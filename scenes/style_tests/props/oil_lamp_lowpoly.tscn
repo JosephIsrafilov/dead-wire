@@ -1,0 +1,49 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Material" path="res://materials/style_tests/metal_brass_aged.tres" id="1_brass"]
+[ext_resource type="Material" path="res://materials/style_tests/lamp_flame_glow.tres" id="2_flame"]
+[ext_resource type="Material" path="res://materials/style_tests/lamp_glass.tres" id="3_glass"]
+
+[node name="OilLampLowPoly" type="Node3D"]
+
+[node name="BasePedestal" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, 0)
+radius = 0.08
+height = 0.04
+sides = 10
+material = ExtResource("1_brass")
+
+[node name="FountBowl" type="CSGSphere3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.7, 0, 0, 0, 1, 0, 0.08, 0)
+radius = 0.075
+radial_segments = 10
+rings = 6
+material = ExtResource("1_brass")
+
+[node name="BurnerCollar" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.145, 0)
+radius = 0.035
+height = 0.03
+sides = 8
+material = ExtResource("1_brass")
+
+[node name="Flame" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.185, 0)
+radius = 0.012
+height = 0.04
+sides = 6
+material = ExtResource("2_flame")
+
+[node name="GlassChimneyBulge" type="CSGSphere3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1.2, 0, 0, 0, 1, 0, 0.21, 0)
+radius = 0.045
+radial_segments = 8
+rings = 5
+material = ExtResource("3_glass")
+
+[node name="GlassChimneyNeck" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.31, 0)
+radius = 0.025
+height = 0.18
+sides = 8
+material = ExtResource("3_glass")

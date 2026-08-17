@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="TransmissionData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/telegraph/transmission_data.gd" id="1_td8x2"]
+
+[resource]
+script = ExtResource("1_td8x2")
+transmission_id = &"test_distinct_layers"
+true_message = "ALPHA"
+elias_perception = "BRAVO"
+written_transcript = "CHARLIE"

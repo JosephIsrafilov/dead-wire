@@ -1,0 +1,146 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Material" path="res://materials/style_tests/desk_wood.tres" id="1_wood"]
+[ext_resource type="Material" path="res://materials/style_tests/timber_trim.tres" id="2_trim"]
+[ext_resource type="Material" path="res://materials/style_tests/metal_oxidized.tres" id="3_iron"]
+[ext_resource type="Material" path="res://materials/style_tests/metal_brass_aged.tres" id="4_brass"]
+[ext_resource type="Material" path="res://materials/style_tests/paper_log.tres" id="5_paper"]
+[ext_resource type="Material" path="res://materials/style_tests/routing_slate.tres" id="6_soot"]
+
+[node name="OfficeStorytellingProps" type="Node3D"]
+
+[node name="StationClockCase" type="CSGBox3D" parent="."]
+position = Vector3(-2.84, 2.16, 0.62)
+size = Vector3(0.05, 0.42, 0.42)
+material = ExtResource("2_trim")
+
+[node name="StationClockFace" type="CSGBox3D" parent="."]
+position = Vector3(-2.875, 2.16, 0.62)
+size = Vector3(0.012, 0.29, 0.29)
+material = ExtResource("5_paper")
+
+[node name="ClockHandMinute" type="CSGBox3D" parent="."]
+position = Vector3(-2.884, 2.205, 0.62)
+size = Vector3(0.01, 0.012, 0.16)
+material = ExtResource("6_soot")
+
+[node name="ClockHandHour" type="CSGBox3D" parent="."]
+position = Vector3(-2.884, 2.14, 0.67)
+size = Vector3(0.01, 0.012, 0.11)
+material = ExtResource("6_soot")
+
+[node name="WireRunA" type="CSGBox3D" parent="."]
+position = Vector3(-2.8, 2.48, -0.75)
+size = Vector3(0.025, 0.025, 2.45)
+material = ExtResource("3_iron")
+
+[node name="WireRunB" type="CSGBox3D" parent="."]
+position = Vector3(-2.8, 2.37, -0.75)
+size = Vector3(0.018, 0.018, 2.45)
+material = ExtResource("3_iron")
+
+[node name="PorcelainInsulatorA" type="CSGCylinder3D" parent="."]
+position = Vector3(-2.78, 2.48, -1.7)
+radius = 0.055
+height = 0.09
+sides = 8
+material = ExtResource("5_paper")
+
+[node name="PorcelainInsulatorB" type="CSGCylinder3D" parent="."]
+position = Vector3(-2.78, 2.37, -0.35)
+radius = 0.045
+height = 0.075
+sides = 8
+material = ExtResource("5_paper")
+
+[node name="MessageTrayBack" type="CSGBox3D" parent="."]
+position = Vector3(-2.67, 0.95, -1.56)
+size = Vector3(0.14, 0.18, 0.48)
+material = ExtResource("2_trim")
+
+[node name="MessageTrayBase" type="CSGBox3D" parent="."]
+position = Vector3(-2.67, 0.87, -1.56)
+size = Vector3(0.14, 0.035, 0.48)
+material = ExtResource("1_wood")
+
+[node name="ReceivedSlip" type="CSGBox3D" parent="."]
+position = Vector3(-2.75, 0.9, -1.68)
+size = Vector3(0.02, 0.11, 0.18)
+material = ExtResource("5_paper")
+
+[node name="SentSlip" type="CSGBox3D" parent="."]
+position = Vector3(-2.75, 0.9, -1.46)
+size = Vector3(0.02, 0.09, 0.16)
+material = ExtResource("5_paper")
+
+[node name="DutyRosterFrame" type="CSGBox3D" parent="."]
+position = Vector3(1.62, 1.55, 2.285)
+size = Vector3(0.82, 0.72, 0.045)
+material = ExtResource("2_trim")
+
+[node name="DutyRosterPaper" type="CSGBox3D" parent="."]
+position = Vector3(1.62, 1.55, 2.255)
+size = Vector3(0.68, 0.58, 0.012)
+material = ExtResource("5_paper")
+
+[node name="DutyRosterText" type="Label3D" parent="."]
+position = Vector3(1.62, 1.55, 2.23)
+rotation = Vector3(0, 3.141593, 0)
+pixel_size = 0.0022
+modulate = Color(0.12, 0.11, 0.09, 1)
+text = "BLACK CREEK\nNIGHT DUTY\n11 P.M. - 6 A.M.\nKEEP LINE CLEAR"
+font_size = 14
+outline_size = 1
+outline_modulate = Color(0.9, 0.82, 0.62, 1)
+
+[node name="CoatHook" type="CSGBox3D" parent="."]
+position = Vector3(0.62, 2.05, 2.25)
+size = Vector3(0.08, 0.15, 0.06)
+material = ExtResource("4_brass")
+
+[node name="OperatorCoat" type="CSGBox3D" parent="."]
+position = Vector3(0.62, 1.57, 2.24)
+size = Vector3(0.42, 0.8, 0.08)
+material = ExtResource("6_soot")
+
+[node name="ServiceHatchFrame" type="CSGBox3D" parent="."]
+position = Vector3(2.42, 1.35, 2.285)
+size = Vector3(0.56, 0.48, 0.045)
+material = ExtResource("2_trim")
+
+[node name="ServiceHatchDark" type="CSGBox3D" parent="."]
+position = Vector3(2.42, 1.35, 2.25)
+size = Vector3(0.43, 0.32, 0.012)
+material = ExtResource("6_soot")
+
+[node name="ServiceHatchShelf" type="CSGBox3D" parent="."]
+position = Vector3(2.42, 1.1, 2.05)
+size = Vector3(0.62, 0.05, 0.38)
+material = ExtResource("1_wood")
+
+[node name="RoutingBoardSconceBack" type="CSGBox3D" parent="."]
+position = Vector3(2.84, 1.84, -0.85)
+size = Vector3(0.035, 0.16, 0.2)
+material = ExtResource("2_trim")
+
+[node name="RoutingBoardSconce" type="CSGCylinder3D" parent="."]
+transform = Transform3D(0, -1, 0, 1, 0, 0, 0, 0, 1, 2.79, 1.74, -0.85)
+radius = 0.055
+height = 0.12
+sides = 8
+material = ExtResource("4_brass")
+
+[node name="SootAboveStove" type="CSGBox3D" parent="."]
+position = Vector3(2.885, 2.22, 1.55)
+size = Vector3(0.015, 0.72, 0.58)
+material = ExtResource("6_soot")
+
+[node name="DeskWear" type="CSGBox3D" parent="."]
+position = Vector3(-1.32, 0.012, -0.6)
+size = Vector3(0.72, 0.008, 0.66)
+material = ExtResource("6_soot")
+
+[node name="DoorWear" type="CSGBox3D" parent="."]
+position = Vector3(-1.6, 0.012, 1.92)
+size = Vector3(0.74, 0.008, 0.46)
+material = ExtResource("6_soot")

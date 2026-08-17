@@ -1,0 +1,33 @@
+[gd_resource type="Resource" script_class="MorseSequenceData" format=3]
+
+[ext_resource type="Script" path="res://scripts/telegraph/morse/morse_timing_event.gd" id="1_event"]
+[ext_resource type="Script" path="res://scripts/telegraph/morse/morse_sequence_data.gd" id="2_sequence"]
+
+[sub_resource type="Resource" id="Resource_1"]
+script = ExtResource("1_event")
+kind = 0
+duration_units = 1
+
+[sub_resource type="Resource" id="Resource_2"]
+script = ExtResource("1_event")
+kind = 1
+duration_units = 1
+
+[sub_resource type="Resource" id="Resource_3"]
+script = ExtResource("1_event")
+kind = 0
+duration_units = 3
+
+[sub_resource type="Resource" id="Resource_4"]
+script = ExtResource("1_event")
+kind = 1
+duration_units = 3
+
+[sub_resource type="Resource" id="Resource_5"]
+script = ExtResource("1_event")
+kind = 0
+duration_units = 1
+
+[resource]
+script = ExtResource("2_sequence")
+events = Array[ExtResource("1_event")]([SubResource("Resource_1"), SubResource("Resource_2"), SubResource("Resource_3"), SubResource("Resource_4"), SubResource("Resource_5")])

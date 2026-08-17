@@ -1,0 +1,150 @@
+[gd_scene load_steps=13 format=3]
+
+[ext_resource type="Script" path="res://scripts/style_tests/psx_style_runtime.gd" id="1_runtime"]
+[ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="2_player"]
+[ext_resource type="Material" path="res://materials/style_tests/floor_wood_planks.tres" id="3_floor"]
+[ext_resource type="Material" path="res://materials/style_tests/wall_plaster_dirty.tres" id="4_wall"]
+[ext_resource type="Material" path="res://materials/style_tests/ceiling_plaster.tres" id="5_ceiling"]
+[ext_resource type="Material" path="res://materials/style_tests/timber_trim.tres" id="6_trim"]
+[ext_resource type="PackedScene" path="res://scenes/style_tests/props/desk_setup.tscn" id="7_desk"]
+[ext_resource type="PackedScene" path="res://scenes/style_tests/props/window_north.tscn" id="8_window"]
+[ext_resource type="PackedScene" path="res://scenes/style_tests/props/routing_board.tscn" id="9_routing"]
+[ext_resource type="PackedScene" path="res://scenes/style_tests/props/door_south.tscn" id="10_door"]
+[ext_resource type="PackedScene" path="res://scenes/style_tests/props/storage_cabinet.tscn" id="11_cabinet"]
+[ext_resource type="PackedScene" path="res://scenes/style_tests/props/corner_stove.tscn" id="12_stove"]
+
+[sub_resource type="Environment" id="env_spike"]
+background_mode = 1
+background_color = Color(0.035, 0.035, 0.045, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.25, 0.24, 0.23, 1)
+ambient_light_energy = 0.25
+
+[node name="M1OfficeVisualSpike" type="Node3D"]
+script = ExtResource("1_runtime")
+enable_psx_rendering = true
+render_scale = 0.5
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("env_spike")
+
+[node name="ColdWindowLight" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1, 1.8, -1.8)
+light_color = Color(0.4, 0.5, 0.7, 1)
+light_energy = 0.2
+light_range = 4.0
+light_attenuation = 1.0
+shadow_enabled = false
+
+[node name="RoomFillLight" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.1, 0.5)
+light_color = Color(0.5, 0.45, 0.4, 1)
+light_energy = 0.15
+light_range = 6.0
+light_attenuation = 1.0
+shadow_enabled = false
+
+[node name="PreviewCamera" type="Camera3D" parent="."]
+transform = Transform3D(0.707, 0, -0.707, 0, 1, 0, 0.707, 0, 0.707, 0.3, 1.55, 0.4)
+fov = 70.0
+current = false
+
+[node name="Floor" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, 0)
+size = Vector3(5.8, 0.1, 4.6)
+material = ExtResource("3_floor")
+use_collision = true
+
+[node name="NorthWall" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.425, -2.36)
+size = Vector3(5.8, 2.85, 0.12)
+material = ExtResource("4_wall")
+use_collision = true
+
+[node name="SouthWall" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.425, 2.36)
+size = Vector3(5.8, 2.85, 0.12)
+material = ExtResource("4_wall")
+use_collision = true
+
+[node name="WestWall" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.96, 1.425, 0)
+size = Vector3(0.12, 2.85, 4.6)
+material = ExtResource("4_wall")
+use_collision = true
+
+[node name="EastWall" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.96, 1.425, 0)
+size = Vector3(0.12, 2.85, 4.6)
+material = ExtResource("4_wall")
+use_collision = true
+
+[node name="Ceiling" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.9, 0)
+size = Vector3(5.8, 0.1, 4.6)
+material = ExtResource("5_ceiling")
+use_collision = true
+
+[node name="BaseboardNorth" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.08, -2.28)
+size = Vector3(5.76, 0.16, 0.04)
+material = ExtResource("6_trim")
+
+[node name="BaseboardSouth" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.08, 2.28)
+size = Vector3(5.76, 0.16, 0.04)
+material = ExtResource("6_trim")
+
+[node name="BaseboardWest" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.88, 0.08, 0)
+size = Vector3(0.04, 0.16, 4.56)
+material = ExtResource("6_trim")
+
+[node name="BaseboardEast" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.88, 0.08, 0)
+size = Vector3(0.04, 0.16, 4.56)
+material = ExtResource("6_trim")
+
+[node name="ChairRailNorth" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, -2.28)
+size = Vector3(5.76, 0.08, 0.04)
+material = ExtResource("6_trim")
+
+[node name="ChairRailSouth" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 2.28)
+size = Vector3(5.76, 0.08, 0.04)
+material = ExtResource("6_trim")
+
+[node name="ChairRailWest" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.88, 0.95, 0)
+size = Vector3(0.04, 0.08, 4.56)
+material = ExtResource("6_trim")
+
+[node name="ChairRailEast" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.88, 0.95, 0)
+size = Vector3(0.04, 0.08, 4.56)
+material = ExtResource("6_trim")
+
+[node name="PlayerSpawn" type="Marker3D" parent="."]
+position = Vector3(0, 0, 0)
+
+[node name="Player" parent="." instance=ExtResource("2_player")]
+position = Vector3(0, 0, 0)
+
+[node name="DeskSetup" parent="." instance=ExtResource("7_desk")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.15, 0, -0.8)
+
+[node name="WindowNorth" parent="." instance=ExtResource("8_window")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1, 1.5, -2.26)
+
+[node name="RoutingBoard" parent="." instance=ExtResource("9_routing")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.86, 1.4, -0.9)
+
+[node name="DoorSouth" parent="." instance=ExtResource("10_door")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6, 1.05, 2.26)
+
+[node name="StorageCabinet" parent="." instance=ExtResource("11_cabinet")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.65, 0, 1.5)
+
+[node name="CornerStove" parent="." instance=ExtResource("12_stove")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2, 0, 1.8)

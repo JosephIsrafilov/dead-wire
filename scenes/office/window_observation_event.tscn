@@ -1,0 +1,85 @@
+[gd_scene load_steps=9 format=3 uid="uid://b1winobs001"]
+
+[ext_resource type="Script" path="res://scripts/events/attention_observation_target.gd" id="1_obs"]
+
+[sub_resource type="StandardMaterial3D" id="FigureCloth"]
+albedo_color = Color(0.025, 0.032, 0.045, 1)
+roughness = 1.0
+
+[sub_resource type="StandardMaterial3D" id="FigureHat"]
+albedo_color = Color(0.018, 0.022, 0.03, 1)
+roughness = 1.0
+
+[sub_resource type="CylinderMesh" id="CoatMesh"]
+material = SubResource("FigureCloth")
+top_radius = 0.17
+bottom_radius = 0.28
+height = 0.76
+radial_segments = 6
+rings = 1
+
+[sub_resource type="CylinderMesh" id="HeadMesh"]
+material = SubResource("FigureCloth")
+top_radius = 0.12
+bottom_radius = 0.14
+height = 0.24
+radial_segments = 6
+rings = 1
+
+[sub_resource type="CylinderMesh" id="HatBrimMesh"]
+material = SubResource("FigureHat")
+top_radius = 0.21
+bottom_radius = 0.21
+height = 0.035
+radial_segments = 6
+rings = 1
+
+[sub_resource type="CylinderMesh" id="HatCrownMesh"]
+material = SubResource("FigureHat")
+top_radius = 0.13
+bottom_radius = 0.16
+height = 0.16
+radial_segments = 6
+rings = 1
+
+[node name="WindowObservationEvent" type="Node3D"]
+script = ExtResource("1_obs")
+
+[node name="VisualIndicator" type="Node3D" parent="."]
+visible = false
+rotation = Vector3(0, 0.21, 0)
+
+[node name="Coat" type="MeshInstance3D" parent="VisualIndicator"]
+position = Vector3(0, 0, 0)
+mesh = SubResource("CoatMesh")
+
+[node name="Head" type="MeshInstance3D" parent="VisualIndicator"]
+position = Vector3(-0.035, 0.5, 0.015)
+rotation = Vector3(0, 0, 0.09)
+mesh = SubResource("HeadMesh")
+
+[node name="Shoulders" type="CSGBox3D" parent="VisualIndicator"]
+position = Vector3(-0.03, 0.3, 0)
+rotation = Vector3(0, 0, 0.06)
+size = Vector3(0.43, 0.13, 0.2)
+material = SubResource("FigureCloth")
+
+[node name="LeftArm" type="CSGBox3D" parent="VisualIndicator"]
+transform = Transform3D(0.984808, 0.173648, 0, -0.173648, 0.984808, 0, 0, 0, 1, -0.21, 0.04, 0.02)
+size = Vector3(0.11, 0.5, 0.15)
+material = SubResource("FigureCloth")
+
+[node name="RightArm" type="CSGBox3D" parent="VisualIndicator"]
+transform = Transform3D(0.906308, -0.422618, 0, 0.422618, 0.906308, 0, 0, 0, 1, 0.2, 0.11, 0.1)
+size = Vector3(0.1, 0.34, 0.14)
+material = SubResource("FigureCloth")
+
+[node name="HatBrim" type="MeshInstance3D" parent="VisualIndicator"]
+position = Vector3(-0.055, 0.66, 0.025)
+rotation = Vector3(0, 0, 0.04)
+mesh = SubResource("HatBrimMesh")
+
+[node name="HatCrown" type="MeshInstance3D" parent="VisualIndicator"]
+position = Vector3(-0.055, 0.745, 0.025)
+rotation = Vector3(0, 0, 0.04)
+mesh = SubResource("HatCrownMesh")

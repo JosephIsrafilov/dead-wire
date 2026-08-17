@@ -1,0 +1,44 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/debug/debug_inspector.gd" id="1_debug_inspector"]
+
+[sub_resource type="StyleBoxFlat" id="debug_panel_style"]
+bg_color = Color(0.08, 0.09, 0.11, 0.88)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.3, 0.35, 0.4, 0.6)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[node name="DebugInspector" type="CanvasLayer"]
+layer = 100
+visible = false
+script = ExtResource("1_debug_inspector")
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+mouse_filter = 2
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 380.0
+offset_bottom = 560.0
+theme_override_styles/panel = SubResource("debug_panel_style")
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer"]
+mouse_filter = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="Output" type="RichTextLabel" parent="PanelContainer/MarginContainer"]
+mouse_filter = 2
+theme_override_colors/default_color = Color(0.9, 0.92, 0.95, 1)
+theme_override_font_sizes/normal_font_size = 12
+bbcode_enabled = false
+fit_content = true
+scroll_active = false
+text = "DEAD WIRE — M1 DEBUG"

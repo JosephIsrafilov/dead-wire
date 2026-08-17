@@ -1,0 +1,44 @@
+[gd_scene format=3 uid="uid://b1route001"]
+
+[ext_resource type="Script" path="res://scripts/telegraph/ui/routing_board.gd" id="1_route"]
+[ext_resource type="Script" path="res://scripts/interaction/interactable.gd" id="2_interact"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_slate"]
+albedo_color = Color(0.18, 0.2, 0.22, 1)
+roughness = 0.95
+
+[sub_resource type="BoxMesh" id="BoxMesh_slate"]
+material = SubResource("StandardMaterial3D_slate")
+size = Vector3(0.04, 0.8, 0.6)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_interact"]
+size = Vector3(0.25, 0.9, 0.7)
+
+[node name="RoutingBoard" type="Node3D"]
+script = ExtResource("1_route")
+
+[node name="BoardMesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+mesh = SubResource("BoxMesh_slate")
+
+[node name="Label3D" type="Label3D" parent="."]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -0.025, 0.4, 0)
+pixel_size = 0.002
+modulate = Color(0.92, 0.92, 0.88, 1)
+text = "EAST DIVISION TRACK SWITCH
+-------------------------
+[1] CLEAR EAST  |  [2] HOLD
+[E to Inspect Board]"
+font_size = 18
+outline_size = 4
+outline_modulate = Color(0.1, 0.1, 0.1, 1)
+
+[node name="Interactable" type="Area3D" parent="."]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("2_interact")
+prompt_text = "Inspect Routing Board (East Wall)"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Interactable"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+shape = SubResource("BoxShape3D_interact")

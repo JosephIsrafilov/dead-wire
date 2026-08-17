@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="MorsePlaybackProfileData" format=3]
+
+[ext_resource type="Script" path="res://scripts/telegraph/morse/morse_playback_profile_data.gd" id="1_prof"]
+
+[resource]
+script = ExtResource("1_prof")
+seconds_per_unit = 0.1

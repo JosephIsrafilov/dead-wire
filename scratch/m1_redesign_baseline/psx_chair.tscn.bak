@@ -1,0 +1,61 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Material" path="res://materials/style_tests/timber_trim.tres" id="1_dark_wood"]
+[ext_resource type="Material" path="res://materials/style_tests/desk_wood.tres" id="2_light_wood"]
+
+[node name="PSXChair" type="Node3D"]
+
+[node name="Seat" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.44, 0)
+size = Vector3(0.44, 0.04, 0.42)
+material = ExtResource("2_light_wood")
+
+[node name="LegFL" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.18, 0.22, 0.17)
+size = Vector3(0.04, 0.44, 0.04)
+material = ExtResource("1_dark_wood")
+
+[node name="LegFR" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.18, 0.22, 0.17)
+size = Vector3(0.04, 0.44, 0.04)
+material = ExtResource("1_dark_wood")
+
+[node name="LegBL" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.18, 0.44, -0.17)
+size = Vector3(0.04, 0.88, 0.04)
+material = ExtResource("1_dark_wood")
+
+[node name="LegBR" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.18, 0.44, -0.17)
+size = Vector3(0.04, 0.88, 0.04)
+material = ExtResource("1_dark_wood")
+
+[node name="BackRailTop" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.84, -0.17)
+size = Vector3(0.36, 0.06, 0.03)
+material = ExtResource("2_light_wood")
+
+[node name="BackRailMid" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.68, -0.17)
+size = Vector3(0.36, 0.04, 0.02)
+material = ExtResource("1_dark_wood")
+
+[node name="BackSpindle1" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.08, 0.64, -0.17)
+size = Vector3(0.02, 0.36, 0.02)
+material = ExtResource("1_dark_wood")
+
+[node name="BackSpindle2" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.08, 0.64, -0.17)
+size = Vector3(0.02, 0.36, 0.02)
+material = ExtResource("1_dark_wood")
+
+[node name="StretcherL" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.18, 0.16, 0)
+size = Vector3(0.02, 0.02, 0.34)
+material = ExtResource("1_dark_wood")
+
+[node name="StretcherR" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.18, 0.16, 0)
+size = Vector3(0.02, 0.02, 0.34)
+material = ExtResource("1_dark_wood")

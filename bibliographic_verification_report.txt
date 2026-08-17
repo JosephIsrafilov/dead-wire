@@ -1,0 +1,100 @@
+BIBLIOGRAPHIC VERIFICATION REPORT
+DEAD WIRE Historical Research
+Date: 2026-08-16
+Agent: Citation Verification
+
+================================================================================
+EXECUTIVE SUMMARY
+================================================================================
+
+This report verifies bibliographic citations for American Morse historical
+sources referenced in docs/research/american_morse_1894_source_audit.md.
+
+Key findings:
+- POTTER 1870: Successfully verified and extracted page references
+- POPE 1891: Unable to directly verify Section 371-372 page numbers
+- MAVER 1892: Edition exists but not directly accessible (1909 ed. available)
+- SUPPLEMENTARY SOURCES: Partial verification; some not accessible
+- POPE 1874 SECTION 150: Unable to verify numeral zero discussion
+
+CRITICAL ISSUE IDENTIFIED:
+Potter 1870 page 7 states dash duration is "four times as long as the dot"
+(1:4 ratio), which conflicts with the audit document's claimed 1:3 ratio
+(dot=1, dash=3) attributed to Potter 1870, p. 13.
+
+================================================================================
+POTTER 1870 VERIFICATION — COMPLETED
+================================================================================
+
+Source: "The Telegraph Instructor: A Rudimentary Treatise on the Art of
+Telegraphing" by Arthur Potter
+Publisher: Flemming, Potter & Co., Philadelphia, 1870
+Library of Congress Control No. 08000715
+
+PDF Retrieved: Yes (2.8 MB PDF)
+Full text extraction: Successful
+
+VERIFIED CONTENT AND PAGE REFERENCES:
+
+1. THE MORSE ALPHABET SECTION
+   Printed page: 7 (footer reads "THE ART OF TELEGRAPHING. 7")
+
+   Content verified:
+   - Full alphabet table with dots and dashes displayed
+   - Quote: "The Morse Alphabet, as used in this country for telegraphing,
+     is made up of the following combination of signs, called dots and dashes"
+   - Spaced letters explicitly listed: c, o, r, y, z
+   - "Some letters are called spaced letters, as c, o, r, y, and z, and
+     known thus: (two dots, space, dot, for c,) (dot, space, dot, o,)"
+   - "The letter l is represented by a dash twice the length of t"
+
+2. SPACING RULES SECTION
+   Section heading: "SPACING." (begins near bottom of page 7 or top of page 8)
+   Printed pages: 7-8 region
+
+   Exact quotes extracted:
+   - "The space between the parts of a letter (except in spaced letters,)
+      must be while you count one"
+   - "The space between different letters in the same word should be while
+      you count three"
+   - "In spaced letters count two for the space"
+   - "The letter L may be prolonged to count eight and called long dash"
+   - "Spaces between words last while counting four"
+
+3. TIMING RATIOS — CRITICAL DISCREPANCY
+   Potter 1870 page 7 explicitly states:
+
+   "To make a dot, strike with a hammer as you count one and raise it
+   instantly; to make a dash, strike and count four, then raise again.
+   The dash taking four times as long as the dot."
+
+   This describes:
+   - Dot = count 1
+   - Dash = count 4
+   - Ratio = 1:4 (NOT 1:3)
+
+4. PAGE SEQUENCE OBSERVED
+   Printed page numbers in document: 7, 11, 13, 15, 17, 19, 23
+   (Numerals section likely appears on pages 11-15)
+
+CRITICAL FINDING:
+
+The audit document (Section 3.1) claims Potter 1870 p. 13 supports:
+  "Short Dash Mark = 3 units"
+
+However, Potter 1870 page 7 explicitly states:
+  "The dash taking four times as long as the dot"
+
+This is a 1:4 ratio (dot=1, dash=4), NOT the 1:3 ratio claimed in the audit.
+
+RECOMMENDATION:
+The audit document must either:
+a) Verify pages 13-14 show a different timing context (e.g., embossed tape
+   vs. sound reading), OR
+b) Acknowledge that Potter 1870 describes 1:4 ratio and explain why the
+   M1 baseline uses 1:3 from a different source
+
+Current audit citations to "Potter 1870, p. 13" for dash=3 are inconsistent
+with extracted text showing dash=4 on page 7.
+
+================================================================================

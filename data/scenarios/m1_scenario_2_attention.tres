@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="TelegraphScenarioData" format=3]
+
+[ext_resource type="Script" path="res://scripts/telegraph/session/telegraph_scenario_data.gd" id="1_scen"]
+[ext_resource type="Script" path="res://scripts/telegraph/transmission_data.gd" id="2_trans"]
+
+[sub_resource type="Resource" id="Resource_trans2"]
+script = ExtResource("2_trans")
+transmission_id = &"trans_m1_02_hold_freight"
+true_message = "HOLD FREIGHT UNTIL TEN"
+elias_perception = "HOLD FREIGHT UNTIL TEN"
+written_transcript = "HOLD FREIGHT UNTIL TEN"
+
+[resource]
+script = ExtResource("1_scen")
+scenario_id = "attention_hold_freight"
+transmission_data = SubResource("Resource_trans2")
+requires_routing = true
+expected_routing_action = "HOLD"
+correct_world_fact = "freight_held_correctly"
+incorrect_world_fact = "freight_cleared_in_error"
+attention_event_id = "door_footsteps"
+attention_event_start_time = 4.0
+completion_fact = ""

@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="TelegraphScenarioData" format=3]
+
+[ext_resource type="Script" path="res://scripts/telegraph/session/telegraph_scenario_data.gd" id="1_scen"]
+[ext_resource type="Script" path="res://scripts/telegraph/transmission_data.gd" id="2_trans"]
+
+[sub_resource type="Resource" id="Resource_trans1"]
+script = ExtResource("2_trans")
+transmission_id = &"trans_m1_01_train_17"
+true_message = "TRAIN 17 CLEAR EAST"
+elias_perception = "TRAIN 17 CLEAR EAST"
+written_transcript = "TRAIN 17 CLEAR EAST"
+
+[resource]
+script = ExtResource("1_scen")
+scenario_id = "baseline_train_17"
+transmission_data = SubResource("Resource_trans1")
+requires_routing = true
+expected_routing_action = "CLEAR EAST"
+correct_world_fact = "train_17_routed_clear"
+incorrect_world_fact = "train_17_held_in_error"
+attention_event_id = ""
+attention_event_start_time = 0.0
+completion_fact = ""

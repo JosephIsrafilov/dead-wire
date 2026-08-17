@@ -1,0 +1,238 @@
+[gd_scene load_steps=22 format=3 uid="uid://m1office001"]
+
+[ext_resource type="Script" path="res://scripts/office/m1_office_controller.gd" id="1_controller"]
+[ext_resource type="Material" path="res://materials/style_tests/floor_wood_planks.tres" id="2_floor"]
+[ext_resource type="Material" path="res://materials/style_tests/wall_plaster_dirty.tres" id="3_wall"]
+[ext_resource type="Material" path="res://materials/style_tests/ceiling_plaster.tres" id="4_ceiling"]
+[ext_resource type="Material" path="res://materials/style_tests/timber_trim.tres" id="5_trim"]
+[ext_resource type="Material" path="res://materials/style_tests/window_exterior_glass.tres" id="6_glass"]
+[ext_resource type="PackedScene" path="res://scenes/style_tests/props/window_north.tscn" id="7_window"]
+[ext_resource type="PackedScene" path="res://scenes/style_tests/props/door_south.tscn" id="8_door"]
+[ext_resource type="PackedScene" path="res://scenes/style_tests/props/desk_setup.tscn" id="9_desk"]
+[ext_resource type="PackedScene" path="res://scenes/style_tests/props/storage_cabinet.tscn" id="10_cabinet"]
+[ext_resource type="PackedScene" path="res://scenes/style_tests/props/corner_stove.tscn" id="11_stove"]
+[ext_resource type="PackedScene" path="res://scenes/style_tests/props/psx_bookcase.tscn" id="12_bookcase"]
+[ext_resource type="PackedScene" path="res://scenes/telegraph/telegraph_station.tscn" id="13_station"]
+[ext_resource type="PackedScene" path="res://scenes/telegraph/transcript_paper.tscn" id="14_paper"]
+[ext_resource type="PackedScene" path="res://scenes/telegraph/morse_reference_card.tscn" id="15_morseref"]
+[ext_resource type="PackedScene" path="res://scenes/telegraph/dispatch_ledger.tscn" id="16_ledger"]
+[ext_resource type="PackedScene" path="res://scenes/telegraph/routing_board.tscn" id="17_routing"]
+[ext_resource type="PackedScene" path="res://scenes/office/door_attention_source.tscn" id="18_dooratt"]
+[ext_resource type="PackedScene" path="res://scenes/office/window_observation_event.tscn" id="19_winobs"]
+[ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="20_player"]
+[ext_resource type="PackedScene" path="res://scenes/ui/document_viewer.tscn" id="21_docviewer"]
+[ext_resource type="PackedScene" path="res://scenes/debug/debug_inspector.tscn" id="22_debug"]
+[ext_resource type="Script" path="res://scripts/telegraph/morse/morse_runtime_scheduler.gd" id="23_sched"]
+[ext_resource type="Script" path="res://scripts/telegraph/session/telegraph_session_controller.gd" id="24_session"]
+
+[sub_resource type="Environment" id="env_office"]
+background_mode = 1
+background_color = Color(0.04, 0.04, 0.05, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.35, 0.32, 0.28, 1)
+ambient_light_energy = 0.32
+
+[node name="M1Office" type="Node3D" node_paths=PackedStringArray("session_controller", "routing_board", "door_attention", "window_observation", "document_viewer", "player")]
+script = ExtResource("1_controller")
+enable_psx_rendering = true
+render_scale = 0.5
+session_controller = NodePath("TelegraphSessionController")
+routing_board = NodePath("RoutingBoard")
+door_attention = NodePath("DoorAttentionSource")
+window_observation = NodePath("WindowObservationEvent")
+document_viewer = NodePath("DocumentViewer")
+player = NodePath("Player")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("env_office")
+
+[node name="ColdWindowLight" type="SpotLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 1.1, 2.5, -2.0)
+light_color = Color(0.35, 0.45, 0.65, 1)
+light_energy = 0.8
+light_indirect_energy = 0.2
+light_volumetric_fog_energy = 0.5
+shadow_enabled = true
+spot_range = 5.0
+spot_angle = 45.0
+spot_angle_attenuation = 2.0
+
+[node name="OilLampLight" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0.9, -1.5)
+light_color = Color(0.95, 0.65, 0.35, 1)
+light_energy = 0.6
+light_indirect_energy = 1.2
+light_volumetric_fog_energy = 0.8
+shadow_enabled = true
+omni_range = 3.5
+omni_attenuation = 1.5
+
+[node name="Floor" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, 0)
+size = Vector3(5.8, 0.1, 4.6)
+material = ExtResource("2_floor")
+use_collision = true
+
+[node name="Ceiling" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.9, 0)
+size = Vector3(5.8, 0.1, 4.6)
+material = ExtResource("4_ceiling")
+use_collision = true
+
+[node name="WestWall" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.96, 1.425, 0)
+size = Vector3(0.12, 2.85, 4.6)
+material = ExtResource("3_wall")
+use_collision = true
+
+[node name="EastWall" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.96, 1.425, 0)
+size = Vector3(0.12, 2.85, 4.6)
+material = ExtResource("3_wall")
+use_collision = true
+
+[node name="NorthWall_Left" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.25, 1.425, -2.36)
+size = Vector3(3.3, 2.85, 0.12)
+material = ExtResource("3_wall")
+use_collision = true
+
+[node name="NorthWall_Right" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.35, 1.425, -2.36)
+size = Vector3(1.1, 2.85, 0.12)
+material = ExtResource("3_wall")
+use_collision = true
+
+[node name="NorthWall_Bottom" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1, 0.475, -2.36)
+size = Vector3(1.4, 0.95, 0.12)
+material = ExtResource("3_wall")
+use_collision = true
+
+[node name="NorthWall_Top" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1, 2.45, -2.36)
+size = Vector3(1.4, 0.8, 0.12)
+material = ExtResource("3_wall")
+use_collision = true
+
+[node name="NorthWindow" parent="." instance=ExtResource("7_window")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1, 1.5, -2.36)
+
+[node name="NorthNightBackdrop" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1, 1.5, -3.2)
+size = Vector3(2.4, 2.0, 0.05)
+material = ExtResource("6_glass")
+
+[node name="SouthWall_Left" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 1.425, 2.36)
+size = Vector3(0.8, 2.85, 0.12)
+material = ExtResource("3_wall")
+use_collision = true
+
+[node name="SouthWall_Right" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9, 1.425, 2.36)
+size = Vector3(4.0, 2.85, 0.12)
+material = ExtResource("3_wall")
+use_collision = true
+
+[node name="SouthWall_Top" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6, 2.475, 2.36)
+size = Vector3(1.0, 0.75, 0.12)
+material = ExtResource("3_wall")
+use_collision = true
+
+[node name="SouthDoor" parent="." instance=ExtResource("8_door")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6, 1.05, 2.36)
+
+[node name="TicketCounterWall_Bottom" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0.5, 1.0)
+size = Vector3(4.8, 1.0, 0.12)
+material = ExtResource("3_wall")
+use_collision = true
+
+[node name="TicketCounterWall_Top" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 2.4, 1.0)
+size = Vector3(4.8, 1.0, 0.12)
+material = ExtResource("3_wall")
+use_collision = true
+
+[node name="TicketCounterWall_Right" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.4, 1.425, 1.0)
+size = Vector3(1.0, 2.85, 0.12)
+material = ExtResource("3_wall")
+use_collision = true
+
+[node name="TicketCounterOpening" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 1.45, 1.0)
+size = Vector3(1.5, 0.9, 0.05)
+material = ExtResource("6_glass")
+
+[node name="BaseboardNorth" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.08, -2.28)
+size = Vector3(5.76, 0.16, 0.04)
+material = ExtResource("5_trim")
+
+[node name="BaseboardSouth" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.08, 2.28)
+size = Vector3(5.76, 0.16, 0.04)
+material = ExtResource("5_trim")
+
+[node name="BaseboardWest" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.88, 0.08, 0)
+size = Vector3(0.04, 0.16, 4.56)
+material = ExtResource("5_trim")
+
+[node name="BaseboardEast" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.88, 0.08, 0)
+size = Vector3(0.04, 0.16, 4.56)
+material = ExtResource("5_trim")
+
+[node name="DeskSetup" parent="." instance=ExtResource("9_desk")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1, 0, -1.8)
+
+[node name="TelegraphStation" parent="." instance=ExtResource("13_station")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1, 0.75, -1.95)
+
+[node name="TranscriptPaper" parent="." instance=ExtResource("14_paper")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, 0.752, -1.75)
+
+[node name="MorseReferenceCard" parent="." instance=ExtResource("15_morseref")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0.752, -1.75)
+
+[node name="DispatchLedger" parent="." instance=ExtResource("16_ledger")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.15, 0.752, -1.60)
+
+[node name="RoutingBoard" parent="." instance=ExtResource("17_routing")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3, 1.4, -2.3)
+
+[node name="StorageCabinet" parent="." instance=ExtResource("10_cabinet")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.65, 0, 1.5)
+
+[node name="CornerStove" parent="." instance=ExtResource("11_stove")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2, 0, 1.8)
+
+[node name="Bookcase" parent="." instance=ExtResource("12_bookcase")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.7, 0, 0.6)
+
+[node name="DoorAttentionSource" parent="." instance=ExtResource("18_dooratt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6, 0.2, 2.85)
+
+[node name="WindowObservationEvent" parent="." instance=ExtResource("19_winobs")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1, 1.45, -2.85)
+
+[node name="Player" parent="." instance=ExtResource("20_player")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0, 0)
+
+[node name="DocumentViewer" parent="." instance=ExtResource("21_docviewer")]
+
+[node name="MorseRuntimeScheduler" type="Node" parent="."]
+script = ExtResource("23_sched")
+
+[node name="TelegraphSessionController" type="Node" parent="." node_paths=PackedStringArray("scheduler", "sounder", "telegraph_key", "transcript_paper")]
+script = ExtResource("24_session")
+scheduler = NodePath("../MorseRuntimeScheduler")
+sounder = NodePath("../TelegraphStation/Sounder")
+telegraph_key = NodePath("../TelegraphStation/TelegraphKey")
+transcript_paper = NodePath("../TranscriptPaper")
+
+[node name="DebugInspector" parent="." instance=ExtResource("22_debug")]

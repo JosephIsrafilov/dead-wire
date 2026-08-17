@@ -1,0 +1,111 @@
+extends SceneTree
+
+var office_scene = preload("res://scenes/office/m1_office.tscn")
+var office_node: Node3D
+var assertions_passed = 0
+
+func _init():
+    print("--- Starting M1 Spatial Metrics Test Suite (Section 11) ---")
+    
+    office_node = office_scene.instantiate()
+    root.add_child(office_node)
+    
+    call_deferred("run_tests")
+
+func run_tests():
+    var passed = true
+    
+    # Check 1: Desk Setup exists
+    var desk = office_node.get_node_or_null("DeskSetup")
+    passed = passed and assert_true(desk != null, "DeskSetup exists")
+    
+    # Check 2: Telegraph Station is on the desk
+    var station = office_node.get_node_or_null("TelegraphStation")
+    passed = passed and assert_true(station != null and station.position.distance_to(desk.position) < 1.0, "TelegraphStation is on the desk")
+    
+    # Check 3: Transcript paper is on the desk
+    var paper = office_node.get_node_or_null("TranscriptPaper")
+    passed = passed and assert_true(paper != null and paper.position.distance_to(desk.position) < 1.5, "TranscriptPaper is on the desk")
+    
+    # Check 4: Morse card is on the desk
+    var card = office_node.get_node_or_null("MorseReferenceCard")
+    passed = passed and assert_true(card != null and card.position.distance_to(desk.position) < 1.5, "MorseReferenceCard is on the desk")
+    
+    # Check 5: Ledger is on the desk
+    var ledger = office_node.get_node_or_null("DispatchLedger")
+    passed = passed and assert_true(ledger != null and ledger.position.distance_to(desk.position) < 1.5, "DispatchLedger is on the desk")
+    
+    # Check 6: Routing board is accessible
+    var board = office_node.get_node_or_null("RoutingBoard")
+    passed = passed and assert_true(board != null, "RoutingBoard exists")
+    
+    # Check 7: Player exists
+    var player = office_node.get_node_or_null("Player")
+    passed = passed and assert_true(player != null, "Player exists")
+    
+    # Check 8: Desk is within operator area (z < 1.0)
+    passed = passed and assert_true(desk.position.z < 1.0, "Desk is in operator area")
+    
+    # Check 9: NorthWindow exists
+    var window = office_node.get_node_or_null("NorthWindow")
+    passed = passed and assert_true(window != null, "NorthWindow exists")
+    
+    # Check 10: Window event is placed correctly outside
+    var win_event = office_node.get_node_or_null("WindowObservationEvent")
+    passed = passed and assert_true(win_event != null and win_event.position.z < window.position.z, "Window observation event is outside")
+    
+    # Check 11: Door exists
+    var door = office_node.get_node_or_null("SouthDoor")
+    passed = passed and assert_true(door != null, "SouthDoor exists")
+    
+    # Check 12: Door event is placed correctly outside
+    var door_event = office_node.get_node_or_null("DoorAttentionSource")
+    passed = passed and assert_true(door_event != null and door_event.position.z > door.position.z, "Door attention source is outside")
+    
+    # Check 13: Ticket counter exists (Divider)
+    var counter = office_node.get_node_or_null("TicketCounterWall_Bottom")
+    passed = passed and assert_true(counter != null, "Ticket counter exists")
+    
+    # Check 14: Distance from desk to routing board is reasonable (< 3.0m)
+    var desk_to_board = desk.position.distance_to(board.position)
+    passed = passed and assert_true(desk_to_board < 4.0, "Desk to RoutingBoard distance is " + str(desk_to_board) + "m (expected < 4.0m)")
+    
+    # Check 15: Storage cabinet exists
+    var cabinet = office_node.get_node_or_null("StorageCabinet")
+    passed = passed and assert_true(cabinet != null, "StorageCabinet exists")
+    
+    # Check 16: Bookcase exists
+    var bookcase = office_node.get_node_or_null("Bookcase")
+    passed = passed and assert_true(bookcase != null, "Bookcase exists")
+    
+    # Check 17: Corner stove exists
+    var stove = office_node.get_node_or_null("CornerStove")
+    passed = passed and assert_true(stove != null, "CornerStove exists")
+    
+    # Check 18: No overlapping between key interactables (clearance)
+    var clearance_ok = paper.position.distance_to(card.position) > 0.1 and paper.position.distance_to(ledger.position) > 0.1
+    passed = passed and assert_true(clearance_ok, "Interactables have proper clearance")
+    
+    # Check 19: Player is inside room bounds
+    var in_bounds = player.position.x > -2.9 and player.position.x < 2.9 and player.position.z > -2.3 and player.position.z < 2.3
+    passed = passed and assert_true(in_bounds, "Player spawns in bounds")
+    
+    # Check 20: Window LoS is not occluded by desk
+    # (Checking relative Z positions: desk should be south of window)
+    passed = passed and assert_true(desk.position.z > window.position.z, "Desk does not intersect window")
+    
+    if passed:
+        print("--- All M1 Spatial Metrics Tests PASSED ---")
+        quit(0)
+    else:
+        print("--- M1 Spatial Metrics Tests FAILED ---")
+        quit(1)
+
+func assert_true(condition: bool, text: String) -> bool:
+    if condition:
+        print("  PASS: " + text)
+        assertions_passed += 1
+        return true
+    else:
+        print("  FAIL: " + text)
+        return false

@@ -1,0 +1,38 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Material" path="res://materials/style_tests/timber_trim.tres" id="1_trim"]
+[ext_resource type="Material" path="res://materials/style_tests/window_exterior_glass.tres" id="2_glass"]
+
+[node name="WindowNorth" type="Node3D"]
+
+[node name="WindowPane" type="CSGBox3D" parent="."]
+size = Vector3(1.4, 1.1, 0.04)
+material = ExtResource("2_glass")
+
+[node name="FrameTop" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.58, 0)
+size = Vector3(1.56, 0.08, 0.12)
+material = ExtResource("1_trim")
+
+[node name="FrameBottom" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.58, 0.02)
+size = Vector3(1.64, 0.08, 0.16)
+material = ExtResource("1_trim")
+
+[node name="FrameLeft" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.73, 0, 0)
+size = Vector3(0.08, 1.1, 0.12)
+material = ExtResource("1_trim")
+
+[node name="FrameRight" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.73, 0, 0)
+size = Vector3(0.08, 1.1, 0.12)
+material = ExtResource("1_trim")
+
+[node name="MuntinV" type="CSGBox3D" parent="."]
+size = Vector3(0.04, 1.1, 0.06)
+material = ExtResource("1_trim")
+
+[node name="MuntinH" type="CSGBox3D" parent="."]
+size = Vector3(1.4, 0.04, 0.06)
+material = ExtResource("1_trim")

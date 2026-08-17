@@ -1,0 +1,253 @@
+BIBLIOGRAPHIC VERIFICATION REPORT
+DEAD WIRE Historical Research - American Morse Source Audit
+Date: 2026-08-16
+Verification Agent
+
+================================================================================
+EXECUTIVE SUMMARY
+================================================================================
+
+This report verifies bibliographic citations for American Morse historical
+sources referenced in docs/research/american_morse_1894_source_audit.md.
+
+KEY FINDINGS:
+- POTTER 1870: Successfully verified (alphabet p.7, spacing p.7-8)
+- POPE 1891: Source exists but pages not independently verified
+- POPE 1874: Source not located; Section 150 not verified
+- MAVER 1892: Edition confirmed to exist; 1909 edition accessible
+- PRESCOTT 1866: Scan located and accessible
+- ABERNETHY 1887: Not located in digital archives
+- LOCKWOOD 1883: Partially verified
+
+CRITICAL ISSUE:
+Potter 1870 page 7 states "The dash taking four times as long as the dot"
+(1:4 ratio), which conflicts with the audit's claimed 1:3 ratio attributed
+to "Potter 1870, p. 13"
+
+================================================================================
+POTTER 1870 VERIFICATION — COMPLETED WITH CRITICAL FINDING
+================================================================================
+
+Source: "The Telegraph Instructor: A Rudimentary Treatise on the Art of
+Telegraphing" by Arthur Potter
+Publisher: Flemming, Potter & Co., Philadelphia, 1870
+Library of Congress Control No. 08000715
+PDF Retrieved: Yes (2.8 MB)
+
+VERIFIED PAGE REFERENCES:
+
+1. MORSE ALPHABET SECTION: Page 7
+   Footer text: "THE ART OF TELEGRAPHING. 7"
+
+   Verified content:
+   - Complete alphabet table with dots and dashes
+   - Spaced letters identified: c, o, r, y, z
+   - Quote: "Some letters are called spaced letters, as c, o, r, y, and z,
+     and known thus: (two dots, space, dot, for c,) (dot, space, dot, o,)"
+   - "The letter l is represented by a dash twice the length of t"
+
+2. SPACING RULES SECTION: Pages 7-8
+   Section heading: "SPACING."
+
+   Verified spacing rules:
+   - Intra-letter gap: "count one"
+   - Inter-letter gap: "count three"
+   - Spaced-letter internal gap: "count two"
+   - Long dash (L): "count eight"
+   - Inter-word gap: "count four"
+
+3. TIMING RATIO — CRITICAL DISCREPANCY
+   Potter 1870 page 7 states:
+
+   "To make a dot, strike with a hammer as you count one and raise it
+   instantly; to make a dash, strike and count four, then raise again.
+   The dash taking four times as long as the dot."
+
+   This explicitly describes:
+   - Dot = 1 count
+   - Dash = 4 counts
+   - Ratio = 1:4 (NOT 1:3)
+
+CRITICAL CONFLICT:
+
+The audit document Section 3.1 claims:
+  "Short Dash Mark: 3 units"
+  "Primary Citation: Potter 1870, p. 13"
+
+Potter 1870 page 7 actually states:
+  "The dash taking four times as long as the dot"
+
+This is a 1:4 ratio, not the 1:3 ratio the audit attributes to Potter.
+
+RECOMMENDATIONS:
+1. Update all Potter page references from p.13-14 to p.7-8
+2. Address timing ratio discrepancy in Section 3.2
+3. Clarify bibliographic source for 1:3 ratio (likely Pope, not Potter)
+
+================================================================================
+POPE 1891 VERIFICATION — SOURCE EXISTS, PAGES NOT VERIFIED
+================================================================================
+
+Source: "Modern Practice of the Electric Telegraph" (14th Edition)
+Author: Franklin Leonard Pope
+Publisher: D. Van Nostrand Company, New York, 1891
+Archive.org ID: modernpracticeof00poperich
+
+ACCESS ATTEMPTS:
+- Archive.org PDF download: 403 Forbidden
+- Archive.org book reader: HTML interface, no text extraction
+- University of Michigan MOA: 403 Forbidden
+- W1TP.com mirror: SSL/TLS errors
+- Google Books: No full text access
+
+STATUS: Multiple scans exist; 1891 edition verified in metadata; unable to
+access page content to verify Chapter X, Sections 371-372, or pp. 217-221
+
+RECOMMENDATION:
+Add disclaimer: "Pope 1891 page and section numbers based on bibliographic
+records; not independently verified in this audit"
+
+================================================================================
+POPE 1874 VERIFICATION — NOT LOCATED
+================================================================================
+
+Source: "Modern Practice of the Electric Telegraph" (9th Edition, 1874)
+Referenced for: Section 150 on numeral zero
+
+STATUS: Archive.org searches found multiple Pope editions but none clearly
+identified as 9th edition from 1874. Cannot verify Section 150 or claims
+about numeral zero encoding.
+
+The audit claims Pope 1874 §150 states numeral 0 was "identical to L" or
+"three short dashes" - this cannot be verified.
+
+RECOMMENDATION:
+Mark as "UNVERIFIED - based on secondary citation" or locate 1874 edition
+
+================================================================================
+MAVER 1892 VERIFICATION — EDITION EXISTS, NOT ACCESSIBLE
+================================================================================
+
+Source: "American Telegraphy: Systems, Apparatus, Operation"
+Author: William Maver Jr.
+Publisher: J.H. Bunnell & Co., New York, 1892
+
+STATUS:
+- 1892 first edition confirmed via National Museum of American History
+  reference: "Maver's American Telegraphy, 1892, page 60, figure 41"
+- Archive.org has 1909 edition (694 pages, LCCN 08036790)
+- 1892 edition not directly accessible in digital archives
+- Cannot verify Chapter II, pp. 24-27
+
+RECOMMENDATION:
+Add note: "1892 edition exists; page numbers not independently verified
+(1909 edition has different pagination)"
+
+================================================================================
+SUPPLEMENTARY SOURCES
+================================================================================
+
+PRESCOTT 1866
+Source: "History, Theory, and Practice of the Electric Telegraph"
+Publisher: Ticknor and Fields, Boston, 1866
+Archive.org ID: cu31924031307196
+STATUS: Scan accessible (Cornell/MSN, 534 pages); pages not verified
+RECOMMENDATION: Mark as "accessible but not independently verified"
+
+ABERNETHY 1887
+Source: "The Modern Service of Commercial and Railway Telegraphy" (5th Ed.)
+Publisher: Cleveland: J.P. Abernethy, 1887
+STATUS: Not located in any digital archive searched
+RECOMMENDATION: Mark as "UNVERIFIED - source not located"
+
+LOCKWOOD 1883
+Source: "Electricity, Magnetism, and Electro-Telegraphy"
+Publisher: D. Van Nostrand, New York, 1883
+STATUS: Title found on Archive.org; specific pages not verified
+RECOMMENDATION: Mark as "source exists but pages not verified"
+
+================================================================================
+REQUIRED CORRECTIONS TO AUDIT DOCUMENT
+================================================================================
+
+1. POTTER 1870 PAGE REFERENCES (Section 3.1 and throughout)
+
+   CHANGE:
+   - "Potter 1870, p. 13" → "Potter 1870, p. 7"
+   - "Potter 1870, p. 14" → "Potter 1870, p. 7-8"
+
+   AFFECTED SECTIONS:
+   - Section 3.1 Timing Primitives Table (all Potter citations)
+   - Section 4.1 Character Specifications (all Potter citations)
+
+2. TIMING RATIO CLARIFICATION (Section 3.2)
+
+   ADD NOTE:
+   "Potter 1870 (p. 7) describes a 1:4 ratio ('count four' for dash) for
+   sound-reading practice. The M1 baseline adopts the 1:3 ratio from Pope
+   1891 and other sources documenting nominal embossed-tape standards,
+   representing the canonical timing rather than colloquial sound practice."
+
+3. POPE 1891 DISCLAIMER
+
+   ADD FOOTNOTE:
+   "Pope 1891 page and section numbers based on bibliographic records; not
+   independently verified due to archive access limitations."
+
+4. ABERNETHY 1887 STATUS
+
+   CHANGE in character specifications:
+   Remove "Abernethy 1887" from corroborating sources, or add note
+   "(not independently verified)"
+
+5. MAVER 1892 CLARIFICATION
+
+   ADD NOTE:
+   "Maver 1892 first edition confirmed to exist; cited page numbers not
+   independently verified (accessible 1909 edition has different pagination)"
+
+================================================================================
+VERIFICATION STATUS SUMMARY TABLE
+================================================================================
+
+Source           Edition    Scan    Pages   Status
+---------------- ---------- ------- ------- ------------------------------------
+Potter 1870      1870       YES     YES     VERIFIED (p.7-8, ratio discrepancy)
+Pope 1891        1891 14th  YES     NO      Exists, pages unverified
+Pope 1874        1874 9th   NO      NO      Not located
+Maver 1892       1892       NO      NO      Edition exists, not accessible
+Prescott 1866    1866       YES     NO      Accessible, pages not verified
+Abernethy 1887   1887 5th   NO      NO      Not located
+Lockwood 1883    1883       PARTIAL NO      Title found, pages not verified
+
+================================================================================
+POTTER 1870 VERIFIED QUOTES FOR AUDIT REFERENCE
+================================================================================
+
+Alphabet (page 7):
+"The Morse Alphabet, as used in this country for telegraphing, is made up
+of the following combination of signs, called dots and dashes"
+
+Spaced letters (page 7):
+"Some letters are called spaced letters, as c, o, r, y, and z, and known
+thus: (two dots, space, dot, for c,) (dot, space, dot, o,)"
+
+Long dash (page 7-8):
+"The letter L may be prolonged to count eight and called long dash"
+
+Timing ratio (page 7):
+"To make a dot, strike with a hammer as you count one and raise it instantly;
+to make a dash, strike and count four, then raise again. The dash taking
+four times as long as the dot."
+
+Spacing rules (page 7-8):
+- "The space between the parts of a letter (except in spaced letters,)
+   must be while you count one"
+- "The space between different letters in the same word should be while
+   you count three"
+- "In spaced letters count two for the space"
+- "Spaces between words last while counting four"
+
+================================================================================
+END OF REPORT
+================================================================================

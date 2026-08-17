@@ -1,0 +1,51 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Material" path="res://materials/style_tests/timber_trim.tres" id="1_trim"]
+[ext_resource type="Material" path="res://materials/style_tests/routing_slate.tres" id="2_slate"]
+[ext_resource type="Material" path="res://materials/style_tests/paper_log.tres" id="3_paper"]
+
+[node name="RoutingBoard" type="Node3D"]
+
+[node name="BoardSlate" type="CSGBox3D" parent="."]
+size = Vector3(0.04, 1.6, 1.2)
+material = ExtResource("2_slate")
+
+[node name="FrameTop" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.02, 0.82, 0)
+size = Vector3(0.06, 0.06, 1.28)
+material = ExtResource("1_trim")
+
+[node name="FrameBottom" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.02, -0.82, 0)
+size = Vector3(0.06, 0.06, 1.28)
+material = ExtResource("1_trim")
+
+[node name="FrameLeft" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.02, 0, -0.62)
+size = Vector3(0.06, 1.6, 0.06)
+material = ExtResource("1_trim")
+
+[node name="FrameRight" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.02, 0, 0.62)
+size = Vector3(0.06, 1.6, 0.06)
+material = ExtResource("1_trim")
+
+[node name="ScheduleSheet1" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.022, 0.45, -0.3)
+size = Vector3(0.005, 0.35, 0.25)
+material = ExtResource("3_paper")
+
+[node name="ScheduleSheet2" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.022, 0.45, 0.15)
+size = Vector3(0.005, 0.35, 0.25)
+material = ExtResource("3_paper")
+
+[node name="DispatchSlip1" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.996195, 0.0871557, 0, -0.0871557, 0.996195, -0.022, -0.15, -0.25)
+size = Vector3(0.005, 0.22, 0.16)
+material = ExtResource("3_paper")
+
+[node name="DispatchSlip2" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.984808, -0.173648, 0, 0.173648, 0.984808, -0.022, -0.2, 0.2)
+size = Vector3(0.005, 0.25, 0.18)
+material = ExtResource("3_paper")

@@ -1,0 +1,50 @@
+extends SceneTree
+
+var office_scene = preload("res://scenes/office/m1_office.tscn")
+var office_node: Node3D
+
+func _init():
+    print("Starting 12 final redesign screenshot capture...")
+    var root = get_root()
+    office_node = office_scene.instantiate()
+    root.add_child(office_node)
+    call_deferred("_on_timer_timeout")
+
+func _on_timer_timeout():
+    var player = office_node.get_node("Player")
+    var camera = player.get_node("Neck/Head/Camera3D")
+    
+    # Setup shots
+    var shots = [
+        {"name": "docs/art/final_m1_redesign/01_operator_desk_wide.png", "pos": Vector3(1.1, 1.5, -0.5), "rot": Vector3(0, deg_to_rad(180), 0)},
+        {"name": "docs/art/final_m1_redesign/02_telegraph_hardware_close.png", "pos": Vector3(1.1, 1.2, -1.5), "rot": Vector3(deg_to_rad(-30), deg_to_rad(180), 0)},
+        {"name": "docs/art/final_m1_redesign/03_routing_board_view.png", "pos": Vector3(1.0, 1.5, -1.0), "rot": Vector3(0, deg_to_rad(90), 0)},
+        {"name": "docs/art/final_m1_redesign/04_bay_window_night.png", "pos": Vector3(1.1, 1.5, -1.0), "rot": Vector3(0, deg_to_rad(180), 0)},
+        {"name": "docs/art/final_m1_redesign/05_ticket_counter_divider.png", "pos": Vector3(0, 1.5, 0), "rot": Vector3(0, 0, 0)},
+        {"name": "docs/art/final_m1_redesign/06_waiting_room_perspective.png", "pos": Vector3(0, 1.5, 2.0), "rot": Vector3(0, deg_to_rad(180), 0)},
+        {"name": "docs/art/final_m1_redesign/07_door_attention.png", "pos": Vector3(-1.0, 1.5, 1.5), "rot": Vector3(0, deg_to_rad(-45), 0)},
+        {"name": "docs/art/final_m1_redesign/08_corner_stove_warmth.png", "pos": Vector3(1.0, 1.5, 1.0), "rot": Vector3(0, deg_to_rad(135), 0)},
+        {"name": "docs/art/final_m1_redesign/09_storage_cabinet.png", "pos": Vector3(-1.5, 1.5, 0.5), "rot": Vector3(0, deg_to_rad(-135), 0)},
+        {"name": "docs/art/final_m1_redesign/10_overall_room_nw.png", "pos": Vector3(2.0, 2.5, 2.0), "rot": Vector3(deg_to_rad(-30), deg_to_rad(45), 0)},
+        {"name": "docs/art/final_m1_redesign/11_overall_room_se.png", "pos": Vector3(-2.0, 2.5, -1.5), "rot": Vector3(deg_to_rad(-30), deg_to_rad(-135), 0)},
+        {"name": "docs/art/final_m1_redesign/12_player_spawn_view.png", "pos": Vector3(0, 1.6, 0), "rot": Vector3(0, deg_to_rad(180), 0)}
+    ]
+    
+    _capture_shots(shots)
+
+func _capture_shots(shots: Array):
+    var player = office_node.get_node("Player")
+    var camera = player.get_node("Head/Camera3D")
+    for shot in shots:
+        camera.global_position = shot["pos"]
+        camera.global_rotation = shot["rot"]
+        
+        await get_root().get_tree().process_frame
+        await get_root().get_tree().process_frame
+        
+        var img = get_root().get_viewport().get_texture().get_image()
+        img.save_png(shot["name"])
+        print("Captured: ", shot["name"])
+    
+    print("All 12 screenshots captured.")
+    quit(0)

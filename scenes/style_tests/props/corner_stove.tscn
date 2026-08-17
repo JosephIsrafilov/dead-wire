@@ -1,0 +1,105 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Material" path="res://materials/style_tests/metal_oxidized.tres" id="1_iron"]
+[ext_resource type="Material" path="res://materials/style_tests/timber_trim.tres" id="2_trim"]
+[ext_resource type="Material" path="res://materials/style_tests/paper_log.tres" id="3_paper"]
+
+[sub_resource type="BoxShape3D" id="StoveSolid"]
+size = Vector3(0.7, 1.75, 0.7)
+
+[sub_resource type="StandardMaterial3D" id="Ember"]
+albedo_color = Color(0.7, 0.1, 0.02, 1)
+emission_enabled = true
+emission = Color(0.9, 0.12, 0.02, 1)
+emission_energy_multiplier = 0.85
+roughness = 0.8
+
+[node name="CornerStove" type="Node3D"]
+
+[node name="StoveBody" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.67, 0)
+radius = 0.29
+height = 1.12
+sides = 10
+material = ExtResource("1_iron")
+
+[node name="StoveBase" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
+size = Vector3(0.72, 0.1, 0.72)
+material = ExtResource("1_iron")
+
+[node name="TopPlate" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.26, 0)
+radius = 0.31
+height = 0.08
+sides = 10
+material = ExtResource("1_iron")
+
+[node name="FireDoor" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, -0.29)
+size = Vector3(0.3, 0.34, 0.04)
+material = ExtResource("2_trim")
+
+[node name="EmberSeam" type="CSGBox3D" parent="."]
+position = Vector3(0, 0.69, -0.315)
+size = Vector3(0.16, 0.045, 0.012)
+material = SubResource("Ember")
+
+[node name="DoorHandle" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.12, 0.7, -0.34)
+radius = 0.025
+height = 0.12
+sides = 8
+material = ExtResource("1_iron")
+
+[node name="StovePipe" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.02, 0)
+radius = 0.09
+height = 1.44
+sides = 8
+material = ExtResource("1_iron")
+
+[node name="HeatShield" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.05, 0.42)
+size = Vector3(0.95, 1.7, 0.04)
+material = ExtResource("1_iron")
+
+[node name="CoalScuttle" type="CSGCylinder3D" parent="."]
+position = Vector3(-0.38, 0.18, 0.24)
+radius = 0.17
+height = 0.3
+sides = 8
+material = ExtResource("1_iron")
+
+[node name="CoalRim" type="CSGTorus3D" parent="."]
+position = Vector3(-0.38, 0.34, 0.24)
+inner_radius = 0.12
+outer_radius = 0.18
+rings = 8
+ring_segments = 6
+material = ExtResource("1_iron")
+
+[node name="CoalShovelHandle" type="CSGCylinder3D" parent="."]
+transform = Transform3D(0.939693, 0.34202, 0, -0.34202, 0.939693, 0, 0, 0, 1, -0.42, 0.54, 0.24)
+radius = 0.018
+height = 0.72
+sides = 6
+material = ExtResource("2_trim")
+
+[node name="CoalShovelBlade" type="CSGBox3D" parent="."]
+transform = Transform3D(0.939693, 0.34202, 0, -0.34202, 0.939693, 0, 0, 0, 1, -0.54, 0.2, 0.24)
+size = Vector3(0.18, 0.12, 0.04)
+material = ExtResource("1_iron")
+
+[node name="AshPan" type="CSGBox3D" parent="."]
+position = Vector3(0.18, 0.08, 0.38)
+size = Vector3(0.3, 0.06, 0.18)
+material = ExtResource("3_paper")
+
+[node name="StoveSolid" type="StaticBody3D" parent="."]
+collision_layer = 1
+collision_mask = 1
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StoveSolid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.875, 0)
+shape = SubResource("StoveSolid")

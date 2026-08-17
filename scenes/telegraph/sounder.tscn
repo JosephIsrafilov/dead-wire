@@ -1,0 +1,45 @@
+[gd_scene format=3 uid="uid://b1sounder001"]
+
+[ext_resource type="Script" path="res://scripts/telegraph/hardware/sounder_controller.gd" id="1_sounder"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wood"]
+albedo_color = Color(0.24, 0.14, 0.08, 1)
+roughness = 0.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_base"]
+material = SubResource("StandardMaterial3D_wood")
+size = Vector3(0.12, 0.02, 0.16)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_brass"]
+albedo_color = Color(0.65, 0.52, 0.22, 1)
+metallic = 0.75
+roughness = 0.35
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_coil"]
+material = SubResource("StandardMaterial3D_brass")
+top_radius = 0.015
+bottom_radius = 0.015
+height = 0.04
+
+[sub_resource type="BoxMesh" id="BoxMesh_anvil"]
+material = SubResource("StandardMaterial3D_brass")
+size = Vector3(0.01, 0.05, 0.08)
+
+[node name="Sounder" type="Node3D"]
+script = ExtResource("1_sounder")
+
+[node name="BaseMesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, 0)
+mesh = SubResource("BoxMesh_base")
+
+[node name="CoilLeft" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.025, 0.04, -0.02)
+mesh = SubResource("CylinderMesh_coil")
+
+[node name="CoilRight" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.025, 0.04, -0.02)
+mesh = SubResource("CylinderMesh_coil")
+
+[node name="Anvil" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.045, 0.03)
+mesh = SubResource("BoxMesh_anvil")

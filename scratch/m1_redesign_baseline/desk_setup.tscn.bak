@@ -1,0 +1,78 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Material" path="res://materials/style_tests/desk_wood.tres" id="1_wood"]
+[ext_resource type="Material" path="res://materials/style_tests/timber_trim.tres" id="2_dark_wood"]
+[ext_resource type="Material" path="res://materials/style_tests/paper_log.tres" id="3_paper"]
+[ext_resource type="Material" path="res://materials/style_tests/metal_brass_aged.tres" id="4_brass"]
+[ext_resource type="PackedScene" path="res://scenes/style_tests/props/psx_chair.tscn" id="5_chair"]
+[ext_resource type="PackedScene" path="res://scenes/style_tests/props/oil_lamp_lowpoly.tscn" id="6_lamp"]
+
+[node name="DeskSetup" type="Node3D"]
+
+[node name="DeskTop" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.72, 0)
+size = Vector3(1.5, 0.06, 0.75)
+material = ExtResource("1_wood")
+
+[node name="LegFL" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.68, 0.35, 0.31)
+size = Vector3(0.08, 0.7, 0.08)
+material = ExtResource("2_dark_wood")
+
+[node name="LegFR" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.68, 0.35, 0.31)
+size = Vector3(0.08, 0.7, 0.08)
+material = ExtResource("2_dark_wood")
+
+[node name="LegBL" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.68, 0.35, -0.31)
+size = Vector3(0.08, 0.7, 0.08)
+material = ExtResource("2_dark_wood")
+
+[node name="LegBR" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.68, 0.35, -0.31)
+size = Vector3(0.08, 0.7, 0.08)
+material = ExtResource("2_dark_wood")
+
+[node name="DrawerBank" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.48, 0.45, 0)
+size = Vector3(0.38, 0.48, 0.65)
+material = ExtResource("2_dark_wood")
+
+[node name="DrawerKnob1" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.48, 0.58, 0.34)
+radius = 0.02
+height = 0.04
+sides = 8
+material = ExtResource("4_brass")
+
+[node name="DrawerKnob2" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.48, 0.38, 0.34)
+radius = 0.02
+height = 0.04
+sides = 8
+material = ExtResource("4_brass")
+
+[node name="Chair" parent="." instance=ExtResource("5_chair")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.2, 0, 0.48)
+
+[node name="OilLamp" parent="." instance=ExtResource("6_lamp")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0.75, -0.15)
+
+[node name="LampLight" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0.95, -0.15)
+light_color = Color(1, 0.8, 0.5, 1)
+light_energy = 1.3
+light_range = 5.0
+light_attenuation = 1.1
+shadow_enabled = true
+
+[node name="TelegramLog" type="CSGBox3D" parent="."]
+transform = Transform3D(0.984808, 0, 0.173648, 0, 1, 0, -0.173648, 0, 0.984808, -0.2, 0.752, 0.05)
+size = Vector3(0.35, 0.005, 0.25)
+material = ExtResource("3_paper")
+
+[node name="TelegramSheet2" type="CSGBox3D" parent="."]
+transform = Transform3D(0.939693, 0, -0.34202, 0, 1, 0, 0.34202, 0, 0.939693, -0.45, 0.752, -0.08)
+size = Vector3(0.22, 0.004, 0.28)
+material = ExtResource("3_paper")

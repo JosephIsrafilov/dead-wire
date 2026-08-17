@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://b1dooratt001"]
+
+[ext_resource type="Script" path="res://scripts/events/door_attention_source.gd" id="1_dooratt"]
+
+[node name="DoorAttentionSource" type="Node3D"]
+script = ExtResource("1_dooratt")
