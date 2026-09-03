@@ -1,0 +1,58 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/intro_card.gd" id="1_intro"]
+
+[node name="IntroCard" type="CanvasLayer"]
+layer = 25
+script = ExtResource("1_intro")
+
+[node name="Fade" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
+custom_minimum_size = Vector2(640, 0)
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="PlaceLabel" type="Label" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.84, 0.77, 0.6, 1)
+theme_override_font_sizes/font_size = 22
+text = "BLACK CREEK, COLORADO
+APRIL 1894"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="OrderLabel" type="RichTextLabel" parent="CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(620, 160)
+layout_mode = 2
+theme_override_colors/default_color = Color(0.66, 0.61, 0.51, 1)
+theme_override_font_sizes/normal_font_size = 15
+bbcode_enabled = false
+text = "WESTERN UNION — ORDER 41
+
+E. CRANE TO RELIEVE NIGHT OPERATOR AT BLACK CREEK.
+LINE HAS RUN QUIET SINCE THE MINE CLOSED IN 89.
+KEEP THE WIRE. COPY WHAT COMES."
+fit_content = true
+
+[node name="HintLabel" type="Label" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.38, 0.35, 0.29, 1)
+theme_override_font_sizes/font_size = 12
+text = "any key"
+horizontal_alignment = 1

@@ -3,7 +3,7 @@
 [ext_resource type="Texture2D" path="res://materials/style_tests/textures/psx/psx_wall_plaster_128.png" id="1_tex"]
 
 [resource]
-shading_mode = 2
+shading_mode = 1
 albedo_color = Color(0.55, 0.52, 0.48, 1)
 albedo_texture = ExtResource("1_tex")
 roughness = 0.98

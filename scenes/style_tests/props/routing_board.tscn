@@ -7,27 +7,27 @@
 [node name="RoutingBoard" type="Node3D"]
 
 [node name="BoardSlate" type="CSGBox3D" parent="."]
-size = Vector3(0.04, 1.6, 1.2)
+size = Vector3(0.04, 1.42, 1.1)
 material = ExtResource("2_slate")
 
 [node name="FrameTop" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.02, 0.82, 0)
-size = Vector3(0.06, 0.06, 1.28)
+size = Vector3(0.06, 0.06, 1.18)
 material = ExtResource("1_trim")
 
 [node name="FrameBottom" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.02, -0.82, 0)
-size = Vector3(0.06, 0.06, 1.28)
+size = Vector3(0.06, 0.06, 1.18)
 material = ExtResource("1_trim")
 
 [node name="FrameLeft" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.02, 0, -0.62)
-size = Vector3(0.06, 1.6, 0.06)
+size = Vector3(0.06, 1.42, 0.06)
 material = ExtResource("1_trim")
 
 [node name="FrameRight" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.02, 0, 0.62)
-size = Vector3(0.06, 1.6, 0.06)
+size = Vector3(0.06, 1.42, 0.06)
 material = ExtResource("1_trim")
 
 [node name="ScheduleSheet1" type="CSGBox3D" parent="."]

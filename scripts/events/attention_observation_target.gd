@@ -17,6 +17,12 @@ var is_active: bool = false
 var is_observed: bool = false
 var _remaining_duration: float = 0.0
 
+## A figure that blinks into existence in front of the player is a bug, not a
+## scare. Appearances and disappearances are held until the player is not looking
+## at the window, so the figure is always something that was already there.
+var _pending_show: bool = false
+var _pending_hide: bool = false
+
 var visual_indicator: Node3D = null
 
 func _ready() -> void:
@@ -31,6 +37,8 @@ func reset_state() -> void:
 	is_active = false
 	is_observed = false
 	_remaining_duration = 0.0
+	_pending_show = false
+	_pending_hide = false
 	var vi := get_visual_indicator()
 	if vi != null:
 		vi.visible = false
@@ -40,9 +48,9 @@ func trigger_event(duration: float = 5.0) -> void:
 	is_observed = false
 	_remaining_duration = duration
 
-	var vi := get_visual_indicator()
-	if vi != null:
-		vi.visible = true
+	_pending_show = true
+	_pending_hide = false
+	_resolve_pending_visibility()
 
 	var world := _get_world_state()
 	if world != null and not world_fact_id.is_empty():
@@ -52,6 +60,10 @@ func trigger_event(duration: float = 5.0) -> void:
 
 func evaluate_observation(camera_global_pos: Vector3, camera_forward: Vector3, is_occluded: bool = false) -> bool:
 	if not is_active or is_observed or is_occluded:
+		return false
+	# Nothing can be seen that has not actually appeared yet.
+	var indicator := get_visual_indicator()
+	if indicator != null and not indicator.visible:
 		return false
 
 	var target_pos := global_position if is_inside_tree() else position
@@ -112,10 +124,45 @@ func _process(delta: float) -> void:
 		_remaining_duration -= delta
 		if _remaining_duration <= 0.0:
 			is_active = false
-			var vi := get_visual_indicator()
-			if vi != null:
-				vi.visible = false
+			_pending_hide = true
+			_pending_show = false
 			event_expired.emit()
+	_resolve_pending_visibility()
+
+## Applies a queued appearance or disappearance, but only while the player has
+## their back to it. With no camera in the scene — as in tests — it applies at
+## once.
+func _resolve_pending_visibility() -> void:
+	if not _pending_show and not _pending_hide:
+		return
+	var vi := get_visual_indicator()
+	if vi == null:
+		return
+	if _is_being_watched():
+		return
+
+	if _pending_show:
+		vi.visible = true
+		_pending_show = false
+	elif _pending_hide:
+		vi.visible = false
+		_pending_hide = false
+
+func _is_being_watched() -> bool:
+	if not is_inside_tree():
+		return false
+	var viewport := get_viewport()
+	if viewport == null:
+		return false
+	var camera := viewport.get_camera_3d()
+	if camera == null or not camera.is_inside_tree():
+		return false
+
+	var to_target := global_position - camera.global_position
+	if to_target.length() > max_distance or to_target.length() < 0.001:
+		return false
+	var forward := -camera.global_transform.basis.z
+	return forward.normalized().angle_to(to_target.normalized()) <= deg_to_rad(max_view_angle_degrees)
 
 func _get_world_state() -> WorldStateStore:
 	if world_state != null:

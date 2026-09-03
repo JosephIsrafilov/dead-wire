@@ -7,6 +7,11 @@ extends Node
 var current_target: Interactable = null
 var is_ui_blocked: bool = false
 
+## Shown when nothing is under the crosshair. Used by the chair: the interaction
+## ray does not report a trigger it starts inside, so a seated operator would
+## otherwise never be told how to get up.
+var persistent_hint: String = ""
+
 func _ready() -> void:
 	if not interaction_ray:
 		interaction_ray = get_node_or_null("../Head/Camera3D/InteractionRay") as RayCast3D
@@ -62,5 +67,13 @@ func _update_prompt_ui() -> void:
 		else:
 			prompt_label.text = current_target.get_prompt()
 		prompt_label.visible = true
+	elif not persistent_hint.is_empty() and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+		prompt_label.text = persistent_hint
+		prompt_label.visible = true
 	else:
 		prompt_label.visible = false
+
+## Sets or clears the fallback prompt shown when nothing is targeted.
+func set_persistent_hint(text: String) -> void:
+	persistent_hint = text
+	_update_prompt_ui()

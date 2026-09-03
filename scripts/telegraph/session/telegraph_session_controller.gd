@@ -26,6 +26,11 @@ signal attention_event_triggered(event_id: String)
 @export var transcript_paper: TranscriptPaper = null
 @export var world_state: WorldStateStore = null
 
+## When a ShiftDirector is running the night, the wire decides when a message
+## arrives and the key means "answer the call". Clearing this hands ownership of
+## the key to the director so the operator cannot start his own traffic early.
+@export var allow_key_start: bool = true
+
 var _state: State = State.IDLE
 var _current_scenario: TelegraphScenarioData = null
 var _encoder := AmericanMorseEncoder.new()
@@ -94,11 +99,20 @@ func start_transmission() -> bool:
 	if not scheduler.start(sched):
 		return false
 
+	# Elias starts writing as the signal starts arriving, not after it ends.
+	if transcript_paper != null:
+		transcript_paper.begin_writing(_current_scenario.transmission_data.written_transcript)
+
 	_set_state(State.RECEIVING)
 	transmission_started.emit(_current_scenario)
 	return true
 
 func _on_playback_time_advanced(prev_time: float, curr_time: float) -> void:
+	if _state == State.RECEIVING and transcript_paper != null and scheduler != null:
+		var total := scheduler.get_total_duration_seconds()
+		if total > 0.0:
+			transcript_paper.set_writing_progress(curr_time / total)
+
 	if _state == State.RECEIVING and _current_scenario != null:
 		if not _current_scenario.attention_event_id.is_empty() and not _attention_event_fired:
 			var target_time: float = _current_scenario.attention_event_start_time
@@ -186,6 +200,8 @@ func _get_world_state() -> WorldStateStore:
 	return null
 
 func _on_key_pressed() -> void:
+	if not allow_key_start:
+		return
 	if _state == State.READY:
 		start_transmission()
 

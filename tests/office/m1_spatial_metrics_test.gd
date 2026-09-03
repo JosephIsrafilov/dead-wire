@@ -162,7 +162,7 @@ func _interaction_rays_hit_expected() -> bool:
 	var key_area := office_node.get_node_or_null("TelegraphStation/TelegraphKey/Interactable") as Area3D
 	var paper_area := office_node.get_node_or_null("TranscriptPaper/Interactable") as Area3D
 	var ledger_area := office_node.get_node_or_null("DispatchLedger/Interactable") as Area3D
-	return _ray_hits_area(Vector3(1.65, 1.45, -0.85), board_area) and _ray_hits_area(Vector3(-1.65, 1.1, -0.92), key_area) and _ray_hits_area(Vector3(-1.65, 1.1, -0.72), paper_area) and _ray_hits_area(Vector3(-1.65, 1.1, -0.42), ledger_area)
+	return _ray_hits_area(Vector3(1.65, 1.45, -0.85), board_area) and _ray_hits_area(Vector3(-0.95, 1.1, -0.92), key_area) and _ray_hits_area(Vector3(-0.95, 1.1, -0.72), paper_area) and _ray_hits_area(Vector3(-0.95, 1.1, -0.42), ledger_area)
 
 func _ray_hits_area(from: Vector3, expected: Area3D) -> bool:
 	if expected == null:

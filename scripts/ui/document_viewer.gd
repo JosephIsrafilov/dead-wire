@@ -5,6 +5,7 @@ signal document_opened(doc_id: String)
 signal document_closed(doc_id: String)
 
 @export var default_footer: String = "[E / Esc] Put Down Document"
+@export var open_duration: float = 0.14
 
 var _current_doc_id: String = ""
 var _is_open: bool = false
@@ -50,7 +51,30 @@ func open_document(doc_id: String, title: String, body: String, footer: String =
 		footer_label.text = footer if not footer.is_empty() else default_footer
 
 	visible = true
+	_animate_in()
 	document_opened.emit(_current_doc_id)
+
+## Lifting a document into view takes a moment. Instant appearance is the single
+## most common reason a first-person game reads as a slideshow of states.
+func _animate_in() -> void:
+	var backdrop := get_node_or_null("Backdrop") as ColorRect
+	var centre := get_node_or_null("CenterContainer") as Control
+	if not is_inside_tree():
+		if centre != null:
+			centre.modulate.a = 1.0
+		return
+
+	var tween := create_tween()
+	tween.set_parallel(true)
+	if backdrop != null:
+		backdrop.color.a = 0.0
+		tween.tween_property(backdrop, "color:a", 0.6, open_duration).set_trans(Tween.TRANS_SINE)
+	if centre != null:
+		centre.modulate.a = 0.0
+		centre.scale = Vector2(0.985, 0.985)
+		centre.pivot_offset = centre.size * 0.5
+		tween.tween_property(centre, "modulate:a", 1.0, open_duration).set_trans(Tween.TRANS_SINE)
+		tween.tween_property(centre, "scale", Vector2.ONE, open_duration).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 
 func close_document() -> void:
 	if not _is_open:

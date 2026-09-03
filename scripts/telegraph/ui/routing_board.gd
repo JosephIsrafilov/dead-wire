@@ -8,12 +8,29 @@ signal board_closed()
 @export var prompt_message: String = "Inspect Routing Board (East Wall)"
 @export var is_awaiting_route: bool = false
 
+## The switch lever physically throws when a route is set. Angles in degrees from
+## the lever's rest pose; CLEAR EAST throws one way, HOLD the other.
+@export var lever_throw_degrees: float = 34.0
+@export var lever_throw_duration: float = 0.42
+
 var interactable: Interactable = null
 var route_prompt: Control = null
 var is_open: bool = false
 var has_submitted_this_session: bool = false
 
+var _lever_rest_rotation: float = 0.0
+var _lever_rest_captured: bool = false
+
+func _capture_lever_rest() -> void:
+	if _lever_rest_captured:
+		return
+	var lever := get_node_or_null("RouteLever") as Node3D
+	if lever != null:
+		_lever_rest_rotation = lever.rotation.z
+		_lever_rest_captured = true
+
 func _ready() -> void:
+	_capture_lever_rest()
 	interactable = get_node_or_null("Interactable") as Interactable
 	route_prompt = get_node_or_null("RoutePromptUI/Panel") as Control
 
@@ -94,9 +111,31 @@ func select_action(action: String) -> bool:
 		return false
 
 	has_submitted_this_session = true
+	_throw_lever(action)
 	routing_action_selected.emit(action)
 	close_board()
 	return true
+
+## A route order is a physical act. Before this the board answered a keypress with
+## nothing moving at all.
+func _throw_lever(action: String) -> void:
+	var lever := get_node_or_null("RouteLever") as Node3D
+	var marker := get_node_or_null("SwitchMarker") as Node3D
+	if lever == null:
+		return
+
+	var direction := 1.0 if action == "CLEAR EAST" else -1.0
+	var target := _lever_rest_rotation + direction * deg_to_rad(lever_throw_degrees)
+
+	if not is_inside_tree():
+		lever.rotation.z = target
+		return
+
+	var tween := create_tween()
+	tween.set_parallel(true)
+	tween.tween_property(lever, "rotation:z", target, lever_throw_duration) 		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	if marker != null:
+		tween.tween_property(marker, "position:y", marker.position.y + direction * 0.055, lever_throw_duration) 			.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 
 func reset_for_new_transmission() -> void:
 	has_submitted_this_session = false

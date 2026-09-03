@@ -1,0 +1,72 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/shift_end_card.gd" id="1_endcard"]
+
+[node name="ShiftEndCard" type="CanvasLayer"]
+layer = 20
+visible = false
+script = ExtResource("1_endcard")
+
+[node name="Fade" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0)
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+modulate = Color(1, 1, 1, 0)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
+custom_minimum_size = Vector2(640, 0)
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="TitleLabel" type="Label" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.82, 0.75, 0.58, 1)
+theme_override_font_sizes/font_size = 22
+text = "END OF WATCH"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="BodyLabel" type="RichTextLabel" parent="CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(620, 300)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/default_color = Color(0.68, 0.63, 0.52, 1)
+theme_override_font_sizes/normal_font_size = 14
+bbcode_enabled = false
+fit_content = true
+
+[node name="ButtonRow" type="HBoxContainer" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 16
+
+[node name="AgainButton" type="Button" parent="CenterContainer/VBoxContainer/ButtonRow"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "Stand Another Watch"
+
+[node name="TitleButton" type="Button" parent="CenterContainer/VBoxContainer/ButtonRow"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "Return to Title"
+
+[node name="FooterLabel" type="Label" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.45, 0.41, 0.34, 1)
+theme_override_font_sizes/font_size = 13
+text = "6:00 A.M. — Black Creek Station"
+horizontal_alignment = 1

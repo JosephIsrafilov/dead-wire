@@ -1,7 +1,9 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Material" path="res://materials/style_tests/timber_trim.tres" id="1_trim"]
 [ext_resource type="Material" path="res://materials/style_tests/window_exterior_glass.tres" id="2_glass"]
+[ext_resource type="Material" path="res://materials/style_tests/metal_brass_aged.tres" id="3_brass"]
+[ext_resource type="Material" path="res://materials/style_tests/desk_wood.tres" id="4_wood"]
 
 [node name="WindowNorth" type="Node3D"]
 
@@ -12,22 +14,22 @@ material = ExtResource("2_glass")
 
 [node name="OuterTop" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.64, 0.05)
-size = Vector3(1.64, 0.1, 0.18)
+size = Vector3(1.68, 0.1, 0.18)
 material = ExtResource("1_trim")
 
 [node name="OuterBottom" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.64, 0.05)
-size = Vector3(1.64, 0.1, 0.22)
+size = Vector3(1.68, 0.1, 0.22)
 material = ExtResource("1_trim")
 
 [node name="OuterLeft" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.77, 0, 0.05)
-size = Vector3(0.1, 1.28, 0.18)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.78, 0, 0.05)
+size = Vector3(0.12, 1.28, 0.18)
 material = ExtResource("1_trim")
 
 [node name="OuterRight" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.77, 0, 0.05)
-size = Vector3(0.1, 1.28, 0.18)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.78, 0, 0.05)
+size = Vector3(0.12, 1.28, 0.18)
 material = ExtResource("1_trim")
 
 [node name="SashTop" type="CSGBox3D" parent="."]
@@ -40,17 +42,32 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.29, 0.085)
 size = Vector3(1.4, 0.055, 0.08)
 material = ExtResource("1_trim")
 
+[node name="SashMeetingRail" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, 0.09)
+size = Vector3(1.4, 0.045, 0.09)
+material = ExtResource("1_trim")
+
+[node name="SashLock" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.045, 0.11)
+size = Vector3(0.06, 0.02, 0.03)
+material = ExtResource("3_brass")
+
 [node name="MuntinV" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.085)
-size = Vector3(0.045, 1.15, 0.08)
+size = Vector3(0.04, 1.15, 0.075)
 material = ExtResource("1_trim")
 
 [node name="MuntinH" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.085)
-size = Vector3(1.4, 0.045, 0.08)
+size = Vector3(1.4, 0.04, 0.075)
 material = ExtResource("1_trim")
 
 [node name="InteriorSill" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.57, 0.22)
-size = Vector3(1.84, 0.09, 0.38)
+size = Vector3(1.84, 0.08, 0.36)
+material = ExtResource("4_wood")
+
+[node name="SillApron" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.65, 0.12)
+size = Vector3(1.72, 0.08, 0.06)
 material = ExtResource("1_trim")

@@ -5,11 +5,14 @@ const CANONICAL_FILES := [
 	"01_spawn_hero.png", "02_full_room_overview.png", "03_operator_workstation.png",
 	"04_chair_clearance.png", "05_telegraph_equipment.png", "06_north_window_idle.png",
 	"07_north_window_figure.png", "08_south_door.png", "09_routing_board.png",
-	"10_stove_storage.png", "11_real_morse_document.png", "12_scenario3_debug_telemetry.png"
+	"10_stove_storage.png", "11_real_morse_document.png", "12_scenario3_debug_telemetry.png",
+	"13_station_clock_detail.png", "14_duty_roster_hatch.png", "15_bookcase_records.png",
+	"16_storage_cabinet_detail.png"
 ]
 const COMPARISON_PAIRS := [
-	"01_spawn_hero.png", "02_full_room_overview.png",
-	"07_north_window_figure.png", "09_routing_board.png", "10_stove_storage.png"
+	"01_spawn_hero.png", "02_full_room_overview.png", "03_operator_workstation.png",
+	"05_telegraph_equipment.png", "07_north_window_figure.png", "08_south_door.png",
+	"09_routing_board.png", "10_stove_storage.png"
 ]
 
 var office_scene := preload("res://scenes/office/m1_office.tscn")
@@ -32,6 +35,12 @@ func _capture() -> void:
 		return
 	root.add_child(office_node)
 
+	# The intro card opens on full black over everything. Without this every
+	# canonical frame would be a black rectangle.
+	var intro := office_node.get_node_or_null("IntroCard") as IntroCard
+	if intro != null:
+		intro.skip_immediately()
+
 	var camera := office_node.get_node_or_null("Player/Head/Camera3D") as Camera3D
 	if camera == null:
 		_fail("Missing required production camera at Player/Head/Camera3D")
@@ -51,8 +60,14 @@ func _capture() -> void:
 		{"file": "09_routing_board.png", "position": Vector3(1.45, 1.42, -0.85), "target": Vector3(2.7, 1.34, -0.85), "fov": 50.0, "board_open": true},
 		{"file": "10_stove_storage.png", "position": Vector3(0.18, 1.55, -0.1), "target": Vector3(2.25, 0.9, 1.32), "fov": 70.0},
 		{"file": "11_real_morse_document.png", "position": Vector3(0.0, 1.65, 0.0), "target": Vector3(-1.75, 0.8, -0.9), "fov": 68.0, "document": true},
-		{"file": "12_scenario3_debug_telemetry.png", "position": Vector3(0.0, 1.65, 0.0), "target": Vector3(-1.75, 0.8, -0.9), "fov": 68.0, "debug": true}
+		{"file": "12_scenario3_debug_telemetry.png", "position": Vector3(0.0, 1.65, 0.0), "target": Vector3(-1.75, 0.8, -0.9), "fov": 68.0, "debug": true},
+		{"file": "13_station_clock_detail.png", "position": Vector3(-1.95, 2.05, 0.62), "target": Vector3(-2.84, 2.05, 0.62), "fov": 54.0},
+		{"file": "14_duty_roster_hatch.png", "position": Vector3(1.2, 1.45, 0.8), "target": Vector3(1.9, 1.45, 2.28), "fov": 65.0},
+		{"file": "15_bookcase_records.png", "position": Vector3(1.4, 1.25, 0.45), "target": Vector3(2.62, 0.95, 0.45), "fov": 58.0},
+		{"file": "16_storage_cabinet_detail.png", "position": Vector3(-1.4, 1.25, 1.4), "target": Vector3(-2.58, 0.95, 1.4), "fov": 58.0}
 	]
+
+
 	if diagnostic_only:
 		shots = shots.filter(func(shot: Dictionary) -> bool: return shot["file"] in ["01_spawn_hero.png", "02_full_room_overview.png", "07_north_window_figure.png", "09_routing_board.png", "10_stove_storage.png"])
 		# Explicit names keep the written review independent of canonical numbering.
@@ -116,18 +131,18 @@ func _capture_shot(camera: Camera3D, shot: Dictionary) -> bool:
 	if image == null or image.get_size() != REQUIRED_SIZE:
 		_fail("Invalid viewport image for %s: expected %s, got %s" % [shot["file"], REQUIRED_SIZE, image.get_size() if image != null else Vector2i.ZERO])
 		return false
-	var output_path := output_directory.path_join(shot["file"])
-	var save_error := image.save_png(output_path)
+	var abs_output_path := ProjectSettings.globalize_path(output_directory.path_join(shot["file"]))
+	var save_error := image.save_png(abs_output_path)
 	if save_error != OK:
-		_fail("save_png failed for %s with error %d" % [output_path, save_error])
+		_fail("save_png failed for %s with error %d" % [abs_output_path, save_error])
 		return false
-	var reloaded := Image.load_from_file(ProjectSettings.globalize_path(output_path))
+	var reloaded := Image.load_from_file(abs_output_path)
 	if reloaded == null or reloaded.get_size() != REQUIRED_SIZE or reloaded.get_width() <= 1 or reloaded.get_height() <= 1:
-		_fail("Corrupt or invalid PNG written: %s" % output_path)
+		_fail("Corrupt or invalid PNG written: %s" % abs_output_path)
 		return false
-	var digest := _sha256(output_path)
+	var digest := _sha256(abs_output_path)
 	if digest.is_empty() or captured_hashes.has(digest):
-		_fail("Missing or duplicate PNG SHA256 for %s" % output_path)
+		_fail("Missing or duplicate PNG SHA256 for %s" % abs_output_path)
 		return false
 	captured_hashes[digest] = shot["file"]
 	print("Captured ", shot["file"], "  ", reloaded.get_width(), "x", reloaded.get_height(), "  ", digest)
@@ -146,6 +161,10 @@ func _reset_visual_state() -> void:
 		inspector.visible = false
 
 func _activate_scenario_3_event() -> bool:
+	# Captures pose the scene by hand, so the shift clock must not advance under them.
+	if office_node.shift_director != null:
+		office_node.shift_director.enabled = false
+	office_node.session_controller.allow_key_start = true
 	office_node.load_scenario_by_index(2)
 	var key := office_node.session_controller.telegraph_key if office_node.session_controller != null else null
 	var interactable := key.get_interactable() if key != null else null
@@ -175,7 +194,8 @@ func _configure_output_directory() -> bool:
 	for argument in OS.get_cmdline_user_args():
 		if argument.begins_with("--stage="):
 			var stage := argument.trim_prefix("--stage=")
-			if stage not in ["before", "round_1", "final", "focused_round"]:
+			# "lighting_probe" is a scratch stage: it never overwrites accepted evidence.
+			if stage not in ["before", "round_1", "final", "focused_round", "lighting_probe"]:
 				_fail("Unknown evidence stage: %s" % stage)
 				return false
 			output_directory = "res://docs/art/m1_visual_acceptance/" + stage
@@ -205,7 +225,7 @@ func _write_comparisons() -> bool:
 		var comparison := Image.create(REQUIRED_SIZE.x * 2, REQUIRED_SIZE.y, false, Image.FORMAT_RGBA8)
 		comparison.blit_rect(before, Rect2i(Vector2i.ZERO, REQUIRED_SIZE), Vector2i.ZERO)
 		comparison.blit_rect(final, Rect2i(Vector2i.ZERO, REQUIRED_SIZE), Vector2i(REQUIRED_SIZE.x, 0))
-		var output_path := comparison_directory.path_join(filename.trim_suffix(".png") + "_before_final.png")
+		var output_path := ProjectSettings.globalize_path(comparison_directory.path_join(filename.trim_suffix(".png") + "_before_final.png"))
 		if comparison.save_png(output_path) != OK:
 			_fail("Could not save comparison for %s" % filename)
 			return false
@@ -218,8 +238,10 @@ func _sha256(path: String) -> String:
 	var context := HashingContext.new()
 	context.start(HashingContext.HASH_SHA256)
 	context.update(file.get_buffer(file.get_length()))
+	file.close()
 	return context.finish().hex_encode()
 
 func _fail(message: String) -> void:
 	printerr("CAPTURE ERROR: ", message)
 	quit(1)
+

@@ -35,7 +35,7 @@ disabled = false
 position = Vector3(0, 1.65, 0)
 
 [node name="Camera3D" type="Camera3D" parent="Head"]
-fov = 75.0
+fov = 80.0
 current = true
 
 [node name="InteractionRay" type="RayCast3D" parent="Head/Camera3D"]

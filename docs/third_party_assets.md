@@ -4,6 +4,27 @@ All third-party assets integrated into DEAD WIRE are verified for licensing comp
 
 > **PSX Pipeline Note:** In accordance with the True PSX Art Pipeline, all runtime visual assets (walls, floors, furniture, fixtures) are rendered exclusively using custom hand-authored low-poly geometry and palette-quantized textures (`materials/style_tests/textures/psx/`). All external third-party models and photogrammetry textures listed below are retained solely as downloaded reference (`runtime-instanced: no`).
 
+## Audio Provenance Record
+
+The M1 office ambience bed introduced **no third-party audio**. Every sample under
+`audio/sfx/` is synthesised in-project by `tools/generate_office_ambience.py`
+(NumPy noise shaping and additive synthesis, seeded per layer, deterministic on
+re-run). There is nothing here to licence, credit, or clear:
+
+| File | Source | Length |
+|---|---|---|
+| `audio/sfx/ambience/room_tone.wav` | `render_room_tone()` | 24.0 s stereo loop |
+| `audio/sfx/ambience/wind_window.wav` | `render_window_wind()` | 20.0 s mono loop |
+| `audio/sfx/ambience/stove_fire.wav` | `render_stove_fire()` | 18.0 s mono loop |
+| `audio/sfx/foley/clock_tick.wav` | `render_clock_tick()` | 0.13 s mono one-shot |
+
+**Open item:** `sounder_down.wav`, `sounder_up.wav`, and `footstep_wood.wav`
+predate this register and their origin is not documented anywhere in the
+repository. Their provenance must be established — or they must be regenerated —
+before any public release.
+
+---
+
 ## M1 Historical Redesign Record
 
 The M1 historical office redesign introduced no new third-party runtime assets.

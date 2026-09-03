@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Material" path="res://materials/style_tests/desk_wood.tres" id="1_wood"]
 [ext_resource type="Material" path="res://materials/style_tests/timber_trim.tres" id="2_trim"]
 [ext_resource type="Material" path="res://materials/style_tests/metal_brass_aged.tres" id="3_brass"]
+[ext_resource type="Material" path="res://materials/style_tests/paper_log.tres" id="4_paper"]
 
 [sub_resource type="BoxShape3D" id="CabinetSolid"]
 size = Vector3(0.92, 1.7, 0.42)
@@ -14,10 +15,40 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, 0)
 size = Vector3(0.9, 1.7, 0.4)
 material = ExtResource("2_trim")
 
+[node name="BasePlinth" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0.02)
+size = Vector3(0.94, 0.1, 0.44)
+material = ExtResource("2_trim")
+
 [node name="UpperRecords" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.35, 0.215)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.35, 0.21)
 size = Vector3(0.8, 0.52, 0.03)
 material = ExtResource("1_wood")
+
+[node name="PigeonholeDivider1" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.26, 1.35, 0.22)
+size = Vector3(0.02, 0.5, 0.05)
+material = ExtResource("2_trim")
+
+[node name="PigeonholeDivider2" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.35, 0.22)
+size = Vector3(0.02, 0.5, 0.05)
+material = ExtResource("2_trim")
+
+[node name="PigeonholeDivider3" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.26, 1.35, 0.22)
+size = Vector3(0.02, 0.5, 0.05)
+material = ExtResource("2_trim")
+
+[node name="PaperFolio1" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.13, 1.25, 0.23)
+size = Vector3(0.2, 0.15, 0.04)
+material = ExtResource("4_paper")
+
+[node name="PaperFolio2" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.13, 1.4, 0.23)
+size = Vector3(0.2, 0.18, 0.04)
+material = ExtResource("4_paper")
 
 [node name="RecordShelf" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.05, 0.23)
@@ -25,28 +56,28 @@ size = Vector3(0.84, 0.04, 0.06)
 material = ExtResource("1_wood")
 
 [node name="LeftDoor" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.22, 0.5, 0.22)
-size = Vector3(0.4, 0.82, 0.04)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.22, 0.52, 0.22)
+size = Vector3(0.4, 0.84, 0.04)
 material = ExtResource("1_wood")
 
 [node name="RightDoor" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.22, 0.5, 0.22)
-size = Vector3(0.4, 0.82, 0.04)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.22, 0.52, 0.22)
+size = Vector3(0.4, 0.84, 0.04)
 material = ExtResource("1_wood")
 
 [node name="LeftKnob" type="CSGSphere3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.04, 0.54, 0.27)
-radius = 0.025
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.04, 0.54, 0.26)
+radius = 0.02
 material = ExtResource("3_brass")
 
 [node name="RightKnob" type="CSGSphere3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.04, 0.54, 0.27)
-radius = 0.025
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.04, 0.54, 0.26)
+radius = 0.02
 material = ExtResource("3_brass")
 
 [node name="Crown" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.73, 0)
-size = Vector3(1.0, 0.08, 0.48)
+size = Vector3(0.98, 0.08, 0.46)
 material = ExtResource("2_trim")
 
 [node name="CabinetSolid" type="StaticBody3D" parent="."]
@@ -56,3 +87,4 @@ collision_mask = 1
 [node name="CollisionShape3D" type="CollisionShape3D" parent="CabinetSolid"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, 0)
 shape = SubResource("CabinetSolid")
+

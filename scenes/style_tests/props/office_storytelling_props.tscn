@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Material" path="res://materials/style_tests/desk_wood.tres" id="1_wood"]
 [ext_resource type="Material" path="res://materials/style_tests/timber_trim.tres" id="2_trim"]
@@ -6,50 +6,88 @@
 [ext_resource type="Material" path="res://materials/style_tests/metal_brass_aged.tres" id="4_brass"]
 [ext_resource type="Material" path="res://materials/style_tests/paper_log.tres" id="5_paper"]
 [ext_resource type="Material" path="res://materials/style_tests/routing_slate.tres" id="6_soot"]
+[ext_resource type="Material" path="res://materials/style_tests/clock_dial.tres" id="7_dial"]
 
 [node name="OfficeStorytellingProps" type="Node3D"]
 
 [node name="StationClockCase" type="CSGBox3D" parent="."]
 position = Vector3(-2.84, 2.16, 0.62)
-size = Vector3(0.05, 0.42, 0.42)
+size = Vector3(0.06, 0.44, 0.44)
 material = ExtResource("2_trim")
 
 [node name="StationClockFace" type="CSGBox3D" parent="."]
-position = Vector3(-2.875, 2.16, 0.62)
-size = Vector3(0.012, 0.29, 0.29)
-material = ExtResource("5_paper")
+position = Vector3(-2.805, 2.16, 0.62)
+size = Vector3(0.012, 0.32, 0.32)
+material = ExtResource("7_dial")
 
-[node name="ClockHandMinute" type="CSGBox3D" parent="."]
-position = Vector3(-2.884, 2.205, 0.62)
-size = Vector3(0.01, 0.012, 0.16)
-material = ExtResource("6_soot")
+[node name="ClockMarkXII" type="CSGBox3D" parent="."]
+position = Vector3(-2.799, 2.29, 0.62)
+size = Vector3(0.008, 0.035, 0.014)
+material = ExtResource("3_iron")
 
-[node name="ClockHandHour" type="CSGBox3D" parent="."]
-position = Vector3(-2.884, 2.14, 0.67)
-size = Vector3(0.01, 0.012, 0.11)
-material = ExtResource("6_soot")
+[node name="ClockMarkVI" type="CSGBox3D" parent="."]
+position = Vector3(-2.799, 2.03, 0.62)
+size = Vector3(0.008, 0.035, 0.014)
+material = ExtResource("3_iron")
+
+[node name="ClockMarkIII" type="CSGBox3D" parent="."]
+position = Vector3(-2.799, 2.16, 0.49)
+size = Vector3(0.008, 0.014, 0.035)
+material = ExtResource("3_iron")
+
+[node name="ClockMarkIX" type="CSGBox3D" parent="."]
+position = Vector3(-2.799, 2.16, 0.75)
+size = Vector3(0.008, 0.014, 0.035)
+material = ExtResource("3_iron")
+
+[node name="ClockHandMinute" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.795, 2.16, 0.62)
+
+[node name="Hand" type="CSGBox3D" parent="ClockHandMinute"]
+position = Vector3(0, 0.062, 0)
+size = Vector3(0.008, 0.124, 0.012)
+material = ExtResource("3_iron")
+
+[node name="ClockHandHour" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.792, 2.16, 0.62)
+
+[node name="Hand" type="CSGBox3D" parent="ClockHandHour"]
+position = Vector3(0, 0.042, 0)
+size = Vector3(0.011, 0.084, 0.012)
+material = ExtResource("3_iron")
+
+[node name="ClockPendulumBox" type="CSGBox3D" parent="."]
+position = Vector3(-2.84, 1.82, 0.62)
+size = Vector3(0.05, 0.26, 0.22)
+material = ExtResource("2_trim")
+
+[node name="ClockPendulumGlass" type="CSGBox3D" parent="."]
+position = Vector3(-2.81, 1.82, 0.62)
+size = Vector3(0.01, 0.18, 0.14)
+material = ExtResource("4_brass")
+
 
 [node name="WireRunA" type="CSGBox3D" parent="."]
-position = Vector3(-2.8, 2.48, -0.75)
-size = Vector3(0.025, 0.025, 2.45)
+position = Vector3(-2.82, 2.48, -0.75)
+size = Vector3(0.015, 0.015, 2.45)
 material = ExtResource("3_iron")
 
 [node name="WireRunB" type="CSGBox3D" parent="."]
-position = Vector3(-2.8, 2.37, -0.75)
-size = Vector3(0.018, 0.018, 2.45)
+position = Vector3(-2.82, 2.37, -0.75)
+size = Vector3(0.015, 0.015, 2.45)
 material = ExtResource("3_iron")
 
 [node name="PorcelainInsulatorA" type="CSGCylinder3D" parent="."]
-position = Vector3(-2.78, 2.48, -1.7)
-radius = 0.055
-height = 0.09
+transform = Transform3D(0, 1, 0, -1, 0, 0, 0, 0, 1, -2.82, 2.48, -1.7)
+radius = 0.035
+height = 0.07
 sides = 8
 material = ExtResource("5_paper")
 
 [node name="PorcelainInsulatorB" type="CSGCylinder3D" parent="."]
-position = Vector3(-2.78, 2.37, -0.35)
-radius = 0.045
-height = 0.075
+transform = Transform3D(0, 1, 0, -1, 0, 0, 0, 0, 1, -2.82, 2.37, -0.35)
+radius = 0.035
+height = 0.07
 sides = 8
 material = ExtResource("5_paper")
 
@@ -93,14 +131,26 @@ font_size = 14
 outline_size = 1
 outline_modulate = Color(0.9, 0.82, 0.62, 1)
 
+[node name="CoatRackBoard" type="CSGBox3D" parent="."]
+position = Vector3(0.62, 2.05, 2.27)
+size = Vector3(0.5, 0.12, 0.025)
+material = ExtResource("2_trim")
+
 [node name="CoatHook" type="CSGBox3D" parent="."]
-position = Vector3(0.62, 2.05, 2.25)
-size = Vector3(0.08, 0.15, 0.06)
+position = Vector3(0.62, 2.05, 2.24)
+size = Vector3(0.04, 0.1, 0.05)
 material = ExtResource("4_brass")
 
 [node name="OperatorCoat" type="CSGBox3D" parent="."]
-position = Vector3(0.62, 1.57, 2.24)
-size = Vector3(0.42, 0.8, 0.08)
+position = Vector3(0.62, 1.57, 2.23)
+size = Vector3(0.38, 0.82, 0.07)
+material = ExtResource("6_soot")
+
+[node name="OperatorHat" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0.62, 2.08, 2.21)
+radius = 0.14
+height = 0.08
+sides = 8
 material = ExtResource("6_soot")
 
 [node name="ServiceHatchFrame" type="CSGBox3D" parent="."]
@@ -130,17 +180,3 @@ height = 0.12
 sides = 8
 material = ExtResource("4_brass")
 
-[node name="SootAboveStove" type="CSGBox3D" parent="."]
-position = Vector3(2.885, 2.22, 1.55)
-size = Vector3(0.015, 0.72, 0.58)
-material = ExtResource("6_soot")
-
-[node name="DeskWear" type="CSGBox3D" parent="."]
-position = Vector3(-1.32, 0.012, -0.6)
-size = Vector3(0.72, 0.008, 0.66)
-material = ExtResource("6_soot")
-
-[node name="DoorWear" type="CSGBox3D" parent="."]
-position = Vector3(-1.6, 0.012, 1.92)
-size = Vector3(0.74, 0.008, 0.46)
-material = ExtResource("6_soot")

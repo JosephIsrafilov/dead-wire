@@ -163,6 +163,41 @@ static func build_display_text(world_data: Dictionary, knowledge_data: Dictionar
 
 	return "\n".join(lines)
 
+## Reads the shift clock without touching it. The inspector stays read-only.
+static func describe_shift(controller: TelegraphSessionController) -> String:
+	if controller == null or not controller.is_inside_tree():
+		return "M1 OFFICE PROTOTYPE"
+	var office := controller.get_parent()
+	if office == null:
+		return "M1 OFFICE PROTOTYPE"
+
+	var director := office.get_node_or_null("ShiftDirector") as ShiftDirector
+	if director == null or not director.enabled:
+		return "M1 OFFICE PROTOTYPE (manual session)"
+
+	var phase_name := "UNKNOWN"
+	match director.get_phase():
+		ShiftDirector.Phase.PRE_SHIFT: phase_name = "PRE_SHIFT (line not opened)"
+		ShiftDirector.Phase.WAITING: phase_name = "WAITING (line quiet)"
+		ShiftDirector.Phase.CALLING: phase_name = "CALLING"
+		ShiftDirector.Phase.RECEIVING: phase_name = "RECEIVING"
+		ShiftDirector.Phase.AWAITING_ROUTE: phase_name = "AWAITING_ROUTE (%.1fs left)" % director.get_route_seconds_remaining()
+		ShiftDirector.Phase.CLOSING: phase_name = "CLOSING"
+		ShiftDirector.Phase.SHIFT_OVER: phase_name = "SHIFT_OVER"
+
+	var station_time := ""
+	var props := office.get_node_or_null("OfficeStorytellingProps")
+	if props != null:
+		var clock := props.get_node_or_null("StationClock") as StationClock
+		if clock != null:
+			station_time = "  |  station %s" % clock.get_station_time_text()
+
+	return "SHIFT %s  |  slot %d%s
+  calls %d  missed %d  lapsed %d" % [
+		phase_name, director.get_slot_index(), station_time,
+		director.calls_sent_total, director.messages_missed, director.routes_defaulted
+	]
+
 static func build_session_display_text(world_data: Dictionary, knowledge_data: Dictionary, controller: TelegraphSessionController) -> String:
 	var scen: TelegraphScenarioData = controller.get_current_scenario() if controller != null else null
 	var scen_id := scen.scenario_id if scen != null else "NONE"
@@ -195,7 +230,7 @@ static func build_session_display_text(world_data: Dictionary, knowledge_data: D
 		"DEAD WIRE — M1 DEBUG",
 		"",
 		"CURRENT PHASE:",
-		"M1 OFFICE PROTOTYPE",
+		describe_shift(controller),
 		"",
 		"CURRENT TRANSMISSION:",
 		scen_id,

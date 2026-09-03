@@ -5,6 +5,9 @@ signal key_pressed()
 
 @export var is_enabled: bool = true
 @export var prompt_message: String = "Press Key (Answer Line)"
+@export var press_travel: float = 0.011
+@export var press_down_time: float = 0.05
+@export var press_up_time: float = 0.16
 
 var interactable: Interactable = null
 var lever_mesh: Node3D = null
@@ -65,19 +68,16 @@ func _animate_press() -> void:
 		lever_mesh = get_node_or_null("Lever") as Node3D
 	if lever_mesh == null or _is_animating:
 		return
-	_is_animating = true
-	lever_mesh.position.y = _orig_lever_y - 0.008
 
-	# Reset visual position after 150ms if inside tree
-	if is_inside_tree():
-		var tree := get_tree()
-		if tree != null:
-			var timer := tree.create_timer(0.15)
-			timer.timeout.connect(func():
-				if lever_mesh != null:
-					lever_mesh.position.y = _orig_lever_y
-				_is_animating = false
-			)
-	else:
+	if not is_inside_tree():
 		lever_mesh.position.y = _orig_lever_y
-		_is_animating = false
+		return
+
+	# A telegraph key is sprung: it goes down hard and comes back slower, with a
+	# little bounce off the contact. The old version snapped to an offset and sat
+	# there for 150 ms, which read as a glitch rather than a press.
+	_is_animating = true
+	var tween := create_tween()
+	tween.tween_property(lever_mesh, "position:y", _orig_lever_y - press_travel, press_down_time) 		.set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_OUT)
+	tween.tween_property(lever_mesh, "position:y", _orig_lever_y, press_up_time) 		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tween.tween_callback(func() -> void: _is_animating = false)

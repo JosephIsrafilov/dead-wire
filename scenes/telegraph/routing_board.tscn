@@ -1,29 +1,12 @@
-[gd_scene load_steps=10 format=3 uid="uid://b1route001"]
+[gd_scene load_steps=9 format=3 uid="uid://b1route001"]
 
 [ext_resource type="Script" path="res://scripts/telegraph/ui/routing_board.gd" id="1_route"]
 [ext_resource type="Script" path="res://scripts/interaction/interactable.gd" id="2_interact"]
-
-[sub_resource type="StandardMaterial3D" id="BoardWood"]
-albedo_color = Color(0.19, 0.105, 0.055, 1)
-roughness = 0.92
-
-[sub_resource type="StandardMaterial3D" id="BoardSlate"]
-albedo_color = Color(0.14, 0.19, 0.16, 1)
-roughness = 0.98
-
-[sub_resource type="StandardMaterial3D" id="RailBrass"]
-albedo_color = Color(0.42, 0.35, 0.24, 1)
-metallic = 0.82
-roughness = 0.72
-
-[sub_resource type="StandardMaterial3D" id="LabelPaper"]
-albedo_color = Color(0.34, 0.3, 0.2, 1)
-roughness = 0.96
-
-[sub_resource type="StandardMaterial3D" id="BlackIron"]
-albedo_color = Color(0.075, 0.08, 0.075, 1)
-metallic = 0.8
-roughness = 0.58
+[ext_resource type="Material" path="res://materials/style_tests/routing_slate.tres" id="3_slate"]
+[ext_resource type="Material" path="res://materials/style_tests/timber_trim.tres" id="4_wood"]
+[ext_resource type="Material" path="res://materials/style_tests/metal_brass_aged.tres" id="5_brass"]
+[ext_resource type="Material" path="res://materials/style_tests/paper_log.tres" id="6_paper"]
+[ext_resource type="Material" path="res://materials/style_tests/metal_oxidized.tres" id="7_iron"]
 
 [sub_resource type="BoxShape3D" id="BoardSolid"]
 size = Vector3(1.52, 1.4, 0.16)
@@ -37,155 +20,183 @@ script = ExtResource("1_route")
 [node name="BoardSurface" type="CSGBox3D" parent="."]
 position = Vector3(0, 0.72, 0)
 size = Vector3(1.4, 1.12, 0.075)
-material = SubResource("BoardSlate")
+material = ExtResource("3_slate")
 
 [node name="FrameTop" type="CSGBox3D" parent="."]
 position = Vector3(0, 1.34, 0)
 size = Vector3(1.56, 0.12, 0.14)
-material = SubResource("BoardWood")
+material = ExtResource("4_wood")
 
 [node name="FrameBottom" type="CSGBox3D" parent="."]
 position = Vector3(0, 0.1, 0)
 size = Vector3(1.56, 0.12, 0.14)
-material = SubResource("BoardWood")
+material = ExtResource("4_wood")
 
 [node name="FrameLeft" type="CSGBox3D" parent="."]
 position = Vector3(-0.72, 0.72, 0)
 size = Vector3(0.12, 1.32, 0.14)
-material = SubResource("BoardWood")
+material = ExtResource("4_wood")
 
 [node name="FrameRight" type="CSGBox3D" parent="."]
 position = Vector3(0.72, 0.72, 0)
 size = Vector3(0.12, 1.32, 0.14)
-material = SubResource("BoardWood")
+material = ExtResource("4_wood")
+
+[node name="CornerBracketTL" type="CSGBox3D" parent="."]
+position = Vector3(-0.68, 1.3, -0.075)
+size = Vector3(0.08, 0.08, 0.015)
+material = ExtResource("5_brass")
+
+[node name="CornerBracketTR" type="CSGBox3D" parent="."]
+position = Vector3(0.68, 1.3, -0.075)
+size = Vector3(0.08, 0.08, 0.015)
+material = ExtResource("5_brass")
+
+[node name="CornerBracketBL" type="CSGBox3D" parent="."]
+position = Vector3(-0.68, 0.14, -0.075)
+size = Vector3(0.08, 0.08, 0.015)
+material = ExtResource("5_brass")
+
+[node name="CornerBracketBR" type="CSGBox3D" parent="."]
+position = Vector3(0.68, 0.14, -0.075)
+size = Vector3(0.08, 0.08, 0.015)
+material = ExtResource("5_brass")
 
 [node name="MainRailNorth" type="CSGBox3D" parent="."]
 position = Vector3(0.02, 0.8, -0.075)
 size = Vector3(1.04, 0.025, 0.025)
-material = SubResource("RailBrass")
+material = ExtResource("5_brass")
 
 [node name="MainRailSouth" type="CSGBox3D" parent="."]
 position = Vector3(0.02, 0.66, -0.075)
 size = Vector3(1.04, 0.025, 0.025)
-material = SubResource("RailBrass")
+material = ExtResource("5_brass")
 
 [node name="SidingRailNorth" type="CSGBox3D" parent="."]
 transform = Transform3D(0.906308, 0.422618, 0, -0.422618, 0.906308, 0, 0, 0, 1, 0.05, 0.4, -0.075)
 size = Vector3(0.88, 0.025, 0.025)
-material = SubResource("RailBrass")
+material = ExtResource("5_brass")
 
 [node name="SidingRailSouth" type="CSGBox3D" parent="."]
 transform = Transform3D(0.906308, 0.422618, 0, -0.422618, 0.906308, 0, 0, 0, 1, 0.05, 0.26, -0.075)
 size = Vector3(0.88, 0.025, 0.025)
-material = SubResource("RailBrass")
+material = ExtResource("5_brass")
 
 [node name="SwitchMarker" type="CSGCylinder3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -0.4, 0.73, -0.115)
 radius = 0.045
 height = 0.035
 sides = 8
-material = SubResource("RailBrass")
+material = ExtResource("5_brass")
 
 [node name="RouteLever" type="CSGCylinder3D" parent="."]
 transform = Transform3D(0.819152, -0.573576, 0, 0.573576, 0.819152, 0, 0, 0, 1, -0.4, 0.59, -0.12)
 radius = 0.028
 height = 0.38
 sides = 8
-material = SubResource("BlackIron")
+material = ExtResource("7_iron")
 
 [node name="LeverBase" type="CSGCylinder3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -0.4, 0.46, -0.1)
 radius = 0.06
 height = 0.05
 sides = 8
-material = SubResource("RailBrass")
+material = ExtResource("5_brass")
 
 [node name="LeverGrip" type="CSGCylinder3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -0.51, 0.77, -0.12)
 radius = 0.04
 height = 0.12
 sides = 8
-material = SubResource("BoardWood")
+material = ExtResource("4_wood")
 
 [node name="HeaderPlaque" type="CSGBox3D" parent="."]
 position = Vector3(0.44, 1.09, -0.08)
-size = Vector3(0.3, 0.19, 0.025)
-material = SubResource("LabelPaper")
+size = Vector3(0.32, 0.16, 0.025)
+material = ExtResource("5_brass")
 
 [node name="MainLineLabel" type="CSGBox3D" parent="."]
-position = Vector3(0.4, 0.93, -0.08)
-size = Vector3(0.25, 0.1, 0.02)
-material = SubResource("LabelPaper")
+position = Vector3(0.44, 0.92, -0.08)
+size = Vector3(0.26, 0.09, 0.02)
+material = ExtResource("5_brass")
 
 [node name="SidingLabel" type="CSGBox3D" parent="."]
-position = Vector3(0.43, 0.47, -0.08)
-size = Vector3(0.26, 0.1, 0.02)
-material = SubResource("LabelPaper")
+position = Vector3(0.44, 0.47, -0.08)
+size = Vector3(0.26, 0.09, 0.02)
+material = ExtResource("5_brass")
+
 
 [node name="RailTieA" type="CSGBox3D" parent="."]
 position = Vector3(-0.18, 0.73, -0.07)
 size = Vector3(0.03, 0.22, 0.02)
-material = SubResource("BoardWood")
+material = ExtResource("4_wood")
 
 [node name="RailTieB" type="CSGBox3D" parent="."]
 position = Vector3(0.18, 0.73, -0.07)
 size = Vector3(0.03, 0.22, 0.02)
-material = SubResource("BoardWood")
+material = ExtResource("4_wood")
 
 [node name="RailTieC" type="CSGBox3D" parent="."]
 position = Vector3(0.55, 0.73, -0.07)
 size = Vector3(0.03, 0.22, 0.02)
-material = SubResource("BoardWood")
+material = ExtResource("4_wood")
 
 [node name="FastenerA" type="CSGCylinder3D" parent="."]
 position = Vector3(-0.56, 1.18, -0.1)
 radius = 0.026
 height = 0.025
 sides = 8
-material = SubResource("BlackIron")
+material = ExtResource("7_iron")
 
 [node name="FastenerB" type="CSGCylinder3D" parent="."]
 position = Vector3(0.56, 1.18, -0.1)
 radius = 0.026
 height = 0.025
 sides = 8
-material = SubResource("BlackIron")
+material = ExtResource("7_iron")
 
 [node name="FastenerC" type="CSGCylinder3D" parent="."]
 position = Vector3(-0.56, 0.25, -0.1)
 radius = 0.026
 height = 0.025
 sides = 8
-material = SubResource("BlackIron")
+material = ExtResource("7_iron")
 
 [node name="FastenerD" type="CSGCylinder3D" parent="."]
 position = Vector3(0.56, 0.25, -0.1)
 radius = 0.026
 height = 0.025
 sides = 8
-material = SubResource("BlackIron")
+material = ExtResource("7_iron")
+
 
 [node name="Label3D" type="Label3D" parent="."]
-position = Vector3(0.46, 1.13, -0.105)
+position = Vector3(0.44, 1.13, -0.105)
 rotation = Vector3(0, 3.141593, 0)
-pixel_size = 0.0017
+pixel_size = 0.0021
 modulate = Color(0.1, 0.09, 0.06, 1)
+outline_size = 1
+outline_modulate = Color(0.86, 0.74, 0.46, 1)
 text = "BLACK CREEK\nEAST DIV."
 font_size = 14
 
 [node name="LineLabel3D" type="Label3D" parent="."]
-position = Vector3(0.48, 0.93, -0.105)
+position = Vector3(0.44, 0.93, -0.105)
 rotation = Vector3(0, 3.141593, 0)
-pixel_size = 0.00155
+pixel_size = 0.0017
 modulate = Color(0.1, 0.09, 0.06, 1)
+outline_size = 1
+outline_modulate = Color(0.86, 0.74, 0.46, 1)
 text = "MAIN LINE"
 font_size = 12
 
 [node name="SidingLabel3D" type="Label3D" parent="."]
-position = Vector3(0.5, 0.49, -0.105)
+position = Vector3(0.44, 0.49, -0.105)
 rotation = Vector3(0, 3.141593, 0)
-pixel_size = 0.00155
+pixel_size = 0.0017
 modulate = Color(0.1, 0.09, 0.06, 1)
+outline_size = 1
+outline_modulate = Color(0.86, 0.74, 0.46, 1)
 text = "SIDING 4"
 font_size = 12
 

@@ -13,6 +13,10 @@ signal scenario_cycle_completed()
 @export var document_viewer: DocumentViewer = null
 @export var player_camera: Camera3D = null
 @export var player: PlayerController = null
+@export var shift_director: ShiftDirector = null
+@export var operator_seat: OperatorSeat = null
+@export var office_door: OfficeDoor = null
+@export var shift_end_card: ShiftEndCard = null
 
 @export var scenario_1: TelegraphScenarioData = preload("res://data/scenarios/m1_scenario_1_baseline.tres")
 @export var scenario_2: TelegraphScenarioData = preload("res://data/scenarios/m1_scenario_2_attention.tres")
@@ -54,6 +58,18 @@ func _bind_signals() -> void:
 		document_viewer = get_node_or_null("DocumentViewer") as DocumentViewer
 	if player == null:
 		player = get_node_or_null("Player") as PlayerController
+	if shift_director == null:
+		shift_director = get_node_or_null("ShiftDirector") as ShiftDirector
+	if operator_seat == null:
+		operator_seat = get_node_or_null("Chair/OperatorSeat") as OperatorSeat
+	if office_door == null:
+		office_door = get_node_or_null("SouthDoor/DoorController") as OfficeDoor
+	if shift_end_card == null:
+		shift_end_card = get_node_or_null("ShiftEndCard") as ShiftEndCard
+
+	var exit_trigger := get_node_or_null("OfficeExitTrigger") as Area3D
+	if exit_trigger != null and not exit_trigger.body_entered.is_connected(_on_exit_body_entered):
+		exit_trigger.body_entered.connect(_on_exit_body_entered)
 
 	if document_viewer != null:
 		if not document_viewer.document_opened.is_connected(_on_document_opened):
@@ -75,6 +91,10 @@ func _bind_signals() -> void:
 	var ledger := get_node_or_null("DispatchLedger") as DispatchLedger
 	if ledger != null and not ledger.ledger_inspected.is_connected(_on_ledger_inspected):
 		ledger.ledger_inspected.connect(_on_ledger_inspected)
+
+	var duty_sheet := get_node_or_null("DutySheet") as DutySheet
+	if duty_sheet != null and not duty_sheet.sheet_inspected.is_connected(_on_duty_sheet_inspected):
+		duty_sheet.sheet_inspected.connect(_on_duty_sheet_inspected)
 
 	if routing_board != null:
 		var board_act := routing_board.get_interactable()
@@ -106,6 +126,13 @@ func _get_scenario_list() -> Array[TelegraphScenarioData]:
 	if _scenario_list.is_empty():
 		_scenario_list = [scenario_1, scenario_2, scenario_3]
 	return _scenario_list
+
+func get_scenario_list() -> Array[TelegraphScenarioData]:
+	return _get_scenario_list()
+
+## True while a ShiftDirector owns the pacing of the night.
+func is_shift_directed() -> bool:
+	return shift_director != null and shift_director.enabled
 
 func load_scenario_by_index(idx: int) -> bool:
 	_bind_signals()
@@ -144,6 +171,8 @@ func get_current_scenario_index() -> int:
 	return _scenario_index
 
 func _on_key_pressed() -> void:
+	if is_shift_directed():
+		return
 	if session_controller != null and session_controller.get_state() == TelegraphSessionController.State.COMPLETE:
 		if not _cycle_completed and _scenario_index + 1 < _get_scenario_list().size():
 			advance_to_next_scenario.call_deferred()
@@ -183,6 +212,30 @@ func _on_ledger_inspected(text: String) -> void:
 	if document_viewer != null:
 		document_viewer.open_document("dispatch_ledger", "BLACK CREEK STATION — DISPATCH LEDGER", text, "[E / Esc] Put Down Ledger")
 
+## Stepping through the open door ends the slice. The record shown is Elias's
+## own duty sheet, so it reports what he knows, never what actually happened.
+func _on_exit_body_entered(body: Node) -> void:
+	_bind_signals()
+	if body != player or player == null:
+		return
+	if office_door == null or not office_door.is_open:
+		return
+	if shift_end_card == null or shift_end_card.is_running():
+		return
+
+	office_door.notify_player_left()
+	player.set_movement_locked(true)
+
+	var record := ""
+	var sheet := get_node_or_null("DutySheet") as DutySheet
+	if sheet != null:
+		record = sheet.get_sheet_text()
+	shift_end_card.play("END OF WATCH", record)
+
+func _on_duty_sheet_inspected(text: String) -> void:
+	if document_viewer != null:
+		document_viewer.open_document("duty_sheet", "OPERATOR'S DUTY SHEET", text, "[E / Esc] Put Down Duty Sheet")
+
 func _on_document_opened(_doc_id: String) -> void:
 	if player != null:
 		player.set_movement_locked(true)
@@ -198,6 +251,8 @@ func _on_document_closed(_doc_id: String) -> void:
 			ic.is_ui_blocked = false
 
 func _update_key_feedback() -> void:
+	if is_shift_directed():
+		return
 	var key: TelegraphKey = session_controller.telegraph_key if session_controller != null else null
 	if key == null:
 		return

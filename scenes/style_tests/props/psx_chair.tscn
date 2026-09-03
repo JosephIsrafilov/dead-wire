@@ -35,7 +35,7 @@ material = ExtResource("1_dark_wood")
 
 [node name="BackRailTop" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.84, -0.17)
-size = Vector3(0.36, 0.06, 0.03)
+size = Vector3(0.38, 0.06, 0.03)
 material = ExtResource("2_light_wood")
 
 [node name="BackRailMid" type="CSGBox3D" parent="."]
@@ -44,12 +44,17 @@ size = Vector3(0.36, 0.04, 0.02)
 material = ExtResource("1_dark_wood")
 
 [node name="BackSpindle1" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.08, 0.64, -0.17)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1, 0.64, -0.17)
 size = Vector3(0.02, 0.36, 0.02)
 material = ExtResource("1_dark_wood")
 
 [node name="BackSpindle2" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.08, 0.64, -0.17)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.64, -0.17)
+size = Vector3(0.02, 0.36, 0.02)
+material = ExtResource("1_dark_wood")
+
+[node name="BackSpindle3" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1, 0.64, -0.17)
 size = Vector3(0.02, 0.36, 0.02)
 material = ExtResource("1_dark_wood")
 
@@ -61,6 +66,16 @@ material = ExtResource("1_dark_wood")
 [node name="StretcherR" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.18, 0.16, 0)
 size = Vector3(0.02, 0.02, 0.34)
+material = ExtResource("1_dark_wood")
+
+[node name="StretcherF" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.14, 0.17)
+size = Vector3(0.34, 0.02, 0.02)
+material = ExtResource("1_dark_wood")
+
+[node name="StretcherB" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.18, -0.17)
+size = Vector3(0.34, 0.02, 0.02)
 material = ExtResource("1_dark_wood")
 
 [node name="ChairSolid" type="StaticBody3D" parent="."]

@@ -3,10 +3,10 @@
 [ext_resource type="Texture2D" path="res://materials/style_tests/textures/psx/psx_window_night_64.png" id="1_tex"]
 
 [resource]
-shading_mode = 2
+shading_mode = 1
 transparency = 1
-albedo_color = Color(0.9, 0.95, 1, 0.42)
+albedo_color = Color(0.42, 0.58, 0.82, 0.3)
 albedo_texture = ExtResource("1_tex")
-roughness = 0.35
-metallic_specular = 0.5
+roughness = 0.62
+metallic_specular = 0.14
 texture_filter = 0

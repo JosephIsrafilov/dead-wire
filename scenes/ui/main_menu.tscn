@@ -1,0 +1,161 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/main_menu.gd" id="1_menu"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_options"]
+bg_color = Color(0.06, 0.055, 0.05, 0.9)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.3, 0.26, 0.19, 1)
+
+[node name="MainMenu" type="Control"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_menu")
+
+[node name="Background" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.028, 0.026, 0.03, 1)
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
+custom_minimum_size = Vector2(420, 0)
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="TitleLabel" type="Label" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.87, 0.79, 0.6, 1)
+theme_override_font_sizes/font_size = 40
+text = "DEAD WIRE"
+horizontal_alignment = 1
+
+[node name="TaglineLabel" type="Label" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.52, 0.47, 0.38, 1)
+theme_override_font_sizes/font_size = 14
+text = "You hear one thing. Your hand writes another."
+horizontal_alignment = 1
+
+[node name="StationLabel" type="Label" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.34, 0.31, 0.26, 1)
+theme_override_font_sizes/font_size = 12
+text = "BLACK CREEK STATION — APRIL 1894"
+horizontal_alignment = 1
+
+[node name="Spacer" type="Control" parent="CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 26)
+layout_mode = 2
+
+[node name="BeginButton" type="Button" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 17
+text = "Begin the Watch"
+
+[node name="OptionsButton" type="Button" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "Options"
+
+[node name="OptionsPanel" type="PanelContainer" parent="CenterContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_options")
+
+[node name="OptionsBox" type="VBoxContainer" parent="CenterContainer/VBoxContainer/OptionsPanel"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="SensitivityRow" type="HBoxContainer" parent="CenterContainer/VBoxContainer/OptionsPanel/OptionsBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="CenterContainer/VBoxContainer/OptionsPanel/OptionsBox/SensitivityRow"]
+custom_minimum_size = Vector2(170, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.65, 0.54, 1)
+theme_override_font_sizes/font_size = 13
+text = "Mouse sensitivity"
+
+[node name="SensitivitySlider" type="HSlider" parent="CenterContainer/VBoxContainer/OptionsPanel/OptionsBox/SensitivityRow"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+size_flags_vertical = 4
+min_value = 0.5
+max_value = 8.0
+step = 0.1
+value = 3.0
+
+[node name="HeadBobCheck" type="CheckButton" parent="CenterContainer/VBoxContainer/OptionsPanel/OptionsBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.65, 0.54, 1)
+theme_override_font_sizes/font_size = 13
+button_pressed = true
+text = "Head movement while walking"
+
+[node name="MasterRow" type="HBoxContainer" parent="CenterContainer/VBoxContainer/OptionsPanel/OptionsBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="CenterContainer/VBoxContainer/OptionsPanel/OptionsBox/MasterRow"]
+custom_minimum_size = Vector2(170, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.65, 0.54, 1)
+theme_override_font_sizes/font_size = 13
+text = "Master volume"
+
+[node name="MasterSlider" type="HSlider" parent="CenterContainer/VBoxContainer/OptionsPanel/OptionsBox/MasterRow"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+size_flags_vertical = 4
+min_value = -40.0
+max_value = 6.0
+step = 1.0
+
+[node name="AmbienceRow" type="HBoxContainer" parent="CenterContainer/VBoxContainer/OptionsPanel/OptionsBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="CenterContainer/VBoxContainer/OptionsPanel/OptionsBox/AmbienceRow"]
+custom_minimum_size = Vector2(170, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.65, 0.54, 1)
+theme_override_font_sizes/font_size = 13
+text = "Room ambience"
+
+[node name="AmbienceSlider" type="HSlider" parent="CenterContainer/VBoxContainer/OptionsPanel/OptionsBox/AmbienceRow"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+size_flags_vertical = 4
+min_value = -40.0
+max_value = 6.0
+step = 1.0
+value = -4.0
+
+[node name="QuitButton" type="Button" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "Quit"
+
+[node name="FooterLabel" type="Label" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.28, 0.26, 0.22, 1)
+theme_override_font_sizes/font_size = 11
+text = "M1 office prototype"
+horizontal_alignment = 1

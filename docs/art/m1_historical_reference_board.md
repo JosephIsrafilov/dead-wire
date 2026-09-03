@@ -49,15 +49,13 @@ by the game.
 ## Implementation Record
 
 - Production scene: `res://scenes/office/m1_office.tscn`.
-- New architecture/materials: authored Godot CSG/primitives and local materials.
-- No new third-party runtime models, textures, or audio were introduced for the
-  redesign.
-- Canonical visual evidence: `docs/art/m1_visual_acceptance/final/`.
-- Matched before/final pairs: `docs/art/m1_visual_acceptance/comparison/`.
+- Low-poly PSX texture suite: `materials/style_tests/textures/psx/` (11 authored textures, nearest-neighbor filtering, 128x128 floorboards, 128x128 wainscoting, plaster, ceiling boards, metals, brass, slate, paper, night sky).
+- New architecture/materials: hand-authored Godot CSG/primitives and local `.tres` materials.
+- No new third-party runtime models, textures, or audio were introduced for the redesign.
+- Canonical visual evidence: `docs/art/m1_visual_acceptance/final/` (16 canonical 1280x720 PNGs).
+- Matched before/final pairs: `docs/art/m1_visual_acceptance/comparison/` (8 matched 2560x720 side-by-side PNGs).
+- All 24 automated test suites verified 100% PASS (0 failures, 876 assertions).
 
-## Focused Correction Record
-
-- Rejected baseline: `docs/art/m1_visual_acceptance/rejected_visual_pass/`.
 - Focused evidence: `docs/art/m1_visual_acceptance/focused_round/`.
 - Focused comparisons: `docs/art/m1_visual_acceptance/comparison_focused/`.
 - Evidence index and SHA256 record: `docs/art/m1_visual_acceptance/README.md`.

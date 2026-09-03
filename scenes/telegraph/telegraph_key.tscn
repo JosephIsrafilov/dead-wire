@@ -1,30 +1,28 @@
-[gd_scene format=3 uid="uid://b1telkey001"]
+[gd_scene load_steps=8 format=3 uid="uid://b1telkey001"]
 
 [ext_resource type="Script" path="res://scripts/telegraph/hardware/telegraph_key.gd" id="1_key"]
 [ext_resource type="Script" path="res://scripts/interaction/interactable.gd" id="2_interact"]
+[ext_resource type="Material" path="res://materials/style_tests/metal_brass_aged.tres" id="3_brass"]
+[ext_resource type="Material" path="res://materials/style_tests/timber_trim.tres" id="4_wood"]
+[ext_resource type="Material" path="res://materials/style_tests/metal_oxidized.tres" id="5_iron"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_brass"]
-albedo_color = Color(0.65, 0.52, 0.22, 1)
-metallic = 0.75
-roughness = 0.35
+[sub_resource type="BoxMesh" id="BoxMesh_wood_base"]
+material = ExtResource("4_wood")
+size = Vector3(0.09, 0.012, 0.19)
 
 [sub_resource type="BoxMesh" id="BoxMesh_base"]
-material = SubResource("StandardMaterial3D_brass")
-size = Vector3(0.08, 0.015, 0.18)
+material = ExtResource("3_brass")
+size = Vector3(0.075, 0.008, 0.16)
 
 [sub_resource type="BoxMesh" id="BoxMesh_arm"]
-material = SubResource("StandardMaterial3D_brass")
-size = Vector3(0.015, 0.015, 0.14)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_knob"]
-albedo_color = Color(0.1, 0.1, 0.1, 1)
-roughness = 0.5
+material = ExtResource("3_brass")
+size = Vector3(0.012, 0.012, 0.14)
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_knob"]
-material = SubResource("StandardMaterial3D_knob")
+material = ExtResource("5_iron")
 top_radius = 0.02
-bottom_radius = 0.02
-height = 0.015
+bottom_radius = 0.022
+height = 0.016
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_interact"]
 size = Vector3(0.12, 0.08, 0.22)
@@ -32,19 +30,47 @@ size = Vector3(0.12, 0.08, 0.22)
 [node name="TelegraphKey" type="Node3D"]
 script = ExtResource("1_key")
 
+[node name="WoodBase" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.006, 0)
+mesh = SubResource("BoxMesh_wood_base")
+
 [node name="BaseMesh" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0075, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.014, 0)
 mesh = SubResource("BoxMesh_base")
 
+[node name="TrunnionL" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.03, 0.026, 0.01)
+size = Vector3(0.01, 0.02, 0.02)
+material = ExtResource("3_brass")
+
+[node name="TrunnionR" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.03, 0.026, 0.01)
+size = Vector3(0.01, 0.02, 0.02)
+material = ExtResource("3_brass")
+
+[node name="BindingPost1" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.025, 0.025, -0.065)
+radius = 0.008
+height = 0.02
+sides = 8
+material = ExtResource("3_brass")
+
+[node name="BindingPost2" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.025, 0.025, -0.065)
+radius = 0.008
+height = 0.02
+sides = 8
+material = ExtResource("3_brass")
+
 [node name="Lever" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.022, 0)
 
 [node name="LeverArm" type="MeshInstance3D" parent="Lever"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0075, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.006, 0.005)
 mesh = SubResource("BoxMesh_arm")
 
 [node name="Knob" type="MeshInstance3D" parent="Lever"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, 0.06)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.018, 0.06)
 mesh = SubResource("CylinderMesh_knob")
 
 [node name="Interactable" type="Area3D" parent="."]
@@ -56,3 +82,4 @@ prompt_text = "Press Key (Answer Line)"
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Interactable"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.04, 0)
 shape = SubResource("BoxShape3D_interact")
+

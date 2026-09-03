@@ -8,6 +8,13 @@ signal sounder_clacked_up(event_index: int)
 @export var up_sound: AudioStream = preload("res://audio/sfx/telegraph/sounder_up.wav")
 @export var volume_db: float = -3.0
 
+## The armature bar physically drops onto the anvil on every mark and lifts on
+## every gap. Until this existed the game's centrepiece clicked audibly while
+## standing perfectly still, which is most of why the office read as a diorama.
+@export var armature_travel: float = 0.0042
+## Metres per second. A real sounder armature snaps; this crosses in about 14 ms.
+@export var armature_speed: float = 0.3
+
 var _player_down: AudioStreamPlayer3D = null
 var _player_up: AudioStreamPlayer3D = null
 
@@ -16,8 +23,32 @@ var up_clacks_played: int = 0
 var is_lever_down: bool = false
 var _connected_scheduler: MorseRuntimeScheduler = null
 
+var armature: Node3D = null
+var _armature_rest_y: float = 0.0
+var _armature_rest_captured: bool = false
+var _armature_target_y: float = 0.0
+
 func _ready() -> void:
 	_setup_audio_players()
+	_setup_armature()
+
+func _setup_armature() -> void:
+	if armature == null:
+		armature = get_node_or_null("ArmatureBar") as Node3D
+	# Capture rest exactly once. Re-reading it after the bar has dropped would
+	# treat the struck position as the new rest and the armature would walk down
+	# the anvil one mark at a time.
+	if armature != null and not _armature_rest_captured:
+		_armature_rest_captured = true
+		_armature_rest_y = armature.position.y
+		_armature_target_y = _armature_rest_y
+
+## Driven per frame rather than by a tween: a message is dozens of marks a
+## second and spawning a tween per click would thrash.
+func _process(delta: float) -> void:
+	if armature == null:
+		return
+	armature.position.y = move_toward(armature.position.y, _armature_target_y, armature_speed * delta)
 
 func _setup_audio_players() -> void:
 	if _player_down == null:
@@ -74,6 +105,9 @@ func reset_telemetry() -> void:
 func play_down(event_index: int = -1) -> void:
 	is_lever_down = true
 	down_clicks_played += 1
+	_setup_armature()
+	if armature != null:
+		_armature_target_y = _armature_rest_y - armature_travel
 	if _player_down != null and is_inside_tree():
 		_player_down.play()
 	sounder_clicked_down.emit(event_index)
@@ -81,6 +115,9 @@ func play_down(event_index: int = -1) -> void:
 func play_up(event_index: int = -1) -> void:
 	is_lever_down = false
 	up_clacks_played += 1
+	_setup_armature()
+	if armature != null:
+		_armature_target_y = _armature_rest_y
 	if _player_up != null and is_inside_tree():
 		_player_up.play()
 	sounder_clacked_up.emit(event_index)

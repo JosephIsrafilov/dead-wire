@@ -1,7 +1,12 @@
-[gd_resource type="StandardMaterial3D" format=3]
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3]
+
+[ext_resource type="Texture2D" path="res://materials/style_tests/textures/psx/psx_ceiling_boards_128.png" id="1_tex"]
 
 [resource]
-albedo_color = Color(0.31, 0.29, 0.25, 1)
-roughness = 1.0
+shading_mode = 1
+albedo_color = Color(0.58, 0.61, 0.65, 1)
+albedo_texture = ExtResource("1_tex")
+roughness = 0.95
 metallic_specular = 0.02
+uv1_scale = Vector3(2.5, 3.0, 1.0)
 texture_filter = 0

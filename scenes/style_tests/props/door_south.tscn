@@ -1,51 +1,91 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Material" path="res://materials/style_tests/timber_trim.tres" id="1_trim"]
 [ext_resource type="Material" path="res://materials/style_tests/desk_wood.tres" id="2_wood"]
 [ext_resource type="Material" path="res://materials/style_tests/metal_brass_aged.tres" id="3_brass"]
+[ext_resource type="Material" path="res://materials/style_tests/metal_oxidized.tres" id="4_iron"]
+
+[sub_resource type="BoxShape3D" id="DoorwayBlock"]
+size = Vector3(1.02, 2.15, 0.16)
 
 [node name="DoorSouth" type="Node3D"]
 
-[node name="DoorLeaf" type="CSGBox3D" parent="."]
-size = Vector3(0.9, 2.1, 0.05)
-material = ExtResource("2_wood")
-
 [node name="FrameTop" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.08, 0)
-size = Vector3(1.04, 0.08, 0.1)
+size = Vector3(1.08, 0.09, 0.12)
 material = ExtResource("1_trim")
 
 [node name="FrameLeft" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.48, 0, 0)
-size = Vector3(0.08, 2.1, 0.1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.49, 0, 0)
+size = Vector3(0.09, 2.15, 0.12)
 material = ExtResource("1_trim")
 
 [node name="FrameRight" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.48, 0, 0)
-size = Vector3(0.08, 2.1, 0.1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.49, 0, 0)
+size = Vector3(0.09, 2.15, 0.12)
 material = ExtResource("1_trim")
 
-[node name="Panel1" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.18, 0.48, 0.005)
+[node name="Threshold" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.04, -0.02)
+size = Vector3(0.98, 0.04, 0.14)
+material = ExtResource("1_trim")
+
+[node name="HingeTop" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.44, 0.72, -0.03)
+size = Vector3(0.025, 0.12, 0.015)
+material = ExtResource("4_iron")
+
+[node name="HingeBottom" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.44, -0.72, -0.03)
+size = Vector3(0.025, 0.12, 0.015)
+material = ExtResource("4_iron")
+
+[node name="Leaf" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.45, 0, 0)
+
+[node name="DoorLeaf" type="CSGBox3D" parent="Leaf"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.45, 0, 0)
+size = Vector3(0.9, 2.1, 0.05)
+material = ExtResource("2_wood")
+
+[node name="Panel1" type="CSGBox3D" parent="Leaf"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.26, 0.48, -0.005)
 size = Vector3(0.28, 0.75, 0.055)
 material = ExtResource("1_trim")
 
-[node name="Panel2" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.18, 0.48, 0.005)
+[node name="Panel2" type="CSGBox3D" parent="Leaf"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.64, 0.48, -0.005)
 size = Vector3(0.28, 0.75, 0.055)
 material = ExtResource("1_trim")
 
-[node name="Panel3" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.18, -0.48, 0.005)
+[node name="Panel3" type="CSGBox3D" parent="Leaf"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.26, -0.48, -0.005)
 size = Vector3(0.28, 0.75, 0.055)
 material = ExtResource("1_trim")
 
-[node name="Panel4" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.18, -0.48, 0.005)
+[node name="Panel4" type="CSGBox3D" parent="Leaf"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.64, -0.48, -0.005)
 size = Vector3(0.28, 0.75, 0.055)
 material = ExtResource("1_trim")
 
-[node name="Doorknob" type="CSGSphere3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.35, -0.05, 0.05)
-radius = 0.035
+[node name="EscutcheonPlate" type="CSGBox3D" parent="Leaf"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, -0.05, -0.032)
+size = Vector3(0.065, 0.18, 0.008)
 material = ExtResource("3_brass")
+
+[node name="Doorknob" type="CSGSphere3D" parent="Leaf"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, -0.02, -0.06)
+radius = 0.032
+material = ExtResource("3_brass")
+
+[node name="Keyhole" type="CSGBox3D" parent="Leaf"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, -0.09, -0.038)
+size = Vector3(0.012, 0.025, 0.006)
+material = ExtResource("4_iron")
+
+[node name="DoorBlocker" type="StaticBody3D" parent="."]
+collision_layer = 1
+collision_mask = 1
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="DoorBlocker"]
+shape = SubResource("DoorwayBlock")

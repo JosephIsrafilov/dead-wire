@@ -1,29 +1,23 @@
-[gd_scene format=3 uid="uid://b1sounder001"]
+[gd_scene load_steps=8 format=3 uid="uid://b1sounder001"]
 
 [ext_resource type="Script" path="res://scripts/telegraph/hardware/sounder_controller.gd" id="1_sounder"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wood"]
-albedo_color = Color(0.24, 0.14, 0.08, 1)
-roughness = 0.8
+[ext_resource type="Material" path="res://materials/style_tests/desk_wood.tres" id="2_wood"]
+[ext_resource type="Material" path="res://materials/style_tests/metal_brass_aged.tres" id="3_brass"]
+[ext_resource type="Material" path="res://materials/style_tests/metal_oxidized.tres" id="4_iron"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_base"]
-material = SubResource("StandardMaterial3D_wood")
+material = ExtResource("2_wood")
 size = Vector3(0.12, 0.02, 0.16)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_brass"]
-albedo_color = Color(0.65, 0.52, 0.22, 1)
-metallic = 0.75
-roughness = 0.35
-
 [sub_resource type="CylinderMesh" id="CylinderMesh_coil"]
-material = SubResource("StandardMaterial3D_brass")
-top_radius = 0.015
-bottom_radius = 0.015
-height = 0.04
+material = ExtResource("4_iron")
+top_radius = 0.016
+bottom_radius = 0.016
+height = 0.045
 
 [sub_resource type="BoxMesh" id="BoxMesh_anvil"]
-material = SubResource("StandardMaterial3D_brass")
-size = Vector3(0.01, 0.05, 0.08)
+material = ExtResource("3_brass")
+size = Vector3(0.016, 0.055, 0.08)
 
 [node name="Sounder" type="Node3D"]
 script = ExtResource("1_sounder")
@@ -40,6 +34,33 @@ mesh = SubResource("CylinderMesh_coil")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.025, 0.04, -0.02)
 mesh = SubResource("CylinderMesh_coil")
 
+[node name="CoilTopL" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.025, 0.063, -0.02)
+radius = 0.019
+height = 0.006
+sides = 10
+material = ExtResource("3_brass")
+
+[node name="CoilTopR" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.025, 0.063, -0.02)
+radius = 0.019
+height = 0.006
+sides = 10
+material = ExtResource("3_brass")
+
 [node name="Anvil" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.045, 0.03)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.048, 0.03)
 mesh = SubResource("BoxMesh_anvil")
+
+[node name="ArmatureBar" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.065, 0.005)
+size = Vector3(0.014, 0.01, 0.08)
+material = ExtResource("3_brass")
+
+[node name="SounderScrew" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.08, 0.04)
+radius = 0.006
+height = 0.018
+sides = 8
+material = ExtResource("3_brass")
+

@@ -1,8 +1,9 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Material" path="res://materials/style_tests/desk_wood.tres" id="1_wood"]
 [ext_resource type="Material" path="res://materials/style_tests/timber_trim.tres" id="2_dark_wood"]
 [ext_resource type="Material" path="res://materials/style_tests/metal_brass_aged.tres" id="4_brass"]
+[ext_resource type="Material" path="res://materials/style_tests/metal_oxidized.tres" id="5_iron"]
 [ext_resource type="PackedScene" path="res://scenes/style_tests/props/oil_lamp_lowpoly.tscn" id="6_lamp"]
 
 [sub_resource type="BoxShape3D" id="DeskSolid"]
@@ -20,23 +21,67 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.63, -0.33)
 size = Vector3(1.48, 0.08, 0.05)
 material = ExtResource("2_dark_wood")
 
+[node name="OrganizerShelf" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.15, 0.88, 0.28)
+size = Vector3(0.95, 0.24, 0.12)
+material = ExtResource("2_dark_wood")
+
+[node name="OrganizerDivider1" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.45, 0.88, 0.28)
+size = Vector3(0.02, 0.22, 0.14)
+material = ExtResource("1_wood")
+
+[node name="OrganizerDivider2" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.15, 0.88, 0.28)
+size = Vector3(0.02, 0.22, 0.14)
+material = ExtResource("1_wood")
+
+[node name="OrganizerDivider3" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.15, 0.88, 0.28)
+size = Vector3(0.02, 0.22, 0.14)
+material = ExtResource("1_wood")
+
+[node name="PenTray" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.52, 0.755, -0.18)
+size = Vector3(0.18, 0.015, 0.06)
+material = ExtResource("2_dark_wood")
+
+[node name="Inkwell" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.52, 0.77, -0.08)
+radius = 0.025
+height = 0.04
+sides = 8
+material = ExtResource("5_iron")
+
+[node name="InkwellCap" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.52, 0.795, -0.08)
+radius = 0.016
+height = 0.012
+sides = 8
+material = ExtResource("4_brass")
+
+[node name="WireLeadBlock" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.62, 0.765, 0.3)
+size = Vector3(0.08, 0.03, 0.06)
+material = ExtResource("2_dark_wood")
+
 [node name="LegFL" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.68, 0.35, 0.31)
-size = Vector3(0.08, 0.7, 0.08)
-material = ExtResource("2_dark_wood")
-
-[node name="LegFR" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.68, 0.35, 0.31)
-size = Vector3(0.08, 0.7, 0.08)
-material = ExtResource("2_dark_wood")
-
-[node name="LegBL" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.68, 0.35, -0.31)
 size = Vector3(0.08, 0.7, 0.08)
 material = ExtResource("2_dark_wood")
 
-[node name="LegBR" type="CSGBox3D" parent="."]
+[node name="LegFR" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.68, 0.35, -0.31)
+size = Vector3(0.08, 0.7, 0.08)
+material = ExtResource("2_dark_wood")
+
+[node name="LegBL" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.68, 0.35, 0.31)
+size = Vector3(0.08, 0.7, 0.08)
+material = ExtResource("2_dark_wood")
+
+[node name="LegBR" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.68, 0.35, 0.31)
 size = Vector3(0.08, 0.7, 0.08)
 material = ExtResource("2_dark_wood")
 
@@ -46,21 +91,22 @@ size = Vector3(0.38, 0.48, 0.65)
 material = ExtResource("2_dark_wood")
 
 [node name="DrawerKnob1" type="CSGCylinder3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.48, 0.58, 0.34)
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.48, 0.58, -0.34)
 radius = 0.02
 height = 0.04
 sides = 8
 material = ExtResource("4_brass")
 
 [node name="DrawerKnob2" type="CSGCylinder3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.48, 0.38, 0.34)
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.48, 0.38, -0.34)
 radius = 0.02
 height = 0.04
 sides = 8
 material = ExtResource("4_brass")
 
 [node name="OilLamp" parent="." instance=ExtResource("6_lamp")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0.75, -0.15)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.55, 0.75, 0.22)
+
 
 [node name="DeskSolid" type="StaticBody3D" parent="."]
 collision_layer = 1

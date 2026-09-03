@@ -29,6 +29,12 @@ func _init() -> void:
 	# Ensure scheduler does not auto-advance in pure step test
 	office.session_controller.scheduler.auto_process = false
 
+	# This suite covers the manual key-driven session API. Shift pacing is a
+	# separate layer with its own suite, so stand the director down here.
+	office.shift_director.enabled = false
+	office.session_controller.allow_key_start = true
+	office.load_scenario_by_index(0)
+
 	# Track cycle completion signals
 	var cycle_completed_fired: Array[int] = [0]
 	office.scenario_cycle_completed.connect(func(): cycle_completed_fired[0] += 1)
