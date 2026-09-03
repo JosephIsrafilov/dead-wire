@@ -107,14 +107,25 @@ func _init() -> void:
 	board_act.interact()
 	if not assert_condition(board.is_open, "Routing Board is open via interact()"): return
 	if not assert_condition(board.is_awaiting_route, "Routing Board is_awaiting_route is true"): return
+	var player_interaction := office.player.get_node_or_null("InteractionController") as InteractionController
+	if not assert_condition(office.player.is_movement_locked and office.player.is_look_locked, "Routing Board locks player movement and look while open"): return
+	if not assert_condition(player_interaction != null and player_interaction.is_ui_blocked, "Routing Board blocks world interactions while open"): return
 
 	var ev_clear_east := InputEventKey.new()
 	ev_clear_east.physical_keycode = KEY_1
 	ev_clear_east.pressed = true
 	ev_clear_east.echo = false
+	var ev_clear_east_echo := InputEventKey.new()
+	ev_clear_east_echo.physical_keycode = KEY_1
+	ev_clear_east_echo.pressed = true
+	ev_clear_east_echo.echo = true
+	board._input(ev_clear_east_echo)
+	if not assert_condition(board.is_open and not board.has_submitted_this_session, "Routing Board ignores echoed route input"): return
 	board._input(ev_clear_east)
 
 	if not assert_condition(not board.is_open, "Routing Board closed after selection"): return
+	if not assert_condition(not office.player.is_movement_locked and not office.player.is_look_locked, "Closing Routing Board restores player control"): return
+	if not assert_condition(player_interaction != null and not player_interaction.is_ui_blocked, "Closing Routing Board restores world interactions"): return
 	if not assert_condition(office.session_controller.get_state() == TelegraphSessionController.State.COMPLETE, "Routing decision 1 completes Scenario 1"): return
 	if not assert_condition(world.get_fact("train_17_routed_clear") == true, "WorldState recorded train_17_routed_clear = true"): return
 

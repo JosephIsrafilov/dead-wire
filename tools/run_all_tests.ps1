@@ -36,7 +36,7 @@ foreach ($suite in $suites) {
     $oldErrorActionPreference = $ErrorActionPreference
     $ErrorActionPreference = "Continue"
     try {
-        $output = (& $godotBin --headless --editor --path $projectDir.Path --script "res://$relative" 2>&1 | Out-String)
+        $output = (& $godotBin --headless --path $projectDir.Path --script "res://$relative" 2>&1 | Out-String)
     } finally {
         $ErrorActionPreference = $oldErrorActionPreference
     }

@@ -124,7 +124,18 @@ func _run() -> void:
 	var offset := absf(rad_to_deg(wrapf(player.rotation.y - deg_to_rad(seat.seat_facing_degrees), -PI, PI)))
 	if not assert_condition(offset <= seat.look_half_arc_degrees + 0.5, "Seated look is clamped to the arc, got %.1f deg" % offset): return
 
-	# 10. Standing restores everything.
+	# 10. Closing a document restores seated movement/look semantics. The viewer
+	#    temporarily locks both axes, but reading at the desk must not unlock feet
+	#    or leave the head frozen when it closes.
+	var viewer := office.document_viewer
+	if not assert_condition(viewer != null, "Office exposes the document viewer"): return
+	viewer.open_document("player_body_seated_doc", "TEST", "seated document")
+	if not assert_condition(player.is_movement_locked and player.is_look_locked, "Opening a document locks seated movement and look"): return
+	viewer.close_document()
+	if not assert_condition(player.is_movement_locked, "Closing a seated document keeps walking locked"): return
+	if not assert_condition(not player.is_look_locked, "Closing a seated document restores free look"): return
+
+	# 11. Standing restores everything.
 	if not assert_condition(seat.stand(), "Operator stands"): return
 	if not assert_condition(not seat.is_seated and not player.is_seated, "Standing clears the seated state"): return
 	if not assert_condition(not player.is_movement_locked, "Standing restores walking"): return
@@ -132,7 +143,7 @@ func _run() -> void:
 	seat._set_head_height(standing_eye)
 	if not assert_condition(absf(player.head_rest_position.y - standing_eye) < 0.001, "Standing eye height is restored"): return
 
-	# 11. Sitting is idempotent and standing twice is harmless.
+	# 12. Sitting is idempotent and standing twice is harmless.
 	if not assert_condition(seat.sit(), "Can sit again"): return
 	if not assert_condition(not seat.sit(), "Sitting while seated is a no-op"): return
 	if not assert_condition(seat.stand(), "Can stand again"): return

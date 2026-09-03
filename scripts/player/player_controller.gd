@@ -15,6 +15,7 @@ extends CharacterBody3D
 ## exported, and the bob can be switched off entirely.
 
 signal seated_changed(is_seated: bool)
+signal footstep_played(step_index: int)
 
 @export var move_speed: float = 3.0
 @export var mouse_sensitivity: float = 0.003
@@ -42,6 +43,13 @@ signal seated_changed(is_seated: bool)
 @export var urgency_bob_multiplier: float = 1.35
 @export var urgency_breathing_multiplier: float = 2.1
 
+## Footsteps are distance-based so the sound stays tied to the floor even when
+## acceleration or frame rate changes. One sample is pitched in a short cycle
+## to keep the bed tactile without pretending there is a full foley library.
+@export var footstep_step_distance: float = 1.05
+@export var footstep_min_distance: float = 0.001
+@export var footstep_stream: AudioStream = preload("res://audio/sfx/foley/footstep_wood.wav")
+
 @export var settle_distance: float = 0.022
 @export var settle_duration: float = 0.22
 
@@ -55,6 +63,7 @@ var is_seated: bool = false
 
 @onready var head: Node3D = $Head
 @onready var camera: Camera3D = $Head/Camera3D
+@onready var footstep_player: AudioStreamPlayer3D = get_node_or_null("FootstepPlayer") as AudioStreamPlayer3D
 
 var head_rest_position: Vector3 = Vector3.ZERO
 
@@ -64,6 +73,8 @@ var _settle_offset: float = 0.0
 var _was_moving: bool = false
 var _spawn_transform: Transform3D = Transform3D.IDENTITY
 var _urgency: float = 0.0
+var _footstep_distance: float = 0.0
+var _footstep_index: int = 0
 
 ## Yaw clamp used while seated, in radians. Negative range means unclamped.
 var _yaw_limit_centre: float = 0.0
@@ -76,6 +87,8 @@ func _ready() -> void:
 	if head != null:
 		head_rest_position = head.position
 	_spawn_transform = global_transform if is_inside_tree() else transform
+	if footstep_player != null and footstep_player.stream == null:
+		footstep_player.stream = footstep_stream
 
 ## Locks walking and looking. Used by the modal document viewer.
 func set_movement_locked(locked: bool) -> void:
@@ -89,6 +102,9 @@ func set_movement_locked(locked: bool) -> void:
 ## operator cannot walk away, but he can still look around the room.
 func set_walk_locked(locked: bool) -> void:
 	is_movement_locked = locked
+	# This API is deliberately the seated variant of set_movement_locked:
+	# callers may arrive here after a modal UI has locked both axes.
+	is_look_locked = false
 	if locked:
 		velocity.x = 0.0
 		velocity.z = 0.0
@@ -158,8 +174,31 @@ func _physics_process(delta: float) -> void:
 	velocity.x = move_toward(velocity.x, target.x, rate * delta)
 	velocity.z = move_toward(velocity.z, target.z, rate * delta)
 
+	var position_before_move := global_position
 	move_and_slide()
+	var moved_distance := Vector2(global_position.x - position_before_move.x, global_position.z - position_before_move.z).length()
+	_advance_footsteps(moved_distance)
 	_update_head(delta)
+
+## Separated from physics so the cadence can be tested without relying on an
+## input device or a particular frame rate.
+func _advance_footsteps(moved_distance: float) -> void:
+	if is_seated or is_movement_locked or not is_on_floor() or moved_distance < footstep_min_distance:
+		return
+	if footstep_step_distance <= 0.0:
+		return
+	_footstep_distance += moved_distance
+	while _footstep_distance >= footstep_step_distance:
+		_footstep_distance -= footstep_step_distance
+		_play_footstep()
+
+func _play_footstep() -> void:
+	var index := _footstep_index
+	_footstep_index = (_footstep_index + 1) % 3
+	if footstep_player != null and footstep_player.stream != null and is_inside_tree():
+		footstep_player.pitch_scale = [0.96, 1.03, 0.99][index]
+		footstep_player.play()
+	footstep_played.emit(index)
 
 func _recover_from_fall() -> void:
 	velocity = Vector3.ZERO

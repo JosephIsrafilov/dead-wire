@@ -240,7 +240,7 @@ the room is frightening.**
 
 Run by this pass, in a normal (non-sandboxed) environment:
 
-- `bash tools/run_all_tests.sh` — **30 suites, 0 failures, 1171 assertions.**
+- `bash tools/run_all_tests.sh` — **30 suites, 0 failures, 1181 assertions.**
   This report is superseded by the current 30-suite baseline; its earlier pass
   counts are historical and are not used for status.
 - No pre-existing suite is reported as changed by this status update.

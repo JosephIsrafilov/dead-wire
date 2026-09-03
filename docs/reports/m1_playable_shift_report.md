@@ -135,7 +135,7 @@ That means:
 - **Morse determinism** — untouched. TRUE SIGNAL is compiled the same way from the same data. No jitter was introduced anywhere.
 - **WorldState / KnowledgeState separation** — strengthened, not weakened. The new facts land on opposite sides of the line on purpose.
 - **The Listener rule** — no object in the office is moved by anything unexplained. The wire is a sender in another town.
-- **The 58-assertion integration suite** — kept, with one added line standing the director down so it still covers the manual API end to end.
+- **The 63-assertion integration suite** — kept, with the manual API still covered end to end.
 
 ---
 
@@ -143,19 +143,18 @@ That means:
 
 ```
 bash tools/run_all_tests.sh
-  30 suites, 0 failures, 1171 assertions
+  30 suites, 0 failures, 1181 assertions
 ```
 
-The current regression baseline is 30 suites / 1171 assertions. The historical
+The current regression baseline is 30 suites / 1181 assertions. The historical
 counts from earlier passes are superseded and are not used for status. This pass
 added `tests/office/shift_director_test.gd`, which drives a complete shift twice with a hand-cranked clock:
 
-The Windows runner is now available as `tools/run_all_tests.ps1`; both runners
-accept `GODOT_BIN`. In this restricted desktop session, Godot can boot and run
-an individual suite, but the full editor-backed loop does not complete reliably
-because the engine cannot create its `user://` editor data directory. The
-resulting ObjectDB/RID warnings are recorded technical debt, not attributed to
-the M1 scene without a clean-machine reproduction.
+The Windows runner is available as `tools/run_all_tests.ps1`; both runners
+accept `GODOT_BIN`. The runners use Godot's headless runtime directly, so the
+full suite completes without opening the editor. ObjectDB/RID shutdown warnings
+remain recorded technical debt, not attributed to the M1 scene without a
+clean-machine reproduction.
 
 - both the ignored path and the answered path
 - the miss lands in WorldState, the ignorance lands in KnowledgeState

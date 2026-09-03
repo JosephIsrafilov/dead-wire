@@ -98,6 +98,8 @@ func play(title: String, record: String, footer: String = "") -> void:
 	visible = true
 	# The operator has walked out; he needs a cursor to decide what happens next.
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	if again_button != null:
+		again_button.grab_focus()
 	if not is_inside_tree():
 		_snap_to_end()
 		return

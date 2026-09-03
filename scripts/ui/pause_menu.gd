@@ -92,7 +92,7 @@ func _connect_controls() -> void:
 		quit_button.pressed.connect(_on_quit)
 
 func _input(event: InputEvent) -> void:
-	if not event.is_action_pressed("ui_cancel"):
+	if event.is_echo() or not event.is_action_pressed("ui_cancel"):
 		return
 	# A document in hand takes the key first: Escape should put the paper down
 	# before it stops the shift.
@@ -112,6 +112,9 @@ func pause() -> void:
 	if is_paused:
 		return
 	is_paused = true
+	if player != null:
+		player.velocity.x = 0.0
+		player.velocity.z = 0.0
 	visible = true
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	if is_inside_tree():
@@ -128,6 +131,10 @@ func resume() -> void:
 	if is_inside_tree():
 		get_tree().paused = false
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	if player != null:
+		var interaction := player.get_node_or_null("InteractionController") as InteractionController
+		if interaction != null:
+			interaction.refresh_prompt()
 	_save()
 	resumed.emit()
 

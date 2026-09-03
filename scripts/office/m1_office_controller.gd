@@ -4,7 +4,7 @@ extends Node3D
 signal scenario_cycle_completed()
 
 @export var enable_psx_rendering: bool = true
-@export var render_scale: float = 0.5
+@export var render_scale: float = 0.75
 
 @export var session_controller: TelegraphSessionController = null
 @export var routing_board: RoutingBoard = null
@@ -104,6 +104,10 @@ func _bind_signals() -> void:
 				board_act.interacted.connect(routing_board._on_interacted)
 		if not routing_board.routing_action_selected.is_connected(_on_routing_action):
 			routing_board.routing_action_selected.connect(_on_routing_action)
+		if not routing_board.board_opened.is_connected(_on_routing_board_opened):
+			routing_board.board_opened.connect(_on_routing_board_opened)
+		if not routing_board.board_closed.is_connected(_on_routing_board_closed):
+			routing_board.board_closed.connect(_on_routing_board_closed)
 
 	if session_controller != null:
 		if not session_controller.attention_event_triggered.is_connected(_on_attention_event):
@@ -181,6 +185,27 @@ func _on_routing_action(action: String) -> void:
 	if session_controller != null:
 		session_controller.submit_routing_decision(action)
 
+func _on_routing_board_opened() -> void:
+	if player == null:
+		return
+	player.set_movement_locked(true)
+	var interaction := player.get_node_or_null("InteractionController") as InteractionController
+	if interaction != null:
+		interaction.is_ui_blocked = true
+		interaction.refresh_prompt()
+
+func _on_routing_board_closed() -> void:
+	if player == null:
+		return
+	if operator_seat != null and operator_seat.is_seated:
+		player.set_walk_locked(true)
+	else:
+		player.set_movement_locked(false)
+	var interaction := player.get_node_or_null("InteractionController") as InteractionController
+	if interaction != null:
+		interaction.is_ui_blocked = false
+		interaction.refresh_prompt()
+
 func _on_attention_event(event_id: String) -> void:
 	if event_id == "door_footsteps" and door_attention != null:
 		door_attention.trigger_footsteps()
@@ -197,6 +222,8 @@ func _on_session_completed(_scen: TelegraphScenarioData) -> void:
 
 func _on_session_state_changed(new_state: TelegraphSessionController.State, _prev_state: TelegraphSessionController.State) -> void:
 	if routing_board != null:
+		if new_state != TelegraphSessionController.State.AWAITING_ROUTE and routing_board.is_open:
+			routing_board.close_board()
 		routing_board.set_awaiting_route(new_state == TelegraphSessionController.State.AWAITING_ROUTE)
 	_update_key_feedback()
 
@@ -242,13 +269,20 @@ func _on_document_opened(_doc_id: String) -> void:
 		var ic := player.get_node_or_null("InteractionController") as InteractionController
 		if ic != null:
 			ic.is_ui_blocked = true
+			ic.refresh_prompt()
 
 func _on_document_closed(_doc_id: String) -> void:
 	if player != null:
-		player.set_movement_locked(false)
+		if operator_seat != null and operator_seat.is_seated:
+			# Reading at the desk must not let WASD pull the capsule out of the
+			# chair. Looking remains free, as it is during a normal seated watch.
+			player.set_walk_locked(true)
+		else:
+			player.set_movement_locked(false)
 		var ic := player.get_node_or_null("InteractionController") as InteractionController
 		if ic != null:
 			ic.is_ui_blocked = false
+			ic.refresh_prompt()
 
 func _update_key_feedback() -> void:
 	if is_shift_directed():

@@ -1,6 +1,6 @@
 # M1 Visual Acceptance Correction Report — Historical Art-Direction Rebuild
 
-> **Status superseded (2026-09-03):** The current regression baseline is **30 test suites, 0 failures, 1171 assertions**. This report records the art pass and is not the authoritative status source.
+> **Status superseded (2026-09-03):** The current regression baseline is **30 test suites, 0 failures, 1181 assertions**. This report records the art pass and is not the authoritative status source.
 
 ## Scope
 
@@ -25,9 +25,9 @@ All gameplay systems, Morse timing, encoder, scheduler, scenarios, WorldState, K
 
 ## Technical & Automated Verification
 
-- **Current regression baseline**: 30/30 suites PASSED (0 failures, 0 errors, 1171 assertions).
-- **Integration Suite**: 58 assertions PASS.
-- **Presentation Structure Suite**: 22 assertions PASS.
+- **Current regression baseline**: 30/30 suites PASSED (0 failures, 0 errors, 1181 assertions).
+- **Integration Suite**: 63 assertions PASS.
+- **Presentation Structure Suite**: 23 assertions PASS.
 - **Spatial Metrics Suite**: PASS (zero furniture intersections, player clearance paths verified, desk document separation preserved, chair orientation and contact verified).
 - **Godot Headless/Console Launch**: Exit Code 0.
 - **16 Canonical Final PNGs**: Rendered at 1280x720 via production Forward+ (D3D12) engine pipeline with unique SHA256 hashes.

@@ -202,13 +202,13 @@ first atmosphere test, fixed by capturing rest exactly once.
 
 ```
 bash tools/run_all_tests.sh
-  30 suites, 0 failures, 1171 assertions
+  30 suites, 0 failures, 1181 assertions
 ```
 
-The current regression baseline is 30 suites / 1171 assertions. The historical
+The current regression baseline is 30 suites / 1181 assertions. The historical
 counts from earlier passes are superseded and are not used for status. New:
 
-- `tests/player/player_body_test.gd` (39) — lock separation, decay, comfort ceiling on all head
+- `tests/player/player_body_test.gd` (43) — lock separation, decay, comfort ceiling on all head
   motion, bob toggle, yaw clamp, fall recovery, the full sit/stand contract and the key gate
 - `tests/office/office_door_test.gd` (32) — doorway solidity by raycast, floor beyond the door,
   locked prompt, rattle-without-opening, unlock on shift close, swing, and the end card carrying

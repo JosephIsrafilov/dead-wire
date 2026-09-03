@@ -20,9 +20,9 @@ size = Vector3(0.012, 0.012, 0.14)
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_knob"]
 material = ExtResource("5_iron")
-top_radius = 0.02
-bottom_radius = 0.022
-height = 0.016
+top_radius = 0.024
+bottom_radius = 0.027
+height = 0.02
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_interact"]
 size = Vector3(0.12, 0.08, 0.22)
@@ -82,4 +82,3 @@ prompt_text = "Press Key (Answer Line)"
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Interactable"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.04, 0)
 shape = SubResource("BoxShape3D_interact")
-

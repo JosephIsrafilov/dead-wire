@@ -2,6 +2,11 @@
 
 **Updated:** 2026-09-03
 
+## Current verification baseline
+
+The Windows and shell runners both complete **30/30 suites with 0 failures and
+1181 assertions**. Production-scene headless boot also exits with code 0.
+
 ## Headless teardown resource warnings
 
 Godot 4.7.1 can finish an individual test and the production scene with exit

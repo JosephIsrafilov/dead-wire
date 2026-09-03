@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Material" path="res://materials/style_tests/timber_trim.tres" id="1_dark_wood"]
 [ext_resource type="Material" path="res://materials/style_tests/desk_wood.tres" id="2_light_wood"]
+[ext_resource type="Material" path="res://materials/style_tests/routing_slate.tres" id="3_cushion"]
 
 [sub_resource type="BoxShape3D" id="ChairSolid"]
 size = Vector3(0.44, 0.88, 0.42)
@@ -12,6 +13,11 @@ size = Vector3(0.44, 0.88, 0.42)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.44, 0)
 size = Vector3(0.44, 0.04, 0.42)
 material = ExtResource("2_light_wood")
+
+[node name="SeatPad" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.48, 0)
+size = Vector3(0.38, 0.055, 0.35)
+material = ExtResource("3_cushion")
 
 [node name="LegFL" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.18, 0.22, 0.17)

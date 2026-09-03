@@ -93,7 +93,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	if _just_opened_frame == Engine.get_process_frames():
 		return
 
-	if event.is_action_pressed("interact") or event.is_action_pressed("ui_cancel"):
+	if not event.is_echo() and (event.is_action_pressed("interact") or event.is_action_pressed("ui_cancel")):
 		close_document()
 		var vp := get_viewport()
 		if vp != null:

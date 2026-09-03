@@ -89,8 +89,13 @@ func _capture() -> void:
 
 func _capture_shot(camera: Camera3D, shot: Dictionary) -> bool:
 	_reset_visual_state()
+	camera.fov = float(shot["fov"])
+	camera.global_position = shot["position"]
+	# Camera3D looks down local -Z. Do not use model-front orientation here.
+	camera.look_at(shot["target"], Vector3.UP)
+
 	if shot.get("scenario_3", false):
-		if not _activate_scenario_3_event():
+		if not _activate_scenario_3_event(camera):
 			return false
 	if shot.get("board_open", false):
 		office_node.routing_board.set_awaiting_route(true)
@@ -110,7 +115,7 @@ func _capture_shot(camera: Camera3D, shot: Dictionary) -> bool:
 				_fail("MorseReferenceCard document misses required character %s" % character)
 				return false
 	if shot.get("debug", false):
-		if not _activate_scenario_3_event():
+		if not _activate_scenario_3_event(camera):
 			return false
 		var inspector := office_node.get_node_or_null("DebugInspector") as DebugInspector
 		if inspector == null:
@@ -118,11 +123,6 @@ func _capture_shot(camera: Camera3D, shot: Dictionary) -> bool:
 			return false
 		inspector.visible = true
 		inspector._refresh_display()
-
-	camera.fov = float(shot["fov"])
-	camera.global_position = shot["position"]
-	# Camera3D looks down local -Z. Do not use model-front orientation here.
-	camera.look_at(shot["target"], Vector3.UP)
 	await _wait_for_rendered_frames(6)
 	RenderingServer.force_draw()
 	await process_frame
@@ -160,8 +160,12 @@ func _reset_visual_state() -> void:
 	if inspector != null:
 		inspector.visible = false
 
-func _activate_scenario_3_event() -> bool:
+func _activate_scenario_3_event(camera: Camera3D) -> bool:
 	# Captures pose the scene by hand, so the shift clock must not advance under them.
+	var saved_camera_transform := camera.global_transform
+	# The window event defers showing its figure while it is being watched. Aim
+	# away for activation, then restore the requested shot pose before capture.
+	camera.look_at(camera.global_position + saved_camera_transform.basis.z * 2.0, Vector3.UP)
 	if office_node.shift_director != null:
 		office_node.shift_director.enabled = false
 	office_node.session_controller.allow_key_start = true
@@ -169,11 +173,14 @@ func _activate_scenario_3_event() -> bool:
 	var key := office_node.session_controller.telegraph_key if office_node.session_controller != null else null
 	var interactable := key.get_interactable() if key != null else null
 	if key == null or interactable == null:
+		camera.global_transform = saved_camera_transform
 		_fail("Scenario 3 production telegraph interaction is missing")
 		return false
 	interactable.interact()
 	office_node.session_controller.scheduler.advance_time(1.0)
-	if office_node.window_observation == null or not office_node.window_observation.is_active:
+	var event_active := office_node.window_observation != null and office_node.window_observation.is_active
+	camera.global_transform = saved_camera_transform
+	if not event_active:
 		_fail("Scenario 3 did not activate the production window event")
 		return false
 	return true

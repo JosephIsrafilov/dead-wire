@@ -63,11 +63,11 @@ rings = 8
 ring_segments = 12
 material = ExtResource("1_iron")
 
-[node name="StoveBody" type="CSGCylinder3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.76, 0)
-radius = 0.28
-height = 0.44
-sides = 12
+[node name="StoveBody" type="CSGSphere3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.86, 0, 0, 0, 1, 0, 0.76, 0)
+radius = 0.34
+radial_segments = 12
+rings = 8
 material = ExtResource("1_iron")
 
 [node name="TopPlate" type="CSGCylinder3D" parent="."]

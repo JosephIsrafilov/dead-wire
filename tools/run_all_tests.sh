@@ -13,6 +13,14 @@ find_godot() {
 	local override="${GODOT_BIN:-}"
 	if [ -n "$override" ] && command -v cygpath >/dev/null 2>&1; then
 		override="$(cygpath -u "$override" 2>/dev/null || echo "$override")"
+	elif [ -n "$override" ] && command -v wslpath >/dev/null 2>&1; then
+		override="$(wslpath -u "$override" 2>/dev/null || echo "$override")"
+	elif [[ "$override" =~ ^[A-Za-z]:[\\/] ]]; then
+		# WSL images may not ship wslpath; still accept a conventional Windows path.
+		local drive="${override:0:1}"
+		local rest="${override:2}"
+		drive="$(printf '%s' "$drive" | tr '[:upper:]' '[:lower:]')"
+		override="/mnt/$drive/${rest//\\//}"
 	fi
 	if [ -n "$override" ] && [ -f "$override" ]; then
 		echo "$override"
@@ -22,6 +30,8 @@ find_godot() {
 	for candidate in godot4 godot \
 		"$HOME/Desktop/Godot_v4.7.1-stable_win64.exe/Godot_v4.7.1-stable_win64_console.exe" \
 		"$HOME/Downloads/Godot_v4.7.1-stable_win64.exe/Godot_v4.7.1-stable_win64_console.exe" \
+		"/mnt/c/Users/YUSIF/Desktop/Godot_v4.7.1-stable_win64.exe/Godot_v4.7.1-stable_win64_console.exe" \
+		"/c/Users/YUSIF/Desktop/Godot_v4.7.1-stable_win64.exe/Godot_v4.7.1-stable_win64_console.exe" \
 		"C:/Users/YUSIF/Desktop/Godot_v4.7.1-stable_win64.exe/Godot_v4.7.1-stable_win64_console.exe"; do
 		if command -v "$candidate" >/dev/null 2>&1; then
 			command -v "$candidate"
@@ -41,6 +51,15 @@ if ! GODOT_BIN="$(find_godot)"; then
 	exit 2
 fi
 
+GODOT_PROJECT_DIR="$PROJECT_DIR"
+if [[ "$GODOT_BIN" =~ \.exe$ ]]; then
+	if command -v cygpath >/dev/null 2>&1; then
+		GODOT_PROJECT_DIR="$(cygpath -w "$PROJECT_DIR" 2>/dev/null || echo "$PROJECT_DIR")"
+	elif command -v wslpath >/dev/null 2>&1; then
+		GODOT_PROJECT_DIR="$(wslpath -w "$PROJECT_DIR" 2>/dev/null || echo "$PROJECT_DIR")"
+	fi
+fi
+
 passed_suites=0
 failed_suites=0
 total_assertions=0
@@ -48,7 +67,7 @@ failed_names=""
 
 for suite in $(find "$PROJECT_DIR/tests" -name "*_test.gd" | sort); do
 	relative="${suite#"$PROJECT_DIR"/}"
-	output=$("$GODOT_BIN" --headless --editor --path "$PROJECT_DIR" --script "res://$relative" 2>&1)
+	output=$("$GODOT_BIN" --headless --path "$GODOT_PROJECT_DIR" --script "res://$relative" 2>&1)
 	exit_code=$?
 	assertions=$(echo "$output" | grep -c "PASS:")
 	if [ $exit_code -eq 0 ] && ! echo "$output" | grep -q "FAIL"; then

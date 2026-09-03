@@ -119,7 +119,7 @@ prints `WATER`, `WATCHER`, or the word "missed".
 
 ```
 bash tools/run_all_tests.sh
-  30 suites, 0 failures, 1171 assertions
+  30 suites, 0 failures, 1181 assertions
 ```
 
 Up from 29 / 1129. New `tests/ui/framing_test.gd` (42 assertions): settings round-trip

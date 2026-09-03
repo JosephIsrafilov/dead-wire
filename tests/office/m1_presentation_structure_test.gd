@@ -11,7 +11,7 @@ func _init() -> void:
 
 	# 1. PSX Presentation Settings
 	if not assert_condition(office.enable_psx_rendering == true, "enable_psx_rendering is true"): return
-	if not assert_condition(office.render_scale == 0.5, "render_scale is 0.5"): return
+	if not assert_condition(is_equal_approx(office.render_scale, 0.75), "render_scale is 0.75 for readable PSX presentation"): return
 
 	# 2. No placeholder nodes in production scene
 	var placeholder_nodes: Array[String] = []
@@ -25,6 +25,7 @@ func _init() -> void:
 	if not assert_condition(office.get_node_or_null("NorthWall_Right") != null, "NorthWall_Right exists"): return
 	if not assert_condition(office.get_node_or_null("DeskSetup") != null, "DeskSetup exists"): return
 	if not assert_condition(office.get_node_or_null("DocumentViewer") != null, "DocumentViewer exists"): return
+	if not assert_condition(office.player.get_node_or_null("FootstepPlayer") != null, "Player has a spatial footstep player"): return
 
 	# 4. Desk props exist and are distinctly placed
 	var paper := office.get_node_or_null("TranscriptPaper")

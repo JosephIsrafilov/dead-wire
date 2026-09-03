@@ -3,7 +3,7 @@
 **Status:** M1 VISUAL ACCEPTANCE CANDIDATE — AUTOMATED GATES PASS, HUMAN ACCEPTANCE PENDING  
 **Godot Version:** 4.7.1-stable (Console / Headless)  
 **Workspace:** `C:\Users\YUSIF\Documents\dead-wire`  
-**Current Test Results (2026-09-03):** 30 Test Suites | 0 Failures | 1171 Assertions Passed
+**Current Test Results (2026-09-03):** 30 Test Suites | 0 Failures | 1181 Assertions Passed
 
 ---
 
@@ -17,7 +17,7 @@ The Milestone 1 Office Prototype for **DEAD WIRE** has completed automated techn
 - Spatial attention events (3 directional footsteps outside the south door, silhouette observation outside the north window).
 - Physical layout checks for furniture collision, player clearance, interaction reachability, line of sight, and attention-zone separation.
 - Strict layer separation proving the core narrative hook (`WATER` audio vs `WATCHER` transcript).
-- 100% automated regression coverage across 30 test suites (1171 assertions passed).
+- 100% automated regression coverage across 30 test suites (1181 assertions passed).
 
 ---
 
@@ -52,10 +52,14 @@ The Milestone 1 Office Prototype for **DEAD WIRE** has completed automated techn
 
 ## 3. Automated Test Suite Scoreboard
 
+> The detailed table below is the original 24-suite milestone record (876
+> assertions). The current 30-suite baseline is reported in the header and in
+> `m1_technical_debt.md`.
+
 | # | Test Suite | Scope / Gate | Assertions | Result |
 |---|:---|:---|:---:|:---:|
-| 1 | `tests/integration/m1_office_integration_test.gd` | Full M1 E2E Playtest Integration | 58 | **PASS** |
-| 2 | `tests/office/m1_presentation_structure_test.gd` | Presentation Geometry & Unmirrored Orientation | 22 | **PASS** |
+| 1 | `tests/integration/m1_office_integration_test.gd` | Full M1 E2E Playtest Integration | 63 | **PASS** |
+| 2 | `tests/office/m1_presentation_structure_test.gd` | Presentation Geometry & Unmirrored Orientation | 23 | **PASS** |
 | 3 | `tests/ui/document_viewer_test.gd` | Modal Document Viewer & Movement Lock | 15 | **PASS** |
 | 4 | `tests/events/attention_timeline_test.gd` | Hitch-Proof Attention Timeline Signals | 11 | **PASS** |
 | 5 | `tests/debug/debug_inspector_telemetry_test.gd` | F3 Live Telemetry & Inspector | 5 | **PASS** |

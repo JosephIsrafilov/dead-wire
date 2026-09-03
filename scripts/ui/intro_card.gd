@@ -68,6 +68,10 @@ func begin() -> void:
 	# He is not in the room yet, so he cannot walk or look around it.
 	if player != null:
 		player.set_movement_locked(true)
+		var interaction := player.get_node_or_null("InteractionController") as InteractionController
+		if interaction != null:
+			interaction.is_ui_blocked = true
+			interaction.refresh_prompt()
 
 func _process(delta: float) -> void:
 	if not _is_running:
@@ -114,5 +118,9 @@ func _release() -> void:
 	visible = false
 	if player != null:
 		player.set_movement_locked(false)
+		var interaction := player.get_node_or_null("InteractionController") as InteractionController
+		if interaction != null:
+			interaction.is_ui_blocked = false
+			interaction.refresh_prompt()
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	intro_finished.emit()

@@ -3,11 +3,11 @@
 [ext_resource type="Script" path="res://scripts/events/attention_observation_target.gd" id="1_obs"]
 
 [sub_resource type="StandardMaterial3D" id="FigureCloth"]
-albedo_color = Color(0.025, 0.032, 0.045, 1)
+albedo_color = Color(0.045, 0.06, 0.09, 1)
 roughness = 1.0
 
 [sub_resource type="StandardMaterial3D" id="FigureHat"]
-albedo_color = Color(0.018, 0.022, 0.03, 1)
+albedo_color = Color(0.03, 0.042, 0.065, 1)
 roughness = 1.0
 
 [sub_resource type="CylinderMesh" id="CoatMesh"]

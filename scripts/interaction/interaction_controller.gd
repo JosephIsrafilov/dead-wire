@@ -28,6 +28,9 @@ func _process(_delta: float) -> void:
 		return
 
 	_update_target()
+	# Prompts are live state: the key, routing board, and seat can change their
+	# action text while the crosshair stays on the same collider.
+	_update_prompt_ui()
 
 func _unhandled_input(event: InputEvent) -> void:
 	if is_ui_blocked:
@@ -44,6 +47,8 @@ func _unhandled_input(event: InputEvent) -> void:
 func _update_target() -> void:
 	var new_target: Interactable = null
 
+	if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED and interaction_ray:
+		interaction_ray.force_raycast_update()
 	if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED and interaction_ray and interaction_ray.is_colliding():
 		var collider: Object = interaction_ray.get_collider()
 		if collider is Interactable and collider.can_interact():
@@ -76,4 +81,10 @@ func _update_prompt_ui() -> void:
 ## Sets or clears the fallback prompt shown when nothing is targeted.
 func set_persistent_hint(text: String) -> void:
 	persistent_hint = text
+	_update_prompt_ui()
+
+## Public refresh hook for pause/resume and other systems that change input
+## capture state without moving the camera.
+func refresh_prompt() -> void:
+	_update_target()
 	_update_prompt_ui()
