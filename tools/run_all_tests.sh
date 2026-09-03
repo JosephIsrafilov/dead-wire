@@ -8,11 +8,36 @@
 set -u
 
 PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-GODOT_BIN="${GODOT_BIN:-C:/Users/YUSIF/Desktop/Godot_v4.7.1-stable_win64.exe/Godot_v4.7.1-stable_win64_console.exe}"
 
-if [ ! -f "$GODOT_BIN" ]; then
-	echo "Godot binary not found: $GODOT_BIN" >&2
-	echo "Set GODOT_BIN to the console executable path." >&2
+find_godot() {
+	local override="${GODOT_BIN:-}"
+	if [ -n "$override" ] && command -v cygpath >/dev/null 2>&1; then
+		override="$(cygpath -u "$override" 2>/dev/null || echo "$override")"
+	fi
+	if [ -n "$override" ] && [ -f "$override" ]; then
+		echo "$override"
+		return 0
+	fi
+
+	for candidate in godot4 godot \
+		"$HOME/Desktop/Godot_v4.7.1-stable_win64.exe/Godot_v4.7.1-stable_win64_console.exe" \
+		"$HOME/Downloads/Godot_v4.7.1-stable_win64.exe/Godot_v4.7.1-stable_win64_console.exe" \
+		"C:/Users/YUSIF/Desktop/Godot_v4.7.1-stable_win64.exe/Godot_v4.7.1-stable_win64_console.exe"; do
+		if command -v "$candidate" >/dev/null 2>&1; then
+			command -v "$candidate"
+			return 0
+		fi
+		if [ -f "$candidate" ]; then
+			echo "$candidate"
+			return 0
+		fi
+	done
+	return 1
+}
+
+if ! GODOT_BIN="$(find_godot)"; then
+	echo "Godot binary not found." >&2
+	echo "Set GODOT_BIN to the console executable path, e.g. GODOT_BIN=/path/to/Godot_console.exe." >&2
 	exit 2
 fi
 
@@ -23,7 +48,7 @@ failed_names=""
 
 for suite in $(find "$PROJECT_DIR/tests" -name "*_test.gd" | sort); do
 	relative="${suite#"$PROJECT_DIR"/}"
-	output=$("$GODOT_BIN" --headless --path "$PROJECT_DIR" --script "res://$relative" 2>&1)
+	output=$("$GODOT_BIN" --headless --editor --path "$PROJECT_DIR" --script "res://$relative" 2>&1)
 	exit_code=$?
 	assertions=$(echo "$output" | grep -c "PASS:")
 	if [ $exit_code -eq 0 ] && ! echo "$output" | grep -q "FAIL"; then

@@ -1,10 +1,12 @@
 # M1 Visual Acceptance Correction Report — Historical Art-Direction Rebuild
 
+> **Status superseded (2026-09-03):** The current regression baseline is **30 test suites, 0 failures, 1171 assertions**. This report records the art pass and is not the authoritative status source.
+
 ## Scope
 
 This comprehensive art-direction rebuild transformed the M1 office from a stark CSG prototype box into a believable, inhabited late-19th-century (1894) American railway telegraph office at night, while rigorously adhering to the low-resolution PSX visual language (320x180 internal framebuffer upscaled to 1280x720, nearest-neighbor texture filtering, palette quantization, affine wood/metal textures).
 
-All gameplay systems, Morse timing, encoder, scheduler, scenarios, WorldState, KnowledgeState, controls, interaction semantics, route outcomes, WATER/WATCHER behavior, attention timings, footsteps, and final-cycle lock remain 100% intact and verified across 24 test suites.
+All gameplay systems, Morse timing, encoder, scheduler, scenarios, WorldState, KnowledgeState, controls, interaction semantics, route outcomes, WATER/WATCHER behavior, attention timings, footsteps, and final-cycle lock remain 100% intact. The current regression baseline is recorded above.
 
 ## Confirmed Rebuild & Art Corrections
 
@@ -23,7 +25,7 @@ All gameplay systems, Morse timing, encoder, scheduler, scenarios, WorldState, K
 
 ## Technical & Automated Verification
 
-- **24 Test Suites**: 24/24 PASSED (0 failures, 0 errors, 876 assertions).
+- **Current regression baseline**: 30/30 suites PASSED (0 failures, 0 errors, 1171 assertions).
 - **Integration Suite**: 58 assertions PASS.
 - **Presentation Structure Suite**: 22 assertions PASS.
 - **Spatial Metrics Suite**: PASS (zero furniture intersections, player clearance paths verified, desk document separation preserved, chair orientation and contact verified).
@@ -56,4 +58,3 @@ All gameplay systems, Morse timing, encoder, scheduler, scenarios, WorldState, K
 ## Visual Acceptance Status
 
 M1 VISUAL ACCEPTANCE CANDIDATE — AUTOMATED GATES PASS, HUMAN ACCEPTANCE PENDING
-

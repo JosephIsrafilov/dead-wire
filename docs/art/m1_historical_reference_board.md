@@ -48,18 +48,20 @@ by the game.
 
 ## Implementation Record
 
+> **Status note (2026-09-03):** This historical board is superseded for regression status. The current baseline is 30 suites, 0 failures, 1171 assertions.
+
 - Production scene: `res://scenes/office/m1_office.tscn`.
 - Low-poly PSX texture suite: `materials/style_tests/textures/psx/` (11 authored textures, nearest-neighbor filtering, 128x128 floorboards, 128x128 wainscoting, plaster, ceiling boards, metals, brass, slate, paper, night sky).
 - New architecture/materials: hand-authored Godot CSG/primitives and local `.tres` materials.
 - No new third-party runtime models, textures, or audio were introduced for the redesign.
 - Canonical visual evidence: `docs/art/m1_visual_acceptance/final/` (16 canonical 1280x720 PNGs).
 - Matched before/final pairs: `docs/art/m1_visual_acceptance/comparison/` (8 matched 2560x720 side-by-side PNGs).
-- All 24 automated test suites verified 100% PASS (0 failures, 876 assertions).
+- Current verification baseline: 30 automated test suites, 0 failures, 1171 assertions.
 
 - Focused evidence: `docs/art/m1_visual_acceptance/focused_round/`.
 - Focused comparisons: `docs/art/m1_visual_acceptance/comparison_focused/`.
 - Evidence index and SHA256 record: `docs/art/m1_visual_acceptance/README.md`.
-- Current verification: 24 suites, 0 failures, 876 assertions; integration 58;
+- Current verification: 30 suites, 0 failures, 1171 assertions; integration 58;
   presentation structure 22.
 - Changed files are listed in `docs/reports/m1_office_prototype_completion_report.md`.
 - Current visual status remains `M1 VISUAL ACCEPTANCE CANDIDATE - AUTOMATED GATES

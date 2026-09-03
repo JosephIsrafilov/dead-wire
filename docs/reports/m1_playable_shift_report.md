@@ -143,10 +143,19 @@ That means:
 
 ```
 bash tools/run_all_tests.sh
-  26 suites, 0 failures, 1006 assertions
+  30 suites, 0 failures, 1171 assertions
 ```
 
-Baseline at the start of this pass was 25 suites / 926 assertions. The delta is `tests/office/shift_director_test.gd` (80 assertions), which drives a complete shift twice with a hand-cranked clock:
+The current regression baseline is 30 suites / 1171 assertions. The historical
+counts from earlier passes are superseded and are not used for status. This pass
+added `tests/office/shift_director_test.gd`, which drives a complete shift twice with a hand-cranked clock:
+
+The Windows runner is now available as `tools/run_all_tests.ps1`; both runners
+accept `GODOT_BIN`. In this restricted desktop session, Godot can boot and run
+an individual suite, but the full editor-backed loop does not complete reliably
+because the engine cannot create its `user://` editor data directory. The
+resulting ObjectDB/RID warnings are recorded technical debt, not attributed to
+the M1 scene without a clean-machine reproduction.
 
 - both the ignored path and the answered path
 - the miss lands in WorldState, the ignorance lands in KnowledgeState

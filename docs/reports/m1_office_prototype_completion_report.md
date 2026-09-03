@@ -3,7 +3,7 @@
 **Status:** M1 VISUAL ACCEPTANCE CANDIDATE — AUTOMATED GATES PASS, HUMAN ACCEPTANCE PENDING  
 **Godot Version:** 4.7.1-stable (Console / Headless)  
 **Workspace:** `C:\Users\YUSIF\Documents\dead-wire`  
-**Test Results:** 24 Test Suites | 0 Failures | 876 Assertions Passed  
+**Current Test Results (2026-09-03):** 30 Test Suites | 0 Failures | 1171 Assertions Passed
 
 ---
 
@@ -17,7 +17,7 @@ The Milestone 1 Office Prototype for **DEAD WIRE** has completed automated techn
 - Spatial attention events (3 directional footsteps outside the south door, silhouette observation outside the north window).
 - Physical layout checks for furniture collision, player clearance, interaction reachability, line of sight, and attention-zone separation.
 - Strict layer separation proving the core narrative hook (`WATER` audio vs `WATCHER` transcript).
-- 100% automated regression coverage across 24 test suites (876 assertions passed).
+- 100% automated regression coverage across 30 test suites (1171 assertions passed).
 
 ---
 

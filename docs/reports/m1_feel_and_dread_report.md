@@ -202,10 +202,11 @@ first atmosphere test, fixed by capturing rest exactly once.
 
 ```
 bash tools/run_all_tests.sh
-  29 suites, 0 failures, 1129 assertions
+  30 suites, 0 failures, 1171 assertions
 ```
 
-Baseline at the start of this pass was 26 suites / 1006 assertions. New:
+The current regression baseline is 30 suites / 1171 assertions. The historical
+counts from earlier passes are superseded and are not used for status. New:
 
 - `tests/player/player_body_test.gd` (39) — lock separation, decay, comfort ceiling on all head
   motion, bob toggle, yaw clamp, fall recovery, the full sit/stand contract and the key gate

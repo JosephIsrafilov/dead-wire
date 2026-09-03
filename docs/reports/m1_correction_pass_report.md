@@ -240,10 +240,10 @@ the room is frightening.**
 
 Run by this pass, in a normal (non-sandboxed) environment:
 
-- `bash tools/run_all_tests.sh` — **25 suites, 0 failures, 926 assertions.**
-  Baseline before any edit was 24 suites / 876 assertions; the delta is the new
-  `tests/audio/office_ambience_test.gd` (50 assertions). No pre-existing suite
-  changed its result.
+- `bash tools/run_all_tests.sh` — **30 suites, 0 failures, 1171 assertions.**
+  This report is superseded by the current 30-suite baseline; its earlier pass
+  counts are historical and are not used for status.
+- No pre-existing suite is reported as changed by this status update.
 - Headless production scene launch, `--quit-after 120` — exit 0.
 - 16-shot capture through the production Forward+ / D3D12 pipeline — exit 0, all
   PNGs 1280×720 with unique SHA256.
@@ -252,8 +252,8 @@ Run by this pass, in a normal (non-sandboxed) environment:
 
 ## 8. Not done — deliberately
 
-- **No commit.** The working tree is dirty by the owner's instruction and stays
-  that way until the owner authorises a commit.
+- **Checkpoint:** The accumulated M1 working tree was recorded in commit `2b16524`
+  (`chore: checkpoint M1 playable shift baseline`) before M2 work.
 - **No claim of M1 acceptance.** No human has played this build. The five M1
   questions — is telegraph interaction interesting, does divided attention create
   tension, is American Morse fair, does spatial audio support attention pressure,
