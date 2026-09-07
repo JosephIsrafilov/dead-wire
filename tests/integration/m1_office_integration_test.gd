@@ -91,11 +91,12 @@ func _init() -> void:
 
 	# Advance time through 13.60s (TRAIN 17 schedule duration)
 	office.session_controller.scheduler.advance_time(14.0)
-	if not assert_condition(office.session_controller.get_state() == TelegraphSessionController.State.AWAITING_ROUTE, "Transmission end transitions to AWAITING_ROUTE"): return
+	if not assert_condition(office.session_controller.get_state() == TelegraphSessionController.State.VERIFYING, "Transmission end waits for transcript verification"): return
 
 	# Test TranscriptPaper repeated open with revealed message
 	paper_act.interact()
 	if not assert_condition(viewer.is_open(), "1st interaction with TranscriptPaper opens DocumentViewer"): return
+	if not assert_condition(office.session_controller.get_state() == TelegraphSessionController.State.AWAITING_ROUTE, "Transcript inspection unlocks routing"): return
 	if not assert_condition(viewer.body_label.text == "TRAIN 17 CLEAR EAST", "Viewer displays 'TRAIN 17 CLEAR EAST'"): return
 	viewer.close_document()
 	if not assert_condition(not viewer.is_open(), "DocumentViewer closes"): return
@@ -153,7 +154,10 @@ func _init() -> void:
 
 	# Complete transmission (total 15.60s) - proving Morse scheduler progressed
 	office.session_controller.scheduler.advance_time(12.0)
-	if not assert_condition(office.session_controller.get_state() == TelegraphSessionController.State.AWAITING_ROUTE, "Scenario 2 transitions to AWAITING_ROUTE"): return
+	if not assert_condition(office.session_controller.get_state() == TelegraphSessionController.State.VERIFYING, "Scenario 2 waits for transcript verification"): return
+	paper_act.interact()
+	if not assert_condition(office.session_controller.get_state() == TelegraphSessionController.State.AWAITING_ROUTE, "Scenario 2 transcript inspection unlocks routing"): return
+	viewer.close_document()
 
 	# Open board and route HOLD via InputEventKey 2
 	board_act.interact()
@@ -181,28 +185,17 @@ func _init() -> void:
 	key_act.interact()
 	if not assert_condition(office.session_controller.get_state() == TelegraphSessionController.State.RECEIVING, "Scenario 3 transmission starts"): return
 
-	# Advance 1.0s -> Window figure event triggers
+	# Advance 1.0s: the window figure is deferred until the consequence beat.
 	office.session_controller.scheduler.advance_time(1.0)
-	if not assert_condition(office.window_observation.is_active and office.window_observation.get_visual_indicator() != null and office.window_observation.get_visual_indicator().visible, "Window figure event is active with its VisualIndicator visible at 0.8s"): return
-	if not assert_condition(world.get_fact("window_event_occurred") == true, "WorldState recorded window_event_occurred"): return
+	# The consequence figure is deliberately absent while the signal is arriving.
+	if not assert_condition(not office.window_observation.is_active, "Window figure is inactive during RECEIVING"): return
+	if not assert_condition(world.get_fact("window_event_occurred") != true, "Window event fact is not recorded during RECEIVING"): return
 
-	# Player is facing desk (West): KnowledgeState must NOT know about the event
-	await process_frame
-	if not assert_condition(not office.window_observation.is_observed, "Silhouette NOT observed while player faces desk"): return
-	if not assert_condition(not knowledge.knows("saw_window_event"), "KnowledgeState does NOT have saw_window_event yet"): return
-
-	# Player actively turns toward the North window
-	var cam: Camera3D = office.player.get_node_or_null("Head/Camera3D") as Camera3D
-	office.player.rotation.y = deg_to_rad(0.0) # Face North
-	await process_frame
-
-	# Direct camera check through physical window aperture succeeds
-	if not assert_condition(office.window_observation.is_observed, "Camera looking through window opening observes window figure"): return
-	if not assert_condition(knowledge.knows("saw_window_event"), "KnowledgeState recorded saw_window_event = true"): return
-
-	# Complete transmission (total 3.60s)
+	# Complete transmission (total 3.60s), then prove stale commit input is ignored.
 	office.session_controller.scheduler.advance_time(3.0)
-	if not assert_condition(office.session_controller.get_state() == TelegraphSessionController.State.COMPLETE, "Scenario 3 completes without routing"): return
+	if not assert_condition(office.session_controller.get_state() == TelegraphSessionController.State.VERIFYING, "Scenario 3 waits for transcript verification"): return
+	if not assert_condition(not office.copy_commit_desk.is_enabled(), "Commit desk is disabled before inspection"): return
+	if not assert_condition(not office.session_controller.submit_commit(&"file_water"), "Commit before inspection is ignored"): return
 
 	# Prove layer separation: Sounder WATER (10 clicks) -> Paper WATCHER
 	var scen3 := office.session_controller.get_current_scenario()
@@ -213,8 +206,29 @@ func _init() -> void:
 
 	# Inspect final transcript in viewer
 	paper_act.interact()
+	if not assert_condition(office.session_controller.get_state() == TelegraphSessionController.State.AWAITING_COMMIT, "Transcript inspection unlocks commit desk"): return
+	if not assert_condition(office.copy_commit_desk.is_enabled(), "Commit desk is enabled after inspection"): return
 	if not assert_condition(viewer.body_label.text == "WATCHER", "Transcript paper displays WATCHER"): return
 	viewer.close_document()
+
+	# Unknown input and double input cannot alter the authored commit.
+	if not assert_condition(not office.session_controller.submit_commit(&"stale_action"), "Unknown commit action is ignored"): return
+	if not assert_condition(office.copy_commit_desk.commit_option(&"file_watcher"), "Valid WATCHER commit is accepted"): return
+	if not assert_condition(office.session_controller.get_state() == TelegraphSessionController.State.CONSEQUENCE, "Valid commit enters CONSEQUENCE"): return
+	if not assert_condition(world.get_fact("core_hook_filed_watcher") == true, "WorldState records core_hook_filed_watcher"): return
+	if not assert_condition(knowledge.knows("committed_watcher_core_hook"), "KnowledgeState records committed_watcher_core_hook"): return
+	if not assert_condition(not office.copy_commit_desk.commit_option(&"file_water"), "Second commit input is ignored"): return
+
+	# The neutral figure starts only after the recovery delay and remains observable
+	# for the consequence hold, independent of which copy was filed.
+	office.session_controller.advance_consequence(1.0)
+	if not assert_condition(office.window_observation.is_active and office.window_observation.get_visual_indicator().visible, "Window figure starts after commit recovery delay"): return
+	office.player.rotation.y = deg_to_rad(0.0) # Face North
+	await process_frame
+	if not assert_condition(office.window_observation.is_observed, "Camera looking through window opening observes post-commit figure"): return
+	if not assert_condition(knowledge.knows("saw_window_event"), "KnowledgeState records saw_window_event after post-commit figure"): return
+	office.session_controller.advance_consequence(1.0)
+	if not assert_condition(office.session_controller.get_state() == TelegraphSessionController.State.COMPLETE, "Consequence hold is required before Scenario 3 completes"): return
 
 	# 6. CYCLE COMPLETION
 	if not assert_condition(cycle_completed_fired[0] == 1, "scenario_cycle_completed emitted exactly once"): return

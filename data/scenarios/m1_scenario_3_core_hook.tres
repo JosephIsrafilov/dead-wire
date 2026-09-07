@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" path="res://scripts/telegraph/session/telegraph_scenario_data.gd" id="1_scen"]
 [ext_resource type="Script" path="res://scripts/telegraph/transmission_data.gd" id="2_trans"]
+[ext_resource type="Script" path="res://scripts/telegraph/session/telegraph_commit_option.gd" id="3_commit"]
 
 [sub_resource type="Resource" id="Resource_trans3"]
 script = ExtResource("2_trans")
@@ -9,6 +10,22 @@ transmission_id = &"trans_m1_03_water_watcher"
 true_message = "WATER"
 elias_perception = "WATER"
 written_transcript = "WATCHER"
+
+[sub_resource type="Resource" id="Resource_commit_water"]
+script = ExtResource("3_commit")
+action_id = &"file_water"
+display_label = "CORRECT COPY\nWATER"
+world_fact = "core_hook_filed_water"
+knowledge_fact = "committed_water_core_hook"
+result_text = "WATER FILED"
+
+[sub_resource type="Resource" id="Resource_commit_watcher"]
+script = ExtResource("3_commit")
+action_id = &"file_watcher"
+display_label = "FILE COPY\nWATCHER"
+world_fact = "core_hook_filed_watcher"
+knowledge_fact = "committed_watcher_core_hook"
+result_text = "WATCHER FILED"
 
 [resource]
 script = ExtResource("1_scen")
@@ -21,3 +38,11 @@ incorrect_world_fact = ""
 attention_event_id = "window_figure"
 attention_event_start_time = 0.8
 completion_fact = "water_watcher_transmission_received"
+requires_transcript_verification = true
+transcript_reveal_cues = PackedFloat32Array(0.08, 0.20, 0.35, 0.52, 0.68, 0.84, 1.0)
+commit_options = [SubResource("Resource_commit_water"), SubResource("Resource_commit_watcher")]
+commit_lapsed_world_fact = "core_hook_commit_lapsed"
+commit_lapsed_knowledge_fact = "core_hook_commit_lapsed"
+consequence_event_id = "window_figure"
+consequence_delay_seconds = 1.0
+consequence_hold_seconds = 1.0

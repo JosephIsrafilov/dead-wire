@@ -21,3 +21,5 @@ incorrect_world_fact = "train_17_held_in_error"
 attention_event_id = ""
 attention_event_start_time = 0.0
 completion_fact = ""
+requires_transcript_verification = true
+transcript_reveal_cues = PackedFloat32Array(0.05, 0.11, 0.18, 0.25, 0.32, 0.40, 0.47, 0.55, 0.61, 0.68, 0.75, 0.82, 0.88, 0.93, 0.97, 1.0)

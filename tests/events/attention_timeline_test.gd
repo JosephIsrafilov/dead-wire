@@ -34,7 +34,9 @@ func _init() -> void:
 	# Advance to completion -> no duplicate event
 	scheduler.advance_time(12.0)
 	if not assert_condition(events_fired.size() == 1, "Exactly one event emitted during normal transmission"): return
-	if not assert_condition(controller.get_state() == TelegraphSessionController.State.AWAITING_ROUTE, "Transmission completed to AWAITING_ROUTE"): return
+	if not assert_condition(controller.get_state() == TelegraphSessionController.State.VERIFYING, "Transmission completed to VERIFYING"): return
+	if not assert_condition(controller.mark_transcript_verified(), "Transcript inspection unlocks routing"): return
+	if not assert_condition(controller.get_state() == TelegraphSessionController.State.AWAITING_ROUTE, "Verified transcript reaches AWAITING_ROUTE"): return
 
 	# 2. Giant Hitch Step Test: advance_time(20.0) in a single tick
 	events_fired.clear()
@@ -44,7 +46,9 @@ func _init() -> void:
 	# Huge hitch crossing 0.0s -> 20.0s (past attention time 4.0s and total duration 15.6s) in one call
 	scheduler.advance_time(20.0)
 	if not assert_condition(events_fired.size() == 1 and events_fired[0] == "door_footsteps", "Attention event emitted even with single giant 20s hitch step"): return
-	if not assert_condition(controller.get_state() == TelegraphSessionController.State.AWAITING_ROUTE, "State transitions cleanly to AWAITING_ROUTE"): return
+	if not assert_condition(controller.get_state() == TelegraphSessionController.State.VERIFYING, "Hitch reaches VERIFYING cleanly"): return
+	controller.mark_transcript_verified()
+	if not assert_condition(controller.get_state() == TelegraphSessionController.State.AWAITING_ROUTE, "Verified hitch reaches AWAITING_ROUTE"): return
 
 	# 3. Reset clears pending event marker
 	controller.reset_session()

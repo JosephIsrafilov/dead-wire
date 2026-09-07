@@ -8,6 +8,7 @@ signal scenario_cycle_completed()
 
 @export var session_controller: TelegraphSessionController = null
 @export var routing_board: RoutingBoard = null
+@export var copy_commit_desk: CopyCommitDesk = null
 @export var door_attention: DoorAttentionSource = null
 @export var window_observation: AttentionObservationTarget = null
 @export var document_viewer: DocumentViewer = null
@@ -17,6 +18,7 @@ signal scenario_cycle_completed()
 @export var operator_seat: OperatorSeat = null
 @export var office_door: OfficeDoor = null
 @export var shift_end_card: ShiftEndCard = null
+@export var dawn_evidence: DawnEvidence = null
 
 @export var scenario_1: TelegraphScenarioData = preload("res://data/scenarios/m1_scenario_1_baseline.tres")
 @export var scenario_2: TelegraphScenarioData = preload("res://data/scenarios/m1_scenario_2_attention.tres")
@@ -25,6 +27,7 @@ signal scenario_cycle_completed()
 var _scenario_index: int = 0
 var _scenario_list: Array[TelegraphScenarioData] = []
 var _cycle_completed: bool = false
+var _exit_body_present: bool = false
 
 func _ready() -> void:
 	if enable_psx_rendering:
@@ -50,10 +53,17 @@ func _bind_signals() -> void:
 		session_controller = get_node_or_null("TelegraphSessionController") as TelegraphSessionController
 	if routing_board == null:
 		routing_board = get_node_or_null("RoutingBoard") as RoutingBoard
+	if copy_commit_desk == null:
+		copy_commit_desk = get_node_or_null("CopyCommitDesk") as CopyCommitDesk
 	if door_attention == null:
 		door_attention = get_node_or_null("DoorAttentionSource") as DoorAttentionSource
 	if window_observation == null:
 		window_observation = get_node_or_null("WindowObservationEvent") as AttentionObservationTarget
+	if window_observation != null:
+		if not window_observation.visibility_started.is_connected(_on_consequence_visibility_started):
+			window_observation.visibility_started.connect(_on_consequence_visibility_started)
+		if not window_observation.event_expired.is_connected(_on_consequence_visibility_expired):
+			window_observation.event_expired.connect(_on_consequence_visibility_expired)
 	if document_viewer == null:
 		document_viewer = get_node_or_null("DocumentViewer") as DocumentViewer
 	if player == null:
@@ -66,10 +76,15 @@ func _bind_signals() -> void:
 		office_door = get_node_or_null("SouthDoor/DoorController") as OfficeDoor
 	if shift_end_card == null:
 		shift_end_card = get_node_or_null("ShiftEndCard") as ShiftEndCard
+	if dawn_evidence == null:
+		dawn_evidence = get_node_or_null("DawnEvidence") as DawnEvidence
 
 	var exit_trigger := get_node_or_null("OfficeExitTrigger") as Area3D
-	if exit_trigger != null and not exit_trigger.body_entered.is_connected(_on_exit_body_entered):
-		exit_trigger.body_entered.connect(_on_exit_body_entered)
+	if exit_trigger != null:
+		if not exit_trigger.body_entered.is_connected(_on_exit_body_entered):
+			exit_trigger.body_entered.connect(_on_exit_body_entered)
+		if not exit_trigger.body_exited.is_connected(_on_exit_body_exited):
+			exit_trigger.body_exited.connect(_on_exit_body_exited)
 
 	if document_viewer != null:
 		if not document_viewer.document_opened.is_connected(_on_document_opened):
@@ -96,6 +111,9 @@ func _bind_signals() -> void:
 	if duty_sheet != null and not duty_sheet.sheet_inspected.is_connected(_on_duty_sheet_inspected):
 		duty_sheet.sheet_inspected.connect(_on_duty_sheet_inspected)
 
+	if dawn_evidence != null and not dawn_evidence.evidence_inspected.is_connected(_on_dawn_evidence_inspected):
+		dawn_evidence.evidence_inspected.connect(_on_dawn_evidence_inspected)
+
 	if routing_board != null:
 		var board_act := routing_board.get_interactable()
 		if board_act != null:
@@ -109,9 +127,19 @@ func _bind_signals() -> void:
 		if not routing_board.board_closed.is_connected(_on_routing_board_closed):
 			routing_board.board_closed.connect(_on_routing_board_closed)
 
+	if copy_commit_desk != null:
+		if not copy_commit_desk.option_committed.is_connected(_on_commit_option_committed):
+			copy_commit_desk.option_committed.connect(_on_commit_option_committed)
+
 	if session_controller != null:
 		if not session_controller.attention_event_triggered.is_connected(_on_attention_event):
 			session_controller.attention_event_triggered.connect(_on_attention_event)
+		if not session_controller.commit_requested.is_connected(_on_commit_requested):
+			session_controller.commit_requested.connect(_on_commit_requested)
+		if not session_controller.consequence_started.is_connected(_on_consequence_started):
+			session_controller.consequence_started.connect(_on_consequence_started)
+		if not session_controller.commit_resolved.is_connected(_on_commit_resolved):
+			session_controller.commit_resolved.connect(_on_commit_resolved)
 
 		if not session_controller.session_completed.is_connected(_on_session_completed):
 			session_controller.session_completed.connect(_on_session_completed)
@@ -144,12 +172,20 @@ func load_scenario_by_index(idx: int) -> bool:
 	if idx < 0 or idx >= list.size():
 		return false
 	_scenario_index = idx
+	if idx == 0:
+		_exit_body_present = false
+		if dawn_evidence != null:
+			dawn_evidence.reset_for_new_watch()
 	if session_controller != null:
 		if routing_board != null:
 			routing_board.reset_for_new_transmission()
+		if copy_commit_desk != null:
+			copy_commit_desk.reset_for_new_transmission()
 		if window_observation != null:
 			window_observation.reset_state()
 		var ok: bool = session_controller.load_scenario(list[_scenario_index])
+		# Register after load_scenario resets transient consequence state.
+		session_controller.set_consequence_visibility_required(window_observation != null)
 		_update_key_feedback()
 		return ok
 	return false
@@ -209,10 +245,37 @@ func _on_routing_board_closed() -> void:
 func _on_attention_event(event_id: String) -> void:
 	if event_id == "door_footsteps" and door_attention != null:
 		door_attention.trigger_footsteps()
-	elif event_id == "window_figure" and window_observation != null:
-		window_observation.trigger_event(5.0)
+
+func _on_commit_requested(options: Array[TelegraphCommitOption]) -> void:
+	if copy_commit_desk == null:
+		return
+	copy_commit_desk.configure(options)
+	copy_commit_desk.set_enabled(session_controller != null and session_controller.get_state() == TelegraphSessionController.State.AWAITING_COMMIT)
+
+func _on_commit_option_committed(action_id: StringName) -> void:
+	if session_controller != null:
+		session_controller.submit_commit(action_id)
+
+func _on_commit_resolved(action_id: StringName, result_text: String) -> void:
+	if copy_commit_desk == null or action_id != TelegraphSessionController.LAPSED_ACTION_ID:
+		return
+	copy_commit_desk.show_lapsed(result_text)
+
+func _on_consequence_started(event_id: String, hold_seconds: float) -> void:
+	if event_id == "window_figure" and window_observation != null:
+		window_observation.trigger_event(maxf(hold_seconds, 0.0))
+
+func _on_consequence_visibility_started() -> void:
+	if session_controller != null:
+		session_controller.notify_consequence_visible()
+
+func _on_consequence_visibility_expired() -> void:
+	if session_controller != null:
+		session_controller.notify_consequence_expired()
 
 func _on_session_completed(_scen: TelegraphScenarioData) -> void:
+	if dawn_evidence != null and _scen != null and _scen.scenario_id == "core_hook_water_watcher":
+		dawn_evidence.reveal()
 	var list := _get_scenario_list()
 	if _scenario_index + 1 >= list.size():
 		if not _cycle_completed:
@@ -225,6 +288,8 @@ func _on_session_state_changed(new_state: TelegraphSessionController.State, _pre
 		if new_state != TelegraphSessionController.State.AWAITING_ROUTE and routing_board.is_open:
 			routing_board.close_board()
 		routing_board.set_awaiting_route(new_state == TelegraphSessionController.State.AWAITING_ROUTE)
+	if copy_commit_desk != null:
+		copy_commit_desk.set_enabled(new_state == TelegraphSessionController.State.AWAITING_COMMIT)
 	_update_key_feedback()
 
 func _on_transcript_inspected(text: String) -> void:
@@ -242,12 +307,28 @@ func _on_ledger_inspected(text: String) -> void:
 ## Stepping through the open door ends the slice. The record shown is Elias's
 ## own duty sheet, so it reports what he knows, never what actually happened.
 func _on_exit_body_entered(body: Node) -> void:
+	if body == player:
+		_exit_body_present = true
+	_try_end_shift()
+
+func _on_exit_body_exited(body: Node) -> void:
+	if body == player:
+		_exit_body_present = false
+
+func _try_end_shift() -> void:
 	_bind_signals()
-	if body != player or player == null:
+	if not _exit_body_present or player == null:
 		return
 	if office_door == null or not office_door.is_open:
 		return
 	if shift_end_card == null or shift_end_card.is_running():
+		return
+	if document_viewer != null and document_viewer.is_open():
+		return
+	if dawn_evidence != null and dawn_evidence.is_revealed() and not dawn_evidence.is_inspected():
+		var interaction := player.get_node_or_null("InteractionController") as InteractionController
+		if interaction != null:
+			interaction.set_persistent_hint("Read the morning dispatch before leaving")
 		return
 
 	office_door.notify_player_left()
@@ -263,6 +344,13 @@ func _on_duty_sheet_inspected(text: String) -> void:
 	if document_viewer != null:
 		document_viewer.open_document("duty_sheet", "OPERATOR'S DUTY SHEET", text, "[E / Esc] Put Down Duty Sheet")
 
+func _on_dawn_evidence_inspected(text: String) -> void:
+	var interaction := player.get_node_or_null("InteractionController") as InteractionController if player != null else null
+	if interaction != null:
+		interaction.set_persistent_hint("")
+	if document_viewer != null:
+		document_viewer.open_document("dawn_evidence", "BLACK CREEK DISPATCH — MORNING DRAFT", text, "[E / Esc] Put Down Dispatch Draft")
+
 func _on_document_opened(_doc_id: String) -> void:
 	if player != null:
 		player.set_movement_locked(true)
@@ -271,7 +359,7 @@ func _on_document_opened(_doc_id: String) -> void:
 			ic.is_ui_blocked = true
 			ic.refresh_prompt()
 
-func _on_document_closed(_doc_id: String) -> void:
+func _on_document_closed(doc_id: String) -> void:
 	if player != null:
 		if operator_seat != null and operator_seat.is_seated:
 			# Reading at the desk must not let WASD pull the capsule out of the
@@ -283,6 +371,8 @@ func _on_document_closed(_doc_id: String) -> void:
 		if ic != null:
 			ic.is_ui_blocked = false
 			ic.refresh_prompt()
+	if doc_id == "dawn_evidence":
+		_try_end_shift()
 
 func _update_key_feedback() -> void:
 	if is_shift_directed():
@@ -311,6 +401,9 @@ func _update_key_feedback() -> void:
 			key.set_enabled(false)
 		TelegraphSessionController.State.AWAITING_ROUTE:
 			key.set_prompt_message("Awaiting Route Decision on Board")
+			key.set_enabled(false)
+		TelegraphSessionController.State.VERIFYING, TelegraphSessionController.State.AWAITING_COMMIT, TelegraphSessionController.State.CONSEQUENCE:
+			key.set_prompt_message("Transcript Requires Attention")
 			key.set_enabled(false)
 		TelegraphSessionController.State.COMPLETE:
 			if _scenario_index + 1 < _get_scenario_list().size():

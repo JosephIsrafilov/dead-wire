@@ -15,6 +15,9 @@ func _init() -> void:
 
 	var lbl: Label3D = paper_node.get_label_3d()
 	if not assert_condition(lbl != null, "paper has Label3D"): return
+	var writer := paper_node.get_writer_rig()
+	if not assert_condition(writer != null, "paper has WriterRig"): return
+	var sleeve_rest: Vector3 = (writer.get_node("Sleeve") as Node3D).position
 
 	# 1. Initial blank state
 	if not assert_condition(paper_node.get_transcript_text().is_empty(), "Initial transcript text is empty"): return
@@ -46,6 +49,22 @@ func _init() -> void:
 	if not assert_condition(paper_node.get_transcript_text().is_empty(), "Cleared transcript text is empty"): return
 	if not assert_condition(not paper_node.is_revealed(), "Cleared state is unrevealed"): return
 	if not assert_condition(lbl.text == "[BLANK TELEGRAM PAD]", "Label resets to placeholder"): return
+
+	# 6. Authored cues reveal glyphs at their authored boundaries, and progress
+	# never regresses when scheduler updates arrive out of order.
+	paper_node.begin_writing("WATER", PackedFloat32Array([0.1, 0.24, 0.51, 0.72, 0.93]))
+	if not assert_condition(paper_node.is_using_authored_cues(), "Authored cue map is accepted"): return
+	paper_node.set_writing_progress(0.24)
+	if not assert_condition(paper_node.get_revealed_glyph_count() == 2, "Cue progress reveals two glyphs"): return
+	paper_node.set_writing_progress(0.11)
+	if not assert_condition(paper_node.get_revealed_glyph_count() == 2, "Out-of-order cue progress is ignored"): return
+	paper_node.set_writing_progress(1.0)
+	if not assert_condition(paper_node.get_display_text() == "WATER", "Final authored cue reveals complete transcript"): return
+	if not assert_condition(paper_node.get_writer_rig().is_active(), "Writer rig remains active during writing"): return
+	paper_node.clear_transcript()
+	if not assert_condition(paper_node.get_writer_rig().get_presentation_state() == WriterRig.PresentationState.HIDDEN, "Clear resets writer rig lifecycle"): return
+	var sleeve_after_reset := (writer.get_node("Sleeve") as Node3D).position
+	if not assert_condition(sleeve_after_reset.is_equal_approx(sleeve_rest), "Clear restores WriterRig rest transform (expected %s, got %s; rig rest %s captured=%s)" % [sleeve_rest, sleeve_after_reset, writer.get_rest_position(), writer.is_rest_captured()]): return
 
 	# Clean up
 	paper_node.queue_free()

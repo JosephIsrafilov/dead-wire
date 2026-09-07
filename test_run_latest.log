@@ -1,0 +1,40 @@
+FAIL tests/audio/office_ambience_test.gd                        exit -1073741819
+       ERROR: Failed to read the root certificate store.
+OK   tests/debug/debug_inspector_telemetry_test.gd                 5 assertions
+FAIL tests/debug/debug_inspector_test.gd                        exit -1073741819
+       ERROR: Failed to read the root certificate store.
+OK   tests/events/attention_timeline_test.gd                      14 assertions
+OK   tests/events/door_attention_test.gd                          14 assertions
+OK   tests/events/window_observation_test.gd                      24 assertions
+OK   tests/integration/m1_office_integration_test.gd              75 assertions
+OK   tests/integration/main_scene_smoke_test.gd                    9 assertions
+OK   tests/office/atmosphere_test.gd                              43 assertions
+OK   tests/office/m1_presentation_structure_test.gd               23 assertions
+OK   tests/office/m1_spatial_metrics_test.gd                      30 assertions
+OK   tests/office/office_door_test.gd                             32 assertions
+OK   tests/office/shift_director_test.gd                          98 assertions
+OK   tests/player/player_body_test.gd                             43 assertions
+OK   tests/state/state_separation_test.gd                         29 assertions
+OK   tests/telegraph/american_morse_alphabet_data_test.gd        263 assertions
+OK   tests/telegraph/american_morse_encoder_test.gd               92 assertions
+OK   tests/telegraph/copy_commit_desk_test.gd                     16 assertions
+FAIL tests/telegraph/duty_sheet_test.gd                         exit 1
+       ERROR: Failed to read the root certificate store.
+       FAIL: Assertion failed: Production consequence completes the shift segment
+OK   tests/telegraph/investigative_anchors_test.gd                13 assertions
+OK   tests/telegraph/morse_playback_profile_test.gd               29 assertions
+OK   tests/telegraph/morse_runtime_scheduler_test.gd              31 assertions
+OK   tests/telegraph/morse_schedule_compiler_test.gd              39 assertions
+OK   tests/telegraph/morse_timing_model_test.gd                   38 assertions
+OK   tests/telegraph/routing_board_test.gd                        18 assertions
+OK   tests/telegraph/sounder_controller_test.gd                   15 assertions
+OK   tests/telegraph/telegraph_hardware_test.gd                   17 assertions
+OK   tests/telegraph/telegraph_scenario_data_test.gd              27 assertions
+OK   tests/telegraph/telegraph_session_controller_test.gd         44 assertions
+OK   tests/telegraph/transcript_paper_test.gd                     25 assertions
+OK   tests/telegraph/transmission_data_test.gd                    40 assertions
+OK   tests/ui/document_viewer_test.gd                             15 assertions
+OK   tests/ui/framing_test.gd                                     42 assertions
+-------------------------------------------------------------------------
+suites passed: 30   failed: 3   assertions: 1203
+failed suites: tests/audio/office_ambience_test.gd tests/debug/debug_inspector_test.gd tests/telegraph/duty_sheet_test.gd

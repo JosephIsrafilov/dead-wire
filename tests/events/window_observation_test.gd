@@ -62,8 +62,35 @@ func _init() -> void:
 	if not assert_condition(not target_node.is_active, "Event expires after duration"): return
 	if not assert_condition(not target_node.get_visual_indicator().visible, "Visual indicator hidden on expiration"): return
 
+	# 7. A watched trigger is queued without spending its visible lifetime.
+	var watched_scene: PackedScene = ResourceLoader.load("res://scenes/office/window_observation_event.tscn")
+	var watched_target: AttentionObservationTarget = watched_scene.instantiate() as AttentionObservationTarget
+	if not assert_condition(watched_target != null, "Watched target instantiates"): return
+	watched_target.position = Vector3(0.0, 1.5, -3.0)
+	root.add_child(watched_target)
+	var camera := Camera3D.new()
+	camera.position = Vector3(0.0, 1.5, 0.0)
+	root.add_child(camera)
+	await process_frame
+	camera.look_at(watched_target.global_position, Vector3.UP)
+	camera.make_current()
+	await process_frame
+	watched_target.trigger_event(2.0)
+	if not assert_condition(watched_target.is_active and not watched_target.get_visual_indicator().visible, "Watched trigger remains pending while in view"): return
+	watched_target._process(5.0)
+	if not assert_condition(watched_target.is_active and not watched_target.get_visual_indicator().visible, "Pending trigger does not expire off-screen"): return
+	camera.look_at(Vector3(0.0, 1.5, 3.0), Vector3.UP)
+	watched_target._process(0.0)
+	if not assert_condition(watched_target.get_visual_indicator().visible, "Pending figure appears after the player looks away"): return
+	watched_target._process(1.9)
+	if not assert_condition(watched_target.is_active, "Visible figure keeps its full post-appearance lifetime"): return
+	watched_target._process(0.2)
+	if not assert_condition(not watched_target.is_active and not watched_target.get_visual_indicator().visible, "Visible figure expires after its hold"): return
+
 	# Clean up
 	target_node.queue_free()
+	watched_target.queue_free()
+	camera.queue_free()
 
 	print("--- All Window Observation Event Tests PASSED ---")
 	quit(0)

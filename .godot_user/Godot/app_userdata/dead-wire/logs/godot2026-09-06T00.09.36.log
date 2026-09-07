@@ -1,0 +1,50 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+--- Starting Telegraph Session Controller Test Suite (Gate 12) ---
+  PASS: Scenario 1 loaded -> state READY
+  PASS: Key press transitions to RECEIVING
+  PASS: Transmission end transitions to VERIFYING
+  PASS: Paper text set to written_transcript
+  PASS: Paper is revealed after transmission
+  PASS: Transcript verification unlocks routing
+  PASS: Verified transcript transitions to AWAITING_ROUTE
+  PASS: Transcript verification is exactly once
+  PASS: Routing decision submitted
+  PASS: State is COMPLETE after routing
+  PASS: WorldState recorded correct fact
+  PASS: Incorrect fact is NOT set
+  PASS: State is COMPLETE after incorrect routing
+  PASS: WorldState recorded incorrect consequence
+  PASS: Correct fact is NOT set on mistake
+  PASS: Attention event not fired before 4.0s
+  PASS: Attention event 'door_footsteps' triggered at 4.0s
+  PASS: Scenario 2 reaches VERIFYING
+  PASS: Scenario 2 reaches AWAITING_ROUTE after inspection
+  PASS: Scenario 2 correct routing recorded
+  PASS: Scenario 3 reaches VERIFYING
+  PASS: Paper displays WATCHER
+  PASS: Sounder played clicks during transmission
+  PASS: Commit before inspection is a no-op
+  PASS: Scenario 3 awaits commit after inspection
+  PASS: Scenario 3 accepts authored commit
+  PASS: Commit starts consequence state
+  PASS: Second commit is a no-op
+  PASS: Pending consequence does not complete before figure visibility
+  PASS: Visible consequence hold completes session
+  PASS: Scenario 3 water fact recorded
+  PASS: Scenario 3 completion fact recorded
+  PASS: Automatic timeout branch starts in VERIFYING
+  PASS: Automatic timeout resolves from VERIFYING
+  PASS: Automatic timeout records dedicated lapse facts
+  PASS: Automatic timeout does not select either authored copy
+  PASS: Automatic timeout consequence completes the session
+  PASS: Timeout branch reaches AWAITING_COMMIT
+  PASS: Timeout branch accepts an explicit lapse
+  PASS: Lapse enters the neutral consequence state
+  PASS: Lapse records the dedicated world fact
+  PASS: Lapse records the dedicated knowledge fact
+  PASS: Lapse does not select either authored copy
+  PASS: Lapse consequence still completes the session
+--- All Telegraph Session Controller Tests PASSED ---
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2582)

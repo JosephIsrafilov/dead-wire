@@ -130,6 +130,8 @@ func _run() -> void:
 
 	# 10. Completing the message hands over to a routing deadline.
 	session.scheduler.advance_time(30.0)
+	if not assert_condition(session.get_state() == TelegraphSessionController.State.VERIFYING, "Message completion waits for transcript verification"): return
+	if not assert_condition(session.mark_transcript_verified(), "Transcript inspection unlocks route deadline"): return
 	if not assert_condition(session.get_state() == TelegraphSessionController.State.AWAITING_ROUTE, "Message ends awaiting a route"): return
 	if not assert_condition(director.get_phase() == ShiftDirector.Phase.AWAITING_ROUTE, "Director opens the routing deadline"): return
 	if not assert_condition(knowledge.knows(&"copied_baseline_train_17"), "Elias knows he copied the message"): return
@@ -152,6 +154,8 @@ func _run() -> void:
 	director.advance(director.wait_seconds_before_call[1] + 0.1)
 	key.press()
 	session.scheduler.advance_time(60.0)
+	if not assert_condition(session.get_state() == TelegraphSessionController.State.VERIFYING, "Second message waits for transcript verification"): return
+	session.mark_transcript_verified()
 	if not assert_condition(director.get_phase() == ShiftDirector.Phase.AWAITING_ROUTE, "Second message also awaits a route"): return
 	director.route_defaulted.connect(func(_slot: int, scenario: TelegraphScenarioData) -> void: _defaults.append(scenario.scenario_id))
 	director.advance(director.route_deadline_seconds + 0.1)
@@ -160,10 +164,19 @@ func _run() -> void:
 	if not assert_condition(knowledge.knows(&"lapsed_attention_hold_freight"), "Elias knows the freight order lapsed"): return
 	if not assert_condition(director.get_slot_index() == 2, "Shift advances after a defaulted route"): return
 
-	# 14. The final message needs no route and closes the night.
+	# 14. The final message is the core-hook commit, then closes the night.
 	director.advance(director.wait_seconds_before_call[2] + 0.1)
 	key.press()
 	session.scheduler.advance_time(30.0)
+	if not assert_condition(session.get_state() == TelegraphSessionController.State.VERIFYING, "Final message waits for transcript verification"): return
+	if not assert_condition(session.mark_transcript_verified(), "Final transcript inspection unlocks the commit"): return
+	if not assert_condition(session.get_state() == TelegraphSessionController.State.AWAITING_COMMIT, "Final message opens the commit desk"): return
+	var phase_before_commit_wait := director.get_phase()
+	director.advance(120.0)
+	if not assert_condition(director.get_phase() == phase_before_commit_wait and director.get_slot_index() == 2, "Commit inspection pauses call pacing until a decision"): return
+	if not assert_condition(session.submit_commit(&"file_water"), "Final message accepts an authored commit"): return
+	if not assert_condition(session.get_state() == TelegraphSessionController.State.CONSEQUENCE, "Final message enters its consequence beat"): return
+	session.advance_consequence(2.1)
 	if not assert_condition(director.get_phase() == ShiftDirector.Phase.CLOSING, "Last message closes the line"): return
 	director.advance(director.closing_delay_seconds + 0.1)
 	if not assert_condition(director.get_phase() == ShiftDirector.Phase.SHIFT_OVER, "Shift reaches SHIFT_OVER"): return

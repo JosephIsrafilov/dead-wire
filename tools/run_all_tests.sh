@@ -67,10 +67,12 @@ failed_names=""
 
 for suite in $(find "$PROJECT_DIR/tests" -name "*_test.gd" | sort); do
 	relative="${suite#"$PROJECT_DIR"/}"
-	output=$("$GODOT_BIN" --headless --path "$GODOT_PROJECT_DIR" --script "res://$relative" 2>&1)
+	# Match the Windows runner: tests validate the audio graph/telemetry, not a
+	# host device, so use a deterministic headless backend.
+	output=$("$GODOT_BIN" --headless --audio-driver Dummy --path "$GODOT_PROJECT_DIR" --script "res://$relative" 2>&1)
 	exit_code=$?
 	assertions=$(echo "$output" | grep -c "PASS:")
-	if [ $exit_code -eq 0 ] && ! echo "$output" | grep -q "FAIL"; then
+	if [ $exit_code -eq 0 ] && ! echo "$output" | grep -q '^FAIL:'; then
 		passed_suites=$((passed_suites + 1))
 		total_assertions=$((total_assertions + assertions))
 		printf 'OK   %-58s %4d assertions\n' "$relative" "$assertions"

@@ -1,4 +1,4 @@
-[gd_scene load_steps=43 format=3 uid="uid://m1office001"]
+[gd_scene load_steps=44 format=3 uid="uid://m1office001"]
 
 [ext_resource type="Script" path="res://scripts/office/m1_office_controller.gd" id="1_controller"]
 [ext_resource type="Material" path="res://materials/style_tests/floor_wood_planks.tres" id="2_floor"]
@@ -19,6 +19,7 @@
 [ext_resource type="PackedScene" path="res://scenes/telegraph/morse_reference_card.tscn" id="17_morseref"]
 [ext_resource type="PackedScene" path="res://scenes/telegraph/dispatch_ledger.tscn" id="18_ledger"]
 [ext_resource type="PackedScene" path="res://scenes/telegraph/routing_board.tscn" id="19_routing"]
+[ext_resource type="PackedScene" path="res://scenes/telegraph/copy_commit_desk.tscn" id="40_commit"]
 [ext_resource type="PackedScene" path="res://scenes/office/door_attention_source.tscn" id="20_dooratt"]
 [ext_resource type="PackedScene" path="res://scenes/office/window_observation_event.tscn" id="21_winobs"]
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="22_player"]
@@ -39,6 +40,7 @@
 [ext_resource type="Script" path="res://scripts/office/lamp_life.gd" id="37_lamplife"]
 [ext_resource type="PackedScene" path="res://scenes/ui/pause_menu.tscn" id="38_pause"]
 [ext_resource type="PackedScene" path="res://scenes/ui/intro_card.tscn" id="39_intro"]
+[ext_resource type="PackedScene" path="res://scenes/office/dawn_evidence.tscn" id="41_evidence"]
 
 [sub_resource type="BoxShape3D" id="SeatInteract"]
 size = Vector3(0.52, 0.76, 0.52)
@@ -63,16 +65,18 @@ tonemap_mode = 2
 tonemap_exposure = 1.42
 tonemap_white = 2.2
 
-[node name="M1Office" type="Node3D" node_paths=PackedStringArray("session_controller", "routing_board", "door_attention", "window_observation", "document_viewer", "player")]
+[node name="M1Office" type="Node3D" node_paths=PackedStringArray("session_controller", "routing_board", "copy_commit_desk", "door_attention", "window_observation", "document_viewer", "player", "dawn_evidence")]
 script = ExtResource("1_controller")
 enable_psx_rendering = true
 render_scale = 0.75
 session_controller = NodePath("TelegraphSessionController")
 routing_board = NodePath("RoutingBoard")
+copy_commit_desk = NodePath("CopyCommitDesk")
 door_attention = NodePath("DoorAttentionSource")
 window_observation = NodePath("WindowObservationEvent")
 document_viewer = NodePath("DocumentViewer")
 player = NodePath("Player")
+dawn_evidence = NodePath("DawnEvidence")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("env_office")
@@ -387,6 +391,9 @@ position = Vector3(-2.38, 0.752, -0.92)
 [node name="TranscriptPaper" parent="." instance=ExtResource("16_paper")]
 position = Vector3(-2.15, 0.752, -0.72)
 
+[node name="CopyCommitDesk" parent="." instance=ExtResource("40_commit")]
+position = Vector3(-1.15, 0.72, 1.35)
+
 [node name="MorseReferenceCard" parent="." instance=ExtResource("17_morseref")]
 position = Vector3(-2.17, 0.752, -0.32)
 
@@ -449,6 +456,9 @@ prompt_text = "Read Duty Sheet"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="DutySheet/Interactable"]
 shape = SubResource("DutySheetInteract")
+
+[node name="DawnEvidence" parent="." instance=ExtResource("41_evidence")]
+position = Vector3(-0.02, 1.5, 2.24)
 
 [node name="ShiftDirector" type="Node" parent="." node_paths=PackedStringArray("office", "session")]
 script = ExtResource("29_shift")

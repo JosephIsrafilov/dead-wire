@@ -1,0 +1,115 @@
+[gd_scene load_steps=7 format=3 uid="uid://b1commit001"]
+
+[ext_resource type="Script" path="res://scripts/telegraph/ui/copy_commit_desk.gd" id="1_desk"]
+[ext_resource type="Script" path="res://scripts/interaction/interactable.gd" id="2_interact"]
+[ext_resource type="Material" path="res://materials/style_tests/timber_trim.tres" id="3_wood"]
+[ext_resource type="Material" path="res://materials/style_tests/paper_log.tres" id="4_paper"]
+[ext_resource type="Material" path="res://materials/style_tests/metal_brass_aged.tres" id="5_brass"]
+
+[sub_resource type="BoxShape3D" id="DeskInteract"]
+size = Vector3(0.92, 0.28, 0.58)
+
+[node name="CopyCommitDesk" type="Node3D"]
+script = ExtResource("1_desk")
+
+[node name="DeskTop" type="CSGBox3D" parent="."]
+position = Vector3(0, 0.04, 0)
+size = Vector3(0.86, 0.08, 0.48)
+material = ExtResource("3_wood")
+
+[node name="OptionOnePlate" type="CSGBox3D" parent="."]
+position = Vector3(-0.2, 0.085, -0.02)
+size = Vector3(0.36, 0.012, 0.24)
+material = ExtResource("4_paper")
+
+[node name="OptionTwoPlate" type="CSGBox3D" parent="."]
+position = Vector3(0.2, 0.085, -0.02)
+size = Vector3(0.36, 0.012, 0.24)
+material = ExtResource("4_paper")
+
+[node name="OptionOneLabel" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, -0.2, 0.105, 0.08)
+pixel_size = 0.0014
+modulate = Color(0.08, 0.06, 0.04, 1)
+outline_modulate = Color(0.08, 0.06, 0.04, 1)
+font_size = 18
+outline_size = 1
+horizontal_alignment = 1
+vertical_alignment = 1
+width = 180.0
+text = "CORRECT COPY\nWATER"
+visible = false
+
+[node name="OptionTwoLabel" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0.2, 0.105, 0.08)
+pixel_size = 0.0014
+modulate = Color(0.08, 0.06, 0.04, 1)
+outline_modulate = Color(0.08, 0.06, 0.04, 1)
+font_size = 18
+outline_size = 1
+horizontal_alignment = 1
+vertical_alignment = 1
+width = 180.0
+text = "FILE COPY\nWATCHER"
+visible = false
+
+[node name="OptionOneStamp" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, -0.2, 0.12, 0.04)
+pixel_size = 0.0013
+modulate = Color(0.55, 0.12, 0.08, 1)
+outline_modulate = Color(0.16, 0.06, 0.03, 1)
+font_size = 15
+outline_size = 1
+horizontal_alignment = 1
+vertical_alignment = 1
+width = 120.0
+text = "VOID"
+visible = false
+
+[node name="OptionTwoStamp" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0.2, 0.12, 0.04)
+pixel_size = 0.0013
+modulate = Color(0.55, 0.12, 0.08, 1)
+outline_modulate = Color(0.16, 0.06, 0.03, 1)
+font_size = 15
+outline_size = 1
+horizontal_alignment = 1
+vertical_alignment = 1
+width = 120.0
+text = "VOID"
+visible = false
+
+[node name="PromptLabel" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.12, -0.16)
+pixel_size = 0.0013
+modulate = Color(0.08, 0.06, 0.04, 1)
+outline_modulate = Color(0.08, 0.06, 0.04, 1)
+font_size = 15
+outline_size = 1
+horizontal_alignment = 1
+vertical_alignment = 1
+width = 240.0
+text = "AWAITING TRANSCRIPT"
+
+[node name="ResultLabel" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.12, 0.08)
+pixel_size = 0.0013
+modulate = Color(0.08, 0.06, 0.04, 1)
+outline_modulate = Color(0.08, 0.06, 0.04, 1)
+font_size = 15
+outline_size = 1
+horizontal_alignment = 1
+vertical_alignment = 1
+width = 160.0
+text = "NO FILE"
+
+[node name="Interactable" type="Area3D" parent="."]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("2_interact")
+prompt_text = "File one copy"
+enabled = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Interactable"]
+position = Vector3(0, 0.12, 0)
+shape = SubResource("DeskInteract")

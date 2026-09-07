@@ -1,0 +1,21 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+--- Starting Document Viewer Test Suite (Phase D) ---
+  PASS: document_viewer.tscn loads
+  PASS: instantiates as DocumentViewer
+  PASS: Initially not open
+  PASS: Initially not visible
+  PASS: is_open() is true after open_document()
+  PASS: visible is true after open_document()
+  PASS: current_doc_id matches
+  PASS: document_opened signal emitted
+  PASS: title_label text matches
+  PASS: body_label text matches
+  PASS: footer_label text matches
+  PASS: Viewer does not immediately close on same opening frame
+  PASS: is_open() is false after close_document()
+  PASS: visible is false after close_document()
+  PASS: document_closed signal emitted
+--- All Document Viewer Tests PASSED ---
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2582)

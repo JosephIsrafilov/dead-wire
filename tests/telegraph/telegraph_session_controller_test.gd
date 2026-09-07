@@ -9,6 +9,11 @@ func _init() -> void:
 		world = WorldStateStore.new()
 		world.name = "WorldState"
 		root.add_child(world)
+	var knowledge: KnowledgeStateStore = root.get_node_or_null("KnowledgeState") as KnowledgeStateStore
+	if knowledge == null:
+		knowledge = KnowledgeStateStore.new()
+		knowledge.name = "KnowledgeState"
+		root.add_child(knowledge)
 
 	# Set up components
 	var controller := TelegraphSessionController.new()
@@ -48,9 +53,12 @@ func _init() -> void:
 	# Advance time through 13.60s (TRAIN 17 schedule duration)
 	scheduler.advance_time(14.0)
 
-	if not assert_condition(controller.get_state() == TelegraphSessionController.State.AWAITING_ROUTE, "Transmission end transitions to AWAITING_ROUTE"): return
+	if not assert_condition(controller.get_state() == TelegraphSessionController.State.VERIFYING, "Transmission end transitions to VERIFYING"): return
 	if not assert_condition(paper.get_transcript_text() == "TRAIN 17 CLEAR EAST", "Paper text set to written_transcript"): return
 	if not assert_condition(paper.is_revealed(), "Paper is revealed after transmission"): return
+	if not assert_condition(controller.mark_transcript_verified(), "Transcript verification unlocks routing"): return
+	if not assert_condition(controller.get_state() == TelegraphSessionController.State.AWAITING_ROUTE, "Verified transcript transitions to AWAITING_ROUTE"): return
+	if not assert_condition(not controller.mark_transcript_verified(), "Transcript verification is exactly once"): return
 
 	# Submit correct decision
 	var route_ok := controller.submit_routing_decision("CLEAR EAST")
@@ -64,6 +72,7 @@ func _init() -> void:
 	controller.load_scenario(scen1)
 	key.press()
 	scheduler.advance_time(14.0)
+	controller.mark_transcript_verified()
 	controller.submit_routing_decision("HOLD")
 	if not assert_condition(controller.get_state() == TelegraphSessionController.State.COMPLETE, "State is COMPLETE after incorrect routing"): return
 	if not assert_condition(world.has_fact("train_17_held_in_error") and world.get_fact("train_17_held_in_error") == true, "WorldState recorded incorrect consequence"): return
@@ -84,7 +93,9 @@ func _init() -> void:
 
 	# Complete transmission (total 15.60s)
 	scheduler.advance_time(12.0)
-	if not assert_condition(controller.get_state() == TelegraphSessionController.State.AWAITING_ROUTE, "Scenario 2 reaches AWAITING_ROUTE"): return
+	if not assert_condition(controller.get_state() == TelegraphSessionController.State.VERIFYING, "Scenario 2 reaches VERIFYING"): return
+	controller.mark_transcript_verified()
+	if not assert_condition(controller.get_state() == TelegraphSessionController.State.AWAITING_ROUTE, "Scenario 2 reaches AWAITING_ROUTE after inspection"): return
 	controller.submit_routing_decision("HOLD")
 	if not assert_condition(world.has_fact("freight_held_correctly") and world.get_fact("freight_held_correctly") == true, "Scenario 2 correct routing recorded"): return
 
@@ -97,10 +108,58 @@ func _init() -> void:
 	# Run transmission (3.60s)
 	scheduler.advance_time(4.0)
 
-	if not assert_condition(controller.get_state() == TelegraphSessionController.State.COMPLETE, "Scenario 3 completes without routing"): return
+	if not assert_condition(controller.get_state() == TelegraphSessionController.State.VERIFYING, "Scenario 3 reaches VERIFYING"): return
 	if not assert_condition(paper.get_transcript_text() == "WATCHER", "Paper displays WATCHER"): return
 	if not assert_condition(sounder.down_clicks_played > 0, "Sounder played clicks during transmission"): return
-	if not assert_condition(world.has_fact("water_watcher_transmission_received") and world.get_fact("water_watcher_transmission_received") == true, "Scenario 3 completion fact recorded"): return
+	if not assert_condition(not controller.submit_commit(&"file_water"), "Commit before inspection is a no-op"): return
+	controller.mark_transcript_verified()
+	if not assert_condition(controller.get_state() == TelegraphSessionController.State.AWAITING_COMMIT, "Scenario 3 awaits commit after inspection"): return
+	if not assert_condition(controller.submit_commit(&"file_water"), "Scenario 3 accepts authored commit"): return
+	if not assert_condition(controller.get_state() == TelegraphSessionController.State.CONSEQUENCE, "Commit starts consequence state"): return
+	if not assert_condition(not controller.submit_commit(&"file_watcher"), "Second commit is a no-op"): return
+	# A world-space figure can remain pending while the camera watches it. The
+	# session must not complete the observable hold before the figure appears.
+	controller.set_consequence_visibility_required(true)
+	controller.advance_consequence(2.0)
+	if not assert_condition(controller.get_state() == TelegraphSessionController.State.CONSEQUENCE, "Pending consequence does not complete before figure visibility"): return
+	controller.notify_consequence_visible()
+	controller.advance_consequence(0.0)
+	if not assert_condition(controller.get_state() == TelegraphSessionController.State.COMPLETE, "Visible consequence hold completes session"): return
+	if not assert_condition(world.has_fact("core_hook_filed_water") and world.get_fact("core_hook_filed_water") == true, "Scenario 3 water fact recorded"): return
+	if not assert_condition(world.has_fact("water_watcher_transmission_received"), "Scenario 3 completion fact recorded"): return
+
+	# 5. Automatic deadline covers both VERIFYING and AWAITING_COMMIT without
+	# silently choosing either copy.
+	world.reset_for_new_game()
+	knowledge.reset_for_new_game()
+	controller.commit_deadline_seconds = 0.5
+	controller.load_scenario(scen3)
+	key.press()
+	scheduler.advance_time(4.0)
+	if not assert_condition(controller.get_state() == TelegraphSessionController.State.VERIFYING, "Automatic timeout branch starts in VERIFYING"): return
+	controller._process(0.6)
+	if not assert_condition(controller.get_state() == TelegraphSessionController.State.CONSEQUENCE, "Automatic timeout resolves from VERIFYING"): return
+	if not assert_condition(world.has_fact("core_hook_commit_lapsed") and knowledge.knows("core_hook_commit_lapsed"), "Automatic timeout records dedicated lapse facts"): return
+	if not assert_condition(not world.has_fact("core_hook_filed_water") and not world.has_fact("core_hook_filed_watcher"), "Automatic timeout does not select either authored copy"): return
+	controller.advance_consequence(2.0)
+	if not assert_condition(controller.get_state() == TelegraphSessionController.State.COMPLETE, "Automatic timeout consequence completes the session"): return
+
+	# 6. Explicit timeout path remains available for UI/deadline owners.
+	controller.commit_deadline_seconds = 30.0
+	world.reset_for_new_game()
+	knowledge.reset_for_new_game()
+	controller.load_scenario(scen3)
+	key.press()
+	scheduler.advance_time(4.0)
+	controller.mark_transcript_verified()
+	if not assert_condition(controller.get_state() == TelegraphSessionController.State.AWAITING_COMMIT, "Timeout branch reaches AWAITING_COMMIT"): return
+	if not assert_condition(controller.lapse_commit(), "Timeout branch accepts an explicit lapse"): return
+	if not assert_condition(controller.get_state() == TelegraphSessionController.State.CONSEQUENCE, "Lapse enters the neutral consequence state"): return
+	if not assert_condition(world.has_fact("core_hook_commit_lapsed"), "Lapse records the dedicated world fact"): return
+	if not assert_condition(knowledge.knows("core_hook_commit_lapsed"), "Lapse records the dedicated knowledge fact"): return
+	if not assert_condition(not world.has_fact("core_hook_filed_water") and not world.has_fact("core_hook_filed_watcher"), "Lapse does not select either authored copy"): return
+	controller.advance_consequence(2.0)
+	if not assert_condition(controller.get_state() == TelegraphSessionController.State.COMPLETE, "Lapse consequence still completes the session"): return
 
 	# Clean up
 	controller.queue_free()

@@ -1,0 +1,48 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2582)
+--- Starting Framing Test Suite ---
+  PASS: Settings write to disk
+  PASS: Sensitivity survives a reload
+  PASS: Head bob choice survives a reload
+  PASS: Master volume survives a reload
+  PASS: Ambience volume survives a reload
+  PASS: m1_office.tscn loads
+  PASS: Office instantiates
+  PASS: Sensitivity reaches the controller
+  PASS: Head bob toggle reaches the controller
+  PASS: Ambience bus exists
+  PASS: Ambience volume reaches the bus
+  PASS: The game opens on an intro card
+  PASS: The intro is running at scene start
+  PASS: The intro is on screen
+  PASS: The operator cannot move or look during the intro
+  PASS: The intro can be skipped
+  PASS: The intro clears the screen
+  PASS: Skipping hands control back
+  PASS: There is a pause menu
+  PASS: The pause menu still runs while the tree is paused
+  PASS: It starts closed
+  PASS: Escape holds the line
+  PASS: The shift actually stops
+  PASS: Resuming closes the menu
+  PASS: The shift runs again
+  PASS: Document viewer is wired
+  PASS: Escape with a document open does not pause
+  PASS: Escape with empty hands pauses
+  PASS: Sensitivity is adjustable
+  PASS: Head bob is toggleable by the player
+  PASS: Both volumes are adjustable
+  PASS: Resume and quit exist
+  PASS: A shift with nothing gone wrong reports no trouble
+  PASS: A missed message counts as trouble
+  PASS: A lapsed route counts as trouble
+  PASS: A wrong route counts as trouble
+  PASS: The clean sign-off is sendable American Morse
+  PASS: The trouble query is sendable American Morse
+  PASS: The two nights do not sound the same
+  PASS: Duty sheet is present
+  PASS: An unfinished sheet says so
+  PASS: It still never reports what actually happened
+--- All Framing Tests PASSED (42 assertions) ---

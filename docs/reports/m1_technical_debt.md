@@ -1,11 +1,13 @@
 # M1 Technical Debt Register
 
-**Updated:** 2026-09-03
+**Updated:** 2026-09-04
 
 ## Current verification baseline
 
-The Windows and shell runners both complete **30/30 suites with 0 failures and
-1181 assertions**. Production-scene headless boot also exits with code 0.
+The Windows runner completes **32/32 suites with 0 failures and 1273
+assertions**. Both runners use Godot's `Dummy` audio driver in headless mode so
+the result does not depend on a host audio device. Production-scene headless
+boot and the main-menu-to-office smoke test also exit with code 0.
 
 ## Headless teardown resource warnings
 

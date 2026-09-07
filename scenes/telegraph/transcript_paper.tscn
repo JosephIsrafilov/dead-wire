@@ -1,8 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://b1paper001"]
+[gd_scene load_steps=9 format=3 uid="uid://b1paper001"]
 
 [ext_resource type="Script" path="res://scripts/telegraph/ui/transcript_paper.gd" id="1_paper"]
 [ext_resource type="Script" path="res://scripts/interaction/interactable.gd" id="2_interact"]
 [ext_resource type="Material" path="res://materials/style_tests/paper_log.tres" id="3_mat"]
+[ext_resource type="Script" path="res://scripts/telegraph/ui/writer_rig.gd" id="4_rig"]
+[ext_resource type="Material" path="res://materials/style_tests/timber_trim.tres" id="5_wood"]
+[ext_resource type="Material" path="res://materials/style_tests/metal_brass_aged.tres" id="6_brass"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_paper"]
 material = ExtResource("3_mat")
@@ -10,6 +13,28 @@ size = Vector3(0.2, 0.003, 0.26)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_interact"]
 size = Vector3(0.24, 0.06, 0.3)
+
+[sub_resource type="BoxMesh" id="BoxMesh_sleeve"]
+material = ExtResource("5_wood")
+size = Vector3(0.09, 0.08, 0.16)
+
+[sub_resource type="BoxMesh" id="BoxMesh_hand"]
+material = ExtResource("5_wood")
+size = Vector3(0.055, 0.035, 0.075)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_pen"]
+material = ExtResource("6_brass")
+top_radius = 0.009
+bottom_radius = 0.009
+height = 0.09
+radial_segments = 6
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_nib"]
+material = ExtResource("6_brass")
+top_radius = 0.004
+bottom_radius = 0.001
+height = 0.022
+radial_segments = 5
 
 [node name="TranscriptPaper" type="Node3D"]
 script = ExtResource("1_paper")
@@ -39,3 +64,37 @@ prompt_text = "Read Telegram Transcript"
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.03, 0)
 shape = SubResource("BoxShape3D_interact")
 
+[node name="WriterRig" type="Node3D" parent="."]
+script = ExtResource("4_rig")
+
+[node name="Sleeve" type="Node3D" parent="WriterRig"]
+position = Vector3(0.0, 0.045, 0.14)
+rotation = Vector3(0.12, 0.0, 0.12)
+
+[node name="SleeveMesh" type="MeshInstance3D" parent="WriterRig/Sleeve"]
+mesh = SubResource("BoxMesh_sleeve")
+
+[node name="Wrist" type="Node3D" parent="WriterRig/Sleeve"]
+position = Vector3(0.0, -0.01, -0.08)
+rotation = Vector3(0.0, 0.0, -0.1)
+
+[node name="WristMesh" type="MeshInstance3D" parent="WriterRig/Sleeve/Wrist"]
+mesh = SubResource("BoxMesh_hand")
+
+[node name="Hand" type="Node3D" parent="WriterRig/Sleeve/Wrist"]
+position = Vector3(0.0, -0.025, -0.08)
+rotation = Vector3(0.0, 0.0, -0.08)
+
+[node name="HandMesh" type="MeshInstance3D" parent="WriterRig/Sleeve/Wrist/Hand"]
+mesh = SubResource("BoxMesh_hand")
+
+[node name="Pen" type="Node3D" parent="WriterRig/Sleeve/Wrist/Hand"]
+position = Vector3(0.0, -0.022, -0.04)
+rotation = Vector3(0.0, 0.0, -0.16)
+
+[node name="Shaft" type="MeshInstance3D" parent="WriterRig/Sleeve/Wrist/Hand/Pen"]
+mesh = SubResource("CylinderMesh_pen")
+
+[node name="Nib" type="MeshInstance3D" parent="WriterRig/Sleeve/Wrist/Hand/Pen"]
+position = Vector3(0.0, -0.058, 0.0)
+mesh = SubResource("CylinderMesh_nib")

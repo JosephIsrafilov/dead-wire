@@ -2,6 +2,7 @@ class_name AttentionObservationTarget
 extends Node3D
 
 signal event_started()
+signal visibility_started()
 signal event_observed()
 signal event_expired()
 
@@ -16,6 +17,7 @@ signal event_expired()
 var is_active: bool = false
 var is_observed: bool = false
 var _remaining_duration: float = 0.0
+var _pending_duration: float = 0.0
 
 ## A figure that blinks into existence in front of the player is a bug, not a
 ## scare. Appearances and disappearances are held until the player is not looking
@@ -37,6 +39,7 @@ func reset_state() -> void:
 	is_active = false
 	is_observed = false
 	_remaining_duration = 0.0
+	_pending_duration = 0.0
 	_pending_show = false
 	_pending_hide = false
 	var vi := get_visual_indicator()
@@ -46,7 +49,11 @@ func reset_state() -> void:
 func trigger_event(duration: float = 5.0) -> void:
 	is_active = true
 	is_observed = false
-	_remaining_duration = duration
+	# The event can be queued while the player is looking at the window. Its
+	# lifetime must begin when the figure is actually visible, otherwise a
+	# watched trigger can expire entirely off-screen.
+	_remaining_duration = 0.0
+	_pending_duration = maxf(duration, 0.0)
 
 	_pending_show = true
 	_pending_hide = false
@@ -120,7 +127,10 @@ func check_camera(camera: Camera3D) -> bool:
 	return evaluate_observation(cam_pos, cam_fwd, is_occluded)
 
 func _process(delta: float) -> void:
-	if is_active:
+	# Pending visibility is not time on screen. Do not consume the hold while the
+	# player is watching the blocked reveal; _resolve_pending_visibility() starts
+	# the real lifetime once the figure can be shown.
+	if is_active and _remaining_duration > 0.0:
 		_remaining_duration -= delta
 		if _remaining_duration <= 0.0:
 			is_active = false
@@ -144,6 +154,9 @@ func _resolve_pending_visibility() -> void:
 	if _pending_show:
 		vi.visible = true
 		_pending_show = false
+		_remaining_duration = _pending_duration
+		_pending_duration = 0.0
+		visibility_started.emit()
 	elif _pending_hide:
 		vi.visible = false
 		_pending_hide = false

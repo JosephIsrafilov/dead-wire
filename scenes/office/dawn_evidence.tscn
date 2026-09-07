@@ -1,0 +1,75 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scripts/office/dawn_evidence.gd" id="1_evidence"]
+[ext_resource type="Script" path="res://scripts/interaction/interactable.gd" id="2_interact"]
+[ext_resource type="Material" path="res://materials/style_tests/timber_trim.tres" id="3_wood"]
+[ext_resource type="Material" path="res://materials/style_tests/paper_log.tres" id="4_paper"]
+
+[sub_resource type="BoxShape3D" id="EvidenceInteract"]
+size = Vector3(0.88, 0.78, 0.22)
+
+[node name="DawnEvidence" type="Node3D"]
+script = ExtResource("1_evidence")
+
+[node name="Frame" type="CSGBox3D" parent="."]
+position = Vector3(0, 0, 0.025)
+size = Vector3(0.9, 0.8, 0.06)
+material = ExtResource("3_wood")
+
+[node name="Paper" type="CSGBox3D" parent="."]
+position = Vector3(0, 0, -0.012)
+size = Vector3(0.74, 0.64, 0.014)
+material = ExtResource("4_paper")
+
+[node name="TitleLabel" type="Label3D" parent="."]
+position = Vector3(0, 0.23, -0.026)
+rotation = Vector3(0, 3.141593, 0)
+pixel_size = 0.0018
+modulate = Color(0.12, 0.1, 0.075, 1)
+outline_size = 1
+outline_modulate = Color(0.78, 0.67, 0.45, 1)
+text = "MORNING DRAFT"
+font_size = 15
+
+[node name="SubtitleLabel" type="Label3D" parent="."]
+position = Vector3(0, 0.05, -0.026)
+rotation = Vector3(0, 3.141593, 0)
+pixel_size = 0.00155
+modulate = Color(0.18, 0.14, 0.095, 1)
+text = "UNREAD / 6:03 A.M."
+font_size = 12
+
+[node name="ResultLabel" type="Label3D" parent="."]
+position = Vector3(0, -0.08, -0.026)
+rotation = Vector3(0, 3.141593, 0)
+pixel_size = 0.0018
+modulate = Color(0.55, 0.12, 0.08, 1)
+outline_size = 1
+text = "UNREAD"
+font_size = 14
+
+[node name="StampLabel" type="Label3D" parent="."]
+position = Vector3(0, -0.22, -0.026)
+rotation = Vector3(0, 3.141593, 0)
+pixel_size = 0.00145
+modulate = Color(0.22, 0.18, 0.12, 1)
+text = "SEALED"
+font_size = 11
+
+[node name="RevealLight" type="OmniLight3D" parent="."]
+position = Vector3(0, 0, 0.17)
+light_energy = 0.0
+omni_range = 1.55
+omni_attenuation = 1.8
+shadow_enabled = true
+
+[node name="Interactable" type="Area3D" parent="."]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("2_interact")
+prompt_text = "Read Dawn Dispatch"
+enabled = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Interactable"]
+position = Vector3(0, 0, -0.08)
+shape = SubResource("EvidenceInteract")

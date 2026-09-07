@@ -36,13 +36,20 @@ foreach ($suite in $suites) {
     $oldErrorActionPreference = $ErrorActionPreference
     $ErrorActionPreference = "Continue"
     try {
-        $output = (& $godotBin --headless --path $projectDir.Path --script "res://$relative" 2>&1 | Out-String)
+        # Keep the regression runner deterministic on CI/headless machines. A
+        # real audio backend can crash during teardown when several Godot
+        # processes are launched sequentially; tests assert audio graph and
+        # telemetry, not device output.
+        $output = (& $godotBin --headless --audio-driver Dummy --path $projectDir.Path --script "res://$relative" 2>&1 | Out-String)
     } finally {
         $ErrorActionPreference = $oldErrorActionPreference
     }
     $exitCode = $LASTEXITCODE
     $assertions = ([regex]::Matches($output, "PASS:")).Count
-    if ($exitCode -eq 0 -and $output -notmatch "FAIL") {
+    # Godot on Windows may print "Failed to read the root certificate store"
+    # to stderr even when the suite exits successfully. Match assertion lines,
+    # not the generic word "Failed" in that engine warning.
+    if ($exitCode -eq 0 -and $output -notmatch "(?m)^FAIL:") {
         $passedSuites++
         $totalAssertions += $assertions
         "OK   {0,-58} {1,4} assertions" -f $relative, $assertions

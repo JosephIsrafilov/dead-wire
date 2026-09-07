@@ -1,0 +1,31 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+--- Starting Transcript Paper Test Suite (Gate 11) ---
+  PASS: transcript_paper.tscn loads
+  PASS: instantiates as TranscriptPaper
+  PASS: paper has Interactable component
+  PASS: prompt text matches
+  PASS: paper has Label3D
+  PASS: paper has WriterRig
+  PASS: Initial transcript text is empty
+  PASS: Initial state is unrevealed
+  PASS: Label shows placeholder initially
+  PASS: Transcript text set to WATCHER
+  PASS: Label remains placeholder before reveal
+  PASS: is_revealed() is true
+  PASS: Label displays WATCHER upon reveal
+  PASS: First interaction emits transcript_inspected with text
+  PASS: Second interaction also emits transcript_inspected with text
+  PASS: Cleared transcript text is empty
+  PASS: Cleared state is unrevealed
+  PASS: Label resets to placeholder
+  PASS: Authored cue map is accepted
+  PASS: Cue progress reveals two glyphs
+  PASS: Out-of-order cue progress is ignored
+  PASS: Final authored cue reveals complete transcript
+  PASS: Writer rig remains active during writing
+  PASS: Clear resets writer rig lifecycle
+  PASS: Clear restores WriterRig rest transform (expected (0.0, 0.045, 0.14), got (0.0, 0.045, 0.14); rig rest (0.0, 0.045, 0.14) captured=true)
+--- All Transcript Paper Tests PASSED ---
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2582)

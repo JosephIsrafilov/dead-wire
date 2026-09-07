@@ -62,6 +62,20 @@ const STATUS_FILED: String = "COPIED / FILED"
 const STATUS_NO_COPY: String = "NO COPY"
 const STATUS_LAPSED: String = "NO ORDER SENT"
 
+## Core-hook outcomes are deliberately phrased as Elias's paperwork, not as a
+## replay of the wire. The lookup table keeps this surface data-driven: adding
+## another knowledge-backed outcome does not require a second branch in the
+## sheet renderer.
+const STATUS_CORE_HOOK_WATER: String = "HEARD COPY SEALED"
+const STATUS_CORE_HOOK_WATCHER: String = "WRITTEN COPY SEALED"
+const STATUS_CORE_HOOK_LAPSED: String = "UNFILED"
+const CORE_HOOK_OUTCOME_LABEL: String = "CORE HOOK RECORD"
+const CORE_HOOK_OUTCOME_BY_FACT: Dictionary = {
+	&"committed_water_core_hook": STATUS_CORE_HOOK_WATER,
+	&"committed_watcher_core_hook": STATUS_CORE_HOOK_WATCHER,
+	&"core_hook_commit_lapsed": STATUS_CORE_HOOK_LAPSED,
+}
+
 var interactable: Interactable = null
 
 func _ready() -> void:
@@ -100,7 +114,22 @@ func get_sheet_text() -> String:
 	var body := "\n".join(lines)
 	if not unscheduled.is_empty():
 		body += "\n\n" + "\n".join(unscheduled)
+	var core_hook_status := get_core_hook_outcome_status()
+	if not core_hook_status.is_empty():
+		body += "\n\n" + _pad_status(CORE_HOOK_OUTCOME_LABEL, core_hook_status)
 	return HEADER + body + (FOOTER_INCOMPLETE if _has_open_items() else FOOTER)
+
+## Returns the terminal core-hook record Elias knows about, if any. This
+## method intentionally never consults WorldState: the sheet can only show a
+## consequence after the corresponding KnowledgeState fact has been learned.
+func get_core_hook_outcome_status() -> String:
+	var knowledge := _knowledge_state()
+	if knowledge == null:
+		return ""
+	for fact_id in CORE_HOOK_OUTCOME_BY_FACT:
+		if knowledge.knows(fact_id):
+			return String(CORE_HOOK_OUTCOME_BY_FACT[fact_id])
+	return ""
 
 ## Elias can see a gap in his own paperwork. He cannot see what it cost — that
 ## stays in WorldState, and the only thing that ever reports it is the wire.

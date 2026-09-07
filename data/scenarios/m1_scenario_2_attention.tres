@@ -21,3 +21,5 @@ incorrect_world_fact = "freight_cleared_in_error"
 attention_event_id = "door_footsteps"
 attention_event_start_time = 4.0
 completion_fact = ""
+requires_transcript_verification = true
+transcript_reveal_cues = PackedFloat32Array(0.04, 0.09, 0.14, 0.20, 0.27, 0.33, 0.39, 0.45, 0.51, 0.58, 0.64, 0.70, 0.76, 0.82, 0.87, 0.91, 0.95, 0.98, 1.0)

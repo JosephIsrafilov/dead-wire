@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="TransmissionData" format=3]
+
+[ext_resource type="Script" path="res://scripts/telegraph/transmission_data.gd" id="1_503b1"]
+
+[resource]
+script = ExtResource("1_503b1")
+transmission_id = &"roundtrip_id"
+true_message = "RT_TRUE"
+elias_perception = "RT_PERCEPTION"
+written_transcript = "RT_WRITTEN"

@@ -1,0 +1,23 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+--- Starting Telegraph Hardware Scene Test Suite (Gate 10 / Gate 20A) ---
+  PASS: sounder.tscn loads
+  PASS: sounder instantiates as SounderController
+  PASS: telegraph_key.tscn loads
+  PASS: telegraph_key instantiates as TelegraphKey
+  PASS: key has Interactable component
+  PASS: key interactable prompt text matches
+  PASS: key interact() triggers key_pressed signal when enabled
+  PASS: key.press_count is 1
+  PASS: Prompt updated to Line Busy
+  PASS: Interactable remains enabled for prompt visibility
+  PASS: interact() on disabled key does NOT emit key_pressed
+  PASS: press_count does not increase when disabled
+  PASS: interact() after re-enabling emits key_pressed
+  PASS: telegraph_station.tscn loads
+  PASS: telegraph_station instantiates
+  PASS: station contains Sounder
+  PASS: station contains TelegraphKey
+--- All Telegraph Hardware Scene Tests PASSED ---
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2582)
