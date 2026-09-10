@@ -30,6 +30,7 @@ func _run_tests() -> void:
 	var bookcase := office_node.get_node_or_null("Bookcase") as Node3D
 	var stove := office_node.get_node_or_null("CornerStove") as Node3D
 	var board := office_node.get_node_or_null("RoutingBoard") as RoutingBoard
+	var filing_desk := office_node.get_node_or_null("CopyCommitDesk") as Node3D
 	var window := office_node.get_node_or_null("NorthWindow") as Node3D
 	var door := office_node.get_node_or_null("SouthDoor") as Node3D
 	var player := office_node.get_node_or_null("Player") as CharacterBody3D
@@ -52,7 +53,7 @@ func _run_tests() -> void:
 	_assert(_inside_room(_combined_aabb(bookcase)), "11. Bookcase does not intersect a room wall")
 	_assert(_inside_room(_combined_aabb(stove)) and not _combined_aabb(stove).intersects(_combined_aabb(cabinet)) and not _combined_aabb(stove).intersects(_combined_aabb(bookcase)), "12. Stove avoids wall and furniture overlap")
 	_assert(stove != null and stove.get_node_or_null("SideTable") == null, "13. Stove contains no SideTable")
-	_assert(_has_collider(desk) and _has_collider(chair) and _has_collider(cabinet) and _has_collider(bookcase) and _has_collider(stove) and _has_collider(board), "14. Large furniture and board have collision shapes")
+	_assert(_has_collider(desk) and _has_collider(chair) and _has_collider(cabinet) and _has_collider(bookcase) and _has_collider(stove) and _has_collider(board) and _has_collider(filing_desk), "14. Large furniture, filing desk, and board have collision shapes")
 	_assert(_passage_width_is_at_least(0.65), "15. Main crossing uses a 0.70m player capsule clearance")
 	var desk_access := Vector3(-0.65, 0.0, -0.6)
 	_assert(_capsule_path_is_clear(player, Vector3(0.0, 0.0, 0.0), desk_access), "16. Player capsule passes spawn to desk")
@@ -71,6 +72,7 @@ func _run_tests() -> void:
 	_assert(_window_line_of_sight_is_honest(), "25-26. Wall blocks outside aperture and LoS passes window aperture")
 	_assert(_attention_directions_are_separate(desk_access, window.global_position, door.global_position), "27. Door and Window are different attention directions")
 	_assert(_cannot_see_all_attention_zones(desk_access, desk.global_position, window.global_position, door.global_position, board.global_position), "28. Desk, Window, Door, and Board exceed central FOV")
+	_assert(office_node.get_node("CopyCommitDesk").global_position.x > -0.2, "28b. Filing desk stays east of the south-door approach")
 	_assert(_inside_room(_combined_aabb(desk)) and _inside_room(chair_box) and _inside_room(_combined_aabb(cabinet)) and _inside_room(_combined_aabb(bookcase)) and _inside_room(_combined_aabb(stove)) and _inside_room(_combined_aabb(board)), "29. All major props are inside room bounds")
 	_assert(_no_rejected_runtime_assets(office_node), "30. Runtime scene contains no third-party high-poly reference assets")
 
@@ -93,6 +95,8 @@ func _combined_aabb(node: Node) -> AABB:
 	return _combined_aabb_fixed(node)
 
 func _geometry_aabbs(node: Node, output: Array[AABB]) -> void:
+	if node is Node3D and not node.is_visible_in_tree():
+		return
 	if node is MeshInstance3D or node is CSGShape3D:
 		var instance := node as VisualInstance3D
 		var local_box := instance.get_aabb()
@@ -162,7 +166,7 @@ func _interaction_rays_hit_expected() -> bool:
 	var key_area := office_node.get_node_or_null("TelegraphStation/TelegraphKey/Interactable") as Area3D
 	var paper_area := office_node.get_node_or_null("TranscriptPaper/Interactable") as Area3D
 	var ledger_area := office_node.get_node_or_null("DispatchLedger/Interactable") as Area3D
-	return _ray_hits_area(Vector3(1.65, 1.45, -0.85), board_area) and _ray_hits_area(Vector3(-0.95, 1.1, -0.92), key_area) and _ray_hits_area(Vector3(-0.95, 1.1, -0.72), paper_area) and _ray_hits_area(Vector3(-0.95, 1.1, -0.42), ledger_area)
+	return _ray_hits_area(Vector3(1.65, 1.45, -0.85), board_area) and _ray_hits_area(Vector3(-0.95, 1.1, -0.92), key_area) and _ray_hits_area(Vector3(-0.95, 1.1, -0.72), paper_area) and _ray_hits_area(Vector3(-1.25, 1.65, -0.1), ledger_area)
 
 func _ray_hits_area(from: Vector3, expected: Area3D) -> bool:
 	if expected == null:
@@ -172,6 +176,8 @@ func _ray_hits_area(from: Vector3, expected: Area3D) -> bool:
 	query.collide_with_areas = true
 	query.collide_with_bodies = false
 	var hit := office_node.get_world_3d().direct_space_state.intersect_ray(query)
+	if hit.is_empty() or hit.get("collider") != expected:
+		printerr("Interaction ray expected %s from %s; hit %s" % [expected.get_path(), from, hit.get("collider")])
 	return not hit.is_empty() and hit.get("collider") == expected
 
 func _window_line_of_sight_is_honest() -> bool:

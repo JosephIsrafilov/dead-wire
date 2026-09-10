@@ -2,8 +2,8 @@ class_name DawnEvidence
 extends Node3D
 
 ## A physical morning document left behind after the last telegram.
-## The variant is selected from WorldState: this is the railroad's account,
-## not Elias's memory.
+## WorldState selects the copy actually filed during this watch; knowledge
+## records whether Elias inspected it. Neither confirms the message's meaning.
 
 signal evidence_revealed(variant_id: StringName)
 signal evidence_inspected(text: String)
@@ -62,21 +62,6 @@ func reveal() -> bool:
 	_update_interaction()
 	evidence_revealed.emit(_variant_id)
 
-	if is_inside_tree():
-		var reveal_light := get_node_or_null("RevealLight") as OmniLight3D
-		if reveal_light != null:
-			reveal_light.light_color = _reveal_light_color(_variant_id)
-			reveal_light.light_energy = 0.0
-		scale = Vector3(0.84, 0.84, 0.84)
-		var rest_rotation := rotation.y
-		var tween := create_tween()
-		tween.set_parallel(true)
-		tween.tween_property(self, "scale", Vector3.ONE, 0.72).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-		if reveal_light != null:
-			tween.tween_property(reveal_light, "light_energy", 0.48, 0.16).set_trans(Tween.TRANS_SINE)
-			tween.chain().tween_property(reveal_light, "light_energy", 0.12, 0.72).set_trans(Tween.TRANS_SINE)
-		tween.tween_property(self, "rotation:y", rest_rotation + deg_to_rad(1.5), 0.22).set_trans(Tween.TRANS_SINE)
-		tween.chain().tween_property(self, "rotation:y", rest_rotation, 0.42).set_trans(Tween.TRANS_SINE)
 	return true
 
 func reset_for_new_watch() -> void:
@@ -100,48 +85,26 @@ func _read_variant() -> StringName:
 	return VARIANT_LAPSED
 
 func _build_document(variant_id: StringName) -> String:
-	match variant_id:
-		VARIANT_WATER:
-			return """BLACK CREEK DISPATCH
-MORNING DRAFT — 6:03 A.M.
+	var copy := "No copy filed. The unscheduled call remains open."
+	if variant_id == VARIANT_WATER:
+		copy = "WATER\n\nCorrection entered by E. Crane. The original\nworking transcript is retained beneath this copy."
+	elif variant_id == VARIANT_WATCHER:
+		copy = "WATCHER\n\nFiled as written by E. Crane. No correction\nentered. Retain the working transcript."
+	return """BLACK CREEK STATION
+HANDOVER — 6 A.M., APRIL 1894
 ================================
 
-EASTBOUND MAIN
-TANK 4 — WATER
-STATUS: RELEASED
+UNSCHEDULED NIGHT TRAFFIC
 
-The morning clerk's copy agrees with
-the wire. A clean line was handed over.
+%s
 
-SIGNED: J. VALE / DAY DESK"""
-		VARIANT_WATCHER:
-			return """BLACK CREEK DISPATCH
-MORNING DRAFT — 6:03 A.M.
-================================
+Sender not entered in the night ledger.
+No train number supplied.
 
-EASTBOUND MAIN
-TRAIN: [NO NUMBER]
-STATUS: RECORD DOES NOT MATCH
+Leave both sheets for the morning operator.
+An entry is not a confirmation.
 
-The day clerk has crossed out the copy.
-In the margin, one word remains:
-
-WATCHER
-
-SIGNED: J. VALE / DAY DESK"""
-		_:
-			return """BLACK CREEK DISPATCH
-MORNING DRAFT — 6:03 A.M.
-================================
-
-EASTBOUND MAIN
-STATUS: NO COPY ON FILE
-
-At 6:03 the dispatcher asked why
-Black Creek held the line open.
-No answer was attached to the docket.
-
-SIGNED: J. VALE / DAY DESK"""
+PREPARED: E. CRANE / NIGHT DESK""" % copy
 
 func _update_labels() -> void:
 	var result := get_node_or_null("ResultLabel") as Label3D
@@ -151,12 +114,12 @@ func _update_labels() -> void:
 		return
 	match _variant_id:
 		VARIANT_WATER:
-			result.text = "RELEASED"
-			stamp.text = "MATCHED"
-			subtitle.text = "TANK 4 / EASTBOUND"
+			result.text = "WATER"
+			stamp.text = "CORRECTED"
+			subtitle.text = "NIGHT COPY / RETAIN"
 		VARIANT_WATCHER:
-			result.text = "MISMATCH"
-			stamp.text = "CROSSED OUT"
+			result.text = "WATCHER"
+			stamp.text = "AS WRITTEN"
 			subtitle.text = "NO TRAIN NUMBER"
 		_:
 			result.text = "NO COPY"
@@ -167,15 +130,6 @@ func _update_interaction() -> void:
 	_resolve_nodes()
 	if interactable != null:
 		interactable.enabled = _revealed
-
-func _reveal_light_color(variant_id: StringName) -> Color:
-	match variant_id:
-		VARIANT_WATER:
-			return Color(0.91, 0.68, 0.36, 1.0)
-		VARIANT_WATCHER:
-			return Color(0.42, 0.55, 0.92, 1.0)
-		_:
-			return Color(0.74, 0.24, 0.16, 1.0)
 
 func _on_interacted() -> void:
 	if _revealed:

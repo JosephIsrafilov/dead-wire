@@ -124,6 +124,10 @@ func _init() -> void:
 	if not assert_condition(controller.get_state() == TelegraphSessionController.State.CONSEQUENCE, "Pending consequence does not complete before figure visibility"): return
 	controller.notify_consequence_visible()
 	controller.advance_consequence(0.0)
+	if not assert_condition(controller.get_state() == TelegraphSessionController.State.CONSEQUENCE, "Late appearance starts a fresh observable hold"): return
+	controller.advance_consequence(scen3.consequence_hold_seconds - 0.1)
+	if not assert_condition(controller.get_state() == TelegraphSessionController.State.CONSEQUENCE, "Full visible hold cannot be consumed while pending"): return
+	controller.advance_consequence(0.1)
 	if not assert_condition(controller.get_state() == TelegraphSessionController.State.COMPLETE, "Visible consequence hold completes session"): return
 	if not assert_condition(world.has_fact("core_hook_filed_water") and world.get_fact("core_hook_filed_water") == true, "Scenario 3 water fact recorded"): return
 	if not assert_condition(world.has_fact("water_watcher_transmission_received"), "Scenario 3 completion fact recorded"): return
@@ -141,7 +145,7 @@ func _init() -> void:
 	if not assert_condition(controller.get_state() == TelegraphSessionController.State.CONSEQUENCE, "Automatic timeout resolves from VERIFYING"): return
 	if not assert_condition(world.has_fact("core_hook_commit_lapsed") and knowledge.knows("core_hook_commit_lapsed"), "Automatic timeout records dedicated lapse facts"): return
 	if not assert_condition(not world.has_fact("core_hook_filed_water") and not world.has_fact("core_hook_filed_watcher"), "Automatic timeout does not select either authored copy"): return
-	controller.advance_consequence(2.0)
+	controller.advance_consequence(scen3.consequence_delay_seconds + scen3.consequence_hold_seconds)
 	if not assert_condition(controller.get_state() == TelegraphSessionController.State.COMPLETE, "Automatic timeout consequence completes the session"): return
 
 	# 6. Explicit timeout path remains available for UI/deadline owners.
@@ -158,9 +162,16 @@ func _init() -> void:
 	if not assert_condition(world.has_fact("core_hook_commit_lapsed"), "Lapse records the dedicated world fact"): return
 	if not assert_condition(knowledge.knows("core_hook_commit_lapsed"), "Lapse records the dedicated knowledge fact"): return
 	if not assert_condition(not world.has_fact("core_hook_filed_water") and not world.has_fact("core_hook_filed_watcher"), "Lapse does not select either authored copy"): return
-	controller.advance_consequence(2.0)
+	controller.advance_consequence(scen3.consequence_delay_seconds + scen3.consequence_hold_seconds)
 	if not assert_condition(controller.get_state() == TelegraphSessionController.State.COMPLETE, "Lapse consequence still completes the session"): return
 
+	controller.load_scenario(scen1)
+	controller.start_transmission()
+	scheduler.advance_time(14.0)
+	if not assert_condition(not controller.submit_routing_decision("CLEAR EAST"), "Unread order still rejects player routing"): return
+	if not assert_condition(controller.lapse_routing(), "Unread order can lapse without verification"): return
+	if not assert_condition(controller.get_state() == TelegraphSessionController.State.COMPLETE, "Unread lapse completes rather than stranding the night"): return
+	if not assert_condition(not controller.lapse_routing(), "Lapse is terminal exactly once"): return
 	# Clean up
 	controller.queue_free()
 	scheduler.queue_free()

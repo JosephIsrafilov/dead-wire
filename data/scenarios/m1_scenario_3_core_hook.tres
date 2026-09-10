@@ -45,4 +45,4 @@ commit_lapsed_world_fact = "core_hook_commit_lapsed"
 commit_lapsed_knowledge_fact = "core_hook_commit_lapsed"
 consequence_event_id = "window_figure"
 consequence_delay_seconds = 1.0
-consequence_hold_seconds = 1.0
+consequence_hold_seconds = 6.0

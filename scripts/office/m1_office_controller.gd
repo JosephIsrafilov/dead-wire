@@ -4,7 +4,7 @@ extends Node3D
 signal scenario_cycle_completed()
 
 @export var enable_psx_rendering: bool = true
-@export var render_scale: float = 0.75
+@export var render_scale: float = 0.5
 
 @export var session_controller: TelegraphSessionController = null
 @export var routing_board: RoutingBoard = null
@@ -47,6 +47,7 @@ func apply_psx_settings() -> void:
 	vp.screen_space_aa = Viewport.SCREEN_SPACE_AA_DISABLED
 	vp.use_taa = false
 	vp.use_debanding = false
+	vp.canvas_item_default_texture_filter = Viewport.DEFAULT_CANVAS_ITEM_TEXTURE_FILTER_NEAREST
 
 func _bind_signals() -> void:
 	if session_controller == null:
@@ -274,16 +275,23 @@ func _on_consequence_visibility_expired() -> void:
 		session_controller.notify_consequence_expired()
 
 func _on_session_completed(_scen: TelegraphScenarioData) -> void:
+	if window_observation != null:
+		window_observation.cancel_pending_appearance()
 	if dawn_evidence != null and _scen != null and _scen.scenario_id == "core_hook_water_watcher":
 		dawn_evidence.reveal()
 	var list := _get_scenario_list()
-	if _scenario_index + 1 >= list.size():
+	if not list.is_empty() and _scen == list.back():
 		if not _cycle_completed:
 			_cycle_completed = true
 			scenario_cycle_completed.emit()
 	_update_key_feedback()
 
 func _on_session_state_changed(new_state: TelegraphSessionController.State, _prev_state: TelegraphSessionController.State) -> void:
+	if new_state == TelegraphSessionController.State.IDLE:
+		if window_observation != null:
+			window_observation.reset_state()
+		if copy_commit_desk != null:
+			copy_commit_desk.reset_for_new_transmission()
 	if routing_board != null:
 		if new_state != TelegraphSessionController.State.AWAITING_ROUTE and routing_board.is_open:
 			routing_board.close_board()
@@ -337,8 +345,12 @@ func _try_end_shift() -> void:
 	var record := ""
 	var sheet := get_node_or_null("DutySheet") as DutySheet
 	if sheet != null:
-		record = sheet.get_sheet_text()
+		record = sheet.get_watch_record()
 	shift_end_card.play("END OF WATCH", record)
+	var interaction := player.get_node_or_null("InteractionController") as InteractionController
+	if interaction != null:
+		interaction.is_ui_blocked = true
+		interaction.refresh_prompt()
 
 func _on_duty_sheet_inspected(text: String) -> void:
 	if document_viewer != null:
@@ -349,7 +361,7 @@ func _on_dawn_evidence_inspected(text: String) -> void:
 	if interaction != null:
 		interaction.set_persistent_hint("")
 	if document_viewer != null:
-		document_viewer.open_document("dawn_evidence", "BLACK CREEK DISPATCH — MORNING DRAFT", text, "[E / Esc] Put Down Dispatch Draft")
+		document_viewer.open_document("dawn_evidence", "BLACK CREEK — NIGHT HANDOVER", text, "[E / Esc] Put Down Dispatch Draft")
 
 func _on_document_opened(_doc_id: String) -> void:
 	if player != null:
@@ -414,6 +426,7 @@ func _update_key_feedback() -> void:
 				key.set_enabled(false)
 
 func _process(_delta: float) -> void:
+	_refresh_guidance()
 	if window_observation != null and window_observation.is_active:
 		var cam := player_camera
 		if cam == null and player != null:
@@ -422,3 +435,26 @@ func _process(_delta: float) -> void:
 			cam = get_viewport().get_camera_3d()
 		if cam != null:
 			window_observation.check_camera(cam)
+
+func _refresh_guidance() -> void:
+	if not is_shift_directed() or player == null or session_controller == null:
+		return
+	var interaction := player.get_node_or_null("InteractionController") as InteractionController
+	if interaction == null:
+		return
+	var hint := OperatorSeat.HINT_SEATED if operator_seat != null and operator_seat.is_seated else ""
+	match session_controller.get_state():
+		TelegraphSessionController.State.VERIFYING:
+			hint = "Read the finished telegram on the desk"
+		TelegraphSessionController.State.AWAITING_ROUTE:
+			hint = "Set the route on the east wall board"
+		TelegraphSessionController.State.AWAITING_COMMIT:
+			hint = "File one copy at the table beside the door"
+	if shift_director.get_phase() == ShiftDirector.Phase.PRE_SHIFT:
+		hint = "Work the key to open the line" if operator_seat.is_seated else "[W A S D] Move   [E] Inspect   [Esc] Pause"
+	elif shift_director.get_phase() == ShiftDirector.Phase.CALLING:
+		hint = "The office is calling — answer at the key"
+	elif shift_director.is_shift_over():
+		hint = "Read the night handover beside the door" if dawn_evidence.is_revealed() and not dawn_evidence.is_inspected() else "The watch is over — leave through the south door"
+	if interaction.persistent_hint != hint:
+		interaction.set_persistent_hint(hint)

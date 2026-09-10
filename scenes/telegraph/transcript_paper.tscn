@@ -1,11 +1,26 @@
-[gd_scene load_steps=9 format=3 uid="uid://b1paper001"]
+[gd_scene load_steps=15 format=3 uid="uid://b1paper001"]
 
 [ext_resource type="Script" path="res://scripts/telegraph/ui/transcript_paper.gd" id="1_paper"]
 [ext_resource type="Script" path="res://scripts/interaction/interactable.gd" id="2_interact"]
 [ext_resource type="Material" path="res://materials/style_tests/paper_log.tres" id="3_mat"]
 [ext_resource type="Script" path="res://scripts/telegraph/ui/writer_rig.gd" id="4_rig"]
-[ext_resource type="Material" path="res://materials/style_tests/timber_trim.tres" id="5_wood"]
 [ext_resource type="Material" path="res://materials/style_tests/metal_brass_aged.tres" id="6_brass"]
+
+[ext_resource type="ArrayMesh" path="res://assets/models/operator/hand.obj" id="7_hand"]
+[ext_resource type="ArrayMesh" path="res://assets/models/operator/sleeve.obj" id="8_sleeve"]
+[ext_resource type="ArrayMesh" path="res://assets/models/operator/cuff.obj" id="9_cuff"]
+
+[sub_resource type="StandardMaterial3D" id="Skin"]
+albedo_color = Color(0.48, 0.32, 0.23, 1)
+roughness = 0.86
+
+[sub_resource type="StandardMaterial3D" id="Wool"]
+albedo_color = Color(0.055, 0.066, 0.063, 1)
+roughness = 1.0
+
+[sub_resource type="StandardMaterial3D" id="Cotton"]
+albedo_color = Color(0.48, 0.44, 0.35, 1)
+roughness = 1.0
 
 [sub_resource type="BoxMesh" id="BoxMesh_paper"]
 material = ExtResource("3_mat")
@@ -14,18 +29,10 @@ size = Vector3(0.2, 0.003, 0.26)
 [sub_resource type="BoxShape3D" id="BoxShape3D_interact"]
 size = Vector3(0.24, 0.06, 0.3)
 
-[sub_resource type="BoxMesh" id="BoxMesh_sleeve"]
-material = ExtResource("5_wood")
-size = Vector3(0.09, 0.08, 0.16)
-
-[sub_resource type="BoxMesh" id="BoxMesh_hand"]
-material = ExtResource("5_wood")
-size = Vector3(0.055, 0.035, 0.075)
-
 [sub_resource type="CylinderMesh" id="CylinderMesh_pen"]
 material = ExtResource("6_brass")
-top_radius = 0.009
-bottom_radius = 0.009
+top_radius = 0.003
+bottom_radius = 0.003
 height = 0.09
 radial_segments = 6
 
@@ -44,14 +51,16 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0015, 0)
 mesh = SubResource("BoxMesh_paper")
 
 [node name="Label3D" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.004, 0)
-pixel_size = 0.0014
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, -0.082, 0.004, -0.065)
+pixel_size = 0.0012
 modulate = Color(0.12, 0.1, 0.08, 1)
 outline_modulate = Color(0.92, 0.88, 0.78, 1)
-text = "[BLANK TELEGRAM PAD]"
+text = ""
+horizontal_alignment = 0
+vertical_alignment = 0
 font_size = 16
-outline_size = 1
-autowrap_mode = 2
+outline_size = 0
+autowrap_mode = 0
 width = 120.0
 
 [node name="Interactable" type="Area3D" parent="."]
@@ -67,26 +76,39 @@ shape = SubResource("BoxShape3D_interact")
 [node name="WriterRig" type="Node3D" parent="."]
 script = ExtResource("4_rig")
 
+[node name="StationHeading" type="Label3D" parent="."]
+position = Vector3(0, 0.005, -0.105)
+rotation = Vector3(-1.5707963, 0, 0)
+text = "BLACK CREEK / NIGHT COPY"
+font_size = 9
+pixel_size = 0.0011
+modulate = Color(0.26, 0.22, 0.17, 1)
+outline_size = 0
+
 [node name="Sleeve" type="Node3D" parent="WriterRig"]
 position = Vector3(0.0, 0.045, 0.14)
 rotation = Vector3(0.12, 0.0, 0.12)
+scale = Vector3(0.82, 0.82, 0.82)
 
 [node name="SleeveMesh" type="MeshInstance3D" parent="WriterRig/Sleeve"]
-mesh = SubResource("BoxMesh_sleeve")
+mesh = ExtResource("8_sleeve")
+material_override = SubResource("Wool")
 
 [node name="Wrist" type="Node3D" parent="WriterRig/Sleeve"]
 position = Vector3(0.0, -0.01, -0.08)
 rotation = Vector3(0.0, 0.0, -0.1)
 
 [node name="WristMesh" type="MeshInstance3D" parent="WriterRig/Sleeve/Wrist"]
-mesh = SubResource("BoxMesh_hand")
+mesh = ExtResource("9_cuff")
+material_override = SubResource("Cotton")
 
 [node name="Hand" type="Node3D" parent="WriterRig/Sleeve/Wrist"]
 position = Vector3(0.0, -0.025, -0.08)
 rotation = Vector3(0.0, 0.0, -0.08)
 
 [node name="HandMesh" type="MeshInstance3D" parent="WriterRig/Sleeve/Wrist/Hand"]
-mesh = SubResource("BoxMesh_hand")
+mesh = ExtResource("7_hand")
+material_override = SubResource("Skin")
 
 [node name="Pen" type="Node3D" parent="WriterRig/Sleeve/Wrist/Hand"]
 position = Vector3(0.0, -0.022, -0.04)

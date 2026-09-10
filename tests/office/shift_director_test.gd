@@ -176,7 +176,9 @@ func _run() -> void:
 	if not assert_condition(director.get_phase() == phase_before_commit_wait and director.get_slot_index() == 2, "Commit inspection pauses call pacing until a decision"): return
 	if not assert_condition(session.submit_commit(&"file_water"), "Final message accepts an authored commit"): return
 	if not assert_condition(session.get_state() == TelegraphSessionController.State.CONSEQUENCE, "Final message enters its consequence beat"): return
-	session.advance_consequence(2.1)
+	session.advance_consequence(1.0)
+	session.notify_consequence_visible()
+	session.advance_consequence(office.scenario_3.consequence_hold_seconds)
 	if not assert_condition(director.get_phase() == ShiftDirector.Phase.CLOSING, "Last message closes the line"): return
 	director.advance(director.closing_delay_seconds + 0.1)
 	if not assert_condition(director.get_phase() == ShiftDirector.Phase.SHIFT_OVER, "Shift reaches SHIFT_OVER"): return

@@ -47,6 +47,16 @@ var ticks_played: int = 0
 
 var _clock_elapsed: float = 0.0
 
+## Scene-local attenuation leaves the player's bus volume untouched, including
+## when settings change mid-hush or the scene is abandoned.
+func set_hush_db(value: float) -> void:
+	if room_tone_player != null:
+		room_tone_player.volume_db = room_tone_volume_db + value
+	if wind_player != null:
+		wind_player.volume_db = wind_volume_db + value
+	if stove_player != null:
+		stove_player.volume_db = stove_volume_db + value
+
 func _ready() -> void:
 	build_players()
 	start()

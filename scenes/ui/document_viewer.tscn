@@ -56,7 +56,7 @@ theme_override_constants/separation = 14
 layout_mode = 2
 theme_override_colors/font_color = Color(0.18, 0.14, 0.1, 1)
 theme_override_font_sizes/font_size = 20
-text = "DOCUMENT TITLE"
+text = ""
 horizontal_alignment = 1
 
 [node name="HSeparator" type="HSeparator" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
@@ -67,9 +67,9 @@ custom_minimum_size = Vector2(560, 260)
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_colors/default_color = Color(0.15, 0.12, 0.08, 1)
-theme_override_font_sizes/normal_font_size = 15
+theme_override_font_sizes/normal_font_size = 16
 bbcode_enabled = false
-text = "Document body text content goes here..."
+text = ""
 fit_content = true
 
 [node name="FooterLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]

@@ -49,7 +49,7 @@ foreach ($suite in $suites) {
     # Godot on Windows may print "Failed to read the root certificate store"
     # to stderr even when the suite exits successfully. Match assertion lines,
     # not the generic word "Failed" in that engine warning.
-    if ($exitCode -eq 0 -and $output -notmatch "(?m)^FAIL:") {
+    if ($exitCode -eq 0 -and $assertions -gt 0 -and $output -notmatch "(?m)^FAIL:|SCRIPT ERROR:|Parse Error:") {
         $passedSuites++
         $totalAssertions += $assertions
         "OK   {0,-58} {1,4} assertions" -f $relative, $assertions

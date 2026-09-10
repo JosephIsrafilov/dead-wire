@@ -17,6 +17,7 @@ var interactable: Interactable = null
 var route_prompt: Control = null
 var is_open: bool = false
 var has_submitted_this_session: bool = false
+var _last_route_action: String = ""
 
 var _lever_rest_rotation: float = 0.0
 var _lever_rest_captured: bool = false
@@ -58,6 +59,13 @@ func _update_presentation() -> void:
 		route_prompt = get_node_or_null("RoutePromptUI/Panel") as Control
 	if route_prompt != null:
 		route_prompt.visible = is_open and is_awaiting_route and not has_submitted_this_session
+	if interactable != null:
+		if has_submitted_this_session and not _last_route_action.is_empty():
+			interactable.prompt_text = "Route recorded: %s" % _last_route_action
+			interactable.is_actionable = false
+		else:
+			interactable.prompt_text = prompt_message
+			interactable.is_actionable = true
 
 func _input(event: InputEvent) -> void:
 	if not is_open:
@@ -111,6 +119,7 @@ func select_action(action: String) -> bool:
 		return false
 
 	has_submitted_this_session = true
+	_last_route_action = action
 	_throw_lever(action)
 	routing_action_selected.emit(action)
 	close_board()
@@ -139,11 +148,17 @@ func _throw_lever(action: String) -> void:
 
 func reset_for_new_transmission() -> void:
 	has_submitted_this_session = false
+	_last_route_action = ""
 	is_open = false
 	is_awaiting_route = false
 	_update_presentation()
 
 func _on_interacted() -> void:
+	# A completed route is a terminal state for this board instance. Keep the
+	# physical board inspectable as status, but never reopen a modal with no
+	# choices and trap player controls behind it.
+	if has_submitted_this_session:
+		return
 	if is_open:
 		close_board()
 	else:

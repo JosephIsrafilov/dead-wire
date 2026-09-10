@@ -22,12 +22,12 @@ func _init() -> void:
 	# 1. Initial blank state
 	if not assert_condition(paper_node.get_transcript_text().is_empty(), "Initial transcript text is empty"): return
 	if not assert_condition(not paper_node.is_revealed(), "Initial state is unrevealed"): return
-	if not assert_condition(lbl.text == "[BLANK TELEGRAM PAD]", "Label shows placeholder initially"): return
+	if not assert_condition(lbl.text == "", "Label shows placeholder initially"): return
 
 	# 2. Set text without revealing
 	paper_node.set_transcript_text("WATCHER")
 	if not assert_condition(paper_node.get_transcript_text() == "WATCHER", "Transcript text set to WATCHER"): return
-	if not assert_condition(lbl.text == "[BLANK TELEGRAM PAD]", "Label remains placeholder before reveal"): return
+	if not assert_condition(lbl.text == "", "Label remains placeholder before reveal"): return
 
 	# 3. Reveal transcript
 	paper_node.reveal_transcript()
@@ -48,7 +48,7 @@ func _init() -> void:
 	paper_node.clear_transcript()
 	if not assert_condition(paper_node.get_transcript_text().is_empty(), "Cleared transcript text is empty"): return
 	if not assert_condition(not paper_node.is_revealed(), "Cleared state is unrevealed"): return
-	if not assert_condition(lbl.text == "[BLANK TELEGRAM PAD]", "Label resets to placeholder"): return
+	if not assert_condition(lbl.text == "", "Label resets to placeholder"): return
 
 	# 6. Authored cues reveal glyphs at their authored boundaries, and progress
 	# never regresses when scheduler updates arrive out of order.

@@ -111,6 +111,13 @@ func toggle() -> void:
 func pause() -> void:
 	if is_paused:
 		return
+	var office := get_parent() as M1OfficeController
+	if office != null:
+		if office.routing_board != null and office.routing_board.is_open:
+			return
+		var intro := office.get_node_or_null("IntroCard") as IntroCard
+		if (intro != null and intro.visible) or (office.shift_end_card != null and office.shift_end_card.is_running()):
+			return
 	is_paused = true
 	if player != null:
 		player.velocity.x = 0.0

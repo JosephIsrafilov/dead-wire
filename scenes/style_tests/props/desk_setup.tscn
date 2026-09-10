@@ -22,22 +22,22 @@ size = Vector3(1.48, 0.08, 0.05)
 material = ExtResource("2_dark_wood")
 
 [node name="OrganizerShelf" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.15, 0.88, 0.28)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.15, 0.88, 0.34)
 size = Vector3(0.95, 0.24, 0.12)
 material = ExtResource("2_dark_wood")
 
 [node name="OrganizerDivider1" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.45, 0.88, 0.28)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.45, 0.88, 0.34)
 size = Vector3(0.02, 0.22, 0.14)
 material = ExtResource("1_wood")
 
 [node name="OrganizerDivider2" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.15, 0.88, 0.28)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.15, 0.88, 0.34)
 size = Vector3(0.02, 0.22, 0.14)
 material = ExtResource("1_wood")
 
 [node name="OrganizerDivider3" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.15, 0.88, 0.28)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.15, 0.88, 0.34)
 size = Vector3(0.02, 0.22, 0.14)
 material = ExtResource("1_wood")
 

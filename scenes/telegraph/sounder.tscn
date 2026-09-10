@@ -17,7 +17,7 @@ height = 0.055
 
 [sub_resource type="BoxMesh" id="BoxMesh_anvil"]
 material = ExtResource("3_brass")
-size = Vector3(0.02, 0.065, 0.1)
+size = Vector3(0.012, 0.048, 0.014)
 
 [node name="Sounder" type="Node3D"]
 script = ExtResource("1_sounder")
@@ -49,12 +49,12 @@ sides = 10
 material = ExtResource("3_brass")
 
 [node name="Anvil" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.048, 0.03)
+position = Vector3(0, 0.041, 0.047)
 mesh = SubResource("BoxMesh_anvil")
 
 [node name="ArmatureBar" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.065, 0.005)
-size = Vector3(0.018, 0.012, 0.1)
+size = Vector3(0.018, 0.007, 0.1)
 material = ExtResource("3_brass")
 
 [node name="SounderScrew" type="CSGCylinder3D" parent="."]

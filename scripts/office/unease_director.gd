@@ -56,8 +56,8 @@ var _armed: bool = false
 var _last_creak_position: Vector3 = Vector3(9999.0, 0.0, 9999.0)
 var _rng := RandomNumberGenerator.new()
 var _creak_player: AudioStreamPlayer3D = null
-var _bus_index: int = -1
-var _bus_rest_db: float = 0.0
+var _hush_tween: Tween
+var _hush_elapsed: float = 0.0
 
 func _ready() -> void:
 	_rng.seed = 18940414
@@ -87,9 +87,6 @@ func _build_player() -> void:
 	_creak_player.unit_size = 4.0
 	add_child(_creak_player)
 
-	_bus_index = AudioServer.get_bus_index(String(creak_bus))
-	if _bus_index >= 0:
-		_bus_rest_db = AudioServer.get_bus_volume_db(_bus_index)
 
 func _process(delta: float) -> void:
 	advance(delta)
@@ -97,6 +94,10 @@ func _process(delta: float) -> void:
 ## Separated from _process so tests can drive the dwell timer directly.
 func advance(delta: float) -> void:
 	_resolve()
+	if is_hushed:
+		_hush_elapsed += delta
+		if _hush_elapsed >= pre_call_hush_seconds:
+			release_hush()
 	_cooldown = maxf(0.0, _cooldown - delta)
 
 	var player := office.player if office != null else null
@@ -153,33 +154,23 @@ func _on_call_started(_slot_index: int, call_number: int) -> void:
 
 ## Drops the ambience bed so the sounder breaks silence rather than competing.
 func hush() -> void:
-	if _bus_index < 0 or is_hushed:
+	if ambience == null or is_hushed:
 		return
+	if _hush_tween != null:
+		_hush_tween.kill()
 	is_hushed = true
-	AudioServer.set_bus_volume_db(_bus_index, _bus_rest_db + hush_depth_db)
-	if not is_inside_tree():
-		release_hush()
-		return
-	var tree := get_tree()
-	if tree == null:
-		release_hush()
-		return
-	var timer := tree.create_timer(pre_call_hush_seconds)
-	timer.timeout.connect(release_hush)
+	_hush_elapsed = 0.0
+	ambience.set_hush_db(hush_depth_db)
 
 func release_hush() -> void:
 	if not is_hushed:
 		return
 	is_hushed = false
-	if _bus_index < 0:
+	if ambience == null:
 		return
 	if not is_inside_tree():
-		AudioServer.set_bus_volume_db(_bus_index, _bus_rest_db)
+		ambience.set_hush_db(0.0)
 		return
-	var tween := create_tween()
-	tween.tween_method(_set_bus_db, _bus_rest_db + hush_depth_db, _bus_rest_db, hush_recover_seconds) \
+	_hush_tween = create_tween()
+	_hush_tween.tween_method(ambience.set_hush_db, hush_depth_db, 0.0, hush_recover_seconds) \
 		.set_trans(Tween.TRANS_SINE)
-
-func _set_bus_db(value: float) -> void:
-	if _bus_index >= 0:
-		AudioServer.set_bus_volume_db(_bus_index, value)

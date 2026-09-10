@@ -129,6 +129,8 @@ func _init() -> void:
 	if not assert_condition(player_interaction != null and not player_interaction.is_ui_blocked, "Closing Routing Board restores world interactions"): return
 	if not assert_condition(office.session_controller.get_state() == TelegraphSessionController.State.COMPLETE, "Routing decision 1 completes Scenario 1"): return
 	if not assert_condition(world.get_fact("train_17_routed_clear") == true, "WorldState recorded train_17_routed_clear = true"): return
+	board_act.interact()
+	if not assert_condition(not board.is_open and not office.player.is_movement_locked and not office.player.is_look_locked, "Repeated routed-board interaction cannot open stale modal or lock player"): return
 
 	# 4. SCENARIO 2: ATTENTION (HOLD FREIGHT UNTIL TEN + 3 Door Footsteps)
 	key_act.interact()
@@ -227,7 +229,7 @@ func _init() -> void:
 	await process_frame
 	if not assert_condition(office.window_observation.is_observed, "Camera looking through window opening observes post-commit figure"): return
 	if not assert_condition(knowledge.knows("saw_window_event"), "KnowledgeState records saw_window_event after post-commit figure"): return
-	office.session_controller.advance_consequence(1.0)
+	office.session_controller.advance_consequence(office.scenario_3.consequence_hold_seconds)
 	if not assert_condition(office.session_controller.get_state() == TelegraphSessionController.State.COMPLETE, "Consequence hold is required before Scenario 3 completes"): return
 
 	# 6. CYCLE COMPLETION

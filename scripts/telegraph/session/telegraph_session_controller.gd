@@ -56,6 +56,7 @@ var _consequence_elapsed: float = 0.0
 var _consequence_started: bool = false
 var _consequence_requires_visibility: bool = false
 var _consequence_visible: bool = false
+var _consequence_visible_elapsed: float = 0.0
 var _consequence_visibility_timeout: float = 0.0
 
 const LAPSED_ACTION_ID: StringName = &"lapsed"
@@ -196,8 +197,7 @@ func _on_scheduler_completed(_schedule: MorsePlaybackScheduleData) -> void:
 		routing_requested.emit(_current_scenario.expected_routing_action)
 	else:
 		_record_completion_fact()
-		_set_state(State.COMPLETE)
-		session_completed.emit(_current_scenario)
+		_finish_session()
 
 ## Records the player's inspection of the finished transcript. Decisions are not
 ## exposed until this method succeeds, and the gate can only be passed once.
@@ -213,8 +213,7 @@ func mark_transcript_verified() -> bool:
 		commit_requested.emit(_current_scenario.commit_options)
 	else:
 		_record_completion_fact()
-		_set_state(State.COMPLETE)
-		session_completed.emit(_current_scenario)
+		_finish_session()
 	return true
 
 func get_commit_options() -> Array[TelegraphCommitOption]:
@@ -279,8 +278,9 @@ func set_consequence_visibility_required(required: bool) -> void:
 	_consequence_requires_visibility = required
 
 func notify_consequence_visible() -> void:
-	if _state == State.CONSEQUENCE and _consequence_started:
+	if _state == State.CONSEQUENCE and _consequence_started and not _consequence_visible:
 		_consequence_visible = true
+		_consequence_visible_elapsed = 0.0
 
 func notify_consequence_expired() -> void:
 	if _state == State.CONSEQUENCE and _consequence_started and _consequence_visible:
@@ -292,6 +292,8 @@ func advance_consequence(delta: float) -> void:
 	if _state != State.CONSEQUENCE or delta < 0.0:
 		return
 	_consequence_elapsed += delta
+	if _consequence_visible:
+		_consequence_visible_elapsed += delta
 	var delay := _current_scenario.consequence_delay_seconds if _current_scenario != null else 0.0
 	var hold := _current_scenario.consequence_hold_seconds if _current_scenario != null else 0.0
 	if not _consequence_started and _consequence_elapsed >= delay:
@@ -300,19 +302,33 @@ func advance_consequence(delta: float) -> void:
 		consequence_started.emit(_current_scenario.consequence_event_id, hold)
 	if _consequence_started and _consequence_requires_visibility and not _consequence_visible and _consequence_elapsed >= _consequence_visibility_timeout:
 		_complete_consequence()
-	elif _consequence_started and (not _consequence_requires_visibility or _consequence_visible) and _consequence_elapsed >= delay + hold:
+	elif _consequence_started and ((_consequence_requires_visibility and _consequence_visible and _consequence_visible_elapsed >= hold) or (not _consequence_requires_visibility and _consequence_elapsed >= delay + hold)):
 		_complete_consequence()
 
 func _complete_consequence() -> void:
 	if _state != State.CONSEQUENCE or _current_scenario == null:
 		return
+	_finish_session()
+
+func _finish_session() -> void:
+	# A completion listener may synchronously load the next scenario. Passing
+	# the member itself lets later listeners see that replacement resource.
+	var completed_scenario := _current_scenario
 	_set_state(State.COMPLETE)
-	session_completed.emit(_current_scenario)
+	session_completed.emit(completed_scenario)
+
+## A deadline can close an unread order without pretending it was verified.
+func lapse_routing(action: String = "NO ORDER") -> bool:
+	if _current_scenario == null or not _current_scenario.requires_routing or _state not in [State.VERIFYING, State.AWAITING_ROUTE]:
+		return false
+	return _resolve_routing(action)
 
 func submit_routing_decision(action: String) -> bool:
 	if _state != State.AWAITING_ROUTE or _current_scenario == null:
 		return false
+	return _resolve_routing(action)
 
+func _resolve_routing(action: String) -> bool:
 	var is_correct := (action == _current_scenario.expected_routing_action)
 	var world := _get_world_state()
 
@@ -325,8 +341,7 @@ func submit_routing_decision(action: String) -> bool:
 
 	routing_resolved.emit(action, is_correct)
 	_record_completion_fact()
-	_set_state(State.COMPLETE)
-	session_completed.emit(_current_scenario)
+	_finish_session()
 	return true
 
 func reset_session() -> void:
@@ -346,6 +361,7 @@ func reset_session() -> void:
 	_consequence_started = false
 	_consequence_requires_visibility = false
 	_consequence_visible = false
+	_consequence_visible_elapsed = 0.0
 	_consequence_visibility_timeout = 0.0
 	_set_state(State.IDLE)
 

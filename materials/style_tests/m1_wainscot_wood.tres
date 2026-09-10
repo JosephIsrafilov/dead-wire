@@ -1,12 +1,12 @@
 [gd_resource type="StandardMaterial3D" load_steps=2 format=3]
 
-[ext_resource type="Texture2D" path="res://materials/style_tests/textures/psx/psx_wainscot_128.png" id="1_tex"]
+[ext_resource type="Texture2D" path="res://materials/style_tests/textures/weathered_brown_planks_diff.png" id="1_tex"]
 
 [resource]
 shading_mode = 1
-albedo_color = Color(0.72, 0.58, 0.42, 1)
+albedo_color = Color(0.31, 0.27, 0.23, 1)
 albedo_texture = ExtResource("1_tex")
 roughness = 0.84
 metallic_specular = 0.12
 uv1_scale = Vector3(2.5, 1.0, 1.0)
-texture_filter = 0
+texture_filter = 3

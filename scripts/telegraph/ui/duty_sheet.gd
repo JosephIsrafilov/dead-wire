@@ -30,12 +30,12 @@ OPERATOR: E. CRANE
 
 STANDING ORDERS
 
-  1. Keep your chair. The key is worked seated; step
-     away from it and walk to rise.
+  1. Sit at the desk and open the line on the key.
+     Press a movement key to rise from the chair.
   2. Answer the office call (CR) on the key. Do not
      leave the wire calling.
-  3. Copy each message as received. Copy nothing you
-     did not hear.
+  3. Read the finished transcript before setting a
+     route. Copy nothing you did not hear.
   4. Set the route on the East Wall board before the
      sender releases the line.
   5. Routing rules are in the Dispatch Ledger.
@@ -47,14 +47,14 @@ TONIGHT'S TRAFFIC
 
 const FOOTER: String = """
 --------------------------------------------
-This sheet records what you know.
-It does not record what happened."""
+Entries made by E. Crane. Retain station copies
+for the division's morning audit."""
 
 const FOOTER_INCOMPLETE: String = """
 --------------------------------------------
 Not every item on this sheet is closed.
-This sheet records what you know.
-It does not record what happened."""
+Entries made by E. Crane. Retain station copies
+for the division's morning audit."""
 
 const STATUS_AWAITING: String = "AWAITING"
 const STATUS_COPIED: String = "COPIED"
@@ -69,7 +69,7 @@ const STATUS_LAPSED: String = "NO ORDER SENT"
 const STATUS_CORE_HOOK_WATER: String = "HEARD COPY SEALED"
 const STATUS_CORE_HOOK_WATCHER: String = "WRITTEN COPY SEALED"
 const STATUS_CORE_HOOK_LAPSED: String = "UNFILED"
-const CORE_HOOK_OUTCOME_LABEL: String = "CORE HOOK RECORD"
+const CORE_HOOK_OUTCOME_LABEL: String = "UNSCHEDULED COPY"
 const CORE_HOOK_OUTCOME_BY_FACT: Dictionary = {
 	&"committed_water_core_hook": STATUS_CORE_HOOK_WATER,
 	&"committed_watcher_core_hook": STATUS_CORE_HOOK_WATCHER,
@@ -118,6 +118,9 @@ func get_sheet_text() -> String:
 	if not core_hook_status.is_empty():
 		body += "\n\n" + _pad_status(CORE_HOOK_OUTCOME_LABEL, core_hook_status)
 	return HEADER + body + (FOOTER_INCOMPLETE if _has_open_items() else FOOTER)
+
+func get_watch_record() -> String:
+	return "BLACK CREEK STATION\nNIGHT REGISTER — E. CRANE\n\n" + get_sheet_text().substr(HEADER.length())
 
 ## Returns the terminal core-hook record Elias knows about, if any. This
 ## method intentionally never consults WorldState: the sheet can only show a

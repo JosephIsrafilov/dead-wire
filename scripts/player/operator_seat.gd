@@ -202,5 +202,7 @@ func _process(_delta: float) -> void:
 	# a player reaches for without being told.
 	if office != null and office.document_viewer != null and office.document_viewer.is_open():
 		return
+	if office != null and office.routing_board != null and office.routing_board.is_open:
+		return
 	if Input.get_vector("move_left", "move_right", "move_forward", "move_backward").length_squared() > 0.01:
 		stand()

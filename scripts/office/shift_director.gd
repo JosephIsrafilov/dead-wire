@@ -105,6 +105,8 @@ func _bind() -> void:
 		return
 
 	if session != null:
+		if not session.verification_requested.is_connected(_on_verification_requested):
+			session.verification_requested.connect(_on_verification_requested)
 		# The wire owns the key from here on.
 		session.allow_key_start = false
 		if not session.transmission_finished.is_connected(_on_transmission_finished):
@@ -315,10 +317,9 @@ func _on_transmission_finished(_scenario: TelegraphScenarioData) -> void:
 		if knowledge != null:
 			knowledge.learn(StringName("copied_%s" % _scenario_identifier(scenario)))
 
-func _on_session_completed(_scenario: TelegraphScenarioData) -> void:
+func _on_session_completed(scenario: TelegraphScenarioData) -> void:
 	if not enabled:
 		return
-	var scenario := _current_scenario()
 	if scenario != null and scenario.requires_routing:
 		var knowledge := _knowledge_state()
 		if knowledge != null:
@@ -338,9 +339,16 @@ func had_trouble() -> bool:
 	return messages_missed > 0 or routes_defaulted > 0 or routes_misdirected > 0
 
 func _on_route_requested(_expected_action: String) -> void:
+	if _phase == Phase.AWAITING_ROUTE:
+		return
 	_nags_sent = 0
 	_set_phase(Phase.AWAITING_ROUTE)
 	route_deadline_started.emit(_slot_index, route_deadline_seconds)
+
+func _on_verification_requested() -> void:
+	var scenario := _current_scenario()
+	if enabled and scenario != null and scenario.requires_routing:
+		_on_route_requested(scenario.expected_routing_action)
 
 func _maybe_nag() -> void:
 	if route_nag_interval_seconds <= 0.0:
@@ -359,7 +367,7 @@ func _default_route() -> void:
 	if session != null:
 		# Not a valid action, so it lands as an incorrect decision and its
 		# consequence goes into WorldState. The shift moves on either way.
-		session.submit_routing_decision(default_route_action)
+		session.lapse_routing(default_route_action)
 
 func _begin_closing() -> void:
 	_slot_index = _scenario_count()

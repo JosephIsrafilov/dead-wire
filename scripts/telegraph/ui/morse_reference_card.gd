@@ -31,7 +31,7 @@ func _ready() -> void:
 			interactable.interacted.connect(_on_interacted)
 
 	if label_3d != null:
-		label_3d.text = "AMERICAN MORSE (1894)\n[E to Inspect Reference]"
+		label_3d.text = "AMERICAN MORSE\nRAILROAD SERVICE\n1894"
 
 func get_interactable() -> Interactable:
 	if interactable == null:

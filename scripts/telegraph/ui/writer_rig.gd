@@ -92,12 +92,17 @@ func set_writing_progress(ratio: float, text: String = "", visible_characters: i
 	if target_glyph < _last_glyph_index:
 		return
 	_last_glyph_index = target_glyph
-	var x_ratio := float(target_glyph) / float(maxi(glyph_count - 1, 1))
 	var nib := get_node_or_null("%s/Pen/Nib" % _get_hand_path()) as Node3D
 	if nib == null:
 		return
-	# The pad is wider than it is tall; keep the hand inside its near edge.
-	nib.position = Vector3(lerpf(-0.065, 0.065, x_ratio), 0.018, lerpf(0.035, -0.045, x_ratio))
+	# Move the entire arm. Moving Nib alone detached the metal tip from its pen.
+	_cancel_tween()
+	var paper := get_parent() as TranscriptPaper
+	var assembly := _get_assembly()
+	if paper != null and assembly != null and is_inside_tree():
+		var contact := paper.to_global(paper.get_glyph_contact(target_glyph))
+		var tip := nib.to_global(Vector3(0, -0.011, 0))
+		assembly.global_position += contact - tip
 	_last_nib_position = nib.global_position if is_inside_tree() else nib.position
 	presentation_state = PresentationState.WRITING
 
@@ -106,7 +111,7 @@ func mark_letter_pause() -> void:
 		presentation_state = PresentationState.LETTER_PAUSE
 		var hand := get_node_or_null(_get_hand_path()) as Node3D
 		if hand != null:
-			hand.position.y += pause_lift
+			hand.position.y = _hand_rest_position.y + pause_lift
 
 func finish_writing() -> void:
 	if presentation_state == PresentationState.HIDDEN or presentation_state == PresentationState.WITHDRAWN:

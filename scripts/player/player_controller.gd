@@ -17,13 +17,13 @@ extends CharacterBody3D
 signal seated_changed(is_seated: bool)
 signal footstep_played(step_index: int)
 
-@export var move_speed: float = 3.0
+@export var move_speed: float = 2.35
 @export var mouse_sensitivity: float = 0.003
 
 ## Tight rather than floaty. Playtesters describe soft first-person acceleration
 ## as "an ice level", and this room is full of small interaction targets.
-@export var acceleration: float = 14.0
-@export var deceleration: float = 18.0
+@export var acceleration: float = 7.5
+@export var deceleration: float = 6.5
 
 @export var head_bob_enabled: bool = true
 ## Vertical travel of the step cycle, in metres. Low by design.

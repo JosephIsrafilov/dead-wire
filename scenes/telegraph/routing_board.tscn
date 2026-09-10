@@ -73,13 +73,13 @@ size = Vector3(1.04, 0.025, 0.025)
 material = ExtResource("5_brass")
 
 [node name="SidingRailNorth" type="CSGBox3D" parent="."]
-transform = Transform3D(0.906308, 0.422618, 0, -0.422618, 0.906308, 0, 0, 0, 1, 0.05, 0.4, -0.075)
-size = Vector3(0.88, 0.025, 0.025)
+position = Vector3(0.02, 0.42, -0.075)
+size = Vector3(1.04, 0.025, 0.025)
 material = ExtResource("5_brass")
 
 [node name="SidingRailSouth" type="CSGBox3D" parent="."]
-transform = Transform3D(0.906308, 0.422618, 0, -0.422618, 0.906308, 0, 0, 0, 1, 0.05, 0.26, -0.075)
-size = Vector3(0.88, 0.025, 0.025)
+position = Vector3(0.02, 0.26, -0.075)
+size = Vector3(1.04, 0.025, 0.025)
 material = ExtResource("5_brass")
 
 [node name="SwitchMarker" type="CSGCylinder3D" parent="."]
@@ -111,18 +111,18 @@ sides = 8
 material = ExtResource("4_wood")
 
 [node name="HeaderPlaque" type="CSGBox3D" parent="."]
-position = Vector3(0.44, 1.09, -0.08)
-size = Vector3(0.32, 0.16, 0.025)
+position = Vector3(-0.38, 1.1, -0.08)
+size = Vector3(0.55, 0.18, 0.025)
 material = ExtResource("5_brass")
 
 [node name="MainLineLabel" type="CSGBox3D" parent="."]
-position = Vector3(0.44, 0.92, -0.08)
-size = Vector3(0.26, 0.09, 0.02)
+position = Vector3(-0.38, 0.88, -0.08)
+size = Vector3(0.42, 0.09, 0.02)
 material = ExtResource("5_brass")
 
 [node name="SidingLabel" type="CSGBox3D" parent="."]
-position = Vector3(0.44, 0.47, -0.08)
-size = Vector3(0.26, 0.09, 0.02)
+position = Vector3(-0.38, 0.5, -0.08)
+size = Vector3(0.42, 0.09, 0.02)
 material = ExtResource("5_brass")
 
 
@@ -171,7 +171,7 @@ material = ExtResource("7_iron")
 
 
 [node name="Label3D" type="Label3D" parent="."]
-position = Vector3(0.44, 1.13, -0.105)
+position = Vector3(-0.38, 1.13, -0.105)
 rotation = Vector3(0, 3.141593, 0)
 pixel_size = 0.0021
 modulate = Color(0.1, 0.09, 0.06, 1)
@@ -181,7 +181,7 @@ text = "BLACK CREEK\nEAST DIV."
 font_size = 14
 
 [node name="LineLabel3D" type="Label3D" parent="."]
-position = Vector3(0.44, 0.93, -0.105)
+position = Vector3(-0.38, 0.93, -0.105)
 rotation = Vector3(0, 3.141593, 0)
 pixel_size = 0.0017
 modulate = Color(0.1, 0.09, 0.06, 1)
@@ -191,7 +191,7 @@ text = "MAIN LINE"
 font_size = 12
 
 [node name="SidingLabel3D" type="Label3D" parent="."]
-position = Vector3(0.44, 0.49, -0.105)
+position = Vector3(-0.38, 0.51, -0.105)
 rotation = Vector3(0, 3.141593, 0)
 pixel_size = 0.0017
 modulate = Color(0.1, 0.09, 0.06, 1)

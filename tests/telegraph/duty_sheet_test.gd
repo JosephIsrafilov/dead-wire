@@ -74,7 +74,7 @@ func _run() -> void:
 	# explicitly instead of relying on the bounded unattended fallback.
 	office.session_controller.advance_consequence(1.0)
 	office.session_controller.notify_consequence_visible()
-	office.session_controller.advance_consequence(1.1)
+	office.session_controller.advance_consequence(6.1)
 	if not assert_condition(office.session_controller.get_state() == TelegraphSessionController.State.COMPLETE, "Production consequence completes the shift segment"): return
 	var production_sheet := office.get_node_or_null("DutySheet") as DutySheet
 	if not assert_condition(production_sheet != null, "Production office exposes its duty sheet"): return

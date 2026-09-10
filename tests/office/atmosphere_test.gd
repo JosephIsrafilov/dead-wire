@@ -163,7 +163,8 @@ func _run() -> void:
 	var rest_db := AudioServer.get_bus_volume_db(bus)
 	unease.hush()
 	if not assert_condition(unease.is_hushed, "The room can be hushed"): return
-	if not assert_condition(AudioServer.get_bus_volume_db(bus) < rest_db - 1.0, "Hushing actually drops the bed"): return
+	if not assert_condition(unease.ambience.room_tone_player.volume_db < unease.ambience.room_tone_volume_db - 1.0, "Hushing actually drops the bed"): return
+	if not assert_condition(is_equal_approx(AudioServer.get_bus_volume_db(bus), rest_db), "Hush preserves the user's ambience setting"): return
 	unease.release_hush()
 	if not assert_condition(not unease.is_hushed, "The hush releases"): return
 

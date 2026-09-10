@@ -5,7 +5,7 @@ signal transcript_inspected(text: String)
 signal transcript_closed()
 
 @export var prompt_message: String = "Read Telegram Transcript"
-@export var empty_placeholder: String = "[BLANK TELEGRAM PAD]"
+@export var empty_placeholder: String = ""
 
 var interactable: Interactable = null
 var label_3d: Label3D = null
@@ -213,7 +213,39 @@ func get_display_text() -> String:
 func _update_display() -> void:
 	var lbl := get_label_3d()
 	if lbl != null:
-		lbl.text = get_display_text()
+		lbl.text = _layout_prefix(get_display_text())
+
+## Fixed columns keep existing ink still as each new glyph is written. The
+## same layout defines pen contact, so nib and ink cannot drift apart.
+func _layout_prefix(prefix: String) -> String:
+	var result := ""
+	var column := 0
+	for index in prefix.length():
+		if column == 10:
+			result += "\n"
+			column = 0
+		result += prefix[index]
+		column += 1
+	return result
+
+func get_glyph_contact(glyph_index: int) -> Vector3:
+	var character := 0
+	var glyph := 0
+	for index in _transcript_text.length():
+		if _transcript_text[index] != " ":
+			if glyph == glyph_index:
+				character = index
+				break
+			glyph += 1
+	var lbl := get_label_3d()
+	if lbl == null:
+		return Vector3.ZERO
+	var font := lbl.font if lbl.font != null else ThemeDB.fallback_font
+	var line_start := (character / 10) * 10
+	var preceding := _transcript_text.substr(line_start, character % 10)
+	var x := font.get_string_size(preceding, HORIZONTAL_ALIGNMENT_LEFT, -1, lbl.font_size).x
+	var y := font.get_height(lbl.font_size) * float(character / 10) + font.get_ascent(lbl.font_size)
+	return lbl.position + lbl.basis * Vector3(x * lbl.pixel_size, -y * lbl.pixel_size, 0.0005)
 
 func _on_interacted() -> void:
 	transcript_inspected.emit(get_display_text())

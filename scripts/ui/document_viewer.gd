@@ -16,6 +16,9 @@ var title_label: Label = null
 var body_label: RichTextLabel = null
 var footer_label: Label = null
 
+const PAPER_FONT = preload("res://materials/typography/office_serif.tres")
+const MORSE_FONT = preload("res://materials/typography/morse_mono.tres")
+
 func _ready() -> void:
 	visible = false
 	_is_open = false
@@ -46,7 +49,9 @@ func open_document(doc_id: String, title: String, body: String, footer: String =
 	if title_label != null:
 		title_label.text = title
 	if body_label != null:
+		body_label.add_theme_font_override("normal_font", MORSE_FONT if doc_id == "morse_reference" else PAPER_FONT)
 		body_label.text = body
+		body_label.scroll_to_line(0)
 	if footer_label != null:
 		footer_label.text = footer if not footer.is_empty() else default_footer
 

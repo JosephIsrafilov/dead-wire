@@ -19,6 +19,10 @@ func _ready() -> void:
 	interactable = get_node_or_null("Interactable") as Interactable
 	if interactable != null:
 		interactable.prompt_text = prompt_message
+	for index in 2:
+		var target := get_node_or_null("Option%dInteractable" % (index + 1)) as Interactable
+		if target != null:
+			target.interacted.connect(select_option.bind(index))
 	_update_presentation()
 
 func get_interactable() -> Interactable:
@@ -97,6 +101,13 @@ func reset_for_new_transmission() -> void:
 func _input(event: InputEvent) -> void:
 	if not is_enabled() or event.is_echo() or not event.is_pressed():
 		return
+	var office := get_parent() as M1OfficeController
+	if office != null:
+		var controller := office.player.get_node_or_null("InteractionController") as InteractionController
+		if controller == null or controller.is_ui_blocked or Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
+			return
+		if controller.current_target == null or controller.current_target.get_parent() != self:
+			return
 	var option_index := -1
 	if _action_pressed(event, "commit_option_1") or _key_pressed(event, KEY_1):
 		option_index = 0
@@ -117,6 +128,12 @@ func _update_presentation() -> void:
 	var interact := get_interactable()
 	if interact != null:
 		interact.enabled = is_enabled()
+	for index in 2:
+		var target := get_node_or_null("Option%dInteractable" % (index + 1)) as Interactable
+		if target != null:
+			target.enabled = is_enabled()
+			if index < _options.size():
+				target.prompt_text = _string_property(_options[index], "display_label").replace("\n", ": ")
 	var selected_index := _selected_index()
 	var options_visible := is_enabled() or _committed
 	for index in 2:
@@ -128,7 +145,7 @@ func _update_presentation() -> void:
 			label.visible = options_visible and has_option
 		if stamp != null:
 			stamp.visible = _committed and has_option
-			_set_text(stamp, "STAMPED" if index == selected_index else "VOID")
+			_set_text(stamp, "FILED" if index == selected_index else "VOID")
 			_set_modulate(stamp, Color(0.72, 0.18, 0.12, 1.0) if index == selected_index else Color(0.42, 0.4, 0.35, 0.65))
 	var result := get_node_or_null("ResultLabel")
 	_set_text(result, _result_text if _committed and not _result_text.is_empty() else "NO FILE")

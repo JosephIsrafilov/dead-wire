@@ -23,3 +23,8 @@ func apply_psx_settings() -> void:
 	vp.screen_space_aa = Viewport.SCREEN_SPACE_AA_DISABLED
 	vp.use_taa = false
 	vp.use_debanding = false
+	# Keep the low-resolution buffer stable across window sizes. Texture
+	# filtering remains nearest in authored materials, preserving hard PSX texel
+	# edges instead of introducing a modern post-process blur.
+	vp.scaling_3d_scale = clampf(render_scale, 0.25, 1.0)
+	vp.canvas_item_default_texture_filter = Viewport.DEFAULT_CANVAS_ITEM_TEXTURE_FILTER_NEAREST

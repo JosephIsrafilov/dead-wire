@@ -65,6 +65,10 @@ func trigger_event(duration: float = 5.0) -> void:
 
 	event_started.emit()
 
+func cancel_pending_appearance() -> void:
+	if _pending_show:
+		reset_state()
+
 func evaluate_observation(camera_global_pos: Vector3, camera_forward: Vector3, is_occluded: bool = false) -> bool:
 	if not is_active or is_observed or is_occluded:
 		return false

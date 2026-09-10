@@ -31,7 +31,7 @@ func _ready() -> void:
 			interactable.interacted.connect(_on_interacted)
 
 	if label_3d != null:
-		label_3d.text = "DISPATCH LEDGER\n[E to Inspect Rules]"
+		label_3d.text = "DISPATCH LEDGER\nBLACK CREEK"
 
 func get_interactable() -> Interactable:
 	if interactable == null:

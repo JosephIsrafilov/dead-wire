@@ -57,6 +57,8 @@ func _init() -> void:
 	if not assert_condition(selected_actions.size() == 1 and selected_actions[0] == "CLEAR EAST", "Key 1 selects CLEAR EAST when awaiting route"): return
 	if not assert_condition(not board_node.is_open, "Board automatically closes after selection"): return
 	if not assert_condition(board_node.has_submitted_this_session, "has_submitted_this_session is true after submission"): return
+	board_node.get_interactable().interact()
+	if not assert_condition(not board_node.is_open and not board_node.get_interactable().is_actionable and board_node.get_interactable().prompt_text == "Route recorded: CLEAR EAST", "Repeated board interaction is safe read-only status"): return
 
 	# 5. Duplicate input rejection in same session
 	board_node.open_board()
