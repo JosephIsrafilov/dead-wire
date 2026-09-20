@@ -98,7 +98,10 @@ func evaluate_observation(camera_global_pos: Vector3, camera_forward: Vector3, i
 
 	return false
 
-func check_camera(camera: Camera3D) -> bool:
+## A full-screen UI surface (document, board, cards) hides the world without
+## cancelling the event: the figure keeps its pending/appearance rules, only the
+## assignment of knowledge is gated while the player cannot actually see.
+func check_camera(camera: Camera3D, ui_blocked: bool = false) -> bool:
 	if camera == null or not is_active:
 		return false
 
@@ -106,7 +109,7 @@ func check_camera(camera: Camera3D) -> bool:
 	var cam_fwd := -camera.global_transform.basis.z if camera.is_inside_tree() else -camera.transform.basis.z
 
 	# Raycast line-of-sight check
-	var is_occluded := false
+	var is_occluded := ui_blocked
 	var space_state := get_world_3d().direct_space_state if is_inside_tree() and get_world_3d() != null else null
 	if space_state != null:
 		var target_pos := global_position if is_inside_tree() else position

@@ -66,6 +66,21 @@ position = Vector3(-2.81, 1.82, 0.62)
 size = Vector3(0.01, 0.18, 0.14)
 material = ExtResource("4_brass")
 
+[node name="ClockPendulumPivot" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.825, 1.93, 0.62)
+
+[node name="ClockPendulumRod" type="CSGBox3D" parent="ClockPendulumPivot"]
+position = Vector3(0, -0.085, 0)
+size = Vector3(0.005, 0.17, 0.005)
+material = ExtResource("4_brass")
+
+[node name="ClockPendulumBob" type="CSGCylinder3D" parent="ClockPendulumPivot"]
+transform = Transform3D(0, 1, 0, -1, 0, 0, 0, 0, 1, 0, -0.18, 0)
+radius = 0.03
+height = 0.006
+sides = 12
+material = ExtResource("4_brass")
+
 
 [node name="WireRunA" type="CSGBox3D" parent="."]
 position = Vector3(-2.82, 2.48, -0.75)
@@ -118,16 +133,18 @@ material = ExtResource("2_trim")
 
 [node name="DutyRosterPaper" type="CSGBox3D" parent="."]
 position = Vector3(1.62, 1.55, 2.255)
-size = Vector3(0.68, 0.58, 0.012)
+size = Vector3(0.24, 0.32, 0.012)
 material = ExtResource("5_paper")
 
 [node name="DutyRosterText" type="Label3D" parent="."]
 position = Vector3(1.62, 1.55, 2.23)
 rotation = Vector3(0, 3.141593, 0)
-pixel_size = 0.0022
+pixel_size = 0.0011
 modulate = Color(0.12, 0.11, 0.09, 1)
-text = "BLACK CREEK\nNIGHT DUTY\n11 P.M. - 6 A.M.\nKEEP LINE CLEAR"
-font_size = 14
+text = "BLACK CREEK
+NIGHT REGISTER
+11 P.M. — 6 A.M."
+font_size = 13
 outline_size = 1
 outline_modulate = Color(0.9, 0.82, 0.62, 1)
 

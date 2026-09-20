@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/props/psx_asset_adapter.gd" id="1_adapter"]
+[ext_resource type="PackedScene" path="res://assets/m1_adapted/ph_table/wooden_table_02.gltf" id="2_table"]
+
+; Small service table adapted from Poly Haven "Wooden Table 02" (CC0, 196 tris).
+; Used as the filing-side surface language next to the door; scaled slightly
+; down to read as station furniture.
+
+[node name="PhTableVisual" type="Node3D"]
+script = ExtResource("1_adapter")
+mute = Color(0.6, 0.55, 0.47, 1)
+
+[node name="TableModel" parent="." instance=ExtResource("2_table")]
+transform = Transform3D(0.85, 0, 0, 0, 0.85, 0, 0, 0, 0.85, 0, 0, 0)

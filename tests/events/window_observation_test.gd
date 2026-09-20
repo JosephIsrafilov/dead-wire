@@ -87,10 +87,40 @@ func _init() -> void:
 	watched_target._process(0.2)
 	if not assert_condition(not watched_target.is_active and not watched_target.get_visual_indicator().visible, "Visible figure expires after its hold"): return
 
+	# 8. A full-screen UI surface blocks observation without cancelling the event.
+	knowledge.reset_for_new_game()
+	var ui_scene: PackedScene = ResourceLoader.load("res://scenes/office/window_observation_event.tscn")
+	var ui_target: AttentionObservationTarget = ui_scene.instantiate() as AttentionObservationTarget
+	if not assert_condition(ui_target != null, "UI-blocked target instantiates"): return
+	ui_target.position = Vector3(1.1, 1.5, -2.85)
+	root.add_child(ui_target)
+	var ui_camera := Camera3D.new()
+	ui_camera.position = Vector3(0.0, 1.65, 0.0)
+	root.add_child(ui_camera)
+	await process_frame
+	# Figure must be on screen first: trigger while looking away.
+	ui_camera.look_at(Vector3(0.0, 1.65, 3.0), Vector3.UP)
+	ui_camera.make_current()
+	await process_frame
+	ui_target.trigger_event(5.0)
+	ui_target._process(0.0)
+	if not assert_condition(ui_target.get_visual_indicator().visible, "UI-blocked case: figure appears while camera looks away"): return
+	ui_camera.look_at(ui_target.global_position, Vector3.UP)
+	await process_frame
+	var observed_ui_blocked: bool = ui_target.check_camera(ui_camera, true)
+	if not assert_condition(not observed_ui_blocked, "Observation blocked while a UI surface hides the world"): return
+	if not assert_condition(not knowledge.knows("saw_window_event"), "No knowledge assigned through a covering UI"): return
+	if not assert_condition(ui_target.is_active and ui_target.get_visual_indicator().visible, "UI block does not cancel or pause the event"): return
+	var observed_ui_open: bool = ui_target.check_camera(ui_camera, false)
+	if not assert_condition(observed_ui_open, "Same view observes once the surface is gone"): return
+	if not assert_condition(knowledge.knows("saw_window_event"), "Knowledge assigned after the surface closes"): return
+
 	# Clean up
 	target_node.queue_free()
 	watched_target.queue_free()
 	camera.queue_free()
+	ui_target.queue_free()
+	ui_camera.queue_free()
 
 	print("--- All Window Observation Event Tests PASSED ---")
 	quit(0)

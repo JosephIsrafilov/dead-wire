@@ -55,8 +55,14 @@ func _run() -> void:
 	check(office.document_viewer.is_open(), "Ledger is reachable and readable")
 	await _press("ui_cancel")
 	await _interact_at(Vector3(-0.75, 0, -0.1), office.get_node("Chair/Interactable"))
+	# The approach glide (0.34 s) precedes the seated state: wait for the
+	# chair to actually take the operator.
+	var seat_guard := 0
+	while not office.operator_seat.is_seated and seat_guard < 100:
+		await create_timer(0.05).timeout
+		seat_guard += 1
 	check(office.operator_seat.is_seated, "Chair is reachable through production ray")
-	await create_timer(0.9).timeout
+	await create_timer(1.6).timeout
 	await _aim_and_interact(office.session_controller.telegraph_key.get_interactable())
 	check(office.shift_director.get_phase() == ShiftDirector.Phase.WAITING, "Seated key opens the watch")
 	for slot in 3:
@@ -67,7 +73,7 @@ func _run() -> void:
 		check(office.shift_director.get_phase() == ShiftDirector.Phase.CALLING, "Wire calls for slot %d" % slot)
 		if not office.operator_seat.is_seated:
 			await _interact_at(Vector3(-0.75, 0, -0.1), office.get_node("Chair/Interactable"))
-			await create_timer(0.9).timeout
+			await create_timer(1.6).timeout
 		await _aim_and_interact(office.session_controller.telegraph_key.get_interactable())
 		check(office.session_controller.get_state() == TelegraphSessionController.State.RECEIVING, "E answers traffic %d" % slot)
 		if slot == 0:
@@ -87,6 +93,12 @@ func _run() -> void:
 				timeout += 0.1
 		else:
 			office.session_controller.scheduler.advance_time(30.0)
+		# The sheet may still be draining its backlog after t0 (COPYING): the
+		# hand finishes at its own bounded pace before inspection opens.
+		var copy_timeout := 0.0
+		while office.session_controller.get_state() == TelegraphSessionController.State.COPYING and copy_timeout < 10.0:
+			await create_timer(0.25).timeout
+			copy_timeout += 0.25
 		check(office.session_controller.get_state() == TelegraphSessionController.State.VERIFYING, "Traffic requires transcript inspection")
 		await _aim_and_interact(office.session_controller.transcript_paper.get_interactable())
 		check(office.document_viewer.is_open(), "Transcript lifts through E")

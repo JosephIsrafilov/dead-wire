@@ -1,0 +1,7 @@
+{
+  "scripts/telegraph/ui/writer_rig.gd": "322b16b4f72c50046340a70e16b5f6c4df1a3f1503531a57c68db2ce5c3849a6",
+  "scripts/telegraph/ui/copy_commit_desk.gd": "96a3483136cfb393fea0e63dcb4cf1ce9e6397ea5955e27909661eba232495f2",
+  "scripts/telegraph/ui/transcript_paper.gd": "0a7220606067b380eea2c9ba1c5382860622c014e1dfb0cf90bfff0b004d88a2",
+  "scripts/office/m1_office_controller.gd": "ad2f80330b1f5171a4ec0e8fd14585b2781c8925fdad87d29d27f29e38b0721d",
+  "data/scenarios/m1_scenario_3_core_hook.tres": "afefad7428db0b88f487aeceee7435433c04912b41f0650170ae6f4251be85bd"
+}

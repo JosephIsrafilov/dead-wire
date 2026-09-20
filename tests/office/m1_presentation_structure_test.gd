@@ -21,7 +21,7 @@ func _init() -> void:
 	# 3. Required physical architecture nodes
 	if not assert_condition(office.get_node_or_null("NorthWindow") != null, "NorthWindow exists"): return
 	if not assert_condition(office.get_node_or_null("SouthDoor") != null, "SouthDoor exists"): return
-	if not assert_condition(office.get_node_or_null("NorthWall_Left") != null, "NorthWall_Left exists"): return
+	if not assert_condition(office.get_node_or_null("NorthWall_FarLeft") != null and office.get_node_or_null("NorthWall_MidLeft") != null, "North wall window segments exist (FarLeft + MidLeft)"): return
 	if not assert_condition(office.get_node_or_null("NorthWall_Right") != null, "NorthWall_Right exists"): return
 	if not assert_condition(office.get_node_or_null("DeskSetup") != null, "DeskSetup exists"): return
 	if not assert_condition(office.get_node_or_null("DocumentViewer") != null, "DocumentViewer exists"): return
@@ -42,8 +42,8 @@ func _init() -> void:
 	# 5. Routing Board orientation check (facing into room, unmirrored)
 	var board: RoutingBoard = office.routing_board
 	if not assert_condition(board != null, "RoutingBoard is bound"): return
-	var lbl: Label3D = board.get_node_or_null("Label3D") as Label3D
-	if not assert_condition(lbl != null, "RoutingBoard has Label3D"): return
+	var lbl: Label3D = board.get_node_or_null("HeaderLabel3D") as Label3D
+	if not assert_condition(lbl != null, "RoutingBoard has its header Label3D"): return
 	var basis: Basis = lbl.transform.basis
 	var det: float = basis.determinant()
 	if not assert_condition(det > 0.99 and det < 1.01, "Label3D basis has determinant +1.0 (unmirrored)"): return

@@ -95,29 +95,29 @@ func _input(event: InputEvent) -> void:
 	if event.is_echo() or not event.is_action_pressed("ui_cancel"):
 		return
 	# A document in hand takes the key first: Escape should put the paper down
-	# before it stops the shift.
+	# before it stops the shift. Input is left unhandled so the viewer consumes it.
 	if not is_paused and document_viewer != null and document_viewer.is_open():
 		return
+	# When toggle() declines because an active surface owns the key, the event
+	# must reach that surface: Escape closes the board instead of vanishing.
+	if toggle():
+		get_viewport().set_input_as_handled()
 
-	toggle()
-	get_viewport().set_input_as_handled()
-
-func toggle() -> void:
+func toggle() -> bool:
 	if is_paused:
-		resume()
-	else:
-		pause()
+		return resume()
+	return pause()
 
-func pause() -> void:
+func pause() -> bool:
 	if is_paused:
-		return
+		return false
 	var office := get_parent() as M1OfficeController
 	if office != null:
 		if office.routing_board != null and office.routing_board.is_open:
-			return
+			return false
 		var intro := office.get_node_or_null("IntroCard") as IntroCard
 		if (intro != null and intro.visible) or (office.shift_end_card != null and office.shift_end_card.is_running()):
-			return
+			return false
 	is_paused = true
 	if player != null:
 		player.velocity.x = 0.0
@@ -129,10 +129,11 @@ func pause() -> void:
 	if resume_button != null:
 		resume_button.grab_focus()
 	paused.emit()
+	return true
 
-func resume() -> void:
+func resume() -> bool:
 	if not is_paused:
-		return
+		return false
 	is_paused = false
 	visible = false
 	if is_inside_tree():
@@ -144,6 +145,7 @@ func resume() -> void:
 			interaction.refresh_prompt()
 	_save()
 	resumed.emit()
+	return true
 
 func _on_sensitivity_changed(value: float) -> void:
 	if settings == null:

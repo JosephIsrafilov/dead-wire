@@ -10,6 +10,8 @@ extends Node
 
 @export var lamp_light: OmniLight3D = null
 @export var stove_light: OmniLight3D = null
+## NodePath so the scene can wire the wick mesh; resolved in _ready.
+@export var flame_mesh_path: NodePath = ^""
 @export var flame_mesh: Node3D = null
 
 ## Fraction of rest energy. A guttering oil lamp is subtle; ±8% reads as alive.
@@ -28,6 +30,8 @@ var _time: float = 0.0
 
 func _ready() -> void:
 	_resolve()
+	if flame_mesh == null and not flame_mesh_path.is_empty():
+		flame_mesh = get_node_or_null(flame_mesh_path) as Node3D
 	if lamp_light != null:
 		_lamp_rest = lamp_light.light_energy
 	if stove_light != null:

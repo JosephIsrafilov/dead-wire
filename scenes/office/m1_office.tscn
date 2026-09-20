@@ -1,4 +1,4 @@
-[gd_scene load_steps=44 format=3 uid="uid://m1office001"]
+[gd_scene load_steps=45 format=3 uid="uid://m1office001"]
 
 [ext_resource type="Script" path="res://scripts/office/m1_office_controller.gd" id="1_controller"]
 [ext_resource type="Material" path="res://materials/style_tests/floor_wood_planks.tres" id="2_floor"]
@@ -36,12 +36,18 @@
 [ext_resource type="Script" path="res://scripts/player/operator_seat.gd" id="33_seat"]
 [ext_resource type="Script" path="res://scripts/office/office_door.gd" id="34_door"]
 [ext_resource type="PackedScene" path="res://scenes/ui/shift_end_card.tscn" id="35_endcard"]
+
+[ext_resource type="PackedScene" path="res://scenes/props/m1/ph_chair.tscn" id="50_phchair"]
+[ext_resource type="PackedScene" path="res://scenes/props/m1/ph_cabinet.tscn" id="51_phcabinet"]
+[ext_resource type="PackedScene" path="res://scenes/props/m1/ph_ledger_volumes.tscn" id="52_phbooks"]
+[ext_resource type="PackedScene" path="res://scenes/props/m1/ph_table.tscn" id="53_phtable"]
 [ext_resource type="Script" path="res://scripts/office/unease_director.gd" id="36_unease"]
 [ext_resource type="Script" path="res://scripts/office/lamp_life.gd" id="37_lamplife"]
 [ext_resource type="PackedScene" path="res://scenes/ui/pause_menu.tscn" id="38_pause"]
 [ext_resource type="PackedScene" path="res://scenes/ui/intro_card.tscn" id="39_intro"]
 [ext_resource type="PackedScene" path="res://scenes/office/dawn_evidence.tscn" id="41_evidence"]
 [ext_resource type="Script" path="res://scripts/audio/office_foley.gd" id="42_foley"]
+[ext_resource type="PackedScene" path="res://scenes/telegraph/tape_register.tscn" id="43_tape"]
 
 [sub_resource type="BoxShape3D" id="SeatInteract"]
 size = Vector3(0.52, 0.76, 0.52)
@@ -215,9 +221,21 @@ size = Vector3(0.12, 2.85, 4.6)
 material = ExtResource("3_wall")
 use_collision = true
 
-[node name="NorthWall_Left" type="CSGBox3D" parent="."]
-position = Vector3(-1.345, 1.425, -2.36)
-size = Vector3(3.07, 2.85, 0.12)
+[node name="NorthWall_FarLeft" type="CSGBox3D" parent="."]
+position = Vector3(-2.59, 1.425, -2.36)
+size = Vector3(0.58, 2.85, 0.12)
+material = ExtResource("3_wall")
+use_collision = true
+
+[node name="NorthWall_MidLeft" type="CSGBox3D" parent="."]
+position = Vector3(-0.255, 1.425, -2.36)
+size = Vector3(0.89, 2.85, 0.12)
+material = ExtResource("3_wall")
+use_collision = true
+
+[node name="NorthWall_MidRight" type="CSGBox3D" parent="."]
+position = Vector3(1.05, 1.425, -2.36)
+size = Vector3(1.72, 2.85, 0.12)
 material = ExtResource("3_wall")
 use_collision = true
 
@@ -228,22 +246,22 @@ material = ExtResource("3_wall")
 use_collision = true
 
 [node name="NorthWall_Bottom" type="CSGBox3D" parent="."]
-position = Vector3(1.05, 0.46, -2.36)
+position = Vector3(-1.5, 0.46, -2.36)
 size = Vector3(1.6, 0.92, 0.12)
 material = ExtResource("3_wall")
 use_collision = true
 
 [node name="NorthWall_Top" type="CSGBox3D" parent="."]
-position = Vector3(1.05, 2.52, -2.36)
+position = Vector3(-1.5, 2.52, -2.36)
 size = Vector3(1.6, 0.76, 0.12)
 material = ExtResource("3_wall")
 use_collision = true
 
 [node name="NorthWindow" parent="." instance=ExtResource("8_window")]
-position = Vector3(1.05, 1.55, -2.36)
+position = Vector3(-1.5, 1.55, -2.36)
 
 [node name="NorthNightBackdrop" type="CSGBox3D" parent="."]
-position = Vector3(1.05, 1.55, -3.2)
+position = Vector3(-1.5, 1.55, -3.2)
 size = Vector3(2.4, 1.8, 0.03)
 material = ExtResource("6_night")
 
@@ -331,9 +349,19 @@ position = Vector3(2.885, 0.7, 0)
 size = Vector3(0.045, 1.4, 4.48)
 material = ExtResource("7_wainscot")
 
-[node name="WainscotNorthLeft" type="CSGBox3D" parent="."]
-position = Vector3(-1.345, 0.7, -2.285)
-size = Vector3(3.0, 1.4, 0.045)
+[node name="WainscotNorthFarLeft" type="CSGBox3D" parent="."]
+position = Vector3(-2.59, 0.7, -2.285)
+size = Vector3(0.52, 1.4, 0.045)
+material = ExtResource("7_wainscot")
+
+[node name="WainscotNorthMidLeft" type="CSGBox3D" parent="."]
+position = Vector3(-0.255, 0.7, -2.285)
+size = Vector3(0.89, 1.4, 0.045)
+material = ExtResource("7_wainscot")
+
+[node name="WainscotNorthMidRight" type="CSGBox3D" parent="."]
+position = Vector3(1.05, 0.7, -2.285)
+size = Vector3(1.72, 1.4, 0.045)
 material = ExtResource("7_wainscot")
 
 [node name="WainscotNorthRight" type="CSGBox3D" parent="."]
@@ -361,9 +389,19 @@ position = Vector3(2.85, 1.4, 0)
 size = Vector3(0.09, 0.07, 4.52)
 material = ExtResource("5_trim")
 
-[node name="ChairRailNorth" type="CSGBox3D" parent="."]
-position = Vector3(-1.35, 1.4, -2.27)
-size = Vector3(3.0, 0.07, 0.09)
+[node name="ChairRailNorthFarLeft" type="CSGBox3D" parent="."]
+position = Vector3(-2.59, 1.4, -2.27)
+size = Vector3(0.56, 0.07, 0.09)
+material = ExtResource("5_trim")
+
+[node name="ChairRailNorthMidLeft" type="CSGBox3D" parent="."]
+position = Vector3(-0.255, 1.4, -2.27)
+size = Vector3(0.93, 0.07, 0.09)
+material = ExtResource("5_trim")
+
+[node name="ChairRailNorthMidRight" type="CSGBox3D" parent="."]
+position = Vector3(1.05, 1.4, -2.27)
+size = Vector3(1.76, 0.07, 0.09)
 material = ExtResource("5_trim")
 
 [node name="ChairRailSouth" type="CSGBox3D" parent="."]
@@ -397,6 +435,8 @@ transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -2.32,
 [node name="Chair" parent="." instance=ExtResource("11_chair")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -1.55, 0, -0.6)
 
+[node name="PhChairVisual" parent="Chair" instance=ExtResource("50_phchair")]
+
 [node name="OperatorSeat" type="Node" parent="Chair" node_paths=PackedStringArray("office")]
 script = ExtResource("33_seat")
 office = NodePath("../..")
@@ -415,26 +455,48 @@ shape = SubResource("SeatInteract")
 position = Vector3(-2.38, 0.752, -0.92)
 
 [node name="TranscriptPaper" parent="." instance=ExtResource("16_paper")]
-position = Vector3(-2.15, 0.752, -0.72)
-rotation = Vector3(0, 1.5707963, 0)
+position = Vector3(-1.99, 0.822, -0.72)
+rotation = Vector3(0.5, 1.5707963, 0)
+
+[node name="PaperSlopeSupport" type="CSGBox3D" parent="."]
+position = Vector3(-2.132, 0.823, -0.72)
+size = Vector3(0.025, 0.143, 0.24)
+material = ExtResource("5_trim")
 
 [node name="CopyCommitDesk" parent="." instance=ExtResource("40_commit")]
 position = Vector3(0.95, 0.72, 1.35)
 rotation = Vector3(0, 3.141593, 0)
 
 [node name="MorseReferenceCard" parent="." instance=ExtResource("17_morseref")]
-position = Vector3(-2.17, 0.752, -0.32)
-rotation = Vector3(0, 1.5707963, 0)
+position = Vector3(-2.06, 0.811, -0.3)
+rotation = Vector3(0.42, 1.5707963, 0)
+
+[node name="CardSlopeSupport" type="CSGBox3D" parent="."]
+position = Vector3(-2.222, 0.812, -0.3)
+size = Vector3(0.025, 0.121, 0.26)
+material = ExtResource("5_trim")
 
 [node name="DispatchLedger" parent="." instance=ExtResource("18_ledger")]
 position = Vector3(-2.52, 0.752, -0.42)
 rotation = Vector3(0, 1.5707963, 0)
+office_path = NodePath("..")
 
 [node name="RoutingBoard" parent="." instance=ExtResource("19_routing")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 2.74, 0.62, -0.85)
 
 [node name="StorageCabinet" parent="." instance=ExtResource("12_cabinet")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -2.58, 0, 1.4)
+
+[node name="PhCabinetVisual" parent="." instance=ExtResource("51_phcabinet")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -2.58, 0, 1.4)
+
+[node name="PhFilingTable" parent="." instance=ExtResource("53_phtable")]
+; Service table by the south wall, west of the door: hats, stove mitts and the
+; morning's dispatch satchel live here — the door group's working surface.
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -0.5, 0, 1.85)
+
+[node name="PhLedgerVolumes" parent="." instance=ExtResource("52_phbooks")]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 2.62, 1.08, 0.45)
 
 [node name="CornerStove" parent="." instance=ExtResource("13_stove")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 2.1, 0, 1.55)
@@ -455,7 +517,7 @@ script = ExtResource("28_ambience")
 position = Vector3(-1.6, 0.2, 2.85)
 
 [node name="WindowObservationEvent" parent="." instance=ExtResource("21_winobs")]
-position = Vector3(0.72, 1.18, -2.85)
+position = Vector3(-1.5, 1.18, -2.85)
 
 [node name="Player" parent="." instance=ExtResource("22_player")]
 position = Vector3(0, 0, 1.05)
@@ -472,6 +534,9 @@ scheduler = NodePath("../MorseRuntimeScheduler")
 sounder = NodePath("../TelegraphStation/Sounder")
 telegraph_key = NodePath("../TelegraphStation/TelegraphKey")
 transcript_paper = NodePath("../TranscriptPaper")
+
+[node name="TapeRegister" parent="TelegraphSessionController" instance=ExtResource("43_tape")]
+position = Vector3(-2.06, 0.751, -1.15)
 
 [node name="DutySheet" type="Node3D" parent="." node_paths=PackedStringArray("office")]
 position = Vector3(1.62, 1.55, 2.2)
@@ -497,9 +562,28 @@ session = NodePath("../TelegraphSessionController")
 
 [node name="LampLife" type="Node" parent="."]
 script = ExtResource("37_lamplife")
+flame_mesh_path = NodePath("../DeskSetup/OilLamp/Flame")
 
 [node name="UneaseDirector" type="Node3D" parent="."]
 script = ExtResource("36_unease")
+
+[node name="CreakAnchorFloorNW" type="Marker3D" parent="UneaseDirector"]
+position = Vector3(-1.8, 0.05, -1.4)
+
+[node name="CreakAnchorBeam" type="Marker3D" parent="UneaseDirector"]
+position = Vector3(0.4, 2.3, -0.6)
+
+[node name="CreakAnchorCornerNE" type="Marker3D" parent="UneaseDirector"]
+position = Vector3(2.3, 0.8, -1.9)
+
+[node name="CreakAnchorWestWall" type="Marker3D" parent="UneaseDirector"]
+position = Vector3(-2.75, 0.9, 0.6)
+
+[node name="CreakAnchorSouthDoor" type="Marker3D" parent="UneaseDirector"]
+position = Vector3(1.4, 0.7, 2.2)
+
+[node name="CreakAnchorStove" type="Marker3D" parent="UneaseDirector"]
+position = Vector3(2.1, 0.4, 1.5)
 
 [node name="ShiftEndCard" parent="." instance=ExtResource("35_endcard")]
 

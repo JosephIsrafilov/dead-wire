@@ -1,0 +1,8 @@
+#!/bin/bash
+set -e
+
+# Symlink .env from repo root (where secrets live, outside worktrees)
+[ -f "$CONDUCTOR_ROOT_PATH/.env" ] && ln -sf "$CONDUCTOR_ROOT_PATH/.env" .env
+
+# Generate Godot import cache (.godot/) for this worktree
+godot --headless --path . --import

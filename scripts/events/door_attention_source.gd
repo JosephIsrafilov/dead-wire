@@ -27,7 +27,7 @@ func _setup_audio_player() -> void:
 		_player.volume_db = volume_db
 		_player.pitch_scale = 1.0
 		_player.max_distance = 12.0
-		_player.bus = &"Attention" if AudioServer.get_bus_index(&"Attention") >= 0 else &"Master"
+		_player.bus = &"Foley" if AudioServer.get_bus_index(&"Foley") >= 0 else &"Master"
 		add_child(_player)
 
 func trigger_footsteps() -> void:

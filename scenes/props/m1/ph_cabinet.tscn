@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/props/psx_asset_adapter.gd" id="1_adapter"]
+[ext_resource type="PackedScene" path="res://assets/m1_adapted/ph_cabinet/painted_wooden_cabinet_02.gltf" id="2_cabinet"]
+
+; Archive cabinet adapted from Poly Haven "Painted Wooden Cabinet 02" (CC0).
+; Source is 2.57 m tall — deliberately shortened (non-uniform avoided: the
+; model is scaled uniformly 0.72 which reads as a low station bookpress) and
+; its paint muted into the room's palette.
+
+[node name="PhCabinetVisual" type="Node3D"]
+script = ExtResource("1_adapter")
+mute = Color(0.52, 0.48, 0.42, 1)
+
+[node name="CabinetModel" parent="." instance=ExtResource("2_cabinet")]
+transform = Transform3D(0.72, 0, 0, 0, 0.72, 0, 0, 0, 0.72, 0, 0, 0)

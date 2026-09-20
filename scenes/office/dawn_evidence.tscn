@@ -11,50 +11,68 @@ size = Vector3(0.88, 0.78, 0.22)
 [node name="DawnEvidence" type="Node3D"]
 script = ExtResource("1_evidence")
 
+; A real sheet of paper pinned to a backing board — not a poster-sized UI panel.
+
 [node name="Frame" type="CSGBox3D" parent="."]
 position = Vector3(0, 0, 0.025)
-size = Vector3(0.9, 0.8, 0.06)
+size = Vector3(0.42, 0.5, 0.05)
 material = ExtResource("3_wood")
 
 [node name="Paper" type="CSGBox3D" parent="."]
 position = Vector3(0, 0, -0.012)
-size = Vector3(0.74, 0.64, 0.014)
+size = Vector3(0.25, 0.33, 0.008)
 material = ExtResource("4_paper")
 
+; Two flat iron pins hold the sheet to the board.
+
+[node name="PinTop" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1.74846e-08, 1, 0, -1, 1.74846e-08, 0, 0.15, -0.018)
+radius = 0.008
+height = 0.01
+sides = 8
+material = ExtResource("3_wood")
+
+[node name="PinBottom" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1.74846e-08, 1, 0, -1, 1.74846e-08, 0, -0.15, -0.018)
+radius = 0.008
+height = 0.01
+sides = 8
+material = ExtResource("3_wood")
+
 [node name="TitleLabel" type="Label3D" parent="."]
-position = Vector3(0, 0.23, -0.026)
+position = Vector3(0, 0.105, -0.019)
 rotation = Vector3(0, 3.141593, 0)
-pixel_size = 0.0018
+pixel_size = 0.0011
 modulate = Color(0.12, 0.1, 0.075, 1)
 outline_size = 0
 outline_modulate = Color(0.78, 0.67, 0.45, 1)
 text = "NIGHT HANDOVER"
-font_size = 15
+font_size = 13
 
 [node name="SubtitleLabel" type="Label3D" parent="."]
-position = Vector3(0, 0.05, -0.026)
+position = Vector3(0, 0.02, -0.019)
 rotation = Vector3(0, 3.141593, 0)
-pixel_size = 0.00155
+pixel_size = 0.00095
 modulate = Color(0.18, 0.14, 0.095, 1)
 text = "STATION COPY"
-font_size = 12
+font_size = 11
 
 [node name="ResultLabel" type="Label3D" parent="."]
-position = Vector3(0, -0.08, -0.026)
+position = Vector3(0, -0.04, -0.019)
 rotation = Vector3(0, 3.141593, 0)
-pixel_size = 0.0018
+pixel_size = 0.0011
 modulate = Color(0.55, 0.12, 0.08, 1)
 outline_size = 0
 text = "UNREAD"
-font_size = 14
+font_size = 13
 
 [node name="StampLabel" type="Label3D" parent="."]
-position = Vector3(0, -0.22, -0.026)
+position = Vector3(0, -0.105, -0.019)
 rotation = Vector3(0, 3.141593, 0)
-pixel_size = 0.00145
+pixel_size = 0.0009
 modulate = Color(0.22, 0.18, 0.12, 1)
 text = "SEALED"
-font_size = 11
+font_size = 10
 
 [node name="RevealLight" type="OmniLight3D" parent="."]
 position = Vector3(0, 0, 0.17)

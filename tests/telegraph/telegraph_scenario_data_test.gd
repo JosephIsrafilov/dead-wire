@@ -45,6 +45,10 @@ func _init() -> void:
 	if not assert_condition(is_equal_approx(scen2.attention_event_start_time, 4.0), "Scenario 2 start time is 4.0s"): return
 	if not assert_condition(scen2.requires_transcript_verification, "Scenario 2 requires transcript verification"): return
 	if not assert_condition(scen2.transcript_reveal_cues.size() == 19, "Scenario 2 has authored glyph cues"): return
+	if not assert_condition(scen1.routing_lapsed_world_fact == "train_17_no_order_sent", "Scenario 1 routing lapse world fact matches"): return
+	if not assert_condition(scen1.routing_lapsed_knowledge_fact == "lapsed_baseline_train_17", "Scenario 1 routing lapse knowledge fact matches"): return
+	if not assert_condition(scen2.routing_lapsed_world_fact == "freight_no_order_sent", "Scenario 2 routing lapse world fact matches"): return
+	if not assert_condition(scen2.routing_lapsed_knowledge_fact == "lapsed_attention_hold_freight", "Scenario 2 routing lapse knowledge fact matches"): return
 
 	# 4. Load Scenario 3 fixture
 	var scen3_path := "res://data/scenarios/m1_scenario_3_core_hook.tres"
@@ -56,8 +60,9 @@ func _init() -> void:
 	if not assert_condition(scen3.transmission_data.written_transcript == "WATCHER", "Scenario 3 written_transcript is WATCHER"): return
 	if not assert_condition(scen3.requires_transcript_verification, "Scenario 3 requires transcript verification"): return
 	if not assert_condition(scen3.commit_options.size() == 2, "Scenario 3 exposes two commit options"): return
-	if not assert_condition(scen3.commit_options[0].display_label == "CORRECT COPY\nWATER", "Scenario 3 water label is concrete"): return
-	if not assert_condition(scen3.commit_options[1].display_label == "FILE COPY\nWATCHER", "Scenario 3 watcher label is concrete"): return
+	if not assert_condition(scen3.routing_lapsed_world_fact.is_empty() and scen3.routing_lapsed_knowledge_fact.is_empty(), "Commit scenario leaves routing lapse fields empty (compatible default)"): return
+	if not assert_condition(scen3.commit_options[0].display_label == "AMEND COPY\nWATER", "Scenario 3 water label names the act"): return
+	if not assert_condition(scen3.commit_options[1].display_label == "RETAIN COPY\nWATCHER", "Scenario 3 watcher label names the act"): return
 	if not assert_condition(scen3.consequence_event_id == "window_figure", "Scenario 3 consequence event is authored"): return
 
 	print("--- All Telegraph Scenario Data Tests PASSED ---")

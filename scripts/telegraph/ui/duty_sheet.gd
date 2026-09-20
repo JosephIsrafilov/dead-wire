@@ -26,7 +26,7 @@ signal sheet_inspected(text: String)
 const HEADER: String = """BLACK CREEK STATION
 NIGHT SHIFT, APRIL 1894 — 11 P.M. TO 6 A.M.
 OPERATOR: E. CRANE
-============================================
+────────────────────────────────────────────
 
 STANDING ORDERS
 
@@ -41,17 +41,17 @@ STANDING ORDERS
   5. Routing rules are in the Dispatch Ledger.
   6. The outer door stays locked until the line closes.
 
---------------------------------------------
+────────────────────────────────────────────
 TONIGHT'S TRAFFIC
 """
 
 const FOOTER: String = """
---------------------------------------------
+────────────────────────────────────────────
 Entries made by E. Crane. Retain station copies
 for the division's morning audit."""
 
 const FOOTER_INCOMPLETE: String = """
---------------------------------------------
+────────────────────────────────────────────
 Not every item on this sheet is closed.
 Entries made by E. Crane. Retain station copies
 for the division's morning audit."""
@@ -61,6 +61,7 @@ const STATUS_COPIED: String = "COPIED"
 const STATUS_FILED: String = "COPIED / FILED"
 const STATUS_NO_COPY: String = "NO COPY"
 const STATUS_LAPSED: String = "NO ORDER SENT"
+const STATUS_INCOMPLETE: String = "COPY INCOMPLETE"
 
 ## Core-hook outcomes are deliberately phrased as Elias's paperwork, not as a
 ## replay of the wire. The lookup table keeps this surface data-driven: adding
@@ -122,18 +123,6 @@ func get_sheet_text() -> String:
 func get_watch_record() -> String:
 	return "BLACK CREEK STATION\nNIGHT REGISTER — E. CRANE\n\n" + get_sheet_text().substr(HEADER.length())
 
-## Returns the terminal core-hook record Elias knows about, if any. This
-## method intentionally never consults WorldState: the sheet can only show a
-## consequence after the corresponding KnowledgeState fact has been learned.
-func get_core_hook_outcome_status() -> String:
-	var knowledge := _knowledge_state()
-	if knowledge == null:
-		return ""
-	for fact_id in CORE_HOOK_OUTCOME_BY_FACT:
-		if knowledge.knows(fact_id):
-			return String(CORE_HOOK_OUTCOME_BY_FACT[fact_id])
-	return ""
-
 ## Elias can see a gap in his own paperwork. He cannot see what it cost — that
 ## stays in WorldState, and the only thing that ever reports it is the wire.
 func _has_open_items() -> bool:
@@ -146,23 +135,45 @@ func _has_open_items() -> bool:
 	return false
 
 ## Status is read from KnowledgeState only. WorldState is never consulted here.
+## The vocabulary itself is shared with the dispatch ledger: one paperwork
+## tradition, not two diverging condition trees (plan §7.1).
 func get_status_for(scenario: TelegraphScenarioData) -> String:
 	if scenario == null:
 		return STATUS_AWAITING
-	var knowledge := _knowledge_state()
-	if knowledge == null:
-		return STATUS_AWAITING
+	return knowledge_status(scenario.scenario_id, _knowledge_state())
 
-	var identifier := scenario.scenario_id
+## The one knowledge-backed status computation the whole night's paperwork
+## shares. Filed beats lapsed beats incomplete, so a sheet that closed with ink
+## missing reads as the terminal outcome it ended on.
+static func knowledge_status(identifier: String, knowledge: KnowledgeStateStore) -> String:
+	if identifier.is_empty() or knowledge == null:
+		return STATUS_AWAITING
 	if knowledge.knows(StringName("filed_%s" % identifier)):
 		return STATUS_FILED
 	if knowledge.knows(StringName("lapsed_%s" % identifier)):
 		return STATUS_LAPSED
+	if knowledge.knows(StringName("incomplete_copy_%s" % identifier)):
+		return STATUS_INCOMPLETE
 	if knowledge.knows(StringName("copied_%s" % identifier)):
 		return STATUS_COPIED
 	if knowledge.knows(StringName("missed_call_%s" % identifier)):
 		return STATUS_NO_COPY
 	return STATUS_AWAITING
+
+## Returns the terminal core-hook outcome Elias knows about, if any. This
+## computation intentionally never consults WorldState: paperwork can only
+## show a consequence after the corresponding KnowledgeState fact is learned.
+## Shared with the dispatch ledger for the same reason.
+func get_core_hook_outcome_status() -> String:
+	return core_hook_outcome(_knowledge_state())
+
+static func core_hook_outcome(knowledge: KnowledgeStateStore) -> String:
+	if knowledge == null:
+		return ""
+	for fact_id in CORE_HOOK_OUTCOME_BY_FACT:
+		if knowledge.knows(fact_id):
+			return String(CORE_HOOK_OUTCOME_BY_FACT[fact_id])
+	return ""
 
 static func _pad_status(label: String, status: String) -> String:
 	var width := 30

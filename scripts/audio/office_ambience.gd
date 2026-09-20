@@ -26,7 +26,7 @@ signal clock_ticked(tick_count: int)
 @export var clock_volume_db: float = -17.0
 
 ## Local positions of the physical sources, relative to this node.
-@export var wind_position: Vector3 = Vector3(1.05, 1.55, -2.36)
+@export var wind_position: Vector3 = Vector3(-1.5, 1.55, -2.36)
 @export var stove_position: Vector3 = Vector3(2.1, 0.75, 1.55)
 @export var clock_position: Vector3 = Vector3(-2.8, 2.16, 0.62)
 
@@ -137,6 +137,12 @@ func _emit_tick() -> void:
 	if clock_player != null and clock_player.stream != null and is_inside_tree():
 		clock_player.play()
 	clock_ticked.emit(ticks_played)
+
+## The room's one mechanical clock, in seconds since the scene started ticking.
+## The station clock's pendulum reads this so the swing and the tick share a
+## phase instead of drifting apart.
+func get_mechanical_elapsed() -> float:
+	return _clock_elapsed + float(ticks_played) * clock_interval_seconds
 
 func reset_telemetry() -> void:
 	ticks_played = 0

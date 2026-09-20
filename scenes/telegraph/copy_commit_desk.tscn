@@ -90,7 +90,7 @@ outline_size = 0
 horizontal_alignment = 1
 vertical_alignment = 1
 width = 180.0
-text = "CORRECT COPY\nWATER"
+text = "AMEND COPY\nWATER"
 visible = false
 
 [node name="OptionTwoLabel" type="Label3D" parent="."]
@@ -103,7 +103,7 @@ outline_size = 0
 horizontal_alignment = 1
 vertical_alignment = 1
 width = 180.0
-text = "FILE COPY\nWATCHER"
+text = "RETAIN COPY\nWATCHER"
 visible = false
 
 [node name="OptionOneStamp" type="Label3D" parent="."]

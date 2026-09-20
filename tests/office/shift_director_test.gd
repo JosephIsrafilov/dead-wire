@@ -44,6 +44,7 @@ func _run() -> void:
 	key.press()
 	if not assert_condition(director.get_phase() == ShiftDirector.Phase.PRE_SHIFT, "A standing operator cannot open the line"): return
 
+	seat.approach_duration = 0.0
 	if not assert_condition(seat.sit(), "Operator can sit at the desk"): return
 	if not assert_condition(office.player.is_movement_locked, "Sitting locks walking"): return
 	if not assert_condition(not office.player.is_look_locked, "Sitting leaves the head free"): return
@@ -117,6 +118,10 @@ func _run() -> void:
 	key = session.telegraph_key
 	knowledge = _knowledge_state()
 	world = _world_state()
+	# A settled operator: the R7 gate suspends ink while the sit transition is
+	# still running, and this suite steps time without frames.
+	office.operator_seat.sit_duration = 0.0
+	office.operator_seat.approach_duration = 0.0
 	if not assert_condition(office.operator_seat.sit(), "Operator sits for the answered path"): return
 
 	# 9. Answering the call starts the real transmission.
@@ -128,19 +133,25 @@ func _run() -> void:
 	if not assert_condition(session.get_state() == TelegraphSessionController.State.RECEIVING, "Session is receiving the real message"): return
 	if not assert_condition(not key.is_enabled, "Key is inert while copy is coming in"): return
 
-	# 10. Completing the message hands over to a routing deadline.
+	# 10. Completing the message hands over to a routing deadline. The key
+	# reports the session's work at each step, not a blanket "receiving" (R1).
 	session.scheduler.advance_time(30.0)
+	if not assert_condition(session.get_state() == TelegraphSessionController.State.COPYING, "t0 leaves the physical copy open"): return
+	if not assert_condition(key.prompt_message == ShiftDirector.PROMPT_FINISHING_COPY, "The key reports the copy being finished"): return
+	_drain_paper(session.transcript_paper)
 	if not assert_condition(session.get_state() == TelegraphSessionController.State.VERIFYING, "Message completion waits for transcript verification"): return
+	if not assert_condition(key.prompt_message == ShiftDirector.PROMPT_READ_COPY, "The key reports the finished copy waiting to be read"): return
 	if not assert_condition(session.mark_transcript_verified(), "Transcript inspection unlocks route deadline"): return
 	if not assert_condition(session.get_state() == TelegraphSessionController.State.AWAITING_ROUTE, "Message ends awaiting a route"): return
 	if not assert_condition(director.get_phase() == ShiftDirector.Phase.AWAITING_ROUTE, "Director opens the routing deadline"): return
+	if not assert_condition(key.prompt_message == ShiftDirector.PROMPT_AWAITING_ROUTE, "The key reports the route decision once the copy is verified"): return
 	if not assert_condition(knowledge.knows(&"copied_baseline_train_17"), "Elias knows he copied the message"): return
 	if not assert_condition(director.get_route_seconds_remaining() > 0.0, "Routing deadline is counting"): return
 
 	# 11. The sender prods on the wire rather than through an on-screen timer.
 	sounder = session.sounder
 	sounder.reset_telemetry()
-	director.advance(director.route_nag_interval_seconds + 0.1)
+	_advance_night(session, director, director.route_nag_interval_seconds + 0.1)
 	if not assert_condition(sounder.down_clicks_played > 0, "Sender asks again on the wire while waiting for a route"): return
 	if not assert_condition(director.get_phase() == ShiftDirector.Phase.AWAITING_ROUTE, "A prod does not end the deadline"): return
 
@@ -154,11 +165,12 @@ func _run() -> void:
 	director.advance(director.wait_seconds_before_call[1] + 0.1)
 	key.press()
 	session.scheduler.advance_time(60.0)
+	_drain_paper(session.transcript_paper)
 	if not assert_condition(session.get_state() == TelegraphSessionController.State.VERIFYING, "Second message waits for transcript verification"): return
 	session.mark_transcript_verified()
 	if not assert_condition(director.get_phase() == ShiftDirector.Phase.AWAITING_ROUTE, "Second message also awaits a route"): return
 	director.route_defaulted.connect(func(_slot: int, scenario: TelegraphScenarioData) -> void: _defaults.append(scenario.scenario_id))
-	director.advance(director.route_deadline_seconds + 0.1)
+	_advance_night(session, director, director.route_deadline_seconds + 0.1)
 	if not assert_condition(_defaults.size() == 1 and _defaults[0] == "attention_hold_freight", "Expired deadline defaults the route"): return
 	if not assert_condition(not knowledge.knows(&"filed_attention_hold_freight"), "A defaulted route is not a filed message"): return
 	if not assert_condition(knowledge.knows(&"lapsed_attention_hold_freight"), "Elias knows the freight order lapsed"): return
@@ -168,14 +180,27 @@ func _run() -> void:
 	director.advance(director.wait_seconds_before_call[2] + 0.1)
 	key.press()
 	session.scheduler.advance_time(30.0)
+	if not assert_condition(session.get_state() == TelegraphSessionController.State.COPYING, "Final message leaves the copy open at t0"): return
+	if not assert_condition(key.prompt_message == ShiftDirector.PROMPT_FINISHING_COPY, "The key reports the final copy being finished"): return
+	_drain_paper(session.transcript_paper)
+	if not assert_condition(key.prompt_message == ShiftDirector.PROMPT_READ_COPY, "The key reports the final copy waiting to be read"): return
 	if not assert_condition(session.get_state() == TelegraphSessionController.State.VERIFYING, "Final message waits for transcript verification"): return
 	if not assert_condition(session.mark_transcript_verified(), "Final transcript inspection unlocks the commit"): return
 	if not assert_condition(session.get_state() == TelegraphSessionController.State.AWAITING_COMMIT, "Final message opens the commit desk"): return
+	if not assert_condition(key.prompt_message == ShiftDirector.PROMPT_FILE_COPY, "The key reports the filing decision"): return
 	var phase_before_commit_wait := director.get_phase()
-	director.advance(120.0)
-	if not assert_condition(director.get_phase() == phase_before_commit_wait and director.get_slot_index() == 2, "Commit inspection pauses call pacing until a decision"): return
-	if not assert_condition(session.submit_commit(&"file_water"), "Final message accepts an authored commit"): return
+	_advance_night(session, director, 10.0)
+	if not assert_condition(director.get_phase() == phase_before_commit_wait and director.get_slot_index() == 2, "Commit inspection pauses call pacing while the deadline runs"): return
+	# (R8) A warning on a busy wire is deferred, never played over traffic, and
+	# is dropped once its slot resolves.
+	if not assert_condition(director._play_on_wire("E") > 0.0, "A service signal occupies the wire for the deferral case"): return
+	session.advance_post_signal(10.15)
+	if not assert_condition(director._pending_warning != &"", "A warning on a busy wire is deferred, not played over traffic"): return
+	if not assert_condition(session.submit_commit(&"file_water"), "Final message accepts an authored commit inside the deadline"): return
 	if not assert_condition(session.get_state() == TelegraphSessionController.State.CONSEQUENCE, "Final message enters its consequence beat"): return
+	if not assert_condition(key.prompt_message == ShiftDirector.PROMPT_STAND_BY, "The key reports a neutral standby during the consequence beat"): return
+	director.advance(0.3)
+	if not assert_condition(director._pending_warning == &"", "A deferred warning is dropped once its slot is resolved"): return
 	session.advance_consequence(1.0)
 	session.notify_consequence_visible()
 	session.advance_consequence(office.scenario_3.consequence_hold_seconds)
@@ -185,11 +210,17 @@ func _run() -> void:
 	if not assert_condition(director.is_shift_over(), "is_shift_over() agrees"): return
 	if not assert_condition(not key.is_enabled, "Key is dead once the line closes"): return
 	var closing_clock := office.get_node_or_null("OfficeStorytellingProps/StationClock") as StationClock
-	if not assert_condition(closing_clock != null and closing_clock.get_station_time_text() == "6:00 A.M.", "Closing the line lands the watch on 6 A.M."): return
+	if not assert_condition(closing_clock != null and closing_clock.get_station_hours() <= 30.0, "Closing never overshoots 6 A.M."): return
+	# (H1) No snap at the close: the hands keep their own bounded speed toward
+	# 06:00 instead of teleporting there the moment the line closes.
+	var closing_hours := closing_clock.get_station_hours()
 	if not assert_condition(key.prompt_message == ShiftDirector.PROMPT_SHIFT_OVER, "Key reports the shift is over"): return
 
 	director.advance(300.0)
 	if not assert_condition(director.get_phase() == ShiftDirector.Phase.SHIFT_OVER, "The night does not loop back around"): return
+	if not assert_condition(closing_clock.get_station_hours() >= closing_hours, "The hands never ran backward across the close"): return
+	if not assert_condition(closing_clock.get_station_time_text() == "6:00 A.M.", "The hands reach 6 A.M. at their bounded speed, got %s" % closing_clock.get_station_time_text()): return
+	if not assert_condition(closing_clock.get_progress() == 1.0, "The clock rests at the end of the watch"): return
 
 	# 15. The duty sheet is the goal surface, written from knowledge alone.
 	var sheet := office.get_node_or_null("DutySheet") as DutySheet
@@ -204,7 +235,8 @@ func _run() -> void:
 
 	# 16. The sheet reports Elias, not the world. He believes he handled the
 	#     freight; WorldState knows the route was never given.
-	if not assert_condition(world.has_fact(&"freight_cleared_in_error"), "WorldState recorded the defaulted freight route"): return
+	if not assert_condition(world.has_fact(&"freight_no_order_sent"), "WorldState recorded the defaulted freight route as no order sent"): return
+	if not assert_condition(not world.has_fact(&"freight_cleared_in_error"), "A defaulted route is not a misdirected one"): return
 	if not assert_condition(sheet.get_status_for(office.get_scenario_list()[1]) == DutySheet.STATUS_LAPSED, "Defaulted freight reads as no order sent"): return
 
 	# 17. The night has to visibly move. The station clock is the only reading of
@@ -225,17 +257,96 @@ func _run() -> void:
 	fresh_clock.advance(60.0)
 	if not assert_condition(fresh_clock.get_progress() == 0.0, "Hands do not move before the line is opened"): return
 
+	fresh_office.operator_seat.sit_duration = 0.0
+	fresh_office.operator_seat.approach_duration = 0.0
 	fresh_office.operator_seat.sit()
 	fresh_office.session_controller.telegraph_key.press()
-	fresh_clock.advance(fresh_clock.shift_real_seconds * 0.5)
-	if not assert_condition(is_equal_approx(fresh_clock.get_progress(), 0.5), "Half a shift winds the clock halfway"): return
-	if not assert_condition(fresh_clock.get_station_time_text() == "2:30 A.M.", "Mid-watch reads 2:30 A.M., got %s" % fresh_clock.get_station_time_text()): return
+	# (H1) The hands are monotone across phase changes: the old bug wound them
+	# backward whenever a wait ended and a call began, and again at the close.
+	var h_wait: float = fresh_office.shift_director.get_station_hours()
+	fresh_office.shift_director.advance(fresh_office.shift_director.get_current_wait_seconds() + 0.1)
+	var h_call: float = fresh_office.shift_director.get_station_hours()
+	if not assert_condition(h_call >= h_wait, "The call beginning never rewinds the hands"): return
+	fresh_office.session_controller.telegraph_key.press()
+	fresh_office.shift_director.advance(2.0)
+	var h_receive: float = fresh_office.shift_director.get_station_hours()
+	if not assert_condition(h_receive >= h_call, "Answering the call never rewinds the hands"): return
+	fresh_office.session_controller.scheduler.auto_process = false
+	fresh_office.session_controller.scheduler.advance_time(30.0)
+	_drain_paper(fresh_office.session_controller.transcript_paper)
+	fresh_office.session_controller.mark_transcript_verified()
+	fresh_office.session_controller.submit_routing_decision("CLEAR EAST")
+	fresh_clock.advance(0.016)
+	# Slot 0 resolved: the authored target is 02:00 and the display chases it
+	# at a bounded speed instead of snapping onto it.
+	if not assert_condition(absf(fresh_office.shift_director.get_station_target_hours() - 26.0) < 0.001, "Slot 0 resolved targets 02:00"): return
+	var h_slot0: float = fresh_clock.get_station_hours()
+	if not assert_condition(h_slot0 > 23.0 and h_slot0 < 26.0, "The display moved toward 02:00 without snapping, got %.2f" % h_slot0): return
+	if not assert_condition(fresh_clock.get_station_time_text() != "11:00 P.M.", "The dial has left the start"): return
 
 	var midnight_rotation := fresh_clock.minute_hand.rotation.x
-	fresh_clock.advance(fresh_clock.shift_real_seconds)
+	# Run the remaining slots through to the close.
+	for slot in 2:
+		fresh_office.shift_director.advance(fresh_office.shift_director.get_current_wait_seconds() + 0.1)
+		fresh_office.session_controller.telegraph_key.press()
+		fresh_office.shift_director.advance(2.0)
+		fresh_office.session_controller.scheduler.advance_time(30.0)
+		_drain_paper(fresh_office.session_controller.transcript_paper)
+		fresh_office.session_controller.mark_transcript_verified()
+		if slot == 0:
+			fresh_office.session_controller.submit_routing_decision("HOLD")
+		else:
+			fresh_office.session_controller.submit_commit(&"file_water")
+			fresh_office.session_controller.advance_consequence(1.5)
+			fresh_office.session_controller.notify_consequence_visible()
+			fresh_office.session_controller.advance_consequence(30.0)
+	fresh_office.shift_director.advance(fresh_office.shift_director.closing_delay_seconds + 0.1)
+	if not assert_condition(fresh_office.shift_director.is_shift_over(), "Fresh watch reaches SHIFT_OVER"): return
+	# The hands had not crossed 06:00 at the moment the shift ended.
+	if not assert_condition(fresh_clock.get_station_hours() <= 29.3 + 0.001, "The hands never crossed 06:00 before the shift ended, got %.2f" % fresh_clock.get_station_hours()): return
+	# The hands do not wait for the player and are not waited for: they keep
+	# their bounded speed toward 06:00 and stop there on their own.
+	fresh_office.shift_director.advance(200.0)
+	fresh_clock.advance(0.016)
 	if not assert_condition(fresh_clock.get_station_time_text() == "6:00 A.M.", "Watch ends at 6 A.M., got %s" % fresh_clock.get_station_time_text()): return
 	if not assert_condition(not is_equal_approx(fresh_clock.minute_hand.rotation.x, midnight_rotation), "The minute hand actually turned"): return
 	if not assert_condition(fresh_clock.get_progress() == 1.0, "The clock stops at the end of the watch"): return
+
+	# 17. (R8) A grace warning and a route nag landing in the same breath are
+	# one wire call, and the grace still closes the slot on time.
+	var merge_office: M1OfficeController = (ResourceLoader.load("res://scenes/office/m1_office.tscn") as PackedScene).instantiate() as M1OfficeController
+	if not assert_condition(merge_office != null, "Merge-case office instantiates"): return
+	root.add_child(merge_office)
+	await process_frame
+	await process_frame
+	merge_office.get_node("IntroCard").skip_immediately()
+	var merge_session := merge_office.session_controller
+	var merge_director := merge_office.shift_director
+	merge_director.set_process(false)
+	merge_session.set_process(false)
+	merge_session.scheduler.auto_process = false
+	merge_office.operator_seat.sit_duration = 0.0
+	merge_office.operator_seat.approach_duration = 0.0
+	merge_office.operator_seat.sit()
+	merge_session.telegraph_key.press()
+	if not assert_condition(merge_director.get_phase() == ShiftDirector.Phase.WAITING, "Merge case opens the line"): return
+	merge_director.advance(merge_director.wait_seconds_before_call[0] + 0.1)
+	if not assert_condition(merge_director.get_phase() == ShiftDirector.Phase.CALLING, "Merge case reaches the call"): return
+	merge_session.telegraph_key.press()
+	if not assert_condition(merge_session.get_state() == TelegraphSessionController.State.RECEIVING, "Merge case answers the call"): return
+	merge_session.scheduler.advance_time(30.0)
+	if not assert_condition(merge_session.get_state() == TelegraphSessionController.State.COPYING, "Merge case leaves the copy open at t0"): return
+	if not assert_condition(merge_director.get_phase() == ShiftDirector.Phase.AWAITING_ROUTE, "Merge case runs the route deadline from t0"): return
+	# The grace warning (20 s - 5 s) and the first nag (15 s) land together.
+	var wire_calls: Array[int] = [0]
+	merge_session.scheduler.playback_started.connect(func(_schedule: MorsePlaybackScheduleData): wire_calls[0] += 1)
+	_advance_night(merge_session, merge_director, 15.2)
+	if not assert_condition(wire_calls[0] == 1, "Warning and nag in the same breath are a single wire call, got %d" % wire_calls[0]): return
+	if not assert_condition(merge_director._nags_sent == 1, "The merged nag is still counted as delivered"): return
+	# The grace then closes the open copy and the shift moves on.
+	_advance_night(merge_session, merge_director, 6.0)
+	if not assert_condition(merge_director.get_slot_index() == 1, "Grace expiry moves the shift to the next slot"): return
+	merge_office.queue_free()
 
 	print("--- All Shift Director Tests PASSED (%d assertions) ---" % _assertions_passed)
 	quit(0)
@@ -267,6 +378,22 @@ func _fresh_office() -> M1OfficeController:
 	office.set_process(false)
 	office.shift_director.set_process(false)
 	return office
+
+func _drain_paper(p: TranscriptPaper) -> void:
+	var guard := 0
+	while p.is_copy_in_progress() and guard < 400:
+		p.advance_paper(0.25)
+		guard += 1
+
+## Session and director advance one production-like step at a time: the shared
+## post-signal clock and the deadline owner must never see each other ahead.
+func _advance_night(session: TelegraphSessionController, director: ShiftDirector, seconds: float) -> void:
+	var remaining := seconds
+	while remaining > 0.0:
+		var step := minf(remaining, 0.25)
+		session._process(step)
+		director.advance(step)
+		remaining -= step
 
 func _world_state() -> WorldStateStore:
 	return root.get_node_or_null("WorldState") as WorldStateStore

@@ -14,6 +14,21 @@ func _run() -> void:
 	if not assert_condition(ambience_bus_index > 0, "Dedicated 'Ambience' audio bus exists"): return
 	if not assert_condition(AudioServer.get_bus_send(ambience_bus_index) == "Master", "Ambience bus sends to Master"): return
 
+	# 1b. The wire and the furniture each have their own lane: Foley for
+	# physical contact, Telegraph for everything the sounder says.
+	var foley_bus_index := AudioServer.get_bus_index("Foley")
+	if not assert_condition(foley_bus_index > 0, "Dedicated 'Foley' audio bus exists"): return
+	if not assert_condition(AudioServer.get_bus_send(foley_bus_index) == "Master", "Foley bus sends to Master"): return
+	var telegraph_bus_index := AudioServer.get_bus_index("Telegraph")
+	if not assert_condition(telegraph_bus_index > 0, "Dedicated 'Telegraph' audio bus exists"): return
+	if not assert_condition(AudioServer.get_bus_send(telegraph_bus_index) == "Master", "Telegraph bus sends to Master"): return
+	var wire_sounder := SounderController.new()
+	root.add_child(wire_sounder)
+	await process_frame
+	if not assert_condition(wire_sounder._player_down != null and wire_sounder._player_down.bus == &"Telegraph", "The sounder rides the Telegraph bus"): return
+	if not assert_condition(wire_sounder._player_up != null and wire_sounder._player_up.bus == &"Telegraph", "Both sounder strokes ride the Telegraph bus"): return
+	wire_sounder.queue_free()
+
 	# 2. Standalone construction.
 	var ambience := OfficeAmbience.new()
 	root.add_child(ambience)
@@ -120,6 +135,14 @@ func _run() -> void:
 
 	# 14. The ambience must never grab the player's interaction focus.
 	if not assert_condition(scene_ambience.get_node_or_null("Interactable") == null, "Ambience exposes no interactable"): return
+
+	# 15. The production foley sources sit on the Foley bus, not the room's.
+	var foley := office.get_node_or_null("OfficeFoley") as Node
+	if not assert_condition(foley != null, "Production scene contains the foley node"): return
+	var paper_player := foley.get_node_or_null("Paper") as AudioStreamPlayer
+	if not assert_condition(paper_player != null and paper_player.bus == &"Foley", "Paper foley rides the Foley bus"): return
+	var board := office.routing_board
+	if not assert_condition(board != null and board.lever_impact_bus == &"Foley", "The lever stop rides the Foley bus"): return
 
 	print("--- All Office Ambience Tests PASSED (%d assertions) ---" % _assertions_passed)
 	quit(0)

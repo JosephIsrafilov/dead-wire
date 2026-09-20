@@ -1,0 +1,18 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/props/psx_asset_adapter.gd" id="1_adapter"]
+[ext_resource type="PackedScene" path="res://assets/m1_adapted/ph_chair/painted_wooden_chair_01.gltf" id="2_chair"]
+[ext_resource type="Material" path="res://materials/style_tests/desk_wood.tres" id="3_wood"]
+
+; Working chair adapted from Poly Haven "Painted Wooden Chair 01" (CC0).
+; The farmhouse white is re-stained to the depot's dark, worn wood so the
+; chair joins the room's palette; the visual sits
+; inside the authored chair frame so OperatorSeat anchors, ChairSolid
+; collision and the sit transition keep working untouched.
+
+[node name="PhChairVisual" type="Node3D"]
+script = ExtResource("1_adapter")
+mute = Color(0.3, 0.25, 0.19, 1)
+
+[node name="ChairModel" parent="." instance=ExtResource("2_chair")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)

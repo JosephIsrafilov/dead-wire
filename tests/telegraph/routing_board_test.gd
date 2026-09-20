@@ -13,12 +13,21 @@ func _init() -> void:
 	if not assert_condition(act != null, "board has Interactable component"): return
 	if not assert_condition(act.prompt_text == "Inspect Routing Board (East Wall)", "prompt text matches"): return
 
-	# 1. Open / Close
+	# 1. Open / Close (only while a route decision is pending)
 	if not assert_condition(not board_node.is_open, "Initially closed"): return
 	board_node.open_board()
-	if not assert_condition(board_node.is_open, "Board is open after open_board()"): return
+	if not assert_condition(not board_node.is_open, "Idle board (not awaiting route) does not open on demand"): return
+	board_node._on_interacted()
+	if not assert_condition(not board_node.is_open, "Idle board interaction is a no-op, not a modal"): return
+	board_node.set_awaiting_route(true)
+	board_node.open_board()
+	if not assert_condition(board_node.is_open, "Board is open after open_board() while awaiting route"): return
 	board_node.close_board()
 	if not assert_condition(not board_node.is_open, "Board is closed after close_board()"): return
+
+	# 1b. An idle board presents line status, not a fake [E] action.
+	board_node.set_awaiting_route(false)
+	if not assert_condition(not act.is_actionable and act.prompt_text == "Routing Board — Line Status", "Idle board prompt is truthful line status without an action"): return
 
 	# 2. Input actions when board is CLOSED (Must do nothing)
 	var selected_actions: Array[String] = []
@@ -32,6 +41,7 @@ func _init() -> void:
 	if not assert_condition(selected_actions.is_empty(), "Key 1 does nothing when board is closed"): return
 
 	# 3. Input actions when board is OPEN but NOT AWAITING ROUTE (e.g. READY or RECEIVING)
+	board_node.set_awaiting_route(true)
 	board_node.open_board()
 	board_node.set_awaiting_route(false)
 
@@ -81,8 +91,31 @@ func _init() -> void:
 	if not assert_condition(selected_actions.size() == 2 and selected_actions[1] == "HOLD", "Key 2 selects HOLD after reset"): return
 	if not assert_condition(not board_node.is_open, "Board automatically closes after HOLD"): return
 
+	# 6b. (R01/R04) The physical record outlives the slot: a per-slot reset
+	# keeps the lever, the needle and the last route; only a watch reset
+	# clears them. Two throws land on authored absolute stops, not offsets.
+	var pivot: Node3D = board_node.get_node("LeverPivot")
+	var lever_rest_z: float = pivot.rotation.z
+	board_node.play_route_accept("CLEAR EAST", true)
+	var clear_z: float = pivot.rotation.z
+	if not assert_condition(clear_z > lever_rest_z + 0.4, "CLEAR EAST throws to its absolute stop"): return
+	board_node.play_route_accept("HOLD", true)
+	var hold_z: float = pivot.rotation.z
+	if not assert_condition(hold_z < lever_rest_z - 0.4, "HOLD throws to its own absolute stop, not an offset"): return
+	board_node.play_route_accept("CLEAR EAST", true)
+	if not assert_condition(is_equal_approx(pivot.rotation.z, clear_z), "A repeated CLEAR EAST lands on the same authored stop, no drift"): return
+	pivot.rotation.z = hold_z
+	board_node.reset_for_new_transmission()
+	if not assert_condition(is_equal_approx(pivot.rotation.z, hold_z), "Per-slot reset keeps the thrown lever where the night left it"): return
+	if not assert_condition(board_node._last_route_action == "HOLD", "Per-slot reset keeps the recorded route"): return
+	if not assert_condition(not board_node.has_submitted_this_session, "Per-slot reset restores the ability to submit"): return
+	board_node.reset_for_new_watch()
+	if not assert_condition(is_equal_approx(pivot.rotation.z, lever_rest_z), "Watch reset returns the lever to rest"): return
+	if not assert_condition(board_node._last_route_action.is_empty(), "Watch reset forgets the last route"): return
+
 	# 7. Close via Esc
 	board_node.reset_for_new_transmission()
+	board_node.set_awaiting_route(true)
 	board_node.open_board()
 	var ev_esc: InputEventKey = InputEventKey.new()
 	ev_esc.physical_keycode = KEY_ESCAPE

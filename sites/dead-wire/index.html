@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEAD WIRE — You hear one thing. Your hand writes another.</title>
+<meta name="description" content="DEAD WIRE is a first-person psychological horror game about a telegraph operator in 1894 whose written transcripts stop matching the signal. American Morse. Six nights. No combat.">
+<meta property="og:title" content="DEAD WIRE — You hear one thing. Your hand writes another.">
+<meta property="og:description" content="A telegraph operator. An objective wire. A hand that writes something else. 1894. Six nights.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="img/hero.png">
+<link rel="icon" href="img/icon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"VideoGame","name":"Dead Wire","description":"First-person psychological horror game about a telegraph operator in 1894 whose transcripts stop matching the objective Morse signal.","genre":["Horror","Psychological Horror","Adventure"],"gamePlatform":"PC","applicationCategory":"Game","playMode":"SinglePlayer","numberOfPlayers":1}
+</script>
+<style>
+:root{
+  --ink:#0a0908; --ink2:#12100d; --ink3:#1a1712;
+  --paper:#d8cfba; --paper-dim:#a89f8a; --paper-faint:#6e6757;
+  --lamp:#e8c47a; --lamp-hot:#ffd98a; --amber:#c9a05a;
+  --blood:#9e2f22; --blood-hot:#c43a2a;
+  --rust:#5c4432; --line:#292319;
+  --mono:'IBM Plex Mono',Courier,monospace;
+  --type:'Special Elite',Courier,monospace;
+  --serif:'Cormorant Garamond',Georgia,serif;
+  --ease:cubic-bezier(.22,1,.36,1);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:auto}
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+body{
+  background:var(--ink); color:var(--paper);
+  font-family:var(--serif); font-size:19px; line-height:1.55;
+  overflow-x:clip; -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--lamp);color:var(--ink)}
+a{color:var(--lamp);text-decoration:none}
+img{display:block;max-width:100%}
+::-webkit-scrollbar{width:10px}
+::-webkit-scrollbar-track{background:var(--ink)}
+::-webkit-scrollbar-thumb{background:#2c261d;border-radius:5px}
+::-webkit-scrollbar-thumb:hover{background:var(--rust)}
+
+@media(pointer:fine){ body.cursor-on, body.cursor-on a, body.cursor-on button{cursor:none} }
+#cursor{
+  position:fixed;top:0;left:0;z-index:200;pointer-events:none;
+  width:10px;height:10px;border-radius:50%;background:var(--lamp);
+  transform:translate(-50%,-50%);display:none;
+  mix-blend-mode:difference;transition:width .25s var(--ease),height .25s var(--ease),opacity .2s;
+}
+body.cursor-on #cursor{display:block}
+#cursor.grow{width:52px;height:52px;background:var(--lamp)}
+#cursor .cl{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:9px;letter-spacing:.22em;color:var(--ink);opacity:0;transition:opacity .2s;
+}
+#cursor.grow .cl{opacity:1}
+
+body::before{
+  content:"";position:fixed;inset:-100px;z-index:90;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+  opacity:.07;mix-blend-mode:overlay;animation:grain 1.1s steps(4) infinite;
+}
+@keyframes grain{
+  0%{transform:translate(0,0)}25%{transform:translate(-2%,1.5%)}
+  50%{transform:translate(1.5%,-2%)}75%{transform:translate(-1%,2%)}100%{transform:translate(0,0)}
+}
+body::after{
+  content:"";position:fixed;inset:0;z-index:89;pointer-events:none;
+  background:radial-gradient(ellipse 120% 90% at 50% 42%,transparent 52%,rgba(0,0,0,.62) 100%);
+}
+#scanlines{
+  position:fixed;inset:0;z-index:88;pointer-events:none;opacity:.5;
+  background:repeating-linear-gradient(to bottom,transparent 0 3px,rgba(0,0,0,.14) 3px 4px);
+}
+
+.wrap{max-width:1240px;margin:0 auto;padding:0 clamp(20px,4vw,48px)}
+.mono{font-family:var(--mono)}
+
+/* ============ PRELOADER ============ */
+#boot{
+  position:fixed;inset:0;z-index:300;background:var(--ink);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;
+  transition:opacity .6s var(--ease),visibility .6s;
+}
+#boot.done{opacity:0;visibility:hidden}
+#boot .b-morse{display:flex;gap:5px;height:14px;align-items:center}
+#boot .b-morse i{width:4px;height:4px;border-radius:50%;background:var(--rust)}
+#boot .b-morse i.on{background:var(--lamp);box-shadow:0 0 8px rgba(232,196,122,.7)}
+#boot .b-txt{font-family:var(--mono);font-size:11px;letter-spacing:.5em;color:var(--paper-dim);text-transform:uppercase}
+#boot .b-bar{width:180px;height:1px;background:var(--line);overflow:hidden}
+#boot .b-bar i{display:block;height:100%;width:100%;background:var(--lamp);transform:scaleX(0);transform-origin:left;transition:transform .3s linear}
+
+/* ============ NAV ============ */
+nav{
+  position:fixed;top:18px;left:50%;transform:translateX(-50%);z-index:100;
+  display:flex;align-items:center;gap:34px;
+  padding:10px 26px;border-radius:999px;border:1px solid rgba(232,196,122,.14);
+  background:rgba(12,10,8,.72);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  transition:border-color .3s,background .3s;
+}
+nav:hover{border-color:rgba(232,196,122,.3)}
+nav .brand{font-family:var(--type);font-size:15px;letter-spacing:.26em;color:var(--paper);white-space:nowrap}
+nav .brand b{color:var(--lamp);font-weight:400}
+nav .links{display:flex;gap:24px;font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase}
+nav .links a{color:var(--paper-dim);position:relative;padding:4px 0;transition:color .25s}
+nav .links a::after{
+  content:"";position:absolute;left:0;bottom:0;height:1px;width:100%;background:var(--lamp);
+  transform:scaleX(0);transform-origin:right;transition:transform .35s var(--ease);
+}
+nav .links a:hover{color:var(--lamp)}
+nav .links a:hover::after{transform:scaleX(1);transform-origin:left}
+#burger{
+  display:none;width:22px;height:14px;position:relative;background:none;border:none;cursor:pointer;
+}
+#burger span{position:absolute;left:0;width:100%;height:1.5px;background:var(--paper);transition:all .4s var(--ease)}
+#burger span:nth-child(1){top:0}#burger span:nth-child(2){top:6px}#burger span:nth-child(3){top:12px}
+#burger.open span:nth-child(1){top:6px;transform:rotate(45deg)}
+#burger.open span:nth-child(2){opacity:0;transform:translateX(8px)}
+#burger.open span:nth-child(3){top:6px;transform:rotate(-45deg)}
+@media(max-width:840px){nav{gap:0;justify-content:space-between;width:min(92vw,420px)}nav .links{display:none}#burger{display:block}}
+#menu{
+  position:fixed;inset:0;z-index:99;background:rgba(8,7,5,.92);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  display:flex;flex-direction:column;justify-content:center;padding:0 10vw;gap:6px;
+  opacity:0;visibility:hidden;transition:opacity .5s var(--ease),visibility .5s;
+}
+#menu.open{opacity:1;visibility:visible}
+#menu a{
+  font-family:var(--serif);font-size:clamp(34px,7vw,64px);font-weight:500;letter-spacing:.02em;
+  color:var(--paper);line-height:1.25;display:flex;align-items:baseline;gap:18px;
+  transform:translateY(24px);opacity:0;transition:transform .6s var(--ease),opacity .6s,color .3s;
+}
+#menu.open a{transform:none;opacity:1}
+#menu.open a:nth-child(2){transition-delay:.06s}
+#menu.open a:nth-child(3){transition-delay:.12s}
+#menu.open a:nth-child(4){transition-delay:.18s}
+#menu.open a:nth-child(5){transition-delay:.24s}
+#menu a em{font-style:normal;font-family:var(--mono);font-size:11px;letter-spacing:.3em;color:var(--amber)}
+#menu a:hover{color:var(--lamp)}
+
+/* ============ HERO ============ */
+header{
+  position:relative;min-height:100svh;display:flex;flex-direction:column;
+  justify-content:center;overflow:clip;
+}
+.hero-bg{
+  position:absolute;inset:0;
+  background:url('img/hero.png') center 28%/cover no-repeat;
+  transform-origin:center;
+}
+.hero-bg::after{
+  content:"";position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 70% 60% at 50% 55%,rgba(232,196,122,.10),transparent 70%),
+    linear-gradient(to bottom,rgba(10,9,8,.62) 0%,rgba(10,9,8,.18) 45%,rgba(10,9,8,.9) 88%,var(--ink) 100%);
+}
+#lampGlow{
+  position:absolute;width:46vmin;height:46vmin;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,rgba(232,196,122,.14) 0%,rgba(232,196,122,.05) 45%,transparent 70%);
+  top:18%;left:50%;transform:translateX(-50%);z-index:1;
+  animation:lampBreathe 9s ease-in-out infinite;
+}
+@keyframes lampBreathe{0%,100%{opacity:.5;transform:translateX(-50%) scale(1)}50%{opacity:1;transform:translateX(-50%) scale(1.12)}}
+.hero-inner{position:relative;z-index:2;padding:16vh 0 12vh}
+.kicker{
+  display:flex;align-items:center;gap:16px;
+  font-family:var(--mono);font-size:11.5px;letter-spacing:.42em;text-transform:uppercase;color:var(--amber);
+  margin-bottom:clamp(20px,3.5vh,38px);
+}
+.kicker::before{content:"";width:44px;height:1px;background:var(--amber);opacity:.6}
+h1.title{
+  font-family:var(--serif);font-weight:500;
+  font-size:clamp(46px,8.8vw,124px);
+  line-height:.98;letter-spacing:.012em;text-transform:uppercase;
+  color:var(--paper-dim);max-width:1200px;
+  text-shadow:0 4px 60px rgba(0,0,0,.7);
+}
+h1.title .l2{color:var(--paper);display:block}
+h1.title .l2 .wm{color:var(--lamp);font-style:italic;font-weight:600;position:relative}
+h1.title .l2 .wm::after{
+  content:"";position:absolute;left:0;right:0;bottom:.06em;height:.045em;background:var(--lamp);
+  transform:scaleX(0);transform-origin:left;animation:underline 1.4s var(--ease) 1.6s forwards;
+}
+@keyframes underline{to{transform:scaleX(1)}}
+h1.title .flicker{animation:softFlick 11s infinite}
+@keyframes softFlick{
+  0%,100%{opacity:1}71%{opacity:1}72%{opacity:.4}73%{opacity:1}
+  81%{opacity:1}82%{opacity:.55}83%{opacity:1}
+}
+.wline{overflow:hidden;display:block}
+.tagline{
+  margin:clamp(24px,4vh,44px) 0 8px;max-width:560px;
+  font-family:var(--serif);font-style:italic;
+  font-size:clamp(19px,2.4vw,25px);color:var(--paper-dim);
+}
+.tagline .hl{color:var(--lamp);font-style:normal}
+.tagline-ru{font-family:var(--mono);font-size:12px;letter-spacing:.16em;color:var(--paper-faint)}
+.cta-row{display:flex;gap:16px;margin-top:clamp(28px,5vh,52px);flex-wrap:wrap}
+
+.btn{
+  font-family:var(--mono);font-size:12px;letter-spacing:.22em;text-transform:uppercase;
+  padding:16px 32px;cursor:pointer;position:relative;overflow:hidden;
+  border:1px solid rgba(232,196,122,.28);color:var(--paper);background:transparent;
+  display:inline-flex;align-items:center;gap:12px;
+  transition:color .3s,border-color .3s,transform .15s;
+}
+.btn::before{
+  content:"";position:absolute;inset:0;background:var(--lamp);z-index:-1;
+  transform:translateY(101%);transition:transform .45s var(--ease);
+}
+.btn:hover{color:var(--ink);border-color:var(--lamp)}
+.btn:hover::before{transform:translateY(0)}
+.btn:active{transform:scale(.97)}
+.btn .arr{transition:transform .3s var(--ease)}
+.btn:hover .arr{transform:translateX(5px)}
+.btn.primary{border-color:var(--amber);color:var(--lamp)}
+.scroll-hint{
+  position:absolute;bottom:30px;left:50%;transform:translateX(-50%);z-index:2;
+  font-family:var(--mono);font-size:10px;letter-spacing:.4em;color:var(--paper-faint);
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+}
+.scroll-hint .sw{width:1px;height:36px;background:linear-gradient(to bottom,var(--amber),transparent);animation:drop 2.2s var(--ease) infinite}
+@keyframes drop{0%{transform:scaleY(0);transform-origin:top}45%{transform:scaleY(1);transform-origin:top}55%{transform:scaleY(1);transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+.ledger{
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  background:linear-gradient(to bottom,rgba(18,16,13,.6),rgba(10,9,8,.2));
+}
+.ledger .in{
+  display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;
+  padding:16px 0;font-family:var(--mono);font-size:10.5px;letter-spacing:.3em;
+  text-transform:uppercase;color:var(--paper-dim);
+}
+.ledger .in span b{color:var(--amber);font-weight:400}
+
+.ticker{overflow:clip;border-bottom:1px solid var(--line);padding:12px 0;background:var(--ink2)}
+.ticker .tk{
+  display:flex;gap:0;width:max-content;animation:tick 38s linear infinite;
+}
+.ticker:hover .tk{animation-play-state:paused}
+@keyframes tick{to{transform:translateX(-50%)}}
+.tk-half{display:flex;align-items:center;gap:38px;padding-right:38px;white-space:nowrap}
+.tk-half span{font-family:var(--mono);font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--paper-faint)}
+.tk-half .m{color:var(--amber);letter-spacing:.1em}
+.tk-half .dot{color:var(--lamp)}
+
+/* ============ SECTION HEADS ============ */
+section{padding:clamp(80px,12vh,140px) 0;position:relative}
+.sec-head{margin-bottom:clamp(40px,6vh,64px)}
+.sec-k{
+  font-family:var(--mono);font-size:11px;letter-spacing:.44em;text-transform:uppercase;color:var(--amber);
+  display:flex;align-items:center;gap:16px;margin-bottom:20px;
+}
+.sec-k::after{content:"";flex:1;height:1px;background:linear-gradient(to right,var(--rust),transparent)}
+h2{
+  font-family:var(--serif);font-weight:500;text-transform:uppercase;
+  font-size:clamp(34px,5.2vw,68px);line-height:1.02;letter-spacing:.012em;
+}
+h2 em{font-style:italic;color:var(--lamp);font-weight:600}
+.lead{max-width:640px;color:var(--paper-dim);font-size:clamp(19px,2.2vw,23px);margin-top:22px;font-style:italic}
+
+/* ============ HOOK ============ */
+#hook{background:var(--ink2);border-top:1px solid var(--line)}
+.hook-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(30px,4vw,64px);align-items:start}
+@media(max-width:940px){.hook-grid{grid-template-columns:1fr}}
+.sounder-card{
+  background:linear-gradient(160deg,#17140f,#0c0a08);
+  border:1px solid var(--line);padding:34px 34px 30px;position:relative;
+  box-shadow:0 30px 80px rgba(0,0,0,.55);
+}
+.sounder-card::before{
+  content:"SOUNDER — LINE 4 — BLACK CREEK";
+  position:absolute;top:-9px;left:26px;
+  font-family:var(--mono);font-size:10px;letter-spacing:.3em;color:var(--amber);background:var(--ink2);padding:0 10px;
+}
+.sounder{display:flex;flex-direction:column;gap:10px;align-items:center;padding:16px 0 24px}
+.armature{
+  width:78%;height:15px;transform-origin:center;
+  background:linear-gradient(to bottom,#51432f,#241d14);
+  border:1px solid #000;border-radius:2px;
+  transition:transform .04s cubic-bezier(.3,1.8,.6,1);
+  box-shadow:0 4px 10px rgba(0,0,0,.7),inset 0 1px 0 rgba(200,170,110,.28);
+}
+.sounder.active .armature{transform:translateY(7px)}
+.magnet{width:15%;height:34px;border-radius:3px;background:linear-gradient(to bottom,#382c1e,#171208);border:1px solid #000;box-shadow:inset 0 1px 0 rgba(200,170,110,.22)}
+.pulse-strip{display:flex;gap:2px;height:40px;align-items:stretch;margin:6px 0 4px;border-bottom:1px solid var(--line);padding-bottom:2px;overflow:hidden}
+.pulse{flex:0 0 auto}
+.pulse.mark{background:#4a3a24;opacity:.35;transition:opacity .04s,background .04s}
+.pulse.mark.on{background:var(--lamp-hot);opacity:1;box-shadow:0 0 16px rgba(255,217,138,.65)}
+.pulse.gap{border-left:1px dashed #201a12}
+.pulse-scale{font-family:var(--mono);font-size:9.5px;color:#4d4436;letter-spacing:.15em;display:flex;justify-content:space-between;margin-bottom:16px}
+.transcript{
+  min-height:118px;background:var(--paper);color:#1c1712;padding:20px 24px;position:relative;
+  box-shadow:inset 0 0 44px rgba(92,68,50,.3),0 2px 0 rgba(0,0,0,.6);
+  transform:rotate(-.5deg);
+  background-image:repeating-linear-gradient(transparent 0 27px,rgba(60,45,30,.09) 27px 28px);
+}
+.transcript .t-label{font-family:var(--mono);font-size:9.5px;letter-spacing:.3em;color:#8a7a5c;text-transform:uppercase;margin-bottom:10px}
+.transcript .t-hand{font-family:var(--type);font-size:33px;letter-spacing:.12em;color:#23180e;min-height:42px}
+.transcript .t-hand .ch{opacity:0;display:inline-block;filter:blur(3px);transform:rotate(var(--r,0deg)) translateY(3px);transition:opacity .16s,filter .16s,transform .16s}
+.transcript .t-hand .ch.written{opacity:1;filter:blur(0);transform:rotate(var(--r,0deg)) translateY(0)}
+.transcript .t-hand .cursor{display:inline-block;width:10px;height:29px;background:#23180e;margin-left:3px;vertical-align:baseline;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.signal-truth{margin-top:16px;font-family:var(--mono);font-size:11.5px;letter-spacing:.2em;color:var(--paper-dim);min-height:18px;text-transform:uppercase}
+.signal-truth .t{color:var(--lamp)}
+.signal-truth .m{color:var(--blood-hot);animation:glitch 2.6s infinite}
+@keyframes glitch{
+  0%,91%,100%{text-shadow:none;transform:none}
+  92%{text-shadow:-2px 0 rgba(196,58,42,.8),2px 0 rgba(232,196,122,.6);transform:translateX(1px)}
+  94%{text-shadow:2px 0 rgba(196,58,42,.8),-2px 0 rgba(232,196,122,.6);transform:translateX(-1px)}
+  96%{text-shadow:none;transform:none}
+}
+#rxBtn{width:100%;margin-top:18px;justify-content:center}
+.hook-copy p{color:var(--paper-dim);margin-bottom:16px;font-size:18.5px}
+.hook-copy p strong{color:var(--paper);font-weight:600}
+.layer-stack{margin-top:28px;border-left:2px solid var(--rust);padding-left:22px}
+.layer{
+  font-family:var(--mono);font-size:12px;letter-spacing:.14em;
+  padding:11px 0;border-bottom:1px dashed #241f18;color:var(--paper-dim);
+  display:flex;justify-content:space-between;gap:12px;align-items:baseline;
+}
+.layer b{color:var(--paper);font-weight:500}
+.layer .l-val{color:var(--amber)}
+.layer.last .l-val{color:var(--blood-hot)}
+
+.verdict{
+  margin-top:clamp(40px,7vh,70px);border:1px solid var(--line);
+  display:grid;grid-template-columns:1fr 1fr;min-height:130px;
+  opacity:.25;filter:blur(2px);transform:scale(.985);
+  transition:opacity .7s var(--ease),filter .7s,transform .7s;
+}
+.verdict.lit{opacity:1;filter:none;transform:none}
+@media(max-width:640px){.verdict{grid-template-columns:1fr}}
+.verdict .half{padding:26px 30px;display:flex;flex-direction:column;justify-content:center;gap:8px}
+.verdict .half.v-sig{background:linear-gradient(140deg,rgba(232,196,122,.07),transparent);border-right:1px solid var(--line)}
+.verdict .half.v-file{background:linear-gradient(220deg,rgba(158,47,34,.09),transparent)}
+.verdict .v-k{font-family:var(--mono);font-size:10px;letter-spacing:.34em;color:var(--paper-faint);text-transform:uppercase}
+.verdict .v-w{font-family:var(--serif);font-weight:600;font-size:clamp(36px,5vw,58px);line-height:1;text-transform:uppercase;letter-spacing:.03em}
+.verdict .v-sig .v-w{color:var(--lamp)}
+.verdict .v-file .v-w{color:var(--blood-hot)}
+.verdict .v-s{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--paper-faint);text-transform:uppercase}
+
+/* ============ STORY ============ */
+.story-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(36px,5vw,80px);align-items:center}
+@media(max-width:940px){.story-grid{grid-template-columns:1fr}}
+.story-grid .txt p{color:var(--paper-dim);margin-bottom:18px}
+.story-grid .txt p strong{color:var(--paper);font-weight:600}
+.story-grid .txt p .rd{color:var(--blood-hot)}
+.telegram{
+  background:var(--paper);color:#1c1712;padding:32px 30px 26px;
+  transform:rotate(.8deg);font-family:var(--type);
+  box-shadow:0 24px 70px rgba(0,0,0,.6),inset 0 0 55px rgba(92,68,50,.22);
+  position:relative;
+}
+.telegram::before{
+  content:"WESTERN UNION — TELEGRAM";
+  display:block;font-size:11px;letter-spacing:.28em;color:#8a7a5c;
+  border-bottom:1px solid #b5a888;padding-bottom:10px;margin-bottom:16px;font-family:var(--mono);
+}
+.telegram .tg-line{font-size:16.5px;line-height:1.65;margin-bottom:6px;color:#241a0e}
+.telegram .tg-line.they{color:#7a5c3a}
+.telegram .tg-line.alt{color:var(--blood);text-decoration:underline wavy rgba(158,47,34,.4);text-decoration-thickness:1px}
+.telegram .tg-meta{margin-top:18px;padding-top:12px;border-top:1px dashed #b5a888;font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;color:#8a7a5c;display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px}
+.telegram .stamp{
+  position:absolute;right:18px;bottom:52px;
+  border:2px solid rgba(158,47,34,.55);color:rgba(158,47,34,.75);
+  font-family:var(--mono);font-size:10px;letter-spacing:.24em;
+  padding:5px 9px;transform:rotate(-11deg);text-transform:uppercase;
+}
+
+/* ============ PILLARS ============ */
+#pillars{background:var(--ink2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.pillars-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+@media(max-width:800px){.pillars-grid{grid-template-columns:1fr}}
+.pillar{
+  border:1px solid var(--line);padding:36px 34px;position:relative;overflow:hidden;
+  background:linear-gradient(165deg,rgba(24,20,16,.75),rgba(13,11,9,.75));
+  transition:border-color .4s,transform .4s var(--ease);
+}
+.pillar:hover{border-color:rgba(201,160,90,.5);transform:translateY(-5px)}
+.pillar::after{
+  content:"";position:absolute;top:-70px;right:-70px;width:170px;height:170px;border-radius:50%;
+  background:radial-gradient(circle,rgba(232,196,122,.12),transparent 70%);
+  opacity:0;transition:opacity .5s;
+}
+.pillar:hover::after{opacity:1}
+.pillar .p-morse{font-family:var(--mono);font-size:13px;color:var(--amber);letter-spacing:.34em;margin-bottom:18px}
+.pillar .p-morse i{font-style:normal;color:#4d4436}
+.pillar h3{font-family:var(--serif);font-weight:600;font-size:27px;letter-spacing:.03em;text-transform:uppercase;margin-bottom:13px}
+.pillar h3 em{font-style:italic;color:var(--lamp)}
+.pillar p{color:var(--paper-dim);font-size:16.5px;line-height:1.62}
+.pillar .p-n{position:absolute;top:30px;right:32px;font-family:var(--serif);font-size:15px;color:#3d352a;font-style:italic}
+
+/* ============ OFFICE BENTO ============ */
+.bento{
+  display:grid;grid-template-columns:repeat(6,1fr);
+  grid-auto-rows:clamp(150px,24vh,260px);grid-auto-flow:dense;gap:16px;
+}
+.cell{
+  position:relative;overflow:hidden;border:1px solid var(--line);background:#000;
+  transition:border-color .4s;
+}
+.cell:hover{border-color:rgba(201,160,90,.55)}
+.cell img{
+  width:100%;height:100%;object-fit:cover;position:absolute;inset:0;
+  filter:saturate(.88) brightness(.9);transform:scale(1.001);
+  transition:transform .8s var(--ease),filter .8s;
+}
+.cell:hover img{transform:scale(1.055);filter:saturate(1.02) brightness(1.03)}
+.cell .cap{
+  position:absolute;left:0;right:0;bottom:0;padding:34px 18px 12px;z-index:2;
+  background:linear-gradient(to top,rgba(10,9,8,.94),transparent);
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--paper);opacity:0;transform:translateY(8px);transition:all .4s var(--ease);
+}
+.cell:hover .cap{opacity:1;transform:none}
+.cell .cap b{color:var(--lamp);font-weight:500;display:block;margin-bottom:3px;letter-spacing:.3em}
+.cell.txtc{
+  background:linear-gradient(150deg,#1a1610,#0e0c09);display:flex;flex-direction:column;justify-content:center;
+  padding:34px;border:none;
+}
+.cell.txtc .tt{font-family:var(--serif);font-weight:600;font-size:clamp(24px,2.6vw,34px);text-transform:uppercase;line-height:1.08}
+.cell.txtc .tt em{font-style:italic;color:var(--lamp)}
+.cell.txtc .mm{font-family:var(--mono);font-size:10.5px;letter-spacing:.3em;color:var(--paper-faint);text-transform:uppercase;margin-top:14px}
+.cell.c2{grid-column:span 2}
+.cell.c3{grid-column:span 3}
+.cell.c4{grid-column:span 4}
+.cell.r2{grid-row:span 2}
+@media(max-width:760px){
+  .bento{grid-template-columns:repeat(2,1fr);grid-auto-rows:minmax(140px,32vw)}
+  .cell.c3,.cell.c4{grid-column:span 2}
+}
+
+/* ============ NIGHTS ============ */
+#nights{background:var(--ink2);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding-bottom:0}
+#nightsPin{overflow:clip}
+.nights-head{padding-bottom:clamp(40px,6vh,60px)}
+.nights-track{display:flex;gap:18px;padding:0 clamp(20px,4vw,48px) clamp(60px,8vh,90px);width:max-content}
+.night{
+  width:clamp(260px,30vw,380px);flex-shrink:0;
+  border:1px solid var(--line);padding:30px 28px 26px;position:relative;
+  background:linear-gradient(165deg,rgba(24,20,16,.7),rgba(13,11,9,.7));
+  display:flex;flex-direction:column;min-height:300px;
+  transition:border-color .4s;
+}
+.night:hover{border-color:rgba(201,160,90,.5)}
+.night .n-wire{
+  position:absolute;top:0;left:0;right:0;height:1px;background:var(--rust);
+  transform:scaleX(0);transform-origin:left;transition:transform .7s var(--ease);
+}
+.night:hover .n-wire{transform:scaleX(1)}
+.night .n-num{
+  font-family:var(--mono);font-size:11px;letter-spacing:.34em;color:var(--amber);
+  text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:10px;
+}
+.night .n-num::before{content:"";width:8px;height:8px;background:var(--ink2);border:1px solid var(--amber);transform:rotate(45deg)}
+.night h4{font-family:var(--serif);font-weight:600;font-size:26px;text-transform:uppercase;letter-spacing:.02em;margin-bottom:12px}
+.night p{color:var(--paper-dim);font-size:16px;line-height:1.6;flex:1}
+.night .n-m{font-family:var(--mono);font-size:11px;color:#4d4436;letter-spacing:.2em;margin-top:18px}
+.night.n6{border-color:rgba(158,47,34,.45)}
+.night.n6 .n-num::before{border-color:var(--blood-hot)}
+.night.n6 .n-m{color:rgba(196,58,42,.6)}
+
+/* ============ QUOTE ============ */
+#quote{padding:clamp(110px,16vh,180px) 0;text-align:center}
+.bigquote{
+  font-family:var(--serif);font-style:italic;font-weight:500;
+  font-size:clamp(26px,4.6vw,54px);line-height:1.28;max-width:900px;margin:0 auto;
+}
+.bigquote .w{opacity:.13;transition:opacity .3s}
+.bigquote .qw{color:var(--lamp)}
+.quote-sub{margin-top:30px;font-family:var(--mono);font-size:11px;letter-spacing:.36em;color:var(--paper-faint);text-transform:uppercase}
+
+/* ============ CTA / FOOTER ============ */
+#cta{
+  text-align:center;padding:clamp(100px,14vh,160px) 0;
+  border-top:1px solid var(--line);position:relative;overflow:hidden;
+}
+#cta::before{
+  content:"";position:absolute;inset:0;
+  background:url('img/window_figure.png') center 20%/cover no-repeat;opacity:.16;
+  filter:saturate(.7) brightness(.75);
+}
+#cta .in{position:relative;z-index:2}
+#cta h2{max-width:800px;margin:0 auto}
+#cta .sub{margin:24px auto 40px;max-width:520px;color:var(--paper-dim);font-style:italic;font-size:20px}
+footer{border-top:1px solid var(--line);padding:64px 0 40px;background:linear-gradient(to bottom,var(--ink),#060504)}
+.foot-grid{display:flex;justify-content:space-between;gap:30px;flex-wrap:wrap;align-items:flex-start}
+.foot-brand{font-family:var(--type);font-size:26px;letter-spacing:.14em}
+.foot-brand b{color:var(--lamp);font-weight:400}
+.foot-meta{font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;color:var(--paper-dim);line-height:2.2;text-transform:uppercase;text-align:right}
+.foot-meta a:hover{color:var(--lamp)}
+.foot-line{
+  margin-top:40px;padding-top:20px;border-top:1px dashed #221d16;
+  font-family:var(--mono);font-size:10px;letter-spacing:.24em;color:#4d4436;
+  display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;text-transform:uppercase;
+}
+
+body.haunt::after{
+  background:radial-gradient(ellipse 120% 90% at 50% 42%,transparent 40%,rgba(120,10,0,.5) 100%);
+  animation:hauntPulse .9s ease-in-out infinite;
+}
+@keyframes hauntPulse{0%,100%{opacity:1}50%{opacity:.55}}
+body.haunt .kicker,body.haunt .tagline{color:var(--blood-hot)!important}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  body::before{animation:none}
+  .ticker .tk{animation:none}
+}
+</style>
+</head>
+<body>
+
+<div id="cursor"><span class="cl">LOOK</span></div>
+<div id="scanlines" aria-hidden="true"></div>
+
+<div id="boot" aria-hidden="true">
+  <div class="b-morse" id="bootMorse"></div>
+  <div class="b-txt" id="bootTxt">connecting to line 4</div>
+  <div class="b-bar"><i id="bootBar"></i></div>
+</div>
+
+<nav>
+  <a class="brand" href="#top" data-hover>DEAD<b>·</b>WIRE</a>
+  <div class="links">
+    <a href="#hook" data-hover>The Hook</a>
+    <a href="#story" data-hover>Story</a>
+    <a href="#pillars" data-hover>Pillars</a>
+    <a href="#office" data-hover>The Office</a>
+    <a href="#nights" data-hover>Six Nights</a>
+  </div>
+  <button id="burger" aria-label="Menu" data-hover><span></span><span></span><span></span></button>
+</nav>
+<div id="menu">
+  <a href="#hook" data-hover><em>I</em>The Hook</a>
+  <a href="#story" data-hover><em>II</em>Story</a>
+  <a href="#pillars" data-hover><em>III</em>Pillars</a>
+  <a href="#office" data-hover><em>IV</em>The Office</a>
+  <a href="#nights" data-hover><em>V</em>Six Nights</a>
+</div>
+
+<header id="top">
+  <div class="hero-bg" id="heroBg"></div>
+  <div id="lampGlow"></div>
+  <div class="wrap hero-inner">
+    <div class="kicker">Black Creek · April 1894 · Night Shift</div>
+    <h1 class="title">
+      <span class="wline"><span class="w1">You hear one thing.</span></span>
+      <span class="wline l2"><span class="w2">Your hand <span class="wm">writes</span> <span class="flicker">another.</span></span></span>
+    </h1>
+    <p class="tagline">A telegraph operator. An objective wire. <span class="hl">A transcript that stops matching the signal.</span></p>
+    <p class="tagline-ru">— ты слышишь одно. твоя рука пишет другое. —</p>
+    <div class="cta-row">
+      <a class="btn primary" href="#hook" data-hover>Receive a transmission <span class="arr">→</span></a>
+      <a class="btn" href="#office" data-hover>Enter the office</a>
+    </div>
+  </div>
+  <div class="scroll-hint"><span>SCROLL</span><span class="sw"></span></div>
+</header>
+
+<div class="ledger">
+  <div class="wrap in">
+    <span>EST. <b>1894</b> — AMERICAN WEST</span>
+    <span>SIX NIGHTS <b>ON THE WIRE</b></span>
+    <span>ONE <b>STEADY HAND</b></span>
+    <span><b>ZERO</b> COMBAT</span>
+  </div>
+</div>
+
+<div class="ticker" aria-hidden="true">
+  <div class="tk" id="tickerRow">
+    <div class="tk-half">
+      <span class="m">· — ·</span><span>black creek r.r.</span><span class="dot">◆</span>
+      <span class="m">· · — ·</span><span>night wire open</span><span class="dot">◆</span>
+      <span>train 17 clear east</span><span class="dot">◆</span>
+      <span class="m">— · — —</span><span>hold freight until ten</span><span class="dot">◆</span>
+      <span>the wire does not lie</span><span class="dot">◆</span>
+      <span class="m">· — · —</span><span>do not trust the hand</span><span class="dot">◆</span>
+    </div>
+  </div>
+</div>
+
+<section id="hook">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-k">The Core Hook</div>
+      <h2>The line says <em>WATER</em>.<br>The hand files <em>WATCHER</em>.</h2>
+    </div>
+    <div class="hook-grid">
+      <div class="sounder-card">
+        <div class="sounder" id="sounder">
+          <div class="armature"></div>
+          <div class="magnet"></div>
+        </div>
+        <div class="pulse-strip" id="pulseStrip"></div>
+        <div class="pulse-scale"><span>MARK / GAP — AMERICAN MORSE</span><span>UNIT = 100&nbsp;ms</span></div>
+        <div class="transcript">
+          <div class="t-label">Elias's transcript — automatic hand</div>
+          <div class="t-hand" id="tHand"><span class="cursor"></span></div>
+        </div>
+        <div class="signal-truth" id="truth"></div>
+        <button class="btn primary" id="rxBtn" data-hover>▶&nbsp;&nbsp;Receive transmission</button>
+      </div>
+      <div class="hook-copy">
+        <p>You are <strong>Elias Crane</strong>, a professional telegraph operator working the night shift in an isolated railroad office. You know railroad procedure. You know Morse better than the player does.</p>
+        <p>The signal on the wire is <strong>objective</strong>. It never lies, and the game never secretly scrambles it to cheat you. But the man transcribing it — you — is another matter.</p>
+        <p>The game will never print <em>“Elias made an error.”</em> The mismatch is yours to notice. What you file as the official record becomes the truth the world keeps.</p>
+        <div class="layer-stack">
+          <div class="layer"><span><b>TRUE SIGNAL</b> — the wire</span><span class="l-val" id="lsTrue">···</span></div>
+          <div class="layer"><span><b>ELIAS PERCEPTION</b></span><span class="l-val">?</span></div>
+          <div class="layer last"><span><b>WRITTEN TRANSCRIPT</b> — what gets filed</span><span class="l-val" id="lsFile">···</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="verdict" id="verdict">
+      <div class="half v-sig">
+        <span class="v-k">True signal — 36 units</span>
+        <span class="v-w">WATER</span>
+        <span class="v-s">objective · readable · fair</span>
+      </div>
+      <div class="half v-file">
+        <span class="v-k">Filed transcript — 55 units</span>
+        <span class="v-w">WATCHER</span>
+        <span class="v-s">yours to notice · yours to keep</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="story">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-k">The Story</div>
+      <h2>A town that drank the mine,<br>and a company that <em>rewrote the record</em>.</h2>
+    </div>
+    <div class="story-grid">
+      <div class="txt">
+        <p><strong>October 14, 1889.</strong> Mining operations at Black Creek broke into a dangerous underground water source. The railroad company's own infrastructure distributed it through town. A neurological illness spread. The company suppressed what it knew.</p>
+        <p><strong>Five years later</strong> Elias Crane returns to the town where his family became part of the evidence chain. His mother was quietly removed to a private institution in Denver. His father — a physician — died in a remote company location. A letter and an <span class="rd">altered telegram</span> are still out there.</p>
+        <p>By day, Elias walks the ruined town, reads documents, cross-checks records, and talks to what remains of the disaster. By night, he works the wire — and slowly stops being able to trust the man holding the pen.</p>
+        <p>Every mistake becomes part of the world. There is no <strong>GAME OVER</strong> — only a record that gets harder to correct.</p>
+      </div>
+      <div>
+        <div class="telegram">
+          <div class="tg-line">STOP</div>
+          <div class="tg-line">TO: E. CRANE, OPERATOR, BLACK CREEK</div>
+          <div class="tg-line they">POSITION OPEN NIGHT WIRE APRIL 3 STOP</div>
+          <div class="tg-line they">COMPANY VALUES A STEADY HAND STOP</div>
+          <div class="tg-line alt">YOURS IS THE STEADIEST WE REMEMBER STOP</div>
+          <div class="tg-line">REPORT BEFORE DUSK STOP</div>
+          <div class="tg-line">— DENVER OFFICE</div>
+          <div class="stamp">filed · altered</div>
+          <div class="tg-meta"><span>RATE PAID — CO.</span><span>14 OCT 1889</span><span>ROUTE: DENVER—BC</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="pillars">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-k">Design Pillars</div>
+      <h2>Horror made of <em>information</em>.</h2>
+      <p class="lead">No weapons. No monsters chasing you down a corridor. The pressure is procedural, spatial, and psychological.</p>
+    </div>
+    <div class="pillars-grid">
+      <div class="pillar">
+        <span class="p-n">nº I</span>
+        <div class="p-morse">·— <i>·</i> —·</div>
+        <h3>Morse <em>Integrity</em></h3>
+        <p>The true signal exists independently of Elias — a source-of-truth pipeline the game must never secretly rewrite. Learn enough American Morse and you can verify any message yourself. The game may distort the man. It may not distort the wire.</p>
+      </div>
+      <div class="pillar">
+        <span class="p-n">nº II</span>
+        <div class="p-morse">·· <i>·</i> ·—</div>
+        <h3>Divided <em>Attention</em></h3>
+        <p>Sounder, transcript, ledger, routing board, door, window — the office geometry guarantees you cannot watch them all at once. Is it uncomfortable to turn away from the window when the sounder starts clicking? That discomfort is the game.</p>
+      </div>
+      <div class="pillar">
+        <span class="p-n">nº III</span>
+        <div class="p-morse">—· <i>·</i> ·—·</div>
+        <h3>Consequence <em>Without Reload</em></h3>
+        <p>Mistakes become state, not fail screens. A wrong filing closes a clue, raises suspicion, or surfaces days later. The optimal strategy is never “reload until perfect” — it's living with an imperfect record.</p>
+      </div>
+      <div class="pillar">
+        <span class="p-n">nº IV</span>
+        <div class="p-morse">···· <i>·</i> ·—</div>
+        <h3>Sparse <em>Horror</em></h3>
+        <p>First comes a believable, boring night shift you learn by heart. Only then do small wrongnesses start earning their fear. The unusual must remain unusual — no jumpscare economy, no haunted-every-minute.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="office">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-k">The Office</div>
+      <h2>One room, built like a <em>machine</em>.</h2>
+      <p class="lead">Every object has a mechanical purpose. The tension is in the geometry before anything strange ever happens.</p>
+    </div>
+    <div class="bento">
+      <div class="cell c4 r2" data-hover data-cursor="LOOK"><img src="img/overview.png" alt="Full room overview of the telegraph office" width="1280" height="720"><div class="cap"><b>The whole room</b>desk · window · door · board — never all at once</div></div>
+      <div class="cell c2" data-hover data-cursor="LISTEN"><img src="img/equipment_close.png" alt="Telegraph key and sounder close-up" width="1280" height="720"><div class="cap"><b>The key &amp; sounder</b>your only honest witness</div></div>
+      <div class="cell txtc c2">
+        <div class="tt">The room <em>is</em> the monster.</div>
+        <div class="mm">attention by geometry — not scripted scares</div>
+      </div>
+      <div class="cell c2" data-hover data-cursor="LOOK"><img src="img/routing.png" alt="Routing board" width="1280" height="720"><div class="cap"><b>Routing board</b>checking it means turning your back</div></div>
+      <div class="cell c2" data-hover data-cursor="LOOK"><img src="img/window_figure.png" alt="Figure at the north window" width="1280" height="720"><div class="cap"><b>North window</b>something is standing in it</div></div>
+      <div class="cell c2" data-hover data-cursor="READ"><img src="img/document_viewer.png" alt="Document viewer open" width="1280" height="720"><div class="cap"><b>Documents</b>the anchors you can trust</div></div>
+      <div class="cell c2 r2" data-hover data-cursor="WATCH"><img src="img/writer.png" alt="Elias writing a transcript" width="1280" height="720"><div class="cap"><b>The hand</b>you watch it betray you</div></div>
+      <div class="cell c2" data-hover data-cursor="LOOK"><img src="img/consequence.png" alt="Consequence — the figure arrives" width="1280" height="720"><div class="cap"><b>Consequence</b>what you file decides who visits</div></div>
+      <div class="cell c2" data-hover data-cursor="LOOK"><img src="img/door.png" alt="The south door at night" width="1280" height="720"><div class="cap"><b>South door</b>a separate kind of dread</div></div>
+      <div class="cell c2" data-hover data-cursor="LOOK"><img src="img/waiting.png" alt="Waiting room of the station at night" width="1280" height="720"><div class="cap"><b>The station</b>nothing here needs you alive</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="nights">
+  <div id="nightsPin">
+    <div class="wrap nights-head">
+      <div class="sec-head" style="margin-bottom:0">
+        <div class="sec-k">The Structure</div>
+        <h2>Six nights <em>on the wire</em>.</h2>
+        <p class="lead">Each cycle adds one new layer of wrong. Daytime investigation anchors the evidence; the night shift turns information into pressure.</p>
+      </div>
+    </div>
+    <div class="nights-track" id="nightsTrack">
+      <div class="night"><span class="n-wire"></span><div class="n-num">Night I</div><h4>Procedural Trust</h4><p>Learn the shift. Trust the hand. The baseline is boring on purpose.</p><div class="n-m">— baseline · · ·</div></div>
+      <div class="night"><span class="n-wire"></span><div class="n-num">Night II</div><h4>Attention Pressure</h4><p>The room starts asking for more of you than you can give at once.</p><div class="n-m">— — · · divide</div></div>
+      <div class="night"><span class="n-wire"></span><div class="n-num">Night III</div><h4>Contradiction</h4><p>Sound and paper stop agreeing. The game says nothing about it.</p><div class="n-m">· · — — mismatch</div></div>
+      <div class="night"><span class="n-wire"></span><div class="n-num">Night IV</div><h4>Self-Doubt</h4><p>You start checking Elias. Elias starts noticing the checking.</p><div class="n-m">— · — who</div></div>
+      <div class="night"><span class="n-wire"></span><div class="n-num">Night V</div><h4>Active Verification</h4><p>You know enough Morse now. The wire becomes your instrument.</p><div class="n-m">· — prove</div></div>
+      <div class="night n6"><span class="n-wire"></span><div class="n-num">Night VI</div><h4>The Dispatch</h4><p>What you file — and what you can prove — leaves the valley.</p><div class="n-m">send · or · nothing</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="quote">
+  <div class="wrap">
+    <p class="bigquote" id="bq"><span class="qw">“</span><span class="w">What</span> <span class="w">if</span> <span class="w">the</span> <span class="w">information</span> <span class="w">you</span> <span class="w">depend</span> <span class="w">on</span> <span class="w">is</span> <span class="w">correct</span> <span class="w">—</span> <span class="w">but</span> <span class="w">the</span> <span class="w">person</span> <span class="w">interpreting</span> <span class="w">it</span> <span class="qw">is</span> <span class="qw">you</span><span class="qw">?</span><span class="qw">”</span></p>
+    <p class="quote-sub">— the central question of dead wire</p>
+  </div>
+</section>
+
+<section id="cta">
+  <div class="wrap in">
+    <div class="sec-k" style="justify-content:center">The Night Shift</div>
+    <h2>The wire is open.<br><em>Take the seat.</em></h2>
+    <p class="sub">One office. One sounder. Six nights of a record you can't take back.</p>
+    <a class="btn primary" href="#top" data-hover>Return to the desk <span class="arr">↑</span></a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="foot-brand">DEAD<b>·</b>WIRE</div>
+        <p class="mono" style="font-size:10.5px;letter-spacing:.2em;color:var(--paper-dim);margin-top:12px;text-transform:uppercase;line-height:2.1">
+          First-person psychological horror<br>
+          American Morse · 1894 · PC<br>
+          3–4 hours · six nights
+        </p>
+      </div>
+      <div class="foot-meta">
+        <div>Built in <a href="https://godotengine.org" target="_blank" rel="noopener" data-hover>Godot 4</a></div>
+        <div>Signal timing: MARK/GAP units 1·2·3·6</div>
+        <div>Status: M1 — office prototype</div>
+      </div>
+    </div>
+    <div class="foot-line">
+      <span>BLACK CREEK R.R. — NIGHT WIRE</span>
+      <span>THE WIRE DOES NOT LIE</span>
+      <span>PSST — TYPE “WATER”</span>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+const AM={
+  A:[[0,1],[1,1],[0,3]],C:[[0,1],[1,1],[0,1],[1,2],[0,1]],
+  D:[[0,3],[1,1],[0,1],[1,1],[0,1]],E:[[0,1]],
+  F:[[0,1],[1,1],[0,3],[1,1],[0,1]],G:[[0,3],[1,1],[0,3],[1,1],[0,1]],
+  H:[[0,1],[1,1],[0,1],[1,1],[0,1],[1,1],[0,1]],
+  I:[[0,1],[1,1],[0,1]],L:[[0,6]],
+  N:[[0,3],[1,1],[0,1]],O:[[0,1],[1,2],[0,1]],
+  R:[[0,1],[1,2],[0,1],[1,1],[0,1]],
+  S:[[0,1],[1,1],[0,1],[1,1],[0,1]],T:[[0,3]],
+  U:[[0,1],[1,1],[0,1],[1,1],[0,3]],W:[[0,1],[1,1],[0,3],[1,1],[0,3]],
+};
+const UNIT=0.1;
+const wordEv=w=>{const ev=[];[...w].forEach((ch,i)=>{if(i)ev.push([1,3]);AM[ch].forEach(e=>ev.push(e.slice()))});return ev};
+const textEv=t=>{const ev=[];t.split(" ").forEach((w,wi)=>{if(wi)ev.push([1,6]);wordEv(w).forEach(e=>ev.push(e.slice()))});return ev};
+const toMarks=ev=>{let t=0,marks=[];ev.forEach(([k,d])=>{const dur=d*UNIT;if(k===0)marks.push([t,t+dur]);t+=dur});return{marks,total:t}};
+
+document.getElementById('tickerRow').appendChild(document.querySelector('.tk-half').cloneNode(true));
+
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const boot=document.getElementById('boot'),bootBar=document.getElementById('bootBar'),
+      bootTxt=document.getElementById('bootTxt'),bootMorse=document.getElementById('bootMorse');
+(function(){
+  const ev=textEv("DEAD WIRE"),{marks,total}=toMarks(ev);
+  bootMorse.innerHTML=ev.filter(e=>e[0]===0).map(()=>'<i></i>').join('');
+  const dots=[...bootMorse.children];
+  let t=0,prog=0;
+  const iv=setInterval(()=>{
+    t+=0.08;prog=Math.min(1,t/(total+0.6));
+    bootBar.style.transform=`scaleX(${prog})`;
+    marks.forEach(([a,b],i)=>dots[i]&&dots[i].classList.toggle('on',t>=a&&t<b));
+    if(t>total+0.6){clearInterval(iv);finishBoot()}
+  },80);
+  const fallback=setTimeout(finishBoot,3600);
+  const finished=[false];
+  function finishBoot(){
+    if(finished[0])return;finished[0]=true;
+    clearTimeout(fallback);clearInterval(iv);
+    bootTxt.textContent='line open';
+    setTimeout(()=>{boot.classList.add('done');startIntro()},350);
+  }
+})();
+
+function startIntro(){
+  if(!window.gsap||reduce)return;
+  const tl=gsap.timeline({defaults:{ease:'power4.out'}});
+  tl.from('.kicker',{y:24,opacity:0,duration:.7})
+    .from('h1.title .w1',{yPercent:110,duration:1},'-=.4')
+    .from('h1.title .w2',{yPercent:110,duration:1},'-=.75')
+    .from('.tagline',{y:20,opacity:0,duration:.8},'-=.55')
+    .from('.tagline-ru',{opacity:0,duration:.8},'-=.5')
+    .from('.cta-row .btn',{y:18,opacity:0,duration:.7,stagger:.1},'-=.5')
+    .from('nav',{y:-24,opacity:0,duration:.7},'-=.7')
+    .from('.scroll-hint',{opacity:0,duration:.8},'-=.4');
+}
+
+const burger=document.getElementById('burger'),menu=document.getElementById('menu');
+burger.addEventListener('click',()=>{burger.classList.toggle('open');menu.classList.toggle('open')});
+menu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{burger.classList.remove('open');menu.classList.remove('open')}));
+
+if(matchMedia('(pointer:fine)').matches&&!reduce){
+  document.body.classList.add('cursor-on');
+  const cur=document.getElementById('cursor');
+  let cx=innerWidth/2,cy=innerHeight/2,tx=cx,ty=cy;
+  addEventListener('mousemove',e=>{tx=e.clientX;ty=e.clientY});
+  (function loop(){
+    cx+=(tx-cx)*.22;cy+=(ty-cy)*.22;
+    cur.style.transform=`translate(${cx}px,${cy}px) translate(-50%,-50%)`;
+    requestAnimationFrame(loop);
+  })();
+  document.querySelectorAll('[data-hover],[data-cursor]').forEach(el=>{
+    el.addEventListener('mouseenter',()=>{
+      const lbl=el.dataset.cursor;
+      cur.querySelector('.cl').textContent=lbl||'';
+      cur.classList.toggle('grow',true);
+    });
+    el.addEventListener('mouseleave',()=>cur.classList.remove('grow'));
+  });
+}
+
+(function(){
+  const strip=document.getElementById('pulseStrip'),sounder=document.getElementById('sounder'),
+        hand=document.getElementById('tHand'),truth=document.getElementById('truth'),
+        btn=document.getElementById('rxBtn'),verdict=document.getElementById('verdict'),
+        lsTrue=document.getElementById('lsTrue'),lsFile=document.getElementById('lsFile');
+  const SIGNAL="WATER",TRANSCRIPT="WATCHER";
+  const ev=wordEv(SIGNAL),{marks,total}=toMarks(ev);
+  function buildStrip(){
+    strip.innerHTML="";
+    ev.forEach(([k,d])=>{
+      const s=document.createElement('span');
+      s.className='pulse '+(k===0?'mark':'gap');
+      s.style.flex='0 0 '+(d*7)+'px';
+      strip.appendChild(s);
+    });
+  }
+  buildStrip();
+  let ctx=null;
+  const AC=()=>{if(!ctx)ctx=new(window.AudioContext||window.webkitAudioContext)();if(ctx.state==='suspended')ctx.resume();return ctx};
+  function clack(t,up){
+    const c=AC(),dur=.028;
+    const buf=c.createBuffer(1,Math.ceil(c.sampleRate*dur),c.sampleRate);
+    const d=buf.getChannelData(0);
+    for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,2.2);
+    const src=c.createBufferSource();src.buffer=buf;
+    const bp=c.createBiquadFilter();bp.type='bandpass';bp.frequency.value=up?2400:1700;bp.Q.value=1.4;
+    const g=c.createGain();g.gain.value=.55;
+    src.connect(bp);bp.connect(g);g.connect(c.destination);src.start(t);
+    const o=c.createOscillator();o.type='sine';
+    o.frequency.setValueAtTime(up?170:120,t);
+    o.frequency.exponentialRampToValueAtTime(up?90:65,t+.06);
+    const og=c.createGain();og.gain.setValueAtTime(.28,t);
+    og.gain.exponentialRampToValueAtTime(.001,t+.07);
+    o.connect(og);og.connect(c.destination);o.start(t);o.stop(t+.09);
+  }
+  let playing=false;
+  btn.addEventListener('click',()=>{
+    if(playing)return;
+    playing=true;btn.disabled=true;btn.style.opacity=.5;
+    hand.innerHTML='<span class="cursor"></span>';
+    truth.textContent="";verdict.classList.remove('lit');
+    lsTrue.textContent="···";lsFile.textContent="···";
+    buildStrip();
+    const c=AC(),t0=c.currentTime+.15;
+    marks.forEach(([a,b])=>{clack(t0+a,true);clack(t0+b,false)});
+    const letters=[...TRANSCRIPT],start=t0+.15,end=t0+total-.2;
+    letters.forEach((ch,i)=>{
+      const at=start+(end-start)*(i/letters.length);
+      setTimeout(()=>{
+        const cur=hand.querySelector('.cursor');
+        const s=document.createElement('span');
+        s.className='ch';s.textContent=ch;
+        s.style.setProperty('--r',(Math.random()*4-2).toFixed(1)+'deg');
+        hand.insertBefore(s,cur);
+        requestAnimationFrame(()=>requestAnimationFrame(()=>s.classList.add('written')));
+      },Math.max(0,(at-c.currentTime)*1000));
+    });
+    const pulseEls=[...strip.querySelectorAll('.pulse.mark')];
+    (function frame(){
+      const t=c.currentTime-t0;
+      let any=false;
+      marks.forEach(([a,b],i)=>{
+        const on=t>=a&&t<b;
+        if(pulseEls[i])pulseEls[i].classList.toggle('on',on);
+        if(on)any=true;
+      });
+      sounder.classList.toggle('active',any);
+      if(t<total+.05)requestAnimationFrame(frame);
+      else{
+        sounder.classList.remove('active');
+        pulseEls.forEach(e=>e.classList.remove('on'));
+        setTimeout(()=>{
+          truth.innerHTML='TRUE SIGNAL: <span class="t">WATER</span> &nbsp;—&nbsp; FILED: <span class="m">WATCHER</span>';
+          lsTrue.textContent="WATER";lsFile.textContent="WATCHER";
+          verdict.classList.add('lit');
+          btn.disabled=false;btn.style.opacity=1;
+          btn.innerHTML='▶&nbsp;&nbsp;Receive again';
+          playing=false;
+        },450);
+      }
+    })();
+  });
+})();
+
+let typed="";
+addEventListener('keydown',e=>{
+  if(!/^[a-z]$/i.test(e.key))return;
+  typed=(typed+e.key.toLowerCase()).slice(-8);
+  if(typed.endsWith('water')&&!document.body.classList.contains('haunt')){
+    document.body.classList.add('haunt');
+    const tg=document.querySelector('.tagline');
+    const old=tg.innerHTML;
+    tg.innerHTML='You heard <span class="hl">nothing.</span> The line was quiet all night.';
+    setTimeout(()=>{document.body.classList.remove('haunt');tg.innerHTML=old},4200);
+  }
+});
+
+if(window.gsap&&window.ScrollTrigger&&!reduce){
+  gsap.registerPlugin(ScrollTrigger);
+  const lenis=new(window.Lenis||function(){return{on(){},raf(){},destroy(){}}})();
+  if(window.Lenis){
+    lenis.on('scroll',ScrollTrigger.update);
+    gsap.ticker.add(t=>lenis.raf(t*1000));
+    gsap.ticker.lagSmoothing(0);
+    document.querySelectorAll('a[href^="#"]').forEach(a=>{
+      a.addEventListener('click',e=>{
+        e.preventDefault();
+        const el=document.querySelector(a.getAttribute('href'));
+        if(el)lenis.scrollTo(el,{duration:1.4});
+      });
+    });
+  }
+  gsap.utils.toArray('section .sec-head, .hook-grid, .story-grid, .pillars-grid, .verdict').forEach(el=>{
+    gsap.from(el,{y:56,opacity:0,duration:1.1,ease:'power3.out',
+      scrollTrigger:{trigger:el,start:'top 86%'}});
+  });
+  gsap.to('#heroBg',{yPercent:16,scale:1.08,ease:'none',
+    scrollTrigger:{trigger:'header',start:'top top',end:'bottom top',scrub:true}});
+  gsap.to('.hero-inner',{yPercent:-8,opacity:.25,ease:'none',
+    scrollTrigger:{trigger:'header',start:'top top',end:'75% top',scrub:true}});
+  gsap.to('#lampGlow',{opacity:.15,ease:'none',
+    scrollTrigger:{trigger:'header',start:'top top',end:'bottom top',scrub:true}});
+  gsap.utils.toArray('.cell').forEach(cell=>{
+    const img=cell.querySelector('img');
+    if(!img)return;
+    gsap.fromTo(img,{scale:1.14},{scale:1,ease:'none',
+      scrollTrigger:{trigger:cell,start:'top bottom',end:'top 35%',scrub:true}});
+    gsap.from(cell,{opacity:0,y:40,duration:.9,ease:'power3.out',
+      scrollTrigger:{trigger:cell,start:'top 90%'}});
+  });
+  const mm=gsap.matchMedia();
+  mm.add('(min-width: 940px)',()=>{
+    const track=document.getElementById('nightsTrack');
+    const getDist=()=>track.scrollWidth-document.documentElement.clientWidth+80;
+    gsap.to(track,{x:()=>-getDist(),ease:'none',
+      scrollTrigger:{
+        trigger:'#nightsPin',start:'top top',
+        end:()=>'+='+getDist(),scrub:1,pin:true,invalidateOnRefresh:true,
+        anticipatePin:1
+      }});
+  });
+  const words=document.querySelectorAll('#bq .w');
+  if(words.length){
+    gsap.to(words,{opacity:1,stagger:.08,ease:'none',
+      scrollTrigger:{trigger:'#bq',start:'top 78%',end:'bottom 45%',scrub:true}});
+  }
+  gsap.from('#cta h2, #cta .sub, #cta .btn',{y:40,opacity:0,duration:1,stagger:.12,ease:'power3.out',
+    scrollTrigger:{trigger:'#cta',start:'top 75%'}});
+}
+</script>
+</body>
+</html>

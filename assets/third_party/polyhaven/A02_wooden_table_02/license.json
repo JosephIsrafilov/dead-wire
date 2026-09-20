@@ -1,0 +1,30 @@
+{
+  "asset_id": "A02_wooden_table_02",
+  "source": "https://polyhaven.com/a/wooden_table_02",
+  "provider": "Poly Haven",
+  "license": "CC0 (Poly Haven license)",
+  "format": "glTF 2.0 (gltf+bin+jpg, 1k)",
+  "files": {
+    "gltf": {
+      "sha256": "bb38e301840cb629d72c43c83fdb7fb308518efe2d0bc01e1ed0e9a9e43ed9d3",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/1k/wooden_table_02/wooden_table_02_1k.gltf"
+    },
+    "wooden_table_02_diff_1k.jpg": {
+      "sha256": "2334ac3e23d69222322515d9bad066b4e90d7d81989fe231b8fb12f39179ad9e",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/wooden_table_02/wooden_table_02_diff_1k.jpg"
+    },
+    "wooden_table_02_nor_gl_1k.jpg": {
+      "sha256": "9470e08e5dab4ab6a7cafab2a488a50fb54fa8f38890e9032c39dcbf7f5846d2",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/wooden_table_02/wooden_table_02_nor_gl_1k.jpg"
+    },
+    "wooden_table_02.bin": {
+      "sha256": "52ed7cc67b3aa403375cf9bd18050e8cc21bcced6532a0183c1a733f0965df6d",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/4k/wooden_table_02/wooden_table_02.bin"
+    },
+    "wooden_table_02_arm_1k.jpg": {
+      "sha256": "b970a81e4b03f3b8a341c9eb639f112fff1782d681c846255ebc9073cd803ced",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/wooden_table_02/wooden_table_02_arm_1k.jpg"
+    }
+  },
+  "status": "downloaded"
+}

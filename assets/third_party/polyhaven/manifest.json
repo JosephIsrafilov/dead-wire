@@ -1,0 +1,164 @@
+{
+  "A02_wooden_table_02": {
+    "asset_id": "A02_wooden_table_02",
+    "source": "https://polyhaven.com/a/wooden_table_02",
+    "provider": "Poly Haven",
+    "license": "CC0 (Poly Haven license)",
+    "format": "glTF 2.0 (gltf+bin+jpg, 1k)",
+    "files": {
+      "gltf": {
+        "sha256": "bb38e301840cb629d72c43c83fdb7fb308518efe2d0bc01e1ed0e9a9e43ed9d3",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/1k/wooden_table_02/wooden_table_02_1k.gltf"
+      },
+      "wooden_table_02_diff_1k.jpg": {
+        "sha256": "2334ac3e23d69222322515d9bad066b4e90d7d81989fe231b8fb12f39179ad9e",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/wooden_table_02/wooden_table_02_diff_1k.jpg"
+      },
+      "wooden_table_02_nor_gl_1k.jpg": {
+        "sha256": "9470e08e5dab4ab6a7cafab2a488a50fb54fa8f38890e9032c39dcbf7f5846d2",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/wooden_table_02/wooden_table_02_nor_gl_1k.jpg"
+      },
+      "wooden_table_02.bin": {
+        "sha256": "52ed7cc67b3aa403375cf9bd18050e8cc21bcced6532a0183c1a733f0965df6d",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/4k/wooden_table_02/wooden_table_02.bin"
+      },
+      "wooden_table_02_arm_1k.jpg": {
+        "sha256": "b970a81e4b03f3b8a341c9eb639f112fff1782d681c846255ebc9073cd803ced",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/wooden_table_02/wooden_table_02_arm_1k.jpg"
+      }
+    },
+    "status": "downloaded"
+  },
+  "A03_painted_wooden_cabinet_02": {
+    "asset_id": "A03_painted_wooden_cabinet_02",
+    "source": "https://polyhaven.com/a/painted_wooden_cabinet_02",
+    "provider": "Poly Haven",
+    "license": "CC0 (Poly Haven license)",
+    "format": "glTF 2.0 (gltf+bin+jpg, 1k)",
+    "files": {
+      "gltf": {
+        "sha256": "a4b697adf7a24a081b8452f5a7d482765e2139cf2a6687a4cbb2a7b8bea24325",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/1k/painted_wooden_cabinet_02/painted_wooden_cabinet_02_1k.gltf"
+      },
+      "painted_wooden_cabinet_02_arm_1k.jpg": {
+        "sha256": "0cf309449d4b0c1ecb0a3adbc17837b6f77f36cb45c1f0ceb6013b07fac44214",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/painted_wooden_cabinet_02/painted_wooden_cabinet_02_arm_1k.jpg"
+      },
+      "painted_wooden_cabinet_02.bin": {
+        "sha256": "7acab853993b90cafc9c7550a7035397dfeb4bbda7f0dba8759d40a971c755ca",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/4k/painted_wooden_cabinet_02/painted_wooden_cabinet_02.bin"
+      },
+      "painted_wooden_cabinet_02_nor_gl_1k.jpg": {
+        "sha256": "46e8df6be06eca30a05d0e90f12e8799e6e11c73ab7c910cc3541b0833ee0103",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/painted_wooden_cabinet_02/painted_wooden_cabinet_02_nor_gl_1k.jpg"
+      },
+      "painted_wooden_cabinet_02_diff_1k.jpg": {
+        "sha256": "ddb2cace49bb05b8e03e6c205223a69f95e5eef84ec66e97e5d0e49d2a1af09e",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/painted_wooden_cabinet_02/painted_wooden_cabinet_02_diff_1k.jpg"
+      }
+    },
+    "status": "downloaded"
+  },
+  "A04_painted_wooden_chair_01": {
+    "asset_id": "A04_painted_wooden_chair_01",
+    "source": "https://polyhaven.com/a/painted_wooden_chair_01",
+    "provider": "Poly Haven",
+    "license": "CC0 (Poly Haven license)",
+    "format": "glTF 2.0 (gltf+bin+jpg, 1k)",
+    "files": {
+      "gltf": {
+        "sha256": "34f55ebe1851b89c045dc62d4461c848de3b93c0668e752a2b5f6cbed2d91a5e",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/1k/painted_wooden_chair_01/painted_wooden_chair_01_1k.gltf"
+      },
+      "painted_wooden_chair_01_diff_1k.jpg": {
+        "sha256": "de67d1f8a0318616a7ee769cbe5c513301c2b25056542d011bb4359498f9e25d",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/painted_wooden_chair_01/painted_wooden_chair_01_diff_1k.jpg"
+      },
+      "painted_wooden_chair_01_nor_gl_1k.jpg": {
+        "sha256": "27301c3ac6a7daf9e0ba418ec85feaa44cc898e61d048211bca57133f22e1807",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/painted_wooden_chair_01/painted_wooden_chair_01_nor_gl_1k.jpg"
+      },
+      "painted_wooden_chair_01.bin": {
+        "sha256": "eaf952048db1e770c45898049b8abe28deb83d3dbbaad81d5e7e43e22a322295",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/8k/painted_wooden_chair_01/painted_wooden_chair_01.bin"
+      },
+      "painted_wooden_chair_01_arm_1k.jpg": {
+        "sha256": "9d2de0ea0d630e8e5af05424b1f41b1ae4a80465d27a78eb471cd7f8556db84e",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/painted_wooden_chair_01/painted_wooden_chair_01_arm_1k.jpg"
+      }
+    },
+    "status": "downloaded"
+  },
+  "A05_book_encyclopedia_set_01": {
+    "asset_id": "A05_book_encyclopedia_set_01",
+    "source": "https://polyhaven.com/a/book_encyclopedia_set_01",
+    "provider": "Poly Haven",
+    "license": "CC0 (Poly Haven license)",
+    "format": "glTF 2.0 (gltf+bin+jpg, 1k)",
+    "files": {
+      "gltf": {
+        "sha256": "89eb80fffd619ebbe5043d632bd8cf25b2d68a3614aee2f356e850c69ae498ba",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/1k/book_encyclopedia_set_01/book_encyclopedia_set_01_1k.gltf"
+      },
+      "book_encyclopedia_set_01_cover_diff_1k.jpg": {
+        "sha256": "a456aae6ef0ab24769527cccac5313a802ad253584c49fc10a377ce75969d382",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/book_encyclopedia_set_01/book_encyclopedia_set_01_cover_diff_1k.jpg"
+      },
+      "book_encyclopedia_set_01.bin": {
+        "sha256": "bbc726698b6e40ab5537b73e082f7bb4db97b9e6f978f52cdaf763dddc85d9ba",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/8k/book_encyclopedia_set_01/book_encyclopedia_set_01.bin"
+      },
+      "book_encyclopedia_set_01_paper_nor_gl_1k.jpg": {
+        "sha256": "705f4380c654c44d086ceb120595078e562438c6e4ba01458d2d23fd61483d9d",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/book_encyclopedia_set_01/book_encyclopedia_set_01_paper_nor_gl_1k.jpg"
+      },
+      "book_encyclopedia_set_01_cover_arm_1k.jpg": {
+        "sha256": "ab19b627092da77770de2212a04785940feb2df0957cab8993742a6b8b3f7bff",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/book_encyclopedia_set_01/book_encyclopedia_set_01_cover_arm_1k.jpg"
+      },
+      "book_encyclopedia_set_01_cover_nor_gl_1k.jpg": {
+        "sha256": "17ad410f2d1aab487e47c729a5b988ea4e4d196679c8696331b7960e77a91c17",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/book_encyclopedia_set_01/book_encyclopedia_set_01_cover_nor_gl_1k.jpg"
+      },
+      "book_encyclopedia_set_01_paper_diff_1k.jpg": {
+        "sha256": "b552d6829b75db7a75012bb761068c63507b69e8e944597ea53f6d1a70efa36c",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/book_encyclopedia_set_01/book_encyclopedia_set_01_paper_diff_1k.jpg"
+      },
+      "book_encyclopedia_set_01_paper_roughness_1k.jpg": {
+        "sha256": "62d875e9427f5d71f1bb4d9dc9569e34465bfd3067b8b13f5644b73e23a09fa3",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/book_encyclopedia_set_01/book_encyclopedia_set_01_paper_roughness_1k.jpg"
+      }
+    },
+    "status": "downloaded"
+  },
+  "A06_vintage_wooden_drawer_01": {
+    "asset_id": "A06_vintage_wooden_drawer_01",
+    "source": "https://polyhaven.com/a/vintage_wooden_drawer_01",
+    "provider": "Poly Haven",
+    "license": "CC0 (Poly Haven license)",
+    "format": "glTF 2.0 (gltf+bin+jpg, 1k)",
+    "files": {
+      "gltf": {
+        "sha256": "d39f4172d6fcbb285272168d585f4929c3ed27f05e7101d4fe1c4580408fb8e1",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/1k/vintage_wooden_drawer_01/vintage_wooden_drawer_01_1k.gltf"
+      },
+      "vintage_wooden_drawer_01_nor_gl_1k.jpg": {
+        "sha256": "07312a77e5e5c08a7f72f261dc9517ad837246de70b239859eb5144ddd1725f5",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/vintage_wooden_drawer_01/vintage_wooden_drawer_01_nor_gl_1k.jpg"
+      },
+      "vintage_wooden_drawer_01.bin": {
+        "sha256": "2c0a40a166cf9aa1303975e7b1ac7bcfd413e9aa7fbd6d0bd47643f84833c061",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/8k/vintage_wooden_drawer_01/vintage_wooden_drawer_01.bin"
+      },
+      "vintage_wooden_drawer_01_arm_1k.jpg": {
+        "sha256": "0f6ceab69f8f34adb9cb6213b5a87ac6d8a03ed5efaa72eaedd37d1e1ada37a6",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/vintage_wooden_drawer_01/vintage_wooden_drawer_01_arm_1k.jpg"
+      },
+      "vintage_wooden_drawer_01_diff_1k.jpg": {
+        "sha256": "6aecebf3f5ea52ce75c1e5cdabbf6cf5bf2844e4d3c5243211e52588d8f3f7a8",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/vintage_wooden_drawer_01/vintage_wooden_drawer_01_diff_1k.jpg"
+      }
+    },
+    "status": "downloaded"
+  }
+}

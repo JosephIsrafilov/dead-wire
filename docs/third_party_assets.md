@@ -2,14 +2,17 @@
 
 All third-party assets integrated into DEAD WIRE are verified for licensing compliance. Only CC0 / Public Domain assets with documented origins are used.
 
-> **PSX Pipeline Note:** In accordance with the True PSX Art Pipeline, all runtime visual assets (walls, floors, furniture, fixtures) are rendered exclusively using custom hand-authored low-poly geometry and palette-quantized textures (`materials/style_tests/textures/psx/`). All external third-party models and photogrammetry textures listed below are retained solely as downloaded reference (`runtime-instanced: no`).
+> **Owner policy update — 2026-09-19 (currently in force):** adapted external CC0 / Public Domain models, textures and audio are authorized for runtime use. See the runtime integration record at the bottom of this file for what is actually instanced in production.
+
+> **Historical PSX pipeline note (superseded by the policy above, kept for provenance):** at the time this section was written, all runtime visual assets were hand-authored low-poly geometry and the entries below were reference-only (`runtime-instanced: no`). This describes the past state, not the current scene.
 
 ## Audio Provenance Record
 
-The M1 office ambience bed introduced **no third-party audio**. Every sample under
-`audio/sfx/` is synthesised in-project by `tools/generate_office_ambience.py`
-(NumPy noise shaping and additive synthesis, seeded per layer, deterministic on
-re-run). There is nothing here to licence, credit, or clear:
+**Historical note (pre-2026-09-19):** at the time of writing, the ambience bed
+introduced no third-party audio; every sample listed in this section was
+synthesised in-project by `tools/generate_office_ambience.py`. Some of these
+have since been joined by selected CC0 foley — see the runtime record below;
+the synthesised beds themselves are unchanged.
 
 | File | Source | Length |
 |---|---|---|
@@ -143,3 +146,87 @@ at runtime.
 - **Runtime-Instanced:** No (Replaced by `res://materials/style_tests/textures/psx/psx_paper_64.png`)
 - **Reference File & SHA256:**
   - `res://materials/style_tests/textures/paper_worn_diff.png`: `AA72FA07905379AF376CE7A7211D5FEC761D6D87FE240FAF5550C39E43A37275`
+
+
+---
+
+# Asset Quality Pass 2026-09-19 — runtime integration record
+
+Actual downloads, adaptations and production instances from the V0–V7 pass.
+Every "runtime-instanced" row below is wired into `scenes/office/m1_office.tscn`.
+
+# Third-party assets — DEAD WIRE M1
+
+All selected assets are CC0/Public Domain with verifiable sources. Originals
+live under `assets/third_party/<provider>/<asset>/` (with `license.json` per
+asset and SHA-256 manifests); game exports under `assets/m1_adapted/<asset>/`.
+Downloaded-but-unwired packs are never packaged as runtime references.
+
+| ID | Asset | License | Runtime use | Status |
+|---|---|---|---|---|
+| A02_wooden_table_02 | wooden_table_02 | CC0 | scenes/props/m1/ph_table.tscn -> m1_office PhFilingTable (south-wall service table) | runtime-instanced |
+| A03_painted_wooden_cabinet_02 | painted_wooden_cabinet_02 | CC0 | scenes/props/m1/ph_cabinet.tscn -> m1_office PhCabinetVisual (replaces StorageCabinet visu | runtime-instanced |
+| A04_painted_wooden_chair_01 | painted_wooden_chair_01 | CC0 | scenes/props/m1/ph_chair.tscn -> m1_office Chair/PhChairVisual (OperatorSeat anchors, Chai | runtime-instanced |
+| A05_book_encyclopedia_set_01 | book_encyclopedia_set_01 | CC0 | derived export assets/m1_adapted/ph_books/m1_ledger_volumes.tscn -> scripts/props/ph_ledger_volumes.gd -> m1_office PhLedgerVolumes | runtime-instanced (derived export) |
+| A07_vintage_oil_lamp | vintage_oil_lamp | CC0 | NOT instanced: DeskSetup/OilLamp is the authored CSG proxy oil_lamp_lowpoly.tscn (~160 tris, see section 2) | reference-only |
+| A08_paper001 | view?id=Paper001 | CC0 | downloaded, not yet wired into paper materials (paper_log.tres kept) | downloaded |
+| S01_impact_sounds | impact-sounds | CC0 | lever_stop.ogg (RoutingBoard.LeverSfx at the stop), ink_stamp_cc0.ogg (foley Stamp), chair | runtime-instanced |
+| S03_paper_sounds | various-paper-sound-effects | CC0 | paper_sound_-_2.mp3 -> audio/sfx/foley/paper_sheet.mp3 (foley Paper on viewer open/close) | runtime-instanced |
+
+## Details
+
+### A02_wooden_table_02
+- source: https://polyhaven.com/a/wooden_table_02
+- author: Poly Haven
+- license: CC0
+- adaptation: uniform 0.85 scale; flat PSX material via psx_asset_adapter (albedo from source diff, roughness 1)
+- status: runtime-instanced
+
+### A03_painted_wooden_cabinet_02
+- source: https://polyhaven.com/a/painted_wooden_cabinet_02
+- author: Poly Haven
+- license: CC0
+- adaptation: uniform 0.72 scale (2.57 m source -> 1.85 m station bookpress); muted paint
+- status: runtime-instanced
+
+### A04_painted_wooden_chair_01
+- source: https://polyhaven.com/a/painted_wooden_chair_01
+- author: Poly Haven
+- license: CC0
+- adaptation: farmhouse white muted to worn depot paint; authored CSG visuals hidden, collision preserved
+- status: runtime-instanced
+
+### A05_book_encyclopedia_set_01
+- source: https://polyhaven.com/a/book_encyclopedia_set_01
+- author: Poly Haven
+- license: CC0
+- adaptation: a derived game export `assets/m1_adapted/ph_books/m1_ledger_volumes.tscn` (the 4 selected volumes, own materials, correct owners) was produced by `tools/derive_ledger_volumes.gd`; `scripts/props/ph_ledger_volumes.gd` instances ONLY that export. The 67k-tri source set is never instantiated at runtime and no node cleanup or reparenting happens in play (the previous owner-inconsistent warnings are gone from the boot log).
+- status: runtime-instanced (derived export; source pack stays reference-only)
+
+### A07_vintage_oil_lamp
+- source: https://polyhaven.com/a/vintage_oil_lamp
+- author: Poly Haven
+- license: CC0
+- adaptation: none
+- status: reference-only. The production desk lamp (`scenes/style_tests/props/desk_setup.tscn` -> `OilLamp`) is the authored CSG proxy `oil_lamp_lowpoly.tscn`; the Poly Haven geometry was never wired into the scene. Any earlier "runtime-instanced (pre-existing)" claim was wrong and is corrected here.
+
+### A08_paper001
+- source: https://ambientcg.com/view?id=Paper001
+- author: ambientCG
+- license: CC0
+- adaptation: none yet
+- status: downloaded
+
+### S01_impact_sounds
+- source: https://kenney.nl/assets/impact-sounds
+- author: Kenney
+- license: CC0
+- adaptation: selected 3 of 130; original filenames recorded in manifest_audio_art.json
+- status: runtime-instanced
+
+### S03_paper_sounds
+- source: https://opengameart.org/content/various-paper-sound-effects
+- author: Luckius
+- license: CC0
+- adaptation: selected 1 of 4 paper_sound_* (crushed/ripped excluded)
+- status: runtime-instanced

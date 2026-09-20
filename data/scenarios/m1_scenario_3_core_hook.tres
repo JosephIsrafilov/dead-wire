@@ -14,7 +14,7 @@ written_transcript = "WATCHER"
 [sub_resource type="Resource" id="Resource_commit_water"]
 script = ExtResource("3_commit")
 action_id = &"file_water"
-display_label = "CORRECT COPY\nWATER"
+display_label = "AMEND COPY\nWATER"
 world_fact = "core_hook_filed_water"
 knowledge_fact = "committed_water_core_hook"
 result_text = "WATER FILED"
@@ -22,7 +22,7 @@ result_text = "WATER FILED"
 [sub_resource type="Resource" id="Resource_commit_watcher"]
 script = ExtResource("3_commit")
 action_id = &"file_watcher"
-display_label = "FILE COPY\nWATCHER"
+display_label = "RETAIN COPY\nWATCHER"
 world_fact = "core_hook_filed_watcher"
 knowledge_fact = "committed_watcher_core_hook"
 result_text = "WATCHER FILED"

@@ -33,6 +33,17 @@ func _init() -> void:
 	# separate layer with its own suite, so stand the director down here.
 	office.shift_director.enabled = false
 	office.session_controller.allow_key_start = true
+	# The hand only writes from the chair. Seat the operator so the copy is
+	# physical, then drive it through the paper's presentation tick.
+	office.operator_seat.sit_duration = 0.0
+	office.operator_seat.approach_duration = 0.0
+	office.operator_seat.sit()
+	var paper := office.get_node_or_null("TranscriptPaper") as TranscriptPaper
+	# The intro card is a world-covering surface; this suite inspects the night
+	# long after a real operator has dismissed it.
+	var intro := office.get_node_or_null("IntroCard") as IntroCard
+	if intro != null and intro.is_running():
+		intro.skip_immediately()
 	office.load_scenario_by_index(0)
 
 	# Track cycle completion signals
@@ -43,7 +54,6 @@ func _init() -> void:
 	var key_act := key.get_interactable()
 	var board := office.routing_board
 	var board_act := board.get_interactable()
-	var paper := office.get_node_or_null("TranscriptPaper") as TranscriptPaper
 	var paper_act := paper.get_interactable()
 	var card := office.get_node_or_null("MorseReferenceCard") as MorseReferenceCard
 	var card_act := card.get_interactable()
@@ -68,6 +78,10 @@ func _init() -> void:
 	ledger_act.interact()
 	if not assert_condition(viewer.is_open(), "1st interaction with DispatchLedger opens DocumentViewer"): return
 	if not assert_condition(viewer.get_current_doc_id() == "dispatch_ledger", "Viewer doc_id is dispatch_ledger"): return
+	if not assert_condition(viewer.body_label.text.contains("NIGHT ENTRIES"), "Ledger carries the live NIGHT ENTRIES section"): return
+	if not assert_condition(viewer.body_label.text.contains(DutySheet.STATUS_AWAITING), "Before any traffic the booked slots are honestly awaiting"): return
+	if not assert_condition(not viewer.body_label.text.contains("COPIED"), "Before any traffic nothing claims work was done"): return
+	if not assert_condition(not viewer.body_label.text.contains("UNSCHEDULED"), "Unbooked traffic stays off the paper until the night produces it"): return
 	viewer.close_document()
 	if not assert_condition(not viewer.is_open(), "DocumentViewer closes"): return
 	ledger_act.interact()
@@ -91,6 +105,8 @@ func _init() -> void:
 
 	# Advance time through 13.60s (TRAIN 17 schedule duration)
 	office.session_controller.scheduler.advance_time(14.0)
+	if not assert_condition(office.session_controller.get_state() == TelegraphSessionController.State.COPYING, "t0 with a live sheet lands in COPYING"): return
+	_drain_paper(paper)
 	if not assert_condition(office.session_controller.get_state() == TelegraphSessionController.State.VERIFYING, "Transmission end waits for transcript verification"): return
 
 	# Test TranscriptPaper repeated open with revealed message
@@ -125,12 +141,18 @@ func _init() -> void:
 	board._input(ev_clear_east)
 
 	if not assert_condition(not board.is_open, "Routing Board closed after selection"): return
-	if not assert_condition(not office.player.is_movement_locked and not office.player.is_look_locked, "Closing Routing Board restores player control"): return
+	if not assert_condition(not office.player.is_look_locked and office.player.is_movement_locked, "Seated operator keeps walk lock but regains look on board close"): return
 	if not assert_condition(player_interaction != null and not player_interaction.is_ui_blocked, "Closing Routing Board restores world interactions"): return
 	if not assert_condition(office.session_controller.get_state() == TelegraphSessionController.State.COMPLETE, "Routing decision 1 completes Scenario 1"): return
+	# The ledger records what the operator actually sent tonight (Q6c). This
+	# suite stands the director down, so the copied_ fact never lands; the
+	# ledger honestly files the order without claiming the copy status.
+	ledger_act.interact()
+	if not assert_condition(viewer.body_label.text.contains("TRAIN 17") and viewer.body_label.text.contains("FILED    CLEAR EAST"), "Ledger night entries record the filed CLEAR EAST order"): return
+	viewer.close_document()
 	if not assert_condition(world.get_fact("train_17_routed_clear") == true, "WorldState recorded train_17_routed_clear = true"): return
 	board_act.interact()
-	if not assert_condition(not board.is_open and not office.player.is_movement_locked and not office.player.is_look_locked, "Repeated routed-board interaction cannot open stale modal or lock player"): return
+	if not assert_condition(not board.is_open and not office.player.is_look_locked, "Repeated routed-board interaction cannot open stale modal or lock the seated operator's look"): return
 
 	# 4. SCENARIO 2: ATTENTION (HOLD FREIGHT UNTIL TEN + 3 Door Footsteps)
 	key_act.interact()
@@ -156,6 +178,7 @@ func _init() -> void:
 
 	# Complete transmission (total 15.60s) - proving Morse scheduler progressed
 	office.session_controller.scheduler.advance_time(12.0)
+	_drain_paper(paper)
 	if not assert_condition(office.session_controller.get_state() == TelegraphSessionController.State.VERIFYING, "Scenario 2 waits for transcript verification"): return
 	paper_act.interact()
 	if not assert_condition(office.session_controller.get_state() == TelegraphSessionController.State.AWAITING_ROUTE, "Scenario 2 transcript inspection unlocks routing"): return
@@ -195,6 +218,7 @@ func _init() -> void:
 
 	# Complete transmission (total 3.60s), then prove stale commit input is ignored.
 	office.session_controller.scheduler.advance_time(3.0)
+	_drain_paper(paper)
 	if not assert_condition(office.session_controller.get_state() == TelegraphSessionController.State.VERIFYING, "Scenario 3 waits for transcript verification"): return
 	if not assert_condition(not office.copy_commit_desk.is_enabled(), "Commit desk is disabled before inspection"): return
 	if not assert_condition(not office.session_controller.submit_commit(&"file_water"), "Commit before inspection is ignored"): return
@@ -243,6 +267,12 @@ func _init() -> void:
 
 	print("--- All M1 Office Full Integration Tests PASSED ---")
 	quit(0)
+
+func _drain_paper(p: TranscriptPaper) -> void:
+	var guard := 0
+	while p.is_copy_in_progress() and guard < 400:
+		p.advance_paper(0.25)
+		guard += 1
 
 func assert_condition(condition: bool, description: String) -> bool:
 	if not condition:

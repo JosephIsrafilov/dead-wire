@@ -1,0 +1,30 @@
+{
+  "asset_id": "A06_vintage_wooden_drawer_01",
+  "source": "https://polyhaven.com/a/vintage_wooden_drawer_01",
+  "provider": "Poly Haven",
+  "license": "CC0 (Poly Haven license)",
+  "format": "glTF 2.0 (gltf+bin+jpg, 1k)",
+  "files": {
+    "gltf": {
+      "sha256": "d39f4172d6fcbb285272168d585f4929c3ed27f05e7101d4fe1c4580408fb8e1",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/1k/vintage_wooden_drawer_01/vintage_wooden_drawer_01_1k.gltf"
+    },
+    "vintage_wooden_drawer_01_nor_gl_1k.jpg": {
+      "sha256": "07312a77e5e5c08a7f72f261dc9517ad837246de70b239859eb5144ddd1725f5",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/vintage_wooden_drawer_01/vintage_wooden_drawer_01_nor_gl_1k.jpg"
+    },
+    "vintage_wooden_drawer_01.bin": {
+      "sha256": "2c0a40a166cf9aa1303975e7b1ac7bcfd413e9aa7fbd6d0bd47643f84833c061",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/8k/vintage_wooden_drawer_01/vintage_wooden_drawer_01.bin"
+    },
+    "vintage_wooden_drawer_01_arm_1k.jpg": {
+      "sha256": "0f6ceab69f8f34adb9cb6213b5a87ac6d8a03ed5efaa72eaedd37d1e1ada37a6",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/vintage_wooden_drawer_01/vintage_wooden_drawer_01_arm_1k.jpg"
+    },
+    "vintage_wooden_drawer_01_diff_1k.jpg": {
+      "sha256": "6aecebf3f5ea52ce75c1e5cdabbf6cf5bf2844e4d3c5243211e52588d8f3f7a8",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/vintage_wooden_drawer_01/vintage_wooden_drawer_01_diff_1k.jpg"
+    }
+  },
+  "status": "downloaded"
+}

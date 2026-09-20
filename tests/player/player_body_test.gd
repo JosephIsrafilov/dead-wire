@@ -110,6 +110,7 @@ func _run() -> void:
 
 	var standing_eye := player.head_rest_position.y
 	var chair := seat.get_parent() as Node3D
+	seat.approach_duration = 0.0
 	if not assert_condition(seat.sit(), "Operator sits"): return
 	if not assert_condition(seat.is_seated and player.is_seated, "Both seat and player agree he is seated"): return
 	if not assert_condition(player.global_position.distance_to(chair.global_position) < 0.05, "Seated operator is at the chair"): return
@@ -143,11 +144,85 @@ func _run() -> void:
 	seat._set_head_height(standing_eye)
 	if not assert_condition(absf(player.head_rest_position.y - standing_eye) < 0.001, "Standing eye height is restored"): return
 
-	# 12. Sitting is idempotent and standing twice is harmless.
-	if not assert_condition(seat.sit(), "Can sit again"): return
+	# 12. Sitting is idempotent and standing twice is harmless. A new sit waits
+	# for the body to finish leaving the chair — repeated input during a
+	# transition never stacks a second one.
+	var settle12 := 0
+	while (seat.is_body_moving() or seat._is_animating) and settle12 < 600:
+		await process_frame
+		settle12 += 1
+	if not assert_condition(seat.sit(), "Can sit again after the body finished standing"): return
 	if not assert_condition(not seat.sit(), "Sitting while seated is a no-op"): return
 	if not assert_condition(seat.stand(), "Can stand again"): return
 	if not assert_condition(not seat.stand(), "Standing while standing is a no-op"): return
+
+	# 13. (H4) The body glides through real transitions: standing is a short,
+	# clear move on frames — no teleport, no furniture passed through, and the
+	# stand point is somewhere the capsule actually fits.
+	seat.approach_duration = 0.34
+	seat.sit_duration = 0.8
+	seat.stand_duration = 0.6
+	# Let the previous section's transitions finish, put the operator on his
+	# feet at a known clear spot, and start from a clean standing pose.
+	var drain := 0
+	while (seat.is_body_moving() or seat._is_animating) and drain < 600:
+		await process_frame
+		drain += 1
+	if seat.is_seated:
+		if not assert_condition(seat.stand(), "Stand to start the glide section cleanly"): return
+		drain = 0
+		while (seat.is_body_moving() or seat._is_animating) and drain < 600:
+			await process_frame
+			drain += 1
+	player.global_position = chair.global_position + Vector3(0.9, 0.0, 0.0)
+	await process_frame
+	if not assert_condition(seat.sit(), "Sit with the production transition durations"): return
+	var settle_frames := 0
+	while not seat.is_settled() and settle_frames < 600:
+		await process_frame
+		settle_frames += 1
+	if not assert_condition(seat.is_settled(), "The sit transition completes on frames"): return
+	var seated_position := player.global_position
+	var max_step := 0.0
+	var previous := player.global_position
+	if not assert_condition(seat.stand(), "Stand with the production transition durations"): return
+	var stand_frames := 0
+	while (seat.is_body_moving() or seat._is_animating) and stand_frames < 600:
+		await process_frame
+		max_step = maxf(max_step, previous.distance_to(player.global_position))
+		previous = player.global_position
+		stand_frames += 1
+	if not assert_condition(stand_frames > 3, "Standing took real frames, not an assignment (%d frames)" % stand_frames): return
+	if not assert_condition(max_step < 0.2, "No teleport frame during standing (max %.3f m)" % max_step): return
+	if not assert_condition(player.global_position.distance_to(seated_position) > 0.3, "The body actually left the chair"): return
+	if not assert_condition(seat._transform_clear(player.global_transform), "The standing point is clear of furniture"): return
+	await process_frame
+	if not assert_condition(not seat._chair_collision.disabled, "The chair is solid again once the body is out"): return
+
+	# 14. (H4) Approaching from different sides: the glide ends at the seat
+	# without sweeping the capsule through the desk.
+	for approach_side in [Vector3(0.9, 0, 0.0), Vector3(0.0, 0, 0.9), Vector3(0.0, 0, -0.9)]:
+		player.global_transform = Transform3D(
+			player.global_transform.basis,
+			chair.global_position + approach_side)
+		await process_frame
+		var side_max_step := 0.0
+		var side_prev := player.global_position
+		if not assert_condition(seat.sit(), "Sit from a %.1f m offset works" % approach_side.length()): return
+		var side_frames := 0
+		while not seat.is_settled() and side_frames < 600:
+			await process_frame
+			side_max_step = maxf(side_max_step, side_prev.distance_to(player.global_position))
+			side_prev = player.global_position
+			side_frames += 1
+		if not assert_condition(seat.is_settled(), "Approach settles from every side"): return
+		if not assert_condition(player.global_position.distance_to(chair.global_position) < 0.06, "The body arrives at the chair"): return
+		if not assert_condition(side_max_step < 0.2, "No teleport frame during the approach (max %.3f m)" % side_max_step): return
+		if not assert_condition(seat.stand(), "Stand again for the next side"): return
+		var re_stand := 0
+		while (seat.is_body_moving() or seat._is_animating) and re_stand < 600:
+			await process_frame
+			re_stand += 1
 
 	print("--- All Player Body Tests PASSED (%d assertions) ---" % _assertions_passed)
 	quit(0)

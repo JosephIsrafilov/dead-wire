@@ -10,6 +10,9 @@ signal document_closed(doc_id: String)
 var _current_doc_id: String = ""
 var _is_open: bool = false
 var _just_opened_frame: int = -1
+## The footer the document was opened with; a live status line may temporarily
+## replace it, and closing the situation restores it without reopening.
+var _opened_footer: String = ""
 
 var panel_container: PanelContainer = null
 var title_label: Label = null
@@ -45,6 +48,7 @@ func open_document(doc_id: String, title: String, body: String, footer: String =
 	_current_doc_id = doc_id
 	_is_open = true
 	_just_opened_frame = Engine.get_process_frames()
+	_opened_footer = footer if not footer.is_empty() else default_footer
 
 	if title_label != null:
 		title_label.text = title
@@ -53,11 +57,23 @@ func open_document(doc_id: String, title: String, body: String, footer: String =
 		body_label.text = body
 		body_label.scroll_to_line(0)
 	if footer_label != null:
-		footer_label.text = footer if not footer.is_empty() else default_footer
+		footer_label.text = _opened_footer
 
 	visible = true
 	_animate_in()
 	document_opened.emit(_current_doc_id)
+
+## A live status line — a deadline warning — can replace the footer while the
+## document stays open, so the warning is readable behind the paper it concerns.
+## An empty text restores the footer the document was opened with. The body,
+## scroll and doc_id are never touched: this is a status, not a reopen.
+func set_live_footer(text: String) -> void:
+	_find_nodes()
+	if footer_label == null or not _is_open:
+		return
+	var target := text if not text.is_empty() else _opened_footer
+	if footer_label.text != target:
+		footer_label.text = target
 
 ## Lifting a document into view takes a moment. Instant appearance is the single
 ## most common reason a first-person game reads as a slideshow of states.

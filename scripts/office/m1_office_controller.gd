@@ -32,10 +32,24 @@ var _exit_body_present: bool = false
 func _ready() -> void:
 	if enable_psx_rendering:
 		apply_psx_settings()
+	_apply_embedded_body_font()
 
 	_scenario_list = [scenario_1, scenario_2, scenario_3]
 	_bind_signals()
 	load_scenario_by_index(0)
+
+## Every printed surface in the room renders with the ONE embedded body font
+## (extracted from the engine's own bundled fallback), never with whatever
+## the host machine's fallback happens to be. Labels with an explicitly
+## authored font keep theirs.
+func _apply_embedded_body_font() -> void:
+	var font := load("res://assets/fonts/deadwire_body.res") as Font
+	if font == null:
+		return
+	for label in find_children("*", "Label3D", true, false):
+		var label_3d := label as Label3D
+		if label_3d.font == null:
+			label_3d.font = font
 
 func apply_psx_settings() -> void:
 	var vp := get_viewport()
@@ -100,6 +114,13 @@ func _bind_signals() -> void:
 	if paper != null and not paper.transcript_inspected.is_connected(_on_transcript_inspected):
 		paper.transcript_inspected.connect(_on_transcript_inspected)
 
+	# The register strip lifts to the lamp through the same viewer (design
+	# §4): raw marks only, never compared with the transcript sheet.
+	if session_controller != null:
+		var tape_register := session_controller.get_tape_register()
+		if tape_register != null and not tape_register.tape_inspected.is_connected(_on_tape_inspected):
+			tape_register.tape_inspected.connect(_on_tape_inspected)
+
 	var morse_card := get_node_or_null("MorseReferenceCard") as MorseReferenceCard
 	if morse_card != null and not morse_card.card_inspected.is_connected(_on_card_inspected):
 		morse_card.card_inspected.connect(_on_card_inspected)
@@ -128,6 +149,12 @@ func _bind_signals() -> void:
 		if not routing_board.board_closed.is_connected(_on_routing_board_closed):
 			routing_board.board_closed.connect(_on_routing_board_closed)
 
+	if session_controller != null:
+		# The lever only moves for a route the world actually accepted: a lapsed
+		# NO ORDER never throws it, and a deadline rejection leaves it untouched.
+		if not session_controller.routing_resolved.is_connected(_on_routing_resolved_board):
+			session_controller.routing_resolved.connect(_on_routing_resolved_board)
+
 	if copy_commit_desk != null:
 		if not copy_commit_desk.option_committed.is_connected(_on_commit_option_committed):
 			copy_commit_desk.option_committed.connect(_on_commit_option_committed)
@@ -141,6 +168,8 @@ func _bind_signals() -> void:
 			session_controller.consequence_started.connect(_on_consequence_started)
 		if not session_controller.commit_resolved.is_connected(_on_commit_resolved):
 			session_controller.commit_resolved.connect(_on_commit_resolved)
+		if not session_controller.transmission_started.is_connected(_on_transmission_started):
+			session_controller.transmission_started.connect(_on_transmission_started)
 
 		if not session_controller.session_completed.is_connected(_on_session_completed):
 			session_controller.session_completed.connect(_on_session_completed)
@@ -154,6 +183,12 @@ func _bind_signals() -> void:
 				key_act.interacted.connect(session_controller.telegraph_key._on_interacted)
 			if not session_controller.telegraph_key.key_pressed.is_connected(_on_key_pressed):
 				session_controller.telegraph_key.key_pressed.connect(_on_key_pressed)
+
+	if operator_seat != null:
+		if not operator_seat.stood.is_connected(_on_operator_stood):
+			operator_seat.stood.connect(_on_operator_stood)
+		if not operator_seat.sit_completed.is_connected(_on_operator_sit_completed):
+			operator_seat.sit_completed.connect(_on_operator_sit_completed)
 
 func _get_scenario_list() -> Array[TelegraphScenarioData]:
 	if _scenario_list.is_empty():
@@ -177,6 +212,10 @@ func load_scenario_by_index(idx: int) -> bool:
 		_exit_body_present = false
 		if dawn_evidence != null:
 			dawn_evidence.reset_for_new_watch()
+		if routing_board != null:
+			# A fresh watch wipes the physical record: lever, needle, last
+			# route. Slot changes (idx > 0) never touch it (plan R01).
+			routing_board.reset_for_new_watch()
 	if session_controller != null:
 		if routing_board != null:
 			routing_board.reset_for_new_transmission()
@@ -218,9 +257,36 @@ func _on_key_pressed() -> void:
 		if not _cycle_completed and _scenario_index + 1 < _get_scenario_list().size():
 			advance_to_next_scenario.call_deferred()
 
-func _on_routing_action(action: String) -> void:
+## A telegram answered while the body is still settling into the chair starts
+## all the same: the signal runs and cues are authorized, but no ink appears
+## until the sit transition has physically finished.
+func _on_transmission_started(_scen: TelegraphScenarioData) -> void:
+	if session_controller != null and (operator_seat == null or not operator_seat.is_settled()):
+		session_controller.notify_operator_stood()
+
+func _on_operator_stood() -> void:
 	if session_controller != null:
-		session_controller.submit_routing_decision(action)
+		session_controller.notify_operator_stood()
+
+func _on_operator_sit_completed() -> void:
+	if session_controller != null:
+		session_controller.notify_operator_seated()
+
+func _on_routing_action(action: String) -> void:
+	if session_controller == null:
+		return
+	# An expired route deadline rejects input at the door: the lapse resolves
+	# the slot, and a late lever throw must not produce a route or a result.
+	if is_shift_directed() and shift_director.is_route_deadline_expired():
+		return
+	session_controller.submit_routing_decision(action)
+
+## The board's apparatus answers the session's verdict, not the keypress: the
+## lever reaches its stop only for an order that actually went out.
+func _on_routing_resolved_board(action: String, outcome: TelegraphSessionController.RoutingOutcome) -> void:
+	if routing_board == null:
+		return
+	routing_board.play_route_accept(action, outcome != TelegraphSessionController.RoutingOutcome.LAPSED)
 
 func _on_routing_board_opened() -> void:
 	if player == null:
@@ -254,13 +320,19 @@ func _on_commit_requested(options: Array[TelegraphCommitOption]) -> void:
 	copy_commit_desk.set_enabled(session_controller != null and session_controller.get_state() == TelegraphSessionController.State.AWAITING_COMMIT)
 
 func _on_commit_option_committed(action_id: StringName) -> void:
+	# The desk expressed intent. The session is the authority: its answer
+	# comes back through commit_resolved and only that may change the
+	# surface. A rejected intent deliberately changes nothing here.
 	if session_controller != null:
 		session_controller.submit_commit(action_id)
 
 func _on_commit_resolved(action_id: StringName, result_text: String) -> void:
-	if copy_commit_desk == null or action_id != TelegraphSessionController.LAPSED_ACTION_ID:
+	# Every resolved outcome — accepted filing or lapse — is applied to the
+	# desk by the same authoritative path (B1). Accepted outcomes stamp and
+	# fire the contact sound; a lapse shows UNFILED and stays silent.
+	if copy_commit_desk == null:
 		return
-	copy_commit_desk.show_lapsed(result_text)
+	copy_commit_desk.apply_commit_result(action_id, result_text)
 
 func _on_consequence_started(event_id: String, hold_seconds: float) -> void:
 	if event_id == "window_figure" and window_observation != null:
@@ -301,8 +373,128 @@ func _on_session_state_changed(new_state: TelegraphSessionController.State, _pre
 	_update_key_feedback()
 
 func _on_transcript_inspected(text: String) -> void:
-	if document_viewer != null:
-		document_viewer.open_document("transcript_paper", "TELEGRAM TRANSCRIPT (ELIAS CRANE)", text, "[E / Esc] Put Down Transcript")
+	# A half-written sheet is not a document yet: opening the viewer would freeze
+	# mid-sentence ink and invite inspection of a copy that is not done. The
+	# transcript prompt states the status instead.
+	if _is_transcript_copy_in_progress():
+		return
+	if document_viewer == null:
+		return
+	var paper := _get_transcript_paper()
+	# A blank pad is not a document either: no ink, nothing to read, no
+	# document_opened event for a sheet that never received a message.
+	if paper != null and paper.get_state() in [TranscriptPaper.PaperState.EMPTY, TranscriptPaper.PaperState.PREPARING]:
+		return
+	# A closed partial shows exactly the ink it has, with the honest mark. It
+	# never reveals the hidden remainder and never verifies anything.
+	if paper != null and paper.is_incomplete_closed():
+		var body := text if not text.is_empty() else "(nothing was written)"
+		document_viewer.open_document("transcript_paper", "TELEGRAM TRANSCRIPT (ELIAS CRANE)", "%s\n\n— COPY INCOMPLETE —" % body, "[E / Esc] Put Down Transcript")
+		return
+	# Finished sheets — current or an earlier telegram's — read as records; the
+	# session's own listener decides whether reading verifies anything.
+	document_viewer.open_document("transcript_paper", "TELEGRAM TRANSCRIPT (ELIAS CRANE)", text, "[E / Esc] Put Down Transcript")
+
+func _get_transcript_paper() -> TranscriptPaper:
+	var paper := get_node_or_null("TranscriptPaper") as TranscriptPaper
+	if paper == null and session_controller != null:
+		paper = session_controller.transcript_paper
+	return paper
+
+func _on_tape_inspected(text: String) -> void:
+	# Dots and dashes only. No transcript on this surface, no comparison,
+	# no verdict: checking the copy against the strip is the player's work.
+	if document_viewer == null:
+		return
+	document_viewer.open_document(TapeRegisterController.TAPE_DOC_ID,
+		TapeRegisterController.TAPE_TITLE, _wrap_tape_text(text),
+		"[E / Esc] Put Down Tape")
+
+## Paper strips are narrow: fold the mark sequence into ~40-column lines at
+## space boundaries so the lamp-lit strip reads like the physical object.
+static func _wrap_tape_text(text: String, columns: int = 40) -> String:
+	if text.length() <= columns:
+		return text
+	var out := ""
+	var line_start := 0
+	while text.length() - line_start > columns:
+		var window := text.substr(line_start, mini(columns + 1, text.length() - line_start))
+		var space_at := window.rfind(" ")
+		if space_at < 0:
+			space_at = columns
+		out += text.substr(line_start, space_at) + "\n"
+		line_start += space_at + 1
+	out += text.substr(line_start)
+	return out
+
+## True while the current session's sheet is still being written: receiving the
+## signal or finishing the backlog after it.
+func _is_transcript_copy_in_progress() -> bool:
+	if session_controller == null:
+		return false
+	if session_controller.get_state() != TelegraphSessionController.State.RECEIVING \
+			and session_controller.get_state() != TelegraphSessionController.State.COPYING:
+		return false
+	var paper := _get_transcript_paper()
+	return paper != null and paper.is_copy_in_progress()
+
+## Truthful target prompt for the sheet: while the hand is writing, E does
+## nothing, so the prompt must not offer a read. Standing operators are sent
+## back to the chair; seated ones are told the truth: the copy is not finished.
+func _update_transcript_prompt() -> void:
+	var paper := _get_transcript_paper()
+	if paper == null:
+		return
+	var act := paper.get_interactable()
+	if act == null:
+		return
+	if paper.get_state() == TranscriptPaper.PaperState.EMPTY:
+		# Nothing has been written yet; the pad reports that instead of
+		# offering a read that opens an empty document. (PREPARING is not
+		# empty: a message is on the wire and the blank is feeding.)
+		act.prompt_text = "No Copy Yet"
+		act.is_actionable = false
+	elif _is_transcript_copy_in_progress():
+		var seated: bool = operator_seat != null and operator_seat.is_seated
+		act.prompt_text = "Still Copying" if seated else "Return to the Chair to Finish the Copy"
+		act.is_actionable = false
+	elif paper.is_incomplete_closed():
+		act.prompt_text = "Read Incomplete Copy"
+		act.is_actionable = true
+	else:
+		act.prompt_text = paper.prompt_message
+		act.is_actionable = true
+
+## Any full-screen surface that hides the world also blocks observation through
+## it. This is computed centrally so every caller shares one definition.
+func is_world_view_blocked() -> bool:
+	if document_viewer != null and document_viewer.is_open():
+		return true
+	if routing_board != null and routing_board.is_open:
+		return true
+	var intro := get_node_or_null("IntroCard") as IntroCard
+	if intro != null and intro.visible:
+		return true
+	if shift_end_card != null and shift_end_card.is_running():
+		return true
+	var pause_menu := get_node_or_null("PauseMenu") as PauseMenu
+	if pause_menu != null and pause_menu.is_paused:
+		return true
+	return false
+
+## The deadline warning must be readable where the player actually is —
+## including behind an open document. It updates the live footer of the open
+## viewer without reopening it, rescrolling it or touching its snapshot.
+func _update_deadline_warning_footer() -> void:
+	if document_viewer == null or not document_viewer.is_open():
+		return
+	var warning := ""
+	if session_controller != null:
+		warning = session_controller.get_deadline_warning_text()
+	if not warning.is_empty():
+		document_viewer.set_live_footer("%s  —  [E / Esc] Put Down" % warning)
+	else:
+		document_viewer.set_live_footer("")
 
 func _on_card_inspected(text: String) -> void:
 	if document_viewer != null:
@@ -411,6 +603,9 @@ func _update_key_feedback() -> void:
 		TelegraphSessionController.State.RECEIVING:
 			key.set_prompt_message("Line Busy (Receiving Telegram)")
 			key.set_enabled(false)
+		TelegraphSessionController.State.COPYING:
+			key.set_prompt_message("Finishing the Copy")
+			key.set_enabled(false)
 		TelegraphSessionController.State.AWAITING_ROUTE:
 			key.set_prompt_message("Awaiting Route Decision on Board")
 			key.set_enabled(false)
@@ -426,7 +621,9 @@ func _update_key_feedback() -> void:
 				key.set_enabled(false)
 
 func _process(_delta: float) -> void:
+	_update_transcript_prompt()
 	_refresh_guidance()
+	_update_deadline_warning_footer()
 	if window_observation != null and window_observation.is_active:
 		var cam := player_camera
 		if cam == null and player != null:
@@ -434,7 +631,7 @@ func _process(_delta: float) -> void:
 		if cam == null and is_inside_tree() and get_viewport() != null:
 			cam = get_viewport().get_camera_3d()
 		if cam != null:
-			window_observation.check_camera(cam)
+			window_observation.check_camera(cam, is_world_view_blocked())
 
 func _refresh_guidance() -> void:
 	if not is_shift_directed() or player == null or session_controller == null:
@@ -450,6 +647,11 @@ func _refresh_guidance() -> void:
 			hint = "Set the route on the east wall board"
 		TelegraphSessionController.State.AWAITING_COMMIT:
 			hint = "File one copy at the table beside the door"
+	# A deadline warning is true everywhere the player can be, including behind
+	# an open document: the sender does not wait for the reader.
+	var warning := session_controller.get_deadline_warning_text()
+	if not warning.is_empty():
+		hint = warning
 	if shift_director.get_phase() == ShiftDirector.Phase.PRE_SHIFT:
 		hint = "Work the key to open the line" if operator_seat.is_seated else "[W A S D] Move   [E] Inspect   [Esc] Pause"
 	elif shift_director.get_phase() == ShiftDirector.Phase.CALLING:

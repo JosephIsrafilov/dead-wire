@@ -1,0 +1,64 @@
+[gd_scene load_steps=11 format=3 uid="uid://b1tapereg01"]
+
+[ext_resource type="Script" path="res://scripts/telegraph/hardware/tape_register_controller.gd" id="1_tape"]
+[ext_resource type="Material" path="res://materials/style_tests/timber_trim.tres" id="2_wood"]
+[ext_resource type="Material" path="res://materials/style_tests/paper_log.tres" id="3_paper"]
+[ext_resource type="Script" path="res://scripts/interaction/interactable.gd" id="4_interact"]
+
+[sub_resource type="StandardMaterial3D" id="Brass"]
+albedo_color = Color(0.72, 0.55, 0.25, 1)
+metallic = 0.8
+roughness = 0.35
+
+[sub_resource type="BoxMesh" id="BoxMesh_base"]
+material = ExtResource("2_wood")
+size = Vector3(0.16, 0.06, 0.11)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_drum"]
+material = SubResource("Brass")
+top_radius = 0.025
+bottom_radius = 0.025
+height = 0.03
+radial_segments = 12
+
+[sub_resource type="BoxMesh" id="BoxMesh_strip"]
+material = ExtResource("3_paper")
+size = Vector3(0.014, 0.001, 0.09)
+
+[sub_resource type="BoxMesh" id="BoxMesh_tray"]
+material = ExtResource("2_wood")
+size = Vector3(0.05, 0.02, 0.05)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_interact"]
+size = Vector3(0.18, 0.08, 0.22)
+
+[node name="TapeRegister" type="Node3D"]
+script = ExtResource("1_tape")
+
+[node name="Interactable" type="Area3D" parent="."]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("4_interact")
+prompt_text = "Read Tape Register"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Interactable"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.045, 0.07)
+shape = SubResource("BoxShape3D_interact")
+
+[node name="Body" type="Node3D" parent="."]
+
+[node name="Base" type="MeshInstance3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.03, 0)
+mesh = SubResource("BoxMesh_base")
+
+[node name="Drum" type="MeshInstance3D" parent="Body"]
+transform = Transform3D(0, -1, 0, 1, 0, 0, 0, 0, 1, 0, 0.085, 0.025)
+mesh = SubResource("CylinderMesh_drum")
+
+[node name="PaperStrip" type="MeshInstance3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0005, 0.1)
+mesh = SubResource("BoxMesh_strip")
+
+[node name="ReceivingBox" type="MeshInstance3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, 0.17)
+mesh = SubResource("BoxMesh_tray")

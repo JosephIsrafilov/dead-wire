@@ -7,6 +7,10 @@ signal sounder_clacked_up(event_index: int)
 @export var down_sound: AudioStream = preload("res://audio/sfx/telegraph/sounder_down.wav")
 @export var up_sound: AudioStream = preload("res://audio/sfx/telegraph/sounder_up.wav")
 @export var volume_db: float = -3.0
+## The wire has its own bus so the transmission mix can be balanced against
+## the room without touching anyone else's fader. Calls, nags and closing ride
+## the same sounder and therefore the same bus.
+@export var bus: StringName = &"Telegraph"
 
 ## The armature bar physically drops onto the anvil on every mark and lifts on
 ## every gap. Until this existed the game's centrepiece clicked audibly while
@@ -58,6 +62,7 @@ func _setup_audio_players() -> void:
 		_player_down.volume_db = volume_db
 		_player_down.pitch_scale = 1.0
 		_player_down.max_distance = 15.0
+		_player_down.bus = bus
 		add_child(_player_down)
 
 	if _player_up == null:
@@ -67,6 +72,7 @@ func _setup_audio_players() -> void:
 		_player_up.volume_db = volume_db
 		_player_up.pitch_scale = 1.0
 		_player_up.max_distance = 15.0
+		_player_up.bus = bus
 		add_child(_player_up)
 
 func connect_scheduler(scheduler: MorseRuntimeScheduler) -> void:

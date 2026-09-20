@@ -182,9 +182,13 @@ func _ray_hits_area(from: Vector3, expected: Area3D) -> bool:
 
 func _window_line_of_sight_is_honest() -> bool:
 	var space := office_node.get_world_3d().direct_space_state
-	var open_query := PhysicsRayQueryParameters3D.create(Vector3(0.0, 1.5, -1.0), Vector3(1.05, 1.45, -2.85))
+	# Through the relocated north-west window aperture (glass zone x -2.24..-0.76,
+	# y 0.92..2.14 at z -2.36): a ray through the glass to the night backdrop must
+	# reach the wall plane; a ray to the wall between the window segments must be
+	# blocked by wall geometry before it leaves the room envelope.
+	var open_query := PhysicsRayQueryParameters3D.create(Vector3(-1.5, 1.5, -1.0), Vector3(-1.5, 1.45, -2.42))
 	open_query.collision_mask = 1
-	var closed_query := PhysicsRayQueryParameters3D.create(Vector3(0.0, 1.5, -1.0), Vector3(-1.45, 1.5, -2.85))
+	var closed_query := PhysicsRayQueryParameters3D.create(Vector3(-1.5, 1.5, -1.0), Vector3(-0.25, 1.5, -2.42))
 	closed_query.collision_mask = 1
 	return space.intersect_ray(open_query).is_empty() and not space.intersect_ray(closed_query).is_empty()
 

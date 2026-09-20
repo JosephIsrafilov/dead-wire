@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# Run the game from this worktree
+exec godot --path .

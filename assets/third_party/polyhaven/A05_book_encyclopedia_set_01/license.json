@@ -1,0 +1,42 @@
+{
+  "asset_id": "A05_book_encyclopedia_set_01",
+  "source": "https://polyhaven.com/a/book_encyclopedia_set_01",
+  "provider": "Poly Haven",
+  "license": "CC0 (Poly Haven license)",
+  "format": "glTF 2.0 (gltf+bin+jpg, 1k)",
+  "files": {
+    "gltf": {
+      "sha256": "89eb80fffd619ebbe5043d632bd8cf25b2d68a3614aee2f356e850c69ae498ba",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/1k/book_encyclopedia_set_01/book_encyclopedia_set_01_1k.gltf"
+    },
+    "book_encyclopedia_set_01_cover_diff_1k.jpg": {
+      "sha256": "a456aae6ef0ab24769527cccac5313a802ad253584c49fc10a377ce75969d382",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/book_encyclopedia_set_01/book_encyclopedia_set_01_cover_diff_1k.jpg"
+    },
+    "book_encyclopedia_set_01.bin": {
+      "sha256": "bbc726698b6e40ab5537b73e082f7bb4db97b9e6f978f52cdaf763dddc85d9ba",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/8k/book_encyclopedia_set_01/book_encyclopedia_set_01.bin"
+    },
+    "book_encyclopedia_set_01_paper_nor_gl_1k.jpg": {
+      "sha256": "705f4380c654c44d086ceb120595078e562438c6e4ba01458d2d23fd61483d9d",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/book_encyclopedia_set_01/book_encyclopedia_set_01_paper_nor_gl_1k.jpg"
+    },
+    "book_encyclopedia_set_01_cover_arm_1k.jpg": {
+      "sha256": "ab19b627092da77770de2212a04785940feb2df0957cab8993742a6b8b3f7bff",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/book_encyclopedia_set_01/book_encyclopedia_set_01_cover_arm_1k.jpg"
+    },
+    "book_encyclopedia_set_01_cover_nor_gl_1k.jpg": {
+      "sha256": "17ad410f2d1aab487e47c729a5b988ea4e4d196679c8696331b7960e77a91c17",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/book_encyclopedia_set_01/book_encyclopedia_set_01_cover_nor_gl_1k.jpg"
+    },
+    "book_encyclopedia_set_01_paper_diff_1k.jpg": {
+      "sha256": "b552d6829b75db7a75012bb761068c63507b69e8e944597ea53f6d1a70efa36c",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/book_encyclopedia_set_01/book_encyclopedia_set_01_paper_diff_1k.jpg"
+    },
+    "book_encyclopedia_set_01_paper_roughness_1k.jpg": {
+      "sha256": "62d875e9427f5d71f1bb4d9dc9569e34465bfd3067b8b13f5644b73e23a09fa3",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/book_encyclopedia_set_01/book_encyclopedia_set_01_paper_roughness_1k.jpg"
+    }
+  },
+  "status": "downloaded"
+}

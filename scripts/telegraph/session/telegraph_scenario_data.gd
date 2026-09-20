@@ -7,6 +7,10 @@ extends Resource
 @export var expected_routing_action: String = ""
 @export var correct_world_fact: String = ""
 @export var incorrect_world_fact: String = ""
+## A routing lapse ("NO ORDER") is its own outcome, not a wrong order. Legacy
+## resources may leave these empty; M1 routing scenarios fill them.
+@export var routing_lapsed_world_fact: String = ""
+@export var routing_lapsed_knowledge_fact: String = ""
 @export var attention_event_id: String = ""
 @export var attention_event_start_time: float = 0.0
 @export var completion_fact: String = ""

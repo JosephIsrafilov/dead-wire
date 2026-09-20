@@ -88,6 +88,143 @@ func _run() -> void:
 	if not assert_condition(pause_menu.is_paused, "Escape with empty hands pauses"): return
 	pause_menu.resume()
 
+	# 5b. Escape with the routing board open: the board takes the key first.
+	var board := office.routing_board
+	if not assert_condition(board != null, "Routing board is wired"): return
+	board.reset_for_new_transmission()
+	board.set_awaiting_route(true)
+	board.open_board()
+	if not assert_condition(board.is_open, "Board opens while a route is pending"): return
+	pause_menu._input(escape)
+	if not assert_condition(not pause_menu.is_paused, "Escape with the board open does not pause"): return
+	board._input(escape)
+	if not assert_condition(not board.is_open, "Escape reaches the board and closes it"): return
+	pause_menu._input(escape)
+	if not assert_condition(pause_menu.is_paused, "Escape with the board closed pauses"): return
+	pause_menu.resume()
+
+	# 5c. E on an idle board is a no-op: no invisible modal, no locked movement.
+	# The counter is a mutable array: a captured scalar would never change and
+	# the check would pass even after a signal.
+	board.reset_for_new_transmission()
+	var opened_count: Array[int] = [0]
+	board.board_opened.connect(func(): opened_count[0] += 1)
+	board._on_interacted()
+	if not assert_condition(not board.is_open, "E on an idle board opens nothing"): return
+	if not assert_condition(opened_count[0] == 0, "Idle board emits no board_opened"): return
+	if not assert_condition(not player.is_movement_locked, "Idle board leaves movement free"): return
+	# Positive control: the same counter does increment on a real opening.
+	board.set_awaiting_route(true)
+	board._on_interacted()
+	if not assert_condition(opened_count[0] == 1, "Awaiting board interaction emits exactly one board_opened"): return
+	board.close_board()
+
+	# 5d. A half-written transcript is not a readable document.
+	var session := office.session_controller
+	var paper := office._get_transcript_paper()
+	if not assert_condition(session != null and paper != null, "Session and paper are wired"): return
+	# Before any message, the pad is blank: no document, no fake read.
+	office._process(0.0)
+	if not assert_condition(paper.get_state() == TranscriptPaper.PaperState.EMPTY, "The pad starts EMPTY before the first message"): return
+	if not assert_condition(paper.get_interactable().prompt_text == "No Copy Yet", "A blank pad reports no copy yet"): return
+	if not assert_condition(not paper.get_interactable().is_actionable, "A blank pad offers no [E] read"): return
+	paper.get_interactable().interact()
+	if not assert_condition(not viewer.is_open(), "E on a blank pad opens no viewer"): return
+	if not assert_condition(session.start_transmission(), "Transmission starts for the read-gate case"): return
+	if not assert_condition(session.get_state() == TelegraphSessionController.State.RECEIVING, "Session is receiving"): return
+	if not assert_condition(paper.is_copy_paused(), "A standing operator's hand leaves the sheet waiting"): return
+	office._process(0.0)
+	if not assert_condition(paper.get_interactable().prompt_text == "Return to the Chair to Finish the Copy", "Standing prompt tells the truth: finish the copy at the chair"): return
+	if not assert_condition(not paper.get_interactable().is_actionable, "A half-written sheet offers no [E] read"): return
+	paper.get_interactable().interact()
+	if not assert_condition(not viewer.is_open(), "E on an actively written sheet opens no viewer"): return
+	if not assert_condition(session.get_state() == TelegraphSessionController.State.RECEIVING, "Inspecting a partial sheet verifies nothing"): return
+	session.reset_session()
+
+	# 5d-2. Answering mid-sit does not start ink before the body arrives (R7).
+	# The approach glides the capsule onto the seat; during that glide the
+	# operator is neither seated nor settled.
+	office.operator_seat.sit_duration = 0.05
+	office.operator_seat.approach_duration = 0.05
+	if not assert_condition(office.operator_seat.sit(), "Operator can sit back down"): return
+	if not assert_condition(not office.operator_seat.is_settled(), "Sit starts with the body still travelling"): return
+	office.load_scenario_by_index(0)
+	if not assert_condition(session.start_transmission(), "A call answered mid-sit still starts the signal"): return
+	if not assert_condition(paper.is_copy_paused(), "No ink while the body is still settling into the chair"): return
+	# Let the approach and sit transition physically finish; sit_completed
+	# resumes the sheet.
+	var settle_guard := 0
+	while not office.operator_seat.is_settled() and settle_guard < 120:
+		await process_frame
+		settle_guard += 1
+	if not assert_condition(office.operator_seat.is_settled(), "The sit transition finishes"): return
+	if not assert_condition(office.operator_seat.is_seated, "Approach ends seated at the chair"): return
+	# The blank finishes feeding now that the hand has a seat to come back to,
+	# then the arm enters and the ink resumes.
+	paper.advance_paper(paper.feed_seconds + paper.get_writer_rig().enter_duration + 0.05)
+	if not assert_condition(paper.is_writing(), "The hand resumes once the body has arrived"): return
+	session.reset_session()
+	office.operator_seat.stand()
+	office.operator_seat.sit_duration = 0.0
+	office.operator_seat.approach_duration = 0.0
+
+	# 5d-3. A deadline warning is readable behind an open document (R9).
+	office.load_scenario_by_index(2)
+	if not assert_condition(session.start_transmission(), "Warning-footer case starts a transmission"): return
+	session.scheduler.advance_time(4.0)
+	if not assert_condition(session.get_state() == TelegraphSessionController.State.COPYING, "Standing operator leaves the copy open at t0"): return
+	viewer.open_document("test_doc", "TEST", "body")
+	if not assert_condition(viewer.footer_label.text == "[E / Esc] Put Down Document", "The opened footer is the document's own"): return
+	# Reach the grace-warning threshold on the real clock.
+	session.advance_post_signal(session.unfinished_copy_grace_seconds - session.copy_grace_warning_seconds + 0.1)
+	office._process(0.0)
+	if not assert_condition(viewer.footer_label.text.begins_with("Finish the copy — the sender is waiting"), "The open document's footer carries the warning"): return
+	if not assert_condition(viewer.get_current_doc_id() == "test_doc", "The warning updates the footer without reopening the document"): return
+	if not assert_condition(viewer.body_label.text == "body", "The warning never touches the document body"): return
+	# Let the grace expire: the situation resolves and the footer must recover.
+	session.advance_post_signal(session.copy_grace_warning_seconds)
+	office._process(0.0)
+	if not assert_condition(session.get_state() == TelegraphSessionController.State.CONSEQUENCE, "Grace expiry resolves the slot"): return
+	if not assert_condition(viewer.footer_label.text == "[E / Esc] Put Down Document", "A resolved warning restores the opened footer"): return
+	viewer.close_document()
+	session.reset_session()
+
+	# 5e. One definition of a world-hidden-by-UI, pause included (R4).
+	if not assert_condition(not office.is_world_view_blocked(), "Nothing covering the world"): return
+	viewer.open_document("test_doc", "TEST", "body")
+	if not assert_condition(office.is_world_view_blocked(), "An open document blocks the world view"): return
+	viewer.close_document()
+	board.set_awaiting_route(true)
+	board.open_board()
+	if not assert_condition(office.is_world_view_blocked(), "An open board blocks the world view"): return
+	board.close_board()
+	pause_menu.pause()
+	if not assert_condition(office.is_world_view_blocked(), "A paused shift blocks the world view"): return
+	pause_menu.resume()
+	if not assert_condition(not office.is_world_view_blocked(), "Closing the surfaces and resuming restores the view"): return
+
+	# 5f. Escape through real engine dispatch, in both subscription orders:
+	# the key must close exactly one surface per press regardless of which
+	# node hears it first.
+	for order in ["default", "reversed"]:
+		if order == "reversed":
+			office.move_child(pause_menu, 0)
+		board.reset_for_new_transmission()
+		board.set_awaiting_route(true)
+		board.open_board()
+		if not assert_condition(board.is_open, "Board opens for the %s-order Escape case" % order): return
+		root.push_input(_esc_event())
+		if not assert_condition(not board.is_open, "%s order: engine-dispatched Escape closes the board" % order): return
+		if not assert_condition(not pause_menu.is_paused, "%s order: closing the board does not pause" % order): return
+		root.push_input(_esc_event())
+		if not assert_condition(pause_menu.is_paused, "%s order: Escape with the board closed pauses" % order): return
+		root.push_input(_esc_event())
+		if not assert_condition(not pause_menu.is_paused, "%s order: Escape while paused resumes" % order): return
+	if office.get_child(pause_menu.get_index()) != pause_menu:
+		pass # move_child already restored nothing; ensure original order below.
+	# Restore the authored node order for the rest of the suite.
+	office.move_child(pause_menu, office.get_child_count() - 1)
+
 	# 6. The controls the menu offers are the ones that exist.
 	if not assert_condition(pause_menu.sensitivity_slider != null, "Sensitivity is adjustable"): return
 	if not assert_condition(pause_menu.head_bob_check != null, "Head bob is toggleable by the player"): return
@@ -122,6 +259,15 @@ func _run() -> void:
 
 	print("--- All Framing Tests PASSED (%d assertions) ---" % _assertions_passed)
 	quit(0)
+
+## A fresh Escape press, as the OS would deliver it.
+func _esc_event() -> InputEventKey:
+	var event := InputEventKey.new()
+	event.physical_keycode = KEY_ESCAPE
+	event.keycode = KEY_ESCAPE
+	event.pressed = true
+	event.echo = false
+	return event
 
 func _office() -> M1OfficeController:
 	var scene: PackedScene = ResourceLoader.load("res://scenes/office/m1_office.tscn")

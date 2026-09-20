@@ -6,9 +6,9 @@
 [ext_resource type="Script" path="res://scripts/telegraph/ui/writer_rig.gd" id="4_rig"]
 [ext_resource type="Material" path="res://materials/style_tests/metal_brass_aged.tres" id="6_brass"]
 
-[ext_resource type="ArrayMesh" path="res://assets/models/operator/hand.obj" id="7_hand"]
-[ext_resource type="ArrayMesh" path="res://assets/models/operator/sleeve.obj" id="8_sleeve"]
-[ext_resource type="ArrayMesh" path="res://assets/models/operator/cuff.obj" id="9_cuff"]
+[ext_resource type="ArrayMesh" path="res://assets/models/operator/hand_v2.obj" id="7_hand"]
+[ext_resource type="ArrayMesh" path="res://assets/models/operator/forearm_v2.obj" id="8_sleeve"]
+[ext_resource type="ArrayMesh" path="res://assets/models/operator/cuff_v2.obj" id="9_cuff"]
 
 [sub_resource type="StandardMaterial3D" id="Skin"]
 albedo_color = Color(0.48, 0.32, 0.23, 1)
@@ -24,10 +24,10 @@ roughness = 1.0
 
 [sub_resource type="BoxMesh" id="BoxMesh_paper"]
 material = ExtResource("3_mat")
-size = Vector3(0.2, 0.003, 0.26)
+size = Vector3(0.23, 0.003, 0.3)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_interact"]
-size = Vector3(0.24, 0.06, 0.3)
+size = Vector3(0.24, 0.02, 0.3)
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_pen"]
 material = ExtResource("6_brass")
@@ -46,13 +46,15 @@ radial_segments = 5
 [node name="TranscriptPaper" type="Node3D"]
 script = ExtResource("1_paper")
 
-[node name="PaperMesh" type="MeshInstance3D" parent="."]
+[node name="Sheet" type="Node3D" parent="."]
+
+[node name="PaperMesh" type="MeshInstance3D" parent="Sheet"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0015, 0)
 mesh = SubResource("BoxMesh_paper")
 
-[node name="Label3D" type="Label3D" parent="."]
+[node name="Label3D" type="Label3D" parent="Sheet"]
 transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, -0.082, 0.004, -0.065)
-pixel_size = 0.0012
+pixel_size = 0.00165
 modulate = Color(0.12, 0.1, 0.08, 1)
 outline_modulate = Color(0.92, 0.88, 0.78, 1)
 text = ""
@@ -70,13 +72,33 @@ script = ExtResource("2_interact")
 prompt_text = "Read Telegram Transcript"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Interactable"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.03, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.005, 0)
 shape = SubResource("BoxShape3D_interact")
 
 [node name="WriterRig" type="Node3D" parent="."]
 script = ExtResource("4_rig")
 
-[node name="StationHeading" type="Label3D" parent="."]
+[node name="PreviousSheet" type="Node3D" parent="."]
+visible = false
+
+[node name="PreviousSheetMesh" type="MeshInstance3D" parent="PreviousSheet"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0005, 0)
+mesh = SubResource("BoxMesh_paper")
+
+[node name="PreviousSheetText" type="Label3D" parent="PreviousSheet"]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, -0.082, 0.0035, -0.065)
+pixel_size = 0.00165
+modulate = Color(0.14, 0.12, 0.1, 1)
+outline_modulate = Color(0.92, 0.88, 0.78, 1)
+text = ""
+horizontal_alignment = 0
+vertical_alignment = 0
+font_size = 16
+outline_size = 0
+autowrap_mode = 0
+width = 120.0
+
+[node name="StationHeading" type="Label3D" parent="Sheet"]
 position = Vector3(0, 0.005, -0.105)
 rotation = Vector3(-1.5707963, 0, 0)
 text = "BLACK CREEK / NIGHT COPY"
@@ -86,33 +108,32 @@ modulate = Color(0.26, 0.22, 0.17, 1)
 outline_size = 0
 
 [node name="Sleeve" type="Node3D" parent="WriterRig"]
-position = Vector3(0.0, 0.045, 0.14)
-rotation = Vector3(0.12, 0.0, 0.12)
-scale = Vector3(0.82, 0.82, 0.82)
+position = Vector3(0.0, 0.058, 0.18)
+rotation = Vector3(0.18, 0.0, 0.10)
 
 [node name="SleeveMesh" type="MeshInstance3D" parent="WriterRig/Sleeve"]
 mesh = ExtResource("8_sleeve")
 material_override = SubResource("Wool")
 
 [node name="Wrist" type="Node3D" parent="WriterRig/Sleeve"]
-position = Vector3(0.0, -0.01, -0.08)
-rotation = Vector3(0.0, 0.0, -0.1)
+position = Vector3(0.0, -0.012, -0.024)
+rotation = Vector3(-0.14, 0.0, -0.06)
 
 [node name="WristMesh" type="MeshInstance3D" parent="WriterRig/Sleeve/Wrist"]
 mesh = ExtResource("9_cuff")
 material_override = SubResource("Cotton")
 
 [node name="Hand" type="Node3D" parent="WriterRig/Sleeve/Wrist"]
-position = Vector3(0.0, -0.025, -0.08)
-rotation = Vector3(0.0, 0.0, -0.08)
+position = Vector3(0.0, -0.008, -0.028)
+rotation = Vector3(0.10, 0.0, -0.10)
 
 [node name="HandMesh" type="MeshInstance3D" parent="WriterRig/Sleeve/Wrist/Hand"]
 mesh = ExtResource("7_hand")
 material_override = SubResource("Skin")
 
 [node name="Pen" type="Node3D" parent="WriterRig/Sleeve/Wrist/Hand"]
-position = Vector3(0.0, -0.022, -0.04)
-rotation = Vector3(0.0, 0.0, -0.16)
+position = Vector3(0.002, -0.030, -0.052)
+rotation = Vector3(0.10, 0.0, -0.16)
 
 [node name="Shaft" type="MeshInstance3D" parent="WriterRig/Sleeve/Wrist/Hand/Pen"]
 mesh = SubResource("CylinderMesh_pen")

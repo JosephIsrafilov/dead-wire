@@ -1,0 +1,30 @@
+{
+  "asset_id": "A03_painted_wooden_cabinet_02",
+  "source": "https://polyhaven.com/a/painted_wooden_cabinet_02",
+  "provider": "Poly Haven",
+  "license": "CC0 (Poly Haven license)",
+  "format": "glTF 2.0 (gltf+bin+jpg, 1k)",
+  "files": {
+    "gltf": {
+      "sha256": "a4b697adf7a24a081b8452f5a7d482765e2139cf2a6687a4cbb2a7b8bea24325",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/1k/painted_wooden_cabinet_02/painted_wooden_cabinet_02_1k.gltf"
+    },
+    "painted_wooden_cabinet_02_arm_1k.jpg": {
+      "sha256": "0cf309449d4b0c1ecb0a3adbc17837b6f77f36cb45c1f0ceb6013b07fac44214",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/painted_wooden_cabinet_02/painted_wooden_cabinet_02_arm_1k.jpg"
+    },
+    "painted_wooden_cabinet_02.bin": {
+      "sha256": "7acab853993b90cafc9c7550a7035397dfeb4bbda7f0dba8759d40a971c755ca",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/4k/painted_wooden_cabinet_02/painted_wooden_cabinet_02.bin"
+    },
+    "painted_wooden_cabinet_02_nor_gl_1k.jpg": {
+      "sha256": "46e8df6be06eca30a05d0e90f12e8799e6e11c73ab7c910cc3541b0833ee0103",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/painted_wooden_cabinet_02/painted_wooden_cabinet_02_nor_gl_1k.jpg"
+    },
+    "painted_wooden_cabinet_02_diff_1k.jpg": {
+      "sha256": "ddb2cace49bb05b8e03e6c205223a69f95e5eef84ec66e97e5d0e49d2a1af09e",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/painted_wooden_cabinet_02/painted_wooden_cabinet_02_diff_1k.jpg"
+    }
+  },
+  "status": "downloaded"
+}
