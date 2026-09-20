@@ -174,7 +174,10 @@ func refresh_key_state() -> void:
 
 ## Session work states change without a director phase change (COPYING,
 ## VERIFYING, the decision states); the key must follow them.
-func _on_session_state_changed(_new_state: TelegraphSessionController.State, _prev_state: TelegraphSessionController.State) -> void:
+func _on_session_state_changed(
+		_new_state: TelegraphSessionController.State,
+		_prev_state: TelegraphSessionController.State
+) -> void:
 	_apply_key_state()
 
 func is_operator_seated() -> bool:
@@ -531,7 +534,8 @@ func _maybe_nag() -> void:
 ## without buying the operator a single extra second. A nag in the same breath
 ## already said "the sender is waiting", so the two merge into one call.
 func _on_deadline_warning(kind: StringName) -> void:
-	if not enabled or (kind != TelegraphSessionController.WARNING_COMMIT and kind != TelegraphSessionController.WARNING_COPY_GRACE):
+	if not enabled or (kind != TelegraphSessionController.WARNING_COMMIT \
+		and kind != TelegraphSessionController.WARNING_COPY_GRACE):
 		return
 	if not _warning_still_relevant():
 		return
@@ -550,7 +554,12 @@ func _on_deadline_warning(kind: StringName) -> void:
 func _warning_still_relevant() -> bool:
 	if session == null:
 		return false
-	return session.get_state() in [TelegraphSessionController.State.COPYING, TelegraphSessionController.State.VERIFYING, TelegraphSessionController.State.AWAITING_COMMIT]
+	var live_states := [
+		TelegraphSessionController.State.COPYING,
+		TelegraphSessionController.State.VERIFYING,
+		TelegraphSessionController.State.AWAITING_COMMIT,
+	]
+	return session.get_state() in live_states
 
 func _wire_idle() -> bool:
 	return session == null or session.scheduler == null or not session.scheduler.is_playing()

@@ -83,7 +83,10 @@ func _night_entries_text() -> String:
 func _scheduled_count(scenarios: Array[TelegraphScenarioData]) -> int:
 	return maxi(scenarios.size() - 1, 0) if scenarios.size() >= 1 else 0
 
-func _entry_for(scenario: TelegraphScenarioData, knowledge: KnowledgeStateStore, index: int, scheduled_count: int) -> String:
+func _entry_for(
+	scenario: TelegraphScenarioData, knowledge: KnowledgeStateStore,
+	index: int, scheduled_count: int
+) -> String:
 	var identifier := scenario.scenario_id
 	if identifier.is_empty():
 		return ""

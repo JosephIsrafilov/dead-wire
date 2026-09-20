@@ -33,9 +33,11 @@ func _find_nodes() -> void:
 	if title_label == null:
 		title_label = get_node_or_null("CenterContainer/PanelContainer/MarginContainer/VBoxContainer/TitleLabel") as Label
 	if body_label == null:
-		body_label = get_node_or_null("CenterContainer/PanelContainer/MarginContainer/VBoxContainer/BodyLabel") as RichTextLabel
+		var body_path := "CenterContainer/PanelContainer/MarginContainer/VBoxContainer/BodyLabel"
+		body_label = get_node_or_null(body_path) as RichTextLabel
 	if footer_label == null:
-		footer_label = get_node_or_null("CenterContainer/PanelContainer/MarginContainer/VBoxContainer/FooterLabel") as Label
+		var footer_path := "CenterContainer/PanelContainer/MarginContainer/VBoxContainer/FooterLabel"
+		footer_label = get_node_or_null(footer_path) as Label
 
 func is_open() -> bool:
 	return _is_open

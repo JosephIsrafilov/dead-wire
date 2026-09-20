@@ -71,11 +71,14 @@ func build_players() -> void:
 		add_child(room_tone_player)
 
 	if wind_player == null:
-		wind_player = _build_positional("WindPlayer", as_looping(wind_stream), wind_volume_db, wind_position, wind_max_distance)
+		wind_player = _build_positional(
+			"WindPlayer", as_looping(wind_stream), wind_volume_db, wind_position, wind_max_distance)
 	if stove_player == null:
-		stove_player = _build_positional("StovePlayer", as_looping(stove_stream), stove_volume_db, stove_position, stove_max_distance)
+		stove_player = _build_positional(
+			"StovePlayer", as_looping(stove_stream), stove_volume_db, stove_position, stove_max_distance)
 	if clock_player == null:
-		clock_player = _build_positional("ClockPlayer", clock_tick_stream, clock_volume_db, clock_position, clock_max_distance)
+		clock_player = _build_positional(
+			"ClockPlayer", clock_tick_stream, clock_volume_db, clock_position, clock_max_distance)
 
 ## The WAV importer stores loop settings in .import files, which this repository
 ## does not track, so a fresh checkout would import these beds as one-shots and
@@ -91,7 +94,10 @@ static func as_looping(stream: AudioStream) -> AudioStream:
 	looping.loop_end = int(round(looping.get_length() * float(looping.mix_rate)))
 	return looping
 
-func _build_positional(node_name: String, stream: AudioStream, volume_db: float, local_position: Vector3, max_distance: float) -> AudioStreamPlayer3D:
+func _build_positional(
+	node_name: String, stream: AudioStream, volume_db: float,
+	local_position: Vector3, max_distance: float
+) -> AudioStreamPlayer3D:
 	var player := AudioStreamPlayer3D.new()
 	player.name = node_name
 	player.stream = stream

@@ -237,12 +237,11 @@ func advance_to_next_scenario() -> bool:
 	var next_idx := _scenario_index + 1
 	if next_idx < list.size():
 		return load_scenario_by_index(next_idx)
-	else:
-		if not _cycle_completed:
-			_cycle_completed = true
-			scenario_cycle_completed.emit()
-			_update_key_feedback()
-		return false
+	if not _cycle_completed:
+		_cycle_completed = true
+		scenario_cycle_completed.emit()
+		_update_key_feedback()
+	return false
 
 func is_cycle_completed() -> bool:
 	return _cycle_completed
@@ -317,7 +316,9 @@ func _on_commit_requested(options: Array[TelegraphCommitOption]) -> void:
 	if copy_commit_desk == null:
 		return
 	copy_commit_desk.configure(options)
-	copy_commit_desk.set_enabled(session_controller != null and session_controller.get_state() == TelegraphSessionController.State.AWAITING_COMMIT)
+	var awaiting_commit := session_controller != null \
+		and session_controller.get_state() == TelegraphSessionController.State.AWAITING_COMMIT
+	copy_commit_desk.set_enabled(awaiting_commit)
 
 func _on_commit_option_committed(action_id: StringName) -> void:
 	# The desk expressed intent. The session is the authority: its answer
@@ -358,7 +359,10 @@ func _on_session_completed(_scen: TelegraphScenarioData) -> void:
 			scenario_cycle_completed.emit()
 	_update_key_feedback()
 
-func _on_session_state_changed(new_state: TelegraphSessionController.State, _prev_state: TelegraphSessionController.State) -> void:
+func _on_session_state_changed(
+		new_state: TelegraphSessionController.State,
+		_prev_state: TelegraphSessionController.State
+) -> void:
 	if new_state == TelegraphSessionController.State.IDLE:
 		if window_observation != null:
 			window_observation.reset_state()
@@ -389,11 +393,17 @@ func _on_transcript_inspected(text: String) -> void:
 	# never reveals the hidden remainder and never verifies anything.
 	if paper != null and paper.is_incomplete_closed():
 		var body := text if not text.is_empty() else "(nothing was written)"
-		document_viewer.open_document("transcript_paper", "TELEGRAM TRANSCRIPT (ELIAS CRANE)", "%s\n\n— COPY INCOMPLETE —" % body, "[E / Esc] Put Down Transcript")
+		document_viewer.open_document(
+			"transcript_paper", "TELEGRAM TRANSCRIPT (ELIAS CRANE)",
+			"%s\n\n— COPY INCOMPLETE —" % body, "[E / Esc] Put Down Transcript"
+		)
 		return
 	# Finished sheets — current or an earlier telegram's — read as records; the
 	# session's own listener decides whether reading verifies anything.
-	document_viewer.open_document("transcript_paper", "TELEGRAM TRANSCRIPT (ELIAS CRANE)", text, "[E / Esc] Put Down Transcript")
+	document_viewer.open_document(
+		"transcript_paper", "TELEGRAM TRANSCRIPT (ELIAS CRANE)", text,
+		"[E / Esc] Put Down Transcript"
+	)
 
 func _get_transcript_paper() -> TranscriptPaper:
 	var paper := get_node_or_null("TranscriptPaper") as TranscriptPaper
@@ -498,11 +508,17 @@ func _update_deadline_warning_footer() -> void:
 
 func _on_card_inspected(text: String) -> void:
 	if document_viewer != null:
-		document_viewer.open_document("morse_reference", "AMERICAN MORSE CODE (1894)", text, "[E / Esc] Put Down Reference Card")
+		document_viewer.open_document(
+			"morse_reference", "AMERICAN MORSE CODE (1894)", text,
+			"[E / Esc] Put Down Reference Card"
+		)
 
 func _on_ledger_inspected(text: String) -> void:
 	if document_viewer != null:
-		document_viewer.open_document("dispatch_ledger", "BLACK CREEK STATION — DISPATCH LEDGER", text, "[E / Esc] Put Down Ledger")
+		document_viewer.open_document(
+			"dispatch_ledger", "BLACK CREEK STATION — DISPATCH LEDGER", text,
+			"[E / Esc] Put Down Ledger"
+		)
 
 ## Stepping through the open door ends the slice. The record shown is Elias's
 ## own duty sheet, so it reports what he knows, never what actually happened.
@@ -549,11 +565,15 @@ func _on_duty_sheet_inspected(text: String) -> void:
 		document_viewer.open_document("duty_sheet", "OPERATOR'S DUTY SHEET", text, "[E / Esc] Put Down Duty Sheet")
 
 func _on_dawn_evidence_inspected(text: String) -> void:
-	var interaction := player.get_node_or_null("InteractionController") as InteractionController if player != null else null
+	var interaction: InteractionController = player.get_node_or_null("InteractionController") \
+		if player != null else null
 	if interaction != null:
 		interaction.set_persistent_hint("")
 	if document_viewer != null:
-		document_viewer.open_document("dawn_evidence", "BLACK CREEK — NIGHT HANDOVER", text, "[E / Esc] Put Down Dispatch Draft")
+		document_viewer.open_document(
+			"dawn_evidence", "BLACK CREEK — NIGHT HANDOVER", text,
+			"[E / Esc] Put Down Dispatch Draft"
+		)
 
 func _on_document_opened(_doc_id: String) -> void:
 	if player != null:
@@ -609,7 +629,9 @@ func _update_key_feedback() -> void:
 		TelegraphSessionController.State.AWAITING_ROUTE:
 			key.set_prompt_message("Awaiting Route Decision on Board")
 			key.set_enabled(false)
-		TelegraphSessionController.State.VERIFYING, TelegraphSessionController.State.AWAITING_COMMIT, TelegraphSessionController.State.CONSEQUENCE:
+		TelegraphSessionController.State.VERIFYING, \
+		TelegraphSessionController.State.AWAITING_COMMIT, \
+		TelegraphSessionController.State.CONSEQUENCE:
 			key.set_prompt_message("Transcript Requires Attention")
 			key.set_enabled(false)
 		TelegraphSessionController.State.COMPLETE:
@@ -657,6 +679,9 @@ func _refresh_guidance() -> void:
 	elif shift_director.get_phase() == ShiftDirector.Phase.CALLING:
 		hint = "The office is calling — answer at the key"
 	elif shift_director.is_shift_over():
-		hint = "Read the night handover beside the door" if dawn_evidence.is_revealed() and not dawn_evidence.is_inspected() else "The watch is over — leave through the south door"
+		var leave_hint := "Read the night handover beside the door" \
+			if dawn_evidence.is_revealed() and not dawn_evidence.is_inspected() \
+			else "The watch is over — leave through the south door"
+		hint = leave_hint
 	if interaction.persistent_hint != hint:
 		interaction.set_persistent_hint(hint)

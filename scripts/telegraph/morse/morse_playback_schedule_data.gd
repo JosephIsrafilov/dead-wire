@@ -39,18 +39,31 @@ func get_validation_errors() -> PackedStringArray:
 			errors.append("Scheduled event %d start_seconds must be non-negative finite, got %f" % [i, ev.start_seconds])
 
 		if not is_finite(ev.end_seconds) or not is_equal_approx(ev.end_seconds, ev.start_seconds + ev.duration_seconds):
-			errors.append("Scheduled event %d end_seconds (%f) does not match start + duration (%f)" % [i, ev.end_seconds, ev.start_seconds + ev.duration_seconds])
+			errors.append(
+				"Scheduled event %d end_seconds (%f) does not match start + duration (%f)"
+				% [i, ev.end_seconds, ev.start_seconds + ev.duration_seconds]
+			)
 
 		if i > 0:
 			var prev_ev: MorseScheduledEvent = events[i - 1]
 			if prev_ev != null:
 				if ev.kind == prev_ev.kind:
-					errors.append("Scheduled events %d and %d have identical kind (strictly alternating invariant violated)" % [i - 1, i])
+					errors.append(
+						"Scheduled events %d and %d have identical kind (strictly alternating invariant violated)"
+						% [i - 1, i]
+					)
 				if not is_equal_approx(ev.start_seconds, prev_ev.end_seconds):
-					errors.append("Timeline discontinuity between event %d (end %f) and event %d (start %f)" % [i - 1, prev_ev.end_seconds, i, ev.start_seconds])
+					errors.append(
+						"Timeline discontinuity between event %d (end %f) and event %d (start %f)"
+						% [i - 1, prev_ev.end_seconds, i, ev.start_seconds]
+					)
 
-	var expected_total: float = events[events.size() - 1].end_seconds if not events.is_empty() and events[events.size() - 1] != null else 0.0
+	var last_event := events[events.size() - 1] if not events.is_empty() else null
+	var expected_total: float = last_event.end_seconds if last_event != null else 0.0
 	if not is_equal_approx(total_duration_seconds, expected_total):
-		errors.append("total_duration_seconds (%f) does not match last event end_seconds (%f)" % [total_duration_seconds, expected_total])
+		errors.append(
+			"total_duration_seconds (%f) does not match last event end_seconds (%f)"
+			% [total_duration_seconds, expected_total]
+		)
 
 	return errors

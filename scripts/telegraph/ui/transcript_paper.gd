@@ -252,7 +252,11 @@ func get_revealed_glyph_count() -> int:
 ## The previous sheet's ink is archived first: it physically slides to the
 ## stack edge while the fresh blank feeds in. The hand enters only after the
 ## blank arrives; the signal never waits for any of it.
-func begin_writing(text: String, reveal_cues: PackedFloat32Array = PackedFloat32Array(), scenario_id: String = "") -> void:
+func begin_writing(
+	text: String,
+	reveal_cues: PackedFloat32Array = PackedFloat32Array(),
+	scenario_id: String = ""
+) -> void:
 	_cancel_writer_animation()
 	_archive_visible_sheet()
 	_transcript_text = text

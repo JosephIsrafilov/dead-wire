@@ -134,7 +134,9 @@ func get_tape_register() -> TapeRegisterController:
 func _process(delta: float) -> void:
 	if _state == State.CONSEQUENCE:
 		advance_consequence(delta)
-	elif _post_signal_elapsed >= 0.0 and _state in [State.COPYING, State.VERIFYING, State.AWAITING_ROUTE, State.AWAITING_COMMIT]:
+	elif _post_signal_elapsed >= 0.0 and _state in [
+		State.COPYING, State.VERIFYING, State.AWAITING_ROUTE, State.AWAITING_COMMIT
+	]:
 		advance_post_signal(delta)
 
 ## The single post-signal clock: grace, commit deadline, the director's route
@@ -257,7 +259,9 @@ func _on_playback_time_advanced(prev_time: float, curr_time: float) -> void:
 	if _state == State.RECEIVING and _current_scenario != null:
 		# A consequence event with the same id is intentionally deferred until the
 		# player has inspected and resolved the transcript.
-		if not _current_scenario.consequence_event_id.is_empty() and _current_scenario.attention_event_id == _current_scenario.consequence_event_id:
+		var has_consequence := not _current_scenario.consequence_event_id.is_empty()
+		if has_consequence \
+				and _current_scenario.attention_event_id == _current_scenario.consequence_event_id:
 			return
 		if not _current_scenario.attention_event_id.is_empty() and not _attention_event_fired:
 			var target_time: float = _current_scenario.attention_event_start_time
@@ -275,7 +279,8 @@ func _on_scheduler_completed(schedule: MorsePlaybackScheduleData) -> void:
 	_active_schedule = null
 
 	# Fallback check for attention event before completion
-	if not _current_scenario.attention_event_id.is_empty() and _current_scenario.consequence_event_id != _current_scenario.attention_event_id and not _attention_event_fired:
+	if not _current_scenario.attention_event_id.is_empty() \
+		and _current_scenario.consequence_event_id != _current_scenario.attention_event_id and not _attention_event_fired:
 		_attention_event_fired = true
 		attention_event_triggered.emit(_current_scenario.attention_event_id)
 
@@ -400,7 +405,9 @@ func submit_commit(action_id: StringName) -> bool:
 ## Explicit timeout path. It records lapsed facts without selecting either
 ## authored version, then uses the same neutral consequence beat.
 func lapse_commit() -> bool:
-	if _state not in [State.COPYING, State.VERIFYING, State.AWAITING_COMMIT] or _current_scenario == null or _commit_resolved or not _has_commit_options():
+	if _state not in [State.COPYING, State.VERIFYING, State.AWAITING_COMMIT] \
+			or _current_scenario == null or _commit_resolved \
+			or not _has_commit_options():
 		return false
 	_commit_resolved = true
 	_close_live_sheet_for_terminal()
@@ -459,9 +466,13 @@ func advance_consequence(delta: float) -> void:
 		_consequence_started = true
 		_consequence_visibility_timeout = delay + hold + maxf(consequence_visibility_timeout_seconds, 0.0)
 		consequence_started.emit(_current_scenario.consequence_event_id, hold)
-	if _consequence_started and _consequence_requires_visibility and not _consequence_visible and _consequence_elapsed >= _consequence_visibility_timeout:
+	if _consequence_started and _consequence_requires_visibility and not _consequence_visible \
+		and _consequence_elapsed >= _consequence_visibility_timeout:
 		_complete_consequence()
-	elif _consequence_started and ((_consequence_requires_visibility and _consequence_visible and _consequence_visible_elapsed >= hold) or (not _consequence_requires_visibility and _consequence_elapsed >= delay + hold)):
+	elif _consequence_started and ((_consequence_requires_visibility and _consequence_visible \
+		and _consequence_visible_elapsed >= hold) \
+		or (not _consequence_requires_visibility \
+			and _consequence_elapsed >= delay + hold)):
 		_complete_consequence()
 
 func _complete_consequence() -> void:
@@ -479,7 +490,8 @@ func _finish_session() -> void:
 ## A deadline can close an unread order without pretending it was verified.
 ## "NO ORDER" is a distinct outcome: not correct, not incorrect.
 func lapse_routing(action: String = "NO ORDER") -> bool:
-	if _current_scenario == null or not _current_scenario.requires_routing or _state not in [State.COPYING, State.VERIFYING, State.AWAITING_ROUTE]:
+	if _current_scenario == null or not _current_scenario.requires_routing \
+		or _state not in [State.COPYING, State.VERIFYING, State.AWAITING_ROUTE]:
 		return false
 	return _resolve_routing(action, true)
 

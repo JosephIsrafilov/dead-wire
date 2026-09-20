@@ -78,6 +78,10 @@ func _animate_press() -> void:
 	# there for 150 ms, which read as a glitch rather than a press.
 	_is_animating = true
 	var tween := create_tween()
-	tween.tween_property(lever_mesh, "position:y", _orig_lever_y - press_travel, press_down_time) 		.set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_OUT)
-	tween.tween_property(lever_mesh, "position:y", _orig_lever_y, press_up_time) 		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tween.tween_property(
+			lever_mesh, "position:y", _orig_lever_y - press_travel, press_down_time
+		).set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_OUT)
+	tween.tween_property(
+			lever_mesh, "position:y", _orig_lever_y, press_up_time
+		).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	tween.tween_callback(func() -> void: _is_animating = false)

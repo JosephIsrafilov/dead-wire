@@ -13,11 +13,11 @@ func apply_psx_settings() -> void:
 	var vp: Viewport = get_viewport()
 	if not vp:
 		return
-	
+
 	# Set 3D buffer render scale (0.5 = authentic PSX half-resolution)
 	vp.scaling_3d_scale = clampf(render_scale, 0.25, 1.0)
 	vp.scaling_3d_mode = Viewport.SCALING_3D_MODE_NEAREST
-	
+
 	# Disable modern anti-aliasing to preserve crisp pixel edges
 	vp.msaa_3d = Viewport.MSAA_DISABLED
 	vp.screen_space_aa = Viewport.SCREEN_SPACE_AA_DISABLED

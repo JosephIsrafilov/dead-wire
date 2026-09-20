@@ -135,7 +135,10 @@ func _input(event: InputEvent) -> void:
 	if is_look_locked:
 		return
 
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed and Input.mouse_mode == Input.MOUSE_MODE_VISIBLE:
+	var mouse_clicked: bool = event is InputEventMouseButton \
+		and event.button_index == MOUSE_BUTTON_LEFT and event.pressed \
+		and Input.mouse_mode == Input.MOUSE_MODE_VISIBLE
+	if mouse_clicked:
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 		get_viewport().set_input_as_handled()
 		return
@@ -176,7 +179,9 @@ func _physics_process(delta: float) -> void:
 
 	var position_before_move := global_position
 	move_and_slide()
-	var moved_distance := Vector2(global_position.x - position_before_move.x, global_position.z - position_before_move.z).length()
+	var delta_x := global_position.x - position_before_move.x
+	var delta_z := global_position.z - position_before_move.z
+	var moved_distance := Vector2(delta_x, delta_z).length()
 	_advance_footsteps(moved_distance)
 	_update_head(delta)
 

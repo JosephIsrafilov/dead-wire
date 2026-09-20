@@ -24,7 +24,10 @@ func get_validation_errors() -> PackedStringArray:
 
 		if not entry.symbol.is_empty():
 			if seen_symbols.has(entry.symbol):
-				errors.append("Duplicate symbol '%s' at index %d (first seen at index %d)" % [entry.symbol, i, seen_symbols[entry.symbol]])
+				errors.append(
+					"Duplicate symbol '%s' at index %d (first seen at index %d)"
+					% [entry.symbol, i, seen_symbols[entry.symbol]]
+				)
 			else:
 				seen_symbols[entry.symbol] = i
 

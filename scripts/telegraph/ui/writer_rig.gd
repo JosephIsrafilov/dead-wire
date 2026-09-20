@@ -151,7 +151,7 @@ func get_rest_position() -> Vector3:
 func is_rest_captured() -> bool:
 	return _assembly_rest_captured
 
-func begin_writing(text: String = "") -> void:
+func begin_writing(_text: String = "") -> void:
 	# A fresh sheet: the arm starts off the paper and enters to its rest pose.
 	_cancel_tween()
 	_capture_rest_transforms()
@@ -252,7 +252,11 @@ func _advance_entry(delta: float) -> float:
 ## Returns false when the rig cannot accept it (not at the paper, or a motion
 ## is already under way). The nib travels; `glyph_contact` fires on arrival.
 func request_glyph_motion(glyph_index: int, text: String) -> bool:
-	if presentation_state in [PresentationState.HIDDEN, PresentationState.WITHDRAWN, PresentationState.ENTER, PresentationState.FINISH]:
+	var settled_states := [
+		PresentationState.HIDDEN, PresentationState.WITHDRAWN,
+		PresentationState.ENTER, PresentationState.FINISH
+	]
+	if presentation_state in settled_states:
 		return false
 	if _motion_pending:
 		return false
@@ -418,7 +422,8 @@ func finish_writing() -> void:
 		_apply_visibility(false)
 		return
 	_active_tween = create_tween()
-	_active_tween.tween_property(assembly, "position", target, withdraw_duration).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+	_active_tween.tween_property(assembly, "position", target, withdraw_duration) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
 	_active_tween.finished.connect(func():
 		if presentation_state == PresentationState.FINISH:
 			presentation_state = PresentationState.WITHDRAWN
@@ -500,7 +505,10 @@ func _get_assembly_path() -> String:
 
 func _get_hand_path() -> String:
 	var assembly_path := _get_assembly_path()
-	return "%s/Wrist/Hand" % assembly_path if get_node_or_null("%s/Wrist/Hand" % assembly_path) != null else "%s/Hand" % assembly_path
+	var wrist_hand := "%s/Wrist/Hand" % assembly_path
+	if get_node_or_null(wrist_hand) != null:
+		return wrist_hand
+	return "%s/Hand" % assembly_path
 
 func _cancel_tween() -> void:
 	if _active_tween != null and is_instance_valid(_active_tween):

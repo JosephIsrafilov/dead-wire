@@ -305,7 +305,13 @@ func _stand_target() -> Transform3D:
 	if _transform_clear(_standing_transform):
 		return _standing_transform
 	var basis := player.global_transform.basis
-	for offset in [Vector3(stand_clearance, 0, 0), Vector3(0, 0, stand_clearance), Vector3(0, 0, -stand_clearance), Vector3(-stand_clearance, 0, 0)]:
+	var ring_offsets := [
+		Vector3(stand_clearance, 0, 0),
+		Vector3(0, 0, stand_clearance),
+		Vector3(0, 0, -stand_clearance),
+		Vector3(-stand_clearance, 0, 0),
+	]
+	for offset in ring_offsets:
 		var candidate := Transform3D(basis, chair.global_position + offset)
 		if _transform_clear(candidate):
 			return candidate

@@ -181,7 +181,8 @@ static func describe_shift(controller: TelegraphSessionController) -> String:
 		ShiftDirector.Phase.WAITING: phase_name = "WAITING (line quiet)"
 		ShiftDirector.Phase.CALLING: phase_name = "CALLING"
 		ShiftDirector.Phase.RECEIVING: phase_name = "RECEIVING"
-		ShiftDirector.Phase.AWAITING_ROUTE: phase_name = "AWAITING_ROUTE (%.1fs left)" % director.get_route_seconds_remaining()
+		ShiftDirector.Phase.AWAITING_ROUTE:
+			phase_name = "AWAITING_ROUTE (%.1fs left)" % director.get_route_seconds_remaining()
 		ShiftDirector.Phase.CLOSING: phase_name = "CLOSING"
 		ShiftDirector.Phase.SHIFT_OVER: phase_name = "SHIFT_OVER"
 
@@ -192,13 +193,18 @@ static func describe_shift(controller: TelegraphSessionController) -> String:
 		if clock != null:
 			station_time = "  |  station %s" % clock.get_station_time_text()
 
-	return "SHIFT %s  |  slot %d%s
-  calls %d  missed %d  lapsed %d" % [
-		phase_name, director.get_slot_index(), station_time,
-		director.calls_sent_total, director.messages_missed, director.routes_defaulted
-	]
+	return (
+		"SHIFT %s  |  slot %d%s\n  calls %d  missed %d  lapsed %d"
+		% [
+			phase_name, director.get_slot_index(), station_time,
+			director.calls_sent_total, director.messages_missed, director.routes_defaulted
+		]
+	)
 
-static func build_session_display_text(world_data: Dictionary, knowledge_data: Dictionary, controller: TelegraphSessionController) -> String:
+static func build_session_display_text(
+	world_data: Dictionary, knowledge_data: Dictionary,
+	controller: TelegraphSessionController
+) -> String:
 	var scen: TelegraphScenarioData = controller.get_current_scenario() if controller != null else null
 	var scen_id := scen.scenario_id if scen != null else "NONE"
 	var true_sig := scen.transmission_data.true_message if scen != null and scen.transmission_data != null else "NONE"

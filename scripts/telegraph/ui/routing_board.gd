@@ -90,7 +90,9 @@ func _input(event: InputEvent) -> void:
 	if not is_open:
 		return
 
-	var is_cancel: bool = event.is_action_pressed("ui_cancel") or (event is InputEventKey and event.pressed and (event.physical_keycode == KEY_ESCAPE or event.keycode == KEY_ESCAPE))
+	var escape_key: bool = event is InputEventKey and event.pressed \
+		and (event.physical_keycode == KEY_ESCAPE or event.keycode == KEY_ESCAPE)
+	var is_cancel: bool = event.is_action_pressed("ui_cancel") or escape_key
 	if is_cancel and not event.is_echo():
 		close_board()
 		var vp := get_viewport()
@@ -101,8 +103,12 @@ func _input(event: InputEvent) -> void:
 	if event.is_echo() or not event.is_pressed():
 		return
 
-	var is_route_1: bool = event.is_action_pressed("route_clear_east") or (event is InputEventKey and (event.physical_keycode == KEY_1 or event.keycode == KEY_1))
-	var is_route_2: bool = event.is_action_pressed("route_hold") or (event is InputEventKey and (event.physical_keycode == KEY_2 or event.keycode == KEY_2))
+	var key_1: bool = event is InputEventKey \
+		and (event.physical_keycode == KEY_1 or event.keycode == KEY_1)
+	var is_route_1: bool = event.is_action_pressed("route_clear_east") or key_1
+	var key_2: bool = event is InputEventKey \
+		and (event.physical_keycode == KEY_2 or event.keycode == KEY_2)
+	var is_route_2: bool = event.is_action_pressed("route_hold") or key_2
 
 	if is_route_1:
 		if select_action("CLEAR EAST"):
