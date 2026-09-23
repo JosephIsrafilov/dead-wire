@@ -157,7 +157,7 @@ header{
   content:"";position:absolute;inset:0;
   background:
     radial-gradient(ellipse 70% 60% at 50% 55%,rgba(232,196,122,.10),transparent 70%),
-    linear-gradient(to bottom,rgba(10,9,8,.62) 0%,rgba(10,9,8,.18) 45%,rgba(10,9,8,.9) 88%,var(--ink) 100%);
+    linear-gradient(to bottom,rgba(10,9,8,.66) 0%,rgba(10,9,8,.34) 45%,rgba(10,9,8,.9) 88%,var(--ink) 100%);
 }
 #lampGlow{
   position:absolute;width:46vmin;height:46vmin;border-radius:50%;pointer-events:none;
@@ -166,7 +166,7 @@ header{
   animation:lampBreathe 9s ease-in-out infinite;
 }
 @keyframes lampBreathe{0%,100%{opacity:.5;transform:translateX(-50%) scale(1)}50%{opacity:1;transform:translateX(-50%) scale(1.12)}}
-.hero-inner{position:relative;z-index:2;padding:16vh 0 12vh}
+.hero-inner{position:relative;z-index:2;padding:16vh clamp(20px,4vw,48px) 12vh}
 .kicker{
   display:flex;align-items:center;gap:16px;
   font-family:var(--mono);font-size:11.5px;letter-spacing:.42em;text-transform:uppercase;color:var(--amber);
@@ -175,7 +175,7 @@ header{
 .kicker::before{content:"";width:44px;height:1px;background:var(--amber);opacity:.6}
 h1.title{
   font-family:var(--serif);font-weight:500;
-  font-size:clamp(46px,8.8vw,124px);
+  font-size:clamp(42px,5.2vw,74px);
   line-height:.98;letter-spacing:.012em;text-transform:uppercase;
   color:var(--paper-dim);max-width:1200px;
   text-shadow:0 4px 60px rgba(0,0,0,.7);
@@ -197,9 +197,10 @@ h1.title .flicker{animation:softFlick 11s infinite}
   margin:clamp(24px,4vh,44px) 0 8px;max-width:560px;
   font-family:var(--serif);font-style:italic;
   font-size:clamp(19px,2.4vw,25px);color:var(--paper-dim);
+  text-shadow:0 2px 18px rgba(10,9,8,.85);
 }
 .tagline .hl{color:var(--lamp);font-style:normal}
-.tagline-ru{font-family:var(--mono);font-size:12px;letter-spacing:.16em;color:var(--paper-faint)}
+.tagline-ru{font-family:var(--mono);font-size:12px;letter-spacing:.16em;color:var(--paper-dim)}
 .cta-row{display:flex;gap:16px;margin-top:clamp(28px,5vh,52px);flex-wrap:wrap}
 
 .btn{
@@ -501,6 +502,91 @@ footer{border-top:1px solid var(--line);padding:64px 0 40px;background:linear-gr
   display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;text-transform:uppercase;
 }
 
+/* ============ HERO TAPE — WIRE vs HAND ============ */
+.wireline{max-width:660px;margin-top:clamp(28px,4.5vh,48px)}
+.wl-tape{
+  position:relative;width:clamp(260px,60vw,340px);
+  background:var(--paper);
+  background-image:repeating-linear-gradient(transparent 0 27px,rgba(60,45,30,.08) 27px 28px);
+  padding:15px 20px 17px;transform:rotate(-.45deg);
+  box-shadow:0 18px 50px rgba(0,0,0,.55),inset 0 0 38px rgba(92,68,50,.28);
+}
+.wl-tape::before{
+  content:"TAPE REGISTER — LINE 4";
+  display:block;font-family:var(--mono);font-size:9px;letter-spacing:.28em;
+  color:#8a7a5c;padding-bottom:8px;margin-bottom:12px;
+  border-bottom:1px dashed #b5a888;
+}
+.wl-marks{display:flex;align-items:center;height:14px;margin:5px 0 12px;overflow:hidden}
+.wl-m,.wl-g{display:block;flex:0 0 auto}
+.wl-m{
+  height:3px;background:#2a1e12;border-radius:1px;
+  opacity:0;transform:translateY(-5px);transition:opacity .12s,transform .12s;
+}
+.wl-m.on{opacity:1;transform:none}
+.wl-m.d{width:5px}
+.wl-m.D{width:16px}
+.wl-g{height:1px}
+.wl-hand{font-family:var(--type);font-size:25px;letter-spacing:.14em;color:#23180e;min-height:32px;white-space:nowrap}
+.wl-hand .ch{opacity:0;display:inline-block;transition:opacity .15s}
+.wl-hand .ch.on{opacity:1}
+.wl-hand .ch.bad{
+  text-decoration:underline;text-decoration-color:var(--blood);
+  text-decoration-thickness:2px;text-underline-offset:6px;
+}
+.wl-cursor{display:inline-block;width:9px;height:22px;background:#23180e;margin-left:4px;vertical-align:-3px;animation:blink 1s steps(1) infinite}
+.wl-meta{display:flex;justify-content:flex-start;align-items:baseline;gap:20px;margin-top:12px;flex-wrap:wrap}
+.wl-truth{font-family:var(--mono);font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--paper-dim);min-height:14px}
+.wl-truth .t{color:var(--lamp)}
+.wl-truth .f{color:var(--blood-hot)}
+.wl-truth .u{color:var(--paper-faint)}
+.wl-ctl{display:flex;gap:16px}
+.wl-ctl button{
+  background:none;border:none;cursor:pointer;padding:4px 0;
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.26em;text-transform:uppercase;
+  color:var(--paper-faint);transition:color .25s;
+}
+.wl-ctl button:hover{color:var(--lamp)}
+.wl-ctl button[hidden]{display:none}
+
+/* ============ NIGHTS RAIL ============ */
+.nights-lane{display:flex;flex-direction:column;width:max-content}
+.nights-swipe{display:none}
+.nights-rail{
+  position:relative;display:flex;gap:18px;width:max-content;
+  padding:0 clamp(20px,4vw,48px);margin-bottom:26px;height:22px;
+}
+.nights-rail .r-cell{width:clamp(260px,30vw,380px);position:relative;flex:0 0 auto}
+.nights-rail .r-cell::before{content:"";position:absolute;left:0;right:0;top:11px;height:1px;background:var(--rust)}
+.nights-rail .r-cell:first-child::before{left:50%}
+.nights-rail .r-cell:last-child::before{right:50%}
+.nights-rail .r-node{
+  position:absolute;left:50%;top:11px;width:8px;height:8px;background:var(--ink2);
+  border:1px solid var(--amber);transform:translate(-50%,-50%) rotate(45deg);z-index:2;
+}
+.nights-rail .r-cell.n6 .r-node{border-color:var(--blood-hot)}
+.nights-rail .r-fill{
+  position:absolute;left:0;right:0;top:11px;height:1px;z-index:1;
+  background:linear-gradient(to right,transparent 1%,var(--amber) 4%,var(--lamp));
+  transform:scaleX(0);transform-origin:left;
+}
+@media(max-width:939px){
+  #nightsPin{overflow-x:auto;overflow-y:clip;scrollbar-width:thin}
+  #nightsPin::-webkit-scrollbar{height:4px}
+  #nightsPin::-webkit-scrollbar-thumb{background:#2c261d;border-radius:2px}
+  .nights-swipe{
+    display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.34em;
+    color:var(--paper-faint);text-transform:uppercase;
+    padding:0 0 14px clamp(20px,4vw,48px);
+  }
+}
+
+/* ============ STORY DROP CAP ============ */
+#story .txt p:first-of-type::first-letter{
+  float:left;font-size:3.4em;line-height:.8;font-weight:600;
+  color:var(--lamp);padding:.05em .09em 0 0;
+}
+
 body.haunt::after{
   background:radial-gradient(ellipse 120% 90% at 50% 42%,transparent 40%,rgba(120,10,0,.5) 100%);
   animation:hauntPulse .9s ease-in-out infinite;
@@ -512,7 +598,9 @@ body.haunt .kicker,body.haunt .tagline{color:var(--blood-hot)!important}
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
   body::before{animation:none}
   .ticker .tk{animation:none}
+  .verdict{opacity:1;filter:none;transform:none}
 }
+@media(max-height:700px){.scroll-hint{display:none}}
 </style>
 </head>
 <body>
@@ -559,6 +647,19 @@ body.haunt .kicker,body.haunt .tagline{color:var(--blood-hot)!important}
     <div class="cta-row">
       <a class="btn primary" href="#hook" data-hover>Receive a transmission <span class="arr">→</span></a>
       <a class="btn" href="#office" data-hover>Enter the office</a>
+    </div>
+    <div class="wireline" id="wireline" aria-label="Demonstration of the core hook: the wire transmits WATER, the hand files WATCHER.">
+      <div class="wl-tape">
+        <div class="wl-marks" id="wlMarks" aria-hidden="true"></div>
+        <div class="wl-hand" id="wlHand"><span class="wl-cursor"></span></div>
+      </div>
+      <div class="wl-meta">
+        <span class="wl-truth" id="wlTruth" aria-live="polite"></span>
+        <div class="wl-ctl">
+          <button id="wlSnd" type="button" data-hover aria-pressed="false">SND · OFF</button>
+          <button id="wlReplay" type="button" data-hover hidden>↻ replay</button>
+        </div>
+      </div>
     </div>
   </div>
   <div class="scroll-hint"><span>SCROLL</span><span class="sw"></span></div>
@@ -733,13 +834,25 @@ body.haunt .kicker,body.haunt .tagline{color:var(--blood-hot)!important}
         <p class="lead">Each cycle adds one new layer of wrong. Daytime investigation anchors the evidence; the night shift turns information into pressure.</p>
       </div>
     </div>
-    <div class="nights-track" id="nightsTrack">
+    <div class="nights-swipe" aria-hidden="true">— drag the wire —</div>
+    <div class="nights-lane" id="nightsLane">
+      <div class="nights-rail" aria-hidden="true">
+        <i class="r-fill"></i>
+        <span class="r-cell"><i class="r-node"></i></span>
+        <span class="r-cell"><i class="r-node"></i></span>
+        <span class="r-cell"><i class="r-node"></i></span>
+        <span class="r-cell"><i class="r-node"></i></span>
+        <span class="r-cell"><i class="r-node"></i></span>
+        <span class="r-cell n6"><i class="r-node"></i></span>
+      </div>
+      <div class="nights-track" id="nightsTrack">
       <div class="night"><span class="n-wire"></span><div class="n-num">Night I</div><h4>Procedural Trust</h4><p>Learn the shift. Trust the hand. The baseline is boring on purpose.</p><div class="n-m">— baseline · · ·</div></div>
       <div class="night"><span class="n-wire"></span><div class="n-num">Night II</div><h4>Attention Pressure</h4><p>The room starts asking for more of you than you can give at once.</p><div class="n-m">— — · · divide</div></div>
       <div class="night"><span class="n-wire"></span><div class="n-num">Night III</div><h4>Contradiction</h4><p>Sound and paper stop agreeing. The game says nothing about it.</p><div class="n-m">· · — — mismatch</div></div>
       <div class="night"><span class="n-wire"></span><div class="n-num">Night IV</div><h4>Self-Doubt</h4><p>You start checking Elias. Elias starts noticing the checking.</p><div class="n-m">— · — who</div></div>
       <div class="night"><span class="n-wire"></span><div class="n-num">Night V</div><h4>Active Verification</h4><p>You know enough Morse now. The wire becomes your instrument.</p><div class="n-m">· — prove</div></div>
       <div class="night n6"><span class="n-wire"></span><div class="n-num">Night VI</div><h4>The Dispatch</h4><p>What you file — and what you can prove — leaves the valley.</p><div class="n-m">send · or · nothing</div></div>
+    </div>
     </div>
   </div>
 </section>
@@ -826,7 +939,7 @@ const boot=document.getElementById('boot'),bootBar=document.getElementById('boot
     if(finished[0])return;finished[0]=true;
     clearTimeout(fallback);clearInterval(iv);
     bootTxt.textContent='line open';
-    setTimeout(()=>{boot.classList.add('done');startIntro()},350);
+    setTimeout(()=>{boot.classList.add('done');startIntro();window.dispatchEvent(new Event('dw:boot'))},350);
   }
 })();
 
@@ -839,6 +952,7 @@ function startIntro(){
     .from('.tagline',{y:20,opacity:0,duration:.8},'-=.55')
     .from('.tagline-ru',{opacity:0,duration:.8},'-=.5')
     .from('.cta-row .btn',{y:18,opacity:0,duration:.7,stagger:.1},'-=.5')
+    .from('.wireline',{y:26,opacity:0,duration:.9},'-=.45')
     .from('nav',{y:-24,opacity:0,duration:.7},'-=.7')
     .from('.scroll-hint',{opacity:0,duration:.8},'-=.4');
 }
@@ -951,6 +1065,107 @@ if(matchMedia('(pointer:fine)').matches&&!reduce){
   });
 })();
 
+/* ============ HERO TAPE — true signal vs written hand ============ */
+(function(){
+  const marksEl=document.getElementById('wlMarks'),handEl=document.getElementById('wlHand'),
+        truthEl=document.getElementById('wlTruth'),replay=document.getElementById('wlReplay'),
+        sndBtn=document.getElementById('wlSnd');
+  if(!marksEl)return;
+  const SIGNAL="WATER",FILED="WATCHER",BAD=3,LEAD=350;
+  const marks=[],letters=[];let total=0;
+  SIGNAL.split(' ').forEach((word,wi)=>{
+    if(wi)total+=6*UNIT;
+    [...word].forEach((ch,i)=>{
+      if(i)total+=3*UNIT;
+      AM[ch].forEach(([k,d])=>{
+        if(k===0)marks.push({s:total,d:d*UNIT,w:d>1.5?'D':'d'});
+        total+=d*UNIT;
+      });
+      letters.push({end:total});
+    });
+  });
+  let playing=false,sndOn=false,ctx=null;
+  const AC=()=>{if(!ctx)ctx=new(window.AudioContext||window.webkitAudioContext)();if(ctx.state==='suspended')ctx.resume();return ctx};
+  function click(t,up){
+    const c=AC(),dur=.02;
+    const buf=c.createBuffer(1,Math.ceil(c.sampleRate*dur),c.sampleRate);
+    const d=buf.getChannelData(0);
+    for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,2);
+    const src=c.createBufferSource();src.buffer=buf;
+    const bp=c.createBiquadFilter();bp.type='bandpass';bp.frequency.value=up?2300:1600;bp.Q.value=1.5;
+    const g=c.createGain();g.gain.value=.22;
+    src.connect(bp);bp.connect(g);g.connect(c.destination);src.start(t);
+  }
+  function write(ch){
+    const cur=handEl.querySelector('.wl-cursor');
+    const s=document.createElement('span');
+    s.className='ch';s.textContent=ch;
+    handEl.insertBefore(s,cur);
+    requestAnimationFrame(()=>requestAnimationFrame(()=>s.classList.add('on')));
+  }
+  function reveal(){
+    truthEl.innerHTML='the wire says <span class="t">water</span> — the hand files <span class="f">watcher</span> <span class="u">36 / 55 units</span>';
+    const bad=handEl.children[BAD];if(bad)bad.classList.add('bad');
+    replay.hidden=false;playing=false;
+  }
+  function build(){
+    marksEl.innerHTML='';handEl.innerHTML='';truthEl.innerHTML='';
+    replay.hidden=true;
+    const cur=document.createElement('span');cur.className='wl-cursor';handEl.appendChild(cur);
+    let prevEnd=null;
+    marks.forEach(m=>{
+      if(prevEnd!=null){
+        const gu=(m.s-prevEnd)/UNIT;
+        if(gu>.5){const g=document.createElement('i');g.className='wl-g';g.style.width=(gu*3)+'px';marksEl.appendChild(g)}
+      }
+      const s=document.createElement('i');
+      s.className='wl-m '+m.w;s.dataset.at=m.s;
+      marksEl.appendChild(s);
+      prevEnd=m.s+m.d;
+    });
+  }
+  function staticFinal(){
+    build();
+    marksEl.querySelectorAll('.wl-m').forEach(s=>s.classList.add('on'));
+    [...FILED].forEach(write);
+    handEl.querySelectorAll('.ch').forEach(s=>s.classList.add('on'));
+    reveal();
+  }
+  function run(){
+    if(playing)return;playing=true;
+    build();
+    const mks=[...marksEl.querySelectorAll('.wl-m')];
+    const t0=performance.now()+LEAD;
+    if(sndOn){
+      const c=AC(),base=c.currentTime+LEAD/1000;
+      marks.forEach(m=>{click(base+m.s,true);click(base+m.s+m.d,false)});
+    }
+    [...FILED].forEach((ch,i)=>{
+      const at=i<letters.length?letters[i].end+.18:total+.55*(i-letters.length+1);
+      setTimeout(()=>write(ch),LEAD+Math.max(0,at*1000));
+    });
+    const lastAt=total+.55*(FILED.length-letters.length);
+    (function frame(){
+      const el=(performance.now()-t0)/1000;
+      let live=false;
+      mks.forEach(s=>{
+        if(el>=+s.dataset.at)s.classList.add('on');else live=true;
+      });
+      if(live||el<lastAt+.3)requestAnimationFrame(frame);
+      else setTimeout(reveal,450);
+    })();
+  }
+  sndBtn.addEventListener('click',()=>{
+    sndOn=!sndOn;
+    sndBtn.textContent='SND · '+(sndOn?'ON':'OFF');
+    sndBtn.setAttribute('aria-pressed',String(sndOn));
+    if(sndOn)AC();
+  });
+  replay.addEventListener('click',run);
+  if(reduce){replay.hidden=true;sndBtn.hidden=true;staticFinal()}
+  else window.addEventListener('dw:boot',()=>setTimeout(run,1600),{once:true});
+})();
+
 let typed="";
 addEventListener('keydown',e=>{
   if(!/^[a-z]$/i.test(e.key))return;
@@ -983,6 +1198,8 @@ if(window.gsap&&window.ScrollTrigger&&!reduce){
     gsap.from(el,{y:56,opacity:0,duration:1.1,ease:'power3.out',
       scrollTrigger:{trigger:el,start:'top 86%'}});
   });
+  ScrollTrigger.create({trigger:'#verdict',start:'top 80%',once:true,
+    onEnter:()=>document.getElementById('verdict').classList.add('lit')});
   gsap.to('#heroBg',{yPercent:16,scale:1.08,ease:'none',
     scrollTrigger:{trigger:'header',start:'top top',end:'bottom top',scrub:true}});
   gsap.to('.hero-inner',{yPercent:-8,opacity:.25,ease:'none',
@@ -999,13 +1216,18 @@ if(window.gsap&&window.ScrollTrigger&&!reduce){
   });
   const mm=gsap.matchMedia();
   mm.add('(min-width: 940px)',()=>{
-    const track=document.getElementById('nightsTrack');
-    const getDist=()=>track.scrollWidth-document.documentElement.clientWidth+80;
-    gsap.to(track,{x:()=>-getDist(),ease:'none',
+    const lane=document.getElementById('nightsLane');
+    const getDist=()=>lane.scrollWidth-document.documentElement.clientWidth+80;
+    gsap.to(lane,{x:()=>-getDist(),ease:'none',
       scrollTrigger:{
         trigger:'#nightsPin',start:'top top',
         end:()=>'+='+getDist(),scrub:1,pin:true,invalidateOnRefresh:true,
         anticipatePin:1
+      }});
+    gsap.fromTo('.nights-rail .r-fill',{scaleX:0},{scaleX:1,ease:'none',
+      scrollTrigger:{
+        trigger:'#nightsPin',start:'top top',
+        end:()=>'+='+getDist(),scrub:1,invalidateOnRefresh:true
       }});
   });
   const words=document.querySelectorAll('#bq .w');
