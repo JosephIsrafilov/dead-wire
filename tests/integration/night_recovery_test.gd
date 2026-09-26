@@ -25,6 +25,7 @@ func _run() -> void:
 		# First order is copied but never inspected. It must lapse, not hang.
 		director.advance(15.0)
 		session.telegraph_key.press()
+		director.advance(director.answer_beat_seconds + 0.05)
 		session.scheduler.advance_time(20.0)
 		_drain_paper(paper)
 		check(session.get_state() == TelegraphSessionController.State.VERIFYING, "Unread first order waits for inspection")
@@ -35,6 +36,7 @@ func _run() -> void:
 		check(root.get_node("KnowledgeState").knows(&"lapsed_baseline_train_17"), "Unread order records lapse rather than fabricated filing")
 		director.advance(10.0)
 		session.telegraph_key.press()
+		director.advance(director.answer_beat_seconds + 0.05)
 		session.scheduler.advance_time(20.0)
 		_drain_paper(paper)
 		session.mark_transcript_verified()
@@ -45,6 +47,7 @@ func _run() -> void:
 			check(not office.dawn_evidence.is_revealed(), "Missed final call does not invent a copied document")
 		else:
 			session.telegraph_key.press()
+			director.advance(director.answer_beat_seconds + 0.05)
 			session.scheduler.advance_time(4.0)
 			_drain_paper(paper)
 			if outcome == "lapsed":

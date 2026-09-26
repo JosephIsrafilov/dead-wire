@@ -180,6 +180,7 @@ static func describe_shift(controller: TelegraphSessionController) -> String:
 		ShiftDirector.Phase.PRE_SHIFT: phase_name = "PRE_SHIFT (line not opened)"
 		ShiftDirector.Phase.WAITING: phase_name = "WAITING (line quiet)"
 		ShiftDirector.Phase.CALLING: phase_name = "CALLING"
+		ShiftDirector.Phase.ANSWERING: phase_name = "ANSWERING (sender's beat)"
 		ShiftDirector.Phase.RECEIVING: phase_name = "RECEIVING"
 		ShiftDirector.Phase.AWAITING_ROUTE:
 			phase_name = "AWAITING_ROUTE (%.1fs left)" % director.get_route_seconds_remaining()

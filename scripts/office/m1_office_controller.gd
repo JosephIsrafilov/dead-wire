@@ -75,17 +75,38 @@ func _apply_embedded_body_font() -> void:
 		if label_3d.font == null:
 			label_3d.font = font
 
+## render_scale is authored against the 720-line reference window. The 3D
+## buffer keeps that line count on any display, so a PSX pixel is the same
+## size on a laptop and on a 4K monitor; the dither follows the same grid.
+const REFERENCE_HEIGHT: float = 720.0
+
 func apply_psx_settings() -> void:
 	var vp := get_viewport()
 	if not vp:
 		return
-	vp.scaling_3d_scale = clampf(render_scale, 0.25, 1.0)
+	_apply_psx_scale()
+	var window := get_window()
+	if window != null and not window.size_changed.is_connected(_apply_psx_scale):
+		window.size_changed.connect(_apply_psx_scale)
 	vp.scaling_3d_mode = Viewport.SCALING_3D_MODE_NEAREST
 	vp.msaa_3d = Viewport.MSAA_DISABLED
 	vp.screen_space_aa = Viewport.SCREEN_SPACE_AA_DISABLED
 	vp.use_taa = false
 	vp.use_debanding = false
 	vp.canvas_item_default_texture_filter = Viewport.DEFAULT_CANVAS_ITEM_TEXTURE_FILTER_NEAREST
+
+func _apply_psx_scale() -> void:
+	var vp := get_viewport()
+	if vp == null:
+		return
+	var window := get_window()
+	var height := float(window.size.y) if window != null and window.size.y > 0 else REFERENCE_HEIGHT
+	var scale := clampf(render_scale * REFERENCE_HEIGHT / height, 0.1, 1.0)
+	vp.scaling_3d_scale = scale
+	var grade := get_node_or_null("PSXDither/Grade") as CanvasItem
+	if grade != null and grade.material is ShaderMaterial:
+		# The dither cell is one 3D pixel, measured in window pixels.
+		(grade.material as ShaderMaterial).set_shader_parameter("pixel_size", 1.0 / scale)
 
 func _bind_signals() -> void:
 	if session_controller == null:
@@ -701,6 +722,9 @@ func _refresh_guidance() -> void:
 		hint = warning
 	if shift_director.get_phase() == ShiftDirector.Phase.PRE_SHIFT:
 		hint = "Work the key to open the line" if operator_seat.is_seated else "[W A S D] Move   [E] Inspect   [Esc] Pause"
+		var lamp_life := get_node_or_null("LampLife") as LampLife
+		if operator_seat.is_seated and lamp_life != null and lamp_life.wick < 1.0:
+			hint = "Turn up the lamp, then work the key to open the line"
 	elif shift_director.get_phase() == ShiftDirector.Phase.CALLING:
 		hint = "The office is calling — answer at the key"
 	elif shift_director.is_shift_over():

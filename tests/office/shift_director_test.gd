@@ -129,6 +129,11 @@ func _run() -> void:
 	director.advance(director.wait_seconds_before_call[0] + 0.1)
 	if not assert_condition(director.get_phase() == ShiftDirector.Phase.CALLING, "Wire calls on the fresh shift"): return
 	key.press()
+	# Etiquette beat: the operator has answered; the sender draws breath first.
+	if not assert_condition(director.get_phase() == ShiftDirector.Phase.ANSWERING, "Answering the call opens a short beat before the message"): return
+	if not assert_condition(session.get_state() != TelegraphSessionController.State.RECEIVING, "The sender has not started inside the beat"): return
+	if not assert_condition(not key.is_enabled, "The key is inert inside the beat"): return
+	director.advance(director.answer_beat_seconds + 0.05)
 	if not assert_condition(director.get_phase() == ShiftDirector.Phase.RECEIVING, "Answering moves the shift into RECEIVING"): return
 	if not assert_condition(session.get_state() == TelegraphSessionController.State.RECEIVING, "Session is receiving the real message"): return
 	if not assert_condition(not key.is_enabled, "Key is inert while copy is coming in"): return
@@ -164,6 +169,7 @@ func _run() -> void:
 	# 13. Letting the deadline run out is a decision the world acts on.
 	director.advance(director.wait_seconds_before_call[1] + 0.1)
 	key.press()
+	director.advance(director.answer_beat_seconds + 0.05)
 	session.scheduler.advance_time(60.0)
 	_drain_paper(session.transcript_paper)
 	if not assert_condition(session.get_state() == TelegraphSessionController.State.VERIFYING, "Second message waits for transcript verification"): return
@@ -179,6 +185,7 @@ func _run() -> void:
 	# 14. The final message is the core-hook commit, then closes the night.
 	director.advance(director.wait_seconds_before_call[2] + 0.1)
 	key.press()
+	director.advance(director.answer_beat_seconds + 0.05)
 	session.scheduler.advance_time(30.0)
 	if not assert_condition(session.get_state() == TelegraphSessionController.State.COPYING, "Final message leaves the copy open at t0"): return
 	if not assert_condition(key.prompt_message == ShiftDirector.PROMPT_FINISHING_COPY, "The key reports the final copy being finished"): return
@@ -333,6 +340,7 @@ func _run() -> void:
 	merge_director.advance(merge_director.wait_seconds_before_call[0] + 0.1)
 	if not assert_condition(merge_director.get_phase() == ShiftDirector.Phase.CALLING, "Merge case reaches the call"): return
 	merge_session.telegraph_key.press()
+	merge_director.advance(merge_director.answer_beat_seconds + 0.05)
 	if not assert_condition(merge_session.get_state() == TelegraphSessionController.State.RECEIVING, "Merge case answers the call"): return
 	merge_session.scheduler.advance_time(30.0)
 	if not assert_condition(merge_session.get_state() == TelegraphSessionController.State.COPYING, "Merge case leaves the copy open at t0"): return
