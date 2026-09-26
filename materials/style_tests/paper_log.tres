@@ -4,8 +4,8 @@
 
 [resource]
 shading_mode = 1
-albedo_color = Color(0.62, 0.55, 0.43, 1)
+albedo_color = Color(0.44, 0.36, 0.25, 1)
 albedo_texture = ExtResource("1_tex")
 roughness = 0.95
 metallic_specular = 0.05
-texture_filter = 3
+texture_filter = 0

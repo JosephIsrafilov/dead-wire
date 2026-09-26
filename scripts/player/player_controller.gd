@@ -64,10 +64,16 @@ var is_seated: bool = false
 @onready var head: Node3D = $Head
 @onready var camera: Camera3D = $Head/Camera3D
 @onready var footstep_player: AudioStreamPlayer3D = get_node_or_null("FootstepPlayer") as AudioStreamPlayer3D
+## Bob weight change per second: ~0.15 s to fade a stride out when the body stops.
+const BOB_FADE_RATE: float = 7.0
+## The authored footstep level; each step varies around it.
+var footstep_base_db: float = -13.0
 
 var head_rest_position: Vector3 = Vector3.ZERO
 
 var _bob_phase: float = 0.0
+## 0..1: the stride fades in and out instead of snapping when the body stops.
+var _bob_weight: float = 0.0
 var _breath_phase: float = 0.0
 var _settle_offset: float = 0.0
 var _was_moving: bool = false
@@ -87,6 +93,8 @@ func _ready() -> void:
 	if head != null:
 		head_rest_position = head.position
 	_spawn_transform = global_transform if is_inside_tree() else transform
+	if footstep_player != null:
+		footstep_base_db = footstep_player.volume_db
 	if footstep_player != null and footstep_player.stream == null:
 		footstep_player.stream = footstep_stream
 
@@ -201,7 +209,8 @@ func _play_footstep() -> void:
 	var index := _footstep_index
 	_footstep_index = (_footstep_index + 1) % 3
 	if footstep_player != null and footstep_player.stream != null and is_inside_tree():
-		footstep_player.pitch_scale = [0.96, 1.03, 0.99][index]
+		footstep_player.pitch_scale = [0.96, 1.03, 0.99][index] + randf_range(-0.02, 0.02)
+		footstep_player.volume_db = footstep_base_db + randf_range(-1.5, 1.0)
 		footstep_player.play()
 	footstep_played.emit(index)
 
@@ -220,15 +229,21 @@ func _update_head(delta: float) -> void:
 		# A small downward settle on starting and stopping. Translation only —
 		# rotating the camera here is a known sickness trigger.
 		_settle_offset = -settle_distance
+		# The last foot comes down when the body stops mid-stride.
+		if not is_moving and _footstep_distance > footstep_step_distance * 0.35:
+			_footstep_distance = 0.0
+			_play_footstep()
 		_was_moving = is_moving
 
 	_settle_offset = move_toward(_settle_offset, 0.0, (settle_distance / maxf(settle_duration, 0.01)) * delta)
 
 	var bob := 0.0
 	var sway := 0.0
+	_bob_weight = move_toward(_bob_weight, 1.0 if (head_bob_enabled and is_moving) else 0.0, BOB_FADE_RATE * delta)
 	if head_bob_enabled and is_moving:
 		_bob_phase += planar_speed * delta * head_bob_steps_per_metre * TAU
-		var amplitude := head_bob_amplitude * lerpf(1.0, urgency_bob_multiplier, _urgency)
+	if _bob_weight > 0.0:
+		var amplitude := head_bob_amplitude * lerpf(1.0, urgency_bob_multiplier, _urgency) * _bob_weight
 		# The head rises twice per stride but sways once, which is what makes a
 		# figure-of-eight rather than a pogo stick.
 		bob = absf(sin(_bob_phase)) * amplitude

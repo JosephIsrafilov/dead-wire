@@ -54,6 +54,8 @@ signal creaked(position: Vector3)
 @export var pre_call_hush_seconds: float = 2.2
 @export var hush_depth_db: float = -26.0
 @export var hush_recover_seconds: float = 1.6
+@export var hush_onset_seconds: float = 0.5
+const HUSH_FIRST_STEP_DB: float = -3.0
 
 var creaks_played: int = 0
 var is_hushed: bool = false
@@ -246,7 +248,14 @@ func hush() -> void:
 		_hush_tween.kill()
 	is_hushed = true
 	_hush_elapsed = 0.0
-	ambience.set_hush_db(hush_depth_db)
+	if not is_inside_tree() or hush_onset_seconds <= 0.0:
+		ambience.set_hush_db(hush_depth_db)
+		return
+	# The room draws in, it does not drop out: a small step now, the rest eased.
+	ambience.set_hush_db(HUSH_FIRST_STEP_DB)
+	_hush_tween = create_tween()
+	_hush_tween.tween_method(ambience.set_hush_db, HUSH_FIRST_STEP_DB, hush_depth_db, hush_onset_seconds) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 
 func release_hush() -> void:
 	if not is_hushed:
@@ -254,6 +263,8 @@ func release_hush() -> void:
 	is_hushed = false
 	if ambience == null:
 		return
+	if _hush_tween != null:
+		_hush_tween.kill()
 	if not is_inside_tree():
 		ambience.set_hush_db(0.0)
 		return

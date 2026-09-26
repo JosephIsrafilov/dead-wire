@@ -51,7 +51,7 @@ enum BodyPhase {
 
 const PROMPT_SIT: String = "Sit at the Operator's Desk"
 const PROMPT_STAND: String = "Stand Up"
-const HINT_SEATED: String = "[W A S D] Rise from the chair"
+const HINT_SEATED: String = "Rise From the Chair  ·  W A S D"
 
 var interactable: Interactable = null
 var is_seated: bool = false
@@ -75,6 +75,9 @@ var _stand_target_origin: Vector3 = Vector3.ZERO
 ## Set the moment the player moves the mouse during a transition: the settle
 ## stops fighting the hand that is actually holding the camera.
 var _user_look: bool = false
+## One tween per head channel: a new transition replaces the old, never races it.
+var _head_tween: Tween = null
+var _pitch_tween: Tween = null
 
 ## Sitting down is a transition, not a toggle. Work at the desk — answering the
 ## wire, resuming the copy — requires the body to have actually arrived.
@@ -107,6 +110,9 @@ func _resolve_nodes() -> void:
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		_user_look = true
+		# The posture settle yields to the hand holding the camera.
+		if _pitch_tween != null and _pitch_tween.is_valid():
+			_pitch_tween.kill()
 
 func get_interactable() -> Interactable:
 	_resolve_nodes()
@@ -351,7 +357,10 @@ func _animate_head_to(target_y: float, duration: float, add_settle: bool) -> voi
 
 	_is_animating = true
 	var rest := player.head_rest_position
+	if _head_tween != null and _head_tween.is_valid():
+		_head_tween.kill()
 	var tween := create_tween()
+	_head_tween = tween
 	if add_settle:
 		# Drop slightly past the seat then come back up: weight, not a lerp.
 		tween.tween_method(_set_head_height, rest.y, target_y - settle_overshoot, duration * 0.78) \
@@ -382,14 +391,11 @@ func _animate_head_pitch(target_radians: float, duration: float) -> void:
 	if not is_inside_tree() or duration <= 0.0:
 		player.head.rotation.x = target_radians
 		return
-	var tween := create_tween()
-	tween.tween_property(player.head, "rotation:x", target_radians, duration) \
+	if _pitch_tween != null and _pitch_tween.is_valid():
+		_pitch_tween.kill()
+	_pitch_tween = create_tween()
+	_pitch_tween.tween_property(player.head, "rotation:x", target_radians, duration) \
 		.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
-	tween.tween_callback(func() -> void:
-		# The settle stops fighting the mouse the moment the player looks.
-		if _user_look:
-			return
-	)
 
 func _set_head_height(value: float) -> void:
 	var player := _player_controller()

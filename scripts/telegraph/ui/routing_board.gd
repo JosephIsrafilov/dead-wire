@@ -5,7 +5,7 @@ signal routing_action_selected(action: String)
 signal board_opened()
 signal board_closed()
 
-@export var prompt_message: String = "Inspect Routing Board (East Wall)"
+@export var prompt_message: String = "Train-Order Board"
 @export var is_awaiting_route: bool = false
 
 ## The switch lever physically throws when a route is set. Angles in degrees from

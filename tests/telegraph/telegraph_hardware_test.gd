@@ -19,7 +19,7 @@ func _init() -> void:
 
 	var act: Interactable = key_node.get_interactable()
 	if not assert_condition(act != null, "key has Interactable component"): return
-	if not assert_condition(act.prompt_text == "Press Key (Answer Line)", "key interactable prompt text matches"): return
+	if not assert_condition(act.prompt_text == "Answer the Line", "key interactable prompt text matches"): return
 
 	# 3. Test enabled press
 	var key_pressed_count: Array[int] = [0]
@@ -41,7 +41,7 @@ func _init() -> void:
 
 	# Re-enable
 	key_node.set_enabled(true)
-	key_node.set_prompt_message("Press Key (Answer Line)")
+	key_node.set_prompt_message("Answer the Line")
 	act.interact()
 	if not assert_condition(key_pressed_count[0] == 2, "interact() after re-enabling emits key_pressed"): return
 

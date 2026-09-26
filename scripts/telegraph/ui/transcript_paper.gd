@@ -7,6 +7,8 @@ signal copy_finished(scenario_id: String)
 ## The fresh blank physically landed on the writing zone. The feed's paper
 ## sound belongs to this moment, not to the viewer's open/close.
 signal sheet_fed
+## The finished sheet started its slide to the stack.
+signal sheet_archived
 
 ## The physical sheet of paper, owned by whoever is writing on it.
 ##
@@ -378,6 +380,7 @@ func _archive_visible_sheet() -> void:
 	previous.global_position = to_global(_sheet_rest_position)
 	_previous_slide_elapsed = 0.0
 	_previous_slide_active = true
+	sheet_archived.emit()
 
 func _advance_previous_slide(delta: float) -> void:
 	var previous := get_previous_sheet_node()

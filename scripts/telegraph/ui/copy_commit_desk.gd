@@ -23,6 +23,8 @@ signal stamp_contact(action_id: StringName)
 ## accepted result is already on the surface while the press is moving.
 @export var stamp_press_distance: float = 0.07
 @export var stamp_press_duration: float = 0.16
+## After the contact the stamp is set back on its rest, unhurried.
+@export var stamp_return_duration: float = 0.4
 
 var interactable: Interactable = null
 var _options: Array = []
@@ -36,11 +38,19 @@ var _result_text: String = ""
 var _press_elapsed: float = -1.0
 var _press_action_id: StringName = StringName()
 var _press_plate_index: int = -1
+## The physical rubber stamp (optional prop): swings from its rest onto the
+## chosen plate over the press, lands on the contact, then goes back.
+var _tool: Node3D = null
+var _tool_rest: Vector3 = Vector3.ZERO
+var _tool_tween: Tween = null
 const OPTION_LABEL_NAMES := [&"OptionOneLabel", &"OptionTwoLabel"]
 const OPTION_STAMP_NAMES := [&"OptionOneStamp", &"OptionTwoStamp"]
 const LAPSED_ACTION_ID: StringName = &"lapsed"
 
 func _ready() -> void:
+	_tool = get_node_or_null("StampTool") as Node3D
+	if _tool != null:
+		_tool_rest = _tool.position
 	interactable = get_node_or_null("Interactable") as Interactable
 	if interactable != null:
 		interactable.prompt_text = prompt_message
@@ -147,11 +157,37 @@ func _process(delta: float) -> void:
 	if _press_elapsed < 0.0:
 		return
 	_press_elapsed += maxf(delta, 0.0)
+	_move_tool(clampf(_press_elapsed / maxf(stamp_press_duration, 0.0001), 0.0, 1.0))
 	if _press_elapsed >= stamp_press_duration:
 		# Contact: the mark appears and the sound belongs to this moment.
 		_press_elapsed = -1.0
 		_update_presentation()
 		stamp_contact.emit(_press_action_id)
+		_return_tool()
+
+## An arc from the rest onto the plate: up by the press distance mid-way,
+## exactly on the paper at t = 1 — the same instant as the contact.
+func _move_tool(t: float) -> void:
+	if _tool == null or _press_plate_index < 0:
+		return
+	var stamp := get_node_or_null(String(OPTION_STAMP_NAMES[_press_plate_index])) as Node3D
+	var plate := get_node_or_null("OptionOnePlate" if _press_plate_index == 0 else "OptionTwoPlate") as CSGBox3D
+	if stamp == null or plate == null:
+		return
+	var contact := Vector3(stamp.position.x, plate.position.y + plate.size.y * 0.5, stamp.position.z)
+	var eased := t * t * (3.0 - 2.0 * t)
+	_tool.position = _tool_rest.lerp(contact, eased) + Vector3.UP * stamp_press_distance * sin(PI * t)
+
+func _return_tool() -> void:
+	if _tool == null or not is_inside_tree():
+		return
+	if _tool_tween != null and _tool_tween.is_valid():
+		_tool_tween.kill()
+	_tool_tween = create_tween()
+	_tool_tween.tween_property(_tool, "position", _tool_rest + Vector3.UP * stamp_press_distance * 0.5,
+		stamp_return_duration * 0.5).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	_tool_tween.tween_property(_tool, "position", _tool_rest, stamp_return_duration * 0.5) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
 
 ## True while the press is travelling: the result is accepted, the ink has
 ## not landed yet.
@@ -179,6 +215,10 @@ func reset() -> void:
 	_press_elapsed = -1.0
 	_press_plate_index = -1
 	_press_action_id = StringName()
+	if _tool_tween != null and _tool_tween.is_valid():
+		_tool_tween.kill()
+	if _tool != null:
+		_tool.position = _tool_rest
 	_update_presentation()
 
 func reset_for_new_transmission() -> void:

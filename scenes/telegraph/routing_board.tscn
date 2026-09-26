@@ -8,6 +8,10 @@
 [ext_resource type="Material" path="res://materials/style_tests/paper_log.tres" id="6_paper"]
 [ext_resource type="Material" path="res://materials/style_tests/metal_oxidized.tres" id="7_iron"]
 
+[sub_resource type="StandardMaterial3D" id="StencilPaint"]
+albedo_color = Color(0.6, 0.55, 0.43, 1)
+roughness = 1.0
+
 [sub_resource type="BoxShape3D" id="BoardSolid"]
 size = Vector3(0.78, 1.4, 0.16)
 
@@ -74,32 +78,32 @@ material = ExtResource("4_wood")
 [node name="InkMainLine" type="CSGBox3D" parent="."]
 position = Vector3(-0.02, 0.86, -0.042)
 size = Vector3(0.5, 0.014, 0.004)
-material = ExtResource("7_iron")
+material = SubResource("StencilPaint")
 
 [node name="InkSidingLine" type="CSGBox3D" parent="."]
 position = Vector3(-0.02, 0.62, -0.042)
 size = Vector3(0.5, 0.014, 0.004)
-material = ExtResource("7_iron")
+material = SubResource("StencilPaint")
 
 [node name="InkSwitchLink" type="CSGBox3D" parent="."]
 position = Vector3(0.12, 0.74, -0.042)
 rotation = Vector3(0, 0, 0.523599)
 size = Vector3(0.012, 0.29, 0.004)
-material = ExtResource("7_iron")
+material = SubResource("StencilPaint")
 
 [node name="InkStationDot" type="CSGCylinder3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -0.24, 0.74, -0.042)
 radius = 0.02
 height = 0.004
 sides = 8
-material = ExtResource("7_iron")
+material = SubResource("StencilPaint")
 
 [node name="InkSidingDot" type="CSGCylinder3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.18, 0.62, -0.042)
 radius = 0.02
 height = 0.004
 sides = 8
-material = ExtResource("7_iron")
+material = SubResource("StencilPaint")
 
 ; ---- Route lever assembly: pivot carries lever + grip; stops bound travel ----
 
@@ -198,7 +202,7 @@ font_size = 13
 position = Vector3(-0.24, 0.9, -0.048)
 rotation = Vector3(0, 3.141593, 0)
 pixel_size = 0.0035
-modulate = Color(0.2, 0.15, 0.09, 1)
+modulate = Color(0.7, 0.64, 0.5, 1)
 outline_size = 0
 text = "MAIN"
 font_size = 13
@@ -207,27 +211,27 @@ font_size = 13
 position = Vector3(-0.24, 0.56, -0.048)
 rotation = Vector3(0, 3.141593, 0)
 pixel_size = 0.0035
-modulate = Color(0.2, 0.15, 0.09, 1)
+modulate = Color(0.7, 0.64, 0.5, 1)
 outline_size = 0
 text = "SIDING"
 font_size = 13
 
 [node name="ClearEastLabel3D" type="Label3D" parent="."]
-position = Vector3(-0.12, 0.66, -0.048)
+position = Vector3(0.0, 0.25, -0.048)
 rotation = Vector3(0, 3.141593, 0)
-pixel_size = 0.0035
-modulate = Color(0.2, 0.15, 0.09, 1)
+pixel_size = 0.003
+modulate = Color(0.7, 0.64, 0.5, 1)
 outline_size = 0
-text = "◄ CLEAR EAST"
+text = "CLEAR EAST"
 font_size = 13
 
 [node name="HoldLabel3D" type="Label3D" parent="."]
-position = Vector3(0.26, 0.5, -0.048)
+position = Vector3(0.28, 0.25, -0.048)
 rotation = Vector3(0, 3.141593, 0)
-pixel_size = 0.0035
-modulate = Color(0.2, 0.15, 0.09, 1)
+pixel_size = 0.003
+modulate = Color(0.7, 0.64, 0.5, 1)
 outline_size = 0
-text = "HOLD ►"
+text = "HOLD"
 font_size = 13
 
 [node name="BoardSolid" type="StaticBody3D" parent="."]
@@ -242,7 +246,7 @@ shape = SubResource("BoardSolid")
 collision_layer = 2
 collision_mask = 0
 script = ExtResource("2_interact")
-prompt_text = "Inspect Routing Board (East Wall)"
+prompt_text = "Train-Order Board"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Interactable"]
 position = Vector3(0, 0.72, -0.11)
@@ -262,7 +266,7 @@ offset_left = 410.0
 offset_top = 590.0
 offset_right = 870.0
 offset_bottom = 646.0
-color = Color(0.035, 0.03, 0.022, 0.92)
+color = Color(0.035, 0.03, 0.022, 0.0)
 
 [node name="Label" type="Label" parent="RoutePromptUI/Panel"]
 layout_mode = 0
@@ -270,8 +274,11 @@ offset_left = 14.0
 offset_top = 8.0
 offset_right = 446.0
 offset_bottom = 48.0
-theme_override_colors/font_color = Color(0.92, 0.82, 0.59, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(0.86, 0.79, 0.63, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.85)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/font_size = 16
 text = "[1] CLEAR EAST       [2] HOLD"
 horizontal_alignment = 1
 vertical_alignment = 1

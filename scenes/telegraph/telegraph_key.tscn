@@ -77,7 +77,7 @@ mesh = SubResource("CylinderMesh_knob")
 collision_layer = 2
 collision_mask = 0
 script = ExtResource("2_interact")
-prompt_text = "Press Key (Answer Line)"
+prompt_text = "Answer the Line"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Interactable"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.04, 0)

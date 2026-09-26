@@ -1,5 +1,9 @@
 # DEAD WIRE — GAME DESIGN DOCUMENT
-## Version 1.0 — Project Compass / Frozen Prototype Direction
+## Version 1.1 — Project Compass / Frozen Prototype Direction
+
+> v1.1 (2026-09-26): added pillar §3.7 Weight, presentation direction §35, open scope
+> decisions §36; §25–26 refreshed to the real M1 state; §32 FNAF wording reconciled with
+> `DEAD_WIRE_HORROR_LAYER_DESIGN.md`. Core direction unchanged.
 
 **Project:** DEAD WIRE  
 **Genre:** 3D First-Person Psychological Horror  
@@ -184,6 +188,29 @@ Telegraph work, railroad procedure, documents, equipment, Morse timing, routing,
 Historical realism exists to support immersion and tension.
 
 It is not an excuse to make the game tedious.
+
+---
+
+## 3.7 Weight
+
+Every action costs time, makes a sound, and leaves a trace.
+
+The office must feel physical: paper has thickness and casts a shadow, the lamp is the only
+safe light, the chair creaks when Elias sits, the pen scratches in sync with ink contact.
+
+Weight comes from:
+
+- darkness (one dominant light source; what is outside the lamp's circle is unknown);
+- material (aged paper, ink, brass, worn wood — never clean surfaces);
+- time (taking a sheet, committing a copy, standing up are short animated rituals, not instant toggles);
+- sound (room tone, foley for every mechanism, real silence);
+- the absence of interface (the room tells state; text overlays do not).
+
+The test:
+
+> Would a stranger watching a 30-second clip guess this game cost more than it did?
+
+If the answer is no, add darkness, material, or silence — not content.
 
 ---
 
@@ -794,16 +821,16 @@ Do not skip forward just because later systems sound more interesting.
 
 # 25. CURRENT DEVELOPMENT STATUS
 
-Already completed:
+Status as of 2026-09-26 (history in `docs/reports/`, latest in `docs/plans/2026-09-21_SESSION_HANDOVER.md`):
 
-- Godot project created;
-- folder structure established;
-- main scene assigned;
-- greybox office scene created;
-- basic room geometry works;
-- placeholder office objects exist;
-- scene launches in Godot;
-- basic lighting is sufficient for greybox evaluation.
+- M1 implementation order §24 steps 01–19 are built: office, controller, interaction, WorldState /
+  KnowledgeState, debug inspector, American Morse model + scheduler, sounder, transcript paper with
+  writer rig, session state machine, routing board, ledger, WATER → WATCHER, door and window events;
+- tape register (objective MARK/GAP record) is built as the third renderer of the scheduler;
+- horror layer (6 nights + Sunday trial) is designed and approved, not yet implemented;
+- regression: 38 suites, 0 failures;
+- visual acceptance is **not** passed: see `docs/plans/2026-09-26-production-value-pass.md`;
+- step 20 (external playtest) is still open.
 
 Current office layout intent:
 
@@ -826,43 +853,16 @@ Height Y = 2.85 m
 
 The immediate development step is:
 
-**M1 PLAYER CONTROLLER**
+**M1 PRODUCTION VALUE SLICE**
 
-Required:
+One moment — seated at the desk, first transmission of Night 1 — brought to release quality
+(§3.7, §35) before Nights 2–6 are built. Plan: `docs/plans/2026-09-26-production-value-pass.md`.
 
-- CharacterBody3D
-- CollisionShape3D
-- Head Node3D
-- Camera3D
-- WASD
-- mouse look
-- Esc / mouse capture
-- movement speed approximately 3.0 m/s
-- pitch clamp
-- precise input
-- no artificial smoothing
+Then: external playtest (§24 step 20) on that slice, then horror layer step 2 (night_index + directives).
 
-Before/alongside the player test, only minimal greybox fixes are appropriate:
-
-- collision on floor/walls;
-- ceiling;
-- small desk position correction if required.
-
-Do not add:
-
-- sprint;
-- crouch;
-- stamina;
-- jump gameplay;
-- head bob;
-- lean;
-- footsteps;
-- interaction ray;
-- inventory;
-- camera shake;
-- telegraph systems.
-
-The point of this step is only to walk through the room and evaluate scale and attention geometry.
+Controller feel (supersedes the original greybox controller brief): ~2.35 m/s, weighted
+acceleration/deceleration, restrained body bob only while walking, none while seated.
+Still not added: sprint, crouch, stamina, jump, lean, inventory, camera shake.
 
 ---
 
@@ -1023,6 +1023,9 @@ DEAD WIRE is not:
 
 It borrows tension from observation games and procedural horror, but its identity comes from information integrity.
 
+The horror layer borrows FNAF's **shift structure** (night as a shift, attention as a resource,
+escalation 1→6) — not its jumpscare economy, animatronic threat, or fail-state loop.
+
 ---
 
 # 33. PROJECT COURSE IN ONE PARAGRAPH
@@ -1058,3 +1061,78 @@ ONLY THEN EXPAND
 The project succeeds if the player starts doubting the transcript because they trust what they heard.
 
 That is DEAD WIRE.
+
+---
+
+# 35. PRESENTATION DIRECTION
+
+The target is disciplined PSX, not nostalgic PSX filter. References for *feel*, not copying:
+Mouthwashing (one location, material honesty), Iron Lung (reality only through an instrument),
+Signalis / Crow Country (strict palette, typography as identity), Papers, Please (documents carry drama).
+
+## 35.1 Image
+
+- Fixed low internal resolution with integer upscale; one pixel size on every screen, UI included.
+- One dominant warm light (the desk lamp), one cold light (the moon). Ambient near zero.
+  The door, the corners, and the routing board live in darkness until approached.
+- Consistent texel density across all assets; all third-party textures remapped to one palette.
+  Mixed-style asset packs are the fastest way to look like an asset flip.
+- Grain and vignette: subtle and constant. No CRT frame, VHS noise, or chromatic aberration.
+- Vertex snap / affine warp only if playtested; never on paper or text.
+
+## 35.2 Paper and Type
+
+Reading is the core verb; paper is the most important material in the game.
+
+- Three typefaces maximum: period letterpress (printed forms, card, board, citations),
+  Elias's hand (transcript, ledger — ideally an authored glyph atlas with per-letter variants),
+  and the printed face again for menus. No modern sans anywhere.
+- Paper has thickness, stains, folds, contact shadow; it is never brighter than the lamp that lights it.
+- Documents are lifted toward the camera, not opened as full-screen panels.
+
+## 35.3 The Hand
+
+The hand is the protagonist of the hook. It is modelled and skinned, textured with ink stains
+that accumulate across nights, holds the pen at rest, and moves by rotating joints — never by
+detached parts sliding. Tremor is authored per night (horror layer §8), zero on Night 1.
+
+## 35.4 Interface
+
+The room shows state; overlays do not.
+
+- No status strings ("Line Busy", "Still Copying"). The sounder, tape, and pen carry that information.
+- Interaction hint: a small dot and, on focus, one printed word. Key hints only during the first
+  minutes of Night 1.
+- Choices are physical (lever, stamp, spike), each with a sound and a short animation.
+
+## 35.5 Sound
+
+Sound is the cheapest source of production value and a gameplay channel (§7).
+
+- Room tone: wire hum, wind, clock, stove. Foley for every mechanism, including pen scratch
+  synchronized to ink contact.
+- Real silence is allowed and used. Night 1 establishes the full normal soundscape so later nights
+  can take pieces away.
+- Audio never hints at Elias's errors: the pen sounds the same whether it is right or wrong.
+
+## 35.6 Rituals and Transitions
+
+Starting a shift (light the lamp, wind the clock, sign the ledger), sitting down, committing a copy,
+and dawn are short physical rituals. Title, shift start, and shift end are framed as moments in the
+world, not UI cards over a paused scene.
+
+---
+
+# 36. OPEN SCOPE DECISIONS
+
+Recorded for the owner; not yet decided.
+
+1. **Daytime investigation — DECIDED 2026-09-26: small, intimate town.** Not an open world:
+   one street, depot, 4–6 enterable interiors max (general store, boarding house, company office,
+   doctor's house, water tower / mine gate as exteriors). Every location is built to the §35 bar;
+   fewer places at release quality over many at prototype quality. Still after M1 (§28).
+2. **Sending mechanic.** The Sunday trial (horror layer §7) and Night 3+ repeat requests need the
+   player to transmit with the key. This is a new core verb and must be prototyped and playtested
+   before trial content is written.
+3. **Elias's voice.** The GDD gives Elias no inner voice. Options: none (pure documents), margin notes
+   in his own hand, or rare spoken lines. Margin notes fit §35.2 and the unreliable-hand hook.

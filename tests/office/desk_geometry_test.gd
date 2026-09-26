@@ -59,6 +59,15 @@ func _run() -> void:
 	var card_support := office.get_node_or_null("CardSlopeSupport") as CSGBox3D
 	if not assert_condition(card_support != null and absf(card_support.global_position.y + card_support.size.y / 2.0 - card_far) < 0.004, "The card's support is flush with its far edge"): return
 
+	# --- nothing overhangs the desk: every corner is above the top's footprint
+	var top_aabb := desk_top.global_transform * AABB(-desk_top.size / 2.0, desk_top.size)
+	for c in corners + card_corners:
+		if not assert_condition(
+				c.x >= top_aabb.position.x - 0.002 and c.x <= top_aabb.end.x + 0.002
+				and c.z >= top_aabb.position.z - 0.002 and c.z <= top_aabb.end.z + 0.002,
+				"Paper corner (%.3f, %.3f) lies over the desk top" % [c.x, c.z]):
+			return
+
 	# --- the archived sheet slides flat, never underground -------------------
 	var session := office.session_controller
 	office.shift_director.enabled = false

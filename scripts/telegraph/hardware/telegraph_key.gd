@@ -2,9 +2,12 @@ class_name TelegraphKey
 extends Node3D
 
 signal key_pressed()
+## Any physical press, live line or not: the brass moves either way. Sound and
+## motion only — never the scheduler, so the tape register cannot record it.
+signal key_touched()
 
 @export var is_enabled: bool = true
-@export var prompt_message: String = "Press Key (Answer Line)"
+@export var prompt_message: String = "Answer the Line"
 @export var press_travel: float = 0.011
 @export var press_down_time: float = 0.05
 @export var press_up_time: float = 0.16
@@ -58,10 +61,16 @@ func press() -> void:
 		return
 	press_count += 1
 	_animate_press()
+	key_touched.emit()
 	key_pressed.emit()
 
 func _on_interacted() -> void:
-	press()
+	if is_enabled:
+		press()
+		return
+	# A dead line still has a sprung key under the finger.
+	_animate_press()
+	key_touched.emit()
 
 func _animate_press() -> void:
 	if lever_mesh == null:
