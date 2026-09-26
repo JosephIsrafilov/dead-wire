@@ -23,7 +23,10 @@ enum Phase {
 	RECEIVING,
 	AWAITING_ROUTE,
 	CLOSING,
-	SHIFT_OVER
+	SHIFT_OVER,
+	## The call is answered; the sender draws breath before the first mark.
+	## Appended last so existing phase values keep their numbers.
+	ANSWERING,
 }
 
 signal phase_changed(new_phase: Phase, previous_phase: Phase)
@@ -88,10 +91,14 @@ var _station_clock_running: bool = false
 
 ## How close a warning and a nag may land before they count as one reminder.
 @export var warning_nag_merge_seconds: float = 1.0
+## The etiquette beat between the operator's answer and the sender's first
+## mark. The line is silent through it; the tape crawls empty.
+@export var answer_beat_seconds: float = 0.8
 
 const PROMPT_OPEN_LINE: String = "Open the Line"
 const PROMPT_LINE_QUIET: String = "Line Quiet"
 const PROMPT_ANSWER_CALL: String = "Answer the Call"
+const PROMPT_ANSWERED: String = "Answered — Sender Coming In"
 const PROMPT_RECEIVING: String = "Line Busy — Copying"
 const PROMPT_FINISHING_COPY: String = "Finishing the Copy"
 const PROMPT_READ_COPY: String = "Read the Copy"
@@ -271,6 +278,10 @@ func _advance_step(delta: float) -> void:
 					_send_call()
 				else:
 					_miss_current_traffic()
+		Phase.ANSWERING:
+			_phase_timer += delta
+			if _phase_timer >= answer_beat_seconds:
+				_begin_receiving()
 		Phase.AWAITING_ROUTE:
 			_phase_timer += delta
 			_maybe_nag()
@@ -435,6 +446,12 @@ func _answer_call() -> void:
 
 	session.scheduler.cancel()
 	call_answered.emit(_slot_index, _calls_sent)
+	if answer_beat_seconds <= 0.0:
+		_begin_receiving()
+		return
+	_set_phase(Phase.ANSWERING)
+
+func _begin_receiving() -> void:
 	if session.start_transmission():
 		_set_phase(Phase.RECEIVING)
 	else:
@@ -622,6 +639,9 @@ func _apply_key_state() -> void:
 		Phase.CALLING:
 			key.set_prompt_message(PROMPT_ANSWER_CALL)
 			key.set_enabled(true)
+		Phase.ANSWERING:
+			key.set_prompt_message(PROMPT_ANSWERED)
+			key.set_enabled(false)
 		Phase.RECEIVING, Phase.AWAITING_ROUTE:
 			_apply_key_state_for_session(key)
 		Phase.CLOSING:

@@ -75,6 +75,8 @@ func _run() -> void:
 			await _interact_at(Vector3(-0.75, 0, -0.1), office.get_node("Chair/Interactable"))
 			await create_timer(1.6).timeout
 		await _aim_and_interact(office.session_controller.telegraph_key.get_interactable())
+		# The sender's etiquette beat before the message.
+		await create_timer(office.shift_director.answer_beat_seconds + 0.2).timeout
 		check(office.session_controller.get_state() == TelegraphSessionController.State.RECEIVING, "E answers traffic %d" % slot)
 		if slot == 0:
 			await _press("ui_cancel")

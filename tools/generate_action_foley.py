@@ -65,3 +65,5 @@ write_samples('door_hinge', [math.sin(2 * math.pi * (95 + 40 * math.sin(t * 2.3)
                                              filtered(1.1, lambda t: math.sin(math.pi * t / 1.1) ** 2, 400, 2500, .25, 1102))])
 # A finished sheet sliding across the desk to the stack.
 write_samples('sheet_slide', filtered(.32, lambda t: math.sin(math.pi * t / .32) ** 2, 300, 3200, .55, 1103))
+# Wick wheel: a brass thumbwheel ratcheting the wick up, five small teeth.
+write('wick_turn', .62, lambda t, n: sum(impact(t, n, .03 + k * .105, 2300 - k * 90, 140, .09) for k in range(5)))

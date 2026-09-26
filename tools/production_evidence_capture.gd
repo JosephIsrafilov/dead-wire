@@ -85,6 +85,8 @@ func _run() -> void:
 	await _wait_until(func() -> bool: return director.get_phase() == ShiftDirector.Phase.CALLING, 4000)
 	check(director.get_phase() == ShiftDirector.Phase.CALLING, "The wire called on its own clock")
 	check(await _interact_with(key, "the telegraph key"), "The call was answered through ray + E")
+	# The sender's etiquette beat, then the message.
+	await _wait_until(func() -> bool: return session.get_state() == TelegraphSessionController.State.RECEIVING, 240)
 	check(session.get_state() == TelegraphSessionController.State.RECEIVING, "Key press answered the call")
 	await _shot("p1_seated_receiving")
 	check(office.operator_seat.is_seated and office.operator_seat.is_settled(), "p1 was captured seated and settled")

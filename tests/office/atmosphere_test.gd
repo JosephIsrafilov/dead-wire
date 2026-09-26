@@ -36,10 +36,27 @@ func _run() -> void:
 	office.operator_seat.approach_duration = 0.0
 	office.operator_seat.sit()
 
+	# --- the watch begins with the lamp turned down -------------------------
+	# Taking the watch is a physical act: the operator turns up the wick. If he
+	# opens the line without doing it, the lamp comes up with the shift anyway.
+	var wick_life := office.get_node_or_null("LampLife") as LampLife
+	if not assert_condition(wick_life != null and wick_life.wick < 0.5, "The lamp starts the watch turned down"): return
+	var wick_act := office.get_node_or_null("DeskSetup/OilLamp/WickInteractable") as Interactable
+	if not assert_condition(wick_act != null and wick_act.can_interact(), "The wick can be turned up by hand"): return
+	wick_act.interact()
+	for _step in 120:
+		wick_life.advance(1.0 / 60.0)
+	if not assert_condition(is_equal_approx(wick_life.wick, 1.0), "Turning the wick brings the lamp up to full"): return
+	if not assert_condition(not wick_act.can_interact(), "A lit lamp offers no second turn"): return
+	wick_life.set_wick_immediate(0.3)
+	office.shift_director.open_line()
+	for _step in 180:
+		wick_life.advance(1.0 / 60.0)
+	if not assert_condition(is_equal_approx(wick_life.wick, 1.0), "Opening the line brings a forgotten lamp up"): return
+
 	# --- the authored silence BEFORE the first call ---------------------------
 	# (A04) The room falls quiet inside the WAITING stretch, ahead of the
 	# sounder — not when the call starts — and only once per watch.
-	office.shift_director.open_line()
 	var hush_window: float = unease.pre_call_hush_seconds
 	var wait0: float = office.shift_director.wait_seconds_before_call[0]
 	_advance_room(office.shift_director, unease, maxf(wait0 - hush_window - 0.6, 0.0))
@@ -79,6 +96,7 @@ func _run() -> void:
 
 	seat.sit()
 	session.telegraph_key.press()
+	office.shift_director.advance(office.shift_director.answer_beat_seconds + 0.05)
 	if not assert_condition(session.get_state() == TelegraphSessionController.State.RECEIVING, "Message is coming in"): return
 	if not assert_condition(paper.is_copy_in_progress(), "The pad is being worked on during the message (feed or ink)"): return
 	if not assert_condition(paper.get_visible_character_count() == 0, "The pad starts blank"): return

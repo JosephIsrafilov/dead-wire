@@ -14,6 +14,7 @@ const PEN = preload("res://audio/sfx/foley/pen_scratch.wav")
 const KEY = preload("res://audio/sfx/foley/key_click.wav")
 const HINGE = preload("res://audio/sfx/foley/door_hinge.wav")
 const SLIDE = preload("res://audio/sfx/foley/sheet_slide.wav")
+const WICK = preload("res://audio/sfx/foley/wick_turn.wav")
 
 ## Identical samples machine-gun; a small pitch spread reads as a hand.
 const JITTER: float = 0.06
@@ -68,6 +69,10 @@ func _bind() -> void:
 	# The hand takes the lever: the throw starts here, the stop lands on the board.
 	var lever := _source("LeverThrow", LEVER, office.routing_board.global_position + Vector3(0, 0.7, 0), -20.0)
 	office.routing_board.routing_action_selected.connect(func(_a): _play_varied(lever))
+	var lamp_life := office.get_node_or_null("LampLife") as LampLife
+	if lamp_life != null:
+		var wick := _source("Wick", WICK, office.get_node("DeskSetup/OilLamp").global_position, -20.0)
+		lamp_life.wick_turned_up.connect(wick.play.bind(0.0))
 	var latch := _source("Latch", LATCH, Vector3(-1.6, 1.0, 2.25), -15.0)
 	office.office_door.door_rattled.connect(latch.play.bind(0.0))
 	office.office_door.door_opened.connect(latch.play.bind(0.0))

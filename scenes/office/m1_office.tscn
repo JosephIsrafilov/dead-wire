@@ -61,6 +61,9 @@ size = Vector3(1.7, 2.0, 0.6)
 [sub_resource type="BoxShape3D" id="DutySheetInteract"]
 size = Vector3(0.92, 0.82, 0.38)
 
+[sub_resource type="BoxShape3D" id="WickInteract"]
+size = Vector3(0.18, 0.34, 0.18)
+
 [sub_resource type="StandardMaterial3D" id="ExteriorSilhouette"]
 shading_mode = 0
 albedo_color = Color(0.018, 0.022, 0.032, 1)
@@ -116,6 +119,17 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+
+; One static interior probe: the night pane reads as a dark mirror with the
+; lamp in it, and brass/glass get something to reflect. Captured once.
+[node name="RoomReflection" type="ReflectionProbe" parent="."]
+position = Vector3(0, 1.45, 0)
+update_mode = 0
+intensity = 0.55
+max_distance = 8.0
+size = Vector3(5.9, 2.95, 4.7)
+interior = true
+ambient_mode = 0
 
 [node name="DeskLampLight" type="OmniLight3D" parent="."]
 position = Vector3(-2.12, 1.35, -0.12)
@@ -601,6 +615,16 @@ position = Vector3(-0.02, 1.5, 2.24)
 script = ExtResource("29_shift")
 office = NodePath("..")
 session = NodePath("../TelegraphSessionController")
+
+[node name="WickInteractable" type="Area3D" parent="DeskSetup/OilLamp"]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("31_interact")
+prompt_text = "Turn Up the Wick"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="DeskSetup/OilLamp/WickInteractable"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.16, 0)
+shape = SubResource("WickInteract")
 
 [node name="LampLife" type="Node" parent="."]
 script = ExtResource("37_lamplife")
