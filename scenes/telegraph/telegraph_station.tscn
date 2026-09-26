@@ -13,27 +13,29 @@ roughness = 1.0
 ; Resonator: the hollow box the sounder is screwed onto. It is why a sounder is
 ; loud enough to copy across a room; the voice hole faces the operator (+X).
 [node name="Resonator" type="CSGBox3D" parent="."]
-position = Vector3(-0.08, 0.03, 0)
+position = Vector3(-0.08, 0.03, -0.11)
 rotation = Vector3(0, 0.35, 0)
 size = Vector3(0.21, 0.06, 0.27)
 material = ExtResource("3_wood")
 
 [node name="ResonatorLip" type="CSGBox3D" parent="."]
-position = Vector3(-0.08, 0.004, 0)
+position = Vector3(-0.08, 0.004, -0.11)
 rotation = Vector3(0, 0.35, 0)
 size = Vector3(0.23, 0.008, 0.29)
 material = ExtResource("3_wood")
 
 [node name="VoiceHole" type="CSGBox3D" parent="."]
-position = Vector3(0.0197, 0.03, -0.0363)
+position = Vector3(0.0197, 0.03, -0.1463)
 rotation = Vector3(0, 0.35, 0)
 size = Vector3(0.004, 0.026, 0.13)
 material = SubResource("SoundHole")
 
 [node name="Sounder" parent="." instance=ExtResource("1_sounder")]
-position = Vector3(-0.08, 0.06, 0)
+position = Vector3(-0.08, 0.06, -0.11)
 rotation = Vector3(0, 0.35, 0)
 scale = Vector3(1.2, 1.2, 1.2)
 
+; Knob toward the operator (+X): the hand goes from pen to key without turning.
 [node name="TelegraphKey" parent="." instance=ExtResource("2_key")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.12, 0, 0)
+position = Vector3(0.16, 0, -0.1)
+rotation = Vector3(0, 1.5707963, 0)

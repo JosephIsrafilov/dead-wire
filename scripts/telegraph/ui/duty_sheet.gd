@@ -30,16 +30,18 @@ OPERATOR: E. CRANE
 
 STANDING ORDERS
 
-  1. Sit at the desk and open the line on the key.
-     Press a movement key to rise from the chair.
+  1. Turn up the desk lamp. Sit at the desk and open
+     the line on the key.
   2. Answer the office call (CR) on the key. Do not
      leave the wire calling.
-  3. Read the finished transcript before setting a
-     route. Copy nothing you did not hear.
-  4. Set the route on the East Wall board before the
-     sender releases the line.
-  5. Routing rules are in the Dispatch Ledger.
-  6. The outer door stays locked until the line closes.
+  3. Copy every message in full on the night copy.
+     Copy nothing you did not hear.          Rule 7.
+  4. Read the finished copy, then set the route on
+     the train-order board before the sender releases.
+  5. File one copy at the filing table by the stove.
+  6. Routing rules are in the Dispatch Ledger.
+  7. The office door stays locked until the line
+     closes. Leave the night handover for the day man.
 
 ────────────────────────────────────────────
 TONIGHT'S TRAFFIC

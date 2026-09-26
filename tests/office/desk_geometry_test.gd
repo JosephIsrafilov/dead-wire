@@ -49,19 +49,31 @@ func _run() -> void:
 	if not assert_condition(min_y >= board.global_position.y + board.size.y / 2.0 - 0.0005, "The sheet is on the pad, not inside the board"): return
 	if not assert_condition(office.get_node_or_null("PaperSlopeSupport") == null, "No slope wedge is left behind"): return
 
+	# The reference card is pinned upright to the wall above the desk, facing
+	# the operator, clear of the desk's working surface.
 	var card := office.get_node("MorseReferenceCard") as Node3D
-	var card_corners := _card_corners(card)
-	var card_min := _min_corner_y(card_corners)
-	var card_max := -INF
-	for c in card_corners:
-		card_max = maxf(card_max, c.y)
-	if not assert_condition(card_max - card_min < 0.001, "The reference card lies flat"): return
-	if not assert_condition(absf(card_min - blotter_y) < 0.0015, "The card rests on the blotter (%.4f vs %.4f)" % [card_min, blotter_y]): return
+	var card_normal := card.global_transform.basis.y.normalized()
+	if not assert_condition(card_normal.dot(Vector3.RIGHT) > 0.99, "The reference card faces the operator from the wall"): return
+	if not assert_condition(card.global_position.x < -2.84 and card.global_position.y > desk_y + 0.25, "The card hangs on the wall above the desk"): return
 	if not assert_condition(office.get_node_or_null("CardSlopeSupport") == null, "No card wedge is left behind"): return
+
+	# --- the desk is laid out, not piled: nothing intrudes on anything -------
+	var board_rect := _footprint(board)
+	var key_rect := _footprint(office.get_node("TelegraphStation/TelegraphKey/WoodBase") as VisualInstance3D)
+	if not assert_condition(not board_rect.intersects(key_rect), "The telegraph key stands clear of the copy board"): return
+	var rack_rect := _footprint(office.get_node("DeskSetup/OrganizerBottom") as VisualInstance3D)
+	var ledger_rect := _footprint(office.get_node("DispatchLedger/BookMesh") as VisualInstance3D)
+	if not assert_condition(not rack_rect.intersects(ledger_rect), "The ledger is not pushed under the pigeonholes"): return
+	var rack_bottom := office.get_node("DeskSetup/OrganizerBottom") as CSGBox3D
+	var rack_y: float = rack_bottom.global_position.y - rack_bottom.size.y / 2.0
+	if not assert_condition(absf(rack_y - desk_y) < 0.002, "The pigeonholes stand on the desk (%.4f vs %.4f)" % [rack_y, desk_y]): return
+	var flame := office.get_node("DeskSetup/OilLamp/Flame") as Node3D
+	var lamp_light := office.get_node("DeskLampLight") as Node3D
+	if not assert_condition(lamp_light.global_position.distance_to(flame.global_position) < 0.1, "The lamp's light comes from its flame"): return
 
 	# --- nothing overhangs the desk: every corner is above the top's footprint
 	var top_aabb := desk_top.global_transform * AABB(-desk_top.size / 2.0, desk_top.size)
-	for c in corners + card_corners:
+	for c in corners:
 		if not assert_condition(
 				c.x >= top_aabb.position.x - 0.002 and c.x <= top_aabb.end.x + 0.002
 				and c.z >= top_aabb.position.z - 0.002 and c.z <= top_aabb.end.z + 0.002,
@@ -99,6 +111,11 @@ func _run() -> void:
 	var prev_corners := _sheet_corners(previous, PAPER_HALF_X, PAPER_HALF_Z)
 	var prev_min := _min_corner_y(prev_corners)
 	if not assert_condition(prev_min >= desk_y - 0.004, "The archived sheet lies flat on the desk (min %.4f)" % prev_min): return
+	var prev_rect := Rect2()
+	for i in prev_corners.size():
+		var c: Vector3 = prev_corners[i]
+		prev_rect = Rect2(Vector2(c.x, c.z), Vector2.ZERO) if i == 0 else prev_rect.expand(Vector2(c.x, c.z))
+	if not assert_condition(not prev_rect.grow(-0.002).intersects(_footprint(paper2.get_node("CopyBoard") as VisualInstance3D)), "The archived sheet is set down beside the board, not under it"): return
 	var prev_near := _nearest_edge_y(previous, PAPER_HALF_Z)
 	if not assert_condition(absf(prev_near - desk_y) < 0.006, "The archived sheet rests on the desk surface (%.4f vs %.4f)" % [prev_near, desk_y]): return
 
@@ -136,6 +153,11 @@ func _card_corners(card: Node3D) -> Array[Vector3]:
 			out.append(card.to_global(Vector3(sx, 0.0, sz)))
 	return out
 
+## Top-down footprint (x, z) of a visual in world space.
+func _footprint(node: VisualInstance3D) -> Rect2:
+	var box := node.global_transform * node.get_aabb()
+	return Rect2(Vector2(box.position.x, box.position.z), Vector2(box.size.x, box.size.z))
+
 func _min_corner_y(corners: Array[Vector3]) -> float:
 	var m := INF
 	for c in corners:
@@ -143,7 +165,7 @@ func _min_corner_y(corners: Array[Vector3]) -> float:
 	return m
 
 ## The lowest edge of the sheet in world space: sample the two edges along the
-## slope axis and take the lower midpoint (the edge nearest the desk).
+## sheet's length and take the lower midpoint.
 func _nearest_edge_y(sheet: Node3D, half_z: float) -> float:
 	var e1 := sheet.to_global(Vector3(0.0, 0.0, half_z))
 	var e2 := sheet.to_global(Vector3(0.0, 0.0, -half_z))

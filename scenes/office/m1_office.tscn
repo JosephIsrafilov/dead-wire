@@ -62,13 +62,21 @@ size = Vector3(1.7, 2.0, 0.6)
 size = Vector3(0.92, 0.82, 0.38)
 
 [sub_resource type="StandardMaterial3D" id="BlotterFelt"]
-albedo_color = Color(0.1, 0.17, 0.12, 1)
+albedo_color = Color(0.05, 0.1, 0.07, 1)
 roughness = 1.0
 
 [sub_resource type="StandardMaterial3D" id="BlotterLeather"]
 albedo_color = Color(0.2, 0.11, 0.07, 1)
 roughness = 0.6
 metallic_specular = 0.3
+
+[sub_resource type="StandardMaterial3D" id="LineWire"]
+albedo_color = Color(0.09, 0.08, 0.07, 1)
+roughness = 0.6
+
+[sub_resource type="StandardMaterial3D" id="DoorGapLight"]
+shading_mode = 0
+albedo_color = Color(0.42, 0.34, 0.24, 1)
 
 [sub_resource type="BoxShape3D" id="WickInteract"]
 size = Vector3(0.18, 0.34, 0.18)
@@ -144,7 +152,7 @@ ambient_mode = 0
 reflection_mask = 4294967293
 
 [node name="DeskLampLight" type="OmniLight3D" parent="."]
-position = Vector3(-2.12, 1.35, -0.12)
+position = Vector3(-2.5, 0.975, -0.45)
 light_color = Color(1, 0.81, 0.61, 1)
 light_energy = 2.6
 light_indirect_energy = 0.9
@@ -343,6 +351,30 @@ size = Vector3(2.12, 2.85, 0.12)
 material = ExtResource("3_wall")
 use_collision = true
 
+; The line comes down the west wall behind the pigeonholes to the lead-in
+; block on the desk: the instruments are visibly on the wire.
+[node name="LineDropA" type="CSGBox3D" parent="."]
+position = Vector3(-2.82, 1.635, -1.25)
+size = Vector3(0.008, 1.69, 0.008)
+material = SubResource("LineWire")
+
+[node name="LineDropB" type="CSGBox3D" parent="."]
+position = Vector3(-2.82, 1.58, -1.235)
+size = Vector3(0.008, 1.58, 0.008)
+material = SubResource("LineWire")
+
+[node name="LineLeadIn" type="CSGBox3D" parent="."]
+position = Vector3(-2.72, 0.792, -1.242)
+size = Vector3(0.2, 0.008, 0.022)
+material = SubResource("LineWire")
+
+; Light from the lit landing under the office door: the door is a place in
+; the dark, not a hole in it.
+[node name="DoorGapGlow" type="CSGBox3D" parent="."]
+position = Vector3(-1.6, 0.034, 2.333)
+size = Vector3(0.86, 0.006, 0.002)
+material = SubResource("DoorGapLight")
+
 ; The landing is the way out at 6 A.M.: a street door and a thin dawn light, so
 ; walking off shift reads as leaving into morning rather than into a black box.
 [node name="LandingStreetDoor" parent="." instance=ExtResource("9_door")]
@@ -538,17 +570,17 @@ position = Vector3(-2.38, 0.752, -0.92)
 
 ; Desk blotter: green baize on a board, leather ends. The writing station.
 [node name="DeskBlotter" type="CSGBox3D" parent="."]
-position = Vector3(-2.185, 0.7515, -0.495)
-size = Vector3(0.43, 0.003, 0.81)
+position = Vector3(-2.185, 0.7515, -0.59)
+size = Vector3(0.43, 0.003, 0.56)
 material = SubResource("BlotterFelt")
 
 [node name="DeskBlotterEndNear" type="CSGBox3D" parent="."]
-position = Vector3(-2.185, 0.7525, -0.09)
+position = Vector3(-2.185, 0.7525, -0.31)
 size = Vector3(0.44, 0.005, 0.035)
 material = SubResource("BlotterLeather")
 
 [node name="DeskBlotterEndFar" type="CSGBox3D" parent="."]
-position = Vector3(-2.185, 0.7525, -0.9)
+position = Vector3(-2.185, 0.7525, -0.87)
 size = Vector3(0.44, 0.005, 0.035)
 material = SubResource("BlotterLeather")
 
@@ -561,11 +593,11 @@ position = Vector3(0.95, 0.72, 1.35)
 rotation = Vector3(0, 3.141593, 0)
 
 [node name="MorseReferenceCard" parent="." instance=ExtResource("17_morseref")]
-position = Vector3(-2.11, 0.753, -0.265)
-rotation = Vector3(0, 1.5707963, 0)
+position = Vector3(-2.8605, 1.2, -0.2)
+rotation = Vector3(1.5707963, 1.5707963, 0)
 
 [node name="DispatchLedger" parent="." instance=ExtResource("18_ledger")]
-position = Vector3(-2.52, 0.755, -0.42)
+position = Vector3(-2.52, 0.752, -0.14)
 rotation = Vector3(0, 1.5707963, 0)
 office_path = NodePath("..")
 
@@ -579,7 +611,7 @@ transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -2.58,
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -2.58, 0, 1.4)
 
 [node name="PhFilingTable" parent="." instance=ExtResource("53_phtable")]
-; Service table by the south wall, west of the door: hats, stove mitts and the
+; Service table by the south wall, east of the door: hats, stove mitts and the
 ; morning's dispatch satchel live here — the door group's working surface.
 transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -0.5, 0, 1.85)
 

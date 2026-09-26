@@ -108,40 +108,38 @@ material = SubResource("StencilPaint")
 ; ---- Route lever assembly: pivot carries lever + grip; stops bound travel ----
 
 [node name="LeverBase" type="CSGCylinder3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.16, 0.4, -0.075)
-radius = 0.055
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.0, 0.33, -0.075)
+radius = 0.045
 height = 0.06
 sides = 8
 material = ExtResource("5_brass")
 
 [node name="LeverPivot" type="Node3D" parent="."]
-position = Vector3(0.16, 0.4, -0.09)
+position = Vector3(0.0, 0.33, -0.09)
 
 [node name="RouteLever" type="CSGCylinder3D" parent="LeverPivot"]
-rotation = Vector3(0, 0, 0.610865)
-position = Vector3(-0.09, 0.095, 0)
-radius = 0.016
-height = 0.26
+position = Vector3(0.0, 0.11, 0)
+radius = 0.013
+height = 0.22
 sides = 8
 material = ExtResource("7_iron")
 
 [node name="LeverGrip" type="CSGCylinder3D" parent="LeverPivot"]
-rotation = Vector3(0, 0, 0.610865)
-position = Vector3(-0.2, 0.21, 0)
-radius = 0.032
-height = 0.11
+position = Vector3(0.0, 0.25, 0)
+radius = 0.022
+height = 0.07
 sides = 8
 material = ExtResource("4_wood")
 
 [node name="LeverStopClear" type="CSGCylinder3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.02, 0.56, -0.07)
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -0.145, 0.545, -0.07)
 radius = 0.012
 height = 0.03
 sides = 8
 material = ExtResource("7_iron")
 
 [node name="LeverStopHold" type="CSGCylinder3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.31, 0.52, -0.07)
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.145, 0.545, -0.07)
 radius = 0.012
 height = 0.03
 sides = 8
@@ -150,18 +148,18 @@ material = ExtResource("7_iron")
 ; ---- Mechanical position indicator: brass dial + iron needle ----
 
 [node name="IndicatorDial" type="CSGCylinder3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -0.2, 0.36, -0.045)
-radius = 0.065
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.0, 0.215, -0.045)
+radius = 0.05
 height = 0.014
 sides = 12
 material = ExtResource("5_brass")
 
 [node name="IndicatorPivot" type="Node3D" parent="."]
-position = Vector3(-0.2, 0.36, -0.055)
+position = Vector3(0.0, 0.215, -0.055)
 
 [node name="IndicatorNeedle" type="CSGBox3D" parent="IndicatorPivot"]
-position = Vector3(0, 0.036, 0)
-size = Vector3(0.008, 0.052, 0.006)
+position = Vector3(0, 0.028, 0)
+size = Vector3(0.007, 0.042, 0.006)
 material = ExtResource("7_iron")
 
 ; ---- Mounting: two wall screws in plain iron ----
@@ -217,7 +215,7 @@ text = "SIDING"
 font_size = 13
 
 [node name="ClearEastLabel3D" type="Label3D" parent="."]
-position = Vector3(0.0, 0.25, -0.048)
+position = Vector3(-0.25, 0.385, -0.048)
 rotation = Vector3(0, 3.141593, 0)
 pixel_size = 0.003
 modulate = Color(0.7, 0.64, 0.5, 1)
@@ -226,7 +224,7 @@ text = "CLEAR EAST"
 font_size = 13
 
 [node name="HoldLabel3D" type="Label3D" parent="."]
-position = Vector3(0.28, 0.25, -0.048)
+position = Vector3(0.25, 0.385, -0.048)
 rotation = Vector3(0, 3.141593, 0)
 pixel_size = 0.003
 modulate = Color(0.7, 0.64, 0.5, 1)
@@ -279,6 +277,6 @@ theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.85)
 theme_override_constants/shadow_offset_x = 1
 theme_override_constants/shadow_offset_y = 1
 theme_override_font_sizes/font_size = 16
-text = "[1] CLEAR EAST       [2] HOLD"
+text = "[2] HOLD          [1] CLEAR EAST"
 horizontal_alignment = 1
 vertical_alignment = 1

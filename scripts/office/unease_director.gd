@@ -61,6 +61,10 @@ var creaks_played: int = 0
 var is_hushed: bool = false
 ## The pre-call hush happens once per watch, before the first call of slot 0.
 var first_call_hush_done: bool = false
+## The second authored silence: the room draws in once more before the core
+## hook's call, so WATER breaks real silence. Its own flag; once per watch.
+var core_hook_hush_done: bool = false
+const CORE_HOOK_SCENARIO_ID := "core_hook_water_watcher"
 
 var _dwell: float = 0.0
 var _cooldown: float = 0.0
@@ -130,6 +134,7 @@ func advance(delta: float) -> void:
 		if _hush_elapsed >= pre_call_hush_seconds:
 			release_hush()
 	_maybe_hush_before_first_call()
+	_maybe_hush_before_core_hook()
 	_cooldown = maxf(0.0, _cooldown - delta)
 
 	var player := office.player if office != null else null
@@ -224,6 +229,22 @@ func _maybe_hush_before_first_call() -> void:
 	if remaining > pre_call_hush_seconds:
 		return
 	first_call_hush_done = true
+	hush()
+
+func _maybe_hush_before_core_hook() -> void:
+	if core_hook_hush_done or is_hushed or director == null or ambience == null or office == null:
+		return
+	if director.get_phase() != ShiftDirector.Phase.WAITING:
+		return
+	var session := office.session_controller
+	if session == null or session.get_current_scenario() == null:
+		return
+	if session.get_current_scenario().scenario_id != CORE_HOOK_SCENARIO_ID:
+		return
+	var remaining := director.get_current_wait_seconds() - director.get_phase_timer()
+	if remaining > pre_call_hush_seconds:
+		return
+	core_hook_hush_done = true
 	hush()
 
 ## The core-hook letter is the one moment the design exists for: from the

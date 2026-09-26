@@ -24,72 +24,72 @@ material = ExtResource("2_dark_wood")
 
 ; Pigeonholes: an open-fronted rack of cubbies for blanks and filed forms.
 [node name="OrganizerBack" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.15, 0.88, 0.395)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.15, 0.87, 0.395)
 size = Vector3(0.95, 0.24, 0.012)
 material = ExtResource("2_dark_wood")
 
 [node name="OrganizerTop" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.15, 0.9925, 0.34)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.15, 0.9825, 0.34)
 size = Vector3(0.95, 0.015, 0.12)
 material = ExtResource("2_dark_wood")
 
 [node name="OrganizerBottom" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.15, 0.7675, 0.34)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.15, 0.7575, 0.34)
 size = Vector3(0.95, 0.015, 0.12)
 material = ExtResource("2_dark_wood")
 
 [node name="OrganizerSideLeft" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6175, 0.88, 0.34)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6175, 0.87, 0.34)
 size = Vector3(0.015, 0.24, 0.12)
 material = ExtResource("2_dark_wood")
 
 [node name="OrganizerSideRight" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3175, 0.88, 0.34)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3175, 0.87, 0.34)
 size = Vector3(0.015, 0.24, 0.12)
 material = ExtResource("2_dark_wood")
 
 [node name="OrganizerDivider1" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.45, 0.88, 0.34)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.45, 0.87, 0.34)
 size = Vector3(0.012, 0.21, 0.12)
 material = ExtResource("1_wood")
 
 [node name="OrganizerDivider2" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.15, 0.88, 0.34)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.15, 0.87, 0.34)
 size = Vector3(0.012, 0.21, 0.12)
 material = ExtResource("1_wood")
 
 [node name="OrganizerDivider3" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.15, 0.88, 0.34)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.15, 0.87, 0.34)
 size = Vector3(0.012, 0.21, 0.12)
 material = ExtResource("1_wood")
 
 [node name="OrganizerShelfMid" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3, 0.88, 0.34)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3, 0.87, 0.34)
 size = Vector3(0.3, 0.01, 0.118)
 material = ExtResource("2_dark_wood")
 
 [node name="OrganizerForms0" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.9928, 0.1197, 0, -0.1197, 0.9928, -0.54, 0.83, 0.35)
+transform = Transform3D(1, 0, 0, 0, 0.9928, 0.1197, 0, -0.1197, 0.9928, -0.54, 0.82, 0.35)
 size = Vector3(0.16, 0.1, 0.004)
 material = ExtResource("7_paper")
 
 [node name="OrganizerForms1" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.9928, -0.1197, 0, 0.1197, 0.9928, -0.3, 0.8, 0.352)
+transform = Transform3D(1, 0, 0, 0, 0.9928, -0.1197, 0, 0.1197, 0.9928, -0.3, 0.79, 0.352)
 size = Vector3(0.16, 0.05, 0.004)
 material = ExtResource("7_paper")
 
 [node name="OrganizerForms2" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.9928, 0.1197, 0, -0.1197, 0.9928, -0.3, 0.93, 0.35)
+transform = Transform3D(1, 0, 0, 0, 0.9928, 0.1197, 0, -0.1197, 0.9928, -0.3, 0.92, 0.35)
 size = Vector3(0.16, 0.07, 0.004)
 material = ExtResource("7_paper")
 
 [node name="OrganizerForms3" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.9928, -0.1197, 0, 0.1197, 0.9928, 0.0, 0.84, 0.35)
+transform = Transform3D(1, 0, 0, 0, 0.9928, -0.1197, 0, 0.1197, 0.9928, 0, 0.83, 0.35)
 size = Vector3(0.16, 0.12, 0.004)
 material = ExtResource("7_paper")
 
 [node name="OrganizerForms4" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.9928, 0.1197, 0, -0.1197, 0.9928, 0.23, 0.83, 0.353)
+transform = Transform3D(1, 0, 0, 0, 0.9928, 0.1197, 0, -0.1197, 0.9928, 0.23, 0.82, 0.353)
 size = Vector3(0.16, 0.09, 0.004)
 material = ExtResource("7_paper")
 
@@ -156,8 +156,9 @@ height = 0.04
 sides = 8
 material = ExtResource("4_brass")
 
+; Left-back of a right-handed writer: the hand's shadow falls away from the copy.
 [node name="OilLamp" parent="." instance=ExtResource("6_lamp")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.55, 0.75, 0.22)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.15, 0.75, 0.18)
 
 
 [node name="DeskSolid" type="StaticBody3D" parent="."]
