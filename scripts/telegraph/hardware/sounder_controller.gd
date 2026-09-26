@@ -11,6 +11,9 @@ signal sounder_clacked_up(event_index: int)
 ## the room without touching anyone else's fader. Calls, nags and closing ride
 ## the same sounder and therefore the same bus.
 @export var bus: StringName = &"Telegraph"
+## Brass never strikes twice the same: ±1.5% pitch per stroke. Pitch only —
+## onset timing, the information, is untouched.
+const PITCH_SPREAD: float = 0.015
 
 ## The armature bar physically drops onto the anvil on every mark and lifts on
 ## every gap. Until this existed the game's centrepiece clicked audibly while
@@ -115,6 +118,7 @@ func play_down(event_index: int = -1) -> void:
 	if armature != null:
 		_armature_target_y = _armature_rest_y - armature_travel
 	if _player_down != null and is_inside_tree():
+		_player_down.pitch_scale = 1.0 + randf_range(-PITCH_SPREAD, PITCH_SPREAD)
 		_player_down.play()
 	sounder_clicked_down.emit(event_index)
 
@@ -125,6 +129,7 @@ func play_up(event_index: int = -1) -> void:
 	if armature != null:
 		_armature_target_y = _armature_rest_y
 	if _player_up != null and is_inside_tree():
+		_player_up.pitch_scale = 1.0 + randf_range(-PITCH_SPREAD, PITCH_SPREAD)
 		_player_up.play()
 	sounder_clacked_up.emit(event_index)
 

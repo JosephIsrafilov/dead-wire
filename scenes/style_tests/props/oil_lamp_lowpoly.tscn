@@ -8,8 +8,8 @@
 
 [sub_resource type="SphereMesh" id="FlameMesh"]
 material = ExtResource("2_flame")
-radius = 0.008
-height = 0.042
+radius = 0.011
+height = 0.056
 radial_segments = 12
 rings = 6
 

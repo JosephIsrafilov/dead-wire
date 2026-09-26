@@ -1,0 +1,9 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+; Old case glass: nearly clear, a little lamp glint, so the pendulum shows.
+[resource]
+transparency = 1
+albedo_color = Color(0.7, 0.72, 0.68, 0.12)
+roughness = 0.15
+metallic_specular = 0.6
+texture_filter = 0

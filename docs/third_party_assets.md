@@ -230,3 +230,25 @@ Downloaded-but-unwired packs are never packaged as runtime references.
 - license: CC0
 - adaptation: selected 1 of 4 paper_sound_* (crushed/ripped excluded)
 - status: runtime-instanced
+
+## Fonts (added 2026-09-26)
+
+Both OFL 1.1; license text shipped beside each file. OFL permits bundling in a
+commercial game; the fonts may not be sold on their own. Downloaded from the
+official `google/fonts` repository (`raw.githubusercontent.com/google/fonts/main/ofl/...`).
+
+| Asset | File | License | Use |
+|---|---|---|---|
+| IM FELL English Roman — Igino Marini | `assets/fonts/imfell/IMFeENrm28P.ttf` (+ `OFL.txt`) | SIL OFL 1.1 (Reserved Font Name "IM FELL") | all printed text: 3D labels (`_apply_embedded_body_font`), UI theme `assets/fonts/deadwire_theme.tres`, document viewer |
+| Cedarville Cursive — Kimberly Geswein | `assets/fonts/cedarville/Cedarville-Cursive.ttf` (+ `OFL.txt`) | SIL OFL 1.1 | Elias's handwriting: transcript sheet labels, transcript in the document viewer |
+
+## Project-generated assets (added 2026-09-26)
+
+No third-party content; deterministic generators live in `tools/`.
+
+| Asset | Generator |
+|---|---|
+| `audio/sfx/telegraph/sounder_down.wav`, `sounder_up.wav` | `tools/generate_sounder.py` |
+| `audio/sfx/foley/pen_scratch.wav`, `key_click.wav`, `door_hinge.wav`, `sheet_slide.wav` | `tools/generate_action_foley.py` |
+| `assets/models/operator/hand_v3.res`, `cuff_v3.res`, `forearm_v3.res` | `tools/build_writer_hand.gd` |
+| `materials/style_tests/textures/psx/psx_wallpaper_stripe_128.png` | `tools/build_wallpaper.gd` |

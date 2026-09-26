@@ -6,21 +6,10 @@
 [ext_resource type="Script" path="res://scripts/telegraph/ui/writer_rig.gd" id="4_rig"]
 [ext_resource type="Material" path="res://materials/style_tests/metal_brass_aged.tres" id="6_brass"]
 
-[ext_resource type="ArrayMesh" path="res://assets/models/operator/hand_v2.obj" id="7_hand"]
-[ext_resource type="ArrayMesh" path="res://assets/models/operator/forearm_v2.obj" id="8_sleeve"]
-[ext_resource type="ArrayMesh" path="res://assets/models/operator/cuff_v2.obj" id="9_cuff"]
-
-[sub_resource type="StandardMaterial3D" id="Skin"]
-albedo_color = Color(0.48, 0.32, 0.23, 1)
-roughness = 0.86
-
-[sub_resource type="StandardMaterial3D" id="Wool"]
-albedo_color = Color(0.055, 0.066, 0.063, 1)
-roughness = 1.0
-
-[sub_resource type="StandardMaterial3D" id="Cotton"]
-albedo_color = Color(0.48, 0.44, 0.35, 1)
-roughness = 1.0
+[ext_resource type="ArrayMesh" path="res://assets/models/operator/hand_v3.res" id="7_hand"]
+[ext_resource type="FontFile" path="res://assets/fonts/cedarville/Cedarville-Cursive.ttf" id="10_hand_font"]
+[ext_resource type="ArrayMesh" path="res://assets/models/operator/forearm_v3.res" id="8_sleeve"]
+[ext_resource type="ArrayMesh" path="res://assets/models/operator/cuff_v3.res" id="9_cuff"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_paper"]
 material = ExtResource("3_mat")
@@ -29,11 +18,15 @@ size = Vector3(0.23, 0.003, 0.3)
 [sub_resource type="BoxShape3D" id="BoxShape3D_interact"]
 size = Vector3(0.24, 0.02, 0.3)
 
+[sub_resource type="StandardMaterial3D" id="PenHolder"]
+albedo_color = Color(0.09, 0.055, 0.035, 1)
+roughness = 0.55
+
 [sub_resource type="CylinderMesh" id="CylinderMesh_pen"]
-material = ExtResource("6_brass")
-top_radius = 0.003
-bottom_radius = 0.003
-height = 0.09
+material = SubResource("PenHolder")
+top_radius = 0.0032
+bottom_radius = 0.0042
+height = 0.15
 radial_segments = 6
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_nib"]
@@ -54,6 +47,7 @@ mesh = SubResource("BoxMesh_paper")
 
 [node name="Label3D" type="Label3D" parent="Sheet"]
 transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, -0.082, 0.004, -0.065)
+font = ExtResource("10_hand_font")
 pixel_size = 0.00165
 modulate = Color(0.12, 0.1, 0.08, 1)
 outline_modulate = Color(0.92, 0.88, 0.78, 1)
@@ -87,6 +81,7 @@ mesh = SubResource("BoxMesh_paper")
 
 [node name="PreviousSheetText" type="Label3D" parent="PreviousSheet"]
 transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, -0.082, 0.0035, -0.065)
+font = ExtResource("10_hand_font")
 pixel_size = 0.00165
 modulate = Color(0.14, 0.12, 0.1, 1)
 outline_modulate = Color(0.92, 0.88, 0.78, 1)
@@ -113,7 +108,6 @@ rotation = Vector3(0.18, 0.0, 0.10)
 
 [node name="SleeveMesh" type="MeshInstance3D" parent="WriterRig/Sleeve"]
 mesh = ExtResource("8_sleeve")
-material_override = SubResource("Wool")
 
 [node name="Wrist" type="Node3D" parent="WriterRig/Sleeve"]
 position = Vector3(0.0, -0.012, -0.024)
@@ -121,7 +115,6 @@ rotation = Vector3(-0.14, 0.0, -0.06)
 
 [node name="WristMesh" type="MeshInstance3D" parent="WriterRig/Sleeve/Wrist"]
 mesh = ExtResource("9_cuff")
-material_override = SubResource("Cotton")
 
 [node name="Hand" type="Node3D" parent="WriterRig/Sleeve/Wrist"]
 position = Vector3(0.0, -0.008, -0.028)
@@ -129,13 +122,14 @@ rotation = Vector3(0.10, 0.0, -0.10)
 
 [node name="HandMesh" type="MeshInstance3D" parent="WriterRig/Sleeve/Wrist/Hand"]
 mesh = ExtResource("7_hand")
-material_override = SubResource("Skin")
 
+; Pen transform: built around by tools/build_writer_hand.gd (tripod grip); keep in sync.
 [node name="Pen" type="Node3D" parent="WriterRig/Sleeve/Wrist/Hand"]
-position = Vector3(0.002, -0.030, -0.052)
-rotation = Vector3(0.10, 0.0, -0.16)
+position = Vector3(0.0208, 0.0042, -0.0753)
+rotation = Vector3(0.6672, -0.1674, -0.475)
 
 [node name="Shaft" type="MeshInstance3D" parent="WriterRig/Sleeve/Wrist/Hand/Pen"]
+position = Vector3(0.0, 0.03, 0.0)
 mesh = SubResource("CylinderMesh_pen")
 
 [node name="Nib" type="MeshInstance3D" parent="WriterRig/Sleeve/Wrist/Hand/Pen"]

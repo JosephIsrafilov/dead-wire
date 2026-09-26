@@ -11,7 +11,7 @@ func _init() -> void:
 
 	var act: Interactable = board_node.get_interactable()
 	if not assert_condition(act != null, "board has Interactable component"): return
-	if not assert_condition(act.prompt_text == "Inspect Routing Board (East Wall)", "prompt text matches"): return
+	if not assert_condition(act.prompt_text == "Train-Order Board", "prompt text matches"): return
 
 	# 1. Open / Close (only while a route decision is pending)
 	if not assert_condition(not board_node.is_open, "Initially closed"): return

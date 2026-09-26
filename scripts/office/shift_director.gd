@@ -89,17 +89,17 @@ var _station_clock_running: bool = false
 ## How close a warning and a nag may land before they count as one reminder.
 @export var warning_nag_merge_seconds: float = 1.0
 
-const PROMPT_OPEN_LINE: String = "Open the Line (Begin Shift)"
+const PROMPT_OPEN_LINE: String = "Open the Line"
 const PROMPT_LINE_QUIET: String = "Line Quiet"
 const PROMPT_ANSWER_CALL: String = "Answer the Call"
-const PROMPT_RECEIVING: String = "Line Busy (Receiving)"
+const PROMPT_RECEIVING: String = "Line Busy — Copying"
 const PROMPT_FINISHING_COPY: String = "Finishing the Copy"
-const PROMPT_READ_COPY: String = "Read the Finished Copy"
+const PROMPT_READ_COPY: String = "Read the Copy"
 const PROMPT_AWAITING_ROUTE: String = "Sender Waiting — Set the Route"
 const PROMPT_FILE_COPY: String = "File One Copy"
 const PROMPT_STAND_BY: String = "Stand By"
 const PROMPT_CLOSING: String = "Line Closing"
-const PROMPT_SHIFT_OVER: String = "Line Closed — Shift Over"
+const PROMPT_SHIFT_OVER: String = "Line Closed. The Watch Is Over"
 const PROMPT_NOT_SEATED: String = "Sit to Work the Key"
 
 var _phase: Phase = Phase.PRE_SHIFT

@@ -84,6 +84,9 @@ var _motion_glyph_index: int = -1
 var _motion_elapsed: float = 0.0
 var _motion_duration: float = 0.06
 var _motion_is_row_change: bool = false
+## The first glyph of a new word: the nib lifts over the gap instead of
+## dragging. Same duration as any glyph — only the path changes, not timing.
+var _motion_is_word_start: bool = false
 var _motion_sleeve_start: Transform3D = Transform3D.IDENTITY
 var _motion_sleeve_target: Transform3D = Transform3D.IDENTITY
 var _motion_wrist_start: Vector3 = Vector3.ZERO
@@ -279,6 +282,7 @@ func request_glyph_motion(glyph_index: int, text: String) -> bool:
 	# survives this rig's orientation.
 	var row := _layout_row_of_glyph(text, glyph_index)
 	_motion_is_row_change = _last_contact_row >= 0 and row != _last_contact_row
+	_motion_is_word_start = not _motion_is_row_change and _glyph_follows_space(text, glyph_index)
 
 	var sleeve := _get_assembly()
 	var wrist := get_node_or_null("Sleeve/Wrist") as Node3D
@@ -368,9 +372,9 @@ func _advance_motion(delta: float) -> float:
 		sleeve.transform = _motion_sleeve_start.interpolate_with(_motion_sleeve_target, eased)
 	if wrist != null:
 		var lerped := _motion_wrist_start.lerp(_motion_wrist_target, eased)
-		if _motion_is_row_change:
-			# A small lift over the finished line: the nib hops, it does not
-			# scrape across the paper.
+		if _motion_is_row_change or _motion_is_word_start:
+			# A small lift over the finished line or the word gap: the nib
+			# hops, it does not scrape across the paper.
 			lerped += Vector3(0.0, sin(PI * t) * pause_lift, 0.0)
 		wrist.position = lerped
 	if t >= 1.0:
@@ -395,13 +399,6 @@ func set_writing_progress(_ratio: float, text: String = "", visible_characters: 
 	if text.is_empty() or visible_characters < 0:
 		return
 	request_glyph_motion(clampi(visible_characters, 0, _glyph_count(text) - 1), text)
-
-func mark_letter_pause() -> void:
-	if is_active():
-		presentation_state = PresentationState.LETTER_PAUSE
-		var hand := get_node_or_null(_get_hand_path()) as Node3D
-		if hand != null:
-			hand.position.y = _hand_rest_position.y + pause_lift
 
 func finish_writing() -> void:
 	if presentation_state == PresentationState.HIDDEN or presentation_state == PresentationState.WITHDRAWN:
@@ -473,6 +470,16 @@ func _is_layout_whitespace(character: String) -> bool:
 
 ## The layout row a glyph lives on, from the same fixed-column contract the
 ## paper's ink layout uses (TranscriptPaper.GLYPH_COLUMNS).
+func _glyph_follows_space(text: String, glyph_index: int) -> bool:
+	var glyph := 0
+	for index in text.length():
+		if _is_layout_whitespace(text.substr(index, 1)):
+			continue
+		if glyph == glyph_index:
+			return index > 0 and _is_layout_whitespace(text.substr(index - 1, 1))
+		glyph += 1
+	return false
+
 func _layout_row_of_glyph(text: String, glyph_index: int) -> int:
 	var glyph := 0
 	for index in text.length():

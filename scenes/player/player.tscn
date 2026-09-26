@@ -8,21 +8,7 @@
 radius = 0.35
 height = 1.8
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_prompt"]
-bg_color = Color(0.08, 0.08, 0.1, 0.75)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.3, 0.3, 0.35, 0.6)
-corner_radius_top_left = 3
-corner_radius_top_right = 3
-corner_radius_bottom_right = 3
-corner_radius_bottom_left = 3
-expand_margin_left = 8.0
-expand_margin_top = 4.0
-expand_margin_right = 8.0
-expand_margin_bottom = 4.0
+[sub_resource type="StyleBoxEmpty" id="StyleBoxFlat_prompt"]
 
 [node name="Player" type="CharacterBody3D"]
 script = ExtResource("1_controller")
@@ -42,7 +28,7 @@ current = true
 [node name="FootstepPlayer" type="AudioStreamPlayer3D" parent="."]
 stream = ExtResource("3_footstep")
 volume_db = -13.0
-bus = &"Ambience"
+bus = &"Foley"
 max_distance = 7.0
 unit_size = 3.0
 
@@ -72,7 +58,7 @@ offset_bottom = 2.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0.9, 0.9, 0.9, 0.5)
+color = Color(0.86, 0.79, 0.63, 0.45)
 
 [node name="PromptLabel" type="Label" parent="InteractionUI"]
 visible = false
@@ -81,14 +67,17 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -200.0
-offset_top = -70.0
-offset_right = 200.0
-offset_bottom = -38.0
+offset_left = -240.0
+offset_top = -92.0
+offset_right = 240.0
+offset_bottom = -64.0
 grow_horizontal = 2
 grow_vertical = 0
-theme_override_colors/font_color = Color(0.95, 0.95, 0.9, 1)
-theme_override_font_sizes/font_size = 15
+theme_override_colors/font_color = Color(0.86, 0.79, 0.63, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.85)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/font_size = 14
 theme_override_styles/normal = SubResource("StyleBoxFlat_prompt")
 text = "[E] Interact"
 horizontal_alignment = 1

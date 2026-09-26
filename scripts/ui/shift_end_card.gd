@@ -98,22 +98,34 @@ func play(title: String, record: String, footer: String = "") -> void:
 	visible = true
 	# The operator has walked out; he needs a cursor to decide what happens next.
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-	if again_button != null:
-		again_button.grab_focus()
 	if not is_inside_tree():
 		_snap_to_end()
 		return
 
+	# Nothing on the card can be pressed before it can be seen.
+	_set_buttons_live(false)
 	var tween := create_tween()
 	if fade_rect != null:
 		tween.tween_property(fade_rect, "color:a", 1.0, fade_duration).set_trans(Tween.TRANS_SINE)
 	if card_root != null:
 		tween.tween_interval(card_delay)
 		tween.tween_property(card_root, "modulate:a", 1.0, 0.9).set_trans(Tween.TRANS_SINE)
-	tween.tween_callback(func() -> void: fade_completed.emit())
+	tween.tween_callback(func() -> void:
+		_set_buttons_live(true)
+		fade_completed.emit())
+
+func _set_buttons_live(live: bool) -> void:
+	for button in [again_button, title_button]:
+		if button == null:
+			continue
+		button.disabled = not live
+		button.mouse_filter = Control.MOUSE_FILTER_STOP if live else Control.MOUSE_FILTER_IGNORE
+	if live and again_button != null:
+		again_button.grab_focus()
 
 ## Used when there is no tree to run a tween on, such as in tests.
 func _snap_to_end() -> void:
+	_set_buttons_live(true)
 	if fade_rect != null:
 		fade_rect.color.a = 1.0
 	if card_root != null:

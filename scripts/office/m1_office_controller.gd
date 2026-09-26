@@ -37,13 +37,37 @@ func _ready() -> void:
 	_scenario_list = [scenario_1, scenario_2, scenario_3]
 	_bind_signals()
 	load_scenario_by_index(0)
+	_bind_room_fade_in.call_deferred()
 
-## Every printed surface in the room renders with the ONE embedded body font
-## (extracted from the engine's own bundled fallback), never with whatever
-## the host machine's fallback happens to be. Labels with an explicitly
-## authored font keep theirs.
+## The room is heard faintly behind the intro's black card and comes up with
+## the picture; at the end of the watch it leaves with the picture.
+const ROOM_UNDER_CARD_DB: float = -18.0
+const ROOM_GONE_DB: float = -40.0
+const ROOM_FADE_IN_SECONDS: float = 1.2
+
+func _bind_room_fade_in() -> void:
+	var intro := get_node_or_null("IntroCard") as IntroCard
+	var ambience := get_node_or_null("OfficeAmbience") as OfficeAmbience
+	if intro == null or ambience == null or not intro.is_running():
+		return
+	ambience.set_hush_db(ROOM_UNDER_CARD_DB)
+	intro.intro_finished.connect(func() -> void:
+		_fade_room(ROOM_UNDER_CARD_DB, 0.0, ROOM_FADE_IN_SECONDS), CONNECT_ONE_SHOT)
+
+func _fade_room(from_db: float, to_db: float, seconds: float) -> void:
+	var ambience := get_node_or_null("OfficeAmbience") as OfficeAmbience
+	if ambience == null:
+		return
+	if not is_inside_tree() or seconds <= 0.0:
+		ambience.set_hush_db(to_db)
+		return
+	create_tween().tween_method(ambience.set_hush_db, from_db, to_db, seconds).set_trans(Tween.TRANS_SINE)
+
+## Every printed surface in the room is 1894 letterpress (IM FELL English,
+## OFL, bundled), never whatever the host machine's fallback happens to be.
+## Labels with an explicitly authored font (Elias's hand) keep theirs.
 func _apply_embedded_body_font() -> void:
-	var font := load("res://assets/fonts/deadwire_body.res") as Font
+	var font := load("res://assets/fonts/imfell/IMFeENrm28P.ttf") as Font
 	if font == null:
 		return
 	for label in find_children("*", "Label3D", true, false):
@@ -555,6 +579,7 @@ func _try_end_shift() -> void:
 	if sheet != null:
 		record = sheet.get_watch_record()
 	shift_end_card.play("END OF WATCH", record)
+	_fade_room(0.0, ROOM_GONE_DB, shift_end_card.fade_duration)
 	var interaction := player.get_node_or_null("InteractionController") as InteractionController
 	if interaction != null:
 		interaction.is_ui_blocked = true
@@ -618,10 +643,10 @@ func _update_key_feedback() -> void:
 			key.set_prompt_message("Line Inactive")
 			key.set_enabled(false)
 		TelegraphSessionController.State.READY:
-			key.set_prompt_message("Press Key (Answer Line)")
+			key.set_prompt_message("Answer the Line")
 			key.set_enabled(true)
 		TelegraphSessionController.State.RECEIVING:
-			key.set_prompt_message("Line Busy (Receiving Telegram)")
+			key.set_prompt_message(ShiftDirector.PROMPT_RECEIVING)
 			key.set_enabled(false)
 		TelegraphSessionController.State.COPYING:
 			key.set_prompt_message("Finishing the Copy")

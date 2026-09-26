@@ -80,6 +80,10 @@ commit_option_2={
 ]
 }
 
+[gui]
+
+theme/custom="res://assets/fonts/deadwire_theme.tres"
+
 [physics]
 
 3d/physics_engine="Jolt Physics"

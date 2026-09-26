@@ -94,7 +94,7 @@ func _init() -> void:
 	office.load_scenario_by_index(0)
 
 	if not assert_condition(office.session_controller.get_state() == TelegraphSessionController.State.READY, "Scenario 1 starts in READY state"): return
-	if not assert_condition(key.prompt_message == "Press Key (Answer Line)", "Key prompt is 'Press Key (Answer Line)'"): return
+	if not assert_condition(key.prompt_message == "Answer the Line", "Key prompt is 'Answer the Line'"): return
 	if not assert_condition(key_act.is_actionable, "Key is actionable in READY state"): return
 
 	# Start Scenario 1 transmission via key interact

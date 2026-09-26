@@ -5,7 +5,7 @@ signal document_opened(doc_id: String)
 signal document_closed(doc_id: String)
 
 @export var default_footer: String = "[E / Esc] Put Down Document"
-@export var open_duration: float = 0.14
+@export var open_duration: float = 0.24
 
 var _current_doc_id: String = ""
 var _is_open: bool = false
@@ -19,7 +19,11 @@ var title_label: Label = null
 var body_label: RichTextLabel = null
 var footer_label: Label = null
 
-const PAPER_FONT = preload("res://materials/typography/office_serif.tres")
+## Bundled faces only — never the host's fallback. Printed forms are letterpress;
+## the transcript is Elias's own hand, which is the whole point of reading it.
+const PAPER_FONT = preload("res://assets/fonts/imfell/IMFeENrm28P.ttf")
+const HAND_FONT = preload("res://assets/fonts/cedarville/Cedarville-Cursive.ttf")
+const HAND_DOC_ID := "transcript_paper"
 const MORSE_FONT = preload("res://materials/typography/morse_mono.tres")
 
 func _ready() -> void:
@@ -55,7 +59,16 @@ func open_document(doc_id: String, title: String, body: String, footer: String =
 	if title_label != null:
 		title_label.text = title
 	if body_label != null:
-		body_label.add_theme_font_override("normal_font", MORSE_FONT if doc_id == "morse_reference" else PAPER_FONT)
+		var font: Font = PAPER_FONT
+		var font_size := 17
+		if doc_id == "morse_reference":
+			font = MORSE_FONT
+			font_size = 16
+		elif doc_id == HAND_DOC_ID:
+			font = HAND_FONT
+			font_size = 24
+		body_label.add_theme_font_override("normal_font", font)
+		body_label.add_theme_font_size_override("normal_font_size", font_size)
 		body_label.text = body
 		body_label.scroll_to_line(0)
 	if footer_label != null:
@@ -97,7 +110,8 @@ func _animate_in() -> void:
 		centre.scale = Vector2(0.985, 0.985)
 		centre.pivot_offset = centre.size * 0.5
 		tween.tween_property(centre, "modulate:a", 1.0, open_duration).set_trans(Tween.TRANS_SINE)
-		tween.tween_property(centre, "scale", Vector2.ONE, open_duration).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		# Paper is lifted, not sprung: no overshoot.
+		tween.tween_property(centre, "scale", Vector2.ONE, open_duration).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 
 func close_document() -> void:
 	if not _is_open:

@@ -4,6 +4,8 @@ extends Node
 @export var interaction_ray: RayCast3D
 @export var prompt_label: Label
 
+const STATUS_ALPHA: float = 0.55
+
 var current_target: Interactable = null
 var is_ui_blocked: bool = false
 
@@ -71,9 +73,12 @@ func _update_prompt_ui() -> void:
 			prompt_label.text = "[E] %s" % current_target.get_prompt()
 		else:
 			prompt_label.text = current_target.get_prompt()
+		# Status lines whisper; only an action the operator can take speaks up.
+		prompt_label.modulate.a = 1.0 if current_target.is_actionable else STATUS_ALPHA
 		prompt_label.visible = true
 	elif not persistent_hint.is_empty() and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		prompt_label.text = persistent_hint
+		prompt_label.modulate.a = STATUS_ALPHA
 		prompt_label.visible = true
 	else:
 		prompt_label.visible = false

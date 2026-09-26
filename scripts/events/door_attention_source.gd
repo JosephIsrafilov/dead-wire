@@ -7,14 +7,17 @@ signal footsteps_completed()
 @export var footstep_sound: AudioStream = preload("res://audio/sfx/foley/footstep_wood.wav")
 @export var step_interval: float = 0.55
 @export var total_steps: int = 3
-@export var volume_db: float = -6.0
+@export var volume_db: float = -9.0
 
 var _player: AudioStreamPlayer3D = null
 var is_active: bool = false
 var steps_played: int = 0
 var _step_timer: float = 0.0
 
-const PITCH_VARIATIONS: Array[float] = [0.97, 1.02, 0.99]
+## Someone heavier than the operator, heard through a closed door: lower,
+## muffled.
+const PITCH_VARIATIONS: Array[float] = [0.84, 0.88, 0.82]
+const THROUGH_DOOR_CUTOFF_HZ: float = 1400.0
 
 func _ready() -> void:
 	_setup_audio_player()
@@ -27,6 +30,8 @@ func _setup_audio_player() -> void:
 		_player.volume_db = volume_db
 		_player.pitch_scale = 1.0
 		_player.max_distance = 12.0
+		_player.attenuation_filter_cutoff_hz = THROUGH_DOOR_CUTOFF_HZ
+		_player.attenuation_filter_db = -18.0
 		_player.bus = &"Foley" if AudioServer.get_bus_index(&"Foley") >= 0 else &"Master"
 		add_child(_player)
 

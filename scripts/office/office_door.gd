@@ -23,7 +23,7 @@ signal player_left_office()
 @export var rattle_knob_degrees: float = 9.0
 @export var rattle_leaf_metres: float = 0.009
 
-const PROMPT_LOCKED: String = "Locked — You Are On Shift"
+const PROMPT_LOCKED: String = "Locked Until the Watch Is Over"
 const PROMPT_UNLOCKED: String = "Leave the Office"
 const PROMPT_STANDING_OPEN: String = "The Way Out"
 
