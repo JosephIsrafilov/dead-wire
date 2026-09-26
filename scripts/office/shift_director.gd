@@ -46,9 +46,10 @@ signal shift_closed()
 @export var alphabet: AmericanMorseAlphabetData = preload("res://data/morse/m1_american_morse_alphabet.tres")
 @export var playback_profile: MorsePlaybackProfileData = preload("res://data/morse/m1_morse_playback_profile.tres")
 
-## Quiet stretch before each message. The first is long on purpose: the player
-## needs unpressured time to learn the room before the room starts pressing back.
-@export var wait_seconds_before_call: PackedFloat32Array = PackedFloat32Array([14.0, 9.0, 7.0])
+## Quiet stretch before each message: the line as weather. The first is long
+## enough to learn the room; the silences then GROW toward the core hook, so the
+## empty tape crawling is itself the pressure (horror layer §5).
+@export var wait_seconds_before_call: PackedFloat32Array = PackedFloat32Array([20.0, 38.0, 50.0])
 
 ## Black Creek's office call. Restricted to the 18 characters M1 supports.
 @export var call_sign: String = "CR CR"

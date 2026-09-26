@@ -834,12 +834,13 @@ Status as of 2026-09-26 (history in `docs/reports/`, latest in `docs/plans/2026-
 
 Current office layout intent:
 
-Desk — west wall, northern half, facing east  
-Window — north wall, eastern half  
-Routing Board — east wall, northern half  
-Door — south wall, western half  
-Cabinet — southwest  
-Lamp — southeast
+Desk — west wall, northern half; the operator sits facing west, into the wall  
+Window — north wall, western half, to the operator's right  
+Routing Board — east wall, northern half, behind the operator  
+Door — south wall, western half, behind-left of the operator  
+Filing table — southeast, by the stove  
+Desk lamp — on the desk, the operator's left-back corner (right-handed writer)  
+Reference card — pinned to the wall above the desk
 
 Current room dimensions:
 

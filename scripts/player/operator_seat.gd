@@ -55,6 +55,8 @@ const HINT_SEATED: String = "Rise From the Chair  ·  W A S D"
 
 var interactable: Interactable = null
 var is_seated: bool = false
+## Set the first time the operator rises; after that the rise hint is not shown.
+var has_stood_once: bool = false
 
 var _player: PlayerController = null
 var _standing_transform: Transform3D = Transform3D.IDENTITY
@@ -184,7 +186,7 @@ func _finish_sit() -> void:
 	_apply_prompt()
 	_animate_head_to(seat_eye_height, sit_duration, true)
 	_animate_head_pitch(deg_to_rad(seat_pitch_degrees), sit_duration)
-	_set_hint(HINT_SEATED)
+	_set_hint("" if has_stood_once else HINT_SEATED)
 	_notify_office()
 	seated.emit()
 	if not is_inside_tree() or sit_duration <= 0.0:
@@ -203,6 +205,7 @@ func stand() -> bool:
 		return false
 
 	is_seated = false
+	has_stood_once = true
 	_user_look = false
 	player.clear_yaw_limit()
 	player.set_walk_locked(false)

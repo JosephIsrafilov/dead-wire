@@ -19,7 +19,7 @@ material = ExtResource("3_paper")
 size = Vector3(0.014, 0.001, 0.09)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_interact"]
-size = Vector3(0.18, 0.08, 0.22)
+size = Vector3(0.18, 0.13, 0.13)
 
 ; The Morse register: a clockwork box feeding a paper strip under an inking
 ; stylus. The stylus and the spool are the only moving parts; both are driven
@@ -34,7 +34,7 @@ script = ExtResource("4_interact")
 prompt_text = "Read Tape Register"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Interactable"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.045, 0.07)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.065, 0.0)
 shape = SubResource("BoxShape3D_interact")
 
 [node name="Body" type="Node3D" parent="."]

@@ -8,7 +8,7 @@ extends Node3D
 signal evidence_revealed(variant_id: StringName)
 signal evidence_inspected(text: String)
 
-@export var prompt_message: String = "Read Dawn Dispatch"
+@export var prompt_message: String = "Read the Night Handover"
 @export var world_state: WorldStateStore = null
 
 const VARIANT_WATER: StringName = &"water"

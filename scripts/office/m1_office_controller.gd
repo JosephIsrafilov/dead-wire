@@ -439,14 +439,14 @@ func _on_transcript_inspected(text: String) -> void:
 	if paper != null and paper.is_incomplete_closed():
 		var body := text if not text.is_empty() else "(nothing was written)"
 		document_viewer.open_document(
-			"transcript_paper", "TELEGRAM TRANSCRIPT (ELIAS CRANE)",
+			"transcript_paper", "NIGHT COPY — E. CRANE",
 			"%s\n\n— COPY INCOMPLETE —" % body, "[E / Esc] Put Down Transcript"
 		)
 		return
 	# Finished sheets — current or an earlier telegram's — read as records; the
 	# session's own listener decides whether reading verifies anything.
 	document_viewer.open_document(
-		"transcript_paper", "TELEGRAM TRANSCRIPT (ELIAS CRANE)", text,
+		"transcript_paper", "NIGHT COPY — E. CRANE", text,
 		"[E / Esc] Put Down Transcript"
 	)
 
@@ -589,7 +589,7 @@ func _try_end_shift() -> void:
 	if dawn_evidence != null and dawn_evidence.is_revealed() and not dawn_evidence.is_inspected():
 		var interaction := player.get_node_or_null("InteractionController") as InteractionController
 		if interaction != null:
-			interaction.set_persistent_hint("Read the morning dispatch before leaving")
+			interaction.set_persistent_hint("Read the night handover before leaving")
 		return
 
 	office_door.notify_player_left()
@@ -707,14 +707,16 @@ func _refresh_guidance() -> void:
 	var interaction := player.get_node_or_null("InteractionController") as InteractionController
 	if interaction == null:
 		return
-	var hint := OperatorSeat.HINT_SEATED if operator_seat != null and operator_seat.is_seated else ""
+	# How to rise is told until the operator has done it once, then never again.
+	var seated_hint := operator_seat != null and operator_seat.is_seated and not operator_seat.has_stood_once
+	var hint := OperatorSeat.HINT_SEATED if seated_hint else ""
 	match session_controller.get_state():
 		TelegraphSessionController.State.VERIFYING:
-			hint = "Read the finished telegram on the desk"
+			hint = "Read the finished copy on the desk"
 		TelegraphSessionController.State.AWAITING_ROUTE:
 			hint = "Set the route on the east wall board"
 		TelegraphSessionController.State.AWAITING_COMMIT:
-			hint = "File one copy at the table beside the door"
+			hint = "File one copy at the table by the stove"
 	# A deadline warning is true everywhere the player can be, including behind
 	# an open document: the sender does not wait for the reader.
 	var warning := session_controller.get_deadline_warning_text()

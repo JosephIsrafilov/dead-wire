@@ -186,7 +186,7 @@ func _throw_lever(action: String) -> void:
 	if not is_inside_tree():
 		pivot.rotation.z = target
 		if needle != null:
-			needle.rotation.z = -direction * deg_to_rad(50.0)
+			needle.rotation.z = direction * deg_to_rad(50.0)
 		return
 
 	_lever_tween = create_tween()
@@ -194,7 +194,8 @@ func _throw_lever(action: String) -> void:
 	_lever_tween.tween_property(pivot, "rotation:z", target, lever_throw_duration) \
 		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	if needle != null:
-		_lever_tween.tween_property(needle, "rotation:z", -direction * deg_to_rad(50.0), lever_throw_duration) \
+		# The needle leans the same way as the lever: toward the route taken.
+		_lever_tween.tween_property(needle, "rotation:z", direction * deg_to_rad(50.0), lever_throw_duration) \
 			.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	# Impact lands when the lever meets the stop, not when the hand starts it.
 	var sfx := get_node_or_null("LeverSfx") as AudioStreamPlayer3D

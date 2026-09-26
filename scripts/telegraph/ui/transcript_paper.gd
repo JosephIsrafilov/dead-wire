@@ -37,7 +37,7 @@ enum PaperState {
 	INCOMPLETE_CLOSED,
 }
 
-@export var prompt_message: String = "Read Telegram Transcript"
+@export var prompt_message: String = "Read the Copy"
 @export var empty_placeholder: String = ""
 ## Bounded catch-up after a pause, in glyphs per second. The continuous seated
 ## path follows authored cue timing; this rate only drains accumulated backlog.
@@ -57,7 +57,7 @@ enum PaperState {
 ## active sheet and the last archived one.
 ## World offset of the finished sheet: set down on the blotter beside the copy
 ## board (the board, pad and sheet stack 11 mm above the blotter).
-@export var previous_sheet_offset: Vector3 = Vector3(0.0, -0.0115, 0.19)
+@export var previous_sheet_offset: Vector3 = Vector3(0.0, -0.0115, 0.27)
 @export var previous_slide_seconds: float = 0.35
 
 var interactable: Interactable = null
@@ -397,7 +397,12 @@ func _advance_previous_slide(delta: float) -> void:
 	_previous_slide_elapsed += delta
 	var t := clampf(_previous_slide_elapsed / previous_slide_seconds, 0.0, 1.0)
 	var eased := 1.0 - pow(1.0 - t, 2.0)
-	previous.global_position = rest_world + previous_sheet_offset * eased
+	# Slide across the pad first; drop onto the blotter only past the board's
+	# edge — never down through the stack of blanks.
+	var drop := clampf((eased - 0.6) / 0.4, 0.0, 1.0)
+	var offset := previous_sheet_offset * eased
+	offset.y = previous_sheet_offset.y * drop
+	previous.global_position = rest_world + offset
 	if t >= 1.0:
 		_previous_slide_active = false
 
