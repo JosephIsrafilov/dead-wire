@@ -1,10 +1,9 @@
 extends SceneTree
 
-## C2: the tilted writing surfaces are physically honest. The writing sheet
-## and the reference card lean on real supports — the near edge rests exactly
-## on the desk top, the far edge on its wedge, and the archived sheet slides
-## FLAT across the desk. No corner of any sheet may sink under the desk
-## surface or hang in the air without support.
+## C2: the working surfaces are physically honest. The copy sheet lies flat on
+## its pad on the copy board on the blotter; the reference card lies on the
+## blotter; the archived sheet slides flat across the desk. No corner of any
+## sheet may sink under the desk surface, hang in the air, or overhang the top.
 ## Also guards the Q1 readability budget: the projected letter height on the
 ## tilted sheet must not fall below the working-read target.
 
@@ -29,35 +28,36 @@ func _run() -> void:
 	var desk_y: float = desk_top.global_position.y + desk_top.size.y / 2.0
 	if not assert_condition(desk_y > 0.7 and desk_y < 0.8, "Desk top surface found at %.3f m" % desk_y): return
 
-	# --- the writing sheet: near edge on the desk, far edge on the wedge ----
+	# --- the working surfaces lie flat: operators copied on the desk --------
+	# The copy board rests on the blotter, the pad on the board, the sheet on
+	# the pad; the reference card lies on the blotter. Nothing leans on wedges.
+	var blotter := office.get_node_or_null("DeskBlotter") as CSGBox3D
+	if not assert_condition(blotter != null, "The desk has its blotter"): return
+	var blotter_y: float = blotter.global_position.y + blotter.size.y / 2.0
 	var paper := office._get_transcript_paper()
 	var sheet := paper.get_sheet_node()
 	var corners := _sheet_corners(sheet, PAPER_HALF_X, PAPER_HALF_Z)
 	var min_y := _min_corner_y(corners)
-	var near_y := _nearest_edge_y(sheet, PAPER_HALF_Z)
-	var far_y := _farthest_edge_y(sheet, PAPER_HALF_Z)
-	if not assert_condition(min_y >= desk_y - 0.002, "No corner of the writing sheet sinks under the desk (min %.4f vs desk %.4f)" % [min_y, desk_y]): return
-	if not assert_condition(near_y <= desk_y + 0.005, "The near edge rests on the desk (%.4f)" % near_y): return
-	if not assert_condition(far_y > near_y + 0.05, "The far edge is raised onto its support (%.4f > %.4f)" % [far_y, near_y]): return
+	var max_y := -INF
+	for c in corners:
+		max_y = maxf(max_y, c.y)
+	if not assert_condition(max_y - min_y < 0.001, "The writing sheet lies flat (%.4f spread)" % (max_y - min_y)): return
+	var board := paper.get_node_or_null("CopyBoard") as CSGBox3D
+	if not assert_condition(board != null, "The sheet sits on a copy board"): return
+	var board_bottom: float = board.global_position.y - board.size.y / 2.0
+	if not assert_condition(absf(board_bottom - blotter_y) < 0.0015, "The copy board rests on the blotter (%.4f vs %.4f)" % [board_bottom, blotter_y]): return
+	if not assert_condition(min_y >= board.global_position.y + board.size.y / 2.0 - 0.0005, "The sheet is on the pad, not inside the board"): return
+	if not assert_condition(office.get_node_or_null("PaperSlopeSupport") == null, "No slope wedge is left behind"): return
 
-	# The support itself: a solid under the far edge, top flush with it.
-	var support := office.get_node_or_null("PaperSlopeSupport") as CSGBox3D
-	if not assert_condition(support != null, "The writing slope has a physical support"): return
-	var support_top: float = support.global_position.y + support.size.y / 2.0
-	if not assert_condition(absf(support_top - far_y) < 0.004, "The support's top is flush with the far edge (support %.4f, edge %.4f)" % [support_top, far_y]): return
-
-	# --- the reference card: same honesty -----------------------------------
 	var card := office.get_node("MorseReferenceCard") as Node3D
 	var card_corners := _card_corners(card)
 	var card_min := _min_corner_y(card_corners)
-	var card_near := _nearest_edge_y(card, CARD_HALF_Z)
-	var card_far := _farthest_edge_y(card, CARD_HALF_Z)
-	if not assert_condition(card_min >= desk_y - 0.002, "No corner of the reference card sinks under the desk (min %.4f)" % card_min): return
-	if not assert_condition(card_near <= desk_y + 0.005, "The card's near edge rests on the desk (%.4f)" % card_near): return
-	if not assert_condition(card_far > card_near + 0.04, "The card leans on its support (%.4f > %.4f)" % [card_far, card_near]):
-		return
-	var card_support := office.get_node_or_null("CardSlopeSupport") as CSGBox3D
-	if not assert_condition(card_support != null and absf(card_support.global_position.y + card_support.size.y / 2.0 - card_far) < 0.004, "The card's support is flush with its far edge"): return
+	var card_max := -INF
+	for c in card_corners:
+		card_max = maxf(card_max, c.y)
+	if not assert_condition(card_max - card_min < 0.001, "The reference card lies flat"): return
+	if not assert_condition(absf(card_min - blotter_y) < 0.0015, "The card rests on the blotter (%.4f vs %.4f)" % [card_min, blotter_y]): return
+	if not assert_condition(office.get_node_or_null("CardSlopeSupport") == null, "No card wedge is left behind"): return
 
 	# --- nothing overhangs the desk: every corner is above the top's footprint
 	var top_aabb := desk_top.global_transform * AABB(-desk_top.size / 2.0, desk_top.size)

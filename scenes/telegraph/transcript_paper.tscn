@@ -120,7 +120,7 @@ shape = SubResource("BoxShape3D_interact")
 
 [node name="WriterRig" type="Node3D" parent="."]
 script = ExtResource("4_rig")
-elbow_offset_rig = Vector3(0.2183, -0.1113, 0.2669)
+elbow_offset_rig = Vector3(0.2183, -0.2222, 0.2669)
 
 [node name="PreviousSheet" type="Node3D" parent="."]
 visible = false

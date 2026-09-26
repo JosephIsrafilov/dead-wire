@@ -55,7 +55,9 @@ enum PaperState {
 ## rest position: a flat slide across the desk top (down 2 mm to lie on it),
 ## independent of the writing sheet's own tilt. Two layers maximum — the
 ## active sheet and the last archived one.
-@export var previous_sheet_offset: Vector3 = Vector3(0.07, -0.002, 0.115)
+## World offset of the finished sheet: set down on the blotter beside the copy
+## board (the board, pad and sheet stack 11 mm above the blotter).
+@export var previous_sheet_offset: Vector3 = Vector3(0.0, -0.0115, 0.19)
 @export var previous_slide_seconds: float = 0.35
 
 var interactable: Interactable = null

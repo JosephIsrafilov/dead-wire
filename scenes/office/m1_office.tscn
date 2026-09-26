@@ -538,41 +538,31 @@ position = Vector3(-2.38, 0.752, -0.92)
 
 ; Desk blotter: green baize on a board, leather ends. The writing station.
 [node name="DeskBlotter" type="CSGBox3D" parent="."]
-position = Vector3(-2.185, 0.7515, -0.51)
-size = Vector3(0.43, 0.003, 0.78)
+position = Vector3(-2.185, 0.7515, -0.495)
+size = Vector3(0.43, 0.003, 0.81)
 material = SubResource("BlotterFelt")
 
 [node name="DeskBlotterEndNear" type="CSGBox3D" parent="."]
-position = Vector3(-2.185, 0.7525, -0.105)
+position = Vector3(-2.185, 0.7525, -0.09)
 size = Vector3(0.44, 0.005, 0.035)
 material = SubResource("BlotterLeather")
 
 [node name="DeskBlotterEndFar" type="CSGBox3D" parent="."]
-position = Vector3(-2.185, 0.7525, -0.915)
+position = Vector3(-2.185, 0.7525, -0.9)
 size = Vector3(0.44, 0.005, 0.035)
 material = SubResource("BlotterLeather")
 
 [node name="TranscriptPaper" parent="." instance=ExtResource("16_paper")]
-position = Vector3(-2.23, 0.825, -0.72)
-rotation = Vector3(0.5, 1.5707963, 0)
-
-[node name="PaperSlopeSupport" type="CSGBox3D" parent="."]
-position = Vector3(-2.372, 0.826, -0.72)
-size = Vector3(0.025, 0.143, 0.24)
-material = ExtResource("5_trim")
+position = Vector3(-2.23, 0.764, -0.72)
+rotation = Vector3(0, 1.5707963, 0)
 
 [node name="CopyCommitDesk" parent="." instance=ExtResource("40_commit")]
 position = Vector3(0.95, 0.72, 1.35)
 rotation = Vector3(0, 3.141593, 0)
 
 [node name="MorseReferenceCard" parent="." instance=ExtResource("17_morseref")]
-position = Vector3(-2.09, 0.814, -0.3)
-rotation = Vector3(0.42, 1.5707963, 0)
-
-[node name="CardSlopeSupport" type="CSGBox3D" parent="."]
-position = Vector3(-2.252, 0.815, -0.3)
-size = Vector3(0.025, 0.121, 0.26)
-material = ExtResource("5_trim")
+position = Vector3(-2.11, 0.753, -0.265)
+rotation = Vector3(0, 1.5707963, 0)
 
 [node name="DispatchLedger" parent="." instance=ExtResource("18_ledger")]
 position = Vector3(-2.52, 0.755, -0.42)

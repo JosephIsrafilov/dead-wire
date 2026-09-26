@@ -17,11 +17,13 @@ extends SceneTree
 const SCENE := "res://scenes/telegraph/transcript_paper.tscn"
 const OUT := "res://assets/models/operator/"
 const SIDES := 10
-## The transcript's tilt in the office: beyond the near edge the desk falls away.
-const SHEET_TILT := 0.5
+## The sheet lies flat on a pad on the copy board on the blotter. Heights in
+## sheet space: sheet 0, board top -0.004 past its edge, blotter -0.011.
 const SHEET_NEAR_EDGE := 0.15
+const BOARD_NEAR_EDGE := 0.168
+const BLOTTER_Y := -0.011
 ## Where the desk top ends, measured along the sheet's +Z from its centre.
-const DESK_FRONT := 0.30
+const DESK_FRONT := 0.285
 
 const SKIN := Color(0.52, 0.42, 0.36)
 const SKIN_DORSAL := Color(0.55, 0.43, 0.37)
@@ -88,11 +90,14 @@ func _run() -> void:
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
 
 	# Palm: wrist -> knuckle ridge; sections widen and flatten.
-	var palm_rings := []
+	# The palm starts inside the cuff with a full, round wrist — no thin neck
+	# where the hand meets the sleeve.
+	var elbow_dir0 := Vector3(0.13, 0.0, 0.30).normalized()
+	var palm_rings := [[wrist + elbow_dir0 * 0.024, 0.029, 0.022]]
 	for i in 7:
 		var t := float(i) / 6.0
 		var c := wrist.lerp(knuckles, t) + _back * 0.004 * sin(t * PI)
-		palm_rings.append([c, lerpf(0.030, 0.046, smoothstep(0.0, 0.7, t)), lerpf(0.018, 0.012, t)])
+		palm_rings.append([c, lerpf(0.031, 0.046, smoothstep(0.0, 0.7, t)), lerpf(0.021, 0.012, t)])
 	_loft(st, palm_rings, fwd, _back, _palm_color, true, true, _hand_inv)
 
 	# Knuckle heads along the ridge (thumb side higher because of the roll).
@@ -259,10 +264,10 @@ func _seated_shoulder_in_sheet_space() -> Vector3:
 func _ground(z: float) -> float:
 	if z <= SHEET_NEAR_EDGE:
 		return 0.0
-	# The sheet slopes down to the desk at its near edge, so in sheet space the
-	# level desk in front of it rises away from the sheet's plane.
-	var desk := (minf(z, DESK_FRONT) - SHEET_NEAR_EDGE) * tan(SHEET_TILT)
-	return desk - maxf(z - DESK_FRONT, 0.0) * 1.2
+	if z <= BOARD_NEAR_EDGE:
+		return -0.004
+	# Past the desk's front edge the arm goes down toward the operator's lap.
+	return BLOTTER_Y - maxf(z - DESK_FRONT, 0.0) * 1.2
 
 # --- colour functions: (t along the part, radial direction) -> Color ---------
 
