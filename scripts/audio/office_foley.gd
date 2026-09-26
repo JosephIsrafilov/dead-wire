@@ -73,6 +73,11 @@ func _bind() -> void:
 	if lamp_life != null:
 		var wick := _source("Wick", WICK, office.get_node("DeskSetup/OilLamp").global_position, -20.0)
 		lamp_life.wick_turned_up.connect(wick.play.bind(0.0))
+		lamp_life.wick_turned_down.connect(wick.play.bind(0.0))
+	var register := office.get_node_or_null("TelegraphSessionController/TapeRegister") as TapeRegisterController
+	if register != null:
+		var winder := _source("RegisterWind", WICK, register.global_position, -18.0)
+		register.register_wound.connect(func(): _play_varied(winder))
 	var latch := _source("Latch", LATCH, Vector3(-1.6, 1.0, 2.25), -15.0)
 	office.office_door.door_rattled.connect(latch.play.bind(0.0))
 	office.office_door.door_opened.connect(latch.play.bind(0.0))

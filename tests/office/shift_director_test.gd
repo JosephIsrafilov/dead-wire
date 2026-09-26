@@ -168,6 +168,7 @@ func _run() -> void:
 
 	# 13. Letting the deadline run out is a decision the world acts on.
 	director.advance(director.wait_seconds_before_call[1] + 0.1)
+	if not assert_condition(director.foreign_traffic_played, "Foreign traffic crossed the dead wire in the second silence"): return
 	key.press()
 	director.advance(director.answer_beat_seconds + 0.05)
 	session.scheduler.advance_time(60.0)

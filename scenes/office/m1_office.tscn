@@ -48,6 +48,8 @@
 [ext_resource type="PackedScene" path="res://scenes/office/dawn_evidence.tscn" id="41_evidence"]
 [ext_resource type="Script" path="res://scripts/audio/office_foley.gd" id="42_foley"]
 [ext_resource type="PackedScene" path="res://scenes/telegraph/tape_register.tscn" id="43_tape"]
+[ext_resource type="Script" path="res://scripts/office/moon_weather.gd" id="44_moon"]
+[ext_resource type="Script" path="res://scripts/office/dawn_ritual.gd" id="45_dawn"]
 
 [sub_resource type="BoxShape3D" id="SeatInteract"]
 size = Vector3(0.52, 0.76, 0.52)
@@ -689,6 +691,12 @@ prompt_text = "Turn Up the Wick"
 [node name="CollisionShape3D" type="CollisionShape3D" parent="DeskSetup/OilLamp/WickInteractable"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.16, 0)
 shape = SubResource("WickInteract")
+
+[node name="MoonWeather" type="Node" parent="."]
+script = ExtResource("44_moon")
+
+[node name="DawnRitual" type="Node" parent="."]
+script = ExtResource("45_dawn")
 
 [node name="LampLife" type="Node" parent="."]
 script = ExtResource("37_lamplife")
