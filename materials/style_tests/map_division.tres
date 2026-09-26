@@ -1,0 +1,10 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3]
+
+[ext_resource type="Texture2D" path="res://materials/style_tests/textures/psx/map_division.png" id="1_tex"]
+
+; Division map (tools/build_paper_forms.gd): the line, the mine spur, the reservoir.
+[resource]
+albedo_color = Color(0.6, 0.56, 0.5, 1)
+albedo_texture = ExtResource("1_tex")
+roughness = 0.9
+texture_filter = 5
