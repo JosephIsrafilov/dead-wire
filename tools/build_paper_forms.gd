@@ -31,6 +31,7 @@ func _initialize() -> void:
 func _run() -> void:
 	await _bake("res://materials/style_tests/textures/psx/form_night_copy.png", FORM_PX, _paper_image(FORM_PX, 11, Color(0.82, 0.76, 0.62)), _night_copy)
 	await _bake("res://materials/style_tests/textures/psx/card_morse_stock.png", Vector2i(256, 256), _paper_image(Vector2i(256, 256), 23, Color(0.76, 0.66, 0.48)), _card_stock)
+	await _bake("res://materials/style_tests/textures/psx/map_division.png", Vector2i(384, 240), _paper_image(Vector2i(384, 240), 31, Color(0.74, 0.68, 0.54)), _division_map)
 	quit(0)
 
 func _bake(path: String, size: Vector2i, base: Image, layout: Callable) -> void:
@@ -161,6 +162,41 @@ func _night_copy(vp: Node, px: Vector2) -> void:
 		HORIZONTAL_ALIGNMENT_CENTER, w, INK_PRINT.lerp(Color(0.8, 0.75, 0.6), 0.25))
 	_label(vp, "against the register are chargeable to the operator.  — Rule 7.", Vector2(0, px.y - 21), 7,
 		HORIZONTAL_ALIGNMENT_CENTER, w, INK_PRINT.lerp(Color(0.8, 0.75, 0.6), 0.25))
+
+## The division map on the office wall: the line through Black Creek, the
+## mine spur and the reservoir that feeds the town — the story's geography,
+## hung where the operator walks past it every night.
+func _division_map(vp: Node, px: Vector2) -> void:
+	var ink := INK_PRINT
+	var faint := INK_PRINT.lerp(Color(0.74, 0.68, 0.54), 0.45)
+	_frame(vp, Rect2(6, 6, px.x - 12, px.y - 12), 2.0, ink)
+	_label(vp, "BLACK CREEK & WESTERN RY. — EAST DIVISION", Vector2(0, 12), 12, HORIZONTAL_ALIGNMENT_CENTER, px.x)
+	# Main line west-east with stations.
+	_line(vp, Vector2(30, 120), px.x - 60, 3.0, ink)
+	var stations := [[40.0, "SUMMIT"], [150.0, "BLACK CREEK"], [270.0, "HOLLIS"], [345.0, "DENVER \u2192"]]
+	for st in stations:
+		var x: float = st[0]
+		var dot := ColorRect.new()
+		dot.color = ink
+		dot.position = Vector2(x - 4, 116)
+		dot.size = Vector2(8, 11)
+		vp.add_child(dot)
+		_label(vp, String(st[1]), Vector2(x - 60, 128), 9, HORIZONTAL_ALIGNMENT_CENTER, 120)
+	# Mine spur north of Black Creek, the reservoir beside it.
+	var spur := ColorRect.new()
+	spur.color = ink
+	spur.position = Vector2(150, 58)
+	spur.size = Vector2(2, 60)
+	vp.add_child(spur)
+	_label(vp, "MINE No. 3", Vector2(95, 42), 9, HORIZONTAL_ALIGNMENT_CENTER, 110)
+	var res := ColorRect.new()
+	res.color = Color(0.36, 0.42, 0.48, 0.55)
+	res.position = Vector2(182, 62)
+	res.size = Vector2(46, 24)
+	vp.add_child(res)
+	_label(vp, "RESERVOIR", Vector2(160, 88), 8, HORIZONTAL_ALIGNMENT_CENTER, 90, faint)
+	_line(vp, Vector2(152, 74), 30, 1.0, faint)
+	_label(vp, "Scale: one inch to four miles.   Revised Oct. 1889.", Vector2(0, px.y - 26), 8, HORIZONTAL_ALIGNMENT_CENTER, px.x, faint)
 
 ## Buff card: a double printer's rule and corner dots; the table itself is ink.
 func _card_stock(vp: Node, px: Vector2) -> void:

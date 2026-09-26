@@ -21,6 +21,10 @@ const VIEWS := {
 	"o7_key_sounder": [Vector3(-1.75, 1.05, -0.95), Vector3(-2.38, 0.8, -0.98)],
 	"o8_tape_register": [Vector3(-1.8, 1.0, -1.25), Vector3(-2.06, 0.76, -1.15)],
 	"o9_seated_eye": [Vector3(-1.55, 1.19, -0.6), Vector3(-2.3, 0.78, -0.75)],
+	"c1_center_north": [Vector3(0.0, 1.62, 0.2), Vector3(0.0, 1.4, -2.3)],
+	"c2_center_east": [Vector3(0.0, 1.62, 0.0), Vector3(2.9, 1.4, 0.0)],
+	"c3_center_south": [Vector3(0.0, 1.62, -0.2), Vector3(0.0, 1.4, 2.3)],
+	"c4_center_west": [Vector3(0.4, 1.62, 0.0), Vector3(-2.9, 1.4, 0.0)],
 }
 
 func _initialize() -> void:
