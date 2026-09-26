@@ -252,3 +252,5 @@ No third-party content; deterministic generators live in `tools/`.
 | `audio/sfx/foley/pen_scratch.wav`, `key_click.wav`, `door_hinge.wav`, `sheet_slide.wav` | `tools/generate_action_foley.py` |
 | `assets/models/operator/hand_v3.res`, `cuff_v3.res`, `forearm_v3.res` | `tools/build_writer_hand.gd` |
 | `materials/style_tests/textures/psx/psx_wallpaper_stripe_128.png` | `tools/build_wallpaper.gd` |
+| `materials/style_tests/textures/psx/form_night_copy.png`, `card_morse_stock.png` | `tools/build_paper_forms.gd` (IM FELL, OFL) |
+| `audio/sfx/foley/wick_turn.wav` | `tools/generate_action_foley.py` |

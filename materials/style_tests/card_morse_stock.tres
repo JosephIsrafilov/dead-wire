@@ -1,0 +1,11 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3]
+
+[ext_resource type="Texture2D" path="res://materials/style_tests/textures/psx/card_morse_stock.png" id="1_tex"]
+
+; Buff card stock with a double printer's rule (tools/build_paper_forms.gd).
+[resource]
+albedo_color = Color(0.56, 0.52, 0.46, 1)
+albedo_texture = ExtResource("1_tex")
+roughness = 0.9
+metallic_specular = 0.05
+texture_filter = 5

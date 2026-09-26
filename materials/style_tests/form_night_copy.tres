@@ -1,0 +1,12 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3]
+
+[ext_resource type="Texture2D" path="res://materials/style_tests/textures/psx/form_night_copy.png" id="1_tex"]
+
+; The printed NIGHT COPY blank (tools/build_paper_forms.gd). Anisotropic
+; mipmaps: tilted paper keeps its ruling instead of breaking into speckle.
+[resource]
+albedo_color = Color(0.58, 0.54, 0.48, 1)
+albedo_texture = ExtResource("1_tex")
+roughness = 0.95
+metallic_specular = 0.05
+texture_filter = 5

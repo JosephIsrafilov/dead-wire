@@ -8,12 +8,18 @@
 
 [ext_resource type="ArrayMesh" path="res://assets/models/operator/hand_v3.res" id="7_hand"]
 [ext_resource type="FontFile" path="res://assets/fonts/cedarville/Cedarville-Cursive.ttf" id="10_hand_font"]
+[ext_resource type="Material" path="res://materials/style_tests/form_night_copy.tres" id="11_form"]
+[ext_resource type="Material" path="res://materials/style_tests/desk_wood.tres" id="12_wood"]
 [ext_resource type="ArrayMesh" path="res://assets/models/operator/forearm_v3.res" id="8_sleeve"]
 [ext_resource type="ArrayMesh" path="res://assets/models/operator/cuff_v3.res" id="9_cuff"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_paper"]
 material = ExtResource("3_mat")
 size = Vector3(0.23, 0.003, 0.3)
+
+[sub_resource type="PlaneMesh" id="FormFaceMesh"]
+material = ExtResource("11_form")
+size = Vector2(0.23, 0.3)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_interact"]
 size = Vector3(0.24, 0.02, 0.3)
@@ -39,11 +45,54 @@ radial_segments = 5
 [node name="TranscriptPaper" type="Node3D"]
 script = ExtResource("1_paper")
 
+; The copy board: a lap board with a spring clip, holding a pad of blanks.
+; It is what the tilted sheet physically rests on. Fixed: only the top sheet
+; is fed and archived.
+[node name="CopyBoard" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0075, 0.004)
+size = Vector3(0.262, 0.007, 0.336)
+material = ExtResource("12_wood")
+
+[node name="BlankPad" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0015, -0.002, 0.001)
+size = Vector3(0.231, 0.004, 0.301)
+material = ExtResource("3_mat")
+
+[node name="ClipBar" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0055, -0.1505)
+size = Vector3(0.07, 0.005, 0.011)
+material = ExtResource("6_brass")
+
+[node name="ClipSpring" type="CSGCylinder3D" parent="."]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0.0085, -0.157)
+radius = 0.005
+height = 0.074
+sides = 8
+material = ExtResource("6_brass")
+
+[node name="ClipRivetLeft" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.028, 0.0085, -0.1505)
+radius = 0.003
+height = 0.003
+sides = 6
+material = ExtResource("6_brass")
+
+[node name="ClipRivetRight" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.028, 0.0085, -0.1505)
+radius = 0.003
+height = 0.003
+sides = 6
+material = ExtResource("6_brass")
+
 [node name="Sheet" type="Node3D" parent="."]
 
 [node name="PaperMesh" type="MeshInstance3D" parent="Sheet"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0015, 0)
 mesh = SubResource("BoxMesh_paper")
+
+[node name="FormFace" type="MeshInstance3D" parent="Sheet"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0032, 0)
+mesh = SubResource("FormFaceMesh")
 
 [node name="Label3D" type="Label3D" parent="Sheet"]
 transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, -0.082, 0.004, -0.065)
@@ -71,6 +120,7 @@ shape = SubResource("BoxShape3D_interact")
 
 [node name="WriterRig" type="Node3D" parent="."]
 script = ExtResource("4_rig")
+elbow_offset_rig = Vector3(0.2183, -0.1113, 0.2669)
 
 [node name="PreviousSheet" type="Node3D" parent="."]
 visible = false
@@ -78,6 +128,10 @@ visible = false
 [node name="PreviousSheetMesh" type="MeshInstance3D" parent="PreviousSheet"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0005, 0)
 mesh = SubResource("BoxMesh_paper")
+
+[node name="PreviousFormFace" type="MeshInstance3D" parent="PreviousSheet"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0021, 0)
+mesh = SubResource("FormFaceMesh")
 
 [node name="PreviousSheetText" type="Label3D" parent="PreviousSheet"]
 transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, -0.082, 0.0035, -0.065)
@@ -93,20 +147,12 @@ outline_size = 0
 autowrap_mode = 0
 width = 120.0
 
-[node name="StationHeading" type="Label3D" parent="Sheet"]
-position = Vector3(0, 0.005, -0.105)
-rotation = Vector3(-1.5707963, 0, 0)
-text = "BLACK CREEK / NIGHT COPY"
-font_size = 9
-pixel_size = 0.0011
-modulate = Color(0.26, 0.22, 0.17, 1)
-outline_size = 0
-
 [node name="Sleeve" type="Node3D" parent="WriterRig"]
 position = Vector3(0.0, 0.058, 0.18)
 rotation = Vector3(0.18, 0.0, 0.10)
 
 [node name="SleeveMesh" type="MeshInstance3D" parent="WriterRig/Sleeve"]
+layers = 2
 mesh = ExtResource("8_sleeve")
 
 [node name="Wrist" type="Node3D" parent="WriterRig/Sleeve"]
@@ -114,6 +160,7 @@ position = Vector3(0.0, -0.012, -0.024)
 rotation = Vector3(-0.14, 0.0, -0.06)
 
 [node name="WristMesh" type="MeshInstance3D" parent="WriterRig/Sleeve/Wrist"]
+layers = 2
 mesh = ExtResource("9_cuff")
 
 [node name="Hand" type="Node3D" parent="WriterRig/Sleeve/Wrist"]
@@ -121,12 +168,13 @@ position = Vector3(0.0, -0.008, -0.028)
 rotation = Vector3(0.10, 0.0, -0.10)
 
 [node name="HandMesh" type="MeshInstance3D" parent="WriterRig/Sleeve/Wrist/Hand"]
+layers = 2
 mesh = ExtResource("7_hand")
 
 ; Pen transform: built around by tools/build_writer_hand.gd (tripod grip); keep in sync.
 [node name="Pen" type="Node3D" parent="WriterRig/Sleeve/Wrist/Hand"]
-position = Vector3(0.0208, 0.0042, -0.0753)
-rotation = Vector3(0.6672, -0.1674, -0.475)
+position = Vector3(0.0084, -0.0099, -0.0701)
+rotation = Vector3(0.7289, -0.0649, -0.2110)
 
 [node name="Shaft" type="MeshInstance3D" parent="WriterRig/Sleeve/Wrist/Hand/Pen"]
 position = Vector3(0.0, 0.03, 0.0)

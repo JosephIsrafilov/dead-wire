@@ -18,6 +18,9 @@ const VIEWS := {
 	"o4_west_desk": [Vector3(0.8, 1.6, 0.6), Vector3(-2.4, 0.9, -0.6)],
 	"o5_desk_close": [Vector3(-1.45, 1.25, -0.65), Vector3(-2.3, 0.78, -0.7)],
 	"o6_stove_corner": [Vector3(-0.4, 1.6, -0.6), Vector3(2.4, 0.8, 1.9)],
+	"o7_key_sounder": [Vector3(-1.75, 1.05, -0.95), Vector3(-2.38, 0.8, -0.98)],
+	"o8_tape_register": [Vector3(-1.8, 1.0, -1.25), Vector3(-2.06, 0.76, -1.15)],
+	"o9_seated_eye": [Vector3(-1.55, 1.19, -0.6), Vector3(-2.3, 0.78, -0.75)],
 }
 
 func _initialize() -> void:
@@ -31,6 +34,13 @@ func _run() -> void:
 	var intro := office.get_node_or_null("IntroCard")
 	if intro != null and intro.has_method("skip_immediately"):
 		intro.skip_immediately()
+	# Art review wants the working room: lamp at full wick, not the dark pre-shift.
+	var lamp_life := office.get_node_or_null("LampLife")
+	if lamp_life != null:
+		lamp_life.set_wick_immediate(1.0)
+	var rig := office.get_node_or_null("TranscriptPaper/WriterRig")
+	if rig != null:
+		rig.call("_apply_visibility", true)
 	var director := office.get_node_or_null("ShiftDirector")
 	if director != null:
 		director.set("enabled", false)

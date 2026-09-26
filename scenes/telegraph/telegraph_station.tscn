@@ -1,12 +1,37 @@
-[gd_scene format=3 uid="uid://b1telstat001"]
+[gd_scene load_steps=5 format=3 uid="uid://b1telstat001"]
 
 [ext_resource type="PackedScene" uid="uid://b1sounder001" path="res://scenes/telegraph/sounder.tscn" id="1_sounder"]
 [ext_resource type="PackedScene" uid="uid://b1telkey001" path="res://scenes/telegraph/telegraph_key.tscn" id="2_key"]
+[ext_resource type="Material" path="res://materials/style_tests/timber_trim.tres" id="3_wood"]
+
+[sub_resource type="StandardMaterial3D" id="SoundHole"]
+albedo_color = Color(0.02, 0.015, 0.01, 1)
+roughness = 1.0
 
 [node name="TelegraphStation" type="Node3D"]
 
+; Resonator: the hollow box the sounder is screwed onto. It is why a sounder is
+; loud enough to copy across a room; the voice hole faces the operator (+X).
+[node name="Resonator" type="CSGBox3D" parent="."]
+position = Vector3(-0.08, 0.03, 0)
+rotation = Vector3(0, 0.35, 0)
+size = Vector3(0.21, 0.06, 0.27)
+material = ExtResource("3_wood")
+
+[node name="ResonatorLip" type="CSGBox3D" parent="."]
+position = Vector3(-0.08, 0.004, 0)
+rotation = Vector3(0, 0.35, 0)
+size = Vector3(0.23, 0.008, 0.29)
+material = ExtResource("3_wood")
+
+[node name="VoiceHole" type="CSGBox3D" parent="."]
+position = Vector3(0.0197, 0.03, -0.0363)
+rotation = Vector3(0, 0.35, 0)
+size = Vector3(0.004, 0.026, 0.13)
+material = SubResource("SoundHole")
+
 [node name="Sounder" parent="." instance=ExtResource("1_sounder")]
-position = Vector3(-0.08, 0, 0)
+position = Vector3(-0.08, 0.06, 0)
 rotation = Vector3(0, 0.35, 0)
 scale = Vector3(1.2, 1.2, 1.2)
 
