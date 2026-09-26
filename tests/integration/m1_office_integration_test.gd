@@ -167,17 +167,26 @@ func _init() -> void:
 	# Advance 4.5s -> Door footsteps trigger via hitch-proof signal
 	office.session_controller.scheduler.advance_time(4.5)
 	if not assert_condition(office.door_attention.is_active, "Door attention active after 4.0s"): return
-	if not assert_condition(office.door_attention.steps_played == 1, "Step 1 played immediately"): return
-
-	# Step 2 and 3
-	office.door_attention._process(0.6)
-	if not assert_condition(office.door_attention.steps_played == 2, "Step 2 played"): return
-	office.door_attention._process(0.6)
+	# Audio fairness by construction: a footstep never lands on a Morse MARK.
+	# Each step waits for the wire's next gap; the steps still all arrive.
+	var sched := office.session_controller.scheduler
+	var landed_on_mark := false
+	var guard := 0
+	while office.door_attention.steps_played < 3 and guard < 400:
+		var before := office.door_attention.steps_played
+		sched.advance_time(0.02)
+		office.door_attention._process(0.02)
+		if office.door_attention.steps_played > before:
+			var ev := sched.get_current_event()
+			if sched.is_playing() and ev != null and ev.kind == MorseTimingEvent.Kind.MARK:
+				landed_on_mark = true
+		guard += 1
 	if not assert_condition(office.door_attention.steps_played == 3, "Exactly 3 footsteps played"): return
+	if not assert_condition(not landed_on_mark, "No footstep landed on a Morse mark"): return
 	if not assert_condition(not office.door_attention.is_active, "Door attention is completed and inactive"): return
 
 	# Complete transmission (total 15.60s) - proving Morse scheduler progressed
-	office.session_controller.scheduler.advance_time(12.0)
+	office.session_controller.scheduler.advance_time(14.0)
 	_drain_paper(paper)
 	if not assert_condition(office.session_controller.get_state() == TelegraphSessionController.State.VERIFYING, "Scenario 2 waits for transcript verification"): return
 	paper_act.interact()

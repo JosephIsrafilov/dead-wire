@@ -276,6 +276,70 @@ func _run() -> void:
 	unease.release_hush()
 	if not assert_condition(not unease.is_hushed, "The hush releases"): return
 
+	# --- the moon: clouds and the figure dim it the same way ------------------
+	var moon := office.get_node_or_null("MoonWeather") as MoonWeather
+	if not assert_condition(moon != null and moon.moon_light != null, "The moonlight has its weather"): return
+	moon.cloud_interval_min = 9999.0
+	moon.cloud_interval_max = 9999.0
+	moon._until_cloud = 9999.0
+	moon._cloud_left = 0.0
+	var moon_rest := moon.get_rest_energy()
+	for _step in 240:
+		moon.advance(1.0 / 60.0)
+	if not assert_condition(moon.moon_light.light_energy > moon_rest * 0.95, "A clear sky leaves the moon at full"): return
+	var figure := office.window_observation.get_visual_indicator()
+	figure.visible = true
+	for _step in 240:
+		moon.advance(1.0 / 60.0)
+	if not assert_condition(moon.moon_light.light_energy < moon_rest * 0.6, "Something standing in the pane dims the moon on the room"): return
+	figure.visible = false
+	for _step in 240:
+		moon.advance(1.0 / 60.0)
+	if not assert_condition(moon.moon_light.light_energy > moon_rest * 0.95, "The light comes back once nothing is there"): return
+	moon._until_cloud = 0.1
+	for _step in 180:
+		moon.advance(1.0 / 60.0)
+	if not assert_condition(moon.is_dimmed_now() and moon.moon_light.light_energy < moon_rest * 0.6, "A passing cloud dims it exactly the same way"): return
+
+	# --- the wick sinks as it burns, and is trimmed by hand -------------------
+	wick_life.set_wick_immediate(1.0)
+	wick_life._line_open = true
+	wick_life._full_seconds = 0.0
+	var sink_to_trim := (1.0 - wick_life.trim_threshold) / wick_life.sink_per_second
+	for _step in int((wick_life.sink_delay_seconds + sink_to_trim + 5.0) * 10.0):
+		wick_life.advance(0.1)
+	if not assert_condition(wick_life.wick < wick_life.trim_threshold and wick_life.wick >= wick_life.sink_floor, "A burning wick sinks, never below its floor (%.2f)" % wick_life.wick): return
+	if not assert_condition(wick_act.can_interact() and wick_act.prompt_text == LampLife.PROMPT_TRIM, "A sunk wick asks to be trimmed"): return
+	wick_act.interact()
+	for _step in 120:
+		wick_life.advance(1.0 / 60.0)
+	if not assert_condition(is_equal_approx(wick_life.wick, 1.0), "Trimming brings the flame back to full"): return
+
+	# --- the register's clockwork runs down and is wound ---------------------
+	var register := office.get_node("TelegraphSessionController/TapeRegister") as TapeRegisterController
+	var record_before := register.get_record().size()
+	register.spring_tension = register.wind_prompt_below - 0.1
+	register._process(1.0 / 60.0)
+	var wind_act := register.get_node("WindInteractable") as Interactable
+	if not assert_condition(wind_act.can_interact(), "A run-down register asks to be wound"): return
+	wind_act.interact()
+	if not assert_condition(is_equal_approx(register.spring_tension, 1.0) and not wind_act.can_interact(), "Winding restores the spring"): return
+	if not assert_condition(register.get_record().size() == record_before, "Winding never touches the record"): return
+
+	# --- dawn: the line stops, the sky turns, the lamp is offered down -------
+	var dawn := office.get_node_or_null("DawnRitual") as DawnRitual
+	if not assert_condition(dawn != null, "The watch has its dawn"): return
+	dawn.begin()
+	if not assert_condition(not register.line_live, "At dawn the register's clockwork stops"): return
+	for _step in int(moon.dawn_seconds * 10.0) + 5:
+		moon.advance(0.1)
+	if not assert_condition(is_equal_approx(moon.dawn, 1.0) and moon.moon_light.light_energy > moon_rest * 1.2, "The pane carries the morning into the room"): return
+	if not assert_condition(wick_act.can_interact() and wick_act.prompt_text == LampLife.PROMPT_TURN_DOWN, "The lamp is offered to be turned down"): return
+	wick_act.interact()
+	for _step in 120:
+		wick_life.advance(1.0 / 60.0)
+	if not assert_condition(is_equal_approx(wick_life.wick, wick_life.dawn_wick), "The lamp is turned down for the day man"): return
+
 	print("--- All Office Atmosphere Tests PASSED (%d assertions) ---" % _assertions_passed)
 	quit(0)
 

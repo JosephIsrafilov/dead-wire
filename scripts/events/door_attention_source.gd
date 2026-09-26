@@ -10,6 +10,9 @@ signal footsteps_completed()
 @export var volume_db: float = -9.0
 
 var _player: AudioStreamPlayer3D = null
+## Audio fairness by construction (GDD §7): a step never lands on a Morse
+## MARK. If the wire is marking when a step is due, the step waits for the gap.
+var scheduler: MorseRuntimeScheduler = null
 var is_active: bool = false
 var steps_played: int = 0
 var _step_timer: float = 0.0
@@ -42,6 +45,8 @@ func trigger_footsteps() -> void:
 	steps_played = 0
 	_step_timer = 0.0
 	footsteps_started.emit()
+	if _wire_marking():
+		return
 	_play_step()
 
 func _play_step() -> void:
@@ -61,5 +66,11 @@ func _play_step() -> void:
 func _process(delta: float) -> void:
 	if is_active and steps_played < total_steps:
 		_step_timer -= delta
-		if _step_timer <= 0.0:
+		if _step_timer <= 0.0 and not _wire_marking():
 			_play_step()
+
+func _wire_marking() -> bool:
+	if scheduler == null or not scheduler.is_playing():
+		return false
+	var event := scheduler.get_current_event()
+	return event != null and event.kind == MorseTimingEvent.Kind.MARK

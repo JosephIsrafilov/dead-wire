@@ -117,6 +117,8 @@ func _bind_signals() -> void:
 		copy_commit_desk = get_node_or_null("CopyCommitDesk") as CopyCommitDesk
 	if door_attention == null:
 		door_attention = get_node_or_null("DoorAttentionSource") as DoorAttentionSource
+	if door_attention != null and session_controller != null:
+		door_attention.scheduler = session_controller.scheduler
 	if window_observation == null:
 		window_observation = get_node_or_null("WindowObservationEvent") as AttentionObservationTarget
 	if window_observation != null:

@@ -51,6 +51,16 @@ signal shift_closed()
 ## empty tape crawling is itself the pressure (horror layer §5).
 @export var wait_seconds_before_call: PackedFloat32Array = PackedFloat32Array([20.0, 38.0, 50.0])
 
+## Foreign traffic: not for this station, never copied by Elias, but the wire
+## carries it and the register inks it. A race bulletin from 1890 on a dead
+## line — for the player who reads the tape with the card. Supported letters
+## only. Played once, in the given slot's silence, only if it fits before the
+## call so it can never be cut or collide with real traffic.
+@export var foreign_traffic_text: String = "SLOW DANCER LEADS DIEGO SECOND"
+@export var foreign_traffic_slot: int = 1
+@export var foreign_traffic_after_seconds: float = 4.0
+var foreign_traffic_played: bool = false
+
 ## Black Creek's office call. Restricted to the 18 characters M1 supports.
 @export var call_sign: String = "CR CR"
 @export var call_repeat_gap_seconds: float = 3.5
@@ -270,6 +280,7 @@ func _advance_step(delta: float) -> void:
 	match _phase:
 		Phase.WAITING:
 			_phase_timer += delta
+			_maybe_foreign_traffic()
 			if _phase_timer >= _current_wait_seconds():
 				_begin_call_cycle()
 		Phase.CALLING:
@@ -294,6 +305,21 @@ func _advance_step(delta: float) -> void:
 				_set_phase(Phase.SHIFT_OVER)
 		_:
 			pass
+
+func _maybe_foreign_traffic() -> void:
+	if foreign_traffic_played or foreign_traffic_text.is_empty() or _slot_index != foreign_traffic_slot:
+		return
+	if _phase_timer < foreign_traffic_after_seconds or not _wire_idle():
+		return
+	foreign_traffic_played = true
+	var remaining := _current_wait_seconds() - _phase_timer
+	var sequence := _encoder.encode(foreign_traffic_text, alphabet) if alphabet != null else null
+	if sequence == null or playback_profile == null:
+		return
+	var schedule := _compiler.compile(sequence, playback_profile)
+	if schedule == null or schedule.total_duration_seconds > remaining - 3.0:
+		return
+	_play_on_wire(foreign_traffic_text)
 
 ## The one deliberate act the player makes before the night takes over.
 func open_line() -> bool:

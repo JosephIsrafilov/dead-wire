@@ -25,6 +25,18 @@ const BETWEEN_TRANSMISSIONS_GAP_UNITS := 12
 @export var stylus_speed: float = 0.25
 ## The spool turns while the register is on the line: the tape always crawls.
 @export var spool_turn_rate: float = 0.5
+## Clockwork: the spring runs down over the watch and the spool slows; the
+## operator winds it at the side key. The RECORD never depends on it — the
+## ink comes from the scheduler — only the mechanism's life does.
+signal register_wound()
+@export var spring_run_down_seconds: float = 240.0
+@export var spring_floor: float = 0.35
+@export var wind_prompt_below: float = 0.75
+const PROMPT_WIND := "Wind the Register"
+var spring_tension: float = 1.0
+## False once the line has closed for the night: the spool stops.
+var line_live: bool = true
+var _wind_interactable: Interactable = null
 
 var _stylus: Node3D = null
 var _stylus_rest_y: float = 0.0
@@ -42,6 +54,12 @@ func _ready() -> void:
 		_stylus_rest_y = _stylus.position.y
 		_stylus_target_y = _stylus_rest_y
 	_spool = get_node_or_null("Body/Spool") as Node3D
+	_wind_interactable = get_node_or_null("WindInteractable") as Interactable
+	if _wind_interactable != null:
+		_wind_interactable.prompt_text = PROMPT_WIND
+		_wind_interactable.enabled = false
+		if not _wind_interactable.interacted.is_connected(wind):
+			_wind_interactable.interacted.connect(wind)
 	var act := get_interactable()
 	if act != null:
 		act.prompt_text = prompt_message
@@ -93,8 +111,18 @@ func _on_timing_event_started(event: MorseScheduledEvent) -> void:
 func _process(delta: float) -> void:
 	if _stylus != null:
 		_stylus.position.y = move_toward(_stylus.position.y, _stylus_target_y, stylus_speed * delta)
-	if _spool != null and _connected_scheduler != null:
-		_spool.rotate_object_local(Vector3.UP, spool_turn_rate * delta)
+	if _connected_scheduler != null and line_live:
+		spring_tension = maxf(spring_tension - delta / maxf(spring_run_down_seconds, 0.01), spring_floor)
+		if _spool != null:
+			_spool.rotate_object_local(Vector3.UP, spool_turn_rate * spring_tension * delta)
+		if _wind_interactable != null:
+			_wind_interactable.enabled = spring_tension < wind_prompt_below
+
+func wind() -> void:
+	spring_tension = 1.0
+	if _wind_interactable != null:
+		_wind_interactable.enabled = false
+	register_wound.emit()
 
 func _on_playback_completed(_schedule: MorsePlaybackScheduleData) -> void:
 	_stylus_target_y = _stylus_rest_y
