@@ -10,6 +10,8 @@ extends Node
 
 @export var lamp_light: OmniLight3D = null
 @export var stove_light: OmniLight3D = null
+## Lamp light thrown back off the copy sheet: follows the lamp exactly.
+@export var bounce_light: OmniLight3D = null
 ## NodePath so the scene can wire the wick mesh; resolved in _ready.
 @export var flame_mesh_path: NodePath = ^""
 @export var flame_mesh: Node3D = null
@@ -37,6 +39,7 @@ var _wick_interactable: Interactable = null
 
 var _lamp_rest: float = 0.0
 var _stove_rest: float = 0.0
+var _bounce_rest: float = 0.0
 var _flame_rest_scale: Vector3 = Vector3.ONE
 var _time: float = 0.0
 
@@ -48,6 +51,8 @@ func _ready() -> void:
 		_lamp_rest = lamp_light.light_energy
 	if stove_light != null:
 		_stove_rest = stove_light.light_energy
+	if bounce_light != null:
+		_bounce_rest = bounce_light.light_energy
 	if flame_mesh != null:
 		_flame_rest_scale = flame_mesh.scale
 	if start_turned_down:
@@ -93,6 +98,8 @@ func _resolve() -> void:
 		lamp_light = office.get_node_or_null("DeskLampLight") as OmniLight3D
 	if stove_light == null:
 		stove_light = office.get_node_or_null("StoveEmberLight") as OmniLight3D
+	if bounce_light == null:
+		bounce_light = office.get_node_or_null("PaperBounceLight") as OmniLight3D
 
 func _process(delta: float) -> void:
 	advance(delta)
@@ -107,6 +114,8 @@ func advance(delta: float) -> void:
 		# Two incommensurate rates so the pattern never audibly repeats.
 		var wobble := 0.62 * sin(TAU * lamp_fast_hz * _time) + 0.38 * sin(TAU * lamp_slow_hz * _time + 1.7)
 		lamp_light.light_energy = _lamp_rest * wick * (1.0 + wobble * lamp_flicker_depth)
+		if bounce_light != null:
+			bounce_light.light_energy = _bounce_rest * wick * (1.0 + wobble * lamp_flicker_depth)
 		if flame_mesh != null:
 			var scale_factor := (1.0 + wobble * lamp_flicker_depth * 0.6) * lerpf(0.45, 1.0, wick)
 			flame_mesh.scale = Vector3(_flame_rest_scale.x, _flame_rest_scale.y * scale_factor, _flame_rest_scale.z)

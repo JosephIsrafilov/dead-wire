@@ -18,6 +18,18 @@ const TAPE_TITLE := "STATION REGISTER"
 const BETWEEN_TRANSMISSIONS_GAP_UNITS := 12
 
 @export var prompt_message: String = "Read Tape Register"
+## The inking stylus drops onto the tape on every MARK and lifts on every GAP —
+## driven by the same scheduler events it records, so what it is seen to do is
+## exactly what it wrote. Cosmetic only: the record never reads it back.
+@export var stylus_travel: float = 0.003
+@export var stylus_speed: float = 0.25
+## The spool turns while the register is on the line: the tape always crawls.
+@export var spool_turn_rate: float = 0.5
+
+var _stylus: Node3D = null
+var _stylus_rest_y: float = 0.0
+var _stylus_target_y: float = 0.0
+var _spool: Node3D = null
 
 var interactable: Interactable = null
 
@@ -25,6 +37,11 @@ var _record: Array[MorseScheduledEvent] = []
 var _connected_scheduler: MorseRuntimeScheduler = null
 
 func _ready() -> void:
+	_stylus = get_node_or_null("Body/StylusPivot") as Node3D
+	if _stylus != null:
+		_stylus_rest_y = _stylus.position.y
+		_stylus_target_y = _stylus_rest_y
+	_spool = get_node_or_null("Body/Spool") as Node3D
 	var act := get_interactable()
 	if act != null:
 		act.prompt_text = prompt_message
@@ -71,8 +88,16 @@ func reset() -> void:
 
 func _on_timing_event_started(event: MorseScheduledEvent) -> void:
 	_record.append(event)
+	_stylus_target_y = _stylus_rest_y - (stylus_travel if event.kind == MorseTimingEvent.Kind.MARK else 0.0)
+
+func _process(delta: float) -> void:
+	if _stylus != null:
+		_stylus.position.y = move_toward(_stylus.position.y, _stylus_target_y, stylus_speed * delta)
+	if _spool != null and _connected_scheduler != null:
+		_spool.rotate_object_local(Vector3.UP, spool_turn_rate * delta)
 
 func _on_playback_completed(_schedule: MorsePlaybackScheduleData) -> void:
+	_stylus_target_y = _stylus_rest_y
 	var gap := MorseScheduledEvent.new()
 	gap.kind = MorseTimingEvent.Kind.GAP
 	gap.duration_units = BETWEEN_TRANSMISSIONS_GAP_UNITS
@@ -81,7 +106,7 @@ func _on_playback_completed(_schedule: MorsePlaybackScheduleData) -> void:
 ## No between-gap here: a cancelled transmission may resume or restart, so
 ## only the synthetic separator is withheld — the partial ink stays.
 func _on_playback_cancelled(_schedule: MorsePlaybackScheduleData, _elapsed_seconds: float) -> void:
-	pass
+	_stylus_target_y = _stylus_rest_y
 
 ## Ink rendering. MARK <= 2 units is a dot, >= 3 units is a dash; every GAP
 ## unit is one blank column — exactly how paper strips looked, and exactly

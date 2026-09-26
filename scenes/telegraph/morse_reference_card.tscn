@@ -3,10 +3,15 @@
 [ext_resource type="Script" path="res://scripts/telegraph/ui/morse_reference_card.gd" id="1_ref"]
 [ext_resource type="Script" path="res://scripts/interaction/interactable.gd" id="2_interact"]
 [ext_resource type="Material" path="res://materials/style_tests/paper_log.tres" id="3_paper"]
+[ext_resource type="Material" path="res://materials/style_tests/card_morse_stock.tres" id="4_stock"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_card"]
 material = ExtResource("3_paper")
 size = Vector3(0.3, 0.003, 0.3)
+
+[sub_resource type="PlaneMesh" id="CardFaceMesh"]
+material = ExtResource("4_stock")
+size = Vector2(0.3, 0.3)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_interact"]
 size = Vector3(0.22, 0.05, 0.28)
@@ -17,6 +22,10 @@ script = ExtResource("1_ref")
 [node name="CardMesh" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0015, 0)
 mesh = SubResource("BoxMesh_card")
+
+[node name="CardFace" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0032, 0)
+mesh = SubResource("CardFaceMesh")
 
 [node name="Label3D" type="Label3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0.004, 0)

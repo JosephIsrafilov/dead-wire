@@ -61,6 +61,15 @@ size = Vector3(1.7, 2.0, 0.6)
 [sub_resource type="BoxShape3D" id="DutySheetInteract"]
 size = Vector3(0.92, 0.82, 0.38)
 
+[sub_resource type="StandardMaterial3D" id="BlotterFelt"]
+albedo_color = Color(0.1, 0.17, 0.12, 1)
+roughness = 1.0
+
+[sub_resource type="StandardMaterial3D" id="BlotterLeather"]
+albedo_color = Color(0.2, 0.11, 0.07, 1)
+roughness = 0.6
+metallic_specular = 0.3
+
 [sub_resource type="BoxShape3D" id="WickInteract"]
 size = Vector3(0.18, 0.34, 0.18)
 
@@ -122,6 +131,8 @@ mouse_filter = 2
 
 ; One static interior probe: the night pane reads as a dark mirror with the
 ; lamp in it, and brass/glass get something to reflect. Captured once.
+; The operator's arm (layer 2) is outside its reflection mask: a grazing view
+; along the sleeve would otherwise mirror the room as a grey sheen.
 [node name="RoomReflection" type="ReflectionProbe" parent="."]
 position = Vector3(0, 1.45, 0)
 update_mode = 0
@@ -130,6 +141,7 @@ max_distance = 8.0
 size = Vector3(5.9, 2.95, 4.7)
 interior = true
 ambient_mode = 0
+reflection_mask = 4294967293
 
 [node name="DeskLampLight" type="OmniLight3D" parent="."]
 position = Vector3(-2.12, 1.35, -0.12)
@@ -141,16 +153,30 @@ omni_range = 3.6
 omni_attenuation = 1.9
 
 ; Moonlight enters through the real pane (the window moved west; the light follows).
+; The operator's own arm (visual layer 2) is not in its cull mask: the body
+; stays in the lamp's world instead of becoming a grey band at the frame edge.
 [node name="WindowBounceLight" type="SpotLight3D" parent="."]
 position = Vector3(-1.5, 2.0, -2.9)
 rotation = Vector3(-0.45, 3.141593, 0)
 light_color = Color(0.32, 0.5, 0.86, 1)
-light_energy = 2.2
+light_energy = 1.4
+light_specular = 0.25
+light_cull_mask = 4294967293
 light_indirect_energy = 0.7
 shadow_enabled = true
 spot_range = 4.4
 spot_attenuation = 1.2
 spot_angle = 40.0
+
+; Lamp light thrown back off the lit copy sheet: warms the writing hand from
+; below, the way white paper under a lamp does. No shadow, tiny range.
+[node name="PaperBounceLight" type="OmniLight3D" parent="."]
+position = Vector3(-2.2, 0.9, -0.72)
+light_color = Color(1, 0.82, 0.62, 1)
+light_energy = 0.18
+light_specular = 0.0
+omni_range = 0.4
+omni_attenuation = 1.6
 
 [node name="StoveEmberLight" type="OmniLight3D" parent="."]
 position = Vector3(2.1, 0.82, 1.45)
@@ -510,12 +536,28 @@ shape = SubResource("SeatInteract")
 [node name="TelegraphStation" parent="." instance=ExtResource("15_station")]
 position = Vector3(-2.38, 0.752, -0.92)
 
+; Desk blotter: green baize on a board, leather ends. The writing station.
+[node name="DeskBlotter" type="CSGBox3D" parent="."]
+position = Vector3(-2.185, 0.7515, -0.51)
+size = Vector3(0.43, 0.003, 0.78)
+material = SubResource("BlotterFelt")
+
+[node name="DeskBlotterEndNear" type="CSGBox3D" parent="."]
+position = Vector3(-2.185, 0.7525, -0.105)
+size = Vector3(0.44, 0.005, 0.035)
+material = SubResource("BlotterLeather")
+
+[node name="DeskBlotterEndFar" type="CSGBox3D" parent="."]
+position = Vector3(-2.185, 0.7525, -0.915)
+size = Vector3(0.44, 0.005, 0.035)
+material = SubResource("BlotterLeather")
+
 [node name="TranscriptPaper" parent="." instance=ExtResource("16_paper")]
-position = Vector3(-2.085, 0.822, -0.72)
+position = Vector3(-2.23, 0.825, -0.72)
 rotation = Vector3(0.5, 1.5707963, 0)
 
 [node name="PaperSlopeSupport" type="CSGBox3D" parent="."]
-position = Vector3(-2.227, 0.823, -0.72)
+position = Vector3(-2.372, 0.826, -0.72)
 size = Vector3(0.025, 0.143, 0.24)
 material = ExtResource("5_trim")
 
@@ -524,16 +566,16 @@ position = Vector3(0.95, 0.72, 1.35)
 rotation = Vector3(0, 3.141593, 0)
 
 [node name="MorseReferenceCard" parent="." instance=ExtResource("17_morseref")]
-position = Vector3(-2.09, 0.811, -0.3)
+position = Vector3(-2.09, 0.814, -0.3)
 rotation = Vector3(0.42, 1.5707963, 0)
 
 [node name="CardSlopeSupport" type="CSGBox3D" parent="."]
-position = Vector3(-2.252, 0.812, -0.3)
+position = Vector3(-2.252, 0.815, -0.3)
 size = Vector3(0.025, 0.121, 0.26)
 material = ExtResource("5_trim")
 
 [node name="DispatchLedger" parent="." instance=ExtResource("18_ledger")]
-position = Vector3(-2.52, 0.752, -0.42)
+position = Vector3(-2.52, 0.755, -0.42)
 rotation = Vector3(0, 1.5707963, 0)
 office_path = NodePath("..")
 

@@ -1,37 +1,29 @@
-[gd_scene load_steps=11 format=3 uid="uid://b1tapereg01"]
+[gd_scene load_steps=10 format=3 uid="uid://b1tapereg01"]
 
 [ext_resource type="Script" path="res://scripts/telegraph/hardware/tape_register_controller.gd" id="1_tape"]
 [ext_resource type="Material" path="res://materials/style_tests/timber_trim.tres" id="2_wood"]
 [ext_resource type="Material" path="res://materials/style_tests/paper_log.tres" id="3_paper"]
 [ext_resource type="Script" path="res://scripts/interaction/interactable.gd" id="4_interact"]
+[ext_resource type="Material" path="res://materials/style_tests/metal_brass_aged.tres" id="5_brass"]
 
-[sub_resource type="StandardMaterial3D" id="Brass"]
-albedo_color = Color(0.72, 0.55, 0.25, 1)
-metallic = 0.8
-roughness = 0.35
+[sub_resource type="StandardMaterial3D" id="Ink"]
+albedo_color = Color(0.05, 0.05, 0.07, 1)
+roughness = 0.4
 
-[sub_resource type="BoxMesh" id="BoxMesh_base"]
-material = ExtResource("2_wood")
-size = Vector3(0.16, 0.06, 0.11)
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_drum"]
-material = SubResource("Brass")
-top_radius = 0.025
-bottom_radius = 0.025
-height = 0.03
-radial_segments = 12
+[sub_resource type="StandardMaterial3D" id="DarkWood"]
+albedo_color = Color(0.13, 0.08, 0.05, 1)
+roughness = 0.7
 
 [sub_resource type="BoxMesh" id="BoxMesh_strip"]
 material = ExtResource("3_paper")
 size = Vector3(0.014, 0.001, 0.09)
 
-[sub_resource type="BoxMesh" id="BoxMesh_tray"]
-material = ExtResource("2_wood")
-size = Vector3(0.05, 0.02, 0.05)
-
 [sub_resource type="BoxShape3D" id="BoxShape3D_interact"]
 size = Vector3(0.18, 0.08, 0.22)
 
+; The Morse register: a clockwork box feeding a paper strip under an inking
+; stylus. The stylus and the spool are the only moving parts; both are driven
+; by the controller from the scheduler's own events.
 [node name="TapeRegister" type="Node3D"]
 script = ExtResource("1_tape")
 
@@ -47,18 +39,116 @@ shape = SubResource("BoxShape3D_interact")
 
 [node name="Body" type="Node3D" parent="."]
 
-[node name="Base" type="MeshInstance3D" parent="Body"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.03, 0)
-mesh = SubResource("BoxMesh_base")
+[node name="Plinth" type="CSGBox3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.005, 0)
+size = Vector3(0.172, 0.01, 0.122)
+material = SubResource("DarkWood")
 
-[node name="Drum" type="MeshInstance3D" parent="Body"]
-transform = Transform3D(0, -1, 0, 1, 0, 0, 0, 0, 1, 0, 0.085, 0.025)
-mesh = SubResource("CylinderMesh_drum")
+[node name="Cabinet" type="CSGBox3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0375, 0)
+size = Vector3(0.16, 0.055, 0.11)
+material = ExtResource("2_wood")
+
+[node name="TopPlate" type="CSGBox3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.067, 0)
+size = Vector3(0.15, 0.004, 0.1)
+material = ExtResource("5_brass")
+
+[node name="NamePlate" type="CSGBox3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.036, 0.0555)
+size = Vector3(0.06, 0.012, 0.0012)
+material = ExtResource("5_brass")
+
+[node name="CheekLeft" type="CSGBox3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0145, 0.097, -0.025)
+size = Vector3(0.004, 0.058, 0.05)
+material = ExtResource("5_brass")
+
+[node name="CheekRight" type="CSGBox3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0145, 0.097, -0.025)
+size = Vector3(0.004, 0.058, 0.05)
+material = ExtResource("5_brass")
+
+[node name="Spool" type="Node3D" parent="Body"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0.105, -0.025)
+
+[node name="Roll" type="CSGCylinder3D" parent="Body/Spool"]
+radius = 0.027
+height = 0.02
+sides = 14
+material = ExtResource("3_paper")
+
+[node name="Hub" type="CSGCylinder3D" parent="Body/Spool"]
+radius = 0.008
+height = 0.034
+sides = 8
+material = ExtResource("5_brass")
+
+[node name="HubSpoke" type="CSGBox3D" parent="Body/Spool"]
+size = Vector3(0.036, 0.021, 0.004)
+material = ExtResource("5_brass")
+
+[node name="TapeTop" type="CSGBox3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0695, 0.018)
+size = Vector3(0.014, 0.001, 0.075)
+material = ExtResource("3_paper")
+
+[node name="TapeFront" type="CSGBox3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 0.97, -0.24, 0, 0.24, 0.97, 0, 0.036, 0.0575)
+size = Vector3(0.014, 0.068, 0.001)
+material = ExtResource("3_paper")
+
+[node name="InkWheel" type="CSGCylinder3D" parent="Body"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0.078, 0.052)
+radius = 0.006
+height = 0.012
+sides = 10
+material = SubResource("Ink")
+
+[node name="StylusPivot" type="Node3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.081, 0.03)
+
+[node name="StylusArm" type="CSGBox3D" parent="Body/StylusPivot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.012)
+size = Vector3(0.004, 0.004, 0.04)
+material = ExtResource("5_brass")
+
+[node name="StylusTip" type="CSGCylinder3D" parent="Body/StylusPivot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0055, 0.007)
+radius = 0.0018
+height = 0.008
+sides = 6
+material = SubResource("Ink")
+
+[node name="WindingArbor" type="CSGCylinder3D" parent="Body"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0.085, 0.04, -0.01)
+radius = 0.004
+height = 0.012
+sides = 8
+material = ExtResource("5_brass")
+
+[node name="WindingKey" type="CSGBox3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.092, 0.04, -0.01)
+size = Vector3(0.003, 0.022, 0.012)
+material = ExtResource("5_brass")
 
 [node name="PaperStrip" type="MeshInstance3D" parent="Body"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0005, 0.1)
 mesh = SubResource("BoxMesh_strip")
 
-[node name="ReceivingBox" type="MeshInstance3D" parent="Body"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, 0.17)
-mesh = SubResource("BoxMesh_tray")
+[node name="ReceivingTrayFloor" type="CSGBox3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.003, 0.172)
+size = Vector3(0.06, 0.006, 0.055)
+material = ExtResource("2_wood")
+
+[node name="ReceivingTrayLip" type="CSGBox3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.012, 0.198)
+size = Vector3(0.06, 0.024, 0.005)
+material = ExtResource("2_wood")
+
+[node name="TapeCoil" type="CSGCylinder3D" parent="Body"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0.018, 0.17)
+radius = 0.012
+height = 0.014
+sides = 10
+material = ExtResource("3_paper")
