@@ -1,3 +1,5 @@
+> **SUPERSEDED (2026-09-27).** Исторический документ. Актуальное состояние и планы: `docs/HANDOVER.md`, `docs/plans/next/00_INDEX.md`.
+
 # DEAD WIRE M1 — Quality Finish: исследование, аудит и план исполнения
 
 Дата: 2026-09-19.

@@ -1,3 +1,5 @@
+> **SUPERSEDED (2026-09-27).** Исторический документ. Актуальное состояние и планы: `docs/HANDOVER.md`, `docs/plans/next/00_INDEX.md`.
+
 # PROMPT — довести DEAD WIRE M1 после H1–H9
 
 Работай в /Users/y.israfilov/Desktop/dead-wire.

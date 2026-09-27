@@ -1,3 +1,5 @@
+> **SUPERSEDED (2026-09-27).** Исторический документ. Актуальное состояние и планы: `docs/HANDOVER.md`, `docs/plans/next/00_INDEX.md`.
+
 # M1 Living Shift — ощущение живой смены, план и implementation prompt
 
 > **Актуальный следующий проход после H1–H9 (2026-09-19):** [Quality Finish](m1_quality_finish_plan.md) и [implementation prompt](m1_quality_finish_prompt.md). Старые фазы/замечания ниже сохраняются как контекст; уже закрытые H1–H9 не начинать заново. Новые B1–B3 проверены отдельным diagnostic probe.
