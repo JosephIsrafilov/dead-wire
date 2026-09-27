@@ -3,10 +3,13 @@
 First-person psychological horror, Godot 4.7 / GDScript. You are a telegraph
 operator in 1894; the core hook: you hear one thing, your hand writes another.
 
+**Start here:** `docs/HANDOVER.md` (state, traps, conventions), then
+`docs/plans/next/00_INDEX.md` (implementation plans WS1–WS7).
+
 ## Commands
 
 ```bash
-# Full regression (37+ suites, MUST be green before any task is done)
+# Full regression (38 suites / 1915 assertions at 2026-09-27; MUST be green, counts never drop)
 bash tools/run_all_tests.sh
 
 # Focused suite
@@ -15,8 +18,13 @@ godot --headless --audio-driver Dummy --path . --script tests/telegraph/<suite>_
 # Production boot smoke (0 errors required)
 godot --headless --audio-driver Dummy --path . --quit-after 120 res://scenes/office/m1_office.tscn
 
-# Production route (windowed ONLY — real mouse capture; headless refuses with exit 2)
+# Production route (windowed ONLY — real mouse capture; headless refuses with exit 2; 57 PASS)
 godot --path . --script tools/production_evidence_capture.gd
+# Whole night incl. hook + dawn (windowed; 58 PASS). Other capture tools: docs/HANDOVER.md §4
+godot --path . --script tools/first_night_playthrough.gd -- --capture
+
+# After adding any class_name or asset: refresh the class cache
+godot --headless --path . --import
 
 # Lint production scripts (tests/tools are exempt — established style)
 .venv-tools/bin/gdlint scripts/

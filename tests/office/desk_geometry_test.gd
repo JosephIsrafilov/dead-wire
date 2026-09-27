@@ -5,7 +5,7 @@ extends SceneTree
 ## blotter; the archived sheet slides flat across the desk. No corner of any
 ## sheet may sink under the desk surface, hang in the air, or overhang the top.
 ## Also guards the Q1 readability budget: the projected letter height on the
-## tilted sheet must not fall below the working-read target.
+## flat sheet must not fall below the working-read target.
 
 var _assertions_passed: int = 0
 
