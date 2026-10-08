@@ -3,6 +3,12 @@
 Last updated: 2026-09-27. Audience: any model or person picking up the project cold.
 Docs are written in Russian, code and code comments in English. Keep that split.
 
+## Checkpoint 2026-10-08 — overrides stale status below
+
+Current continuation: `docs/reports/2026-10-08_DEVICE_HANDOFF.md` on branch `codex/hand-rebuild-handoff`.
+Hand anatomy work is saved but **visually rejected by the owner**; interrupted rebuild has before frames only.
+Latest verified regression baseline: **39 suites / 1934 assertions**. Do not treat historical acceptance reports as current visual approval.
+
 ## 1. State now
 
 - HEAD `74f0443` on `main`, in sync with `origin/main`.
