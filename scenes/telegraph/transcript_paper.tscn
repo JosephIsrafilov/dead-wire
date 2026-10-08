@@ -122,7 +122,7 @@ shape = SubResource("BoxShape3D_interact")
 script = ExtResource("4_rig")
 wrist_travel_limit = 0.006
 max_final_correction = 0.16
-elbow_offset_rig = Vector3(0.2183, -0.2222, 0.2669)
+elbow_offset_rig = Vector3(0.1823, -0.1766, 0.2288)
 
 [node name="PreviousSheet" type="Node3D" parent="."]
 visible = false
@@ -175,8 +175,8 @@ mesh = ExtResource("7_hand")
 
 ; Pen transform: built around by tools/build_writer_hand.gd (tripod grip); keep in sync.
 [node name="Pen" type="Node3D" parent="WriterRig/Sleeve/Wrist/Hand"]
-position = Vector3(0.0084, -0.0099, -0.0701)
-rotation = Vector3(0.7289, -0.0649, -0.2110)
+position = Vector3(-0.0106, -0.0049, -0.0754)
+rotation = Vector3(0.6225, 0.0859, 0.1590)
 
 [node name="Shaft" type="MeshInstance3D" parent="WriterRig/Sleeve/Wrist/Hand/Pen"]
 position = Vector3(0.0, 0.03, 0.0)
