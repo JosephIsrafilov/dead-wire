@@ -1,0 +1,54 @@
+[
+  {
+    "name": "wallpaper",
+    "source": "materials\\style_tests\\textures\\psx\\psx_wallpaper_stripe_128.png",
+    "source_sha256": "fd4252660e705680651c887bb3684eeca84e10153f299134f03753e251892c7e",
+    "output": "assets\\textures\\worn_warmth\\wallpaper_128_v1.png",
+    "sha256": "47d5fd1b1b92e2ef57753a21598483a680de0d33babbbe12029e03ab1c4f9f73",
+    "mean_rgb": [
+      89.5897216796875,
+      80.39996337890625,
+      57.6767578125
+    ],
+    "tileable": true
+  },
+  {
+    "name": "wood",
+    "source": "materials\\style_tests\\textures\\weathered_brown_planks_diff.png",
+    "source_sha256": "d4e0fc5ee65045896b99860530c54cd76b65b18bb9df974bb51525259962939b",
+    "output": "assets\\textures\\worn_warmth\\wood_128_v1.png",
+    "sha256": "9dc4451c2496054e0e7f49cd45862e664bed11165b2a078c6818a3c9d21a9611",
+    "mean_rgb": [
+      95.8240966796875,
+      75.051025390625,
+      57.35308837890625
+    ],
+    "tileable": true
+  },
+  {
+    "name": "baize",
+    "source": "authored deterministic cloth_source()",
+    "source_sha256": null,
+    "output": "assets\\textures\\worn_warmth\\baize_128_v1.png",
+    "sha256": "9ebf32d4cef555e575820ac6a2a9a95458aeb5559eeebc8fa505e2365a8b57b6",
+    "mean_rgb": [
+      182.615234375,
+      182.615234375,
+      182.615234375
+    ],
+    "tileable": true
+  },
+  {
+    "name": "paper",
+    "source": "materials\\style_tests\\textures\\paper_worn_diff.png",
+    "source_sha256": "aa72fa07905379af376ce7a7211d5fec761d6d87fe240faf5550c39e43a37275",
+    "output": "assets\\textures\\worn_warmth\\paper_128_v1.png",
+    "sha256": "d962917b9b4ac6f845f6a2d001d8f39ceb97b54d77699461464dd06aef615cd1",
+    "mean_rgb": [
+      246.8935546875,
+      246.24658203125,
+      239.65765380859375
+    ],
+    "tileable": false
+  }
+]

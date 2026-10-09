@@ -1,0 +1,9 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+D3D12 12_0 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 3070 Laptop GPU
+
+SHOT res://docs/art/state_2026-10-09/hand_authored/office/before/01_seated_arm.png 0
+SHOT res://docs/art/state_2026-10-09/hand_authored/office/before/02_desk_arm.png 0
+SHOT res://docs/art/state_2026-10-09/hand_authored/office/before/03_finished_sheet.png 0
+SHOT res://docs/art/state_2026-10-09/hand_authored/office/before/04_lifted_sheet.png 0
+WARNING: 7 RIDs of type "Texture" were leaked.
+   at: finalize (servers/rendering/rendering_device.cpp:8900)

@@ -1,8 +1,8 @@
 [gd_resource type="StandardMaterial3D" load_steps=2 format=3]
 
-[ext_resource type="Texture2D" path="res://materials/style_tests/textures/psx/psx_wallpaper_stripe_128.png" id="1_tex"]
+[ext_resource type="Texture2D" path="res://assets/textures/worn_warmth/wallpaper_128_v1.png" id="1_tex"]
 
-; Upper walls: generated 1890s stripe paper (tools/build_wallpaper.gd).
+; Restrained derivative of the authored stripe; tools/build_worn_warmth.py.
 ; World triplanar keeps one texel density on every wall piece, whatever its size.
 [resource]
 shading_mode = 1

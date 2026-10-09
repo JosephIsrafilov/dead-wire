@@ -1,0 +1,16 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+--- Starting Writer Hand Test Suite ---
+  PASS: Hand, cuff and sleeve meshes stay on layers = 2
+  PASS: Cloth keeps SPECULAR_DISABLED
+  PASS: Hand mesh carries a material
+  PASS: Skin is matte: roughness 1.00 (was 0.74 with a lamp sheen)
+  PASS: Skin keeps SPECULAR_DISABLED like the cloth
+  PASS: Hand mesh carries vertex colours (2760 colours)
+  PASS: Skin albedo luminance 0.355 stays under the form's 0.544
+  PASS: Calibration: the shaft's own centre reads inside the shaft
+  PASS: Calibration: a point a metre away reads outside
+  PASS: Calibration: a point just inside the bottom rim reads inside
+  PASS: Calibration: a point just outside the top rim reads outside
+  PASS: The hand carries one named surface per part (6)
+  FAIL: The complete skin is closed and manifold after welding named seams

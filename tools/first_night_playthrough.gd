@@ -156,7 +156,11 @@ func _run() -> void:
 	office.player.rotation.y = PI
 	office.player.head.rotation = Vector3.ZERO
 	Input.action_press("move_forward")
-	await create_timer(0.7).timeout
+	# Wait for the physical threshold, not a duration tied to the old speed.
+	var exit_timeout := 0.0
+	while not office.shift_end_card.is_running() and exit_timeout < 3.0:
+		await create_timer(0.05).timeout
+		exit_timeout += 0.05
 	Input.action_release("move_forward")
 	check(office.shift_end_card.is_running(), "Walking through threshold starts ending")
 	await create_timer(3.1).timeout

@@ -3,6 +3,7 @@ extends Node3D
 
 signal transcript_inspected(text: String)
 signal transcript_closed()
+signal previous_transcript_inspected(text: String, incomplete: bool)
 signal copy_finished(scenario_id: String)
 ## The fresh blank physically landed on the writing zone. The feed's paper
 ## sound belongs to this moment, not to the viewer's open/close.
@@ -66,6 +67,8 @@ var writer_rig: WriterRig = null
 
 var paper_state: PaperState = PaperState.EMPTY
 
+var _previous_text: String = ""
+var _previous_incomplete: bool = false
 var _transcript_text: String = ""
 var _is_revealed: bool = false
 
@@ -112,6 +115,11 @@ func _ready() -> void:
 		if not interactable.interacted.is_connected(_on_interacted):
 			interactable.interacted.connect(_on_interacted)
 
+	var previous_act := get_node_or_null("PreviousSheet/Interactable") as Interactable
+	if previous_act != null:
+		previous_act.enabled = false
+		previous_act.collision_layer = 0
+		previous_act.interacted.connect(_on_previous_interacted)
 	_update_display()
 
 func _process(delta: float) -> void:
@@ -340,6 +348,11 @@ func clear_transcript() -> void:
 	_cancel_writer_animation()
 	_cancel_sheet_feed()
 	_previous_slide_active = false
+	_previous_text = ""
+	var previous_act := get_node_or_null("PreviousSheet/Interactable") as Interactable
+	if previous_act != null:
+		previous_act.enabled = false
+		previous_act.collision_layer = 0
 	var previous := get_previous_sheet_node()
 	if previous != null:
 		previous.visible = false
@@ -365,6 +378,10 @@ func reset_for_new_transmission() -> void:
 func _archive_visible_sheet() -> void:
 	var previous := get_previous_sheet_node()
 	var previous_label := get_node_or_null("PreviousSheet/PreviousSheetText") as Label3D
+	var previous_act := get_node_or_null("PreviousSheet/Interactable") as Interactable
+	if previous_act != null:
+		previous_act.enabled = false
+		previous_act.collision_layer = 0
 	if previous == null or previous_label == null:
 		return
 	if not _is_revealed or _transcript_text.is_empty():
@@ -374,6 +391,11 @@ func _archive_visible_sheet() -> void:
 	if snapshot.is_empty():
 		previous.visible = false
 		return
+	_previous_text = snapshot
+	_previous_incomplete = is_incomplete_closed()
+	if previous_act != null:
+		previous_act.enabled = true
+		previous_act.collision_layer = 2
 	previous_label.text = _layout_prefix(snapshot)
 	previous.visible = true
 	# The old sheet starts exactly where it lay (the sheet rest, in world
@@ -613,10 +635,9 @@ func _update_display() -> void:
 	if lbl != null:
 		lbl.text = _layout_prefix(get_display_text())
 
-## Columns per written line. Eight keeps a full row of the current lettering
-## inside the sheet's margins; the layout and the pen contact share it, so
-## nib and ink cannot drift apart.
-const GLYPH_COLUMNS: int = 8
+## Short rows preserve readable live ink at the seated PSX resolution.
+## Both the contact solve and lifted view use these same fixed columns.
+const GLYPH_COLUMNS: int = 10
 
 ## Fixed columns keep existing ink still as each new glyph is written. The
 ## same layout defines pen contact, so nib and ink cannot drift apart.
@@ -652,3 +673,8 @@ func get_glyph_contact(glyph_index: int) -> Vector3:
 
 func _on_interacted() -> void:
 	transcript_inspected.emit(get_display_text())
+
+## Archived ink is a record, never a verification event for the current session.
+func _on_previous_interacted() -> void:
+	if not _previous_text.is_empty():
+		previous_transcript_inspected.emit(_previous_text, _previous_incomplete)

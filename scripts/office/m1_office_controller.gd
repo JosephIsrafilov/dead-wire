@@ -160,6 +160,8 @@ func _bind_signals() -> void:
 		paper = session_controller.transcript_paper
 	if paper != null and not paper.transcript_inspected.is_connected(_on_transcript_inspected):
 		paper.transcript_inspected.connect(_on_transcript_inspected)
+	if paper != null and not paper.previous_transcript_inspected.is_connected(_on_previous_transcript_inspected):
+		paper.previous_transcript_inspected.connect(_on_previous_transcript_inspected)
 
 	# The register strip lifts to the lamp through the same viewer (design
 	# §4): raw marks only, never compared with the transcript sheet.
@@ -451,6 +453,14 @@ func _on_transcript_inspected(text: String) -> void:
 		"transcript_paper", "NIGHT COPY — E. CRANE", text,
 		"[E / Esc] Put Down Transcript"
 	)
+
+## The preceding physical sheet stays readable even while the next is live.
+func _on_previous_transcript_inspected(text: String, incomplete: bool) -> void:
+	if document_viewer == null:
+		return
+	var body := text + ("\n\n— COPY INCOMPLETE —" if incomplete else "")
+	document_viewer.open_document("previous_transcript", "NIGHT COPY — E. CRANE", body,
+		"[E / Esc] Put Down Previous Copy")
 
 func _get_transcript_paper() -> TranscriptPaper:
 	var paper := get_node_or_null("TranscriptPaper") as TranscriptPaper

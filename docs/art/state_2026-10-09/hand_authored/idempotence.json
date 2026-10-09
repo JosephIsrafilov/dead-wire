@@ -1,0 +1,15 @@
+{
+  "byte_identical": true,
+  "runs": [
+    {
+      "assets\\models\\operator\\hand_authored_v1.json": "950d0a60ff28f50638a1589112057a9aed4c10608293aa5c8b9fde98fc14944f",
+      "assets\\models\\operator\\hand_authored_v1.res": "0fe338236e568d520ac12ea0c4f3633242a8ee0a0a2cf4ebdbe65068dfc15f32",
+      "scenes\\telegraph\\transcript_paper.tscn": "cd8f936a046df35feff55537b014843da914d3be1ea4476ef53517e27674bad3"
+    },
+    {
+      "assets\\models\\operator\\hand_authored_v1.json": "950d0a60ff28f50638a1589112057a9aed4c10608293aa5c8b9fde98fc14944f",
+      "assets\\models\\operator\\hand_authored_v1.res": "0fe338236e568d520ac12ea0c4f3633242a8ee0a0a2cf4ebdbe65068dfc15f32",
+      "scenes\\telegraph\\transcript_paper.tscn": "cd8f936a046df35feff55537b014843da914d3be1ea4476ef53517e27674bad3"
+    }
+  ]
+}

@@ -1,0 +1,121 @@
+{
+  "date": "2026-10-09",
+  "purpose": "Anatomical/art research only; no runtime edits.",
+  "sources": [
+    {
+      "id": "A1",
+      "title": "TeachMeAnatomy — Bones of the Hand",
+      "url": "https://teachmeanatomy.info/upper-limb/bones/hand/",
+      "read": "Full public article and bone diagram.",
+      "use": "Carpals/metacarpals/phalanges; two thumb phalanges vs three other digits."
+    },
+    {
+      "id": "A2",
+      "title": "TeachMeAnatomy — Muscles of the Hand",
+      "url": "https://teachmeanatomy.info/upper-limb/muscles/hand/",
+      "read": "Full public article and thenar diagram.",
+      "use": "Thenar/hypothenar masses, opposition, intrinsic muscle function."
+    },
+    {
+      "id": "A3",
+      "title": "TeachMeAnatomy — Metacarpophalangeal Joint",
+      "url": "https://teachmeanatomy.info/upper-limb/joints/metacarpophalangeal/",
+      "read": "Full public article.",
+      "use": "MCP structure and movement; not a writing-angle prescription."
+    },
+    {
+      "id": "A4",
+      "title": "TeachMeAnatomy — Proximal Interphalangeal Joint",
+      "url": "https://teachmeanatomy.info/upper-limb/joints/proximal-interphalangeal/",
+      "read": "Full public article.",
+      "use": "PIP hinge, not a free lateral ball joint."
+    },
+    {
+      "id": "A5",
+      "title": "TeachMeAnatomy — Wrist Joint",
+      "url": "https://teachmeanatomy.info/upper-limb/joints/wrist-joint/",
+      "read": "Full public article.",
+      "use": "Wrist movement axes; distinguish from forearm pronation."
+    },
+    {
+      "id": "A6",
+      "title": "TeachMeAnatomy — Anterior Forearm",
+      "url": "https://teachmeanatomy.info/upper-limb/muscles/anterior-forearm/",
+      "read": "Full public article.",
+      "use": "FDS/FDP/FPL tendons, flexion and pronation."
+    },
+    {
+      "id": "B1",
+      "title": "Dounskaia, Van Gemmert, Stelmach (2000) — Interjoint coordination during handwriting-like movements",
+      "url": "https://doi.org/10.1007/s002210000495",
+      "pmid": "11104134",
+      "read": "Metadata and abstract via Europe PMC; no claim of full-text access.",
+      "use": "Nine right-handed subjects, controlled line/circle drawing with inkless pen; coordinated wrist/finger motion; not full telegram writing."
+    },
+    {
+      "id": "B2",
+      "title": "Schwellnus et al. (2013) — Writing forces associated with four pencil grasp patterns in grade 4 children",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3722657/",
+      "doi": "10.5014/ajot.2013.005538",
+      "read": "Public full text, methods/results and Figure 1 photo.",
+      "use": "74 Grade4 children; different mature grasps; do not transfer population conclusions to Elias."
+    },
+    {
+      "id": "B3",
+      "title": "Schwellnus et al. (2012) — Effect of pencil grasp on the speed and legibility of handwriting in children",
+      "url": "https://doi.org/10.5014/ajot.2012.004515",
+      "pmid": "23106992",
+      "read": "Abstract via Europe PMC.",
+      "use": "120 Grade4 children; no significant mature-grasp effect on speed/legibility in that sample.",
+      "authors_indexed": "Schwellnus H, Carnahan H, Kushki A, Polatajko H, Missiuna C, Chau T."
+    },
+    {
+      "id": "B4",
+      "title": "de Almeida, da Cruz, Magna, Ferrigno (2013) — An electromyographic analysis of two handwriting grasp patterns",
+      "url": "https://doi.org/10.1016/j.jelekin.2013.04.004",
+      "pmid": "23642842",
+      "read": "Abstract via Europe PMC; author metadata as indexed.",
+      "use": "24 university students; different proximal muscle recruitment in static/dynamic tripod; not a universal health verdict.",
+      "authors_indexed": "de Almeida PH, da Cruz DM, Magna LA, Ferrigno IS."
+    },
+    {
+      "id": "B5",
+      "title": "Chang, Chen, Yu (2015) — Biomechanical analyses of prolonged handwriting in subjects with and without perceived discomfort",
+      "url": "https://doi.org/10.1016/j.humov.2015.06.008",
+      "pmid": "26141665",
+      "read": "Abstract via Europe PMC; author metadata as indexed.",
+      "use": "40 young adults,30min task; wrist position and soreness association, not a fixed ideal pose.",
+      "authors_indexed": "Chang SH, Chen CL, Yu NY."
+    },
+    {
+      "id": "B6",
+      "title": "Lin et al. (2022) — Pen-grip kinetics in children with and without handwriting difficulties",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9231762/",
+      "doi": "10.1371/journal.pone.0270466",
+      "read": "Open full-text XML obtained; abstract and introduction reviewed. Methods/results not independently analysed.",
+      "use": "64 children; grip force, tip force and hand force are distinct; not adult quantitative target."
+    },
+    {
+      "id": "H1",
+      "title": "Spencer authors — Theory of Spencerian Penmanship (1874)",
+      "url": "https://archive.org/details/spencer-authors-theory-of-spencerian-penmanship-1874-",
+      "read": "Metadata, OCR, scans printed pp9/10/11 (image leaves n10/n11/n12).",
+      "use": "Historical penholding and finger/forearm/combined/whole-arm movement; prescription of a school, not evidence every operator used it."
+    },
+    {
+      "id": "H2",
+      "title": "A.N.Palmer — The Palmer Method of Business Writing (1915 edition)",
+      "url": "https://archive.org/details/palmermethodbus00palm",
+      "read": "Metadata and OCR excerpts; no image validation in this research.",
+      "use": "Muscular movement tradition and paper repositioning; this edition postdates1894 and is not direct period proof."
+    }
+  ],
+  "unavailable": [
+    "Browser runtime reset twice; used direct HTTPS public reading.",
+    "ASSH routes returned generic app shell, not anatomy content.",
+    "NHS pencil-grip route403; not cited as read.",
+    "Some guessed joint routes404; replaced with verified site links.",
+    "EuropePMC fullTextXML500 for PMC3722657/PMC2712583; read public PMC HTML instead."
+  ],
+  "copyright": "Publisher diagrams/photos retained only in ignored local research cache. No external figure copied into game or deliverable artwork."
+}

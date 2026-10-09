@@ -1,0 +1,7 @@
+{
+  "tools/build_writer_hand.gd": "130be4cb5bd99ead9362ee7878d523c57749a8b5d38cc146593360b337af6278",
+  "scripts/telegraph/ui/writer_rig.gd": "701eeee67953a0ab9a08d52d49d53026249e4d28d565d61b6b255cbc83930e5d",
+  "scripts/telegraph/ui/transcript_paper.gd": "0b2a046c077d1b1f116c46ac37f98a1223a8fe120e3e910c5de00e6892c3d5a4",
+  "scenes/telegraph/transcript_paper.tscn": "4772851018139574c00b36ff8904435a333c2db11f9dc6f4c872b77989db293b",
+  "assets/models/operator/hand_v3.res": "30ea8c2b1043294bbf25867f18c67cdf36cb85ebe4f1fdc507564c6d3fd50976"
+}

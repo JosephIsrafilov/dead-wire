@@ -33,6 +33,13 @@ func _run() -> void:
 	# the pad; the reference card lies on the blotter. Nothing leans on wedges.
 	var blotter := office.get_node_or_null("DeskBlotter") as CSGBox3D
 	if not assert_condition(blotter != null, "The desk has its blotter"): return
+	var felt := blotter.material as StandardMaterial3D
+	if not assert_condition(felt != null and felt.roughness >= 0.995,
+			"Blotter baize is fully rough, not polished"): return
+	if not assert_condition(felt.metallic == 0.0,
+			"Blotter baize is non-metallic"): return
+	if not assert_condition(felt.specular_mode == BaseMaterial3D.SPECULAR_DISABLED,
+			"Blotter baize has no grazing specular sheen"): return
 	var blotter_y: float = blotter.global_position.y + blotter.size.y / 2.0
 	var paper := office._get_transcript_paper()
 	var sheet := paper.get_sheet_node()

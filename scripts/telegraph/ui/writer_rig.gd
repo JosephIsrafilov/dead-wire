@@ -79,6 +79,10 @@ var _wrist_resume_transform: Transform3D = Transform3D.IDENTITY
 var _sleeve_resume_transform: Transform3D = Transform3D.IDENTITY
 
 ## The glyph motion under way: start pose, target pose, clock.
+const UPPER_LENGTH := 0.30
+const FOREARM_LENGTH := 0.27
+const ELBOW_POLE := Vector3(1.0, -0.45, 0.0)
+var _shoulder_rest: Vector3 = Vector3.ZERO
 var _motion_pending: bool = false
 var _motion_glyph_index: int = -1
 var _motion_elapsed: float = 0.0
@@ -96,8 +100,12 @@ var _motion_wrist_target: Vector3 = Vector3.ZERO
 var _last_contact_row: int = -1
 
 func _ready() -> void:
+	var upper := get_node_or_null("UpperArm") as MeshInstance3D
+	if upper != null:
+		_shoulder_rest = upper.position
 	_apply_visibility(false)
 	_capture_rest_transforms()
+	_update_upper_arm()
 	_last_nib_position = _get_nib_position()
 	var hand := get_node_or_null("%s" % _get_hand_path()) as Node3D
 	var nib := get_node_or_null("%s/Pen/Nib" % _get_hand_path()) as Node3D
@@ -217,8 +225,10 @@ func _begin_enter(target: Vector3) -> void:
 		if assembly != null:
 			assembly.position = target
 		presentation_state = PresentationState.WRITING
+		_update_upper_arm()
 		return
 	_enter_start = assembly.position
+	_update_upper_arm()
 
 ## Deterministic clocks: entry and glyph motion both advance here, and one
 ## tick's time is spent ONCE. Production advances this from the paper's frame
@@ -231,6 +241,7 @@ func advance_presentation(delta: float) -> float:
 		remaining -= _advance_entry(remaining)
 	if _motion_pending and remaining > 0.0:
 		remaining -= _advance_motion(remaining)
+	_update_upper_arm()
 	return maxf(remaining, 0.0)
 
 ## Advances the entry clock by at most `delta`. Returns the time actually
@@ -290,59 +301,19 @@ func request_glyph_motion(glyph_index: int, text: String) -> bool:
 	if sleeve == null or wrist == null or nib == null:
 		return false
 
-	# --- solve the target pose, entirely in rig-local space ---
-	# The solve is a two-pass reach, and every step is measured:
-	#   1) wrist fine travel toward the contact, clamped to its physical limit;
-	#   2) the sleeve swings around the explicit elbow pivot (rig-local);
-	#   3) once more with whatever travel remains in the wrist;
-	#   4) a final rigid translation of the whole assembly — bounded, and
-	#      recomputed from the actual pose each glyph, so nothing accumulates
-	#      and no joint ever separates (B2: no cumulative hiding, but an
-	#      honest reach when the contact's radius around the elbow differs
-	#      from the nib's).
+	# The hand/pen is one authored rigid pose. Translation places the real nib
+	# on the glyph; the cloth arm is solved separately with fixed bone lengths.
+	# Solve from REST every time, never accumulate a last-letter correction.
 	var sleeve_original := sleeve.transform
-	var wrist_original := wrist.position
-	var wrist_target := wrist.position
-	var sleeve_target := sleeve.transform
-	for pass_index in 2:
-		var tip_pass := to_local(nib.to_global(Vector3(0, -0.011, 0)))
-		var d_pass := contact_rig - tip_pass
-		# Wrist fine travel in its own parent (sleeve) space.
-		var d_sleeve := sleeve_target.basis.inverse() * d_pass
-		var wrist_offset := wrist_target - _wrist_rest_position
-		var desired := wrist_offset + d_sleeve
-		if desired.length() > wrist_travel_limit:
-			desired = desired.normalized() * wrist_travel_limit
-		wrist_target = _wrist_rest_position + desired
-		wrist.position = wrist_target
-		var tip_after_wrist := to_local(nib.to_global(Vector3(0, -0.011, 0)))
-		var residual := contact_rig - tip_after_wrist
-		if residual.length() <= 0.00005:
-			break
-		var elbow := _assembly_rest_position + elbow_offset_rig
-		var to_nib := tip_after_wrist - elbow
-		var to_contact := contact_rig - elbow
-		if to_nib.length() > 0.0001 and to_contact.length() > 0.0001:
-			var axis := to_nib.cross(to_contact)
-			if axis.length() > 0.000001:
-				var angle := to_nib.angle_to(to_contact)
-				var rot := Basis(axis.normalized(), angle)
-				sleeve_target = Transform3D(
-					rot * sleeve_target.basis,
-					elbow + rot * (sleeve_target.origin - elbow))
-		sleeve.transform = sleeve_target
-	# Final bounded rigid translation: the arm reaches as a whole, joints
-	# locked. Beyond the bound the residual stays visible as a solver defect.
-	sleeve.transform = sleeve_target
-	wrist.position = wrist_target
-	var tip_final := to_local(nib.to_global(Vector3(0, -0.011, 0)))
-	var correction := contact_rig - tip_final
-	if correction.length() <= max_final_correction:
-		sleeve_target.origin += correction
-	# Restore the CURRENT pose: the motion below travels from where the hand
-	# actually is to the solved target.
+	var wrist_original := wrist.transform
+	sleeve.transform = _sleeve_rest_transform
+	wrist.transform = _wrist_rest_transform
+	var rest_tip := to_local(nib.to_global(Vector3(0, -0.011, 0)))
+	var sleeve_target := _sleeve_rest_transform
+	sleeve_target.origin += contact_rig - rest_tip
+	var wrist_target := _wrist_rest_position
 	sleeve.transform = sleeve_original
-	wrist.position = wrist_original
+	wrist.transform = wrist_original
 
 	# --- record and start the motion (Q2) ---
 	_motion_sleeve_start = sleeve.transform
@@ -389,6 +360,7 @@ func _advance_motion(delta: float) -> float:
 			_last_nib_position = nib.global_position
 		_motion_pending = false
 		presentation_state = PresentationState.WRITING
+		_update_upper_arm()
 		glyph_contact.emit(_motion_glyph_index)
 		return clampf(_motion_duration - before, 0.0, delta)
 	return delta
@@ -415,6 +387,7 @@ func finish_writing() -> void:
 	var target := assembly.position + Vector3(0.0, 0.0, 0.11)
 	if not is_inside_tree() or withdraw_duration <= 0.0:
 		assembly.position = target
+		_update_upper_arm()
 		presentation_state = PresentationState.WITHDRAWN
 		_apply_visibility(false)
 		return
@@ -444,6 +417,7 @@ func reset() -> void:
 		assembly.transform = _sleeve_rest_transform
 	_restore_joint_rests()
 	_last_nib_position = _get_nib_position()
+	_update_upper_arm()
 
 func _restore_joint_rests() -> void:
 	var wrist := get_node_or_null("Sleeve/Wrist") as Node3D
@@ -500,6 +474,9 @@ func _apply_visibility(value: bool) -> void:
 	var assembly := _get_assembly()
 	if assembly != null:
 		assembly.visible = value
+	var upper := get_node_or_null("UpperArm") as MeshInstance3D
+	if upper != null:
+		upper.visible = value
 
 func _get_assembly() -> Node3D:
 	var assembly := get_node_or_null("Assembly") as Node3D
@@ -521,3 +498,36 @@ func _cancel_tween() -> void:
 	if _active_tween != null and is_instance_valid(_active_tween):
 		_active_tween.kill()
 	_active_tween = null
+
+## Analytical two-link arm: both meshes keep unit scale, the elbow is the
+## sphere intersection for two fixed lengths, on one stable bend side.
+func _update_upper_arm() -> void:
+	var upper := get_node_or_null("UpperArm") as MeshInstance3D
+	var forearm := get_node_or_null("Sleeve/SleeveMesh") as MeshInstance3D
+	var cuff := get_node_or_null("Sleeve/Wrist/CuffAnchor") as Marker3D
+	var elbow := get_node_or_null("Sleeve/ElbowAnchor") as Marker3D
+	var sleeve := _get_assembly()
+	if upper == null or forearm == null or cuff == null or elbow == null or sleeve == null:
+		return
+	var target := to_local(cuff.global_position)
+	var to_cuff := target - _shoulder_rest
+	var distance := to_cuff.length()
+	if distance < 0.001 or distance >= UPPER_LENGTH + FOREARM_LENGTH:
+		return
+	var axis := to_cuff / distance
+	var along := (UPPER_LENGTH * UPPER_LENGTH - FOREARM_LENGTH * FOREARM_LENGTH 		+ distance * distance) / (2.0 * distance)
+	var height := sqrt(maxf(UPPER_LENGTH * UPPER_LENGTH - along * along, 0.0))
+	var bend := (ELBOW_POLE - axis * ELBOW_POLE.dot(axis)).normalized()
+	var joint := _shoulder_rest + axis * along + bend * height
+	upper.transform = _segment_transform(_shoulder_rest, joint)
+	forearm.transform = sleeve.transform.affine_inverse() * _segment_transform(target, joint)
+	elbow.position = sleeve.transform.affine_inverse() * joint
+
+func _segment_transform(start: Vector3, end: Vector3) -> Transform3D:
+	var z := (end - start).normalized()
+	var x := Vector3.UP.cross(z).normalized()
+	return Transform3D(Basis(x, z.cross(x), z), start)
+
+func _process(_delta: float) -> void:
+	# Withdrawal is tween-driven, so its elbow follows on rendered frames too.
+	_update_upper_arm()

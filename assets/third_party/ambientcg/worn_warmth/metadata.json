@@ -1,0 +1,556 @@
+{
+  "searchQuery": {
+    "forceSpecificAssetId": false,
+    "category": [],
+    "assetId": [
+      "fabric030",
+      "paper003",
+      "wood051"
+    ],
+    "dataType": [],
+    "creationMethod": null,
+    "queryString": "",
+    "sort": "Popular",
+    "createdUsingAssetId": null,
+    "basedOnAssetId": null,
+    "variationsOfAssetId": null,
+    "limit": 100,
+    "offset": 0
+  },
+  "numberOfResults": 3,
+  "currentPageHttp": "https://ambientcg.com/api/v2/full_json?id=fabric030%2Cpaper003%2Cwood051&sort=popular&limit=100&include=statisticsData%2ClabelData%2CpreviewData%2CtechnicalData%2CfileData",
+  "foundAssets": [
+    {
+      "assetId": "Wood051",
+      "releaseDate": "2020-09-27 00:00:00",
+      "earlyReleaseDate": "2020-09-27 00:00:00",
+      "dataType": "Material",
+      "creationMethod": "PBRProcedural",
+      "category": null,
+      "downloadCount": 419980,
+      "downloadCountMonth": 12722,
+      "downloadCountWeek": 3543,
+      "popularityScore": 31.415798479365495,
+      "tags": [
+        "051",
+        "51",
+        "brown",
+        "dark",
+        "elegant",
+        "espresso",
+        "flooring",
+        "furniture",
+        "grain",
+        "hardwood",
+        "interior",
+        "modern",
+        "plain",
+        "polished",
+        "smooth",
+        "wood"
+      ],
+      "dataTypeName": "Material",
+      "dataTypeDescription": "A photo texture with PBR maps.",
+      "creationMethodName": "Height field photogrammetry",
+      "creationMethodDescription": "Displacement generated using photogrammetry.",
+      "displayName": "Wood 051",
+      "customDisplayName": "",
+      "description": "",
+      "displayCategory": "Wood",
+      "shortLink": "https://ambientcg.com/a/Wood051",
+      "dimensionX": 80,
+      "dimensionY": 80,
+      "dimensionZ": 0,
+      "createdUsing": [],
+      "basedOnThis": [],
+      "variations": [],
+      "nextVariationAssetId": null,
+      "previousVariationAssetId": null,
+      "nextAssetId": null,
+      "previousAssetId": null,
+      "downloadFolders": {
+        "default": {
+          "title": "default",
+          "downloadFiletypeCategories": {
+            "zip": {
+              "title": "zip",
+              "downloads": [
+                {
+                  "fullDownloadPath": "https://ambientcg.com/get?file=Wood051_1K-JPG.zip",
+                  "downloadLink": "https://ambientcg.com/get?file=Wood051_1K-JPG.zip",
+                  "fileName": "Wood051_1K-JPG.zip",
+                  "size": 6712631,
+                  "filetype": "zip",
+                  "attribute": "1K-JPG",
+                  "zipContent": []
+                },
+                {
+                  "fullDownloadPath": "https://ambientcg.com/get?file=Wood051_2K-JPG.zip",
+                  "downloadLink": "https://ambientcg.com/get?file=Wood051_2K-JPG.zip",
+                  "fileName": "Wood051_2K-JPG.zip",
+                  "size": 23152632,
+                  "filetype": "zip",
+                  "attribute": "2K-JPG",
+                  "zipContent": []
+                },
+                {
+                  "fullDownloadPath": "https://ambientcg.com/get?file=Wood051_4K-JPG.zip",
+                  "downloadLink": "https://ambientcg.com/get?file=Wood051_4K-JPG.zip",
+                  "fileName": "Wood051_4K-JPG.zip",
+                  "size": 82818865,
+                  "filetype": "zip",
+                  "attribute": "4K-JPG",
+                  "zipContent": []
+                },
+                {
+                  "fullDownloadPath": "https://ambientcg.com/get?file=Wood051_8K-JPG.zip",
+                  "downloadLink": "https://ambientcg.com/get?file=Wood051_8K-JPG.zip",
+                  "fileName": "Wood051_8K-JPG.zip",
+                  "size": 261286819,
+                  "filetype": "zip",
+                  "attribute": "8K-JPG",
+                  "zipContent": []
+                },
+                {
+                  "fullDownloadPath": "https://ambientcg.com/get?file=Wood051_1K-PNG.zip",
+                  "downloadLink": "https://ambientcg.com/get?file=Wood051_1K-PNG.zip",
+                  "fileName": "Wood051_1K-PNG.zip",
+                  "size": 15223162,
+                  "filetype": "zip",
+                  "attribute": "1K-PNG",
+                  "zipContent": []
+                },
+                {
+                  "fullDownloadPath": "https://ambientcg.com/get?file=Wood051_2K-PNG.zip",
+                  "downloadLink": "https://ambientcg.com/get?file=Wood051_2K-PNG.zip",
+                  "fileName": "Wood051_2K-PNG.zip",
+                  "size": 56889576,
+                  "filetype": "zip",
+                  "attribute": "2K-PNG",
+                  "zipContent": []
+                },
+                {
+                  "fullDownloadPath": "https://ambientcg.com/get?file=Wood051_4K-PNG.zip",
+                  "downloadLink": "https://ambientcg.com/get?file=Wood051_4K-PNG.zip",
+                  "fileName": "Wood051_4K-PNG.zip",
+                  "size": 219166474,
+                  "filetype": "zip",
+                  "attribute": "4K-PNG",
+                  "zipContent": []
+                },
+                {
+                  "fullDownloadPath": "https://ambientcg.com/get?file=Wood051_8K-PNG.zip",
+                  "downloadLink": "https://ambientcg.com/get?file=Wood051_8K-PNG.zip",
+                  "fileName": "Wood051_8K-PNG.zip",
+                  "size": 810641121,
+                  "filetype": "zip",
+                  "attribute": "8K-PNG",
+                  "zipContent": []
+                }
+              ]
+            }
+          }
+        }
+      },
+      "previewLinks": [
+        {
+          "url": "https://releases.pbr.one/main/material-shading.html#normal_type=directx&color_url=https://f003.backblazeb2.com/file/ambientCG-Web/media/surface-preview/Wood051/Wood051_SQ_Color.jpg?5142&displacement_url=https://f003.backblazeb2.com/file/ambientCG-Web/media/surface-preview/Wood051/Wood051_SQ_Displacement.jpg?45349&normal_url=https://f003.backblazeb2.com/file/ambientCG-Web/media/surface-preview/Wood051/Wood051_SQ_NormalDX.jpg?83800&roughness_url=https://f003.backblazeb2.com/file/ambientCG-Web/media/surface-preview/Wood051/Wood051_SQ_Roughness.jpg?37738",
+          "name": {
+            "id": 4,
+            "slug": "pbr-one-material-shading",
+            "title": "3D Preview",
+            "description": "description"
+          },
+          "displayName": "",
+          "iconName": ""
+        },
+        {
+          "url": "https://releases.pbr.one/main/texture-tiling.html#texture_url=https://f003.backblazeb2.com/file/ambientCG-Web/media/surface-preview/Wood051/Wood051_SQ_Color.jpg?79257,https://f003.backblazeb2.com/file/ambientCG-Web/media/surface-preview/Wood051/Wood051_SQ_Displacement.jpg?63273,https://f003.backblazeb2.com/file/ambientCG-Web/media/surface-preview/Wood051/Wood051_SQ_NormalDX.jpg?49361,https://f003.backblazeb2.com/file/ambientCG-Web/media/surface-preview/Wood051/Wood051_SQ_Roughness.jpg?80471&texture_name=Color,Displacement,Normal,Roughness",
+          "name": {
+            "id": 3,
+            "slug": "pbr-one-material-maps",
+            "title": "Tiling Preview",
+            "description": "description"
+          },
+          "displayName": "",
+          "iconName": ""
+        }
+      ],
+      "previewType": "Default",
+      "maps": [
+        "color",
+        "displacement",
+        "normal",
+        "roughness"
+      ],
+      "hasUsd": false,
+      "previewImage": {
+        "64-PNG": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/64-PNG/Wood051.png",
+        "128-PNG": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/128-PNG/Wood051.png",
+        "256-PNG": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/256-PNG/Wood051.png",
+        "512-PNG": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/512-PNG/Wood051.png",
+        "1024-PNG": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/1024-PNG/Wood051.png",
+        "2048-PNG": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/2048-PNG/Wood051.png",
+        "64-JPG-FFFFFF": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/64-JPG-FFFFFF/Wood051.jpg",
+        "128-JPG-FFFFFF": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/128-JPG-FFFFFF/Wood051.jpg",
+        "256-JPG-FFFFFF": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/256-JPG-FFFFFF/Wood051.jpg",
+        "512-JPG-FFFFFF": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/512-JPG-FFFFFF/Wood051.jpg",
+        "1024-JPG-FFFFFF": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/1024-JPG-FFFFFF/Wood051.jpg",
+        "2048-JPG-FFFFFF": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/2048-JPG-FFFFFF/Wood051.jpg",
+        "64-JPG-242424": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/64-JPG-242424/Wood051.jpg",
+        "128-JPG-242424": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/128-JPG-242424/Wood051.jpg",
+        "256-JPG-242424": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/256-JPG-242424/Wood051.jpg",
+        "512-JPG-242424": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/512-JPG-242424/Wood051.jpg",
+        "1024-JPG-242424": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/1024-JPG-242424/Wood051.jpg",
+        "2048-JPG-242424": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/2048-JPG-242424/Wood051.jpg",
+        "64-WEBP": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/64-WEBP/Wood051.webp",
+        "128-WEBP": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/128-WEBP/Wood051.webp",
+        "256-WEBP": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/256-WEBP/Wood051.webp",
+        "512-WEBP": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/512-WEBP/Wood051.webp",
+        "1024-WEBP": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/1024-WEBP/Wood051.webp",
+        "2048-WEBP": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/2048-WEBP/Wood051.webp"
+      }
+    },
+    {
+      "assetId": "Fabric030",
+      "releaseDate": "2019-05-30 00:00:00",
+      "earlyReleaseDate": "2019-05-30 00:00:00",
+      "dataType": "Material",
+      "creationMethod": "PBRApproximated",
+      "category": null,
+      "downloadCount": 263008,
+      "downloadCountMonth": 9750,
+      "downloadCountWeek": 3063,
+      "popularityScore": 15.698695534940768,
+      "tags": [
+        "30",
+        "cloth",
+        "fabric",
+        "grey"
+      ],
+      "dataTypeName": "Material",
+      "dataTypeDescription": "A photo texture with PBR maps.",
+      "creationMethodName": "Height field photogrammetry",
+      "creationMethodDescription": "Displacement generated using photogrammetry.",
+      "displayName": "Fabric 030",
+      "customDisplayName": "",
+      "description": "",
+      "displayCategory": "Fabric",
+      "shortLink": "https://ambientcg.com/a/Fabric030",
+      "dimensionX": 0,
+      "dimensionY": 0,
+      "dimensionZ": 0,
+      "createdUsing": [],
+      "basedOnThis": [],
+      "variations": [],
+      "nextVariationAssetId": null,
+      "previousVariationAssetId": null,
+      "nextAssetId": null,
+      "previousAssetId": null,
+      "downloadFolders": {
+        "default": {
+          "title": "default",
+          "downloadFiletypeCategories": {
+            "zip": {
+              "title": "zip",
+              "downloads": [
+                {
+                  "fullDownloadPath": "https://ambientcg.com/get?file=Fabric030_1K-JPG.zip",
+                  "downloadLink": "https://ambientcg.com/get?file=Fabric030_1K-JPG.zip",
+                  "fileName": "Fabric030_1K-JPG.zip",
+                  "size": 11064340,
+                  "filetype": "zip",
+                  "attribute": "1K-JPG",
+                  "zipContent": []
+                },
+                {
+                  "fullDownloadPath": "https://ambientcg.com/get?file=Fabric030_2K-JPG.zip",
+                  "downloadLink": "https://ambientcg.com/get?file=Fabric030_2K-JPG.zip",
+                  "fileName": "Fabric030_2K-JPG.zip",
+                  "size": 38032768,
+                  "filetype": "zip",
+                  "attribute": "2K-JPG",
+                  "zipContent": []
+                },
+                {
+                  "fullDownloadPath": "https://ambientcg.com/get?file=Fabric030_4K-JPG.zip",
+                  "downloadLink": "https://ambientcg.com/get?file=Fabric030_4K-JPG.zip",
+                  "fileName": "Fabric030_4K-JPG.zip",
+                  "size": 130608127,
+                  "filetype": "zip",
+                  "attribute": "4K-JPG",
+                  "zipContent": []
+                },
+                {
+                  "fullDownloadPath": "https://ambientcg.com/get?file=Fabric030_1K-PNG.zip",
+                  "downloadLink": "https://ambientcg.com/get?file=Fabric030_1K-PNG.zip",
+                  "fileName": "Fabric030_1K-PNG.zip",
+                  "size": 19846784,
+                  "filetype": "zip",
+                  "attribute": "1K-PNG",
+                  "zipContent": []
+                },
+                {
+                  "fullDownloadPath": "https://ambientcg.com/get?file=Fabric030_2K-PNG.zip",
+                  "downloadLink": "https://ambientcg.com/get?file=Fabric030_2K-PNG.zip",
+                  "fileName": "Fabric030_2K-PNG.zip",
+                  "size": 71826651,
+                  "filetype": "zip",
+                  "attribute": "2K-PNG",
+                  "zipContent": []
+                },
+                {
+                  "fullDownloadPath": "https://ambientcg.com/get?file=Fabric030_4K-PNG.zip",
+                  "downloadLink": "https://ambientcg.com/get?file=Fabric030_4K-PNG.zip",
+                  "fileName": "Fabric030_4K-PNG.zip",
+                  "size": 199878271,
+                  "filetype": "zip",
+                  "attribute": "4K-PNG",
+                  "zipContent": []
+                }
+              ]
+            }
+          }
+        }
+      },
+      "previewLinks": [
+        {
+          "url": "https://releases.pbr.one/main/material-shading.html#normal_type=directx&color_url=https://f003.backblazeb2.com/file/ambientCG-Web/media/surface-preview/Fabric030/Fabric030_SQ_Color.jpg?64148&displacement_url=https://f003.backblazeb2.com/file/ambientCG-Web/media/surface-preview/Fabric030/Fabric030_SQ_Displacement.jpg?90493&normal_url=https://f003.backblazeb2.com/file/ambientCG-Web/media/surface-preview/Fabric030/Fabric030_SQ_NormalDX.jpg?55021&roughness_url=https://f003.backblazeb2.com/file/ambientCG-Web/media/surface-preview/Fabric030/Fabric030_SQ_Roughness.jpg?88604&ambientocclusion_url=https://f003.backblazeb2.com/file/ambientCG-Web/media/surface-preview/Fabric030/Fabric030_SQ_AmbientOcclusion.jpg?34652",
+          "name": {
+            "id": 4,
+            "slug": "pbr-one-material-shading",
+            "title": "3D Preview",
+            "description": "description"
+          },
+          "displayName": "",
+          "iconName": ""
+        },
+        {
+          "url": "https://releases.pbr.one/main/texture-tiling.html#texture_url=https://f003.backblazeb2.com/file/ambientCG-Web/media/surface-preview/Fabric030/Fabric030_SQ_Color.jpg?18405,https://f003.backblazeb2.com/file/ambientCG-Web/media/surface-preview/Fabric030/Fabric030_SQ_Displacement.jpg?30510,https://f003.backblazeb2.com/file/ambientCG-Web/media/surface-preview/Fabric030/Fabric030_SQ_NormalDX.jpg?53909,https://f003.backblazeb2.com/file/ambientCG-Web/media/surface-preview/Fabric030/Fabric030_SQ_Roughness.jpg?31425,https://f003.backblazeb2.com/file/ambientCG-Web/media/surface-preview/Fabric030/Fabric030_SQ_AmbientOcclusion.jpg?46979&texture_name=Color,Displacement,Normal,Roughness,Ambient Occlusion",
+          "name": {
+            "id": 3,
+            "slug": "pbr-one-material-maps",
+            "title": "Tiling Preview",
+            "description": "description"
+          },
+          "displayName": "",
+          "iconName": ""
+        }
+      ],
+      "previewType": "Default",
+      "maps": [
+        "color",
+        "displacement",
+        "normal",
+        "roughness",
+        "ambient-occlusion"
+      ],
+      "hasUsd": false,
+      "previewImage": {
+        "64-PNG": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/64-PNG/Fabric030.png",
+        "128-PNG": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/128-PNG/Fabric030.png",
+        "256-PNG": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/256-PNG/Fabric030.png",
+        "512-PNG": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/512-PNG/Fabric030.png",
+        "1024-PNG": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/1024-PNG/Fabric030.png",
+        "2048-PNG": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/2048-PNG/Fabric030.png",
+        "64-JPG-FFFFFF": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/64-JPG-FFFFFF/Fabric030.jpg",
+        "128-JPG-FFFFFF": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/128-JPG-FFFFFF/Fabric030.jpg",
+        "256-JPG-FFFFFF": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/256-JPG-FFFFFF/Fabric030.jpg",
+        "512-JPG-FFFFFF": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/512-JPG-FFFFFF/Fabric030.jpg",
+        "1024-JPG-FFFFFF": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/1024-JPG-FFFFFF/Fabric030.jpg",
+        "2048-JPG-FFFFFF": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/2048-JPG-FFFFFF/Fabric030.jpg",
+        "64-JPG-242424": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/64-JPG-242424/Fabric030.jpg",
+        "128-JPG-242424": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/128-JPG-242424/Fabric030.jpg",
+        "256-JPG-242424": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/256-JPG-242424/Fabric030.jpg",
+        "512-JPG-242424": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/512-JPG-242424/Fabric030.jpg",
+        "1024-JPG-242424": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/1024-JPG-242424/Fabric030.jpg",
+        "2048-JPG-242424": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/2048-JPG-242424/Fabric030.jpg",
+        "64-WEBP": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/64-WEBP/Fabric030.webp",
+        "128-WEBP": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/128-WEBP/Fabric030.webp",
+        "256-WEBP": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/256-WEBP/Fabric030.webp",
+        "512-WEBP": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/512-WEBP/Fabric030.webp",
+        "1024-WEBP": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/1024-WEBP/Fabric030.webp",
+        "2048-WEBP": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/2048-WEBP/Fabric030.webp"
+      }
+    },
+    {
+      "assetId": "Paper003",
+      "releaseDate": "2018-08-30 00:00:00",
+      "earlyReleaseDate": "2018-08-30 00:00:00",
+      "dataType": "Material",
+      "creationMethod": "PBRApproximated",
+      "category": null,
+      "downloadCount": 70097,
+      "downloadCountMonth": 5018,
+      "downloadCountWeek": 1802,
+      "popularityScore": 4.454712417534417,
+      "tags": [
+        "3",
+        "creased",
+        "paper",
+        "white"
+      ],
+      "dataTypeName": "Material",
+      "dataTypeDescription": "A photo texture with PBR maps.",
+      "creationMethodName": "Height field photogrammetry",
+      "creationMethodDescription": "Displacement generated using photogrammetry.",
+      "displayName": "Paper 003",
+      "customDisplayName": "",
+      "description": "",
+      "displayCategory": "Paper",
+      "shortLink": "https://ambientcg.com/a/Paper003",
+      "dimensionX": 0,
+      "dimensionY": 0,
+      "dimensionZ": 0,
+      "createdUsing": [],
+      "basedOnThis": [],
+      "variations": [],
+      "nextVariationAssetId": null,
+      "previousVariationAssetId": null,
+      "nextAssetId": null,
+      "previousAssetId": null,
+      "downloadFolders": {
+        "default": {
+          "title": "default",
+          "downloadFiletypeCategories": {
+            "zip": {
+              "title": "zip",
+              "downloads": [
+                {
+                  "fullDownloadPath": "https://ambientcg.com/get?file=Paper003_1K-JPG.zip",
+                  "downloadLink": "https://ambientcg.com/get?file=Paper003_1K-JPG.zip",
+                  "fileName": "Paper003_1K-JPG.zip",
+                  "size": 2545301,
+                  "filetype": "zip",
+                  "attribute": "1K-JPG",
+                  "zipContent": []
+                },
+                {
+                  "fullDownloadPath": "https://ambientcg.com/get?file=Paper003_2K-JPG.zip",
+                  "downloadLink": "https://ambientcg.com/get?file=Paper003_2K-JPG.zip",
+                  "fileName": "Paper003_2K-JPG.zip",
+                  "size": 7668597,
+                  "filetype": "zip",
+                  "attribute": "2K-JPG",
+                  "zipContent": []
+                },
+                {
+                  "fullDownloadPath": "https://ambientcg.com/get?file=Paper003_4K-JPG.zip",
+                  "downloadLink": "https://ambientcg.com/get?file=Paper003_4K-JPG.zip",
+                  "fileName": "Paper003_4K-JPG.zip",
+                  "size": 42172822,
+                  "filetype": "zip",
+                  "attribute": "4K-JPG",
+                  "zipContent": []
+                },
+                {
+                  "fullDownloadPath": "https://ambientcg.com/get?file=Paper003_8K-JPG.zip",
+                  "downloadLink": "https://ambientcg.com/get?file=Paper003_8K-JPG.zip",
+                  "fileName": "Paper003_8K-JPG.zip",
+                  "size": 252340806,
+                  "filetype": "zip",
+                  "attribute": "8K-JPG",
+                  "zipContent": []
+                },
+                {
+                  "fullDownloadPath": "https://ambientcg.com/get?file=Paper003_1K-PNG.zip",
+                  "downloadLink": "https://ambientcg.com/get?file=Paper003_1K-PNG.zip",
+                  "fileName": "Paper003_1K-PNG.zip",
+                  "size": 11659545,
+                  "filetype": "zip",
+                  "attribute": "1K-PNG",
+                  "zipContent": []
+                },
+                {
+                  "fullDownloadPath": "https://ambientcg.com/get?file=Paper003_2K-PNG.zip",
+                  "downloadLink": "https://ambientcg.com/get?file=Paper003_2K-PNG.zip",
+                  "fileName": "Paper003_2K-PNG.zip",
+                  "size": 45198729,
+                  "filetype": "zip",
+                  "attribute": "2K-PNG",
+                  "zipContent": []
+                },
+                {
+                  "fullDownloadPath": "https://ambientcg.com/get?file=Paper003_4K-PNG.zip",
+                  "downloadLink": "https://ambientcg.com/get?file=Paper003_4K-PNG.zip",
+                  "fileName": "Paper003_4K-PNG.zip",
+                  "size": 193230482,
+                  "filetype": "zip",
+                  "attribute": "4K-PNG",
+                  "zipContent": []
+                },
+                {
+                  "fullDownloadPath": "https://ambientcg.com/get?file=Paper003_8K-PNG.zip",
+                  "downloadLink": "https://ambientcg.com/get?file=Paper003_8K-PNG.zip",
+                  "fileName": "Paper003_8K-PNG.zip",
+                  "size": 727625344,
+                  "filetype": "zip",
+                  "attribute": "8K-PNG",
+                  "zipContent": []
+                }
+              ]
+            }
+          }
+        }
+      },
+      "previewLinks": [
+        {
+          "url": "https://releases.pbr.one/main/material-shading.html#normal_type=directx&color_url=https://f003.backblazeb2.com/file/ambientCG-Web/media/surface-preview/Paper003/Paper003_SQ_Color.jpg?53955&displacement_url=https://f003.backblazeb2.com/file/ambientCG-Web/media/surface-preview/Paper003/Paper003_SQ_Displacement.jpg?36117&normal_url=https://f003.backblazeb2.com/file/ambientCG-Web/media/surface-preview/Paper003/Paper003_SQ_NormalDX.jpg?127&roughness_url=https://f003.backblazeb2.com/file/ambientCG-Web/media/surface-preview/Paper003/Paper003_SQ_Roughness.jpg?37932",
+          "name": {
+            "id": 4,
+            "slug": "pbr-one-material-shading",
+            "title": "3D Preview",
+            "description": "description"
+          },
+          "displayName": "",
+          "iconName": ""
+        },
+        {
+          "url": "https://releases.pbr.one/main/texture-tiling.html#texture_url=https://f003.backblazeb2.com/file/ambientCG-Web/media/surface-preview/Paper003/Paper003_SQ_Color.jpg?22672,https://f003.backblazeb2.com/file/ambientCG-Web/media/surface-preview/Paper003/Paper003_SQ_Displacement.jpg?14665,https://f003.backblazeb2.com/file/ambientCG-Web/media/surface-preview/Paper003/Paper003_SQ_NormalDX.jpg?39871,https://f003.backblazeb2.com/file/ambientCG-Web/media/surface-preview/Paper003/Paper003_SQ_Roughness.jpg?90505&texture_name=Color,Displacement,Normal,Roughness",
+          "name": {
+            "id": 3,
+            "slug": "pbr-one-material-maps",
+            "title": "Tiling Preview",
+            "description": "description"
+          },
+          "displayName": "",
+          "iconName": ""
+        }
+      ],
+      "previewType": "Default",
+      "maps": [
+        "color",
+        "displacement",
+        "normal",
+        "roughness"
+      ],
+      "hasUsd": false,
+      "previewImage": {
+        "64-PNG": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/64-PNG/Paper003.png",
+        "128-PNG": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/128-PNG/Paper003.png",
+        "256-PNG": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/256-PNG/Paper003.png",
+        "512-PNG": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/512-PNG/Paper003.png",
+        "1024-PNG": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/1024-PNG/Paper003.png",
+        "2048-PNG": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/2048-PNG/Paper003.png",
+        "64-JPG-FFFFFF": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/64-JPG-FFFFFF/Paper003.jpg",
+        "128-JPG-FFFFFF": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/128-JPG-FFFFFF/Paper003.jpg",
+        "256-JPG-FFFFFF": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/256-JPG-FFFFFF/Paper003.jpg",
+        "512-JPG-FFFFFF": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/512-JPG-FFFFFF/Paper003.jpg",
+        "1024-JPG-FFFFFF": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/1024-JPG-FFFFFF/Paper003.jpg",
+        "2048-JPG-FFFFFF": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/2048-JPG-FFFFFF/Paper003.jpg",
+        "64-JPG-242424": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/64-JPG-242424/Paper003.jpg",
+        "128-JPG-242424": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/128-JPG-242424/Paper003.jpg",
+        "256-JPG-242424": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/256-JPG-242424/Paper003.jpg",
+        "512-JPG-242424": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/512-JPG-242424/Paper003.jpg",
+        "1024-JPG-242424": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/1024-JPG-242424/Paper003.jpg",
+        "2048-JPG-242424": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/2048-JPG-242424/Paper003.jpg",
+        "64-WEBP": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/64-WEBP/Paper003.webp",
+        "128-WEBP": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/128-WEBP/Paper003.webp",
+        "256-WEBP": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/256-WEBP/Paper003.webp",
+        "512-WEBP": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/512-WEBP/Paper003.webp",
+        "1024-WEBP": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/1024-WEBP/Paper003.webp",
+        "2048-WEBP": "https://acg-media.struffelproductions.com/file/ambientCG-Web/media/thumbnail/2048-WEBP/Paper003.webp"
+      }
+    }
+  ]
+}

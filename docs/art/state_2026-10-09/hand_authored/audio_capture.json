@@ -1,0 +1,18 @@
+{
+  "baseline": {
+    "seconds": 15.8,
+    "channels": 2,
+    "sample_rate": 48000,
+    "nonzero": true,
+    "rms_dbfs": -47.50451034409415,
+    "peak_dbfs": -23.36325238465994
+  },
+  "hook": {
+    "seconds": 5.8,
+    "channels": 2,
+    "sample_rate": 48000,
+    "nonzero": true,
+    "rms_dbfs": -48.55465648463583,
+    "peak_dbfs": -23.32162663580151
+  }
+}
