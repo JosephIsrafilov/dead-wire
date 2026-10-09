@@ -1,0 +1,66 @@
+{
+  "office/after/01_seated_arm.png": [
+    1280,
+    720
+  ],
+  "office/after/02_desk_arm.png": [
+    1280,
+    720
+  ],
+  "office/after/03_finished_sheet.png": [
+    1280,
+    720
+  ],
+  "office/after/04_lifted_sheet.png": [
+    1280,
+    720
+  ],
+  "office/after_1080p/01_seated_arm.png": [
+    1920,
+    1061
+  ],
+  "office/after_1080p/02_desk_arm.png": [
+    1920,
+    1061
+  ],
+  "office/after_1080p/03_finished_sheet.png": [
+    1920,
+    1061
+  ],
+  "office/after_1080p/04_lifted_sheet.png": [
+    1920,
+    1061
+  ],
+  "office/before/01_seated_arm.png": [
+    1280,
+    720
+  ],
+  "office/before/02_desk_arm.png": [
+    1280,
+    720
+  ],
+  "office/before/03_finished_sheet.png": [
+    1280,
+    720
+  ],
+  "office/before/04_lifted_sheet.png": [
+    1280,
+    720
+  ],
+  "office/before_1080p/01_seated_arm.png": [
+    1920,
+    1061
+  ],
+  "office/before_1080p/02_desk_arm.png": [
+    1920,
+    1061
+  ],
+  "office/before_1080p/03_finished_sheet.png": [
+    1920,
+    1061
+  ],
+  "office/before_1080p/04_lifted_sheet.png": [
+    1920,
+    1061
+  ]
+}

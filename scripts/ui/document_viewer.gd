@@ -24,6 +24,7 @@ var footer_label: Label = null
 const PAPER_FONT = preload("res://assets/fonts/imfell/IMFeENrm28P.ttf")
 const HAND_FONT = preload("res://assets/fonts/cedarville/Cedarville-Cursive.ttf")
 const HAND_DOC_ID := "transcript_paper"
+const COPY_FACE = preload("res://materials/style_tests/textures/psx/form_night_copy.png")
 const MORSE_FONT = preload("res://materials/typography/morse_mono.tres")
 
 func _ready() -> void:
@@ -64,7 +65,7 @@ func open_document(doc_id: String, title: String, body: String, footer: String =
 		if doc_id == "morse_reference":
 			font = MORSE_FONT
 			font_size = 16
-		elif doc_id == HAND_DOC_ID:
+		elif doc_id in [HAND_DOC_ID, "previous_transcript"]:
 			font = HAND_FONT
 			font_size = 24
 		body_label.add_theme_font_override("normal_font", font)
@@ -74,9 +75,48 @@ func open_document(doc_id: String, title: String, body: String, footer: String =
 	if footer_label != null:
 		footer_label.text = _opened_footer
 
+	_present_copy(doc_id, body)
 	visible = true
 	_animate_in()
 	document_opened.emit(_current_doc_id)
+
+## Lift the same A4-like printed stock instead of inventing another wide card.
+## The hidden logical body remains exact for document consumers and inspection tests.
+func _present_copy(doc_id: String, body: String) -> void:
+	var copy := get_node_or_null("TranscriptSheet") as TextureRect
+	var centre := get_node_or_null("CenterContainer") as Control
+	if copy == null or centre == null:
+		return
+	var is_copy := doc_id in [HAND_DOC_ID, "previous_transcript"]
+	copy.visible = is_copy
+	centre.visible = not is_copy
+	if not is_copy:
+		return
+	copy.texture = COPY_FACE
+	var height := minf(get_viewport().get_visible_rect().size.y - 64.0, 640.0)
+	var width := height * 0.23 / 0.3
+	copy.size = Vector2(width, height)
+	copy.position = (get_viewport().get_visible_rect().size - copy.size) * 0.5
+	var ink := copy.get_node("Ink") as Label
+	ink.position = Vector2(width * 0.1435, height * 0.2833)
+	ink.size = Vector2(width * 0.72, height * 0.60)
+	ink.add_theme_font_override("font", HAND_FONT)
+	# Same column layout and physical glyph size, magnified with the sheet.
+	ink.add_theme_font_size_override("font_size", maxi(16, int(round(width * 16.0 * 0.00135 / 0.23))))
+	var mark := body.find("\n\n— COPY INCOMPLETE —")
+	var written := body.substr(0, mark) if mark >= 0 else body
+	var result := ""
+	for i in written.length():
+		if i > 0 and i % TranscriptPaper.GLYPH_COLUMNS == 0:
+			result += "\n"
+		result += written[i]
+	ink.text = result
+	var status := copy.get_node("Status") as Label
+	status.text = "COPY INCOMPLETE" if mark >= 0 else ""
+	var footer := copy.get_node("Footer") as Label
+	footer.text = _opened_footer
+	footer.position = Vector2(0, height - 30)
+	footer.size = Vector2(width, 24)
 
 ## A live status line — a deadline warning — can replace the footer while the
 ## document stays open, so the warning is readable behind the paper it concerns.
@@ -89,12 +129,18 @@ func set_live_footer(text: String) -> void:
 	var target := text if not text.is_empty() else _opened_footer
 	if footer_label.text != target:
 		footer_label.text = target
+	var copy_footer := get_node_or_null("TranscriptSheet/Footer") as Label
+	if copy_footer != null:
+		copy_footer.text = target
 
 ## Lifting a document into view takes a moment. Instant appearance is the single
 ## most common reason a first-person game reads as a slideshow of states.
 func _animate_in() -> void:
 	var backdrop := get_node_or_null("Backdrop") as ColorRect
 	var centre := get_node_or_null("CenterContainer") as Control
+	var copy := get_node_or_null("TranscriptSheet") as Control
+	if copy != null and copy.visible:
+		centre = copy
 	if not is_inside_tree():
 		if centre != null:
 			centre.modulate.a = 1.0

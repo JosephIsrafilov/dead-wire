@@ -194,10 +194,11 @@ func _run() -> void:
 	await process_frame
 	var row_rig := row_paper.get_writer_rig()
 	var row_wrist := row_rig.get_node("Sleeve/Wrist") as Node3D
-	row_paper.begin_writing("ABCDEFGHI")  # 9 glyphs: 0-7 on row 0, 8 on row 1
+	var row_text := "A".repeat(TranscriptPaper.GLYPH_COLUMNS) + "B"
+	row_paper.begin_writing(row_text)
 	row_paper.advance_paper(row_paper.feed_seconds + row_rig.enter_duration + 0.01)
 	if not assert_condition(row_rig.is_ready_to_write(), "Row case: the hand is at the paper"): return
-	if not assert_condition(row_rig.request_glyph_motion(0, "ABCDEFGHI"), "Glyph 0 motion is accepted"): return
+	if not assert_condition(row_rig.request_glyph_motion(0, row_text), "Glyph 0 motion is accepted"): return
 	if not assert_condition(not row_rig._motion_is_row_change, "The first glyph is not a row change"): return
 	if not assert_condition(absf(row_rig._motion_duration - row_rig.glyph_motion_duration) < 0.0001, "The first glyph uses the normal motion duration"): return
 	row_rig.advance_presentation(row_rig._motion_duration * 0.5)
@@ -205,7 +206,7 @@ func _run() -> void:
 	if not assert_condition(absf(row_wrist.position.y - flat_mid_y) < 0.0001, "A same-row glyph rides flat between poses, no lift"): return
 	row_rig.advance_presentation(row_rig._motion_duration)
 	if not assert_condition(not row_rig.is_motion_pending(), "Glyph 0 contact has landed"): return
-	if not assert_condition(row_rig.request_glyph_motion(8, "ABCDEFGHI"), "Glyph 8 motion is accepted"): return
+	if not assert_condition(row_rig.request_glyph_motion(TranscriptPaper.GLYPH_COLUMNS, row_text), "First glyph beyond the current column count is accepted"): return
 	if not assert_condition(row_rig._motion_is_row_change, "The first glyph of the second row is a row change"): return
 	if not assert_condition(absf(row_rig._motion_duration - row_rig.row_change_duration) < 0.0001, "A row change uses the longer row-change duration"): return
 	row_rig.advance_presentation(row_rig._motion_duration * 0.5)

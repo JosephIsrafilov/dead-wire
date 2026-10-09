@@ -22,7 +22,7 @@ extends SceneTree
 ##
 ##   godot --headless --audio-driver Dummy --path . --script tests/telegraph/writer_hand_test.gd
 
-const HAND_MESH := "res://assets/models/operator/hand_v3.res"
+const HAND_MESH := "res://assets/models/operator/hand_authored_v1.res"
 const CUFF_MESH := "res://assets/models/operator/cuff_v3.res"
 const SLEEVE_MESH := "res://assets/models/operator/forearm_v3.res"
 const FORM_MATERIAL := "res://materials/style_tests/form_night_copy.tres"
@@ -142,6 +142,53 @@ func _run() -> void:
 	if not assert_condition(surface_count == part_names.size(),
 			"The hand carries one named surface per part (%d)" % surface_count): return
 
+	var skin_vertices := PackedVector3Array()
+	for s in surface_count:
+		skin_vertices.append_array(_surface_vertices(hand_mesh.mesh, s))
+	var skin_edges := _edge_counts(skin_vertices)
+	if not assert_condition(_closed_edges(skin_edges),
+			"The complete skin is closed and manifold after welding named seams"): return
+	if not assert_condition(_is_one_skin(skin_vertices),
+			"Palm and all five fingers form one connected skin component"): return
+	for s in surface_count:
+		var vertices := _surface_vertices(hand_mesh.mesh, s)
+		var degenerate := 0
+		for t in range(0, vertices.size(), 3):
+			if (vertices[t + 1] - vertices[t]).cross(vertices[t + 2] - vertices[t]).length() < 1e-12:
+				degenerate += 1
+		if not assert_condition(degenerate == 0,
+				"The %s has no zero-area triangles (%d degenerate)" % [part_names[s], degenerate]): return
+		if s > 0:
+			# A named surface may end at a welded palm seam, never in open air.
+			if not assert_condition(_seams_join_skin(vertices, skin_edges),
+					"The %s has a closed tip and every boundary joins the skin" % part_names[s]): return
+
+	var names_match := true
+	for s in surface_count:
+		names_match = names_match and hand_mesh.mesh.surface_get_name(s) == part_names[s]
+	if not assert_condition(names_match, "Surface names identify palm and all five fingers"): return
+
+	# The rejected pose had a 70 mm index arch: it read as a clenched fist.
+	# This only bounds the silhouette; windowed review remains mandatory.
+	var index_height := 0.0
+	for v in _surface_vertices(hand_mesh.mesh, 1):
+		index_height = maxf(index_height, (paper.global_transform.affine_inverse() * hand_mesh.global_transform * v).y)
+	if not assert_condition(index_height < 0.058,
+			"Relaxed writing index stays below a 58 mm arch (%.1f mm)" % (index_height * 1000.0)): return
+
+	var calibration_triangle := PackedVector3Array([
+		axis_origin + perp * 0.02,
+		axis_origin - perp * 0.02 + axis * 0.01,
+		axis_origin - perp * 0.02 - axis * 0.01,
+	])
+	if not assert_condition(_triangle_enters_shaft(calibration_triangle, planes),
+			"Triangle calibration catches a crossing with all three vertices outside"): return
+	for i in calibration_triangle.size():
+		calibration_triangle[i] += perp * 0.10
+	if not assert_condition(not _triangle_enters_shaft(calibration_triangle, planes),
+			"Triangle calibration rejects a separate triangle"): return
+
+	var crossing_triangles := 0
 	var penetration := 0
 	var worst_penetration := 0.0
 	var upper_min := INF
@@ -151,7 +198,14 @@ func _run() -> void:
 		part_contacts[p] = 0
 	for s in surface_count:
 		var part: String = part_names[s]
-		for v in _surface_vertices(hand_mesh.mesh, s):
+		var part_vertices := _surface_vertices(hand_mesh.mesh, s)
+		var part_crossings := 0
+		for t in range(0, part_vertices.size(), 3):
+			if _triangle_enters_shaft(part_vertices.slice(t, t + 3), planes):
+				crossing_triangles += 1
+				part_crossings += 1
+		print("  GEOMETRY: %s shaft crossings=%d" % [part, part_crossings])
+		for v in part_vertices:
 			var signed := _signed_distance(v, planes)
 			if signed < 0.0:
 				penetration += 1
@@ -165,6 +219,8 @@ func _run() -> void:
 			if along >= grip_along - GRIP_HALF_BAND and along <= grip_along + GRIP_HALF_BAND and signed <= CONTACT_TOLERANCE:
 				grip_contacts += 1
 				part_contacts[part] += 1
+	if not assert_condition(crossing_triangles == 0,
+			"No hand triangle crosses the shaft interior (%d crossings)" % crossing_triangles): return
 	if not assert_condition(penetration == 0,
 			"No hand vertex enters the pen shaft (worst %.2f mm)" % (worst_penetration * 1000.0)): return
 	if not assert_condition(upper_min >= CLEARANCE_MIN,
@@ -221,6 +277,48 @@ func _surface_vertices(mesh: Mesh, surface: int) -> PackedVector3Array:
 	var arrays := mesh.surface_get_arrays(surface)
 	return arrays[Mesh.ARRAY_VERTEX] as PackedVector3Array
 
+func _is_one_skin(vertices: PackedVector3Array) -> bool:
+	var graph := {}
+	for t in range(0, vertices.size(), 3):
+		var keys := []
+		for e in 3:
+			keys.append(str(vertices[t + e].snapped(Vector3.ONE * 0.0000001)))
+		for e in 3:
+			if not graph.has(keys[e]): graph[keys[e]] = []
+			graph[keys[e]].append(keys[(e + 1) % 3])
+			graph[keys[e]].append(keys[(e + 2) % 3])
+	var stack := [graph.keys()[0]]
+	var seen := {}
+	while not stack.is_empty():
+		var key: String = stack.pop_back()
+		if seen.has(key): continue
+		seen[key] = true
+		stack.append_array(graph[key])
+	return seen.size() == graph.size()
+
+func _edge_counts(vertices: PackedVector3Array) -> Dictionary:
+	var edges := {}
+	for t in range(0, vertices.size(), 3):
+		for e in 3:
+			var a := str(vertices[t + e].snapped(Vector3.ONE * 0.0000001))
+			var b := str(vertices[t + (e + 1) % 3].snapped(Vector3.ONE * 0.0000001))
+			var key := a + ":" + b if a < b else b + ":" + a
+			edges[key] = int(edges.get(key, 0)) + 1
+	return edges
+
+func _closed_edges(edges: Dictionary) -> bool:
+	for count in edges.values():
+		if count != 2:
+			return false
+	return not edges.is_empty()
+
+func _seams_join_skin(vertices: PackedVector3Array, all_edges: Dictionary) -> bool:
+	var local := _edge_counts(vertices)
+	for edge in local:
+		if int(local[edge]) > 2 or int(all_edges.get(edge, 0)) != 2:
+			return false
+	return not local.is_empty()
+
 func _colors(mesh: Mesh) -> PackedColorArray:
 	var out := PackedColorArray()
 	for s in (mesh as ArrayMesh).get_surface_count():
@@ -252,6 +350,25 @@ func _convex_planes(mesh: Mesh, xform: Transform3D, inside_ref: Vector3) -> Arra
 	return planes
 
 ## Inside a convex solid: on the negative side of every outward plane.
+func _triangle_enters_shaft(vertices: PackedVector3Array, planes: Array) -> bool:
+	var polygon := vertices
+	for plane in planes:
+		var clipped := PackedVector3Array()
+		for i in polygon.size():
+			var a := polygon[i]
+			var b := polygon[(i + 1) % polygon.size()]
+			# Ignore numerical surface contact, not a visible penetration.
+			var da: float = plane.distance_to(a) + 0.000001
+			var db: float = plane.distance_to(b) + 0.000001
+			if da <= 0.0:
+				clipped.append(a)
+			if (da < 0.0) != (db < 0.0):
+				clipped.append(a.lerp(b, da / (da - db)))
+		polygon = clipped
+		if polygon.is_empty():
+			return false
+	return true
+
 func _inside_shaft(point: Vector3, planes: Array) -> bool:
 	for plane in planes:
 		if plane.distance_to(point) > 0.0:

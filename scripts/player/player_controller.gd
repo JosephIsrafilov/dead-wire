@@ -17,22 +17,19 @@ extends CharacterBody3D
 signal seated_changed(is_seated: bool)
 signal footstep_played(step_index: int)
 
-@export var move_speed: float = 2.35
+@export var move_speed: float = 1.35
 @export var mouse_sensitivity: float = 0.003
 
 ## Tight rather than floaty. Playtesters describe soft first-person acceleration
 ## as "an ice level", and this room is full of small interaction targets.
-@export var acceleration: float = 7.5
-@export var deceleration: float = 6.5
+@export var acceleration: float = 4.5
+@export var deceleration: float = 8.0
 
 @export var head_bob_enabled: bool = true
 ## Vertical travel of the step cycle, in metres. Low by design.
-@export var head_bob_amplitude: float = 0.018
+@export var head_bob_amplitude: float = 0.024
 ## Sideways sway is a fraction of the vertical, never equal to it.
 @export var head_bob_lateral_ratio: float = 0.45
-## Steps per metre walked. Phasing on distance rather than time keeps the bob in
-## step with the feet when the operator accelerates or slows.
-@export var head_bob_steps_per_metre: float = 1.15
 
 @export var breathing_enabled: bool = true
 @export var breathing_amplitude: float = 0.005
@@ -46,7 +43,7 @@ signal footstep_played(step_index: int)
 ## Footsteps are distance-based so the sound stays tied to the floor even when
 ## acceleration or frame rate changes. One sample is pitched in a short cycle
 ## to keep the bed tactile without pretending there is a full foley library.
-@export var footstep_step_distance: float = 1.05
+@export var footstep_step_distance: float = 0.65
 @export var footstep_min_distance: float = 0.001
 @export var footstep_stream: AudioStream = preload("res://audio/sfx/foley/footstep_wood.wav")
 
@@ -191,7 +188,7 @@ func _physics_process(delta: float) -> void:
 	var delta_z := global_position.z - position_before_move.z
 	var moved_distance := Vector2(delta_x, delta_z).length()
 	_advance_footsteps(moved_distance)
-	_update_head(delta)
+	_update_head(delta, moved_distance)
 
 ## Separated from physics so the cadence can be tested without relying on an
 ## input device or a particular frame rate.
@@ -218,19 +215,22 @@ func _recover_from_fall() -> void:
 	velocity = Vector3.ZERO
 	global_transform = _spawn_transform
 
-func _update_head(delta: float) -> void:
+func _update_head(delta: float, moved_distance: float = -1.0) -> void:
 	if head == null:
 		return
 
 	var planar_speed := Vector2(velocity.x, velocity.z).length()
-	var is_moving := planar_speed > 0.15 and not is_seated
+	# Production supplies actual floor travel, not intended velocity into a wall.
+	var travel := planar_speed * delta if moved_distance < 0.0 else moved_distance
+	var is_moving := travel > footstep_min_distance and not is_seated
 
 	if is_moving != _was_moving:
 		# A small downward settle on starting and stopping. Translation only —
 		# rotating the camera here is a known sickness trigger.
 		_settle_offset = -settle_distance
 		# The last foot comes down when the body stops mid-stride.
-		if not is_moving and _footstep_distance > footstep_step_distance * 0.35:
+		if not is_moving and not is_seated and not is_movement_locked \
+				and is_on_floor() and _footstep_distance > footstep_step_distance * 0.35:
 			_footstep_distance = 0.0
 			_play_footstep()
 		_was_moving = is_moving
@@ -241,12 +241,11 @@ func _update_head(delta: float) -> void:
 	var sway := 0.0
 	_bob_weight = move_toward(_bob_weight, 1.0 if (head_bob_enabled and is_moving) else 0.0, BOB_FADE_RATE * delta)
 	if head_bob_enabled and is_moving:
-		_bob_phase += planar_speed * delta * head_bob_steps_per_metre * TAU
+		_bob_phase += travel / footstep_step_distance * TAU
 	if _bob_weight > 0.0:
 		var amplitude := head_bob_amplitude * lerpf(1.0, urgency_bob_multiplier, _urgency) * _bob_weight
-		# The head rises twice per stride but sways once, which is what makes a
-		# figure-of-eight rather than a pogo stick.
-		bob = absf(sin(_bob_phase)) * amplitude
+		# Each footfall is the low point; lateral weight shifts once per stride.
+		bob = (0.5 - 0.5 * cos(_bob_phase)) * amplitude
 		sway = sin(_bob_phase * 0.5) * amplitude * head_bob_lateral_ratio
 	else:
 		_bob_phase = 0.0

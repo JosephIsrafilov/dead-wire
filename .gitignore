@@ -6,3 +6,13 @@
 # Out-of-scope tooling output
 graphify-out/
 .dream-loop/
+
+# Local Python tool environments and bytecode
+.venv-tools/
+__pycache__/
+*.py[cod]
+
+# Local credentials (never publish)
+.env
+.env.*
+!.env.example

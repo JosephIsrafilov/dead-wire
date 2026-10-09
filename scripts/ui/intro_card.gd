@@ -24,6 +24,7 @@ signal intro_finished()
 var fade_rect: ColorRect = null
 var card_root: Control = null
 
+var _music_fade: Tween = null
 var _is_running: bool = false
 var _is_finished: bool = false
 var _elapsed: float = 0.0
@@ -61,6 +62,9 @@ func begin() -> void:
 	_is_running = true
 	_elapsed = 0.0
 	visible = true
+	var music := get_node_or_null("IntroMusic") as AudioStreamPlayer
+	if music != null:
+		music.play()
 	if fade_rect != null:
 		fade_rect.color.a = 1.0
 	if card_root != null:
@@ -106,6 +110,10 @@ func finish() -> void:
 		_release()
 		return
 
+	var music := get_node_or_null("IntroMusic") as AudioStreamPlayer
+	if music != null:
+		_music_fade = create_tween()
+		_music_fade.tween_property(music, "volume_db", -60.0, fade_duration)
 	var tween := create_tween()
 	tween.set_parallel(true)
 	if card_root != null:
@@ -115,6 +123,11 @@ func finish() -> void:
 	tween.chain().tween_callback(_release)
 
 func _release() -> void:
+	if _music_fade != null and is_instance_valid(_music_fade):
+		_music_fade.kill()
+	var music := get_node_or_null("IntroMusic") as AudioStreamPlayer
+	if music != null:
+		music.stop()
 	visible = false
 	if player != null:
 		player.set_movement_locked(false)

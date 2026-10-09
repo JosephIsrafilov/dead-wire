@@ -1,0 +1,64 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+D3D12 12_0 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 3070 Laptop GPU
+
+PASS: Shift director runs live
+PASS: Session processing is live
+PASS: Scheduler auto-processes
+PASS: Mouse is captured the way the game captures it
+PASS: The operator reached the chair area on movement input
+PASS: Every frame of the walk was a physics step, not a teleport (0 unexplained, 0.023 m max frame)
+PASS: The operator actually crossed distance on his own legs (0.96 m)
+PASS: Still standing after the walk
+PASS: Sitting was a real ray + E
+PASS: The sit transition physically finished
+PASS: Seated camera height is the seat's own
+PASS: The line was opened through ray + E
+PASS: Seated key press opens the line
+PASS: The wire called on its own clock
+PASS: The call was answered through ray + E
+PASS: Key press answered the call
+PASS: Captured p1_seated_receiving
+PASS: p1 was captured seated and settled
+PASS: Captured p2_seated_window_look
+PASS: Seated look cannot spin past the yaw clamp (115.0° of ±115°)
+PASS: Esc pauses the whole simulation
+PASS: The simulation is frozen while paused (no ticks advanced)
+PASS: Esc resumes the simulation
+PASS: Movement input stands the operator (seat rule)
+PASS: Standing camera height is the standing body's
+PASS: A step away from the desk on real legs
+PASS: Still standing away from the chair
+PASS: Returning to the chair was ray + E
+PASS: Returned and settled — the hand can resume the copy
+PASS: The copy finished on the live clock
+PASS: Telemetry: the paper root never moved
+PASS: Telemetry: sheet_fed fired at least once
+PASS: Telemetry: copy_finished fired exactly once, got 1
+PASS: Telemetry: transmission_finished fired and is not replaced by copy_finished
+PASS: Telemetry: copy_finished and transmission_finished name the same scenario, not a substitution
+PASS: Telemetry: written glyphs are monotonic
+PASS: Telemetry: written <= available <= total at every event
+PASS: Telemetry: every contact writes exactly one glyph, so terminal state accepts none
+PASS: Telemetry: one contact event per written glyph (16 vs 16)
+PASS: Telemetry: the tape's ink only ever grows
+PASS: Telemetry: the tape inked the same transmission the hand transcribed
+PASS: Reading the copy was ray + E
+PASS: The document viewer opened from the chair
+PASS: Captured p3_seated_read
+PASS: The document went down on E
+PASS: Walked the open floor toward the east wall
+PASS: Reached the routing board on movement input
+PASS: The board opened through ray + E
+PASS: Routing board opened from a real standing position
+PASS: Captured p4_board_standing
+PASS: The route went out through the board's own key
+PASS: Elias knows the message was filed
+PASS: Captured p5_route_result
+PASS: Walked toward the door without teleporting
+PASS: Walked toward the door without teleporting
+PASS: The route key → board → door was walked, not teleported
+PASS: Captured p6_door_route
+PRODUCTION EVIDENCE: 0 failures; 6 screenshots
+PRODUCTION EVIDENCE: paper telemetry written to res://.dream-loop/production_evidence/paper_telemetry.json
+WARNING: 7 RIDs of type "Texture" were leaked.
+   at: finalize (servers/rendering/rendering_device.cpp:8900)

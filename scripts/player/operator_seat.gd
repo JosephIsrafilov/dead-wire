@@ -131,8 +131,13 @@ func _player_controller() -> PlayerController:
 func _apply_prompt() -> void:
 	if interactable == null:
 		return
-	interactable.prompt_text = PROMPT_STAND if is_seated else PROMPT_SIT
-	interactable.is_actionable = true
+	var settling := _is_animating or _body_phase != BodyPhase.IDLE
+	if settling:
+		var sitting := _body_phase == BodyPhase.SIT_APPROACH or is_seated
+		interactable.prompt_text = "Settling into the Chair" if sitting else "Standing Up"
+	else:
+		interactable.prompt_text = PROMPT_STAND if is_seated else PROMPT_SIT
+	interactable.is_actionable = not settling
 
 func _on_interacted() -> void:
 	if _is_animating or _body_phase != BodyPhase.IDLE:
@@ -421,6 +426,7 @@ func _notify_office() -> void:
 
 func _process(delta: float) -> void:
 	_advance_body(delta)
+	_apply_prompt()
 	_maybe_reenable_chair()
 	if _body_phase == BodyPhase.STAND_GLIDE and _player_wants_to_walk():
 		# The player is already carrying the body somewhere: the stand glide

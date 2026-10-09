@@ -357,12 +357,12 @@ func _interact_with(target: Interactable, label: String) -> bool:
 		return _fail("no interactable for %s" % label)
 	await _aim_at(_aim_point(target))
 	var guard := 0
-	while interaction.current_target != target and guard < 180:
+	while (interaction.current_target != target or not target.is_actionable) and guard < 180:
 		await process_frame
 		guard += 1
-	if interaction.current_target != target:
+	if interaction.current_target != target or not target.is_actionable:
 		return _fail("%s never came under the crosshair" % label)
-	_press_action("interact")
+	await _press_action("interact")
 	await process_frame
 	await process_frame
 	return true

@@ -1,4 +1,4 @@
-[gd_scene load_steps=45 format=3 uid="uid://m1office001"]
+[gd_scene load_steps=46 format=3 uid="uid://m1office001"]
 
 [ext_resource type="Script" path="res://scripts/office/m1_office_controller.gd" id="1_controller"]
 [ext_resource type="Material" path="res://materials/style_tests/floor_wood_planks.tres" id="2_floor"]
@@ -53,6 +53,8 @@
 [ext_resource type="Material" path="res://materials/style_tests/map_division.tres" id="46_map"]
 [ext_resource type="PackedScene" path="res://scenes/style_tests/props/oil_lamp_lowpoly.tscn" id="47_lamp"]
 
+[ext_resource type="Texture2D" path="res://assets/textures/worn_warmth/baize_128_v1.png" id="51_baize"]
+
 [sub_resource type="BoxShape3D" id="SeatInteract"]
 size = Vector3(0.52, 0.76, 0.52)
 
@@ -67,7 +69,10 @@ size = Vector3(0.92, 0.82, 0.38)
 
 [sub_resource type="StandardMaterial3D" id="BlotterFelt"]
 albedo_color = Color(0.05, 0.1, 0.07, 1)
+albedo_texture = ExtResource("51_baize")
+texture_filter = 0
 roughness = 1.0
+specular_mode = 2
 
 [sub_resource type="StandardMaterial3D" id="BlotterLeather"]
 albedo_color = Color(0.2, 0.11, 0.07, 1)

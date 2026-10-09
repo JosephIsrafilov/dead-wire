@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="ru"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DEAD WIRE — цельная кисть, кандидат 09.10</title>
+<style>body{margin:32px auto;padding:0 22px;max-width:1320px;background:#171817;color:#dcd5c4;font:17px/1.5 system-ui}h1,h2{color:#eee6d2}p{max-width:1000px}.note{border-left:3px solid #a98a58;padding:14px;background:#22231f}img,video{display:block;width:100%;height:auto;margin:15px 0;background:#101110}a{color:#c8b17d}.grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}@media(max-width:750px){.grid{grid-template-columns:1fr}}small{color:#afa996}video{max-height:740px}li{margin:5px 0}</style>
+<h1>DEAD WIRE — одна цельная кисть</h1>
+<p class="note"><b>Подключённый кандидат, не финальная приёмка.</b> Это новая связная низкополигональная оболочка по анатомическому брифу, авторски построенная кодом. Не Blender-скульпт, не mocap. Свет, поза пера и игровой WriterRig в этом проходе не менялись.</p>
+<p><a href="01_plan.md">План</a> · <a href="02_result.md">Результат и ограничения</a> · <a href="../hand_anatomy/01_anatomy_and_writing_brief.md">Анатомический ресерч</a> · <a href="regression.log">Полная регрессия</a></p>
+<h2>Письмо в игре — живые scheduler / paper clocks и настоящий звук</h2>
+<p>Подготовка постановочная: интро пропущено, оператор уже сидит, фитиль полный, режиссёр смены отключён. Затем работает штатная передача. Это не запись действий человека и не проверка темпа целой смены.</p>
+<div class="grid"><section><h3>Обычная передача — 15,8 с</h3><video controls preload="metadata" poster="office/after/01_seated_arm.png"><source src="writing_baseline.mp4" type="video/mp4"></video><a href="writing_baseline.mp4">Открыть MP4</a></section><section><h3>Ключевой момент — WATCHER, 5,8 с</h3><video controls preload="metadata"><source src="writing_hook.mp4" type="video/mp4"></video><a href="writing_hook.mp4">Открыть MP4</a></section></div>
+<p class="note">Анимацию штрихов пока не внедряли: готовый глиф по-прежнему появляется на glyph_contact. Новая форма кисти не выдаётся за решённое живое письмо. Следующий отдельный проход — траектории пера и звук по контакту.</p>
+<h2>Серая модель: одинаковая камера, без маскировки текстурой</h2><img src="01_clay_comparison.png" alt="До и после, серая кисть"><p>Связные переходы ладони, большого пальца и пальцев вместо отдельных перекрывающихся оболочек. Форма остаётся стилизованной; особенно внимательно смотреть ширину ладони и контакт указательного.</p>
+<h2>Из кресла: реальный оконный Godot</h2><img src="02_office_comparison.png" alt="До и после в офисе"><p>720p — ровно1280×720. Запрошенный1080p ограничен Windows до1920×1061, даже без рамки. Не растягивали и не называем точным1080p.</p>
+<div class="grid"><a href="office/before_1080p/01_seated_arm.png">До,1920×1061</a><a href="office/after_1080p/01_seated_arm.png">После,1920×1061</a></div>
+<h2>Шесть нейтральных ракурсов</h2><img src="03_clay_views.png" alt="Шесть ракурсов кисти">
+<h2>Вход, первая и вторая строки, уход</h2><img src="04_motion_sequence.png" alt="Последовательность штатного письма">
+<h2>Что оценить</h2><ol><li>Перо выглядит удерживаемым пальцами, а не проходящим сквозь руку?</li><li>Переходы кисть—ладонь—пальцы выглядят человеческими, а не склеенными?</li><li>При письме больше мешает форма кисти или скачки целых букв?</li></ol>
+<p><small>Тесты проверяют контракты, не красоту. Человеческая приёмка и ощущение тревоги ещё не подтверждены. Никаких commit/push.</small></p>
+</html>
