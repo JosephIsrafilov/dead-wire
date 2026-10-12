@@ -1,0 +1,53 @@
+{
+  "runs": [
+    {
+      "run": 1,
+      "returncode": 0,
+      "returncode_hex": "0x00000000",
+      "baked": [
+        "BAKED res://materials/style_tests/textures/psx/form_night_copy.png 0",
+        "BAKED res://materials/style_tests/textures/psx/card_morse_stock.png 0",
+        "BAKED res://materials/style_tests/textures/psx/map_division.png 0"
+      ],
+      "errors": [],
+      "hashes": {
+        "materials/style_tests/textures/psx/form_night_copy.png": "05336d4d52301cb1be38b5bdda4299c0ceb8cb728265c27ab811c355d462d355",
+        "materials/style_tests/textures/psx/card_morse_stock.png": "f3064c41d495bb060508c82e13d394c6eb585459066ad2d8be76e8e6ebac337c",
+        "materials/style_tests/textures/psx/map_division.png": "8cd7a2ab9e5875d291bafa8afbeb8022d46758c4e2dcb6861ae947d866c5f3ff"
+      }
+    },
+    {
+      "run": 2,
+      "returncode": 0,
+      "returncode_hex": "0x00000000",
+      "baked": [
+        "BAKED res://materials/style_tests/textures/psx/form_night_copy.png 0",
+        "BAKED res://materials/style_tests/textures/psx/card_morse_stock.png 0",
+        "BAKED res://materials/style_tests/textures/psx/map_division.png 0"
+      ],
+      "errors": [],
+      "hashes": {
+        "materials/style_tests/textures/psx/form_night_copy.png": "05336d4d52301cb1be38b5bdda4299c0ceb8cb728265c27ab811c355d462d355",
+        "materials/style_tests/textures/psx/card_morse_stock.png": "f3064c41d495bb060508c82e13d394c6eb585459066ad2d8be76e8e6ebac337c",
+        "materials/style_tests/textures/psx/map_division.png": "8cd7a2ab9e5875d291bafa8afbeb8022d46758c4e2dcb6861ae947d866c5f3ff"
+      }
+    },
+    {
+      "run": 3,
+      "returncode": 0,
+      "returncode_hex": "0x00000000",
+      "baked": [
+        "BAKED res://materials/style_tests/textures/psx/form_night_copy.png 0",
+        "BAKED res://materials/style_tests/textures/psx/card_morse_stock.png 0",
+        "BAKED res://materials/style_tests/textures/psx/map_division.png 0"
+      ],
+      "errors": [],
+      "hashes": {
+        "materials/style_tests/textures/psx/form_night_copy.png": "05336d4d52301cb1be38b5bdda4299c0ceb8cb728265c27ab811c355d462d355",
+        "materials/style_tests/textures/psx/card_morse_stock.png": "f3064c41d495bb060508c82e13d394c6eb585459066ad2d8be76e8e6ebac337c",
+        "materials/style_tests/textures/psx/map_division.png": "8cd7a2ab9e5875d291bafa8afbeb8022d46758c4e2dcb6861ae947d866c5f3ff"
+      }
+    }
+  ],
+  "identical_across_runs": true
+}

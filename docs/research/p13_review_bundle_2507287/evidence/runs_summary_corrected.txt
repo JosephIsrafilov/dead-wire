@@ -1,0 +1,6 @@
+## Q5 production runs (current tree, this session, all windowed 1280x720, settings-preserved wrapper)
+1. production_evidence_capture.gd: 58 PASS / 0 FAIL, 6 screenshots, paper telemetry written; exit 0; exit-time: 7 Texture RID warning (P4 class).
+2. first_night_playthrough.gd --capture: 78 PASS / 0 FAIL, 16 screenshots incl. hook + dawn; exit 0; exit-time: 1 resources-still-in-use (P4 class).
+3. commit_input_route_capture.gd: 17 PASS / 0 FAIL; exit 0; exit-time: 3 resources-still-in-use (P4 class). **CORRECTED (sound_handoff_final_2507287): this is the NORMAL WATER route, NOT the wrong-word branch.** Actual wrong-word evidence: `wrong/` — first_night_playthrough.gd --capture --wrong (WAITER): 78 PASS / 0 FAIL, exit 0x00000000; screenshots .dream-loop/playthrough_wrong/, copies + INDEX in ../q2/captures_index/; the hand writes WAITER while the tape carries WATER (truth→perception→transcript through dawn).
+4. Performance probe: p50 5.2 ms / p95 5.9 ms / p99 6.3 ms @720p (RTX 3070 laptop, D3D12 Forward+).
+Human playtest: NOT RUN (plan gate; needs people). MovieMaker/teleport runs are not pacing evidence.

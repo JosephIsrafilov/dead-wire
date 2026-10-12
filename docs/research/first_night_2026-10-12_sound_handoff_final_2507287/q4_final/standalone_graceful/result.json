@@ -1,0 +1,28 @@
+{
+  "exe": "C:\\Users\\YUSIF\\.hermes\\cache\\scratch\\standalone_p13\\dead-wire-windows-beta\\dead-wire-windows-beta-x86_64.exe",
+  "exe_sha256": "a13b173c265f3759ae67662e655ae2f5d0576b6e24098d838f8e68bde441c35a",
+  "cwd": "C:\\Users\\YUSIF\\.hermes\\cache\\scratch\\standalone_p13\\dead-wire-windows-beta",
+  "alive_at_25s": true,
+  "windows_found": [
+    {
+      "title": "dead-wire",
+      "hwnd": 13435144
+    }
+  ],
+  "post_results": [
+    {
+      "hwnd": 13435144,
+      "title": "dead-wire",
+      "posted": true
+    }
+  ],
+  "raw_exit_code": 0,
+  "exit_hex": "0x00000000",
+  "graceful_close_sent": true,
+  "settings_sha_before": "627f0ee303322c9b",
+  "settings_sha_after": "627f0ee303322c9b",
+  "stdout_bytes": 157,
+  "stderr_bytes": 0,
+  "stdout_script_errors": 0,
+  "stderr_script_errors": 0
+}

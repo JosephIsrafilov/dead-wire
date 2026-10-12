@@ -217,8 +217,14 @@ func _init() -> void:
 	var _probe_enc2 := encoder.encode("TRAIN 17 CLEAR EAST", alphabet)
 	if not assert_condition(root.get_child_count() == child_count_before, "No scene tree nodes created by encoder"): return
 
-	# 18. Absence of runtime scheduler / audio / state machine nodes
-	if not assert_condition(ClassDB.can_instantiate("AmericanMorseEncoder"), "AmericanMorseEncoder is registered"): return
+	# 18. Absence of runtime scheduler / audio / state machine nodes.
+	# Script global classes are not ClassDB-registered (true in 4.7.1, false in 4.8-dev7);
+	# verify the global name and script-level instantiability instead.
+	var encoder_script: Script = load("res://scripts/telegraph/morse/american_morse_encoder.gd")
+	var encoder_registered: bool = encoder_script != null \
+		and encoder_script.get_global_name() == "AmericanMorseEncoder" \
+		and encoder_script.can_instantiate()
+	if not assert_condition(encoder_registered, "AmericanMorseEncoder is registered"): return
 
 	print("--- All American Morse Encoder Tests PASSED ---")
 	quit(0)

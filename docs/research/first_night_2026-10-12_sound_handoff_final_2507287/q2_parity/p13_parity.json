@@ -1,0 +1,41 @@
+[
+  {
+    "asset": "form_night_copy",
+    "source_sha256": "a236bbea4595b50f33c5828a10787799daf7e5693318eec0bf12e9486a1708ab",
+    "pck_import_entry": "present",
+    "pck_import_md5": "17bdd5d8a6ebfc767573559a3ec9fde3",
+    "pck_import_refs_ctex": true,
+    "ctex_name": "form_night_copy.png-fb67d8e06fc2247d6e77aa258fb3d6b1.ctex",
+    "ctex_entry": "present",
+    "ctex_size": 122672,
+    "ctex_sha256": "40717197c833d235663dfb3df67d95d725667fdbfccd937659e74edb5bc6e185",
+    "ctex_md5_matches_dir": true,
+    "ctex_magic": "GST2"
+  },
+  {
+    "asset": "card_morse_stock",
+    "source_sha256": "8c79f7e820193611222e3d829e3d10faff8d1be1239bb3f947d9b0fe44971b78",
+    "pck_import_entry": "present",
+    "pck_import_md5": "4457d88cb798c0e7d45a863811d1ea0e",
+    "pck_import_refs_ctex": true,
+    "ctex_name": "card_morse_stock.png-0ef1da6c3b5f3887ef4841f0fb19ee02.ctex",
+    "ctex_entry": "present",
+    "ctex_size": 40420,
+    "ctex_sha256": "1e1d4ba9359873c5ead699fe9fc0216bc3bca0900212d70d564b695cbba8a8e7",
+    "ctex_md5_matches_dir": true,
+    "ctex_magic": "GST2"
+  },
+  {
+    "asset": "map_division",
+    "source_sha256": "364edb86cfe6b03d9351bb3a728bc1628cfa17c52a5c9eb2bf34ccbd08b9ee81",
+    "pck_import_entry": "present",
+    "pck_import_md5": "f1d6e6880d733006a54b49741f95a6a4",
+    "pck_import_refs_ctex": true,
+    "ctex_name": "map_division.png-7cc2051940c81988096c590454f7b922.ctex",
+    "ctex_entry": "present",
+    "ctex_size": 63386,
+    "ctex_sha256": "479100bf8346a093b42e9b7db9642c6cc02429797c8265be1505b410909886b7",
+    "ctex_md5_matches_dir": true,
+    "ctex_magic": "GST2"
+  }
+]
