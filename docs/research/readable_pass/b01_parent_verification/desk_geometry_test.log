@@ -1,0 +1,34 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+--- Starting Desk Geometry Test Suite ---
+  PASS: Desk top surface found at 0.750 m
+  PASS: The desk has its blotter
+  PASS: Blotter baize is fully rough, not polished
+  PASS: Blotter baize is non-metallic
+  PASS: Blotter baize has no grazing specular sheen
+  PASS: The writing sheet lies flat (0.0000 spread)
+  PASS: The sheet sits on a copy board
+  PASS: The copy board rests on the blotter (0.7530 vs 0.7530)
+  PASS: The sheet is on the pad, not inside the board
+  PASS: No slope wedge is left behind
+  PASS: The reference card faces the operator from the wall
+  PASS: The card hangs on the wall above the desk
+  PASS: No card wedge is left behind
+  PASS: The telegraph key stands clear of the copy board
+  PASS: The ledger is not pushed under the pigeonholes
+  PASS: The pigeonholes stand on the desk (0.7500 vs 0.7500)
+  PASS: The lamp's light comes from its flame
+  PASS: Paper corner (-2.380, -0.605) lies over the desk top
+  PASS: Paper corner (-2.080, -0.605) lies over the desk top
+  PASS: Paper corner (-2.380, -0.835) lies over the desk top
+  PASS: Paper corner (-2.080, -0.835) lies over the desk top
+  PASS: The finished sheet archived
+  PASS: The archived sheet lies flat on the desk (min 0.7525)
+  PASS: The archived sheet is set down beside the board, not under it
+  PASS: The archived sheet rests on the desk surface (0.7525 vs 0.7500)
+  PASS: Live lettering keeps its projected size (21.1 px full height at 720p)
+--- All Desk Geometry Tests PASSED (26 assertions) ---
+WARNING: 25 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 9 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)

@@ -1,0 +1,205 @@
+.FFFFF....FFFFFFFFFFEF
+======================================================================
+ERROR: test_reader_rejects_non_pck_bytes (tools.package_windows_beta_test.PckDirectoryTests.test_reader_rejects_non_pck_bytes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\YUSIF\Documents\dead-wire\tools\package_windows_beta_test.py", line 191, in test_reader_rejects_non_pck_bytes
+    package_windows_beta.read_pck_directory(pck)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'package_windows_beta' has no attribute 'read_pck_directory'
+
+======================================================================
+FAIL: test_build_id_contains_revision_and_content_digest (tools.package_windows_beta_test.PackageFilterTests.test_build_id_contains_revision_and_content_digest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\YUSIF\Documents\dead-wire\tools\package_windows_beta_test.py", line 120, in test_build_id_contains_revision_and_content_digest
+    source = make_source(root, {"res://icon.svg": b"png"})
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\YUSIF\Documents\dead-wire\tools\package_windows_beta_test.py", line 50, in make_source
+    build_pck(source / package_windows_beta.SOURCE_PACK, pck_entries)
+  File "C:\Users\YUSIF\Documents\dead-wire\tools\package_windows_beta_test.py", line 30, in build_pck
+    assert len(header) == 40
+           ^^^^^^^^^^^^^^^^^
+AssertionError
+
+======================================================================
+FAIL: test_build_id_ignores_non_manifest_files (tools.package_windows_beta_test.PackageFilterTests.test_build_id_ignores_non_manifest_files)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\YUSIF\Documents\dead-wire\tools\package_windows_beta_test.py", line 129, in test_build_id_ignores_non_manifest_files
+    source = make_source(root, {"res://icon.svg": b"png"})
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\YUSIF\Documents\dead-wire\tools\package_windows_beta_test.py", line 50, in make_source
+    build_pck(source / package_windows_beta.SOURCE_PACK, pck_entries)
+  File "C:\Users\YUSIF\Documents\dead-wire\tools\package_windows_beta_test.py", line 30, in build_pck
+    assert len(header) == 40
+           ^^^^^^^^^^^^^^^^^
+AssertionError
+
+======================================================================
+FAIL: test_development_and_sensitive_files_are_excluded (tools.package_windows_beta_test.PackageFilterTests.test_development_and_sensitive_files_are_excluded) (path='audio/sfx/foley/footstep_wood.wav')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\YUSIF\Documents\dead-wire\tools\package_windows_beta_test.py", line 84, in test_development_and_sensitive_files_are_excluded
+    self.assertTrue(package_windows_beta.is_excluded(Path(path)))
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_development_and_sensitive_files_are_excluded (tools.package_windows_beta_test.PackageFilterTests.test_development_and_sensitive_files_are_excluded) (path='audio/sfx/foley/footstep_wood.wav.import')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\YUSIF\Documents\dead-wire\tools\package_windows_beta_test.py", line 84, in test_development_and_sensitive_files_are_excluded
+    self.assertTrue(package_windows_beta.is_excluded(Path(path)))
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_explicit_extra_runtime_dll_is_allowed (tools.package_windows_beta_test.PackageFilterTests.test_explicit_extra_runtime_dll_is_allowed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\YUSIF\Documents\dead-wire\tools\package_windows_beta_test.py", line 100, in test_explicit_extra_runtime_dll_is_allowed
+    source = make_source(root, {"res://icon.svg": b"png"}, {"approved.dll": b"dll"})
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\YUSIF\Documents\dead-wire\tools\package_windows_beta_test.py", line 50, in make_source
+    build_pck(source / package_windows_beta.SOURCE_PACK, pck_entries)
+  File "C:\Users\YUSIF\Documents\dead-wire\tools\package_windows_beta_test.py", line 30, in build_pck
+    assert len(header) == 40
+           ^^^^^^^^^^^^^^^^^
+AssertionError
+
+======================================================================
+FAIL: test_unapproved_dll_without_allow_flag_is_refused (tools.package_windows_beta_test.PackageFilterTests.test_unapproved_dll_without_allow_flag_is_refused)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\YUSIF\Documents\dead-wire\tools\package_windows_beta_test.py", line 112, in test_unapproved_dll_without_allow_flag_is_refused
+    source = make_source(root, {"res://icon.svg": b"png"}, {"untrusted.dll": b"dll"})
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\YUSIF\Documents\dead-wire\tools\package_windows_beta_test.py", line 50, in make_source
+    build_pck(source / package_windows_beta.SOURCE_PACK, pck_entries)
+  File "C:\Users\YUSIF\Documents\dead-wire\tools\package_windows_beta_test.py", line 30, in build_pck
+    assert len(header) == 40
+           ^^^^^^^^^^^^^^^^^
+AssertionError
+
+======================================================================
+FAIL: test_unexpected_source_files_are_refused (tools.package_windows_beta_test.PackageFilterTests.test_unexpected_source_files_are_refused)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\YUSIF\Documents\dead-wire\tools\package_windows_beta_test.py", line 89, in test_unexpected_source_files_are_refused
+    source = make_source(root, {"res://icon.svg": b"png"})
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\YUSIF\Documents\dead-wire\tools\package_windows_beta_test.py", line 50, in make_source
+    build_pck(source / package_windows_beta.SOURCE_PACK, pck_entries)
+  File "C:\Users\YUSIF\Documents\dead-wire\tools\package_windows_beta_test.py", line 30, in build_pck
+    assert len(header) == 40
+           ^^^^^^^^^^^^^^^^^
+AssertionError
+
+======================================================================
+FAIL: test_versioned_output_path_always_contains_build_id (tools.package_windows_beta_test.PackageFilterTests.test_versioned_output_path_always_contains_build_id)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\YUSIF\Documents\dead-wire\tools\package_windows_beta_test.py", line 139, in test_versioned_output_path_always_contains_build_id
+    source = make_source(root, {"res://icon.svg": b"png"})
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\YUSIF\Documents\dead-wire\tools\package_windows_beta_test.py", line 50, in make_source
+    build_pck(source / package_windows_beta.SOURCE_PACK, pck_entries)
+  File "C:\Users\YUSIF\Documents\dead-wire\tools\package_windows_beta_test.py", line 30, in build_pck
+    assert len(header) == 40
+           ^^^^^^^^^^^^^^^^^
+AssertionError
+
+======================================================================
+FAIL: test_build_id_changes_when_executable_changes (tools.package_windows_beta_test.PckDirectoryTests.test_build_id_changes_when_executable_changes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\YUSIF\Documents\dead-wire\tools\package_windows_beta_test.py", line 281, in test_build_id_changes_when_executable_changes
+    source = make_source(root, {"res://icon.svg": b"png"})
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\YUSIF\Documents\dead-wire\tools\package_windows_beta_test.py", line 50, in make_source
+    build_pck(source / package_windows_beta.SOURCE_PACK, pck_entries)
+  File "C:\Users\YUSIF\Documents\dead-wire\tools\package_windows_beta_test.py", line 30, in build_pck
+    assert len(header) == 40
+           ^^^^^^^^^^^^^^^^^
+AssertionError
+
+======================================================================
+FAIL: test_class_script_requires_directory_entry_not_substring (tools.package_windows_beta_test.PckDirectoryTests.test_class_script_requires_directory_entry_not_substring)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\YUSIF\Documents\dead-wire\tools\package_windows_beta_test.py", line 222, in test_class_script_requires_directory_entry_not_substring
+    build_pck(pck, {"res://scripts/ui/main_menu.gd": b'ref: "res://scripts/ui/game_settings.gd"'})
+  File "C:\Users\YUSIF\Documents\dead-wire\tools\package_windows_beta_test.py", line 30, in build_pck
+    assert len(header) == 40
+           ^^^^^^^^^^^^^^^^^
+AssertionError
+
+======================================================================
+FAIL: test_class_script_via_remap_requires_existing_gdc_target (tools.package_windows_beta_test.PckDirectoryTests.test_class_script_via_remap_requires_existing_gdc_target)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\YUSIF\Documents\dead-wire\tools\package_windows_beta_test.py", line 239, in test_class_script_via_remap_requires_existing_gdc_target
+    build_pck(pck, {
+  File "C:\Users\YUSIF\Documents\dead-wire\tools\package_windows_beta_test.py", line 30, in build_pck
+    assert len(header) == 40
+           ^^^^^^^^^^^^^^^^^
+AssertionError
+
+======================================================================
+FAIL: test_legacy_footstep_is_refused_and_beta_required (tools.package_windows_beta_test.PckDirectoryTests.test_legacy_footstep_is_refused_and_beta_required)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\YUSIF\Documents\dead-wire\tools\package_windows_beta_test.py", line 252, in test_legacy_footstep_is_refused_and_beta_required
+    build_pck(pck, {
+  File "C:\Users\YUSIF\Documents\dead-wire\tools\package_windows_beta_test.py", line 30, in build_pck
+    assert len(header) == 40
+           ^^^^^^^^^^^^^^^^^
+AssertionError
+
+======================================================================
+FAIL: test_payload_md5_mismatch_is_detected (tools.package_windows_beta_test.PckDirectoryTests.test_payload_md5_mismatch_is_detected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\YUSIF\Documents\dead-wire\tools\package_windows_beta_test.py", line 206, in test_payload_md5_mismatch_is_detected
+    build_pck(pck, {"res://scripts/ui/game_settings.gd": b"runtime bytecode here"})
+  File "C:\Users\YUSIF\Documents\dead-wire\tools\package_windows_beta_test.py", line 30, in build_pck
+    assert len(header) == 40
+           ^^^^^^^^^^^^^^^^^
+AssertionError
+
+======================================================================
+FAIL: test_private_paths_are_refused_in_pck (tools.package_windows_beta_test.PckDirectoryTests.test_private_paths_are_refused_in_pck)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\YUSIF\Documents\dead-wire\tools\package_windows_beta_test.py", line 269, in test_private_paths_are_refused_in_pck
+    build_pck(pck, {
+  File "C:\Users\YUSIF\Documents\dead-wire\tools\package_windows_beta_test.py", line 30, in build_pck
+    assert len(header) == 40
+           ^^^^^^^^^^^^^^^^^
+AssertionError
+
+======================================================================
+FAIL: test_reader_parses_real_directory (tools.package_windows_beta_test.PckDirectoryTests.test_reader_parses_real_directory)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\YUSIF\Documents\dead-wire\tools\package_windows_beta_test.py", line 179, in test_reader_parses_real_directory
+    build_pck(pck, entries)
+  File "C:\Users\YUSIF\Documents\dead-wire\tools\package_windows_beta_test.py", line 30, in build_pck
+    assert len(header) == 40
+           ^^^^^^^^^^^^^^^^^
+AssertionError
+
+======================================================================
+FAIL: test_reader_rejects_unsupported_format_version (tools.package_windows_beta_test.PckDirectoryTests.test_reader_rejects_unsupported_format_version)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\YUSIF\Documents\dead-wire\tools\package_windows_beta_test.py", line 196, in test_reader_rejects_unsupported_format_version
+    build_pck(pck, {"res://icon.svg": b"x"})
+  File "C:\Users\YUSIF\Documents\dead-wire\tools\package_windows_beta_test.py", line 30, in build_pck
+    assert len(header) == 40
+           ^^^^^^^^^^^^^^^^^
+AssertionError
+
+----------------------------------------------------------------------
+Ran 21 tests in 0.025s
+
+FAILED (failures=16, errors=1)

@@ -1,0 +1,27 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Started Project initialization (5 steps)[39m[0m
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Scanning file structure...[39m[0m
+[  16% ] [90m[1mfirst_scan_filesystem[22m | Loading global class names...[39m[0m
+[  33% ] [90m[1mfirst_scan_filesystem[22m | Verifying GDExtensions...[39m[0m
+[  50% ] [90m[1mfirst_scan_filesystem[22m | Creating autoload scripts...[39m[0m
+[  66% ] [90m[1mfirst_scan_filesystem[22m | Initializing plugins...[39m[0m
+[  83% ] [90m[1mfirst_scan_filesystem[22m | Starting file scan...[39m[0m
+[92m[ DONE ][39m [1mfirst_scan_filesystem[22m
+[0m
+[   0% ] [90m[1m_update_scan_actions[22m | Started Scanning actions... (13 steps)[39m[0m
+[   0% ] [90m[1m_update_scan_actions[22m | elias_working_atlas.png[39m[0m
+[   7% ] [90m[1m_update_scan_actions[22m | 01_operator_desk_wide.png[39m[0m
+[  14% ] [90m[1m_update_scan_actions[22m | 02_telegraph_hardware_close.png[39m[0m
+[  21% ] [90m[1m_update_scan_actions[22m | 03_routing_board_view.png[39m[0m
+[  28% ] [90m[1m_update_scan_actions[22m | 04_bay_window_night.png[39m[0m
+[  35% ] [90m[1m_update_scan_actions[22m | 05_ticket_counter_divider.png[39m[0m
+[  42% ] [90m[1m_update_scan_actions[22m | 06_waiting_room_perspective.png[39m[0m
+[  50% ] [90m[1m_update_scan_actions[22m | 07_door_attention.png[39m[0m
+[  57% ] [90m[1m_update_scan_actions[22m | 08_corner_stove_warmth.png[39m[0m
+[  64% ] [90m[1m_update_scan_actions[22m | 09_storage_cabinet.png[39m[0m
+[  71% ] [90m[1m_update_scan_actions[22m | 10_overall_room_nw.png[39m[0m
+[  78% ] [90m[1m_update_scan_actions[22m | 11_overall_room_se.png[39m[0m
+[  85% ] [90m[1m_update_scan_actions[22m | 12_player_spawn_view.png[39m[0m
+[92m[ DONE ][39m [1m_update_scan_actions[22m
+[0m

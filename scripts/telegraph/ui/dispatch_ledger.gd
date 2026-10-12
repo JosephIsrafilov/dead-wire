@@ -20,7 +20,10 @@ SPECIAL ORDERS & ROUTING RULES:
    - Do NOT hold on siding track unless express obstruction reported.
 
 2. UNVERIFIED NIGHT FREIGHT:
-   - Rule 44: HOLD all unscheduled freight pending mine superintendent check.
+   - Rule 44 (fictional Black Creek company order):
+     HOLD unverified night freight until division clearance arrives.
+   - An EAST request reports where freight wishes to go; it is not permission.
+   - No division clearance is booked for Freight 71 tonight.
    - Water supply & mine junction cars remain restricted under 1889 quarantine."""
 
 var interactable: Interactable = null
@@ -113,6 +116,9 @@ func _entry_for(
 				outcome = "COPY INCOMPLETE / UNFILED"
 			else:
 				outcome = commit_outcome
+				var word := knowledge.recall_value(&"filed_word_core_hook", "")
+				if not word.is_empty():
+					outcome += "    " + word
 		elif incomplete:
 			outcome = "COPY INCOMPLETE"
 		elif status == DutySheet.STATUS_COPIED:

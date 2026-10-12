@@ -1,0 +1,10 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+  PASS: Original route is accepted
+  PASS: Routing listeners cannot reenter acceptance or replace its scenario
+  PASS: Only the originally chosen objective route is written
+  PASS: Completion facts belong only to captured original slot
+  PASS: Completion payload stays attributed to original despite reset attempt
+  PASS: Another ordinary route resolves
+  PASS: Legitimate completion can synchronously load next slot after resolution guard clears
+Route authority reentrancy assertions: 7

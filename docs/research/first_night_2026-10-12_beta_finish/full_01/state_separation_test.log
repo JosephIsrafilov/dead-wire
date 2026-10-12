@@ -1,0 +1,33 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+--- Starting State Separation Invariant Test ---
+  PASS: WorldState starts empty
+  PASS: KnowledgeState starts empty
+  PASS: WorldState has no initial facts
+  PASS: KnowledgeState has no initial knowledge
+  PASS: Stores are distinct objects
+  PASS: Stores have different instance IDs
+  PASS: WorldState has fact 'door_unlocked'
+  PASS: WorldState value is true
+  PASS: fact_changed signal emitted on new fact
+  PASS: fact_changed signal payload matches
+  PASS: Repeated set_fact with same value does not emit repeat signal
+  PASS: KnowledgeState does not automatically learn from WorldState
+  PASS: KnowledgeState snapshot remains empty
+  PASS: KnowledgeState now knows 'door_unlocked'
+  PASS: knowledge_learned signal emitted on new knowledge
+  PASS: knowledge_learned signal payload matches
+  PASS: Repeated learn does not emit repeat signal
+  PASS: KnowledgeState still knows fact after repeat learn
+  PASS: WorldState value unaffected by KnowledgeState mutation
+  PASS: WorldState received no extra signals from KnowledgeState mutation
+  PASS: Internal WorldState protected from snapshot mutation
+  PASS: WorldState protected from injected snapshot keys
+  PASS: Internal KnowledgeState protected from snapshot clear
+  PASS: WorldState cleared after reset
+  PASS: WorldState emitted state_reset
+  PASS: KnowledgeState remains intact after WorldState reset
+  PASS: KnowledgeState received no reset signal
+  PASS: KnowledgeState cleared after reset
+  PASS: KnowledgeState emitted state_reset
+--- All State Separation Tests PASSED ---

@@ -32,6 +32,8 @@ signal routing_requested(expected_action: String)
 signal routing_resolved(action_taken: String, outcome: RoutingOutcome)
 signal commit_requested(options: Array[TelegraphCommitOption])
 signal commit_resolved(action_id: StringName, result_text: String)
+## Immutable old-slot record, captured before any resolution callbacks.
+signal commit_recorded(scenario_id: String, action_id: StringName, word: String)
 signal consequence_started(event_id: String, hold_seconds: float)
 signal session_completed(scenario: TelegraphScenarioData)
 signal attention_event_triggered(event_id: String)
@@ -79,6 +81,7 @@ var _compiler := MorseScheduleCompiler.new()
 var _attention_event_fired: bool = false
 var _transcript_verified: bool = false
 var _commit_resolved: bool = false
+var _decision_in_progress: bool = false
 var _consequence_elapsed: float = 0.0
 var _consequence_started: bool = false
 var _consequence_requires_visibility: bool = false
@@ -190,11 +193,11 @@ func get_state() -> State:
 func get_current_scenario() -> TelegraphScenarioData:
 	return _current_scenario
 
+func can_load_scenario(scenario: TelegraphScenarioData) -> bool:
+	return not _decision_in_progress and scenario != null and scenario.get_validation_errors().is_empty()
+
 func load_scenario(scenario: TelegraphScenarioData) -> bool:
-	if scenario == null:
-		return false
-	var errs: PackedStringArray = scenario.get_validation_errors()
-	if not errs.is_empty():
+	if not can_load_scenario(scenario):
 		return false
 
 	_bind_components()
@@ -374,52 +377,86 @@ func get_commit_options() -> Array[TelegraphCommitOption]:
 		return []
 	return _current_scenario.commit_options
 
-## Files one authored commit option exactly once. Unknown input, out-of-order
-## input and input after the deadline has expired are deliberately no-ops so a
-## stale control cannot alter WorldState.
+## Legacy authored options remain direct actions; amendments require an explicit word.
 func submit_commit(action_id: StringName) -> bool:
-	if _state != State.AWAITING_COMMIT or _current_scenario == null or _commit_resolved:
+	if not _can_commit():
 		return false
-	if _is_commit_deadline_expired():
+	var selected := _find_commit_option(action_id)
+	if selected == null or selected.requires_correction:
 		return false
-	var selected: TelegraphCommitOption = null
+	var word := _current_scenario.transmission_data.written_transcript
+	return _accept_commit(selected, word, false)
+
+func submit_amendment(word: String) -> bool:
+	if not _can_commit() or not AmendmentText.validation_error(word).is_empty():
+		return false
 	for option in _current_scenario.commit_options:
-		if option != null and option.action_id == action_id:
-			selected = option
-			break
-	if selected == null:
-		return false
+		if option != null and option.requires_correction:
+			return _accept_commit(option, word, true)
+	return false
+
+func _can_commit() -> bool:
+	return _state == State.AWAITING_COMMIT and _current_scenario != null \
+		and not _commit_resolved and not _decision_in_progress and not _is_commit_deadline_expired()
+
+func _find_commit_option(action_id: StringName) -> TelegraphCommitOption:
+	if _current_scenario != null:
+		for option in _current_scenario.commit_options:
+			if option != null and option.action_id == action_id:
+				return option
+	return null
+
+func _accept_commit(selected: TelegraphCommitOption, word: String, amended: bool) -> bool:
+	# Capture attribution before callbacks can request a different slot.
+	var scenario := _current_scenario
+	var scenario_id := scenario.scenario_id
+	var action_id := selected.action_id
+	var result := scenario.amendment_result_text if amended else selected.result_text
+	var objective_fact := selected.world_fact
+	if amended and word != scenario.transmission_data.true_message:
+		objective_fact = scenario.amendment_wrong_world_fact
+	_decision_in_progress = true
 	_commit_resolved = true
 	var world := _get_world_state()
-	if world != null:
-		world.set_fact(StringName(selected.world_fact), true)
 	var knowledge := _get_knowledge_state()
+	if world != null:
+		world.set_fact(StringName(objective_fact), true)
+		if not scenario.filed_word_world_fact.is_empty():
+			world.set_fact(StringName(scenario.filed_word_world_fact), word)
 	if knowledge != null:
-		knowledge.learn(StringName(selected.knowledge_fact))
+		var fact := scenario.amendment_knowledge_fact if amended else selected.knowledge_fact
+		knowledge.learn(StringName(fact))
+		if not scenario.filed_word_knowledge_key.is_empty():
+			knowledge.remember_value(StringName(scenario.filed_word_knowledge_key), word)
 	_record_completion_fact()
 	_set_state(State.CONSEQUENCE)
-	commit_resolved.emit(selected.action_id, selected.result_text)
+	commit_recorded.emit(scenario_id, action_id, word)
+	commit_resolved.emit(action_id, result)
+	_decision_in_progress = false
 	_begin_consequence()
 	return true
 
 ## Explicit timeout path. It records lapsed facts without selecting either
 ## authored version, then uses the same neutral consequence beat.
 func lapse_commit() -> bool:
-	if _state not in [State.COPYING, State.VERIFYING, State.AWAITING_COMMIT] \
+	if _decision_in_progress or _state not in [State.COPYING, State.VERIFYING, State.AWAITING_COMMIT] \
 			or _current_scenario == null or _commit_resolved \
 			or not _has_commit_options():
 		return false
+	var scenario := _current_scenario
+	_decision_in_progress = true
 	_commit_resolved = true
 	_close_live_sheet_for_terminal()
 	var world := _get_world_state()
-	if world != null and not _current_scenario.commit_lapsed_world_fact.is_empty():
-		world.set_fact(StringName(_current_scenario.commit_lapsed_world_fact), true)
+	if world != null and not scenario.commit_lapsed_world_fact.is_empty():
+		world.set_fact(StringName(scenario.commit_lapsed_world_fact), true)
 	var knowledge := _get_knowledge_state()
-	if knowledge != null and not _current_scenario.commit_lapsed_knowledge_fact.is_empty():
-		knowledge.learn(StringName(_current_scenario.commit_lapsed_knowledge_fact))
-	_record_completion_fact()
+	if knowledge != null and not scenario.commit_lapsed_knowledge_fact.is_empty():
+		knowledge.learn(StringName(scenario.commit_lapsed_knowledge_fact))
+	_record_completion_fact(scenario)
 	_set_state(State.CONSEQUENCE)
 	commit_resolved.emit(LAPSED_ACTION_ID, LAPSED_RESULT_TEXT)
+	_decision_in_progress = false
 	_begin_consequence()
 	return true
 
@@ -480,46 +517,55 @@ func _complete_consequence() -> void:
 		return
 	_finish_session()
 
-func _finish_session() -> void:
-	# A completion listener may synchronously load the next scenario. Passing
-	# the member itself lets later listeners see that replacement resource.
-	var completed_scenario := _current_scenario
+func _finish_session(scenario: TelegraphScenarioData = null) -> void:
+	# Capture attribution through state callbacks, then release resolution ownership
+	# so a legitimate completion listener may synchronously load the next scenario.
+	var completed_scenario := scenario if scenario != null else _current_scenario
 	_set_state(State.COMPLETE)
+	_decision_in_progress = false
 	session_completed.emit(completed_scenario)
 
 ## A deadline can close an unread order without pretending it was verified.
 ## "NO ORDER" is a distinct outcome: not correct, not incorrect.
 func lapse_routing(action: String = "NO ORDER") -> bool:
+	if _decision_in_progress:
+		return false
 	if _current_scenario == null or not _current_scenario.requires_routing \
 		or _state not in [State.COPYING, State.VERIFYING, State.AWAITING_ROUTE]:
 		return false
 	return _resolve_routing(action, true)
 
 func submit_routing_decision(action: String) -> bool:
+	if _decision_in_progress or not RouteAction.is_valid(action):
+		return false
 	if _state != State.AWAITING_ROUTE or _current_scenario == null:
 		return false
 	return _resolve_routing(action, false)
 
 func _resolve_routing(action: String, is_lapse: bool) -> bool:
+	if _decision_in_progress or _current_scenario == null:
+		return false
+	var scenario := _current_scenario
+	var identifier := scenario.scenario_id
 	var outcome: RoutingOutcome = RoutingOutcome.LAPSED if is_lapse \
-		else (RoutingOutcome.CORRECT if action == _current_scenario.expected_routing_action else RoutingOutcome.INCORRECT)
+		else (RoutingOutcome.CORRECT if action == scenario.expected_routing_action else RoutingOutcome.INCORRECT)
+	_decision_in_progress = true
 	_close_live_sheet_for_terminal()
 	var world := _get_world_state()
 
 	match outcome:
 		RoutingOutcome.CORRECT:
-			if world != null and not _current_scenario.correct_world_fact.is_empty():
-				world.set_fact(StringName(_current_scenario.correct_world_fact), true)
+			if world != null and not scenario.correct_world_fact.is_empty():
+				world.set_fact(StringName(scenario.correct_world_fact), true)
 		RoutingOutcome.INCORRECT:
-			if world != null and not _current_scenario.incorrect_world_fact.is_empty():
-				world.set_fact(StringName(_current_scenario.incorrect_world_fact), true)
+			if world != null and not scenario.incorrect_world_fact.is_empty():
+				world.set_fact(StringName(scenario.incorrect_world_fact), true)
 		RoutingOutcome.LAPSED:
-			if world != null and not _current_scenario.routing_lapsed_world_fact.is_empty():
-				world.set_fact(StringName(_current_scenario.routing_lapsed_world_fact), true)
+			if world != null and not scenario.routing_lapsed_world_fact.is_empty():
+				world.set_fact(StringName(scenario.routing_lapsed_world_fact), true)
 
 	var knowledge := _get_knowledge_state()
 	if knowledge != null:
-		var identifier := _current_scenario.scenario_id
 		if not is_lapse:
 			# The journal records what was actually sent, not what was expected.
 			if action == "CLEAR EAST":
@@ -527,15 +573,17 @@ func _resolve_routing(action: String, is_lapse: bool) -> bool:
 			elif action == "HOLD":
 				knowledge.learn(StringName("route_hold_%s" % identifier))
 			knowledge.learn(StringName("filed_%s" % identifier))
-		elif not _current_scenario.routing_lapsed_knowledge_fact.is_empty():
-			knowledge.learn(StringName(_current_scenario.routing_lapsed_knowledge_fact))
+		elif not scenario.routing_lapsed_knowledge_fact.is_empty():
+			knowledge.learn(StringName(scenario.routing_lapsed_knowledge_fact))
 
+	_record_completion_fact(scenario)
 	routing_resolved.emit(action, outcome)
-	_record_completion_fact()
-	_finish_session()
+	_finish_session(scenario)
 	return true
 
 func reset_session() -> void:
+	if _decision_in_progress:
+		return
 	# An abandoned live sheet closes as an honest partial rather than
 	# vanishing. Terminal sheets are kept: the night's record is the paper on
 	# the desk until the next telegram physically replaces it.
@@ -584,11 +632,12 @@ func notify_operator_seated() -> void:
 			and transcript_paper.is_copy_paused():
 		transcript_paper.resume_writing()
 
-func _record_completion_fact() -> void:
-	if _current_scenario != null and not _current_scenario.completion_fact.is_empty():
+func _record_completion_fact(scenario: TelegraphScenarioData = null) -> void:
+	var completed := scenario if scenario != null else _current_scenario
+	if completed != null and not completed.completion_fact.is_empty():
 		var world := _get_world_state()
 		if world != null:
-			world.set_fact(StringName(_current_scenario.completion_fact), true)
+			world.set_fact(StringName(completed.completion_fact), true)
 
 func _has_commit_options() -> bool:
 	return _current_scenario != null and not _current_scenario.commit_options.is_empty()

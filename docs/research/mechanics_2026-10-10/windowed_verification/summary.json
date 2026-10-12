@@ -1,0 +1,51 @@
+[
+  {
+    "case": "input",
+    "exit": 0,
+    "passes": 13,
+    "failures": [],
+    "errors": []
+  },
+  {
+    "case": "pointer",
+    "exit": 0,
+    "passes": 2,
+    "failures": [],
+    "errors": []
+  },
+  {
+    "case": "route",
+    "exit": 0,
+    "passes": 57,
+    "failures": [],
+    "errors": []
+  },
+  {
+    "case": "water",
+    "exit": 0,
+    "passes": 61,
+    "failures": [],
+    "errors": []
+  },
+  {
+    "case": "wrong",
+    "exit": 0,
+    "passes": 61,
+    "failures": [],
+    "errors": []
+  },
+  {
+    "case": "watcher",
+    "exit": 0,
+    "passes": 59,
+    "failures": [],
+    "errors": []
+  },
+  {
+    "case": "lapsed",
+    "exit": 0,
+    "passes": 58,
+    "failures": [],
+    "errors": []
+  }
+]

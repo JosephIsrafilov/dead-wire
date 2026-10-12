@@ -1,0 +1,14 @@
+...............F.....
+======================================================================
+FAIL: test_legacy_footstep_is_refused_and_beta_required (tools.package_windows_beta_test.PckDirectoryTests.test_legacy_footstep_is_refused_and_beta_required)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\YUSIF\Documents\dead-wire\tools\package_windows_beta_test.py", line 294, in test_legacy_footstep_is_refused_and_beta_required
+    with self.assertRaises(RuntimeError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: RuntimeError not raised
+
+----------------------------------------------------------------------
+Ran 21 tests in 0.066s
+
+FAILED (failures=1)

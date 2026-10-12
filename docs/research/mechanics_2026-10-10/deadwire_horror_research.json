@@ -1,0 +1,623 @@
+{
+  "report_type": "primary_developer_source_research",
+  "language": "English",
+  "scope": "Research only: tension, uncertainty and meaningful friction in instrument/office horror; no gameplay architecture, new mechanics, implementation edits or playtest claims.",
+  "source_count": 6,
+  "evidence_excerpt_count": 17,
+  "method": {
+    "source_selection": "Six curated developer essays/interviews, using full source text or publisher transcript rather than search snippets. Quotes were checked mechanically against saved retrieved text.",
+    "payment": "No paid APIs, API-key setup or paid transcript service used.",
+    "epistemic_labels": "Direct claims are attributed source statements. Dead Wire inferences and pitfalls are explicitly untested extrapolations, not facts about current game behavior.",
+    "independence": "The two Thomas Grip essays are one developer viewpoint, not independent corroboration. SOMA audio is a separate specialist account; Szymanski, Mobius designers and Pope supply additional viewpoints.",
+    "not_performed": [
+      "Playing any cited game",
+      "Listening to or watching the Szymanski interview",
+      "Running or inspecting Dead Wire",
+      "Editing game files",
+      "Designing a final gameplay system"
+    ]
+  },
+  "provided_dead_wire_context": {
+    "provenance": "Supplied task context only; not independently inspected or verified.",
+    "m1": "One 1894 telegraph office and three transmissions.",
+    "hook": "The operator hears WATER, while the hand writes WATCHER.",
+    "evidence_boundary": "Objective Morse/tape immutable; perception and transcript separate.",
+    "tension": "Split attention among work, window, door and evidence verification, not monster combat or constant jumpscares.",
+    "existing_beats": "Ordinary/quiet introduction; delayed calls at 20/38/50 seconds; paper inspection and filing; lamp wick and register winding.",
+    "canon": "Listener cannot move physical objects; observation changes only between observations."
+  },
+  "coverage": {
+    "trustworthy evidence amidst uncertain interpretation": [
+      10,
+      3,
+      12
+    ],
+    "knowledge-based progress and ordinary baseline": [
+      8,
+      12
+    ],
+    "physical/attention friction versus unreliable controls": [
+      10,
+      3
+    ],
+    "sparse threat, pacing and attention budget": [
+      9
+    ],
+    "readable and source-grounded audio": [
+      4,
+      10
+    ]
+  },
+  "sources": [
+    {
+      "citation_id": 10,
+      "citation": "[10]",
+      "title": "Dusk and the Art of Making Short Games with David Szymanski",
+      "url": "https://softwareengineeringdaily.com/wp-content/uploads/2024/07/SED1712-Dusk.txt",
+      "author_or_interview": "David Szymanski, interviewed by Joe Nash",
+      "developer_role": "Iron Lung creator",
+      "published_date": "2024-07-11",
+      "source_type": "Developer interview; publisher-provided timestamped transcript",
+      "read_status": "read_source_body",
+      "access_method": "direct HTTPS text retrieval after extractor failed",
+      "read_scope": "Full transcript retrieved; relevant horror/embodiment/audio sections at 00:03:48, 00:11:25, 00:15:25–00:21:30 read. Video/audio was not watched or listened to.",
+      "evidence_text_file": "C:/Users/YUSIF/.hermes/cache/scratch/deadwire_research_szymanski_full.txt",
+      "short_excerpts": [
+        {
+          "excerpt_id": "10.1",
+          "text": "I want you to be in this world and in this experience as a human character. Not as a submarine.",
+          "speaker": "David Szymanski",
+          "location": "00:15:25–00:18:14, Szymanski answer on the first-person controller",
+          "verbatim_checked": true
+        },
+        {
+          "excerpt_id": "10.2",
+          "text": "they're forced to keep moving around in the sub and they're forced to be turning their view and then hearing sounds from different sides",
+          "speaker": "David Szymanski",
+          "location": "Same answer, physical movement and directional sound",
+          "verbatim_checked": true
+        },
+        {
+          "excerpt_id": "10.3",
+          "text": "you can go to any random point on the map and take a picture. And what you're seeing is actually what's out there so to speak.",
+          "speaker": "David Szymanski",
+          "location": "00:20:53, Szymanski answer on the real external world",
+          "verbatim_checked": true
+        }
+      ],
+      "direct_claims": [
+        {
+          "text": "Szymanski says direct submarine control would shift the player’s avatar away from a vulnerable human; bodily movement and changes of view/sound direction make confinement perceptible.[10]",
+          "supporting_excerpt_ids": [
+            "10.1",
+            "10.2"
+          ]
+        },
+        {
+          "text": "He states that photographs at arbitrary coordinates show the actual external game world, despite the separated camera/interior implementation.[10]",
+          "supporting_excerpt_ids": [
+            "10.3"
+          ]
+        }
+      ],
+      "dead_wire_inferences": [
+        {
+          "text": "For Dead Wire’s existing work/window/door split, physical reorientation has a legible attention cost; it need not be implemented as delayed or dropped input.",
+          "basis_source_ids": [
+            10
+          ],
+          "status": "researcher inference, not a developer claim or tested result"
+        },
+        {
+          "text": "Restricted access to a trustworthy view is different from an arbitrarily false view; Iron Lung provides a useful analogy for limited observation with dependable underlying evidence.",
+          "basis_source_ids": [
+            10
+          ],
+          "status": "researcher inference, not a developer claim or tested result"
+        }
+      ],
+      "dead_wire_pitfalls": [
+        {
+          "text": "Do not read Iron Lung’s cumbersome situation as evidence that mouse lag, ignored clicks or sticky inspection are desirable; this interview argues for embodiment, not latency.",
+          "status": "inferred risk, not an observed Dead Wire defect"
+        },
+        {
+          "text": "Do not infer that every photograph or every future instrument channel must lie in order to sustain uncertainty; Szymanski explicitly describes world-grounded photographs.",
+          "status": "inferred risk, not an observed Dead Wire defect"
+        }
+      ],
+      "limits": "No input-latency measurement, optimal interaction duration or proof of Dead Wire effectiveness is provided. Published transcript has occasional transcription errors; quoted wording is preserved."
+    },
+    {
+      "citation_id": 9,
+      "citation": "[9]",
+      "title": "9 Years, 9 Lessons on Horror",
+      "url": "https://frictionalgames.com/2019-10-9-years-9-lessons-on-horror",
+      "author_or_interview": "Thomas Grip",
+      "developer_role": "Frictional Games co-founder and creative director",
+      "published_date": "2019-10-15",
+      "source_type": "Developer-authored retrospective on the studio website",
+      "read_status": "read_source_body",
+      "access_method": "web_extract full article; raw HTML for byline/date",
+      "read_scope": "Full essay read, especially Lessons 1, 3, 4, 6, 7 and 9.",
+      "evidence_text_file": "C:/Users/YUSIF/.hermes/cache/scratch/deadwire_research_horror_lessons.txt",
+      "short_excerpts": [
+        {
+          "excerpt_id": "9.1",
+          "text": "spacing the scares apart made players much more scared than previously.",
+          "speaker": "Thomas Grip",
+          "location": "Lesson 3: Scares alone won’t make a horror game",
+          "verbatim_checked": true
+        },
+        {
+          "excerpt_id": "9.2",
+          "text": "It’s when there is a gap in our knowledge, a certain amount of uncertainty, that horror can really shine.",
+          "speaker": "Thomas Grip",
+          "location": "Lesson 7: Keep it vague",
+          "verbatim_checked": true
+        },
+        {
+          "excerpt_id": "9.3",
+          "text": "If the game is constantly engaging the player with thinking about their aim, checking ammo, and looking for loot, there’s no room left for much else.",
+          "speaker": "Thomas Grip",
+          "location": "Lesson 4: Fun gameplay is just too… fun",
+          "verbatim_checked": true
+        }
+      ],
+      "direct_claims": [
+        {
+          "text": "Grip reports that reducing the Amnesia study’s many jumpscares and emphasizing the castle mysteries made the section scarier.[9]",
+          "supporting_excerpt_ids": [
+            "9.1"
+          ]
+        },
+        {
+          "text": "He argues that incomplete knowledge can sustain horror, while an attention-heavy gameplay loop leaves less capacity for frightening interpretation.[9]",
+          "supporting_excerpt_ids": [
+            "9.2",
+            "9.3"
+          ]
+        }
+      ],
+      "dead_wire_inferences": [
+        {
+          "text": "A quiet, comprehensible office baseline and room for interpretation are compatible with the existing three-transmission scope; constant incident density is not required.",
+          "basis_source_ids": [
+            9
+          ],
+          "status": "researcher inference, not a developer claim or tested result"
+        },
+        {
+          "text": "The uncertainty appropriate to a threat need not apply to how a work control registers input or to the identity of an already preserved record.",
+          "basis_source_ids": [
+            9
+          ],
+          "status": "researcher inference, not a developer claim or tested result"
+        }
+      ],
+      "dead_wire_pitfalls": [
+        {
+          "text": "Too many simultaneous lamp, winding, paper and warning demands could consume the attention needed to notice and interpret the WATER/WATCHER discrepancy.",
+          "status": "inferred risk, not an observed Dead Wire defect"
+        },
+        {
+          "text": "Adding a loud scare to every delayed call risks teaching a predictable scare schedule rather than sustaining uncertainty.",
+          "status": "inferred risk, not an observed Dead Wire defect"
+        },
+        {
+          "text": "Keep it vague is not permission to contradict the supplied immutable Morse/tape rule or Listener’s no-physical-object-movement rule.",
+          "status": "inferred risk, not an observed Dead Wire defect"
+        }
+      ],
+      "limits": "These are studio observations and design arguments, not controlled studies. The essay does not validate 20/38/50-second waits, three calls, or any universal safe scare frequency."
+    },
+    {
+      "citation_id": 3,
+      "citation": "[3]",
+      "title": "Thoughts On Inside and Playable Stories",
+      "url": "https://frictionalgames.com/2016-07-thoughts-on-inside-and-playable-stories",
+      "author_or_interview": "Thomas Grip",
+      "developer_role": "Frictional Games co-founder and creative director; external analysis of Inside, not a Playdead postmortem",
+      "published_date": "2016-07-18",
+      "source_type": "Developer-authored critical design essay on the studio website",
+      "read_status": "read_source_body",
+      "access_method": "web_extract full article; raw HTML for byline/date",
+      "read_scope": "Full essay read; puzzle planning, consistent affordances, trial-and-error and filler sections used.",
+      "evidence_text_file": "C:/Users/YUSIF/.hermes/cache/scratch/deadwire_research_inside.txt",
+      "short_excerpts": [
+        {
+          "excerpt_id": "3.1",
+          "text": "The player just needs to know: the boundaries that are in place, that the problem is solvable, and what goal state to strive for.",
+          "speaker": "Thomas Grip",
+          "location": "Puzzle discussion: solvability and goal state",
+          "verbatim_checked": true
+        },
+        {
+          "excerpt_id": "3.2",
+          "text": "Any time it feels like you need to guess what the designer is thinking, or are being handheld along a set course, you’ve got a bad puzzle.",
+          "speaker": "Thomas Grip",
+          "location": "Puzzle discussion: designer-intent guessing",
+          "verbatim_checked": true
+        },
+        {
+          "excerpt_id": "3.3",
+          "text": "Problems tend to arise when this trial-and-error becomes an integral part of the moment-to-moment gameplay, or when it interferes with the control of the player character.",
+          "speaker": "Thomas Grip",
+          "location": "Planning discussion: trial-and-error versus control",
+          "verbatim_checked": true
+        }
+      ],
+      "direct_claims": [
+        {
+          "text": "Grip argues that a puzzle needs comprehensible boundaries, solvability and a target state so the player can form and execute plans.[3]",
+          "supporting_excerpt_ids": [
+            "3.1"
+          ]
+        },
+        {
+          "text": "He distinguishes discovery from guessing the designer’s intention, and warns against trial-and-error interfering with moment-to-moment character control.[3]",
+          "supporting_excerpt_ids": [
+            "3.2",
+            "3.3"
+          ]
+        }
+      ],
+      "dead_wire_inferences": [
+        {
+          "text": "Uncertainty about a message’s meaning can coexist with certainty about how inspection, filing and winding behave.",
+          "basis_source_ids": [
+            3
+          ],
+          "status": "researcher inference, not a developer claim or tested result"
+        },
+        {
+          "text": "Meaningful friction here means understandable effort or commitment that changes attention or information; input lag means the player’s intended action fails to arrive predictably. This distinction is a synthesis, not a quoted technical definition.",
+          "basis_source_ids": [
+            3
+          ],
+          "status": "researcher inference, not a developer claim or tested result"
+        }
+      ],
+      "dead_wire_pitfalls": [
+        {
+          "text": "If paper pickup, inspection or filing is ambiguous, players may diagnose a UI defect rather than doubt their perception.",
+          "status": "inferred risk, not an observed Dead Wire defect"
+        },
+        {
+          "text": "Repeated maintenance without an information, attention or narrative consequence can become filler; this essay critiques repeated puzzles that add no story value.",
+          "status": "inferred risk, not an observed Dead Wire defect"
+        },
+        {
+          "text": "A forced loss of control for WATCHER risks feeling like authorial override if players cannot distinguish the written transcript from the preserved received signal.",
+          "status": "inferred risk, not an observed Dead Wire defect"
+        }
+      ],
+      "limits": "Grip is interpreting another studio’s game, not reporting Playdead’s intent. The essay is not an input-latency experiment; the friction/lag distinction above is inferred."
+    },
+    {
+      "citation_id": 4,
+      "citation": "[4]",
+      "title": "SOMA – Behind The Sound",
+      "url": "https://frictionalgames.com/2015-09-soma-behind-the-sound",
+      "author_or_interview": "Samuel Justice; embedded first-person account from Kpow Audio",
+      "developer_role": "SOMA audio director and dialogue implementation team",
+      "published_date": "2015-09-17",
+      "source_type": "First-hand audio-production essay on the studio website",
+      "read_status": "read_source_body",
+      "access_method": "web_extract full article; raw HTML for date",
+      "read_scope": "Full essay read, including the Kpow Audio signal-path and historical-blackbox sections.",
+      "evidence_text_file": "C:/Users/YUSIF/.hermes/cache/scratch/deadwire_research_soma_sound.txt",
+      "short_excerpts": [
+        {
+          "excerpt_id": "4.1",
+          "text": "if we were to turn off the visuals, you could instantly tell where you were.",
+          "speaker": "Samuel Justice",
+          "location": "Samuel Justice: contrasting soundscapes",
+          "verbatim_checked": true
+        },
+        {
+          "excerpt_id": "4.2",
+          "text": "The audio team have done an amazing job at creating an audio environment that balances impact and authenticity",
+          "speaker": "Kpow Audio, quoted within Justice’s essay",
+          "location": "Kpow Audio: voiceover implementation and processing",
+          "verbatim_checked": true
+        },
+        {
+          "excerpt_id": "4.3",
+          "text": "we tried – wherever possible – to recreate the signal paths described on screen.",
+          "speaker": "Kpow Audio, quoted within Justice’s essay",
+          "location": "Kpow Audio: recreating depicted signal paths",
+          "verbatim_checked": true
+        }
+      ],
+      "direct_claims": [
+        {
+          "text": "Justice describes designing contrasting sonic spaces that remain recognizable even with the visuals disabled.[4]",
+          "supporting_excerpt_ids": [
+            "4.1"
+          ]
+        },
+        {
+          "text": "Kpow Audio describes balancing impact with authenticity and reproducing the signal paths depicted by in-world equipment.[4]",
+          "supporting_excerpt_ids": [
+            "4.2",
+            "4.3"
+          ]
+        }
+      ],
+      "dead_wire_inferences": [
+        {
+          "text": "For existing Dead Wire signals, recognizable source and carrier behavior can support verification even when their perceived content becomes uncertain.",
+          "basis_source_ids": [
+            4
+          ],
+          "status": "researcher inference, not a developer claim or tested result"
+        },
+        {
+          "text": "Mechanical dirt and atmosphere have to coexist with readable evidence-bearing timing/content; the need to protect Morse intelligibility is our application, not a SOMA mixing rule stated in this essay.",
+          "basis_source_ids": [
+            4
+          ],
+          "status": "researcher inference, not a developer claim or tested result"
+        }
+      ],
+      "dead_wire_pitfalls": [
+        {
+          "text": "Static, drones, wind and machine sounds that mask evidence-bearing signal timing could make WATER/WATCHER an audio-decoding accident rather than a meaningful discrepancy.",
+          "status": "inferred risk, not an observed Dead Wire defect"
+        },
+        {
+          "text": "An unsettling sound that has no distinguishable source or consistent carrier may undercut instrument trust instead of deepening contextual uncertainty.",
+          "status": "inferred risk, not an observed Dead Wire defect"
+        },
+        {
+          "text": "Do not import SOMA’s recording volume, binaural requirements or signal-processing stack as necessary scope for a single office.",
+          "status": "inferred risk, not an observed Dead Wire defect"
+        }
+      ],
+      "limits": "The essay documents production techniques, not a controlled intelligibility test. It specifies no loudness target, EQ band, ducking rule or Morse decoding threshold."
+    },
+    {
+      "citation_id": 8,
+      "citation": "[8]",
+      "title": "Live, die, repeat: How Outer Wilds piques curiosity in an ambivalent solar system",
+      "url": "https://www.gamedeveloper.com/design/live-die-repeat-how-i-outer-wilds-i-piques-curiosity-in-an-ambivalent-solar-system",
+      "author_or_interview": "Kris Graft interviewing Alex Beachum and Loan Verneau",
+      "developer_role": "Outer Wilds designers speaking about their own development process",
+      "published_date": "2019-06-18",
+      "source_type": "Reported interview with direct developer quotations",
+      "read_status": "read_source_body",
+      "access_method": "extractor returned only a partial article; full public HTML retrieved and article paragraphs parsed",
+      "read_scope": "Full article body read after recovering the omitted curiosity/playtest sections; only developer quotations treated as primary claims.",
+      "evidence_text_file": "C:/Users/YUSIF/.hermes/cache/scratch/deadwire_research_outer_wilds_full.txt",
+      "short_excerpts": [
+        {
+          "excerpt_id": "8.1",
+          "text": "the only thing you can bring back in time with you is your memories.",
+          "speaker": "Alex Beachum",
+          "location": "Alex Beachum: memories and the time loop",
+          "verbatim_checked": true
+        },
+        {
+          "excerpt_id": "8.2",
+          "text": "That [object from space] is not new to them to them [when] everything is new.",
+          "speaker": "Alex Beachum",
+          "location": "Alex Beachum: failed meteor opening",
+          "verbatim_checked": true
+        },
+        {
+          "excerpt_id": "8.3",
+          "text": "you can't expect someone to be curious about something specific unless they're already familiar with everything in their immediate vicinity.",
+          "speaker": "Alex Beachum",
+          "location": "Alex Beachum: familiarity before curiosity",
+          "verbatim_checked": true
+        }
+      ],
+      "direct_claims": [
+        {
+          "text": "Beachum explains that the time loop privileges memories/knowledge as the persistent value of exploration.[8]",
+          "supporting_excerpt_ids": [
+            "8.1"
+          ]
+        },
+        {
+          "text": "He reports that an early meteor opening failed to provoke curiosity because players did not yet know the normal village, and states that local familiarity is needed for specific curiosity.[8]",
+          "supporting_excerpt_ids": [
+            "8.2",
+            "8.3"
+          ]
+        }
+      ],
+      "dead_wire_inferences": [
+        {
+          "text": "Dead Wire’s ordinary introduction matters because the player needs a learned normal before a discrepant transcript becomes a specific anomaly.",
+          "basis_source_ids": [
+            8
+          ],
+          "status": "researcher inference, not a developer claim or tested result"
+        },
+        {
+          "text": "The existing record comparison can count as progress when it produces actionable understanding, not merely another completed filing gesture.",
+          "basis_source_ids": [
+            8
+          ],
+          "status": "researcher inference, not a developer claim or tested result"
+        }
+      ],
+      "dead_wire_pitfalls": [
+        {
+          "text": "Opening with anomalies everywhere could erase the comparison baseline and turn a precise discrepancy into generic strangeness.",
+          "status": "inferred risk, not an observed Dead Wire defect"
+        },
+        {
+          "text": "Finishing three routine submissions is not by itself evidence of knowledge-based progression; this report cannot establish whether the player has learned anything consequential.",
+          "status": "inferred risk, not an observed Dead Wire defect"
+        },
+        {
+          "text": "Outer Wilds’ continuously changing world is not license to break Dead Wire’s supplied rule that observation changes only between observations.",
+          "status": "inferred risk, not an observed Dead Wire defect"
+        }
+      ],
+      "limits": "Outer Wilds is an analogy for discovery, not focused office horror. The interview supports familiarity and knowledge-value principles, not transplanting its world scale or time-loop architecture."
+    },
+    {
+      "citation_id": 12,
+      "citation": "[12]",
+      "title": "Interrogating detective mechanics with a real-life detective",
+      "url": "https://www.eurogamer.net/interrogating-detective-mechanics-with-a-real-life-detective",
+      "author_or_interview": "Sean Martin interviewing Lucas Pope and Adam Richardson",
+      "developer_role": "Lucas Pope: Return of the Obra Dinn creator; Richardson: detective, not a game developer",
+      "published_date": "2019-10-20",
+      "source_type": "Reported interview with direct developer quotations",
+      "read_status": "read_source_body",
+      "access_method": "extractor omitted key developer passages; full public HTML retrieved and article paragraphs parsed",
+      "read_scope": "Full article body read; selected claims below are Lucas Pope’s, not Richardson’s or the journalist’s.",
+      "evidence_text_file": "C:/Users/YUSIF/.hermes/cache/scratch/deadwire_research_detective_full.txt",
+      "short_excerpts": [
+        {
+          "excerpt_id": "12.1",
+          "text": "Defining those limits early helped me to focus on how to structure the overall narrative and progression to keep it understandable and revelatory.",
+          "speaker": "Lucas Pope",
+          "location": "Lucas Pope: bounded core loop",
+          "verbatim_checked": true
+        },
+        {
+          "excerpt_id": "12.2",
+          "text": "different players can find and interpret different clues and still progress similarly.",
+          "speaker": "Lucas Pope",
+          "location": "Lucas Pope: globally contributing clues",
+          "verbatim_checked": true
+        }
+      ],
+      "direct_claims": [
+        {
+          "text": "Pope credits the bounded observe-and-note loop with keeping narrative/progression understandable and revelatory.[12]",
+          "supporting_excerpt_ids": [
+            "12.1"
+          ]
+        },
+        {
+          "text": "He explains that clues can contribute globally, letting players find and interpret different evidence while still progressing.[12]",
+          "supporting_excerpt_ids": [
+            "12.2"
+          ]
+        }
+      ],
+      "dead_wire_inferences": [
+        {
+          "text": "Comparison has value when evidence can constrain a hypothesis; the separate objective Morse/tape and subjective perception/transcript layers are a promising supplied premise for that distinction, not proof of a successful implementation.",
+          "basis_source_ids": [
+            12
+          ],
+          "status": "researcher inference, not a developer claim or tested result"
+        },
+        {
+          "text": "An incorrect interpretation is different from arbitrary alteration of the facts used to reason; the present immutable-evidence requirement supplies that boundary.",
+          "basis_source_ids": [
+            12
+          ],
+          "status": "researcher inference, not a developer claim or tested result"
+        }
+      ],
+      "dead_wire_pitfalls": [
+        {
+          "text": "If every retained record can silently rewrite, comparison no longer constrains interpretations and deduction risks becoming guessing.",
+          "status": "inferred risk, not an observed Dead Wire defect"
+        },
+        {
+          "text": "Do not import Obra Dinn’s sixty-person scale or automatic fate-confirmation system; this article does not support a specific confirmation cadence for Dead Wire.",
+          "status": "inferred risk, not an observed Dead Wire defect"
+        },
+        {
+          "text": "Do not attribute the interview’s claims about real investigative practice to Pope; the detective and developer speak in separate roles.",
+          "status": "inferred risk, not an observed Dead Wire defect"
+        }
+      ],
+      "limits": "Pope discusses a deliberately bounded logic puzzle, not unreliable perception horror. The article does not state that evidence immutability is a universal design law; that application is ours. Three-fate confirmation is not used as evidence here."
+    }
+  ],
+  "cross_source_inferences": [
+    {
+      "text": "The strongest shared distinction is uncertainty about interpretation or threat versus reliability of action and retained evidence; conflating them risks converting dread into interface confusion.",
+      "basis_source_ids": [
+        10,
+        3,
+        12
+      ],
+      "status": "synthesis; not a universal law established by the sources"
+    },
+    {
+      "text": "Quietness needs a comprehensible normal and a reason to attend; it is neither a licence for undirected idle waiting nor a requirement to fill every pause with a scare.",
+      "basis_source_ids": [
+        8,
+        9
+      ],
+      "status": "synthesis; exact Dead Wire call timings remain unvalidated"
+    },
+    {
+      "text": "The existing WATER/WATCHER premise depends on perceivable disagreement between channels. Obscuring the received signal beyond verification, or silently changing the retained tape, would remove the supplied factual anchor.",
+      "basis_source_ids": [
+        4,
+        12
+      ],
+      "status": "inference plus supplied immutable-evidence constraint"
+    },
+    {
+      "text": "Existing office actions can occupy attention, but a continuous checklist of equally urgent chores could leave no mental room to interpret the window, door or signal.",
+      "basis_source_ids": [
+        9,
+        10
+      ],
+      "status": "inferred attention-budget risk, not an observed game defect"
+    },
+    {
+      "text": "Knowledge progression requires a consequence for understanding; merely completing the three transmissions cannot establish that criterion without actual game observation or testing.",
+      "basis_source_ids": [
+        8,
+        12
+      ],
+      "status": "research limitation; no new progression design proposed"
+    }
+  ],
+  "inaccessible_or_partial_candidates_not_counted": [
+    {
+      "url": "https://www.youtube.com/watch?v=aJz-AplAoVM",
+      "status": "YouTube extraction returned player chrome, not a transcript.",
+      "resolution": "Used the publisher’s complete downloadable text transcript, source [10]; not counted as a second source."
+    },
+    {
+      "url": "https://www.polygon.com/interviews/2019/7/23/20706307/outer-wilds-game-of-the-year-interview",
+      "status": "Extractor returned promotional/social content only; direct HTTP retry closed without a response.",
+      "resolution": "No claims or quotes used; replaced by the actually read Mobius interview [8]."
+    },
+    {
+      "url": "https://ubm-twvideo01.s3.amazonaws.com/o1/vault/GDC+2021/beachum_gdc_2021(1).pdf",
+      "status": "GDC slide PDF extraction returned upstream forbidden; body not read.",
+      "resolution": "Not counted and no slide claims used."
+    }
+  ],
+  "retrieval_issues": [
+    "Configured search backend lacked a usable identity; successful searches came through documented keyless fallback providers. No account or config changes were made.",
+    "Browser Use recovery was unavailable because the cloud provider supplied no CDP endpoint; public HTTP retrieval recovered the required text without browser impersonation.",
+    "Some extractors returned partial prose without useful body completeness; full public HTML recovered both the Outer Wilds and Lucas Pope interviews.",
+    "An attempt to overwrite an empty intermediate transcript file was refused by the read/write guard; the successful full transcript was saved under deadwire_research_szymanski_full.txt instead."
+  ],
+  "unresolved_questions": [
+    "None of these sources tests Dead Wire’s 20/38/50-second calls, inspection duration or maintenance burden.",
+    "No source supplies a technical input-latency target or Morse/noise audibility threshold.",
+    "No source validates the Listener canon or observation rules; those remain supplied constraints.",
+    "No actual playtest establishes whether current Dead Wire record comparison changes player understanding."
+  ],
+  "sources_block": "Sources:\n[3] https://frictionalgames.com/2016-07-thoughts-on-inside-and-playable-stories\n[4] https://frictionalgames.com/2015-09-soma-behind-the-sound\n[8] https://www.gamedeveloper.com/design/live-die-repeat-how-i-outer-wilds-i-piques-curiosity-in-an-ambivalent-solar-system\n[9] https://frictionalgames.com/2019-10-9-years-9-lessons-on-horror\n[10] https://softwareengineeringdaily.com/wp-content/uploads/2024/07/SED1712-Dusk.txt\n[12] https://www.eurogamer.net/interrogating-detective-mechanics-with-a-real-life-detective",
+  "verification": {
+    "json_schema": "custom research report",
+    "distinct_source_urls": 6,
+    "expected_range": [
+      4,
+      6
+    ],
+    "all_excerpts_attached_to_ledger": true,
+    "quote_match_rule": "Whitespace/case/markdown-insensitive exact substring in retrieved source body",
+    "game_files_modified": false
+  }
+}

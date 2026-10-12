@@ -1,0 +1,27 @@
+| runtime file | binding | provenance | format | sha16 |
+|---|---|---|---|---|
+| paper_sheet.mp3 (viewer open/close) | S03 Luckius various-paper (CC0) | external CC0 | non-wav | 6e81a68cfe8283f7 |
+| ink_stamp_cc0.ogg (stamp) | S01 Kenney impactPlate_heavy (CC0) | external CC0 | non-wav | 142fd6c77f13d25f |
+| chair_settle_cc0.ogg (seat) | S01 Kenney impactWood_medium (CC0) | external CC0 | non-wav | 15271dbe8e2872db |
+| lever_stop.ogg (lever stop) | RoutingBoard lever_impact_stream, Foley bus | Kenney CC0 | (path not found) | - |
+| paper_turn.wav (pickup) | office_foley pickup_stream | tools/generate_action_foley.py | 44100Hz 1ch 16bit 0.46s | b49e2de27fc0e62c |
+| pen_scratch.wav | office_foley pen_stream | tools/generate_action_foley.py | 44100Hz 1ch 16bit 0.05s | b8d89ab8a2db43c9 |
+| key_click.wav | office_foley key_stream | tools/generate_action_foley.py | 44100Hz 1ch 16bit 0.09s | b7856a5b1f7a648b |
+| door_hinge.wav | office_foley hinge_stream | tools/generate_action_foley.py | 44100Hz 1ch 16bit 1.10s | 73a91748f4508083 |
+| sheet_slide.wav (feed) | office_foley feed_stream | tools/generate_action_foley.py | 44100Hz 1ch 16bit 0.32s | e30becd7b01e33c4 |
+| wick_turn.wav (wick) | office_foley wick_stream | tools/generate_action_foley.py | 44100Hz 1ch 16bit 0.62s | 632db6662be818ec |
+| register_wind.wav (winding) | office_foley winding_stream | tools/generate_action_foley.py | 44100Hz 1ch 16bit 0.78s | c491c2d5d539351a |
+| route_lever.wav (accepted route) | office_foley lever_stream | tools/generate_action_foley.py | 44100Hz 1ch 16bit 0.42s | 8ffaa5f3e75d4aba |
+| door_latch.wav | office_foley latch_stream | tools/generate_action_foley.py | 44100Hz 1ch 16bit 0.48s | cf923379ddcf3b84 |
+| sounder_down.wav / sounder_up.wav | Telegraph bus (MARK/GAP) | tools/generate_sounder.py (closed byte-identical) | 44100Hz 1ch 16bit 0.07s | 937b0e802a3a4e05 / 21abfe483cb0a9f4 |
+| beta | player_controller (beta) | tools/generate_beta_footstep.py | 44100Hz 1ch 16bit 0.18s | 8b3f3a965218e843 |
+| legacy | none (excluded) | UNKNOWN - rollback only | 44100Hz 1ch 16bit 0.12s | 5814b110ae7e8976 |
+| beta | player_controller (beta) | UNKNOWN legacy - excluded from beta export | 44100Hz 1ch 16bit 0.18s | 8b3f3a965218e843 |
+| legacy | none (excluded) | UNKNOWN - rollback only | 44100Hz 1ch 16bit 0.12s | 5814b110ae7e8976 |
+| lever_stop.ogg (corrected path) | RoutingBoard lever_impact_stream, Foley bus | Kenney impact-sounds CC0 | ogg | 15ff82332f342c30 |
+
+## Listening gate (honest status)
+Automated checks above are code/provenance only. No agent listening pass was performed:
+- Human headphones + ordinary speakers listening pass on the real Windows build: OPEN (owner/sound designer).
+- Owner artistic acceptance of all audio: OPEN.
+- Recording checklist for the reviewer: (1) telegraph MARK/GAP intelligibility at room ambience; (2) foley double-hits on lever throw+stop; (3) paper feed/pickup distinctness; (4) loop/click artifacts on wick/wind; (5) overall mix levels (Telegraph vs Foley vs Ambience buses).

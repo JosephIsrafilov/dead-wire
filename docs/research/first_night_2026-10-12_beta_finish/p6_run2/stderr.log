@@ -1,0 +1,56 @@
+ERROR: BUG: Unreferenced static string to 0: _draw
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: .
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: _value_changed
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: _shaped_text_get_carets
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: _get_contents_minimum_size
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: _unhandled_key_input
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: _shortcut_input
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: _shaped_text_get_line_breaks
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: _enter_tree
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: _initialize
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: _toggled
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: _get_maximum_size
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: _get_minimum_size
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: Variant
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: _set_path_cache
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: _exists
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: _recognize_path
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: ShaderCompilation
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: _reset_state
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: @warning_ignore_restore
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: @warning_ignore_start
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: @warning_ignore
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: @export_range
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: @export_multiline
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: @export
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: @icon
+   at: unref (core/string/string_name.cpp:117)
+ERROR: 7 RID allocations of type '23NavMeshGeometryParser2D' were leaked at exit.
+ERROR: 6 RID allocations of type '23NavMeshGeometryParser3D' were leaked at exit.
+ERROR: Pages in use exist at exit in PagedAllocator: N12VariantPools11BucketLargeE
+   at: ~PagedAllocator (./core/templates/paged_allocator.h:170)

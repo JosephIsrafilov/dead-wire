@@ -1,0 +1,743 @@
+WorkerThreadPool: 20 threads, 6 max low-priority.
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+TextServer: Added interface "Dummy"
+TextServer: Added interface "ICU / HarfBuzz / Graphite (Built-in)"
+Using "default" pen tablet driver...
+
+TextServer: Primary interface set to: "ICU / HarfBuzz / Graphite (Built-in)".
+Loading resource: res://assets/fonts/deadwire_theme.tres remapped: res://assets/fonts/deadwire_theme.tres
+Loading resource: res://assets/fonts/noto/NotoSans-Regular.ttf remapped: res://assets/fonts/noto/NotoSans-Regular.ttf
+Loading resource: res://.godot/imported/NotoSans-Regular.ttf-a2f6ef013cee47e28f92dbe72318bbb4.fontdata remapped: res://.godot/imported/NotoSans-Regular.ttf-a2f6ef013cee47e28f92dbe72318bbb4.fontdata
+Completed load for: 'res://assets/fonts/noto/NotoSans-Regular.ttf' remapped 'res://assets/fonts/noto/NotoSans-Regular.ttf' at thread -1
+Completed load for: 'res://assets/fonts/deadwire_theme.tres' remapped 'res://assets/fonts/deadwire_theme.tres' at thread -1
+Loading resource: res://default_bus_layout.tres remapped: res://default_bus_layout.tres
+Completed load for: 'res://default_bus_layout.tres' remapped 'res://default_bus_layout.tres' at thread -1
+CORE API HASH: 3769296884
+EDITOR API HASH: 3146738256
+Loading resource: res://tests/office/shift_director_test.gd remapped: res://tests/office/shift_director_test.gd
+Loading resource: res://data/morse/m1_american_morse_alphabet.tres remapped: res://data/morse/m1_american_morse_alphabet.tres
+Loading resource: res://scripts/telegraph/morse/morse_timing_event.gd remapped: res://scripts/telegraph/morse/morse_timing_event.gd
+Completed load for: 'res://scripts/telegraph/morse/morse_timing_event.gd' remapped 'res://scripts/telegraph/morse/morse_timing_event.gd' at thread -1
+Loading resource: res://scripts/telegraph/morse/morse_sequence_data.gd remapped: res://scripts/telegraph/morse/morse_sequence_data.gd
+Completed load for: 'res://scripts/telegraph/morse/morse_sequence_data.gd' remapped 'res://scripts/telegraph/morse/morse_sequence_data.gd' at thread -1
+Loading resource: res://scripts/telegraph/morse/american_morse_character_data.gd remapped: res://scripts/telegraph/morse/american_morse_character_data.gd
+Completed load for: 'res://scripts/telegraph/morse/american_morse_character_data.gd' remapped 'res://scripts/telegraph/morse/american_morse_character_data.gd' at thread -1
+Loading resource: res://scripts/telegraph/morse/american_morse_alphabet_data.gd remapped: res://scripts/telegraph/morse/american_morse_alphabet_data.gd
+Completed load for: 'res://scripts/telegraph/morse/american_morse_alphabet_data.gd' remapped 'res://scripts/telegraph/morse/american_morse_alphabet_data.gd' at thread -1
+Completed load for: 'res://data/morse/m1_american_morse_alphabet.tres' remapped 'res://data/morse/m1_american_morse_alphabet.tres' at thread -1
+Loading resource: res://data/morse/m1_morse_playback_profile.tres remapped: res://data/morse/m1_morse_playback_profile.tres
+Loading resource: res://scripts/telegraph/morse/morse_playback_profile_data.gd remapped: res://scripts/telegraph/morse/morse_playback_profile_data.gd
+Completed load for: 'res://scripts/telegraph/morse/morse_playback_profile_data.gd' remapped 'res://scripts/telegraph/morse/morse_playback_profile_data.gd' at thread -1
+Completed load for: 'res://data/morse/m1_morse_playback_profile.tres' remapped 'res://data/morse/m1_morse_playback_profile.tres' at thread -1
+Loading resource: res://data/scenarios/m1_scenario_3_core_hook.tres remapped: res://data/scenarios/m1_scenario_3_core_hook.tres
+Loading resource: res://scripts/telegraph/session/telegraph_scenario_data.gd remapped: res://scripts/telegraph/session/telegraph_scenario_data.gd
+Completed load for: 'res://scripts/telegraph/session/telegraph_scenario_data.gd' remapped 'res://scripts/telegraph/session/telegraph_scenario_data.gd' at thread -1
+Completed load for: 'res://data/scenarios/m1_scenario_3_core_hook.tres' remapped 'res://data/scenarios/m1_scenario_3_core_hook.tres' at thread -1
+Loading resource: res://data/scenarios/m1_scenario_1_baseline.tres remapped: res://data/scenarios/m1_scenario_1_baseline.tres
+Completed load for: 'res://data/scenarios/m1_scenario_1_baseline.tres' remapped 'res://data/scenarios/m1_scenario_1_baseline.tres' at thread -1
+Loading resource: res://data/scenarios/m1_scenario_2_attention.tres remapped: res://data/scenarios/m1_scenario_2_attention.tres
+Completed load for: 'res://data/scenarios/m1_scenario_2_attention.tres' remapped 'res://data/scenarios/m1_scenario_2_attention.tres' at thread -1
+Loading resource: res://audio/sfx/telegraph/sounder_down.wav remapped: res://audio/sfx/telegraph/sounder_down.wav
+Loading resource: res://.godot/imported/sounder_down.wav-e371a3059e130263e22bc384726a5060.sample remapped: res://.godot/imported/sounder_down.wav-e371a3059e130263e22bc384726a5060.sample
+Completed load for: 'res://audio/sfx/telegraph/sounder_down.wav' remapped 'res://audio/sfx/telegraph/sounder_down.wav' at thread -1
+Loading resource: res://audio/sfx/telegraph/sounder_up.wav remapped: res://audio/sfx/telegraph/sounder_up.wav
+Loading resource: res://.godot/imported/sounder_up.wav-110158cbc5658e97a9c12d3e142f5bfc.sample remapped: res://.godot/imported/sounder_up.wav-110158cbc5658e97a9c12d3e142f5bfc.sample
+Completed load for: 'res://audio/sfx/telegraph/sounder_up.wav' remapped 'res://audio/sfx/telegraph/sounder_up.wav' at thread -1
+Loading resource: res://audio/sfx/foley/footstep_wood.wav remapped: res://audio/sfx/foley/footstep_wood.wav
+Loading resource: res://.godot/imported/footstep_wood.wav-27053a10b84cc01ebb63a166e35ffe06.sample remapped: res://.godot/imported/footstep_wood.wav-27053a10b84cc01ebb63a166e35ffe06.sample
+Completed load for: 'res://audio/sfx/foley/footstep_wood.wav' remapped 'res://audio/sfx/foley/footstep_wood.wav' at thread -1
+Loading resource: res://assets/audio/sfx/kenney_impact/lever_stop.ogg remapped: res://assets/audio/sfx/kenney_impact/lever_stop.ogg
+Loading resource: res://.godot/imported/lever_stop.ogg-51ac4ef36a8a54aa14c2a2373d14ec5c.oggvorbisstr remapped: res://.godot/imported/lever_stop.ogg-51ac4ef36a8a54aa14c2a2373d14ec5c.oggvorbisstr
+Completed load for: 'res://assets/audio/sfx/kenney_impact/lever_stop.ogg' remapped 'res://assets/audio/sfx/kenney_impact/lever_stop.ogg' at thread -1
+Loading resource: res://assets/fonts/oldstandard/OldStandardTT-Regular.ttf remapped: res://assets/fonts/oldstandard/OldStandardTT-Regular.ttf
+Loading resource: res://.godot/imported/OldStandardTT-Regular.ttf-bd64887c725b27973cb4ee7a19e2c58b.fontdata remapped: res://.godot/imported/OldStandardTT-Regular.ttf-bd64887c725b27973cb4ee7a19e2c58b.fontdata
+Completed load for: 'res://assets/fonts/oldstandard/OldStandardTT-Regular.ttf' remapped 'res://assets/fonts/oldstandard/OldStandardTT-Regular.ttf' at thread -1
+Loading resource: res://assets/fonts/elias_working/elias_working.fnt remapped: res://assets/fonts/elias_working/elias_working.fnt
+Loading resource: res://.godot/imported/elias_working.fnt-1acb021ecc4ef1dd7ad6b602adefa886.fontdata remapped: res://.godot/imported/elias_working.fnt-1acb021ecc4ef1dd7ad6b602adefa886.fontdata
+Completed load for: 'res://assets/fonts/elias_working/elias_working.fnt' remapped 'res://assets/fonts/elias_working/elias_working.fnt' at thread -1
+Loading resource: res://materials/style_tests/textures/psx/form_night_copy.png remapped: res://materials/style_tests/textures/psx/form_night_copy.png
+Loading resource: res://.godot/imported/form_night_copy.png-fb67d8e06fc2247d6e77aa258fb3d6b1.ctex remapped: res://.godot/imported/form_night_copy.png-fb67d8e06fc2247d6e77aa258fb3d6b1.ctex
+Completed load for: 'res://materials/style_tests/textures/psx/form_night_copy.png' remapped 'res://materials/style_tests/textures/psx/form_night_copy.png' at thread -1
+Loading resource: res://assets/fonts/courierprime/CourierPrime-Regular.ttf remapped: res://assets/fonts/courierprime/CourierPrime-Regular.ttf
+Loading resource: res://.godot/imported/CourierPrime-Regular.ttf-e5433ce5b2da5c6bb7bf03db3f1fdb88.fontdata remapped: res://.godot/imported/CourierPrime-Regular.ttf-e5433ce5b2da5c6bb7bf03db3f1fdb88.fontdata
+Completed load for: 'res://assets/fonts/courierprime/CourierPrime-Regular.ttf' remapped 'res://assets/fonts/courierprime/CourierPrime-Regular.ttf' at thread -1
+Loading resource: res://audio/sfx/ambience/room_tone.wav remapped: res://audio/sfx/ambience/room_tone.wav
+Loading resource: res://.godot/imported/room_tone.wav-7b2febae606c18ba02803c903f588850.sample remapped: res://.godot/imported/room_tone.wav-7b2febae606c18ba02803c903f588850.sample
+Completed load for: 'res://audio/sfx/ambience/room_tone.wav' remapped 'res://audio/sfx/ambience/room_tone.wav' at thread -1
+Loading resource: res://audio/sfx/ambience/wind_window.wav remapped: res://audio/sfx/ambience/wind_window.wav
+Loading resource: res://.godot/imported/wind_window.wav-9af87f363d3bda5a8cadf77ca3bfc4dd.sample remapped: res://.godot/imported/wind_window.wav-9af87f363d3bda5a8cadf77ca3bfc4dd.sample
+Completed load for: 'res://audio/sfx/ambience/wind_window.wav' remapped 'res://audio/sfx/ambience/wind_window.wav' at thread -1
+Loading resource: res://audio/sfx/ambience/stove_fire.wav remapped: res://audio/sfx/ambience/stove_fire.wav
+Loading resource: res://.godot/imported/stove_fire.wav-4f3c43c3f41f77e3131cfad940e1f241.sample remapped: res://.godot/imported/stove_fire.wav-4f3c43c3f41f77e3131cfad940e1f241.sample
+Completed load for: 'res://audio/sfx/ambience/stove_fire.wav' remapped 'res://audio/sfx/ambience/stove_fire.wav' at thread -1
+Loading resource: res://audio/sfx/foley/clock_tick.wav remapped: res://audio/sfx/foley/clock_tick.wav
+Loading resource: res://.godot/imported/clock_tick.wav-7e064b0f22353e1230f3f6e95db851a3.sample remapped: res://.godot/imported/clock_tick.wav-7e064b0f22353e1230f3f6e95db851a3.sample
+Completed load for: 'res://audio/sfx/foley/clock_tick.wav' remapped 'res://audio/sfx/foley/clock_tick.wav' at thread -1
+Completed load for: 'res://tests/office/shift_director_test.gd' remapped 'res://tests/office/shift_director_test.gd' at thread -1
+SceneTreeFTI: traversal method DEFAULT
+Loaded system CA certificates
+--- Starting Shift Director Test Suite ---
+Loading resource: res://scenes/office/m1_office.tscn remapped: res://scenes/office/m1_office.tscn
+Loading resource: res://materials/style_tests/floor_wood_planks.tres remapped: res://materials/style_tests/floor_wood_planks.tres
+Loading resource: res://materials/style_tests/textures/psx/psx_floor_boards_128.png remapped: res://materials/style_tests/textures/psx/psx_floor_boards_128.png
+Loading resource: res://.godot/imported/psx_floor_boards_128.png-a550b7ca1ff1853d21bcb8cbedda68b3.s3tc.ctex remapped: res://.godot/imported/psx_floor_boards_128.png-a550b7ca1ff1853d21bcb8cbedda68b3.s3tc.ctex
+Completed load for: 'res://materials/style_tests/textures/psx/psx_floor_boards_128.png' remapped 'res://materials/style_tests/textures/psx/psx_floor_boards_128.png' at thread -1
+Completed load for: 'res://materials/style_tests/floor_wood_planks.tres' remapped 'res://materials/style_tests/floor_wood_planks.tres' at thread -1
+Loading resource: res://materials/style_tests/m1_wall_plaster.tres remapped: res://materials/style_tests/m1_wall_plaster.tres
+Loading resource: res://assets/textures/worn_warmth/wallpaper_128_v1.png remapped: res://assets/textures/worn_warmth/wallpaper_128_v1.png
+Loading resource: res://.godot/imported/wallpaper_128_v1.png-3446309c1f632362eee134b0ab81b279.ctex remapped: res://.godot/imported/wallpaper_128_v1.png-3446309c1f632362eee134b0ab81b279.ctex
+Completed load for: 'res://assets/textures/worn_warmth/wallpaper_128_v1.png' remapped 'res://assets/textures/worn_warmth/wallpaper_128_v1.png' at thread -1
+Completed load for: 'res://materials/style_tests/m1_wall_plaster.tres' remapped 'res://materials/style_tests/m1_wall_plaster.tres' at thread -1
+Loading resource: res://materials/style_tests/m1_ceiling_plaster.tres remapped: res://materials/style_tests/m1_ceiling_plaster.tres
+Loading resource: res://materials/style_tests/textures/psx/psx_ceiling_boards_128.png remapped: res://materials/style_tests/textures/psx/psx_ceiling_boards_128.png
+Loading resource: res://.godot/imported/psx_ceiling_boards_128.png-31d66722513e051eeb977c84d84fcf83.s3tc.ctex remapped: res://.godot/imported/psx_ceiling_boards_128.png-31d66722513e051eeb977c84d84fcf83.s3tc.ctex
+Completed load for: 'res://materials/style_tests/textures/psx/psx_ceiling_boards_128.png' remapped 'res://materials/style_tests/textures/psx/psx_ceiling_boards_128.png' at thread -1
+Completed load for: 'res://materials/style_tests/m1_ceiling_plaster.tres' remapped 'res://materials/style_tests/m1_ceiling_plaster.tres' at thread -1
+Loading resource: res://materials/style_tests/timber_trim.tres remapped: res://materials/style_tests/timber_trim.tres
+Loading resource: res://materials/style_tests/textures/weathered_brown_planks_diff.png remapped: res://materials/style_tests/textures/weathered_brown_planks_diff.png
+Loading resource: res://.godot/imported/weathered_brown_planks_diff.png-21694d3bf2f427ad7b285c3d54d6f9dd.s3tc.ctex remapped: res://.godot/imported/weathered_brown_planks_diff.png-21694d3bf2f427ad7b285c3d54d6f9dd.s3tc.ctex
+Completed load for: 'res://materials/style_tests/textures/weathered_brown_planks_diff.png' remapped 'res://materials/style_tests/textures/weathered_brown_planks_diff.png' at thread -1
+Completed load for: 'res://materials/style_tests/timber_trim.tres' remapped 'res://materials/style_tests/timber_trim.tres' at thread -1
+Loading resource: res://materials/style_tests/m1_night_exterior.tres remapped: res://materials/style_tests/m1_night_exterior.tres
+Loading resource: res://materials/style_tests/textures/psx/psx_window_night_64.png remapped: res://materials/style_tests/textures/psx/psx_window_night_64.png
+Loading resource: res://.godot/imported/psx_window_night_64.png-ad7d36c18a9fd8eed1915044ef730d1c.s3tc.ctex remapped: res://.godot/imported/psx_window_night_64.png-ad7d36c18a9fd8eed1915044ef730d1c.s3tc.ctex
+Completed load for: 'res://materials/style_tests/textures/psx/psx_window_night_64.png' remapped 'res://materials/style_tests/textures/psx/psx_window_night_64.png' at thread -1
+Completed load for: 'res://materials/style_tests/m1_night_exterior.tres' remapped 'res://materials/style_tests/m1_night_exterior.tres' at thread -1
+Loading resource: res://materials/style_tests/m1_wainscot_wood.tres remapped: res://materials/style_tests/m1_wainscot_wood.tres
+Loading resource: res://assets/textures/worn_warmth/wood_128_v1.png remapped: res://assets/textures/worn_warmth/wood_128_v1.png
+Loading resource: res://.godot/imported/wood_128_v1.png-26da1db51b974d7f6c5c27391e337430.ctex remapped: res://.godot/imported/wood_128_v1.png-26da1db51b974d7f6c5c27391e337430.ctex
+Completed load for: 'res://assets/textures/worn_warmth/wood_128_v1.png' remapped 'res://assets/textures/worn_warmth/wood_128_v1.png' at thread -1
+Completed load for: 'res://materials/style_tests/m1_wainscot_wood.tres' remapped 'res://materials/style_tests/m1_wainscot_wood.tres' at thread -1
+Loading resource: res://scenes/style_tests/props/window_north.tscn remapped: res://scenes/style_tests/props/window_north.tscn
+Loading resource: res://materials/style_tests/window_exterior_glass.tres remapped: res://materials/style_tests/window_exterior_glass.tres
+Completed load for: 'res://materials/style_tests/window_exterior_glass.tres' remapped 'res://materials/style_tests/window_exterior_glass.tres' at thread -1
+Loading resource: res://materials/style_tests/desk_wood.tres remapped: res://materials/style_tests/desk_wood.tres
+Completed load for: 'res://materials/style_tests/desk_wood.tres' remapped 'res://materials/style_tests/desk_wood.tres' at thread -1
+Completed load for: 'res://scenes/style_tests/props/window_north.tscn' remapped 'res://scenes/style_tests/props/window_north.tscn' at thread -1
+Loading resource: res://scenes/style_tests/props/door_south.tscn remapped: res://scenes/style_tests/props/door_south.tscn
+Loading resource: res://materials/style_tests/metal_brass_aged.tres remapped: res://materials/style_tests/metal_brass_aged.tres
+Loading resource: res://materials/style_tests/textures/psx/psx_brass_32.png remapped: res://materials/style_tests/textures/psx/psx_brass_32.png
+Loading resource: res://.godot/imported/psx_brass_32.png-e0b2de26db8729e22bb068fe5d956b60.s3tc.ctex remapped: res://.godot/imported/psx_brass_32.png-e0b2de26db8729e22bb068fe5d956b60.s3tc.ctex
+Completed load for: 'res://materials/style_tests/textures/psx/psx_brass_32.png' remapped 'res://materials/style_tests/textures/psx/psx_brass_32.png' at thread -1
+Completed load for: 'res://materials/style_tests/metal_brass_aged.tres' remapped 'res://materials/style_tests/metal_brass_aged.tres' at thread -1
+Loading resource: res://materials/style_tests/metal_oxidized.tres remapped: res://materials/style_tests/metal_oxidized.tres
+Loading resource: res://materials/style_tests/textures/psx/psx_aged_metal_64.png remapped: res://materials/style_tests/textures/psx/psx_aged_metal_64.png
+Loading resource: res://.godot/imported/psx_aged_metal_64.png-30ab7e91182e1f8e54b8837f68c3b80a.s3tc.ctex remapped: res://.godot/imported/psx_aged_metal_64.png-30ab7e91182e1f8e54b8837f68c3b80a.s3tc.ctex
+Completed load for: 'res://materials/style_tests/textures/psx/psx_aged_metal_64.png' remapped 'res://materials/style_tests/textures/psx/psx_aged_metal_64.png' at thread -1
+Completed load for: 'res://materials/style_tests/metal_oxidized.tres' remapped 'res://materials/style_tests/metal_oxidized.tres' at thread -1
+Completed load for: 'res://scenes/style_tests/props/door_south.tscn' remapped 'res://scenes/style_tests/props/door_south.tscn' at thread -1
+Loading resource: res://scenes/style_tests/props/desk_setup.tscn remapped: res://scenes/style_tests/props/desk_setup.tscn
+Loading resource: res://scenes/style_tests/props/oil_lamp_lowpoly.tscn remapped: res://scenes/style_tests/props/oil_lamp_lowpoly.tscn
+Loading resource: res://materials/style_tests/lamp_flame_glow.tres remapped: res://materials/style_tests/lamp_flame_glow.tres
+Completed load for: 'res://materials/style_tests/lamp_flame_glow.tres' remapped 'res://materials/style_tests/lamp_flame_glow.tres' at thread -1
+Loading resource: res://materials/style_tests/lamp_glass.tres remapped: res://materials/style_tests/lamp_glass.tres
+Completed load for: 'res://materials/style_tests/lamp_glass.tres' remapped 'res://materials/style_tests/lamp_glass.tres' at thread -1
+Loading resource: res://assets/models/office/chimney.obj remapped: res://assets/models/office/chimney.obj
+Loading resource: res://.godot/imported/chimney.obj-a8b712c12e84e37941d17e6cfb2170cb.mesh remapped: res://.godot/imported/chimney.obj-a8b712c12e84e37941d17e6cfb2170cb.mesh
+Completed load for: 'res://assets/models/office/chimney.obj' remapped 'res://assets/models/office/chimney.obj' at thread -1
+Completed load for: 'res://scenes/style_tests/props/oil_lamp_lowpoly.tscn' remapped 'res://scenes/style_tests/props/oil_lamp_lowpoly.tscn' at thread -1
+Loading resource: res://materials/style_tests/paper_log.tres remapped: res://materials/style_tests/paper_log.tres
+Loading resource: res://assets/textures/worn_warmth/paper_128_v1.png remapped: res://assets/textures/worn_warmth/paper_128_v1.png
+Loading resource: res://.godot/imported/paper_128_v1.png-2c6dd5a2e33f72434694c2910871a3fc.ctex remapped: res://.godot/imported/paper_128_v1.png-2c6dd5a2e33f72434694c2910871a3fc.ctex
+Completed load for: 'res://assets/textures/worn_warmth/paper_128_v1.png' remapped 'res://assets/textures/worn_warmth/paper_128_v1.png' at thread -1
+Completed load for: 'res://materials/style_tests/paper_log.tres' remapped 'res://materials/style_tests/paper_log.tres' at thread -1
+Completed load for: 'res://scenes/style_tests/props/desk_setup.tscn' remapped 'res://scenes/style_tests/props/desk_setup.tscn' at thread -1
+Loading resource: res://scenes/style_tests/props/psx_chair.tscn remapped: res://scenes/style_tests/props/psx_chair.tscn
+Loading resource: res://materials/style_tests/routing_slate.tres remapped: res://materials/style_tests/routing_slate.tres
+Loading resource: res://materials/style_tests/textures/psx/psx_slate_board_128.png remapped: res://materials/style_tests/textures/psx/psx_slate_board_128.png
+Loading resource: res://.godot/imported/psx_slate_board_128.png-f9d1f2eae39aa6476db285c83872a013.s3tc.ctex remapped: res://.godot/imported/psx_slate_board_128.png-f9d1f2eae39aa6476db285c83872a013.s3tc.ctex
+Completed load for: 'res://materials/style_tests/textures/psx/psx_slate_board_128.png' remapped 'res://materials/style_tests/textures/psx/psx_slate_board_128.png' at thread -1
+Completed load for: 'res://materials/style_tests/routing_slate.tres' remapped 'res://materials/style_tests/routing_slate.tres' at thread -1
+Completed load for: 'res://scenes/style_tests/props/psx_chair.tscn' remapped 'res://scenes/style_tests/props/psx_chair.tscn' at thread -1
+Loading resource: res://scenes/style_tests/props/storage_cabinet.tscn remapped: res://scenes/style_tests/props/storage_cabinet.tscn
+Completed load for: 'res://scenes/style_tests/props/storage_cabinet.tscn' remapped 'res://scenes/style_tests/props/storage_cabinet.tscn' at thread -1
+Loading resource: res://scenes/style_tests/props/corner_stove.tscn remapped: res://scenes/style_tests/props/corner_stove.tscn
+Completed load for: 'res://scenes/style_tests/props/corner_stove.tscn' remapped 'res://scenes/style_tests/props/corner_stove.tscn' at thread -1
+Loading resource: res://scenes/style_tests/props/psx_bookcase.tscn remapped: res://scenes/style_tests/props/psx_bookcase.tscn
+Completed load for: 'res://scenes/style_tests/props/psx_bookcase.tscn' remapped 'res://scenes/style_tests/props/psx_bookcase.tscn' at thread -1
+Loading resource: res://scenes/telegraph/telegraph_station.tscn remapped: res://scenes/telegraph/telegraph_station.tscn
+Loading resource: res://scenes/telegraph/sounder.tscn remapped: res://scenes/telegraph/sounder.tscn
+Loading resource: res://assets/models/instruments_v1/sounder_static.res remapped: res://assets/models/instruments_v1/sounder_static.res
+Loading resource: res://assets/textures/instruments_v1/instrument_atlas_256.png remapped: res://assets/textures/instruments_v1/instrument_atlas_256.png
+Loading resource: res://.godot/imported/instrument_atlas_256.png-21c09b0d8393675493bc554d8e3d9937.ctex remapped: res://.godot/imported/instrument_atlas_256.png-21c09b0d8393675493bc554d8e3d9937.ctex
+Completed load for: 'res://assets/textures/instruments_v1/instrument_atlas_256.png' remapped 'res://assets/textures/instruments_v1/instrument_atlas_256.png' at thread -1
+Completed load for: 'res://assets/models/instruments_v1/sounder_static.res' remapped 'res://assets/models/instruments_v1/sounder_static.res' at thread -1
+Loading resource: res://assets/models/instruments_v1/sounder_armature.res remapped: res://assets/models/instruments_v1/sounder_armature.res
+Completed load for: 'res://assets/models/instruments_v1/sounder_armature.res' remapped 'res://assets/models/instruments_v1/sounder_armature.res' at thread -1
+Completed load for: 'res://scenes/telegraph/sounder.tscn' remapped 'res://scenes/telegraph/sounder.tscn' at thread -1
+Loading resource: res://scenes/telegraph/telegraph_key.tscn remapped: res://scenes/telegraph/telegraph_key.tscn
+Loading resource: res://assets/models/instruments_v1/key_static.res remapped: res://assets/models/instruments_v1/key_static.res
+Completed load for: 'res://assets/models/instruments_v1/key_static.res' remapped 'res://assets/models/instruments_v1/key_static.res' at thread -1
+Loading resource: res://assets/models/instruments_v1/key_lever.res remapped: res://assets/models/instruments_v1/key_lever.res
+Completed load for: 'res://assets/models/instruments_v1/key_lever.res' remapped 'res://assets/models/instruments_v1/key_lever.res' at thread -1
+Completed load for: 'res://scenes/telegraph/telegraph_key.tscn' remapped 'res://scenes/telegraph/telegraph_key.tscn' at thread -1
+Completed load for: 'res://scenes/telegraph/telegraph_station.tscn' remapped 'res://scenes/telegraph/telegraph_station.tscn' at thread -1
+Loading resource: res://scenes/telegraph/transcript_paper.tscn remapped: res://scenes/telegraph/transcript_paper.tscn
+Loading resource: res://assets/models/operator/hand_authored_v1.res remapped: res://assets/models/operator/hand_authored_v1.res
+Completed load for: 'res://assets/models/operator/hand_authored_v1.res' remapped 'res://assets/models/operator/hand_authored_v1.res' at thread -1
+Loading resource: res://materials/style_tests/form_night_copy.tres remapped: res://materials/style_tests/form_night_copy.tres
+Completed load for: 'res://materials/style_tests/form_night_copy.tres' remapped 'res://materials/style_tests/form_night_copy.tres' at thread -1
+Loading resource: res://assets/models/operator/forearm_v3.res remapped: res://assets/models/operator/forearm_v3.res
+Completed load for: 'res://assets/models/operator/forearm_v3.res' remapped 'res://assets/models/operator/forearm_v3.res' at thread -1
+Loading resource: res://assets/models/operator/cuff_v3.res remapped: res://assets/models/operator/cuff_v3.res
+Completed load for: 'res://assets/models/operator/cuff_v3.res' remapped 'res://assets/models/operator/cuff_v3.res' at thread -1
+Loading resource: res://assets/models/operator/upper_arm_v1.res remapped: res://assets/models/operator/upper_arm_v1.res
+Completed load for: 'res://assets/models/operator/upper_arm_v1.res' remapped 'res://assets/models/operator/upper_arm_v1.res' at thread -1
+Completed load for: 'res://scenes/telegraph/transcript_paper.tscn' remapped 'res://scenes/telegraph/transcript_paper.tscn' at thread -1
+Loading resource: res://scenes/telegraph/morse_reference_card.tscn remapped: res://scenes/telegraph/morse_reference_card.tscn
+Loading resource: res://materials/style_tests/card_morse_stock.tres remapped: res://materials/style_tests/card_morse_stock.tres
+Loading resource: res://materials/style_tests/textures/psx/card_morse_stock.png remapped: res://materials/style_tests/textures/psx/card_morse_stock.png
+Loading resource: res://.godot/imported/card_morse_stock.png-0ef1da6c3b5f3887ef4841f0fb19ee02.ctex remapped: res://.godot/imported/card_morse_stock.png-0ef1da6c3b5f3887ef4841f0fb19ee02.ctex
+Completed load for: 'res://materials/style_tests/textures/psx/card_morse_stock.png' remapped 'res://materials/style_tests/textures/psx/card_morse_stock.png' at thread -1
+Completed load for: 'res://materials/style_tests/card_morse_stock.tres' remapped 'res://materials/style_tests/card_morse_stock.tres' at thread -1
+Completed load for: 'res://scenes/telegraph/morse_reference_card.tscn' remapped 'res://scenes/telegraph/morse_reference_card.tscn' at thread -1
+Loading resource: res://scenes/telegraph/dispatch_ledger.tscn remapped: res://scenes/telegraph/dispatch_ledger.tscn
+Completed load for: 'res://scenes/telegraph/dispatch_ledger.tscn' remapped 'res://scenes/telegraph/dispatch_ledger.tscn' at thread -1
+Loading resource: res://scenes/telegraph/routing_board.tscn remapped: res://scenes/telegraph/routing_board.tscn
+Completed load for: 'res://scenes/telegraph/routing_board.tscn' remapped 'res://scenes/telegraph/routing_board.tscn' at thread -1
+Loading resource: res://scenes/telegraph/copy_commit_desk.tscn remapped: res://scenes/telegraph/copy_commit_desk.tscn
+Completed load for: 'res://scenes/telegraph/copy_commit_desk.tscn' remapped 'res://scenes/telegraph/copy_commit_desk.tscn' at thread -1
+Loading resource: res://scenes/office/door_attention_source.tscn remapped: res://scenes/office/door_attention_source.tscn
+Completed load for: 'res://scenes/office/door_attention_source.tscn' remapped 'res://scenes/office/door_attention_source.tscn' at thread -1
+Loading resource: res://scenes/office/window_observation_event.tscn remapped: res://scenes/office/window_observation_event.tscn
+Completed load for: 'res://scenes/office/window_observation_event.tscn' remapped 'res://scenes/office/window_observation_event.tscn' at thread -1
+Loading resource: res://scenes/player/player.tscn remapped: res://scenes/player/player.tscn
+Completed load for: 'res://scenes/player/player.tscn' remapped 'res://scenes/player/player.tscn' at thread -1
+Loading resource: res://scenes/ui/document_viewer.tscn remapped: res://scenes/ui/document_viewer.tscn
+Loading resource: res://materials/style_tests/textures/paper_worn_diff.png remapped: res://materials/style_tests/textures/paper_worn_diff.png
+Loading resource: res://.godot/imported/paper_worn_diff.png-bf994a5bbaff5705e234bed20fa825dc.s3tc.ctex remapped: res://.godot/imported/paper_worn_diff.png-bf994a5bbaff5705e234bed20fa825dc.s3tc.ctex
+Completed load for: 'res://materials/style_tests/textures/paper_worn_diff.png' remapped 'res://materials/style_tests/textures/paper_worn_diff.png' at thread -1
+Completed load for: 'res://scenes/ui/document_viewer.tscn' remapped 'res://scenes/ui/document_viewer.tscn' at thread -1
+Loading resource: res://scenes/debug/debug_inspector.tscn remapped: res://scenes/debug/debug_inspector.tscn
+Loading resource: res://scripts/debug/debug_inspector.gd remapped: res://scripts/debug/debug_inspector.gd
+Completed load for: 'res://scripts/debug/debug_inspector.gd' remapped 'res://scripts/debug/debug_inspector.gd' at thread -1
+Completed load for: 'res://scenes/debug/debug_inspector.tscn' remapped 'res://scenes/debug/debug_inspector.tscn' at thread -1
+Loading resource: res://scenes/style_tests/props/office_storytelling_props.tscn remapped: res://scenes/style_tests/props/office_storytelling_props.tscn
+Loading resource: res://materials/style_tests/clock_dial.tres remapped: res://materials/style_tests/clock_dial.tres
+Completed load for: 'res://materials/style_tests/clock_dial.tres' remapped 'res://materials/style_tests/clock_dial.tres' at thread -1
+Loading resource: res://materials/style_tests/clock_glass.tres remapped: res://materials/style_tests/clock_glass.tres
+Completed load for: 'res://materials/style_tests/clock_glass.tres' remapped 'res://materials/style_tests/clock_glass.tres' at thread -1
+Completed load for: 'res://scenes/style_tests/props/office_storytelling_props.tscn' remapped 'res://scenes/style_tests/props/office_storytelling_props.tscn' at thread -1
+Loading resource: res://scenes/ui/shift_end_card.tscn remapped: res://scenes/ui/shift_end_card.tscn
+Completed load for: 'res://scenes/ui/shift_end_card.tscn' remapped 'res://scenes/ui/shift_end_card.tscn' at thread -1
+Loading resource: res://materials/shaders/psx_grade.gdshader remapped: res://materials/shaders/psx_grade.gdshader
+Completed load for: 'res://materials/shaders/psx_grade.gdshader' remapped 'res://materials/shaders/psx_grade.gdshader' at thread -1
+Loading resource: res://scenes/props/m1/ph_chair.tscn remapped: res://scenes/props/m1/ph_chair.tscn
+Loading resource: res://scripts/props/psx_asset_adapter.gd remapped: res://scripts/props/psx_asset_adapter.gd
+Completed load for: 'res://scripts/props/psx_asset_adapter.gd' remapped 'res://scripts/props/psx_asset_adapter.gd' at thread -1
+Loading resource: res://assets/m1_adapted/ph_chair/painted_wooden_chair_01.gltf remapped: res://assets/m1_adapted/ph_chair/painted_wooden_chair_01.gltf
+Loading resource: res://.godot/imported/painted_wooden_chair_01.gltf-f544bb5a4f40dcb65691418119428fff.scn remapped: res://.godot/imported/painted_wooden_chair_01.gltf-f544bb5a4f40dcb65691418119428fff.scn
+Loading resource: res://assets/m1_adapted/ph_chair/textures/painted_wooden_chair_01_diff_1k.jpg remapped: res://assets/m1_adapted/ph_chair/textures/painted_wooden_chair_01_diff_1k.jpg
+Loading resource: res://.godot/imported/painted_wooden_chair_01_diff_1k.jpg-fbf5a6f8a97dc6a675660278264b0176.ctex remapped: res://.godot/imported/painted_wooden_chair_01_diff_1k.jpg-fbf5a6f8a97dc6a675660278264b0176.ctex
+Completed load for: 'res://assets/m1_adapted/ph_chair/textures/painted_wooden_chair_01_diff_1k.jpg' remapped 'res://assets/m1_adapted/ph_chair/textures/painted_wooden_chair_01_diff_1k.jpg' at thread -1
+Loading resource: res://assets/m1_adapted/ph_chair/textures/painted_wooden_chair_01_arm_1k.jpg remapped: res://assets/m1_adapted/ph_chair/textures/painted_wooden_chair_01_arm_1k.jpg
+Loading resource: res://.godot/imported/painted_wooden_chair_01_arm_1k.jpg-e544512099192ba5139bd3cabb020a8a.ctex remapped: res://.godot/imported/painted_wooden_chair_01_arm_1k.jpg-e544512099192ba5139bd3cabb020a8a.ctex
+Completed load for: 'res://assets/m1_adapted/ph_chair/textures/painted_wooden_chair_01_arm_1k.jpg' remapped 'res://assets/m1_adapted/ph_chair/textures/painted_wooden_chair_01_arm_1k.jpg' at thread -1
+Loading resource: res://assets/m1_adapted/ph_chair/textures/painted_wooden_chair_01_nor_gl_1k.jpg remapped: res://assets/m1_adapted/ph_chair/textures/painted_wooden_chair_01_nor_gl_1k.jpg
+Loading resource: res://.godot/imported/painted_wooden_chair_01_nor_gl_1k.jpg-813771f528f4e849abba2631ab152f66.ctex remapped: res://.godot/imported/painted_wooden_chair_01_nor_gl_1k.jpg-813771f528f4e849abba2631ab152f66.ctex
+Completed load for: 'res://assets/m1_adapted/ph_chair/textures/painted_wooden_chair_01_nor_gl_1k.jpg' remapped 'res://assets/m1_adapted/ph_chair/textures/painted_wooden_chair_01_nor_gl_1k.jpg' at thread -1
+Completed load for: 'res://assets/m1_adapted/ph_chair/painted_wooden_chair_01.gltf' remapped 'res://assets/m1_adapted/ph_chair/painted_wooden_chair_01.gltf' at thread -1
+Completed load for: 'res://scenes/props/m1/ph_chair.tscn' remapped 'res://scenes/props/m1/ph_chair.tscn' at thread -1
+Loading resource: res://scenes/props/m1/ph_cabinet.tscn remapped: res://scenes/props/m1/ph_cabinet.tscn
+Loading resource: res://assets/m1_adapted/ph_cabinet/painted_wooden_cabinet_02.gltf remapped: res://assets/m1_adapted/ph_cabinet/painted_wooden_cabinet_02.gltf
+Loading resource: res://.godot/imported/painted_wooden_cabinet_02.gltf-d5a3c2ca4787a012aa9a49bf735feec3.scn remapped: res://.godot/imported/painted_wooden_cabinet_02.gltf-d5a3c2ca4787a012aa9a49bf735feec3.scn
+Loading resource: res://assets/m1_adapted/ph_cabinet/textures/painted_wooden_cabinet_02_diff_1k.jpg remapped: res://assets/m1_adapted/ph_cabinet/textures/painted_wooden_cabinet_02_diff_1k.jpg
+Loading resource: res://.godot/imported/painted_wooden_cabinet_02_diff_1k.jpg-c85458683f7494d9989152e85ef91dc5.ctex remapped: res://.godot/imported/painted_wooden_cabinet_02_diff_1k.jpg-c85458683f7494d9989152e85ef91dc5.ctex
+Completed load for: 'res://assets/m1_adapted/ph_cabinet/textures/painted_wooden_cabinet_02_diff_1k.jpg' remapped 'res://assets/m1_adapted/ph_cabinet/textures/painted_wooden_cabinet_02_diff_1k.jpg' at thread -1
+Loading resource: res://assets/m1_adapted/ph_cabinet/textures/painted_wooden_cabinet_02_arm_1k.jpg remapped: res://assets/m1_adapted/ph_cabinet/textures/painted_wooden_cabinet_02_arm_1k.jpg
+Loading resource: res://.godot/imported/painted_wooden_cabinet_02_arm_1k.jpg-c1fd549593f5c581dd39981a03bf33d5.ctex remapped: res://.godot/imported/painted_wooden_cabinet_02_arm_1k.jpg-c1fd549593f5c581dd39981a03bf33d5.ctex
+Completed load for: 'res://assets/m1_adapted/ph_cabinet/textures/painted_wooden_cabinet_02_arm_1k.jpg' remapped 'res://assets/m1_adapted/ph_cabinet/textures/painted_wooden_cabinet_02_arm_1k.jpg' at thread -1
+Loading resource: res://assets/m1_adapted/ph_cabinet/textures/painted_wooden_cabinet_02_nor_gl_1k.jpg remapped: res://assets/m1_adapted/ph_cabinet/textures/painted_wooden_cabinet_02_nor_gl_1k.jpg
+Loading resource: res://.godot/imported/painted_wooden_cabinet_02_nor_gl_1k.jpg-a912943ce1e34d903c88317662e93498.ctex remapped: res://.godot/imported/painted_wooden_cabinet_02_nor_gl_1k.jpg-a912943ce1e34d903c88317662e93498.ctex
+Completed load for: 'res://assets/m1_adapted/ph_cabinet/textures/painted_wooden_cabinet_02_nor_gl_1k.jpg' remapped 'res://assets/m1_adapted/ph_cabinet/textures/painted_wooden_cabinet_02_nor_gl_1k.jpg' at thread -1
+Completed load for: 'res://assets/m1_adapted/ph_cabinet/painted_wooden_cabinet_02.gltf' remapped 'res://assets/m1_adapted/ph_cabinet/painted_wooden_cabinet_02.gltf' at thread -1
+Completed load for: 'res://scenes/props/m1/ph_cabinet.tscn' remapped 'res://scenes/props/m1/ph_cabinet.tscn' at thread -1
+Loading resource: res://scenes/props/m1/ph_ledger_volumes.tscn remapped: res://scenes/props/m1/ph_ledger_volumes.tscn
+Loading resource: res://scripts/props/ph_ledger_volumes.gd remapped: res://scripts/props/ph_ledger_volumes.gd
+Completed load for: 'res://scripts/props/ph_ledger_volumes.gd' remapped 'res://scripts/props/ph_ledger_volumes.gd' at thread -1
+Completed load for: 'res://scenes/props/m1/ph_ledger_volumes.tscn' remapped 'res://scenes/props/m1/ph_ledger_volumes.tscn' at thread -1
+Loading resource: res://scenes/props/m1/ph_table.tscn remapped: res://scenes/props/m1/ph_table.tscn
+Loading resource: res://assets/m1_adapted/ph_table/wooden_table_02.gltf remapped: res://assets/m1_adapted/ph_table/wooden_table_02.gltf
+Loading resource: res://.godot/imported/wooden_table_02.gltf-fa61817fa60713e6596180f25fed7ee2.scn remapped: res://.godot/imported/wooden_table_02.gltf-fa61817fa60713e6596180f25fed7ee2.scn
+Loading resource: res://assets/m1_adapted/ph_table/textures/wooden_table_02_diff_1k.jpg remapped: res://assets/m1_adapted/ph_table/textures/wooden_table_02_diff_1k.jpg
+Loading resource: res://.godot/imported/wooden_table_02_diff_1k.jpg-9292d42b8ebe7d6dd19ab30e4241c4a4.ctex remapped: res://.godot/imported/wooden_table_02_diff_1k.jpg-9292d42b8ebe7d6dd19ab30e4241c4a4.ctex
+Completed load for: 'res://assets/m1_adapted/ph_table/textures/wooden_table_02_diff_1k.jpg' remapped 'res://assets/m1_adapted/ph_table/textures/wooden_table_02_diff_1k.jpg' at thread -1
+Loading resource: res://assets/m1_adapted/ph_table/textures/wooden_table_02_arm_1k.jpg remapped: res://assets/m1_adapted/ph_table/textures/wooden_table_02_arm_1k.jpg
+Loading resource: res://.godot/imported/wooden_table_02_arm_1k.jpg-14740f727fc9a36e9cf738ae75e493d5.ctex remapped: res://.godot/imported/wooden_table_02_arm_1k.jpg-14740f727fc9a36e9cf738ae75e493d5.ctex
+Completed load for: 'res://assets/m1_adapted/ph_table/textures/wooden_table_02_arm_1k.jpg' remapped 'res://assets/m1_adapted/ph_table/textures/wooden_table_02_arm_1k.jpg' at thread -1
+Loading resource: res://assets/m1_adapted/ph_table/textures/wooden_table_02_nor_gl_1k.jpg remapped: res://assets/m1_adapted/ph_table/textures/wooden_table_02_nor_gl_1k.jpg
+Loading resource: res://.godot/imported/wooden_table_02_nor_gl_1k.jpg-aa8df4f097bc9d630317719e23b83dda.ctex remapped: res://.godot/imported/wooden_table_02_nor_gl_1k.jpg-aa8df4f097bc9d630317719e23b83dda.ctex
+Completed load for: 'res://assets/m1_adapted/ph_table/textures/wooden_table_02_nor_gl_1k.jpg' remapped 'res://assets/m1_adapted/ph_table/textures/wooden_table_02_nor_gl_1k.jpg' at thread -1
+Completed load for: 'res://assets/m1_adapted/ph_table/wooden_table_02.gltf' remapped 'res://assets/m1_adapted/ph_table/wooden_table_02.gltf' at thread -1
+Completed load for: 'res://scenes/props/m1/ph_table.tscn' remapped 'res://scenes/props/m1/ph_table.tscn' at thread -1
+Loading resource: res://scripts/office/unease_director.gd remapped: res://scripts/office/unease_director.gd
+Loading resource: res://audio/sfx/foley/floor_creak_1.wav remapped: res://audio/sfx/foley/floor_creak_1.wav
+Loading resource: res://.godot/imported/floor_creak_1.wav-7acf0d72acd60b9c6475441b8d710229.sample remapped: res://.godot/imported/floor_creak_1.wav-7acf0d72acd60b9c6475441b8d710229.sample
+Completed load for: 'res://audio/sfx/foley/floor_creak_1.wav' remapped 'res://audio/sfx/foley/floor_creak_1.wav' at thread -1
+Loading resource: res://audio/sfx/foley/floor_creak_2.wav remapped: res://audio/sfx/foley/floor_creak_2.wav
+Loading resource: res://.godot/imported/floor_creak_2.wav-a00b30b4ff599cf62ee62312a7440e83.sample remapped: res://.godot/imported/floor_creak_2.wav-a00b30b4ff599cf62ee62312a7440e83.sample
+Completed load for: 'res://audio/sfx/foley/floor_creak_2.wav' remapped 'res://audio/sfx/foley/floor_creak_2.wav' at thread -1
+Loading resource: res://audio/sfx/foley/floor_creak_3.wav remapped: res://audio/sfx/foley/floor_creak_3.wav
+Loading resource: res://.godot/imported/floor_creak_3.wav-9b8a7f9bcbce9310e26678836b39c9c3.sample remapped: res://.godot/imported/floor_creak_3.wav-9b8a7f9bcbce9310e26678836b39c9c3.sample
+Completed load for: 'res://audio/sfx/foley/floor_creak_3.wav' remapped 'res://audio/sfx/foley/floor_creak_3.wav' at thread -1
+Completed load for: 'res://scripts/office/unease_director.gd' remapped 'res://scripts/office/unease_director.gd' at thread -1
+Loading resource: res://scenes/ui/pause_menu.tscn remapped: res://scenes/ui/pause_menu.tscn
+Loading resource: res://scripts/ui/readability_options.gd remapped: res://scripts/ui/readability_options.gd
+Completed load for: 'res://scripts/ui/readability_options.gd' remapped 'res://scripts/ui/readability_options.gd' at thread -1
+Completed load for: 'res://scenes/ui/pause_menu.tscn' remapped 'res://scenes/ui/pause_menu.tscn' at thread -1
+Loading resource: res://scenes/ui/intro_card.tscn remapped: res://scenes/ui/intro_card.tscn
+Loading resource: res://audio/music/temp/long_note_one.mp3 remapped: res://audio/music/temp/long_note_one.mp3
+Loading resource: res://.godot/imported/long_note_one.mp3-120163c309ea0de464b10b9e4711889a.mp3str remapped: res://.godot/imported/long_note_one.mp3-120163c309ea0de464b10b9e4711889a.mp3str
+Completed load for: 'res://audio/music/temp/long_note_one.mp3' remapped 'res://audio/music/temp/long_note_one.mp3' at thread -1
+Completed load for: 'res://scenes/ui/intro_card.tscn' remapped 'res://scenes/ui/intro_card.tscn' at thread -1
+Loading resource: res://scenes/office/dawn_evidence.tscn remapped: res://scenes/office/dawn_evidence.tscn
+Completed load for: 'res://scenes/office/dawn_evidence.tscn' remapped 'res://scenes/office/dawn_evidence.tscn' at thread -1
+Loading resource: res://scripts/audio/office_foley.gd remapped: res://scripts/audio/office_foley.gd
+Loading resource: res://audio/sfx/foley/paper_sheet.mp3 remapped: res://audio/sfx/foley/paper_sheet.mp3
+Loading resource: res://.godot/imported/paper_sheet.mp3-87dd98ca92db1c73c936fc8e644bb97c.mp3str remapped: res://.godot/imported/paper_sheet.mp3-87dd98ca92db1c73c936fc8e644bb97c.mp3str
+Completed load for: 'res://audio/sfx/foley/paper_sheet.mp3' remapped 'res://audio/sfx/foley/paper_sheet.mp3' at thread -1
+Loading resource: res://audio/sfx/foley/ink_stamp_cc0.ogg remapped: res://audio/sfx/foley/ink_stamp_cc0.ogg
+Loading resource: res://.godot/imported/ink_stamp_cc0.ogg-2b233bfa8f8011d6efc3acf4b7879266.oggvorbisstr remapped: res://.godot/imported/ink_stamp_cc0.ogg-2b233bfa8f8011d6efc3acf4b7879266.oggvorbisstr
+Completed load for: 'res://audio/sfx/foley/ink_stamp_cc0.ogg' remapped 'res://audio/sfx/foley/ink_stamp_cc0.ogg' at thread -1
+Loading resource: res://audio/sfx/foley/route_lever.wav remapped: res://audio/sfx/foley/route_lever.wav
+Loading resource: res://.godot/imported/route_lever.wav-fd904ac12faf843754766436c301ac9b.sample remapped: res://.godot/imported/route_lever.wav-fd904ac12faf843754766436c301ac9b.sample
+Completed load for: 'res://audio/sfx/foley/route_lever.wav' remapped 'res://audio/sfx/foley/route_lever.wav' at thread -1
+Loading resource: res://audio/sfx/foley/door_latch.wav remapped: res://audio/sfx/foley/door_latch.wav
+Loading resource: res://.godot/imported/door_latch.wav-24fb797c67def5e1d172d72e838ce61d.sample remapped: res://.godot/imported/door_latch.wav-24fb797c67def5e1d172d72e838ce61d.sample
+Completed load for: 'res://audio/sfx/foley/door_latch.wav' remapped 'res://audio/sfx/foley/door_latch.wav' at thread -1
+Loading resource: res://audio/sfx/foley/chair_settle_cc0.ogg remapped: res://audio/sfx/foley/chair_settle_cc0.ogg
+Loading resource: res://.godot/imported/chair_settle_cc0.ogg-fbfc57e71647f94587e0ac081b3bedb6.oggvorbisstr remapped: res://.godot/imported/chair_settle_cc0.ogg-fbfc57e71647f94587e0ac081b3bedb6.oggvorbisstr
+Completed load for: 'res://audio/sfx/foley/chair_settle_cc0.ogg' remapped 'res://audio/sfx/foley/chair_settle_cc0.ogg' at thread -1
+Loading resource: res://audio/sfx/foley/paper_turn.wav remapped: res://audio/sfx/foley/paper_turn.wav
+Loading resource: res://.godot/imported/paper_turn.wav-1f029a78df4291e5ace63b8881150c5b.sample remapped: res://.godot/imported/paper_turn.wav-1f029a78df4291e5ace63b8881150c5b.sample
+Completed load for: 'res://audio/sfx/foley/paper_turn.wav' remapped 'res://audio/sfx/foley/paper_turn.wav' at thread -1
+Loading resource: res://audio/sfx/foley/pen_scratch.wav remapped: res://audio/sfx/foley/pen_scratch.wav
+Loading resource: res://.godot/imported/pen_scratch.wav-aea91b5a03e5fc2101539aed64337aeb.sample remapped: res://.godot/imported/pen_scratch.wav-aea91b5a03e5fc2101539aed64337aeb.sample
+Completed load for: 'res://audio/sfx/foley/pen_scratch.wav' remapped 'res://audio/sfx/foley/pen_scratch.wav' at thread -1
+Loading resource: res://audio/sfx/foley/key_click.wav remapped: res://audio/sfx/foley/key_click.wav
+Loading resource: res://.godot/imported/key_click.wav-ff617e5e7b7f86e679bd4a98fb333997.sample remapped: res://.godot/imported/key_click.wav-ff617e5e7b7f86e679bd4a98fb333997.sample
+Completed load for: 'res://audio/sfx/foley/key_click.wav' remapped 'res://audio/sfx/foley/key_click.wav' at thread -1
+Loading resource: res://audio/sfx/foley/door_hinge.wav remapped: res://audio/sfx/foley/door_hinge.wav
+Loading resource: res://.godot/imported/door_hinge.wav-7989c0b270b52df1a6657289e25c4b78.sample remapped: res://.godot/imported/door_hinge.wav-7989c0b270b52df1a6657289e25c4b78.sample
+Completed load for: 'res://audio/sfx/foley/door_hinge.wav' remapped 'res://audio/sfx/foley/door_hinge.wav' at thread -1
+Loading resource: res://audio/sfx/foley/sheet_slide.wav remapped: res://audio/sfx/foley/sheet_slide.wav
+Loading resource: res://.godot/imported/sheet_slide.wav-eaaf60382e2e814f51bd7e545ab064cd.sample remapped: res://.godot/imported/sheet_slide.wav-eaaf60382e2e814f51bd7e545ab064cd.sample
+Completed load for: 'res://audio/sfx/foley/sheet_slide.wav' remapped 'res://audio/sfx/foley/sheet_slide.wav' at thread -1
+Loading resource: res://audio/sfx/foley/wick_turn.wav remapped: res://audio/sfx/foley/wick_turn.wav
+Loading resource: res://.godot/imported/wick_turn.wav-5a9acab658e8e807fb1cf3ecd3b8d307.sample remapped: res://.godot/imported/wick_turn.wav-5a9acab658e8e807fb1cf3ecd3b8d307.sample
+Completed load for: 'res://audio/sfx/foley/wick_turn.wav' remapped 'res://audio/sfx/foley/wick_turn.wav' at thread -1
+Completed load for: 'res://scripts/audio/office_foley.gd' remapped 'res://scripts/audio/office_foley.gd' at thread -1
+Loading resource: res://scenes/telegraph/tape_register.tscn remapped: res://scenes/telegraph/tape_register.tscn
+Loading resource: res://assets/models/instruments_v1/register_static.res remapped: res://assets/models/instruments_v1/register_static.res
+Completed load for: 'res://assets/models/instruments_v1/register_static.res' remapped 'res://assets/models/instruments_v1/register_static.res' at thread -1
+Loading resource: res://assets/models/instruments_v1/register_spool.res remapped: res://assets/models/instruments_v1/register_spool.res
+Completed load for: 'res://assets/models/instruments_v1/register_spool.res' remapped 'res://assets/models/instruments_v1/register_spool.res' at thread -1
+Loading resource: res://assets/models/instruments_v1/register_stylus.res remapped: res://assets/models/instruments_v1/register_stylus.res
+Completed load for: 'res://assets/models/instruments_v1/register_stylus.res' remapped 'res://assets/models/instruments_v1/register_stylus.res' at thread -1
+Completed load for: 'res://scenes/telegraph/tape_register.tscn' remapped 'res://scenes/telegraph/tape_register.tscn' at thread -1
+Loading resource: res://scripts/office/moon_weather.gd remapped: res://scripts/office/moon_weather.gd
+Completed load for: 'res://scripts/office/moon_weather.gd' remapped 'res://scripts/office/moon_weather.gd' at thread -1
+Loading resource: res://scripts/office/dawn_ritual.gd remapped: res://scripts/office/dawn_ritual.gd
+Completed load for: 'res://scripts/office/dawn_ritual.gd' remapped 'res://scripts/office/dawn_ritual.gd' at thread -1
+Loading resource: res://scenes/ui/amendment_editor.tscn remapped: res://scenes/ui/amendment_editor.tscn
+Completed load for: 'res://scenes/ui/amendment_editor.tscn' remapped 'res://scenes/ui/amendment_editor.tscn' at thread -1
+Loading resource: res://materials/style_tests/map_division.tres remapped: res://materials/style_tests/map_division.tres
+Loading resource: res://materials/style_tests/textures/psx/map_division.png remapped: res://materials/style_tests/textures/psx/map_division.png
+Loading resource: res://.godot/imported/map_division.png-7cc2051940c81988096c590454f7b922.ctex remapped: res://.godot/imported/map_division.png-7cc2051940c81988096c590454f7b922.ctex
+Completed load for: 'res://materials/style_tests/textures/psx/map_division.png' remapped 'res://materials/style_tests/textures/psx/map_division.png' at thread -1
+Completed load for: 'res://materials/style_tests/map_division.tres' remapped 'res://materials/style_tests/map_division.tres' at thread -1
+Loading resource: res://assets/textures/worn_warmth/baize_128_v1.png remapped: res://assets/textures/worn_warmth/baize_128_v1.png
+Loading resource: res://.godot/imported/baize_128_v1.png-ee242ce58326ae42fdac27d14aeeeac6.ctex remapped: res://.godot/imported/baize_128_v1.png-ee242ce58326ae42fdac27d14aeeeac6.ctex
+Completed load for: 'res://assets/textures/worn_warmth/baize_128_v1.png' remapped 'res://assets/textures/worn_warmth/baize_128_v1.png' at thread -1
+Loading resource: res://scripts/office/night_guidance_controller.gd remapped: res://scripts/office/night_guidance_controller.gd
+Loading resource: res://data/night_guidance/m1_guidance.tres remapped: res://data/night_guidance/m1_guidance.tres
+Loading resource: res://scripts/office/night_guidance_data.gd remapped: res://scripts/office/night_guidance_data.gd
+Completed load for: 'res://scripts/office/night_guidance_data.gd' remapped 'res://scripts/office/night_guidance_data.gd' at thread -1
+Completed load for: 'res://data/night_guidance/m1_guidance.tres' remapped 'res://data/night_guidance/m1_guidance.tres' at thread -1
+Completed load for: 'res://scripts/office/night_guidance_controller.gd' remapped 'res://scripts/office/night_guidance_controller.gd' at thread -1
+Completed load for: 'res://scenes/office/m1_office.tscn' remapped 'res://scenes/office/m1_office.tscn' at thread -1
+  PASS: m1_office.tscn loads
+  PASS: Office instantiates
+Loading resource: res://assets/m1_adapted/ph_books/m1_ledger_volumes.tscn remapped: res://assets/m1_adapted/ph_books/m1_ledger_volumes.tscn
+Loading resource: res://assets/third_party/polyhaven/A05_book_encyclopedia_set_01/textures/book_encyclopedia_set_01_cover_diff_1k.jpg remapped: res://assets/third_party/polyhaven/A05_book_encyclopedia_set_01/textures/book_encyclopedia_set_01_cover_diff_1k.jpg
+Loading resource: res://.godot/imported/book_encyclopedia_set_01_cover_diff_1k.jpg-d079f9de2a51354fd99e09ccca788c69.ctex remapped: res://.godot/imported/book_encyclopedia_set_01_cover_diff_1k.jpg-d079f9de2a51354fd99e09ccca788c69.ctex
+Completed load for: 'res://assets/third_party/polyhaven/A05_book_encyclopedia_set_01/textures/book_encyclopedia_set_01_cover_diff_1k.jpg' remapped 'res://assets/third_party/polyhaven/A05_book_encyclopedia_set_01/textures/book_encyclopedia_set_01_cover_diff_1k.jpg' at thread -1
+Loading resource: res://assets/third_party/polyhaven/A05_book_encyclopedia_set_01/textures/book_encyclopedia_set_01_cover_arm_1k.jpg remapped: res://assets/third_party/polyhaven/A05_book_encyclopedia_set_01/textures/book_encyclopedia_set_01_cover_arm_1k.jpg
+Loading resource: res://.godot/imported/book_encyclopedia_set_01_cover_arm_1k.jpg-eeaeca4a0d271c250b82226727d2a128.ctex remapped: res://.godot/imported/book_encyclopedia_set_01_cover_arm_1k.jpg-eeaeca4a0d271c250b82226727d2a128.ctex
+Completed load for: 'res://assets/third_party/polyhaven/A05_book_encyclopedia_set_01/textures/book_encyclopedia_set_01_cover_arm_1k.jpg' remapped 'res://assets/third_party/polyhaven/A05_book_encyclopedia_set_01/textures/book_encyclopedia_set_01_cover_arm_1k.jpg' at thread -1
+Loading resource: res://assets/third_party/polyhaven/A05_book_encyclopedia_set_01/textures/book_encyclopedia_set_01_cover_nor_gl_1k.jpg remapped: res://assets/third_party/polyhaven/A05_book_encyclopedia_set_01/textures/book_encyclopedia_set_01_cover_nor_gl_1k.jpg
+Loading resource: res://.godot/imported/book_encyclopedia_set_01_cover_nor_gl_1k.jpg-8398b6651fc3cc562fe25f96439bfe1e.ctex remapped: res://.godot/imported/book_encyclopedia_set_01_cover_nor_gl_1k.jpg-8398b6651fc3cc562fe25f96439bfe1e.ctex
+Completed load for: 'res://assets/third_party/polyhaven/A05_book_encyclopedia_set_01/textures/book_encyclopedia_set_01_cover_nor_gl_1k.jpg' remapped 'res://assets/third_party/polyhaven/A05_book_encyclopedia_set_01/textures/book_encyclopedia_set_01_cover_nor_gl_1k.jpg' at thread -1
+Loading resource: res://assets/third_party/polyhaven/A05_book_encyclopedia_set_01/textures/book_encyclopedia_set_01_paper_diff_1k.jpg remapped: res://assets/third_party/polyhaven/A05_book_encyclopedia_set_01/textures/book_encyclopedia_set_01_paper_diff_1k.jpg
+Loading resource: res://.godot/imported/book_encyclopedia_set_01_paper_diff_1k.jpg-1d809cf73e769e9f063a65378bb5e920.ctex remapped: res://.godot/imported/book_encyclopedia_set_01_paper_diff_1k.jpg-1d809cf73e769e9f063a65378bb5e920.ctex
+Completed load for: 'res://assets/third_party/polyhaven/A05_book_encyclopedia_set_01/textures/book_encyclopedia_set_01_paper_diff_1k.jpg' remapped 'res://assets/third_party/polyhaven/A05_book_encyclopedia_set_01/textures/book_encyclopedia_set_01_paper_diff_1k.jpg' at thread -1
+Loading resource: res://assets/third_party/polyhaven/A05_book_encyclopedia_set_01/textures/book_encyclopedia_set_01_paper_roughness_1k.jpg remapped: res://assets/third_party/polyhaven/A05_book_encyclopedia_set_01/textures/book_encyclopedia_set_01_paper_roughness_1k.jpg
+Loading resource: res://.godot/imported/book_encyclopedia_set_01_paper_roughness_1k.jpg-39c7b1d80b1d490f11b677ff45e26c1d.ctex remapped: res://.godot/imported/book_encyclopedia_set_01_paper_roughness_1k.jpg-39c7b1d80b1d490f11b677ff45e26c1d.ctex
+Completed load for: 'res://assets/third_party/polyhaven/A05_book_encyclopedia_set_01/textures/book_encyclopedia_set_01_paper_roughness_1k.jpg' remapped 'res://assets/third_party/polyhaven/A05_book_encyclopedia_set_01/textures/book_encyclopedia_set_01_paper_roughness_1k.jpg' at thread -1
+Loading resource: res://assets/third_party/polyhaven/A05_book_encyclopedia_set_01/textures/book_encyclopedia_set_01_paper_nor_gl_1k.jpg remapped: res://assets/third_party/polyhaven/A05_book_encyclopedia_set_01/textures/book_encyclopedia_set_01_paper_nor_gl_1k.jpg
+Loading resource: res://.godot/imported/book_encyclopedia_set_01_paper_nor_gl_1k.jpg-23b7d1275f5a69824b84c2db9ce2c2d7.ctex remapped: res://.godot/imported/book_encyclopedia_set_01_paper_nor_gl_1k.jpg-23b7d1275f5a69824b84c2db9ce2c2d7.ctex
+Completed load for: 'res://assets/third_party/polyhaven/A05_book_encyclopedia_set_01/textures/book_encyclopedia_set_01_paper_nor_gl_1k.jpg' remapped 'res://assets/third_party/polyhaven/A05_book_encyclopedia_set_01/textures/book_encyclopedia_set_01_paper_nor_gl_1k.jpg' at thread -1
+Completed load for: 'res://assets/m1_adapted/ph_books/m1_ledger_volumes.tscn' remapped 'res://assets/m1_adapted/ph_books/m1_ledger_volumes.tscn' at thread -1
+  PASS: Production scene contains a ShiftDirector
+  PASS: ShiftDirector is enabled in the production scene
+  PASS: Office reports the shift is directed
+  PASS: Session hands key ownership to the director
+  PASS: Shift starts in PRE_SHIFT
+  PASS: Production scene has an operator seat
+  PASS: Operator starts on his feet
+  PASS: Standing operator is told to sit, got 'Sit to Work the Key'
+  PASS: Key is dead while the operator is standing
+  PASS: A standing operator cannot open the line
+  PASS: Operator can sit at the desk
+  PASS: Sitting locks walking
+  PASS: Sitting leaves the head free
+  PASS: Seated operator is invited to open the line
+  PASS: Key is actionable once seated
+  PASS: Time alone never opens the line
+  PASS: Pressing the key opens the line
+  PASS: Shift begins at traffic slot 0
+  PASS: First message is loaded and waiting
+  PASS: Key reports a quiet line while waiting
+  PASS: Operator cannot start his own traffic
+  PASS: Line is still quiet before the interval elapses
+  PASS: Sounder is silent while the line is quiet
+  PASS: Wire calls without any player action
+  PASS: Key asks the operator to answer
+  PASS: Key is actionable during a call
+  PASS: The call is physically audible on the sounder
+  PASS: Call sign encodes in American Morse
+  PASS: Call sign compiles to a playable schedule
+  PASS: Answer window exceeds two room crossings (21.8s vs 4.9s)
+  PASS: An unanswered call is recorded as missed traffic
+  PASS: WorldState records the objective miss
+  PASS: Elias knows he missed the call
+  PASS: Elias never learns what the missed message said
+  PASS: The shift moves on to the next booked message
+  PASS: Missed traffic does not stall the shift
+  PASS: Next message loads normally after a miss
+  -- restarting with a fresh office for the answered path --
+Loading resource: res://scenes/office/m1_office.tscn remapped: res://scenes/office/m1_office.tscn
+Loading resource: res://scenes/style_tests/props/window_north.tscn remapped: res://scenes/style_tests/props/window_north.tscn
+Completed load for: 'res://scenes/style_tests/props/window_north.tscn' remapped 'res://scenes/style_tests/props/window_north.tscn' at thread -1
+Loading resource: res://scenes/style_tests/props/door_south.tscn remapped: res://scenes/style_tests/props/door_south.tscn
+Completed load for: 'res://scenes/style_tests/props/door_south.tscn' remapped 'res://scenes/style_tests/props/door_south.tscn' at thread -1
+Loading resource: res://scenes/style_tests/props/desk_setup.tscn remapped: res://scenes/style_tests/props/desk_setup.tscn
+Loading resource: res://scenes/style_tests/props/oil_lamp_lowpoly.tscn remapped: res://scenes/style_tests/props/oil_lamp_lowpoly.tscn
+Completed load for: 'res://scenes/style_tests/props/oil_lamp_lowpoly.tscn' remapped 'res://scenes/style_tests/props/oil_lamp_lowpoly.tscn' at thread -1
+Completed load for: 'res://scenes/style_tests/props/desk_setup.tscn' remapped 'res://scenes/style_tests/props/desk_setup.tscn' at thread -1
+Loading resource: res://scenes/style_tests/props/psx_chair.tscn remapped: res://scenes/style_tests/props/psx_chair.tscn
+Completed load for: 'res://scenes/style_tests/props/psx_chair.tscn' remapped 'res://scenes/style_tests/props/psx_chair.tscn' at thread -1
+Loading resource: res://scenes/style_tests/props/storage_cabinet.tscn remapped: res://scenes/style_tests/props/storage_cabinet.tscn
+Completed load for: 'res://scenes/style_tests/props/storage_cabinet.tscn' remapped 'res://scenes/style_tests/props/storage_cabinet.tscn' at thread -1
+Loading resource: res://scenes/style_tests/props/corner_stove.tscn remapped: res://scenes/style_tests/props/corner_stove.tscn
+Completed load for: 'res://scenes/style_tests/props/corner_stove.tscn' remapped 'res://scenes/style_tests/props/corner_stove.tscn' at thread -1
+Loading resource: res://scenes/style_tests/props/psx_bookcase.tscn remapped: res://scenes/style_tests/props/psx_bookcase.tscn
+Completed load for: 'res://scenes/style_tests/props/psx_bookcase.tscn' remapped 'res://scenes/style_tests/props/psx_bookcase.tscn' at thread -1
+Loading resource: res://scenes/telegraph/telegraph_station.tscn remapped: res://scenes/telegraph/telegraph_station.tscn
+Loading resource: res://scenes/telegraph/sounder.tscn remapped: res://scenes/telegraph/sounder.tscn
+Completed load for: 'res://scenes/telegraph/sounder.tscn' remapped 'res://scenes/telegraph/sounder.tscn' at thread -1
+Loading resource: res://scenes/telegraph/telegraph_key.tscn remapped: res://scenes/telegraph/telegraph_key.tscn
+Completed load for: 'res://scenes/telegraph/telegraph_key.tscn' remapped 'res://scenes/telegraph/telegraph_key.tscn' at thread -1
+Completed load for: 'res://scenes/telegraph/telegraph_station.tscn' remapped 'res://scenes/telegraph/telegraph_station.tscn' at thread -1
+Loading resource: res://scenes/telegraph/transcript_paper.tscn remapped: res://scenes/telegraph/transcript_paper.tscn
+Completed load for: 'res://scenes/telegraph/transcript_paper.tscn' remapped 'res://scenes/telegraph/transcript_paper.tscn' at thread -1
+Loading resource: res://scenes/telegraph/morse_reference_card.tscn remapped: res://scenes/telegraph/morse_reference_card.tscn
+Completed load for: 'res://scenes/telegraph/morse_reference_card.tscn' remapped 'res://scenes/telegraph/morse_reference_card.tscn' at thread -1
+Loading resource: res://scenes/telegraph/dispatch_ledger.tscn remapped: res://scenes/telegraph/dispatch_ledger.tscn
+Completed load for: 'res://scenes/telegraph/dispatch_ledger.tscn' remapped 'res://scenes/telegraph/dispatch_ledger.tscn' at thread -1
+Loading resource: res://scenes/telegraph/routing_board.tscn remapped: res://scenes/telegraph/routing_board.tscn
+Completed load for: 'res://scenes/telegraph/routing_board.tscn' remapped 'res://scenes/telegraph/routing_board.tscn' at thread -1
+Loading resource: res://scenes/telegraph/copy_commit_desk.tscn remapped: res://scenes/telegraph/copy_commit_desk.tscn
+Completed load for: 'res://scenes/telegraph/copy_commit_desk.tscn' remapped 'res://scenes/telegraph/copy_commit_desk.tscn' at thread -1
+Loading resource: res://scenes/office/door_attention_source.tscn remapped: res://scenes/office/door_attention_source.tscn
+Completed load for: 'res://scenes/office/door_attention_source.tscn' remapped 'res://scenes/office/door_attention_source.tscn' at thread -1
+Loading resource: res://scenes/office/window_observation_event.tscn remapped: res://scenes/office/window_observation_event.tscn
+Completed load for: 'res://scenes/office/window_observation_event.tscn' remapped 'res://scenes/office/window_observation_event.tscn' at thread -1
+Loading resource: res://scenes/player/player.tscn remapped: res://scenes/player/player.tscn
+Completed load for: 'res://scenes/player/player.tscn' remapped 'res://scenes/player/player.tscn' at thread -1
+Loading resource: res://scenes/ui/document_viewer.tscn remapped: res://scenes/ui/document_viewer.tscn
+Completed load for: 'res://scenes/ui/document_viewer.tscn' remapped 'res://scenes/ui/document_viewer.tscn' at thread -1
+Loading resource: res://scenes/debug/debug_inspector.tscn remapped: res://scenes/debug/debug_inspector.tscn
+Completed load for: 'res://scenes/debug/debug_inspector.tscn' remapped 'res://scenes/debug/debug_inspector.tscn' at thread -1
+Loading resource: res://scenes/style_tests/props/office_storytelling_props.tscn remapped: res://scenes/style_tests/props/office_storytelling_props.tscn
+Completed load for: 'res://scenes/style_tests/props/office_storytelling_props.tscn' remapped 'res://scenes/style_tests/props/office_storytelling_props.tscn' at thread -1
+Loading resource: res://scenes/ui/shift_end_card.tscn remapped: res://scenes/ui/shift_end_card.tscn
+Completed load for: 'res://scenes/ui/shift_end_card.tscn' remapped 'res://scenes/ui/shift_end_card.tscn' at thread -1
+Loading resource: res://scenes/props/m1/ph_chair.tscn remapped: res://scenes/props/m1/ph_chair.tscn
+Loading resource: res://assets/m1_adapted/ph_chair/painted_wooden_chair_01.gltf remapped: res://assets/m1_adapted/ph_chair/painted_wooden_chair_01.gltf
+Loading resource: res://.godot/imported/painted_wooden_chair_01.gltf-f544bb5a4f40dcb65691418119428fff.scn remapped: res://.godot/imported/painted_wooden_chair_01.gltf-f544bb5a4f40dcb65691418119428fff.scn
+Completed load for: 'res://assets/m1_adapted/ph_chair/painted_wooden_chair_01.gltf' remapped 'res://assets/m1_adapted/ph_chair/painted_wooden_chair_01.gltf' at thread -1
+Completed load for: 'res://scenes/props/m1/ph_chair.tscn' remapped 'res://scenes/props/m1/ph_chair.tscn' at thread -1
+Loading resource: res://scenes/props/m1/ph_cabinet.tscn remapped: res://scenes/props/m1/ph_cabinet.tscn
+Loading resource: res://assets/m1_adapted/ph_cabinet/painted_wooden_cabinet_02.gltf remapped: res://assets/m1_adapted/ph_cabinet/painted_wooden_cabinet_02.gltf
+Loading resource: res://.godot/imported/painted_wooden_cabinet_02.gltf-d5a3c2ca4787a012aa9a49bf735feec3.scn remapped: res://.godot/imported/painted_wooden_cabinet_02.gltf-d5a3c2ca4787a012aa9a49bf735feec3.scn
+Completed load for: 'res://assets/m1_adapted/ph_cabinet/painted_wooden_cabinet_02.gltf' remapped 'res://assets/m1_adapted/ph_cabinet/painted_wooden_cabinet_02.gltf' at thread -1
+Completed load for: 'res://scenes/props/m1/ph_cabinet.tscn' remapped 'res://scenes/props/m1/ph_cabinet.tscn' at thread -1
+Loading resource: res://scenes/props/m1/ph_ledger_volumes.tscn remapped: res://scenes/props/m1/ph_ledger_volumes.tscn
+Completed load for: 'res://scenes/props/m1/ph_ledger_volumes.tscn' remapped 'res://scenes/props/m1/ph_ledger_volumes.tscn' at thread -1
+Loading resource: res://scenes/props/m1/ph_table.tscn remapped: res://scenes/props/m1/ph_table.tscn
+Loading resource: res://assets/m1_adapted/ph_table/wooden_table_02.gltf remapped: res://assets/m1_adapted/ph_table/wooden_table_02.gltf
+Loading resource: res://.godot/imported/wooden_table_02.gltf-fa61817fa60713e6596180f25fed7ee2.scn remapped: res://.godot/imported/wooden_table_02.gltf-fa61817fa60713e6596180f25fed7ee2.scn
+Completed load for: 'res://assets/m1_adapted/ph_table/wooden_table_02.gltf' remapped 'res://assets/m1_adapted/ph_table/wooden_table_02.gltf' at thread -1
+Completed load for: 'res://scenes/props/m1/ph_table.tscn' remapped 'res://scenes/props/m1/ph_table.tscn' at thread -1
+Loading resource: res://scenes/ui/pause_menu.tscn remapped: res://scenes/ui/pause_menu.tscn
+Completed load for: 'res://scenes/ui/pause_menu.tscn' remapped 'res://scenes/ui/pause_menu.tscn' at thread -1
+Loading resource: res://scenes/ui/intro_card.tscn remapped: res://scenes/ui/intro_card.tscn
+Completed load for: 'res://scenes/ui/intro_card.tscn' remapped 'res://scenes/ui/intro_card.tscn' at thread -1
+Loading resource: res://scenes/office/dawn_evidence.tscn remapped: res://scenes/office/dawn_evidence.tscn
+Completed load for: 'res://scenes/office/dawn_evidence.tscn' remapped 'res://scenes/office/dawn_evidence.tscn' at thread -1
+Loading resource: res://scenes/telegraph/tape_register.tscn remapped: res://scenes/telegraph/tape_register.tscn
+Completed load for: 'res://scenes/telegraph/tape_register.tscn' remapped 'res://scenes/telegraph/tape_register.tscn' at thread -1
+Loading resource: res://scenes/ui/amendment_editor.tscn remapped: res://scenes/ui/amendment_editor.tscn
+Completed load for: 'res://scenes/ui/amendment_editor.tscn' remapped 'res://scenes/ui/amendment_editor.tscn' at thread -1
+Completed load for: 'res://scenes/office/m1_office.tscn' remapped 'res://scenes/office/m1_office.tscn' at thread -1
+  PASS: m1_office.tscn loads
+  PASS: Office instantiates
+Loading resource: res://assets/m1_adapted/ph_books/m1_ledger_volumes.tscn remapped: res://assets/m1_adapted/ph_books/m1_ledger_volumes.tscn
+Completed load for: 'res://assets/m1_adapted/ph_books/m1_ledger_volumes.tscn' remapped 'res://assets/m1_adapted/ph_books/m1_ledger_volumes.tscn' at thread -1
+  PASS: Operator sits for the answered path
+  PASS: Wire calls on the fresh shift
+  PASS: Answering the call opens a short beat before the message
+  PASS: The sender has not started inside the beat
+  PASS: The key is inert inside the beat
+  PASS: Answering moves the shift into RECEIVING
+  PASS: Session is receiving the real message
+  PASS: Key is inert while copy is coming in
+  PASS: t0 leaves the physical copy open
+  PASS: The key reports the copy being finished
+  PASS: Message completion waits for transcript verification
+  PASS: The key reports the finished copy waiting to be read
+  PASS: Transcript inspection unlocks route deadline
+  PASS: Message ends awaiting a route
+  PASS: Director opens the routing deadline
+  PASS: The key reports the route decision once the copy is verified
+  PASS: Elias knows he copied the message
+  PASS: Routing deadline is counting
+  PASS: Sender asks again on the wire while waiting for a route
+  PASS: A prod does not end the deadline
+  PASS: Correct route records the objective outcome
+  PASS: Elias knows he filed the message
+  PASS: Shift advances to the second message
+  PASS: Foreign traffic crossed the dead wire in the second silence
+  PASS: Second message waits for transcript verification
+  PASS: Second message also awaits a route
+  PASS: Expired deadline defaults the route
+  PASS: A defaulted route is not a filed message
+  PASS: Elias knows the freight order lapsed
+  PASS: Shift advances after a defaulted route
+  PASS: Final message leaves the copy open at t0
+  PASS: The key reports the final copy being finished
+  PASS: The key reports the final copy waiting to be read
+  PASS: Final message waits for transcript verification
+  PASS: Final transcript inspection unlocks the commit
+  PASS: Final message opens the commit desk
+  PASS: The key reports the filing decision
+  PASS: Commit inspection pauses call pacing while the deadline runs
+  PASS: A service signal occupies the wire for the deferral case
+  PASS: A warning on a busy wire is deferred, not played over traffic
+  PASS: Final message accepts an authored commit inside the deadline
+  PASS: Final message enters its consequence beat
+  PASS: The key reports a neutral standby during the consequence beat
+  PASS: A deferred warning is dropped once its slot is resolved
+  PASS: Last message closes the line
+  PASS: Shift reaches SHIFT_OVER
+  PASS: is_shift_over() agrees
+  PASS: Key is dead once the line closes
+  PASS: Closing never overshoots 6 A.M.
+  PASS: Key reports the shift is over
+  PASS: The night does not loop back around
+  PASS: The hands never ran backward across the close
+  PASS: The hands reach 6 A.M. at their bounded speed, got 6:00 A.M.
+  PASS: The clock rests at the end of the watch
+  PASS: Production scene contains the duty sheet
+  PASS: Duty sheet is interactable
+  PASS: Duty sheet lists the booked passenger traffic
+  PASS: Duty sheet shows the filed message
+  PASS: Unbooked traffic appears once it has been copied
+  PASS: Duty sheet records only the explicit chosen word after filing
+  PASS: WorldState recorded the defaulted freight route as no order sent
+  PASS: A defaulted route is not a misdirected one
+  PASS: Defaulted freight reads as no order sent
+  PASS: Storytelling props are present
+  PASS: Station clock is driven by a script
+  PASS: Clock hands resolve
+  PASS: Clock follows the shift director
+Loading resource: res://scenes/office/m1_office.tscn remapped: res://scenes/office/m1_office.tscn
+Loading resource: res://scenes/style_tests/props/window_north.tscn remapped: res://scenes/style_tests/props/window_north.tscn
+Completed load for: 'res://scenes/style_tests/props/window_north.tscn' remapped 'res://scenes/style_tests/props/window_north.tscn' at thread -1
+Loading resource: res://scenes/style_tests/props/door_south.tscn remapped: res://scenes/style_tests/props/door_south.tscn
+Completed load for: 'res://scenes/style_tests/props/door_south.tscn' remapped 'res://scenes/style_tests/props/door_south.tscn' at thread -1
+Loading resource: res://scenes/style_tests/props/desk_setup.tscn remapped: res://scenes/style_tests/props/desk_setup.tscn
+Loading resource: res://scenes/style_tests/props/oil_lamp_lowpoly.tscn remapped: res://scenes/style_tests/props/oil_lamp_lowpoly.tscn
+Completed load for: 'res://scenes/style_tests/props/oil_lamp_lowpoly.tscn' remapped 'res://scenes/style_tests/props/oil_lamp_lowpoly.tscn' at thread -1
+Completed load for: 'res://scenes/style_tests/props/desk_setup.tscn' remapped 'res://scenes/style_tests/props/desk_setup.tscn' at thread -1
+Loading resource: res://scenes/style_tests/props/psx_chair.tscn remapped: res://scenes/style_tests/props/psx_chair.tscn
+Completed load for: 'res://scenes/style_tests/props/psx_chair.tscn' remapped 'res://scenes/style_tests/props/psx_chair.tscn' at thread -1
+Loading resource: res://scenes/style_tests/props/storage_cabinet.tscn remapped: res://scenes/style_tests/props/storage_cabinet.tscn
+Completed load for: 'res://scenes/style_tests/props/storage_cabinet.tscn' remapped 'res://scenes/style_tests/props/storage_cabinet.tscn' at thread -1
+Loading resource: res://scenes/style_tests/props/corner_stove.tscn remapped: res://scenes/style_tests/props/corner_stove.tscn
+Completed load for: 'res://scenes/style_tests/props/corner_stove.tscn' remapped 'res://scenes/style_tests/props/corner_stove.tscn' at thread -1
+Loading resource: res://scenes/style_tests/props/psx_bookcase.tscn remapped: res://scenes/style_tests/props/psx_bookcase.tscn
+Completed load for: 'res://scenes/style_tests/props/psx_bookcase.tscn' remapped 'res://scenes/style_tests/props/psx_bookcase.tscn' at thread -1
+Loading resource: res://scenes/telegraph/telegraph_station.tscn remapped: res://scenes/telegraph/telegraph_station.tscn
+Loading resource: res://scenes/telegraph/sounder.tscn remapped: res://scenes/telegraph/sounder.tscn
+Completed load for: 'res://scenes/telegraph/sounder.tscn' remapped 'res://scenes/telegraph/sounder.tscn' at thread -1
+Loading resource: res://scenes/telegraph/telegraph_key.tscn remapped: res://scenes/telegraph/telegraph_key.tscn
+Completed load for: 'res://scenes/telegraph/telegraph_key.tscn' remapped 'res://scenes/telegraph/telegraph_key.tscn' at thread -1
+Completed load for: 'res://scenes/telegraph/telegraph_station.tscn' remapped 'res://scenes/telegraph/telegraph_station.tscn' at thread -1
+Loading resource: res://scenes/telegraph/transcript_paper.tscn remapped: res://scenes/telegraph/transcript_paper.tscn
+Completed load for: 'res://scenes/telegraph/transcript_paper.tscn' remapped 'res://scenes/telegraph/transcript_paper.tscn' at thread -1
+Loading resource: res://scenes/telegraph/morse_reference_card.tscn remapped: res://scenes/telegraph/morse_reference_card.tscn
+Completed load for: 'res://scenes/telegraph/morse_reference_card.tscn' remapped 'res://scenes/telegraph/morse_reference_card.tscn' at thread -1
+Loading resource: res://scenes/telegraph/dispatch_ledger.tscn remapped: res://scenes/telegraph/dispatch_ledger.tscn
+Completed load for: 'res://scenes/telegraph/dispatch_ledger.tscn' remapped 'res://scenes/telegraph/dispatch_ledger.tscn' at thread -1
+Loading resource: res://scenes/telegraph/routing_board.tscn remapped: res://scenes/telegraph/routing_board.tscn
+Completed load for: 'res://scenes/telegraph/routing_board.tscn' remapped 'res://scenes/telegraph/routing_board.tscn' at thread -1
+Loading resource: res://scenes/telegraph/copy_commit_desk.tscn remapped: res://scenes/telegraph/copy_commit_desk.tscn
+Completed load for: 'res://scenes/telegraph/copy_commit_desk.tscn' remapped 'res://scenes/telegraph/copy_commit_desk.tscn' at thread -1
+Loading resource: res://scenes/office/door_attention_source.tscn remapped: res://scenes/office/door_attention_source.tscn
+Completed load for: 'res://scenes/office/door_attention_source.tscn' remapped 'res://scenes/office/door_attention_source.tscn' at thread -1
+Loading resource: res://scenes/office/window_observation_event.tscn remapped: res://scenes/office/window_observation_event.tscn
+Completed load for: 'res://scenes/office/window_observation_event.tscn' remapped 'res://scenes/office/window_observation_event.tscn' at thread -1
+Loading resource: res://scenes/player/player.tscn remapped: res://scenes/player/player.tscn
+Completed load for: 'res://scenes/player/player.tscn' remapped 'res://scenes/player/player.tscn' at thread -1
+Loading resource: res://scenes/ui/document_viewer.tscn remapped: res://scenes/ui/document_viewer.tscn
+Completed load for: 'res://scenes/ui/document_viewer.tscn' remapped 'res://scenes/ui/document_viewer.tscn' at thread -1
+Loading resource: res://scenes/debug/debug_inspector.tscn remapped: res://scenes/debug/debug_inspector.tscn
+Completed load for: 'res://scenes/debug/debug_inspector.tscn' remapped 'res://scenes/debug/debug_inspector.tscn' at thread -1
+Loading resource: res://scenes/style_tests/props/office_storytelling_props.tscn remapped: res://scenes/style_tests/props/office_storytelling_props.tscn
+Completed load for: 'res://scenes/style_tests/props/office_storytelling_props.tscn' remapped 'res://scenes/style_tests/props/office_storytelling_props.tscn' at thread -1
+Loading resource: res://scenes/ui/shift_end_card.tscn remapped: res://scenes/ui/shift_end_card.tscn
+Completed load for: 'res://scenes/ui/shift_end_card.tscn' remapped 'res://scenes/ui/shift_end_card.tscn' at thread -1
+Loading resource: res://scenes/props/m1/ph_chair.tscn remapped: res://scenes/props/m1/ph_chair.tscn
+Loading resource: res://assets/m1_adapted/ph_chair/painted_wooden_chair_01.gltf remapped: res://assets/m1_adapted/ph_chair/painted_wooden_chair_01.gltf
+Loading resource: res://.godot/imported/painted_wooden_chair_01.gltf-f544bb5a4f40dcb65691418119428fff.scn remapped: res://.godot/imported/painted_wooden_chair_01.gltf-f544bb5a4f40dcb65691418119428fff.scn
+Completed load for: 'res://assets/m1_adapted/ph_chair/painted_wooden_chair_01.gltf' remapped 'res://assets/m1_adapted/ph_chair/painted_wooden_chair_01.gltf' at thread -1
+Completed load for: 'res://scenes/props/m1/ph_chair.tscn' remapped 'res://scenes/props/m1/ph_chair.tscn' at thread -1
+Loading resource: res://scenes/props/m1/ph_cabinet.tscn remapped: res://scenes/props/m1/ph_cabinet.tscn
+Loading resource: res://assets/m1_adapted/ph_cabinet/painted_wooden_cabinet_02.gltf remapped: res://assets/m1_adapted/ph_cabinet/painted_wooden_cabinet_02.gltf
+Loading resource: res://.godot/imported/painted_wooden_cabinet_02.gltf-d5a3c2ca4787a012aa9a49bf735feec3.scn remapped: res://.godot/imported/painted_wooden_cabinet_02.gltf-d5a3c2ca4787a012aa9a49bf735feec3.scn
+Completed load for: 'res://assets/m1_adapted/ph_cabinet/painted_wooden_cabinet_02.gltf' remapped 'res://assets/m1_adapted/ph_cabinet/painted_wooden_cabinet_02.gltf' at thread -1
+Completed load for: 'res://scenes/props/m1/ph_cabinet.tscn' remapped 'res://scenes/props/m1/ph_cabinet.tscn' at thread -1
+Loading resource: res://scenes/props/m1/ph_ledger_volumes.tscn remapped: res://scenes/props/m1/ph_ledger_volumes.tscn
+Completed load for: 'res://scenes/props/m1/ph_ledger_volumes.tscn' remapped 'res://scenes/props/m1/ph_ledger_volumes.tscn' at thread -1
+Loading resource: res://scenes/props/m1/ph_table.tscn remapped: res://scenes/props/m1/ph_table.tscn
+Loading resource: res://assets/m1_adapted/ph_table/wooden_table_02.gltf remapped: res://assets/m1_adapted/ph_table/wooden_table_02.gltf
+Loading resource: res://.godot/imported/wooden_table_02.gltf-fa61817fa60713e6596180f25fed7ee2.scn remapped: res://.godot/imported/wooden_table_02.gltf-fa61817fa60713e6596180f25fed7ee2.scn
+Completed load for: 'res://assets/m1_adapted/ph_table/wooden_table_02.gltf' remapped 'res://assets/m1_adapted/ph_table/wooden_table_02.gltf' at thread -1
+Completed load for: 'res://scenes/props/m1/ph_table.tscn' remapped 'res://scenes/props/m1/ph_table.tscn' at thread -1
+Loading resource: res://scenes/ui/pause_menu.tscn remapped: res://scenes/ui/pause_menu.tscn
+Completed load for: 'res://scenes/ui/pause_menu.tscn' remapped 'res://scenes/ui/pause_menu.tscn' at thread -1
+Loading resource: res://scenes/ui/intro_card.tscn remapped: res://scenes/ui/intro_card.tscn
+Completed load for: 'res://scenes/ui/intro_card.tscn' remapped 'res://scenes/ui/intro_card.tscn' at thread -1
+Loading resource: res://scenes/office/dawn_evidence.tscn remapped: res://scenes/office/dawn_evidence.tscn
+Completed load for: 'res://scenes/office/dawn_evidence.tscn' remapped 'res://scenes/office/dawn_evidence.tscn' at thread -1
+Loading resource: res://scenes/telegraph/tape_register.tscn remapped: res://scenes/telegraph/tape_register.tscn
+Completed load for: 'res://scenes/telegraph/tape_register.tscn' remapped 'res://scenes/telegraph/tape_register.tscn' at thread -1
+Loading resource: res://scenes/ui/amendment_editor.tscn remapped: res://scenes/ui/amendment_editor.tscn
+Completed load for: 'res://scenes/ui/amendment_editor.tscn' remapped 'res://scenes/ui/amendment_editor.tscn' at thread -1
+Completed load for: 'res://scenes/office/m1_office.tscn' remapped 'res://scenes/office/m1_office.tscn' at thread -1
+  PASS: m1_office.tscn loads
+  PASS: Office instantiates
+Loading resource: res://assets/m1_adapted/ph_books/m1_ledger_volumes.tscn remapped: res://assets/m1_adapted/ph_books/m1_ledger_volumes.tscn
+Completed load for: 'res://assets/m1_adapted/ph_books/m1_ledger_volumes.tscn' remapped 'res://assets/m1_adapted/ph_books/m1_ledger_volumes.tscn' at thread -1
+  PASS: Fresh office has a station clock
+  PASS: Watch begins at 11 P.M., got 11:00 P.M.
+  PASS: Hands do not move before the line is opened
+  PASS: The call beginning never rewinds the hands
+  PASS: Answering the call never rewinds the hands
+  PASS: Slot 0 resolved targets 02:00
+  PASS: The display moved toward 02:00 without snapping, got 23.52
+  PASS: The dial has left the start
+  PASS: Fresh watch reaches SHIFT_OVER
+  PASS: The hands never crossed 06:00 before the shift ended, got 27.37
+  PASS: Watch ends at 6 A.M., got 6:00 A.M.
+  PASS: The minute hand actually turned
+  PASS: The clock stops at the end of the watch
+Loading resource: res://scenes/office/m1_office.tscn remapped: res://scenes/office/m1_office.tscn
+Loading resource: res://scenes/style_tests/props/window_north.tscn remapped: res://scenes/style_tests/props/window_north.tscn
+Completed load for: 'res://scenes/style_tests/props/window_north.tscn' remapped 'res://scenes/style_tests/props/window_north.tscn' at thread -1
+Loading resource: res://scenes/style_tests/props/door_south.tscn remapped: res://scenes/style_tests/props/door_south.tscn
+Completed load for: 'res://scenes/style_tests/props/door_south.tscn' remapped 'res://scenes/style_tests/props/door_south.tscn' at thread -1
+Loading resource: res://scenes/style_tests/props/desk_setup.tscn remapped: res://scenes/style_tests/props/desk_setup.tscn
+Loading resource: res://scenes/style_tests/props/oil_lamp_lowpoly.tscn remapped: res://scenes/style_tests/props/oil_lamp_lowpoly.tscn
+Completed load for: 'res://scenes/style_tests/props/oil_lamp_lowpoly.tscn' remapped 'res://scenes/style_tests/props/oil_lamp_lowpoly.tscn' at thread -1
+Completed load for: 'res://scenes/style_tests/props/desk_setup.tscn' remapped 'res://scenes/style_tests/props/desk_setup.tscn' at thread -1
+Loading resource: res://scenes/style_tests/props/psx_chair.tscn remapped: res://scenes/style_tests/props/psx_chair.tscn
+Completed load for: 'res://scenes/style_tests/props/psx_chair.tscn' remapped 'res://scenes/style_tests/props/psx_chair.tscn' at thread -1
+Loading resource: res://scenes/style_tests/props/storage_cabinet.tscn remapped: res://scenes/style_tests/props/storage_cabinet.tscn
+Completed load for: 'res://scenes/style_tests/props/storage_cabinet.tscn' remapped 'res://scenes/style_tests/props/storage_cabinet.tscn' at thread -1
+Loading resource: res://scenes/style_tests/props/corner_stove.tscn remapped: res://scenes/style_tests/props/corner_stove.tscn
+Completed load for: 'res://scenes/style_tests/props/corner_stove.tscn' remapped 'res://scenes/style_tests/props/corner_stove.tscn' at thread -1
+Loading resource: res://scenes/style_tests/props/psx_bookcase.tscn remapped: res://scenes/style_tests/props/psx_bookcase.tscn
+Completed load for: 'res://scenes/style_tests/props/psx_bookcase.tscn' remapped 'res://scenes/style_tests/props/psx_bookcase.tscn' at thread -1
+Loading resource: res://scenes/telegraph/telegraph_station.tscn remapped: res://scenes/telegraph/telegraph_station.tscn
+Loading resource: res://scenes/telegraph/sounder.tscn remapped: res://scenes/telegraph/sounder.tscn
+Completed load for: 'res://scenes/telegraph/sounder.tscn' remapped 'res://scenes/telegraph/sounder.tscn' at thread -1
+Loading resource: res://scenes/telegraph/telegraph_key.tscn remapped: res://scenes/telegraph/telegraph_key.tscn
+Completed load for: 'res://scenes/telegraph/telegraph_key.tscn' remapped 'res://scenes/telegraph/telegraph_key.tscn' at thread -1
+Completed load for: 'res://scenes/telegraph/telegraph_station.tscn' remapped 'res://scenes/telegraph/telegraph_station.tscn' at thread -1
+Loading resource: res://scenes/telegraph/transcript_paper.tscn remapped: res://scenes/telegraph/transcript_paper.tscn
+Completed load for: 'res://scenes/telegraph/transcript_paper.tscn' remapped 'res://scenes/telegraph/transcript_paper.tscn' at thread -1
+Loading resource: res://scenes/telegraph/morse_reference_card.tscn remapped: res://scenes/telegraph/morse_reference_card.tscn
+Completed load for: 'res://scenes/telegraph/morse_reference_card.tscn' remapped 'res://scenes/telegraph/morse_reference_card.tscn' at thread -1
+Loading resource: res://scenes/telegraph/dispatch_ledger.tscn remapped: res://scenes/telegraph/dispatch_ledger.tscn
+Completed load for: 'res://scenes/telegraph/dispatch_ledger.tscn' remapped 'res://scenes/telegraph/dispatch_ledger.tscn' at thread -1
+Loading resource: res://scenes/telegraph/routing_board.tscn remapped: res://scenes/telegraph/routing_board.tscn
+Completed load for: 'res://scenes/telegraph/routing_board.tscn' remapped 'res://scenes/telegraph/routing_board.tscn' at thread -1
+Loading resource: res://scenes/telegraph/copy_commit_desk.tscn remapped: res://scenes/telegraph/copy_commit_desk.tscn
+Completed load for: 'res://scenes/telegraph/copy_commit_desk.tscn' remapped 'res://scenes/telegraph/copy_commit_desk.tscn' at thread -1
+Loading resource: res://scenes/office/door_attention_source.tscn remapped: res://scenes/office/door_attention_source.tscn
+Completed load for: 'res://scenes/office/door_attention_source.tscn' remapped 'res://scenes/office/door_attention_source.tscn' at thread -1
+Loading resource: res://scenes/office/window_observation_event.tscn remapped: res://scenes/office/window_observation_event.tscn
+Completed load for: 'res://scenes/office/window_observation_event.tscn' remapped 'res://scenes/office/window_observation_event.tscn' at thread -1
+Loading resource: res://scenes/player/player.tscn remapped: res://scenes/player/player.tscn
+Completed load for: 'res://scenes/player/player.tscn' remapped 'res://scenes/player/player.tscn' at thread -1
+Loading resource: res://scenes/ui/document_viewer.tscn remapped: res://scenes/ui/document_viewer.tscn
+Completed load for: 'res://scenes/ui/document_viewer.tscn' remapped 'res://scenes/ui/document_viewer.tscn' at thread -1
+Loading resource: res://scenes/debug/debug_inspector.tscn remapped: res://scenes/debug/debug_inspector.tscn
+Completed load for: 'res://scenes/debug/debug_inspector.tscn' remapped 'res://scenes/debug/debug_inspector.tscn' at thread -1
+Loading resource: res://scenes/style_tests/props/office_storytelling_props.tscn remapped: res://scenes/style_tests/props/office_storytelling_props.tscn
+Completed load for: 'res://scenes/style_tests/props/office_storytelling_props.tscn' remapped 'res://scenes/style_tests/props/office_storytelling_props.tscn' at thread -1
+Loading resource: res://scenes/ui/shift_end_card.tscn remapped: res://scenes/ui/shift_end_card.tscn
+Completed load for: 'res://scenes/ui/shift_end_card.tscn' remapped 'res://scenes/ui/shift_end_card.tscn' at thread -1
+Loading resource: res://scenes/props/m1/ph_chair.tscn remapped: res://scenes/props/m1/ph_chair.tscn
+Loading resource: res://assets/m1_adapted/ph_chair/painted_wooden_chair_01.gltf remapped: res://assets/m1_adapted/ph_chair/painted_wooden_chair_01.gltf
+Loading resource: res://.godot/imported/painted_wooden_chair_01.gltf-f544bb5a4f40dcb65691418119428fff.scn remapped: res://.godot/imported/painted_wooden_chair_01.gltf-f544bb5a4f40dcb65691418119428fff.scn
+Completed load for: 'res://assets/m1_adapted/ph_chair/painted_wooden_chair_01.gltf' remapped 'res://assets/m1_adapted/ph_chair/painted_wooden_chair_01.gltf' at thread -1
+Completed load for: 'res://scenes/props/m1/ph_chair.tscn' remapped 'res://scenes/props/m1/ph_chair.tscn' at thread -1
+Loading resource: res://scenes/props/m1/ph_cabinet.tscn remapped: res://scenes/props/m1/ph_cabinet.tscn
+Loading resource: res://assets/m1_adapted/ph_cabinet/painted_wooden_cabinet_02.gltf remapped: res://assets/m1_adapted/ph_cabinet/painted_wooden_cabinet_02.gltf
+Loading resource: res://.godot/imported/painted_wooden_cabinet_02.gltf-d5a3c2ca4787a012aa9a49bf735feec3.scn remapped: res://.godot/imported/painted_wooden_cabinet_02.gltf-d5a3c2ca4787a012aa9a49bf735feec3.scn
+Completed load for: 'res://assets/m1_adapted/ph_cabinet/painted_wooden_cabinet_02.gltf' remapped 'res://assets/m1_adapted/ph_cabinet/painted_wooden_cabinet_02.gltf' at thread -1
+Completed load for: 'res://scenes/props/m1/ph_cabinet.tscn' remapped 'res://scenes/props/m1/ph_cabinet.tscn' at thread -1
+Loading resource: res://scenes/props/m1/ph_ledger_volumes.tscn remapped: res://scenes/props/m1/ph_ledger_volumes.tscn
+Completed load for: 'res://scenes/props/m1/ph_ledger_volumes.tscn' remapped 'res://scenes/props/m1/ph_ledger_volumes.tscn' at thread -1
+Loading resource: res://scenes/props/m1/ph_table.tscn remapped: res://scenes/props/m1/ph_table.tscn
+Loading resource: res://assets/m1_adapted/ph_table/wooden_table_02.gltf remapped: res://assets/m1_adapted/ph_table/wooden_table_02.gltf
+Loading resource: res://.godot/imported/wooden_table_02.gltf-fa61817fa60713e6596180f25fed7ee2.scn remapped: res://.godot/imported/wooden_table_02.gltf-fa61817fa60713e6596180f25fed7ee2.scn
+Completed load for: 'res://assets/m1_adapted/ph_table/wooden_table_02.gltf' remapped 'res://assets/m1_adapted/ph_table/wooden_table_02.gltf' at thread -1
+Completed load for: 'res://scenes/props/m1/ph_table.tscn' remapped 'res://scenes/props/m1/ph_table.tscn' at thread -1
+Loading resource: res://scenes/ui/pause_menu.tscn remapped: res://scenes/ui/pause_menu.tscn
+Completed load for: 'res://scenes/ui/pause_menu.tscn' remapped 'res://scenes/ui/pause_menu.tscn' at thread -1
+Loading resource: res://scenes/ui/intro_card.tscn remapped: res://scenes/ui/intro_card.tscn
+Completed load for: 'res://scenes/ui/intro_card.tscn' remapped 'res://scenes/ui/intro_card.tscn' at thread -1
+Loading resource: res://scenes/office/dawn_evidence.tscn remapped: res://scenes/office/dawn_evidence.tscn
+Completed load for: 'res://scenes/office/dawn_evidence.tscn' remapped 'res://scenes/office/dawn_evidence.tscn' at thread -1
+Loading resource: res://scenes/telegraph/tape_register.tscn remapped: res://scenes/telegraph/tape_register.tscn
+Completed load for: 'res://scenes/telegraph/tape_register.tscn' remapped 'res://scenes/telegraph/tape_register.tscn' at thread -1
+Loading resource: res://scenes/ui/amendment_editor.tscn remapped: res://scenes/ui/amendment_editor.tscn
+Completed load for: 'res://scenes/ui/amendment_editor.tscn' remapped 'res://scenes/ui/amendment_editor.tscn' at thread -1
+Completed load for: 'res://scenes/office/m1_office.tscn' remapped 'res://scenes/office/m1_office.tscn' at thread -1
+  PASS: Merge-case office instantiates
+Loading resource: res://assets/m1_adapted/ph_books/m1_ledger_volumes.tscn remapped: res://assets/m1_adapted/ph_books/m1_ledger_volumes.tscn
+Completed load for: 'res://assets/m1_adapted/ph_books/m1_ledger_volumes.tscn' remapped 'res://assets/m1_adapted/ph_books/m1_ledger_volumes.tscn' at thread -1
+  PASS: Merge case opens the line
+  PASS: Merge case reaches the call
+  PASS: Merge case answers the call
+  PASS: Merge case leaves the copy open at t0
+  PASS: Merge case runs the route deadline from t0
+  PASS: Warning and nag in the same breath are a single wire call, got 1
+  PASS: The merged nag is still counted as delivered
+  PASS: Grace expiry moves the shift to the next slot
+--- All Shift Director Tests PASSED (132 assertions) ---

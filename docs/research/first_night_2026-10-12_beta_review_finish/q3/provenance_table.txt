@@ -1,0 +1,33 @@
+# Beta audio provenance audit — one current row per asset (regenerated 2026-10-12, crash-review fix session)
+# Documentary audit only; no WAV was regenerated in this pass. Paths verified on disk.
+# Superseded contradictory copy kept as provenance_table.superseded_2026-10-12.txt.
+
+| asset (repo path) | runtime binding | provenance / license | sha256 (16) |
+|---|---|---|---|
+| audio/sfx/telegraph/sounder_down.wav | Telegraph bus MARK (sounder down) | project generator tools/generate_sounder.py, byte-identical regeneration closed 2026-10-11 | 937b0e802a3a4e05 |
+| audio/sfx/telegraph/sounder_up.wav | Telegraph bus GAP (sounder up) | project generator tools/generate_sounder.py, byte-identical regeneration closed 2026-10-11 | 21abfe483cb0a9f4 |
+| audio/sfx/foley/paper_sheet.mp3 | OfficeFoley paper_stream (viewer open/close) | external CC0: S03 Luckius various-paper-sound-effects (opengameart) | 6e81a68cfe8283f7 |
+| audio/sfx/foley/ink_stamp_cc0.ogg | OfficeFoley stamp_stream | external CC0: S01 Kenney impactSounds impactPlate_heavy (kenney.nl) | 142fd6c77f13d25f |
+| audio/sfx/foley/chair_settle_cc0.ogg | OfficeFoley chair_stream | external CC0: S01 Kenney impactSounds impactWood_medium | 15271dbe8e2872db |
+| assets/audio/sfx/kenney_impact/lever_stop.ogg | RoutingBoard lever_impact_stream (Foley bus), assigned in _throw_lever at throw time | external CC0: Kenney impact-sounds | 15ff82332f342c30 |
+| audio/sfx/foley/route_lever.wav | OfficeFoley lever_stream (accepted route) | project generator tools/generate_action_foley.py (byte-identical re-gen verified 2026-10-12) | 8ffaa5f3e75d4aba |
+| audio/sfx/foley/door_latch.wav | OfficeFoley latch_stream | project generator tools/generate_action_foley.py (byte-identical re-gen verified 2026-10-12) | cf923379ddcf3b84 |
+| audio/sfx/foley/paper_turn.wav | OfficeFoley pickup_stream (document pickup) | project generator tools/generate_action_foley.py (byte-identical re-gen verified 2026-10-12) | b49e2de27fc0e62c |
+| audio/sfx/foley/pen_scratch.wav | OfficeFoley pen_stream | project generator tools/generate_action_foley.py | b8d89ab8a2db43c9 |
+| audio/sfx/foley/key_click.wav | OfficeFoley key_stream | project generator tools/generate_action_foley.py | b7856a5b1f7a648b |
+| audio/sfx/foley/door_hinge.wav | OfficeFoley hinge_stream | project generator tools/generate_action_foley.py | 73a91748f4508083 |
+| audio/sfx/foley/sheet_slide.wav | OfficeFoley feed_stream (paper feed) | project generator tools/generate_action_foley.py | e30becd7b01e33c4 |
+| audio/sfx/foley/wick_turn.wav | OfficeFoley wick_stream (lamp wick) | project generator tools/generate_action_foley.py | 632db6662be818ec |
+| audio/sfx/foley/register_wind.wav | OfficeFoley winding_stream (register wind, ±6% pitch jitter) | project generator tools/generate_action_foley.py | c491c2d5d539351a |
+| audio/sfx/foley/footstep_wood_beta.wav | PlayerController footstep_stream | project generator tools/generate_beta_footstep.py (runtime replacement for legacy) | 8b3f3a965218e843 |
+| audio/sfx/foley/footstep_wood.wav | NOT referenced by any runtime script/scene | UNKNOWN legacy provenance; repo rollback ONLY; excluded from Windows beta export, absent from shipped PCK (p12: 546 entries verified) | 5814b110ae7e8976 |
+| audio/music/temp (Long Note One, Kevin MacLeod) | intro music | CC BY 4.0; licenses/audio/ATTRIBUTION.txt ships in package | (see ATTRIBUTION.txt) |
+| audio/sfx/ambience room beds | OfficeAmbience / room buses | project-generated room beds, provisional (docs/third_party_assets.md) | (register) |
+
+## Listening gate (honest status)
+Automated rows above are code/provenance only. No agent listening pass was performed:
+- Human headphones + ordinary speakers listening pass on the real Windows build: OPEN (owner/sound designer).
+- Owner artistic acceptance of all audio: OPEN.
+- Recording checklist for the reviewer: (1) telegraph MARK/GAP intelligibility at room ambience;
+  (2) lever throw+stop reads as one physical event, no double hit; (3) paper feed vs pickup distinct;
+  (4) no loop/click artifacts on wick/wind; (5) bus balance Telegraph vs Foley vs Ambience.

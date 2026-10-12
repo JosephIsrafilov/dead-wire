@@ -1,0 +1,24 @@
+[
+  {
+    "run": 0,
+    "exit": 0,
+    "passes": 132,
+    "errors": []
+  },
+  {
+    "run": 1,
+    "exit": 0,
+    "passes": 132,
+    "errors": [
+      "ERROR: 3 resources still in use at exit (run with --verbose for details)."
+    ]
+  },
+  {
+    "run": 2,
+    "exit": 0,
+    "passes": 132,
+    "errors": [
+      "ERROR: 1 resources still in use at exit (run with --verbose for details)."
+    ]
+  }
+]

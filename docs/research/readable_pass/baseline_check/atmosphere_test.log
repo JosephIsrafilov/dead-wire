@@ -1,0 +1,94 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+--- Starting Office Atmosphere Test Suite ---
+  PASS: m1_office.tscn loads
+  PASS: Office instantiates
+  PASS: Unease director is wired
+  PASS: The lamp starts the watch turned down
+  PASS: The wick can be turned up by hand
+  PASS: Turning the wick brings the lamp up to full
+  PASS: A lit lamp offers no second turn
+  PASS: Opening the line brings a forgotten lamp up
+  PASS: The room is still itself while the call is far off
+  PASS: The room falls quiet ahead of the first call
+  PASS: The call arrives after the hush, breaking it
+  PASS: The hush is released once the call has the room
+  PASS: The pre-call hush never repeats within the watch
+  PASS: Sounder is wired
+  PASS: Sounder has an armature bar
+  PASS: The armature drops onto the anvil on a mark
+  PASS: It travels the configured distance
+  PASS: It lifts again on a gap
+  PASS: Transcript pad is wired
+  PASS: Message is coming in
+  PASS: The pad is being worked on during the message (feed or ink)
+  PASS: The pad starts blank
+  PASS: Characters appear as the signal arrives
+  PASS: The transcript is not finished early
+  PASS: The pad shows only what has been written so far
+  PASS: Writing stops when the message ends
+  PASS: The finished pad reads the full transcript
+  PASS: Scenario 3 signal is WATER
+  PASS: Scenario 3 transcript is WATCHER
+  PASS: WATCHER appears letter by letter, got 'W'
+  PASS: Window event is wired
+  PASS: The figure is not there to begin with
+  PASS: A figure that has not appeared yet cannot be observed
+  PASS: Lamp life is wired
+  PASS: Both live lights are present
+  PASS: Rest energies were captured
+  PASS: The lamp flickers
+  PASS: The stove breathes
+  PASS: Lamp never guts out
+  PASS: Lamp never flares
+  PASS: Stove never dies
+  PASS: Stove never flares
+  PASS: The lamp's flame mesh is bound in production
+  PASS: The flame visibly breathes
+  PASS: The flame never shrinks past its depth
+  PASS: The flame never flares past its depth
+  PASS: The room carries at least four creak anchors, got 6
+  PASS: Nothing creaks while the operator is walking
+  PASS: Nothing creaks immediately on stopping
+  PASS: The building answers after the dwell
+  PASS: The creak reports where it came from
+  PASS: The creak sounds from a physical anchor, not an invented spot
+  PASS: The creak keeps its distance from the operator's feet, got 4.06
+  PASS: Standing still does not creak repeatedly
+  PASS: Moving and stopping again can creak
+  PASS: The second creak is also a physical anchor
+  PASS: The building does not settle the same spot twice in a row
+  PASS: A wired-but-missing anchor list yields no candidates
+  PASS: No candidates means no creak, no loop, no error
+  PASS: Station clock is wired
+  PASS: The pendulum is a bob on a rod under a pivot
+  PASS: The clock shares the ambience's mechanical phase
+  PASS: The pendulum pivot actually swings, 110/120 frames
+  PASS: The case glass never swings
+  PASS: The swing reverses each half period, in phase with the tick
+  PASS: Ambience bus exists
+  PASS: The room can be hushed
+  PASS: Hushing actually drops the bed
+  PASS: Hush preserves the user's ambience setting
+  PASS: The hush releases
+  PASS: The moonlight has its weather
+  PASS: A clear sky leaves the moon at full
+  PASS: Something standing in the pane dims the moon on the room
+  PASS: The light comes back once nothing is there
+  PASS: A passing cloud dims it exactly the same way
+  PASS: A burning wick sinks, never below its floor (0.85)
+  PASS: A sunk wick asks to be trimmed
+  PASS: Trimming brings the flame back to full
+  PASS: A run-down register asks to be wound
+  PASS: Winding restores the spring
+  PASS: Winding never touches the record
+  PASS: The watch has its dawn
+  PASS: At dawn the register's clockwork stops
+  PASS: The pane carries the morning into the room
+  PASS: The lamp is offered to be turned down
+  PASS: The lamp is turned down for the day man
+--- All Office Atmosphere Tests PASSED (86 assertions) ---
+WARNING: 9 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 1 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)

@@ -1,0 +1,14 @@
+{
+  "scripts/telegraph/hardware/tape_register_controller.gd": "74ddb9436947d2f37114fbd58d900a4ec0aad23d54b99d9e9043e9c17e4066fe",
+  "scripts/telegraph/ui/routing_board.gd": "54218d37db6491e09f002f2907e7fd9a4508f954f323296c3cc805c5b16135c7",
+  "scripts/telegraph/ui/copy_commit_desk.gd": "0154c2fd14ffd27889faa03f57da041ad32b9ca0c2eadda85504e812ccb7a10d",
+  "scripts/telegraph/session/telegraph_session_controller.gd": "598db39fdfbd2a48b59814a8fc93b8649b50a1267b6c7d90c1c8a37ab092fc73",
+  "scripts/office/m1_office_controller.gd": "6bb4de0cf4fe92c1c6d83816216dcf72960e3f443442a04fa53ccc87b977f394",
+  "scripts/audio/office_foley.gd": "7ad668f3535df1b7894143e62d142a0a01cd9efbe82afdebfffca7de514b2b19",
+  "scripts/state/world_state.gd": "062ca5af8fd1775d9cad1bfe332e7c08cd9e2ef83b1093f8120bcd71630a40be",
+  "scripts/state/knowledge_state.gd": "ca576fce5f6306418cfc2b7d267a2e0d86122cce435c92ecf88f8bce8b210362",
+  "data/scenarios/m1_scenario_3_core_hook.tres": "5090ba0ec8d3e83ba5efcc54273127d68fbcdaf4d7949c4f1846e5c4ee4c31bd",
+  "scenes/telegraph/sounder.tscn": "b199f639ed5079ae120ab4d7d67f6a2dab3affd2e9d00907cef7f539cc148824",
+  "scenes/telegraph/telegraph_key.tscn": "622419af750f45767e1348e516b93853c8d78579a70bea786526ff5035b16d93",
+  "scenes/telegraph/tape_register.tscn": "4af0bb4f50107f09ca43e898cc803b0b4df126ec8de48d3b4050adbba4ec62eb"
+}

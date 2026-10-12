@@ -1,0 +1,5 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+--- Starting Tape Evidence Test Suite ---
+  PASS: Real scheduler starts the evidence fixture
+  FAIL: Started MARK exposes zero delivered units, not its future dot length

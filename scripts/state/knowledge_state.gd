@@ -5,6 +5,19 @@ signal knowledge_learned(fact_id: StringName)
 signal state_reset
 
 var _known_facts: Dictionary[StringName, bool] = {}
+## Values the operator explicitly entered, independent from objective WorldState.
+var _known_values: Dictionary[StringName, String] = {}
+
+func remember_value(fact_id: StringName, value: String) -> void:
+	if fact_id.is_empty():
+		return
+	_known_values[fact_id] = value
+
+func recall_value(fact_id: StringName, default_value: String = "") -> String:
+	return _known_values.get(fact_id, default_value)
+
+func value_snapshot() -> Dictionary[StringName, String]:
+	return _known_values.duplicate(true)
 
 func learn(fact_id: StringName) -> void:
 	if fact_id.is_empty():
@@ -26,4 +39,5 @@ func snapshot() -> Dictionary[StringName, bool]:
 
 func reset_for_new_game() -> void:
 	_known_facts.clear()
+	_known_values.clear()
 	state_reset.emit()

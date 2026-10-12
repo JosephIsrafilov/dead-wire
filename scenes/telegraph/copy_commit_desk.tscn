@@ -118,7 +118,7 @@ outline_size = 0
 horizontal_alignment = 1
 vertical_alignment = 1
 width = 180.0
-text = "AMEND COPY\nWATER"
+text = "AMEND COPY"
 visible = false
 
 [node name="OptionTwoLabel" type="Label3D" parent="."]
@@ -131,7 +131,7 @@ outline_size = 0
 horizontal_alignment = 1
 vertical_alignment = 1
 width = 180.0
-text = "RETAIN COPY\nWATCHER"
+text = "FILE AS COPIED"
 visible = false
 
 [node name="OptionOneStamp" type="Label3D" parent="."]
@@ -200,6 +200,7 @@ position = Vector3(-0.2, 0.12, -0.02)
 collision_layer = 2
 collision_mask = 0
 script = ExtResource("2_interact")
+prompt_text = "Amend Copy"
 enabled = false
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Option1Interactable"]
@@ -210,6 +211,7 @@ position = Vector3(0.2, 0.12, -0.02)
 collision_layer = 2
 collision_mask = 0
 script = ExtResource("2_interact")
+prompt_text = "File As Copied"
 enabled = false
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Option2Interactable"]

@@ -1,0 +1,22 @@
+{
+  "command": [
+    "C:/Users/YUSIF/Desktop/Godot_v4.7.1-stable_win64.exe/Godot_v4.7.1-stable_win64_console.exe",
+    "--headless",
+    "--audio-driver",
+    "Dummy",
+    "--path",
+    "C:/Users/YUSIF/Documents/dead-wire",
+    "--script",
+    "res://tests/telegraph/tape_register_test.gd"
+  ],
+  "exit_code": 0,
+  "timed_out": false,
+  "pass_assertions": 35,
+  "fail_assertions": [],
+  "error_lines": [],
+  "warning_lines": [],
+  "suite_totals": [
+    "--- All Tape Register Tests PASSED (35 assertions) ---\r"
+  ],
+  "log": "C:\\Users\\YUSIF\\.hermes\\cache\\scratch\\dead_wire_tape\\green_register.log"
+}

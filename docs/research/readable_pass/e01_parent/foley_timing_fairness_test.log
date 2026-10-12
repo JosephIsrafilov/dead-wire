@@ -1,0 +1,17 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+--- Starting Foley Timing Fairness Test Suite (E01) ---
+  PASS: Foley cannot start during MARK
+  PASS: Short sample plus margin fits the word gap
+  PASS: Sample tail plus margin cannot hit the next MARK
+  PASS: Late in the gap a previously safe sample must wait
+  PASS: An idle wire admits optional foley
+  PASS: Sample ending exactly at margin boundary fits
+  PASS: Sample 10ms past margin boundary does not fit
+  PASS: Invalid durations are rejected
+  PASS: Fit queries never mutate the scheduler clock
+  PASS: Real footstep tail near gap end is refused
+  PASS: Trigger during MARK defers the first step
+  PASS: Fairness binds the scheduler exactly once
+  PASS: Old scheduler listener is released on rebind
+--- Foley Timing Fairness Tests PASSED ---

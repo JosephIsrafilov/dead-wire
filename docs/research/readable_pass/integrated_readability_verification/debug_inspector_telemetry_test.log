@@ -1,0 +1,9 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+--- Starting Debug Inspector Telemetry Test Suite (Gate 19) ---
+  PASS: Shows scenario ID
+  PASS: Shows TRUE SIGNAL = WATER
+  PASS: Shows ELIAS PERCEPTION = WATER
+  PASS: Shows WRITTEN TRANSCRIPT = WATCHER
+  PASS: Shows MORSE STATE = READY
+--- All Debug Inspector Telemetry Tests PASSED ---

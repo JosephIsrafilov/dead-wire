@@ -1,0 +1,7 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+  PASS: Reference labels its own AL example
+  PASS: Card explains letter and word timing
+  PASS: American Morse internal pause remains explicit
+  PASS: Example is rendered from live encoder output
+  PASS: Wire take boundaries are not a translation

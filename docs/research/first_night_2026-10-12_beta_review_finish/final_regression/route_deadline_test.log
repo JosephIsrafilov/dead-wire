@@ -1,0 +1,11 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+  PASS: Order before original deadline receives one acceptance
+  PASS: Accepted old-slot route survives actual synchronous office progression
+  PASS: Exact/late original deadline rejects without accepted sound
+  PASS: Rejected request does not invent route memory
+  PASS: Deadline rejection creates no physical throw sound
+  PASS: Exact/late original deadline rejects without accepted sound
+  PASS: Rejected request does not invent route memory
+  PASS: Deadline rejection creates no physical throw sound
+Office route boundary assertions: 8

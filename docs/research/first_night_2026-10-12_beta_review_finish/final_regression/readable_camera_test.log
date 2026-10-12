@@ -1,0 +1,9 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+--- Starting Readable Camera Test Suite ---
+  PASS: Standing eyes are 1.56 m
+  PASS: Authored vertical FOV is 65 degrees
+  PASS: Camera keeps vertical FOV (KEEP_HEIGHT)
+  PASS: Collision capsule height remains 1.8
+  PASS: Collision capsule centre remains 0.9
+--- Readable Camera: 0 failure(s) ---

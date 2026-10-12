@@ -1,0 +1,690 @@
+{
+  "schema_version": 1,
+  "title": "Primary-source lessons for Dead Wire's evidence-checking and work loop",
+  "requested_output": "4–6 credible primary sources with exact URLs, verified short excerpts, developer claims distinguished from research inference, and concrete pitfalls. Research only; no final design or game-file edits.",
+  "status": "complete; six primary sources read and all excerpt matches verified",
+  "research_date": "2026-10-10",
+  "artifact_path": "C:/Users/YUSIF/.hermes/cache/scratch/deadwire_procedural_research.json",
+  "citation_ledger_path": "C:/Users/YUSIF/.hermes/cache/scratch/deadwire_procedural_citations.json",
+  "retrieval_manifest_path": "C:/Users/YUSIF/.hermes/cache/scratch/deadwire_procedural_evidence/manifest.json",
+  "context_provenance": "Dead Wire details below were supplied in the delegated task, not verified by inspecting the game.",
+  "context_constraints": {
+    "setting": "First-person psychological horror, 1894 railroad telegraph office, Godot 4.7.",
+    "hook": "Objective Morse says WATER; Elias's hand writes WATCHER.",
+    "evidence_contract": "TRUE signal, perception, and transcript are separate layers. Objective tape contains only MARK/GAP and must never secretly lie.",
+    "existing_actions": [
+      "Inspect paper",
+      "Inspect tape",
+      "Consult reference card",
+      "Consult ledger",
+      "Route trains",
+      "File copies"
+    ],
+    "scope": "Current M1 has three messages. No additional nights, town expansion, or combat before loop playtesting.",
+    "intended_consequence_constraint": "Consequences without reload; not established as effective by these sources."
+  },
+  "method": {
+    "source_selection": "Prefer Lucas Pope's own development posts and interviews containing directly attributed answers. Exclude SEO summaries, walkthroughs, listicles, Wikipedia, and reader commentary as evidence of developer intent.",
+    "acquisition": "Discover with web_search; read with web_extract. Because the extraction service intermittently failed and some successful extractions silently omitted article sections, retrieve public live HTML with urllib.request and parse visible text with a stdlib HTMLParser. Read the cached text before selecting excerpts.",
+    "retrieval_verification": "All six selected source pages returned HTTP 200 with substantive matching article or developer-post text. No logins, credentials, paid services, project uploads, or game files were used.",
+    "quote_verification": "Every excerpt is checked against the cached source text with the grounded-citations quote matcher. Source sections and text-file line locations are recorded for human review.",
+    "analysis_boundary": "Inferences and pitfalls are research interpretations for possible later playtest questions, not approved design decisions or recommendations to implement.",
+    "primary_source_boundary": "An interview is primary evidence for the developer's attributed statements, not for the journalist's evaluative prose. Developer-hosted devlog pages contain reader replies; those are not Lucas Pope claims.",
+    "personal_playthrough": false,
+    "peer_design_approval": false
+  },
+  "sources": [
+    {
+      "citation_id": 1,
+      "key": "papers_postmortem_nov",
+      "title": "TIGSource - November 2013 (22 posts): Papers, Please postmortem",
+      "url": "https://dukope.com/devlogs/papers-please/tig-10/",
+      "resolved_url": "https://dukope.com/devlogs/papers-please/tig-10/",
+      "speaker": "Lucas Pope (dukope)",
+      "publication": "Lucas Pope's own archive of his TIGSource development log",
+      "publication_dates": [
+        "2013-11-06",
+        "2013-11-11",
+        "2013-11-19"
+      ],
+      "source_type": "Developer-authored postmortem",
+      "why_credible": "First-person explanations of implemented and cut systems, including their observed or anticipated failure modes; original post numbers are preserved. Restrict attribution to Pope's main posts, not the Replies sections.",
+      "evidence_text_file": "C:/Users/YUSIF/.hermes/cache/scratch/deadwire_procedural_evidence/papers_postmortem_nov.txt",
+      "excerpts": [
+        {
+          "id": "1a",
+          "quote": "Once that judgement is abandoned, the discrepancy hunt falls apart completely.",
+          "speaker": "Lucas Pope",
+          "locator": "Post #626, November 11: Stuff That Was Cut > The Overwatcher; text line 70",
+          "supports": "Pope removed a citation-system subversion partly because objective right/wrong judgement supports the core discrepancy hunt.",
+          "verification": "PASS: verbatim in retrieved page text; whitespace, case and Markdown normalized"
+        },
+        {
+          "id": "1b",
+          "quote": "It changes the focus from the interesting stuff to watching for a light to turn off.",
+          "speaker": "Lucas Pope",
+          "locator": "Post #626: The Overwatcher; text line 68",
+          "supports": "An exploitable unwatched interval would convert difficult decisions into waiting for a safe timing window.",
+          "verification": "PASS: verbatim in retrieved page text; whitespace, case and Markdown normalized"
+        },
+        {
+          "id": "1c",
+          "quote": "That effect will propagate through the entire game to show nighttime earnings, adjusted events, and even when the family would start dying.",
+          "speaker": "Lucas Pope",
+          "locator": "Post #620, November 6: Economy; text line 23",
+          "supports": "Pope simulated the downstream consequences of early penalties rather than balancing each decision in isolation.",
+          "verification": "PASS: verbatim in retrieved page text; whitespace, case and Markdown normalized"
+        },
+        {
+          "id": "1d",
+          "quote": "Eventually, in the last few weeks before shipping, I decided to add a ton of pages to the rulebook to centralize what was previously a slew of scattered information.",
+          "speaker": "Lucas Pope",
+          "locator": "Post #637, November 19: Additional Rulebook Pages; text line 146",
+          "supports": "After beta complaints, Pope centralized persistent procedural information despite his initial preference for vagueness.",
+          "verification": "PASS: verbatim in retrieved page text; whitespace, case and Markdown normalized"
+        }
+      ],
+      "developer_claims": [
+        "Citation-system ambiguity and an overwatcher timing exploit weakened the central discrepancy-checking premise; both were cut.",
+        "An economy simulator propagated penalties, expenses, and story effects forward; its results influenced the placement of relief and bribery events.",
+        "Beta players found rules insufficiently explained; lasting instructions moved into the rulebook while new instructions still appeared in the bulletin.",
+        "He removed already-implemented or planned features when they diluted the experience; the unused shutter switch still attracted complaints about its pointlessness."
+      ],
+      "research_inferences_for_dead_wire": [
+        "The WATER/WATCHER conflict is more assessable if the player can distinguish an invariant evidentiary authority from Elias's fallible transcript. This is an analogy to Pope's judgement system, not a statement that Pope designed Dead Wire's TRUE/perception/transcript layers.",
+        "For consequences without reload, the useful lesson is to examine chains of outcomes from an early mistake, not simply the first punishment. No specific economy, penalty, or recovery mechanism follows from the source.",
+        "A reference surface can preserve procedural certainty without explaining the supernatural story; mystery and procedural opacity are different things."
+      ],
+      "concrete_pitfalls": [
+        "Secretly changing objective MARK/GAP evidence would make successful cross-checking unverifiable, unlike an intentional discrepancy between evidence and handwriting.",
+        "A safe timing exploit can replace an ethical or evidentiary decision with waiting for an indicator, removing the intended cost.",
+        "An early irreversible error may create a delayed failure cascade even if the immediate penalty looks fair; the source does not prove a no-reload version will remain recoverable.",
+        "Extra checking tools or interactive props can create expectations without meaningful payoff and dilute the importance of the central work action."
+      ],
+      "limits": "Papers, Please permits endings and repeat play. This postmortem is not evidence that a no-reload persistent-consequence policy is intrinsically engaging.",
+      "retrieval": {
+        "key": "papers_postmortem_nov",
+        "requested_url": "https://dukope.com/devlogs/papers-please/tig-10/",
+        "retrieval_method": "public HTTP GET (stdlib urllib.request)",
+        "retrieved_at": "2026-10-10T22:28:45.655378+04:00",
+        "status": 200,
+        "final_url": "https://dukope.com/devlogs/papers-please/tig-10/",
+        "content_type": "text/html",
+        "html_file": "C:\\Users\\YUSIF\\.hermes\\cache\\scratch\\deadwire_procedural_evidence\\papers_postmortem_nov.html",
+        "text_file": "C:\\Users\\YUSIF\\.hermes\\cache\\scratch\\deadwire_procedural_evidence\\papers_postmortem_nov.txt",
+        "bytes": 38906,
+        "text_characters": 27906
+      }
+    },
+    {
+      "citation_id": 2,
+      "key": "papers_design_interview",
+      "title": "Designing the bleak genius of Papers, Please",
+      "url": "https://gamedeveloper.com/design/designing-the-bleak-genius-of-i-papers-please-i-",
+      "resolved_url": "https://www.gamedeveloper.com/design/designing-the-bleak-genius-of-i-papers-please-i-",
+      "speaker": "Lucas Pope, interviewed by Leigh Alexander",
+      "publication": "Gamasutra / Game Developer",
+      "publication_date": "2013-09-03",
+      "source_type": "Direct developer interview",
+      "why_credible": "Named interviewer, direct quotations about scheduling tests and narrative systems, and concrete accounts of how technical simplicity enabled choices. Journalist praise is not treated as evidence.",
+      "evidence_text_file": "C:/Users/YUSIF/.hermes/cache/scratch/deadwire_procedural_evidence/papers_design_interview.txt",
+      "excerpts": [
+        {
+          "id": "2a",
+          "quote": "In testing, I found that the bulletin is basically ignored when you've got someone to talk to right away, and that causes unintended confusion.",
+          "speaker": "Lucas Pope",
+          "locator": "Scripted encounters, random encounters; text line 102",
+          "supports": "A simultaneous conversation can capture attention needed for learning a rule.",
+          "verification": "PASS: verbatim in retrieved page text; whitespace, case and Markdown normalized"
+        },
+        {
+          "id": "2b",
+          "quote": "If you put enough of those together, the choices start to build up and you're left feeling like you took a more personal path that wasn't all good or all bad.",
+          "speaker": "Lucas Pope",
+          "locator": "Simplicity that serves the experience; text line 104",
+          "supports": "Small, non-binary encounter resolutions can accumulate into a personally distinctive path.",
+          "verification": "PASS: verbatim in retrieved page text; whitespace, case and Markdown normalized"
+        },
+        {
+          "id": "2c",
+          "quote": "If there were gobs of 3D assets or voice overs or exciting cutscenes, it'd be a lot harder to maintain these nuances.",
+          "speaker": "Lucas Pope",
+          "locator": "Simplicity that serves the experience; text line 104",
+          "supports": "Low production cost made numerous nuanced resolutions practical.",
+          "verification": "PASS: verbatim in retrieved page text; whitespace, case and Markdown normalized"
+        }
+      ],
+      "developer_claims": [
+        "Testing showed that an immediate conversation caused players to ignore new bulletin rules.",
+        "Scripted encounters, rule changes, attacks, and longer arcs formed a delicate dependency network; adding one encounter could disrupt later scheduling.",
+        "Technical simplicity allowed many small choice-dependent resolutions that did not need explicit good/bad classifications."
+      ],
+      "research_inferences_for_dead_wire": [
+        "Divided attention can produce either a meaningful work choice or accidental ignorance of an untaught procedure. The player's explanation of a mistake distinguishes those two outcomes.",
+        "Routing and filing already provide possible contexts for consequential work; the evidence concerns accumulation and interpretation of small decisions, not a requirement for a large branch tree or a new location.",
+        "Uncertainty about motive or morality need not entail uncertainty about which source is objective."
+      ],
+      "concrete_pitfalls": [
+        "A horror interruption during the first explanation of tape or reference-card use may cause procedural ignorance that is mistaken for intended psychological tension.",
+        "Adding every interesting encounter to the same short sequence can overload the player's headspace and obscure which rule caused the outcome.",
+        "Cheap individual branches can still be expensive as a dependency network; production simplicity does not remove scheduling complexity.",
+        "A visible good/evil score can collapse morally ambiguous work into optimizing the game's approval."
+      ],
+      "limits": "Pope reports his testing observation but gives no sample size or controlled comparison. His interview is evidence of his experience and intention, not measured proof for Dead Wire.",
+      "retrieval": {
+        "key": "papers_design_interview",
+        "requested_url": "https://gamedeveloper.com/design/designing-the-bleak-genius-of-i-papers-please-i-",
+        "retrieval_method": "public HTTP GET (stdlib urllib.request)",
+        "retrieved_at": "2026-10-10T22:28:45.657551+04:00",
+        "status": 200,
+        "final_url": "https://www.gamedeveloper.com/design/designing-the-bleak-genius-of-i-papers-please-i-",
+        "content_type": "text/html; charset=utf-8",
+        "html_file": "C:\\Users\\YUSIF\\.hermes\\cache\\scratch\\deadwire_procedural_evidence\\papers_design_interview.html",
+        "text_file": "C:\\Users\\YUSIF\\.hermes\\cache\\scratch\\deadwire_procedural_evidence\\papers_design_interview.txt",
+        "bytes": 467516,
+        "text_characters": 16334
+      }
+    },
+    {
+      "citation_id": 3,
+      "key": "obra_igf_interview",
+      "title": "Road to the IGF: Lucas Pope's Return of the Obra Dinn",
+      "url": "https://gamedeveloper.com/business/road-to-the-igf-lucas-pope-s-i-return-of-the-obra-dinn-i-",
+      "resolved_url": "https://www.gamedeveloper.com/business/road-to-the-igf-lucas-pope-s-i-return-of-the-obra-dinn-i-",
+      "speaker": "Lucas Pope, interviewed by Joel Couture",
+      "publication": "Gamasutra / Game Developer",
+      "publication_date": "2019-03-15",
+      "source_type": "First-person developer Q&A",
+      "why_credible": "Post-release answers about clue construction, player discovery order, and the book's purpose; distinguishes intended motivation from the mechanics actually assessed.",
+      "evidence_text_file": "C:/Users/YUSIF/.hermes/cache/scratch/deadwire_procedural_evidence/obra_igf_interview.txt",
+      "excerpts": [
+        {
+          "id": "3a",
+          "quote": "the core focus of the gameplay is strictly on specific fates and identities, and the player's understanding of the larger mystery is mostly irrelevant.",
+          "speaker": "Lucas Pope",
+          "locator": "On the challenges of doling out clues when you know all the answers; text line 115",
+          "supports": "Specific checkable deductions were separated from a complete understanding of the overarching story.",
+          "verification": "PASS: verbatim in retrieved page text; whitespace, case and Markdown normalized"
+        },
+        {
+          "id": "3b",
+          "quote": "The next step was to place each death somewhere in the narrative, considered on two axes: chronologically in time, and order of player discovery.",
+          "speaker": "Lucas Pope",
+          "locator": "On designing a mystery that spans a massive ship and crew; text line 110",
+          "supports": "The chronology of facts and the order in which the player receives them were tracked separately.",
+          "verification": "PASS: verbatim in retrieved page text; whitespace, case and Markdown normalized"
+        },
+        {
+          "id": "3c",
+          "quote": "My goal for Obra Dinn was to overwhelm the player initially, then give them time to get comfortable with the core loop",
+          "speaker": "Lucas Pope",
+          "locator": "Creating appeal a single mystery at a time; text line 113",
+          "supports": "Initial overload was intentional, but was meant to be followed by comfort with the core activity.",
+          "verification": "PASS: verbatim in retrieved page text; whitespace, case and Markdown normalized"
+        }
+      ],
+      "developer_claims": [
+        "His clue design could focus on specific identities and fates separately from understanding the larger mystery.",
+        "He arranged deaths on both chronology and player-discovery axes using a spreadsheet-like tool.",
+        "He wanted each scene to be interesting independently of full story comprehension; the book supplied chronology and familiar reference metaphors."
+      ],
+      "research_inferences_for_dead_wire": [
+        "Whether a player can justify the decoded work instruction is a different research question from whether they can explain the haunting. Operational understanding can be evaluated without a complete supernatural theory.",
+        "Signal order, order of inspection, and timing of consequences can diverge; confusing these orders can create an accidental mystery about causality instead of the intended mystery about perception.",
+        "A ledger's value is the organization and retrieval it affords, not merely its period appearance."
+      ],
+      "concrete_pitfalls": [
+        "Demanding complete lore comprehension before a correct work action can block the loop for reasons unrelated to evidence checking.",
+        "A realistic-looking ledger without understandable chronology or source relationships can add memory burden rather than reduce it.",
+        "Treating Pope's initial-overwhelm intention as proof that prolonged confusion is effective ignores his later self-criticism in source 6."
+      ],
+      "limits": "The empty-book completion compulsion is explicitly Pope's own taste; it is not universal motivation or a recommendation to copy his scale.",
+      "retrieval": {
+        "key": "obra_igf_interview",
+        "requested_url": "https://gamedeveloper.com/business/road-to-the-igf-lucas-pope-s-i-return-of-the-obra-dinn-i-",
+        "retrieval_method": "public HTTP GET (stdlib urllib.request)",
+        "retrieved_at": "2026-10-10T22:28:45.658172+04:00",
+        "status": 200,
+        "final_url": "https://www.gamedeveloper.com/business/road-to-the-igf-lucas-pope-s-i-return-of-the-obra-dinn-i-",
+        "content_type": "text/html; charset=utf-8",
+        "html_file": "C:\\Users\\YUSIF\\.hermes\\cache\\scratch\\deadwire_procedural_evidence\\obra_igf_interview.html",
+        "text_file": "C:\\Users\\YUSIF\\.hermes\\cache\\scratch\\deadwire_procedural_evidence\\obra_igf_interview.txt",
+        "bytes": 467982,
+        "text_characters": 11899
+      }
+    },
+    {
+      "citation_id": 4,
+      "key": "obra_book_interview",
+      "title": "How a book binds the Return of the Obra Dinn",
+      "url": "https://rockpapershotgun.com/how-a-book-binds-the-return-of-the-obra-dinn",
+      "resolved_url": "https://www.rockpapershotgun.com/how-a-book-binds-the-return-of-the-obra-dinn",
+      "speaker": "Lucas Pope, interviewed by Alex Wiltshire",
+      "publication": "Rock Paper Shotgun, The Mechanic",
+      "publication_date": "2018-11-07",
+      "source_type": "Developer interview about an interface's development",
+      "why_credible": "Specific post-release explanation of failed early presentation, book navigation, retained inconvenience, and production compromises. Direct Pope quotations are separated from the writer's interpretation of pacing.",
+      "evidence_text_file": "C:/Users/YUSIF/.hermes/cache/scratch/deadwire_procedural_evidence/obra_book_interview.txt",
+      "excerpts": [
+        {
+          "id": "4a",
+          "quote": "I had no idea about anything beyond the first 15 minutes, which was the first demo.",
+          "speaker": "Lucas Pope",
+          "locator": "Discussion of early manifest demo; text line 43",
+          "supports": "A seemingly successful short demo did not establish that the information structure would scale.",
+          "verification": "PASS: verbatim in retrieved page text; whitespace, case and Markdown normalized"
+        },
+        {
+          "id": "4b",
+          "quote": "where I inconvenience the player in order to hold the mood, the sense of the rules I’ve set up",
+          "speaker": "Lucas Pope",
+          "locator": "Discussion of returning to corpses and diegetic constraints; text line 59",
+          "supports": "Some retained friction deliberately protected mood and consistent fictional rules.",
+          "verification": "PASS: verbatim in retrieved page text; whitespace, case and Markdown normalized"
+        },
+        {
+          "id": "4c",
+          "quote": "I felt, OK the game’s not perfect but I felt that after four and a half years, I could ship it.",
+          "speaker": "Lucas Pope",
+          "locator": "Discussion of waiting for the book to appear; text line 57",
+          "supports": "Some interface delay was also acknowledged as an unresolved production compromise, not pure design virtue.",
+          "verification": "PASS: verbatim in retrieved page text; whitespace, case and Markdown normalized"
+        },
+        {
+          "id": "4d",
+          "quote": "Anything else would need a lot of instruction, so it was the simplest thing.",
+          "speaker": "Lucas Pope",
+          "locator": "Discussion of the single table-of-contents shortcut; text line 54",
+          "supports": "He limited navigation features partly to reduce their teaching cost.",
+          "verification": "PASS: verbatim in retrieved page text; whitespace, case and Markdown normalized"
+        }
+      ],
+      "developer_claims": [
+        "The early demo did not reveal later information overload; convention playtests exposed the problem.",
+        "Book navigation used familiar concepts and limited shortcuts to reduce teaching requirements.",
+        "Some re-examination inconvenience maintained his fictional rules and mood, but he also conceded that waiting to edit solutions was an imperfect compromise he shipped."
+      ],
+      "research_inferences_for_dead_wire": [
+        "Physical inspection can support concentration and atmosphere, yet a repeatedly paid access cost can obstruct the very cross-checking the work loop depends on.",
+        "A convincing diegetic reference surface still needs usable selection, navigation, and reinspection; physical plausibility alone does not prove usability.",
+        "A three-message playtest can assess immediate comprehension, but cannot by itself certify that any expanded evidence load will remain manageable. This is a scope limitation, not a proposal to expand M1."
+      ],
+      "concrete_pitfalls": [
+        "Calling every wait, walk, or page turn intentional atmosphere conceals admitted rough edges and production trade-offs.",
+        "Repeated tape or paper reaccess with no new judgement can become an access tax rather than an evidence decision.",
+        "Adding many shortcuts can increase teaching and accidental-navigation costs; removing all shortcuts can increase repetitive retrieval costs. The interview does not establish a universal optimum.",
+        "A short prototype's clarity can fail under a much larger narrative and evidence set."
+      ],
+      "limits": "The writer's statement that forced time helps players notice details is interpretation. Pope's directly quoted concession about shipping an imperfect sequence must not be omitted.",
+      "retrieval": {
+        "key": "obra_book_interview",
+        "requested_url": "https://rockpapershotgun.com/how-a-book-binds-the-return-of-the-obra-dinn",
+        "retrieval_method": "public HTTP GET (stdlib urllib.request)",
+        "retrieved_at": "2026-10-10T22:28:45.658792+04:00",
+        "status": 200,
+        "final_url": "https://www.rockpapershotgun.com/how-a-book-binds-the-return-of-the-obra-dinn",
+        "content_type": "text/html; charset=utf-8",
+        "html_file": "C:\\Users\\YUSIF\\.hermes\\cache\\scratch\\deadwire_procedural_evidence\\obra_book_interview.html",
+        "text_file": "C:\\Users\\YUSIF\\.hermes\\cache\\scratch\\deadwire_procedural_evidence\\obra_book_interview.txt",
+        "bytes": 255014,
+        "text_characters": 13359
+      }
+    },
+    {
+      "citation_id": 6,
+      "key": "pope_2022_interview",
+      "title": "Award-Winning Game Designer Lucas Pope Explains Why He Won’t Make Sequels",
+      "url": "https://www.gamingbible.com/features/lucas-pope-papers-please-return-of-the-obra-dinn-and-no-sequels-20220523",
+      "resolved_url": "https://www.gamingbible.com/features/lucas-pope-papers-please-return-of-the-obra-dinn-and-no-sequels-20220523",
+      "speaker": "Lucas Pope, interviewed by Georgina Young",
+      "publication": "GAMINGbible",
+      "publication_date": "2022-05-23",
+      "source_type": "Retrospective direct interview",
+      "why_credible": "Although the headline concerns sequels, the body contains specific attributed comparisons of both games' onboarding and explicit self-criticism. Use those statements, not broad historical or promotional claims from the journalist.",
+      "evidence_text_file": "C:/Users/YUSIF/.hermes/cache/scratch/deadwire_procedural_evidence/pope_2022_interview.txt",
+      "excerpts": [
+        {
+          "id": "6a",
+          "quote": "it’s asking you a very simple task, and you can do that simple task without understanding much more about the game.",
+          "speaker": "Lucas Pope",
+          "locator": "Comparison of Papers, Please with Obra Dinn; text line 43",
+          "supports": "Papers, Please starts with an achievable task despite broader initial obscurity.",
+          "verification": "PASS: verbatim in retrieved page text; whitespace, case and Markdown normalized"
+        },
+        {
+          "id": "6b",
+          "quote": "One issue [with Obra Dinn] is just the approachability - moving around in the 3D environment [in a 1-bit style] was something that I am totally used to, but I can see how it’s very disorientating for some people.",
+          "speaker": "Lucas Pope; bracketed clarifications are in the published interview",
+          "locator": "Approachability discussion; text line 45",
+          "supports": "Developer familiarity with first-person controls and rendering did not guarantee audience approachability.",
+          "verification": "PASS: verbatim in retrieved page text; whitespace, case and Markdown normalized"
+        },
+        {
+          "id": "6c",
+          "quote": "I built the game assuming they would fill out the world in one way, and if that doesn’t quite match up then they’re gonna run into problems",
+          "speaker": "Lucas Pope",
+          "locator": "Discussion of relying on the player's imagination; text line 34",
+          "supports": "Leaving room for imagination can fail when the player's mental model differs from the developer's.",
+          "verification": "PASS: verbatim in retrieved page text; whitespace, case and Markdown normalized"
+        }
+      ],
+      "developer_claims": [
+        "He regards Papers, Please as a smoother ramp with a stronger design: the player can do a simple initial task without understanding the wider situation.",
+        "He considers Obra Dinn's delayed comprehension and disorienting first-person interaction weaknesses rather than strengths to copy automatically.",
+        "He relies on player imagination but recognizes that mismatched expectations can cause trouble."
+      ],
+      "research_inferences_for_dead_wire": [
+        "First-person document handling, recognizing a valid tape reading, and understanding the haunting are distinct learning burdens. Failure on one does not demonstrate failure on the others.",
+        "The existence of a period reference card is not enough evidence that a novice understands MARK/GAP segmentation, the task goal, or the source hierarchy.",
+        "A first successful work action can be a clearer onboarding test than whether the player understands why the handwriting changed. This is a research criterion, not a finalized tutorial design."
+      ],
+      "concrete_pitfalls": [
+        "Celebrated mystery opacity can be mistaken for permission to keep basic controls or job requirements obscure.",
+        "A developer fluent in Morse and first-person games may not notice the compounded cost of decoding, navigation, and paper manipulation for a novice.",
+        "Assuming all players will interpret the WATER/WATCHER mismatch as intended can hide interpretations such as random text corruption, an unreliable tape, or a UI bug. These possibilities are hypotheses, not observed Dead Wire playtest results."
+      ],
+      "limits": "A retrospective self-assessment complements, and partly cautions against, the earlier stated intention to overwhelm. It is not evidence from a controlled onboarding experiment.",
+      "retrieval": {
+        "key": "pope_2022_interview",
+        "requested_url": "https://www.gamingbible.com/features/lucas-pope-papers-please-return-of-the-obra-dinn-and-no-sequels-20220523",
+        "retrieval_method": "public HTTP GET (stdlib urllib.request)",
+        "retrieved_at": "2026-10-10T22:28:46.642761+04:00",
+        "status": 200,
+        "final_url": "https://www.gamingbible.com/features/lucas-pope-papers-please-return-of-the-obra-dinn-and-no-sequels-20220523",
+        "content_type": "text/html; charset=utf-8",
+        "html_file": "C:\\Users\\YUSIF\\.hermes\\cache\\scratch\\deadwire_procedural_evidence\\pope_2022_interview.html",
+        "text_file": "C:\\Users\\YUSIF\\.hermes\\cache\\scratch\\deadwire_procedural_evidence\\pope_2022_interview.txt",
+        "bytes": 412214,
+        "text_characters": 12089
+      }
+    },
+    {
+      "citation_id": 10,
+      "key": "obra_validation_devlog",
+      "title": "TIGSource - August 2017 (9 posts): Return of the Obra Dinn alpha fixes and Fate Validation",
+      "url": "https://dukope.com/devlogs/obra-dinn/tig-30",
+      "resolved_url": "https://dukope.com/devlogs/obra-dinn/tig-30/",
+      "speaker": "Lucas Pope (dukope)",
+      "publication": "Lucas Pope's own archive of his TIGSource development log",
+      "publication_date": "2017-08-11",
+      "source_type": "Developer-authored development report",
+      "why_credible": "Post #734 documents a concrete failed alpha playtest and the reason for verification, book, interaction, and fate-input changes. Reader replies are explicitly excluded from developer intent.",
+      "evidence_text_file": "C:/Users/YUSIF/.hermes/cache/scratch/deadwire_procedural_evidence/obra_validation_devlog.txt",
+      "excerpts": [
+        {
+          "id": "10a",
+          "quote": "I prefer something more immediate just for player satisfaction, but there’s a problem that immediate feedback can be cheated.",
+          "speaker": "Lucas Pope",
+          "locator": "Post #734: Fate Validation; text line 45",
+          "supports": "Immediate confirmation trades player satisfaction against trial-and-error exploitation.",
+          "verification": "PASS: verbatim in retrieved page text; whitespace, case and Markdown normalized"
+        },
+        {
+          "id": "10b",
+          "quote": "The game now tells you when any set of 3 fates are correct.",
+          "speaker": "Lucas Pope",
+          "locator": "Post #734: Fate Validation; text line 45",
+          "supports": "The described alpha confirms and locks correct fates in batches of three.",
+          "verification": "PASS: verbatim in retrieved page text; whitespace, case and Markdown normalized"
+        },
+        {
+          "id": "10c",
+          "quote": "The fate system allows each death to have multiple correct fates so hopefully players won’t get stuck by entering something they thought was correct but wasn’t flagged as so.",
+          "speaker": "Lucas Pope",
+          "locator": "Post #734: SVO Fates; text line 47",
+          "supports": "Multiple semantically defensible causes of death were accepted to avoid wording traps.",
+          "verification": "PASS: verbatim in retrieved page text; whitespace, case and Markdown normalized"
+        },
+        {
+          "id": "10d",
+          "quote": "The manifest is the only collectable on the entire ship, required for meaningful progression but not hard-gated, and easy to miss.",
+          "speaker": "Lucas Pope",
+          "locator": "Post #734: Problems > Interactive Objects; text line 23",
+          "supports": "A required reference tool that is easy to miss creates an unintended progression blocker.",
+          "verification": "PASS: verbatim in retrieved page text; whitespace, case and Markdown normalized"
+        }
+      ],
+      "developer_claims": [
+        "Immediate per-fate feedback permits exhaustive guessing, while waiting until the end sacrifices satisfaction; batched validation was his compromise.",
+        "He describes making exploitation harder, not mathematically impossible.",
+        "Fate descriptions can admit multiple valid causal interpretations; the input system accepts alternative correct fates.",
+        "Alpha playtesting exposed required-object discoverability and an unexplained corpse-chain system; he reduced irrelevant interactive objects and introduced clearer progression support."
+      ],
+      "research_inferences_for_dead_wire": [
+        "Recording a tentative interpretation, checking its evidence, and making a consequential work commitment are analytically different acts. Instant authoritative feedback on every edit can turn evidence work into a guessing interface.",
+        "A batch size that worked in a large fate set is not automatically appropriate for M1's three messages; it could defer all meaningful feedback to the end of the slice.",
+        "Semantic tolerance for a cause-of-death description is not permission to accept an objectively different Morse message. Flexible phrasing and exact signal truth are separate contracts.",
+        "A necessary reference card or tape that is physically present but overlooked may block understanding without testing deductive ability."
+      ],
+      "concrete_pitfalls": [
+        "Do not claim that three-at-a-time validation prevents all brute force: two known answers can make the remaining slot an oracle. This is a mechanical inference, not a quantified developer finding.",
+        "No confirmation until a large batch completes can let one mistaken assumption contaminate several otherwise reasonable conclusions.",
+        "Strict wording can reject a correct interpretation; overly permissive acceptance can erase an exact signal discrepancy. The source's synonyms concern causal descriptions, not arbitrary message equivalence.",
+        "Unexplained interactivity rules can teach the player to ignore the same small objects needed for progress; required evidence then becomes a hidden-object obstacle."
+      ],
+      "limits": "This describes a 2017 alpha iteration. It should not be used to assert that every detail, interaction, or validation case was unchanged in the released game.",
+      "retrieval": {
+        "key": "obra_validation_devlog",
+        "requested_url": "https://dukope.com/devlogs/obra-dinn/tig-30",
+        "retrieval_method": "public HTTP GET (stdlib urllib.request)",
+        "retrieved_at": "2026-10-10T22:30:27.274870+04:00",
+        "status": 200,
+        "final_url": "https://dukope.com/devlogs/obra-dinn/tig-30/",
+        "content_type": "text/html",
+        "html_file": "C:\\Users\\YUSIF\\.hermes\\cache\\scratch\\deadwire_procedural_evidence\\obra_validation_devlog.html",
+        "text_file": "C:\\Users\\YUSIF\\.hermes\\cache\\scratch\\deadwire_procedural_evidence\\obra_validation_devlog.txt",
+        "bytes": 25112,
+        "text_characters": 16076
+      }
+    }
+  ],
+  "cross_source_findings": [
+    {
+      "topic": "Reliable checks versus ambiguous meaning",
+      "evidence_ids": [
+        "1a",
+        "3a",
+        "10c"
+      ],
+      "finding_type": "Research synthesis, not a developer statement",
+      "finding": "The useful contrast is between checkable task facts and open-ended story or moral interpretation. Ambiguity about the haunting is not the same as ambiguity about whether objective tape evidence has changed.",
+      "pitfall": "Treating every information layer as unreliable removes the player's basis for verification."
+    },
+    {
+      "topic": "Decision costs must remain attached to decisions",
+      "evidence_ids": [
+        "1b",
+        "1c",
+        "2b"
+      ],
+      "finding_type": "Research synthesis, not a developer statement",
+      "finding": "Persistent pressure depends on both downstream consequences and the absence of trivial escape exploits. Small resolutions can accumulate without a spectacle-sized branch at every step.",
+      "pitfall": "A waiting exploit empties the decision; an opaque failure cascade obscures responsibility. Neither source endorses a specific no-reload model."
+    },
+    {
+      "topic": "Operational learning versus divided-attention pressure",
+      "evidence_ids": [
+        "1d",
+        "2a",
+        "6a",
+        "6b"
+      ],
+      "finding_type": "Research synthesis, not a developer statement",
+      "finding": "A player can lack basic procedural knowledge even while correctly noticing the horror. Interruption pressure is not evidence of engagement if it prevents learning the job.",
+      "pitfall": "Counting skipped instructions, unreadable evidence, or first-person navigation confusion as intentional difficulty."
+    },
+    {
+      "topic": "Verification cadence and input semantics",
+      "evidence_ids": [
+        "10a",
+        "10b",
+        "10c"
+      ],
+      "finding_type": "Research synthesis, not a developer statement",
+      "finding": "Verification must balance confidence, feedback, and answer-fishing. Tolerance for equivalent descriptions and fidelity to an exact signal need separate consideration.",
+      "pitfall": "Copying the three-fate rule into a three-message slice without assessing feedback latency, or using causal-description flexibility to blur WATER and WATCHER."
+    },
+    {
+      "topic": "Friction is a trade-off, not automatic immersion",
+      "evidence_ids": [
+        "4b",
+        "4c",
+        "4d"
+      ],
+      "finding_type": "Research synthesis, not a developer statement",
+      "finding": "Diegetic rituals can preserve fictional rules, but the same source explicitly concedes residual inconvenience. The cost of revisiting evidence is analytically distinct from the cost of reasoning about it.",
+      "pitfall": "Justifying every repeated walk, page turn, or forced wait as mood without examining whether it still contributes to a judgement."
+    },
+    {
+      "topic": "Developer intentions can change after use",
+      "evidence_ids": [
+        "3c",
+        "4a",
+        "6a",
+        "6b"
+      ],
+      "finding_type": "Research synthesis, not a developer statement",
+      "finding": "Earlier enthusiasm for initial overwhelm coexists with later criticism of approachability. These are not universal principles; both the initial intention and the later qualification belong in the evidence record.",
+      "pitfall": "Cherry-picking the initial-overwhelm quote or assuming a successful short demo validates future scope."
+    }
+  ],
+  "not_established_by_this_research": [
+    "That the proposed evidence/work loop in Dead Wire is already engaging, understandable, or fair.",
+    "That objective tape must be truthful because Lucas Pope said so; that contract comes from the supplied Dead Wire context, with a limited supporting analogy to reliable discrepancy judgement.",
+    "An optimal confirmation batch size, time limit, penalty magnitude, recovery policy, or final tutorial.",
+    "That consequences without reload outperform replayable outcomes.",
+    "That three-at-a-time confirmation completely prevents brute force.",
+    "Any personally observed playthrough results, new implemented mechanics, or peer design approval."
+  ],
+  "issues_encountered": [
+    "Configured web tools intermittently reported that the Nous Tool Gateway or identity was unavailable. Keyless search fallback worked; no credentials or service settings were accessed.",
+    "Some successful web_extract results omitted paragraphs even with a generous character limit; the excerpts used here were instead checked against live public HTTP page text.",
+    "First-party development archives include reader replies. The selected quotes are only from Lucas Pope's own posts or directly attributed interview answers."
+  ],
+  "game_files_modified": [],
+  "final_design_proposed": false,
+  "validation": {
+    "state": "PASS",
+    "verified_at": "2026-10-10T22:38:09.873142+04:00",
+    "selected_source_count": 6,
+    "verified_excerpt_count": 21,
+    "source_urls_unique": true,
+    "selected_sources_http_200": true,
+    "all_excerpts_verbatim_matched": true,
+    "all_sources_have_claim_inference_pitfall_separation": true,
+    "citation_report_path": "C:\\Users\\YUSIF\\.hermes\\cache\\scratch\\deadwire_procedural_research_report.md",
+    "citation_report_exit_code": 0,
+    "citation_report_errors": [],
+    "citation_report_warnings": [
+      "stats: 25 prose sentence(s), 7 with declared provenance (28%) — 7 cited, 0 marked [unverified] (a sentence may be both); 6 distinct source(s) cited, 10 in ledger (6 with evidence quotes)",
+      "registered in the ledger but not cited in this draft: [5], [7], [8], [9]"
+    ],
+    "excerpt_checks": [
+      {
+        "excerpt": "1a",
+        "citation_id": 1,
+        "verbatim_match": true
+      },
+      {
+        "excerpt": "1b",
+        "citation_id": 1,
+        "verbatim_match": true
+      },
+      {
+        "excerpt": "1c",
+        "citation_id": 1,
+        "verbatim_match": true
+      },
+      {
+        "excerpt": "1d",
+        "citation_id": 1,
+        "verbatim_match": true
+      },
+      {
+        "excerpt": "2a",
+        "citation_id": 2,
+        "verbatim_match": true
+      },
+      {
+        "excerpt": "2b",
+        "citation_id": 2,
+        "verbatim_match": true
+      },
+      {
+        "excerpt": "2c",
+        "citation_id": 2,
+        "verbatim_match": true
+      },
+      {
+        "excerpt": "3a",
+        "citation_id": 3,
+        "verbatim_match": true
+      },
+      {
+        "excerpt": "3b",
+        "citation_id": 3,
+        "verbatim_match": true
+      },
+      {
+        "excerpt": "3c",
+        "citation_id": 3,
+        "verbatim_match": true
+      },
+      {
+        "excerpt": "4a",
+        "citation_id": 4,
+        "verbatim_match": true
+      },
+      {
+        "excerpt": "4b",
+        "citation_id": 4,
+        "verbatim_match": true
+      },
+      {
+        "excerpt": "4c",
+        "citation_id": 4,
+        "verbatim_match": true
+      },
+      {
+        "excerpt": "4d",
+        "citation_id": 4,
+        "verbatim_match": true
+      },
+      {
+        "excerpt": "6a",
+        "citation_id": 6,
+        "verbatim_match": true
+      },
+      {
+        "excerpt": "6b",
+        "citation_id": 6,
+        "verbatim_match": true
+      },
+      {
+        "excerpt": "6c",
+        "citation_id": 6,
+        "verbatim_match": true
+      },
+      {
+        "excerpt": "10a",
+        "citation_id": 10,
+        "verbatim_match": true
+      },
+      {
+        "excerpt": "10b",
+        "citation_id": 10,
+        "verbatim_match": true
+      },
+      {
+        "excerpt": "10c",
+        "citation_id": 10,
+        "verbatim_match": true
+      },
+      {
+        "excerpt": "10d",
+        "citation_id": 10,
+        "verbatim_match": true
+      }
+    ]
+  }
+}

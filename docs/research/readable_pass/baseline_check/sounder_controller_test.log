@@ -1,0 +1,19 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+--- Starting Sounder Controller Test Suite (Gate 10) ---
+  PASS: Initial down clicks is 0
+  PASS: Initial up clacks is 0
+  PASS: Initial lever position is up
+  PASS: MARK ev0 start triggers down click (1)
+  PASS: Up clacks is 0 at t=0.0
+  PASS: Lever is down during MARK
+  PASS: Down clicks still 1
+  PASS: GAP ev1 start triggers up clack (1)
+  PASS: Lever is up during GAP
+  PASS: MARK ev2 start triggers down click (2)
+  PASS: Up clacks still 1
+  PASS: Lever is down during MARK ev2
+  PASS: Final down clicks == 2
+  PASS: Final MARK end triggers terminal up clack (2)
+  PASS: Lever is up after completion
+--- All Sounder Controller Tests PASSED ---

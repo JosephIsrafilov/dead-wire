@@ -1,0 +1,6 @@
+## Shutdown-error disposition (read-only, this session)
+- Focused runs transcript_paper (134), foley_lifecycle (36), routing_board (30), readability_options (13): ZERO ERROR lines in logs.
+- player_feedback (15): 1x "resources still in use at exit" — exit-time engine message, not an assertion failure. Test passed.
+- Historical full_02 (86 suites): 18 suites carry the same exit-time class. This is a shutdown-time cleanup ordering issue inside the engine or suite teardown; it does NOT affect assertions and does NOT justify blind teardown patches.
+- Standalone p6_run2 exit-time messages (RID leaks, StringName unref, PagedAllocator) belong to the same class and stay open with P4.
+- Next diagnostic step (needs owner permission per plan): capture a full regression verbose log for one error-bearing suite and correlate "resources still in use" with the resource types listed; no code changes until evidence exists.

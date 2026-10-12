@@ -1,0 +1,44 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+--- Starting TransmissionData Foundation Test ---
+  PASS: TransmissionData instantiates
+  PASS: TransmissionData is a Resource
+  PASS: TransmissionData underlying class is Resource
+  PASS: Fixture distinct_layers.tres loads successfully
+  PASS: Fixture transmission_id matches
+  PASS: Fixture true_message matches
+  PASS: Fixture elias_perception matches
+  PASS: Fixture written_transcript matches
+  PASS: TransmissionData saves to .tres without error
+  PASS: Roundtrip saved resource loads successfully
+  PASS: Roundtrip transmission_id matches
+  PASS: Roundtrip true_message matches
+  PASS: Roundtrip elias_perception matches
+  PASS: Roundtrip written_transcript matches
+  PASS: true_message reads independently
+  PASS: elias_perception reads independently
+  PASS: written_transcript reads independently
+  PASS: true_message differs from elias_perception
+  PASS: elias_perception differs from written_transcript
+  PASS: true_message differs from written_transcript
+  PASS: written_transcript mutated
+  PASS: true_message untouched after written_transcript mutation
+  PASS: elias_perception untouched after written_transcript mutation
+  PASS: elias_perception mutated
+  PASS: true_message untouched after elias_perception mutation
+  PASS: written_transcript untouched after elias_perception mutation
+  PASS: Empty transmission_id yields exactly 1 validation error
+  PASS: Error string identifies transmission_id
+  PASS: Fully empty Resource yields 4 validation errors
+  PASS: Missing true_message yields dedicated error
+  PASS: Missing elias_perception yields dedicated error
+  PASS: Missing written_transcript yields dedicated error
+  PASS: Fully populated TransmissionData has 0 validation errors
+  PASS: Fixture distinct_layers.tres has 0 validation errors
+  PASS: WorldState untouched during TransmissionData operations
+  PASS: KnowledgeState untouched during TransmissionData operations
+  PASS: No scene nodes or runtime objects added to tree
+  PASS: No MorseScheduler runtime class exists
+  PASS: No SounderController runtime class exists
+  PASS: No TelegraphStateMachine class exists
+--- All TransmissionData Foundation Tests PASSED ---

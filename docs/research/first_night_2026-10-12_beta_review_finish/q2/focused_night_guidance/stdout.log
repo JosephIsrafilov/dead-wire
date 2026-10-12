@@ -1,0 +1,8 @@
+OK tests/guidance/night_guidance_test.gd assertions 15 runtime_errors 0
+{
+  "suites": 1,
+  "passed": 1,
+  "failed": 0,
+  "assertions": 15,
+  "error_bearing_suites": 0
+}

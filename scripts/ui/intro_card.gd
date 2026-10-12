@@ -16,6 +16,7 @@ signal intro_finished()
 
 @export var hold_seconds: float = 6.0
 @export var fade_duration: float = 2.2
+@export var skip_fade_duration: float = 0.35
 ## Skipping is refused for this long so the first frame is never missed.
 @export var skip_lockout_seconds: float = 1.0
 
@@ -88,7 +89,7 @@ func _input(event: InputEvent) -> void:
 	if not _is_running or _elapsed < skip_lockout_seconds:
 		return
 	if event is InputEventKey and event.pressed and not event.echo:
-		finish()
+		skip()
 		get_viewport().set_input_as_handled()
 	elif event is InputEventMouseButton and event.pressed:
 		finish()
@@ -101,6 +102,12 @@ func skip_immediately() -> void:
 	_release()
 
 func finish() -> void:
+	_finish_with_duration(fade_duration)
+
+func skip() -> void:
+	_finish_with_duration(skip_fade_duration)
+
+func _finish_with_duration(duration: float) -> void:
 	if not _is_running:
 		return
 	_is_running = false
@@ -113,13 +120,13 @@ func finish() -> void:
 	var music := get_node_or_null("IntroMusic") as AudioStreamPlayer
 	if music != null:
 		_music_fade = create_tween()
-		_music_fade.tween_property(music, "volume_db", -60.0, fade_duration)
+		_music_fade.tween_property(music, "volume_db", -60.0, duration)
 	var tween := create_tween()
 	tween.set_parallel(true)
 	if card_root != null:
-		tween.tween_property(card_root, "modulate:a", 0.0, fade_duration * 0.45).set_trans(Tween.TRANS_SINE)
+		tween.tween_property(card_root, "modulate:a", 0.0, duration * 0.45).set_trans(Tween.TRANS_SINE)
 	if fade_rect != null:
-		tween.tween_property(fade_rect, "color:a", 0.0, fade_duration).set_trans(Tween.TRANS_SINE)
+		tween.tween_property(fade_rect, "color:a", 0.0, duration).set_trans(Tween.TRANS_SINE)
 	tween.chain().tween_callback(_release)
 
 func _release() -> void:

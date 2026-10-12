@@ -1,0 +1,813 @@
+{
+	"copy_driver": "TranscriptPaper.begin_writing + set_writing_progress + advance_paper + close_incomplete (real API)",
+	"display_driver": "Windows",
+	"drives": [
+		{
+			"available": 16,
+			"display_md5": "8143e41195620919196ccabe11dbd026",
+			"display_text": "TRAIN 17 CLEAR EAST",
+			"ok": true,
+			"requested_written": -1,
+			"state": "READY_TO_INSPECT",
+			"tag": "b07_real_complete",
+			"terminal": true,
+			"ticks": 347,
+			"written": 16
+		},
+		{
+			"available": 16,
+			"display_md5": "1cf15cb94c47bbdbeb2cf6c03c73e81d",
+			"display_text": "TRAIN 17 CLEAR ",
+			"ok": true,
+			"requested_written": 12,
+			"state": "INCOMPLETE_CLOSED",
+			"tag": "b07_real_incomplete",
+			"terminal": true,
+			"ticks": 268,
+			"written": 12
+		}
+	],
+	"failures": 2,
+	"fixture_staged_not_playtest": true,
+	"focused_b07_pan": true,
+	"godot_version": "4.7.1-stable (official)",
+	"layout": [],
+	"shots": [
+		{
+			"actual_window": "1280x720",
+			"body": null,
+			"copy_footer_backing": {
+				"inside_window": true,
+				"rect": [
+					0.0,
+					668.0,
+					1280.0,
+					40.0
+				]
+			},
+			"copy_ink": {
+				"inside_window": true,
+				"rect": [
+					432.716644287109,
+					246.854721069336,
+					418.636810302734,
+					455.039978027344
+				]
+			},
+			"copy_reading_footer": {
+				"inside_window": true,
+				"rect": [
+					24.0,
+					672.0,
+					1232.0,
+					32.0
+				]
+			},
+			"copy_sheet": {
+				"inside_window": false,
+				"rect": [
+					349.279998779297,
+					32.0,
+					581.43994140625,
+					758.400024414063
+				]
+			},
+			"doc_id": "transcript_paper",
+			"doc_open": true,
+			"error": 0,
+			"footer": null,
+			"image_size": "1280x720",
+			"ink_line_count": 2,
+			"ink_md5_at_open": "73bd906854cb06c0759d78cc50cbf0a3",
+			"ink_text": "TRAIN 17 C\nLEAR EAST",
+			"ink_text_md5": "73bd906854cb06c0759d78cc50cbf0a3",
+			"keys_used": [
+				"Home",
+				"End"
+			],
+			"kind": "copy_real_complete",
+			"mode": 1,
+			"mode_name": "READABLE",
+			"pan": "pan_top",
+			"pan_probe": {
+				"footer_backing_top": 668.0,
+				"footer_rect": [
+					24.0,
+					672.0,
+					1232.0,
+					32.0
+				],
+				"footer_text": "[E / Esc] Put Down Transcript  ·  [Wheel / PgUp PgDn Home End] Move sheet",
+				"footer_visible": true,
+				"sheet_pan_y": 32.0,
+				"sheet_size": [
+					581.43994140625,
+					758.400024414063
+				],
+				"status_rect": [
+					349.279998779297,
+					730.400024414063,
+					581.43994140625,
+					25.0
+				],
+				"status_text": ""
+			},
+			"panel": null,
+			"paper_state": "READY_TO_INSPECT",
+			"path": "res://docs/art/readable_pass/capture_2175381/h720_mode1_copy_real_complete_ts1.2_pan_top.png",
+			"render_scale": 1.0,
+			"requested_height": 720,
+			"requested_width": 1280,
+			"saved": true,
+			"stem": "copy_real_complete_ts1.2_pan_top",
+			"text_scale": 1.2,
+			"text_scale_requested": 1.2,
+			"title": null,
+			"viewport_px": [
+				1280,
+				720
+			],
+			"window_matches_request": true
+		},
+		{
+			"actual_window": "1280x720",
+			"body": null,
+			"copy_footer_backing": {
+				"inside_window": true,
+				"rect": [
+					0.0,
+					668.0,
+					1280.0,
+					40.0
+				]
+			},
+			"copy_ink": {
+				"inside_window": true,
+				"rect": [
+					432.716644287109,
+					246.854721069336,
+					418.636810302734,
+					455.039978027344
+				]
+			},
+			"copy_reading_footer": {
+				"inside_window": true,
+				"rect": [
+					24.0,
+					672.0,
+					1232.0,
+					32.0
+				]
+			},
+			"copy_sheet": {
+				"inside_window": false,
+				"rect": [
+					349.279998779297,
+					32.0,
+					581.43994140625,
+					758.400024414063
+				]
+			},
+			"doc_id": "transcript_paper",
+			"doc_open": true,
+			"error": 0,
+			"footer": null,
+			"image_size": "1280x720",
+			"ink_line_count": 2,
+			"ink_md5_at_open": "73bd906854cb06c0759d78cc50cbf0a3",
+			"ink_text": "TRAIN 17 C\nLEAR EAST",
+			"ink_text_md5": "73bd906854cb06c0759d78cc50cbf0a3",
+			"ink_unchanged_by_pan": true,
+			"keys_used": [
+				"Home",
+				"End"
+			],
+			"kind": "copy_real_complete",
+			"mode": 1,
+			"mode_name": "READABLE",
+			"pan": "pan_min",
+			"pan_probe": {
+				"footer_backing_top": 668.0,
+				"footer_rect": [
+					24.0,
+					672.0,
+					1232.0,
+					32.0
+				],
+				"footer_text": "[E / Esc] Put Down Transcript  ·  [Wheel / PgUp PgDn Home End] Move sheet",
+				"footer_visible": true,
+				"sheet_pan_y": 32.0,
+				"sheet_size": [
+					581.43994140625,
+					758.400024414063
+				],
+				"status_rect": [
+					349.279998779297,
+					730.400024414063,
+					581.43994140625,
+					25.0
+				],
+				"status_text": ""
+			},
+			"panel": null,
+			"paper_state": "READY_TO_INSPECT",
+			"path": "res://docs/art/readable_pass/capture_2175381/h720_mode1_copy_real_complete_ts1.2_pan_min.png",
+			"render_scale": 1.0,
+			"requested_height": 720,
+			"requested_width": 1280,
+			"saved": true,
+			"status_above_footer_at_pan_min": false,
+			"stem": "copy_real_complete_ts1.2_pan_min",
+			"text_scale": 1.2,
+			"text_scale_requested": 1.2,
+			"title": null,
+			"viewport_px": [
+				1280,
+				720
+			],
+			"window_matches_request": true
+		},
+		{
+			"actual_window": "1280x720",
+			"body": null,
+			"copy_footer_backing": {
+				"inside_window": true,
+				"rect": [
+					0.0,
+					668.0,
+					1280.0,
+					40.0
+				]
+			},
+			"copy_ink": {
+				"inside_window": false,
+				"rect": [
+					380.895812988281,
+					300.568389892578,
+					523.296020507813,
+					568.800048828125
+				]
+			},
+			"copy_reading_footer": {
+				"inside_window": true,
+				"rect": [
+					24.0,
+					672.0,
+					1232.0,
+					32.0
+				]
+			},
+			"copy_sheet": {
+				"inside_window": false,
+				"rect": [
+					276.600006103516,
+					32.0,
+					726.799926757813,
+					948.0
+				]
+			},
+			"doc_id": "transcript_paper",
+			"doc_open": true,
+			"error": 0,
+			"footer": null,
+			"image_size": "1280x720",
+			"ink_line_count": 2,
+			"ink_md5_at_open": "73bd906854cb06c0759d78cc50cbf0a3",
+			"ink_text": "TRAIN 17 C\nLEAR EAST",
+			"ink_text_md5": "73bd906854cb06c0759d78cc50cbf0a3",
+			"keys_used": [
+				"Home",
+				"End"
+			],
+			"kind": "copy_real_complete",
+			"mode": 1,
+			"mode_name": "READABLE",
+			"pan": "pan_top",
+			"pan_probe": {
+				"footer_backing_top": 668.0,
+				"footer_rect": [
+					24.0,
+					672.0,
+					1232.0,
+					32.0
+				],
+				"footer_text": "[E / Esc] Put Down Transcript  ·  [Wheel / PgUp PgDn Home End] Move sheet",
+				"footer_visible": true,
+				"sheet_pan_y": 32.0,
+				"sheet_size": [
+					726.799926757813,
+					948.0
+				],
+				"status_rect": [
+					276.600006103516,
+					920.0,
+					726.799926757813,
+					25.0
+				],
+				"status_text": ""
+			},
+			"panel": null,
+			"paper_state": "READY_TO_INSPECT",
+			"path": "res://docs/art/readable_pass/capture_2175381/h720_mode1_copy_real_complete_ts1.5_pan_top.png",
+			"render_scale": 1.0,
+			"requested_height": 720,
+			"requested_width": 1280,
+			"saved": true,
+			"stem": "copy_real_complete_ts1.5_pan_top",
+			"text_scale": 1.5,
+			"text_scale_requested": 1.5,
+			"title": null,
+			"viewport_px": [
+				1280,
+				720
+			],
+			"window_matches_request": true
+		},
+		{
+			"actual_window": "1280x720",
+			"body": null,
+			"copy_footer_backing": {
+				"inside_window": true,
+				"rect": [
+					0.0,
+					668.0,
+					1280.0,
+					40.0
+				]
+			},
+			"copy_ink": {
+				"inside_window": false,
+				"rect": [
+					380.895812988281,
+					300.568389892578,
+					523.296020507813,
+					568.800048828125
+				]
+			},
+			"copy_reading_footer": {
+				"inside_window": true,
+				"rect": [
+					24.0,
+					672.0,
+					1232.0,
+					32.0
+				]
+			},
+			"copy_sheet": {
+				"inside_window": false,
+				"rect": [
+					276.600006103516,
+					32.0,
+					726.799926757813,
+					948.0
+				]
+			},
+			"doc_id": "transcript_paper",
+			"doc_open": true,
+			"error": 0,
+			"footer": null,
+			"image_size": "1280x720",
+			"ink_line_count": 2,
+			"ink_md5_at_open": "73bd906854cb06c0759d78cc50cbf0a3",
+			"ink_text": "TRAIN 17 C\nLEAR EAST",
+			"ink_text_md5": "73bd906854cb06c0759d78cc50cbf0a3",
+			"ink_unchanged_by_pan": true,
+			"keys_used": [
+				"Home",
+				"End"
+			],
+			"kind": "copy_real_complete",
+			"mode": 1,
+			"mode_name": "READABLE",
+			"pan": "pan_min",
+			"pan_probe": {
+				"footer_backing_top": 668.0,
+				"footer_rect": [
+					24.0,
+					672.0,
+					1232.0,
+					32.0
+				],
+				"footer_text": "[E / Esc] Put Down Transcript  ·  [Wheel / PgUp PgDn Home End] Move sheet",
+				"footer_visible": true,
+				"sheet_pan_y": 32.0,
+				"sheet_size": [
+					726.799926757813,
+					948.0
+				],
+				"status_rect": [
+					276.600006103516,
+					920.0,
+					726.799926757813,
+					25.0
+				],
+				"status_text": ""
+			},
+			"panel": null,
+			"paper_state": "READY_TO_INSPECT",
+			"path": "res://docs/art/readable_pass/capture_2175381/h720_mode1_copy_real_complete_ts1.5_pan_min.png",
+			"render_scale": 1.0,
+			"requested_height": 720,
+			"requested_width": 1280,
+			"saved": true,
+			"status_above_footer_at_pan_min": false,
+			"stem": "copy_real_complete_ts1.5_pan_min",
+			"text_scale": 1.5,
+			"text_scale_requested": 1.5,
+			"title": null,
+			"viewport_px": [
+				1280,
+				720
+			],
+			"window_matches_request": true
+		},
+		{
+			"actual_window": "1280x720",
+			"body": null,
+			"copy_footer_backing": {
+				"inside_window": true,
+				"rect": [
+					0.0,
+					668.0,
+					1280.0,
+					40.0
+				]
+			},
+			"copy_ink": {
+				"inside_window": true,
+				"rect": [
+					432.716644287109,
+					246.854721069336,
+					418.636810302734,
+					455.039978027344
+				]
+			},
+			"copy_reading_footer": {
+				"inside_window": true,
+				"rect": [
+					24.0,
+					672.0,
+					1232.0,
+					32.0
+				]
+			},
+			"copy_sheet": {
+				"inside_window": false,
+				"rect": [
+					349.279998779297,
+					32.0,
+					581.440063476563,
+					758.400024414063
+				]
+			},
+			"doc_id": "transcript_paper",
+			"doc_open": true,
+			"error": 0,
+			"footer": null,
+			"image_size": "1280x720",
+			"ink_line_count": 2,
+			"ink_md5_at_open": "3f7e25706b16f1b3d73f09537bc6bb29",
+			"ink_text": "TRAIN 17 C\nLEAR ",
+			"ink_text_md5": "3f7e25706b16f1b3d73f09537bc6bb29",
+			"keys_used": [
+				"Home",
+				"End"
+			],
+			"kind": "copy_real_incomplete",
+			"mode": 1,
+			"mode_name": "READABLE",
+			"pan": "pan_top",
+			"pan_probe": {
+				"footer_backing_top": 668.0,
+				"footer_rect": [
+					24.0,
+					672.0,
+					1232.0,
+					32.0
+				],
+				"footer_text": "COPY INCOMPLETE  ·  [E / Esc] Put Down Transcript  ·  [Wheel / PgUp PgDn Home End] Move sheet",
+				"footer_visible": true,
+				"sheet_pan_y": 32.0,
+				"sheet_size": [
+					581.440063476563,
+					758.400024414063
+				],
+				"status_rect": [
+					349.279998779297,
+					730.400024414063,
+					581.440063476563,
+					25.0
+				],
+				"status_text": "COPY INCOMPLETE"
+			},
+			"panel": null,
+			"paper_state": "INCOMPLETE_CLOSED",
+			"path": "res://docs/art/readable_pass/capture_2175381/h720_mode1_copy_real_incomplete_ts1.2_pan_top.png",
+			"render_scale": 1.0,
+			"requested_height": 720,
+			"requested_width": 1280,
+			"saved": true,
+			"stem": "copy_real_incomplete_ts1.2_pan_top",
+			"text_scale": 1.2,
+			"text_scale_requested": 1.2,
+			"title": null,
+			"viewport_px": [
+				1280,
+				720
+			],
+			"window_matches_request": true
+		},
+		{
+			"actual_window": "1280x720",
+			"body": null,
+			"copy_footer_backing": {
+				"inside_window": true,
+				"rect": [
+					0.0,
+					668.0,
+					1280.0,
+					40.0
+				]
+			},
+			"copy_ink": {
+				"inside_window": true,
+				"rect": [
+					432.716644287109,
+					246.854721069336,
+					418.636810302734,
+					455.039978027344
+				]
+			},
+			"copy_reading_footer": {
+				"inside_window": true,
+				"rect": [
+					24.0,
+					672.0,
+					1232.0,
+					32.0
+				]
+			},
+			"copy_sheet": {
+				"inside_window": false,
+				"rect": [
+					349.279998779297,
+					32.0,
+					581.440063476563,
+					758.400024414063
+				]
+			},
+			"doc_id": "transcript_paper",
+			"doc_open": true,
+			"error": 0,
+			"footer": null,
+			"image_size": "1280x720",
+			"ink_line_count": 2,
+			"ink_md5_at_open": "3f7e25706b16f1b3d73f09537bc6bb29",
+			"ink_text": "TRAIN 17 C\nLEAR ",
+			"ink_text_md5": "3f7e25706b16f1b3d73f09537bc6bb29",
+			"ink_unchanged_by_pan": true,
+			"keys_used": [
+				"Home",
+				"End"
+			],
+			"kind": "copy_real_incomplete",
+			"mode": 1,
+			"mode_name": "READABLE",
+			"pan": "pan_min",
+			"pan_probe": {
+				"footer_backing_top": 668.0,
+				"footer_rect": [
+					24.0,
+					672.0,
+					1232.0,
+					32.0
+				],
+				"footer_text": "COPY INCOMPLETE  ·  [E / Esc] Put Down Transcript  ·  [Wheel / PgUp PgDn Home End] Move sheet",
+				"footer_visible": true,
+				"sheet_pan_y": 32.0,
+				"sheet_size": [
+					581.440063476563,
+					758.400024414063
+				],
+				"status_rect": [
+					349.279998779297,
+					730.400024414063,
+					581.440063476563,
+					25.0
+				],
+				"status_text": "COPY INCOMPLETE"
+			},
+			"panel": null,
+			"paper_state": "INCOMPLETE_CLOSED",
+			"path": "res://docs/art/readable_pass/capture_2175381/h720_mode1_copy_real_incomplete_ts1.2_pan_min.png",
+			"render_scale": 1.0,
+			"requested_height": 720,
+			"requested_width": 1280,
+			"saved": true,
+			"status_above_footer_at_pan_min": false,
+			"stem": "copy_real_incomplete_ts1.2_pan_min",
+			"text_scale": 1.2,
+			"text_scale_requested": 1.2,
+			"title": null,
+			"viewport_px": [
+				1280,
+				720
+			],
+			"window_matches_request": true
+		},
+		{
+			"actual_window": "1280x720",
+			"body": null,
+			"copy_footer_backing": {
+				"inside_window": true,
+				"rect": [
+					0.0,
+					668.0,
+					1280.0,
+					40.0
+				]
+			},
+			"copy_ink": {
+				"inside_window": false,
+				"rect": [
+					380.895812988281,
+					300.568389892578,
+					523.296020507813,
+					568.800048828125
+				]
+			},
+			"copy_reading_footer": {
+				"inside_window": true,
+				"rect": [
+					24.0,
+					672.0,
+					1232.0,
+					32.0
+				]
+			},
+			"copy_sheet": {
+				"inside_window": false,
+				"rect": [
+					276.600006103516,
+					32.0,
+					726.799926757813,
+					948.0
+				]
+			},
+			"doc_id": "transcript_paper",
+			"doc_open": true,
+			"error": 0,
+			"footer": null,
+			"image_size": "1280x720",
+			"ink_line_count": 2,
+			"ink_md5_at_open": "3f7e25706b16f1b3d73f09537bc6bb29",
+			"ink_text": "TRAIN 17 C\nLEAR ",
+			"ink_text_md5": "3f7e25706b16f1b3d73f09537bc6bb29",
+			"keys_used": [
+				"Home",
+				"End"
+			],
+			"kind": "copy_real_incomplete",
+			"mode": 1,
+			"mode_name": "READABLE",
+			"pan": "pan_top",
+			"pan_probe": {
+				"footer_backing_top": 668.0,
+				"footer_rect": [
+					24.0,
+					672.0,
+					1232.0,
+					32.0
+				],
+				"footer_text": "COPY INCOMPLETE  ·  [E / Esc] Put Down Transcript  ·  [Wheel / PgUp PgDn Home End] Move sheet",
+				"footer_visible": true,
+				"sheet_pan_y": 32.0,
+				"sheet_size": [
+					726.799926757813,
+					948.0
+				],
+				"status_rect": [
+					276.600006103516,
+					920.0,
+					726.799926757813,
+					25.0
+				],
+				"status_text": "COPY INCOMPLETE"
+			},
+			"panel": null,
+			"paper_state": "INCOMPLETE_CLOSED",
+			"path": "res://docs/art/readable_pass/capture_2175381/h720_mode1_copy_real_incomplete_ts1.5_pan_top.png",
+			"render_scale": 1.0,
+			"requested_height": 720,
+			"requested_width": 1280,
+			"saved": true,
+			"stem": "copy_real_incomplete_ts1.5_pan_top",
+			"text_scale": 1.5,
+			"text_scale_requested": 1.5,
+			"title": null,
+			"viewport_px": [
+				1280,
+				720
+			],
+			"window_matches_request": true
+		},
+		{
+			"actual_window": "1280x720",
+			"body": null,
+			"copy_footer_backing": {
+				"inside_window": true,
+				"rect": [
+					0.0,
+					668.0,
+					1280.0,
+					40.0
+				]
+			},
+			"copy_ink": {
+				"inside_window": false,
+				"rect": [
+					380.895812988281,
+					300.568389892578,
+					523.296020507813,
+					568.800048828125
+				]
+			},
+			"copy_reading_footer": {
+				"inside_window": true,
+				"rect": [
+					24.0,
+					672.0,
+					1232.0,
+					32.0
+				]
+			},
+			"copy_sheet": {
+				"inside_window": false,
+				"rect": [
+					276.600006103516,
+					32.0,
+					726.799926757813,
+					948.0
+				]
+			},
+			"doc_id": "transcript_paper",
+			"doc_open": true,
+			"error": 0,
+			"footer": null,
+			"image_size": "1280x720",
+			"ink_line_count": 2,
+			"ink_md5_at_open": "3f7e25706b16f1b3d73f09537bc6bb29",
+			"ink_text": "TRAIN 17 C\nLEAR ",
+			"ink_text_md5": "3f7e25706b16f1b3d73f09537bc6bb29",
+			"ink_unchanged_by_pan": true,
+			"keys_used": [
+				"Home",
+				"End"
+			],
+			"kind": "copy_real_incomplete",
+			"mode": 1,
+			"mode_name": "READABLE",
+			"pan": "pan_min",
+			"pan_probe": {
+				"footer_backing_top": 668.0,
+				"footer_rect": [
+					24.0,
+					672.0,
+					1232.0,
+					32.0
+				],
+				"footer_text": "COPY INCOMPLETE  ·  [E / Esc] Put Down Transcript  ·  [Wheel / PgUp PgDn Home End] Move sheet",
+				"footer_visible": true,
+				"sheet_pan_y": 32.0,
+				"sheet_size": [
+					726.799926757813,
+					948.0
+				],
+				"status_rect": [
+					276.600006103516,
+					920.0,
+					726.799926757813,
+					25.0
+				],
+				"status_text": "COPY INCOMPLETE"
+			},
+			"panel": null,
+			"paper_state": "INCOMPLETE_CLOSED",
+			"path": "res://docs/art/readable_pass/capture_2175381/h720_mode1_copy_real_incomplete_ts1.5_pan_min.png",
+			"render_scale": 1.0,
+			"requested_height": 720,
+			"requested_width": 1280,
+			"saved": true,
+			"status_above_footer_at_pan_min": false,
+			"stem": "copy_real_incomplete_ts1.5_pan_min",
+			"text_scale": 1.5,
+			"text_scale_requested": 1.5,
+			"title": null,
+			"viewport_px": [
+				1280,
+				720
+			],
+			"window_matches_request": true
+		}
+	]
+}

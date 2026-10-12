@@ -1,0 +1,17 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+--- Starting Investigative Anchors Test Suite (Gate 13B) ---
+  PASS: morse_reference_card.tscn loads
+  PASS: instantiates as MorseReferenceCard
+  PASS: card has Interactable component
+  PASS: card prompt text matches
+  PASS: Reference card contains all 18 M1 characters
+  PASS: card interaction emits card_inspected
+  PASS: dispatch_ledger.tscn loads
+  PASS: instantiates as DispatchLedger
+  PASS: ledger has Interactable component
+  PASS: ledger prompt text matches
+  PASS: Ledger contains Train 17 rule
+  PASS: Ledger contains Rule 44 rule
+  PASS: ledger interaction emits ledger_inspected
+--- All Investigative Anchors Tests PASSED ---

@@ -1,0 +1,29 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+  PASS: Tape size preserves timing blanks and raw content
+  PASS: A second printed document retains the chosen scale
+  PASS: The visible sheet, not merely hidden body, becomes larger
+  PASS: Magnification never changes ink or logical evidence
+  PASS: Live deadline remains on the fixed reading footer
+  PASS: Wheel pans the enlarged sheet without rewriting evidence
+  PASS: PageDown pans the enlarged sheet from the keyboard without rewriting evidence
+  PASS: PageDown is consumed while the copy is open
+  PASS: PageUp pans the sheet back toward the top from the keyboard
+  PASS: End pans the sheet to its bounded lower limit
+  PASS: Home returns the sheet to the top bound
+  PASS: Letter keys (WASD) are not captured as sheet panning
+  PASS: Closing hides the magnified sheet and fixed footer together
+  PASS: Long printed ledger scrolls inside the body instead of growing the sheet
+  PASS: Long printed ledger keeps the card within a bounded height at 1.5
+  PASS: Ledger footer stays on screen at 1.5
+  PASS: Long instruction card scrolls inside the body at 1.5
+  PASS: Long instruction card keeps the card within a bounded height at 1.5
+  PASS: Instruction footer stays on screen at 1.5
+  PASS: Incomplete copy states COPY INCOMPLETE on the fixed footer at default pan
+  PASS: Incomplete status stays on the fixed footer at the lower pan limit
+  PASS: Incomplete status and deadline warning share the fixed footer
+  PASS: Text scale change keeps the live deadline and incomplete status on the footer
+  PASS: Viewport resize keeps the live deadline and incomplete status on the footer
+  PASS: A complete copy never claims COPY INCOMPLETE on the footer
+  PASS: A new document never inherits the previous document's live deadline
+  PASS: An empty live footer restores the footer the document opened with

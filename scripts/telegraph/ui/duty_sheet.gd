@@ -30,18 +30,30 @@ OPERATOR: E. CRANE
 
 STANDING ORDERS
 
-  1. Turn up the desk lamp. Sit at the desk and open
-     the line on the key.
-  2. Answer the office call (CR) on the key. Do not
-     leave the wire calling.
-  3. Copy every message in full on the night copy.
-     Copy nothing you did not hear.          Rule 7.
-  4. Read the finished copy, then set the route on
-     the train-order board before the sender releases.
-  5. File one copy at the filing table by the stove.
-  6. Routing rules are in the Dispatch Ledger.
-  7. The office door stays locked until the line
-     closes. Leave the night handover for the day man.
+  Lamp up. Sit. Open the line; answer the call.
+  Copy while seated. Read each finished sheet.
+  Orders: Dispatch Ledger. Routes: east wall board.
+  Read the night handover before leaving.
+
+ROUTING
+  Set CLEAR EAST or HOLD using the Dispatch Ledger.
+  Sending a route is not filing a disputed copy.
+
+READING THE WIRE
+  The register strip records marks and pauses,
+  not a translation. Use the American Morse card.
+
+DISPUTED COPY
+  AMEND COPY — type the word you intend to file.
+  FILE AS COPIED — seal the current handwriting.
+  Enter sends your word to file.
+  Esc puts the paper down and keeps your draft;
+  nothing is filed.
+
+LINE TIME
+  The line clock keeps running while you read or
+  edit. A line warning means the decision is
+  nearly due.
 
 ────────────────────────────────────────────
 TONIGHT'S TRAFFIC
@@ -70,10 +82,12 @@ const STATUS_INCOMPLETE: String = "COPY INCOMPLETE"
 ## another knowledge-backed outcome does not require a second branch in the
 ## sheet renderer.
 const STATUS_CORE_HOOK_WATER: String = "HEARD COPY SEALED"
+const STATUS_CORE_HOOK_AMENDED: String = "AMENDED COPY SEALED"
 const STATUS_CORE_HOOK_WATCHER: String = "WRITTEN COPY SEALED"
 const STATUS_CORE_HOOK_LAPSED: String = "UNFILED"
 const CORE_HOOK_OUTCOME_LABEL: String = "UNSCHEDULED COPY"
 const CORE_HOOK_OUTCOME_BY_FACT: Dictionary = {
+	&"amendment_entered_core_hook": STATUS_CORE_HOOK_AMENDED,
 	&"committed_water_core_hook": STATUS_CORE_HOOK_WATER,
 	&"committed_watcher_core_hook": STATUS_CORE_HOOK_WATCHER,
 	&"core_hook_commit_lapsed": STATUS_CORE_HOOK_LAPSED,
@@ -120,6 +134,10 @@ func get_sheet_text() -> String:
 	var core_hook_status := get_core_hook_outcome_status()
 	if not core_hook_status.is_empty():
 		body += "\n\n" + _pad_status(CORE_HOOK_OUTCOME_LABEL, core_hook_status)
+		var knowledge := _knowledge_state()
+		var word := knowledge.recall_value(&"filed_word_core_hook", "") if knowledge != null else ""
+		if not word.is_empty():
+			body += "\n  FILED WORD: " + word
 	return HEADER + body + (FOOTER_INCOMPLETE if _has_open_items() else FOOTER)
 
 func get_watch_record() -> String:

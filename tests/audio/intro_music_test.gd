@@ -16,9 +16,16 @@ func _run() -> void:
 	fading.fade_duration = 0.05
 	root.add_child(fading)
 	await process_frame
+	var releases: Array[bool] = []
+	fading.intro_finished.connect(func(): releases.append(not (fading.get_node("IntroMusic") as AudioStreamPlayer).playing))
 	fading.finish()
-	await create_timer(0.1).timeout
-	check(not (fading.get_node("IntroMusic") as AudioStreamPlayer).playing,
+	# SceneTree timers run before tween callbacks in the same frame. Wait for
+	# semantic release with a finite guard rather than assuming wall-clock order.
+	var guard := 0
+	while releases.is_empty() and guard < 120:
+		await process_frame
+		guard += 1
+	check(not releases.is_empty() and releases[0],
 		"Normal intro fade also stops source music before releasing controls")
 	fading.queue_free()
 	intro.queue_free()

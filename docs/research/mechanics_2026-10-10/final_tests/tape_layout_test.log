@@ -1,0 +1,21 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+  PASS: Tape layout preserves every timing blank in GAP(1)
+  PASS: Tape layout preserves every timing blank in GAP(2)
+  PASS: Tape layout preserves every timing blank in GAP(3)
+  PASS: Tape layout preserves every timing blank in GAP(6)
+  PASS: Tape layout preserves every timing blank in GAP(12)
+  PASS: Internal American Morse pause survives layout boundary
+  PASS: No-space fallback cannot drop a mark
+  PASS: Empty tape stays empty
+  PASS: Invalid columns cannot trap wrapping loop
+  PASS: Tape and reference use the same mono timing font
+  PASS: Bundled font directly covers incomplete, dot and dash evidence symbols
+  PASS: Timing font is bundled instead of a machine-specific fallback
+  PASS: Tape never receives lossy prose wrapping from UI
+  PASS: Long tape stays in a bounded scrollable paper surface
+  PASS: Tape inspection can locate latest delivered ink
+  PASS: Presentation boundary labels are not split into fake ink lines
+  PASS: Opening a long strip automatically scrolls toward newest ink
+  PASS: Tape-specific scrolling cannot leak into a later document
+Tape layout assertions: 18

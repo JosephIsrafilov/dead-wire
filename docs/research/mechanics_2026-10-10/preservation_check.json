@@ -1,0 +1,14 @@
+{
+  "art_scene_hashes": {
+    "scenes/telegraph/sounder.tscn": true,
+    "scenes/telegraph/telegraph_key.tscn": true,
+    "scenes/telegraph/tape_register.tscn": true
+  },
+  "checkpoint_core_unchanged": {
+    "scripts/player/player_controller.gd": true,
+    "scripts/player/operator_seat.gd": true,
+    "scripts/telegraph/ui/writer_rig.gd": true,
+    "scenes/telegraph/transcript_paper.tscn": true,
+    "scripts/ui/intro_card.gd": true
+  }
+}

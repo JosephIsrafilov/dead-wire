@@ -1,0 +1,30 @@
+{
+  "engine_console_exe": "C:/Users/YUSIF/Desktop/Godot_v4.7.1-stable_win64.exe/Godot_v4.7.1-stable_win64_console.exe",
+  "engine_sha16": "323f9c4cc5db674e",
+  "engine_probe_sha256_recorded": "35dab11e04ece16a2b93035e65204f4a944a3e00b020d43e54409193379d5eef (probe recorded; wrapper hashes console exe)",
+  "test_sha256_recorded": "93102bcca9189bc55df33596377a52c5c7642dcbc185e5cd7a32a872d357042b (shift_director_test.gd at probe time)",
+  "test_sha256_current": "93102bcca9189bc55df33596377a52c5c7642dcbc185e5cd7a32a872d357042b",
+  "test_changed_since_probe": false,
+  "audio_backend_probe": "--audio-driver Dummy (headless probe)",
+  "crash_dumps": [
+    "Godot_v4.7.1-stable_win64.exe.16504.dmp",
+    "Godot_v4.7.1-stable_win64.exe.16920.dmp",
+    "Godot_v4.7.1-stable_win64.exe.6456.dmp"
+  ],
+  "pdb_for_engine": "NONE FOUND (checked Desktop, repo, Windows Kits)",
+  "cdb": "ABSENT (no Windows Kits Debuggers install)",
+  "platform": "Windows 11 10.0.26200 AMD64"
+}
+
+## Additional read-only findings (this session)
+- Windows Kits/10/Debuggers/x64 exists but contains ONLY dbghelp.dll/symsrv.dll/dbgcore.dll/srcsrv.dll — no cdb.exe/windbg.exe. Debugging Tools are partially installed (DLLs only); the command-line debugger is absent.
+- dbghelp.dll present means a future MinidumpWriteDump-based capture is possible without new installs, but no symbolizer is available.
+- Three engine dumps exist (16504 Oct 9, 16920 Oct 8, 6456 Oct 11 22:12). Only 6456's metadata was previously extracted. No new Godot dumps since 22:12 Oct 11 (no new crash events during this session's runs).
+- Current shift_director_test.gd SHA256 matches the probe record exactly (test unchanged since the crash capture).
+- Engine EXE (non-console) sha16 323f9c4cc5db674e on disk now; probe recorded console wrapper sha 35dab11e... (different file).
+
+## Blocker request (owner decision needed, ONE specific request)
+To symbolize the crash stack of dump 6456 (Godot exe +0x547AF6, 0xC0000005 read, thread 10400):
+- Install "Windows SDK Debugging Tools" (cdb.exe, ~50 MB, from Microsoft's official Windows SDK installer, install location C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\), OR
+- Download the matching Godot 4.7.1-stable PDB symbol package (godotengine.org, engine-only symbols, ~200-400 MB) so module offset 0x547AF6 resolves to a function name.
+Without one of these, the dump cannot be tied to a root cause; the crash stays OPEN as a release blocker. No probe will be repeated without new information, per plan.

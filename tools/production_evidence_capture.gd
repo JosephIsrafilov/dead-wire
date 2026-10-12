@@ -52,6 +52,7 @@ func _run() -> void:
 	office.get_node("IntroCard").skip_immediately()
 	player = office.player
 	interaction = player.get_node("InteractionController") as InteractionController
+	var authored_head_y: float = player.head_rest_position.y
 	var session := office.session_controller
 	var director := office.shift_director
 	_begin_paper_telemetry(session)
@@ -121,8 +122,9 @@ func _run() -> void:
 	await _wait_until(func() -> bool: return not office.operator_seat.is_seated, 400)
 	Input.action_release("move_forward")
 	check(not office.operator_seat.is_seated, "Movement input stands the operator (seat rule)")
-	await _wait_until(func() -> bool: return absf(player.camera.global_position.y - 1.65) < 0.05, 400)
-	check(absf(player.camera.global_position.y - 1.65) < 0.05, "Standing camera height is the standing body's")
+	await _wait_until(func() -> bool: return absf(player.head_rest_position.y - authored_head_y) < 0.005, 400)
+	check(absf(player.head_rest_position.y - authored_head_y) < 0.005, "Standing head rest returned to the authored height (%.2f m)" % authored_head_y)
+	check(absf(player.camera.global_position.y - (player.global_position.y + player.head_rest_position.y)) < 0.05, "Standing camera height is the standing body's (head_rest %.2f m)" % player.head_rest_position.y)
 	var away := await _walk_to(Vector3(-0.65, 0, 0.45))
 	check(away.reached and away.teleports == 0, "A step away from the desk on real legs")
 	check(not office.operator_seat.is_seated, "Still standing away from the chair")

@@ -1,0 +1,106 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+  PASS: Generated Elias BMFont exists at its owned path
+  PASS: Generated Elias atlas exists beside its metrics
+  PASS: Generated BMFont metrics are readable
+  PASS: BMFont identifies Elias Working
+  PASS: BMFont keeps explicit authored vertical metrics
+  PASS: BMFont includes glyph A
+  PASS: BMFont includes glyph B
+  PASS: BMFont includes glyph C
+  PASS: BMFont includes glyph D
+  PASS: BMFont includes glyph E
+  PASS: BMFont includes glyph F
+  PASS: BMFont includes glyph G
+  PASS: BMFont includes glyph H
+  PASS: BMFont includes glyph I
+  PASS: BMFont includes glyph J
+  PASS: BMFont includes glyph K
+  PASS: BMFont includes glyph L
+  PASS: BMFont includes glyph M
+  PASS: BMFont includes glyph N
+  PASS: BMFont includes glyph O
+  PASS: BMFont includes glyph P
+  PASS: BMFont includes glyph Q
+  PASS: BMFont includes glyph R
+  PASS: BMFont includes glyph S
+  PASS: BMFont includes glyph T
+  PASS: BMFont includes glyph U
+  PASS: BMFont includes glyph V
+  PASS: BMFont includes glyph W
+  PASS: BMFont includes glyph X
+  PASS: BMFont includes glyph Y
+  PASS: BMFont includes glyph Z
+  PASS: BMFont includes glyph 0
+  PASS: BMFont includes glyph 1
+  PASS: BMFont includes glyph 2
+  PASS: BMFont includes glyph 3
+  PASS: BMFont includes glyph 4
+  PASS: BMFont includes glyph 5
+  PASS: BMFont includes glyph 6
+  PASS: BMFont includes glyph 7
+  PASS: BMFont includes glyph 8
+  PASS: BMFont includes glyph 9
+  PASS: BMFont includes glyph  
+  PASS: BMFont includes glyph .
+  PASS: BMFont includes glyph ,
+  PASS: BMFont includes glyph !
+  PASS: BMFont includes glyph ?
+  PASS: BMFont includes glyph ;
+  PASS: BMFont includes glyph :
+  PASS: BMFont includes glyph '
+  PASS: BMFont includes glyph -
+  PASS: BMFont includes glyph /
+  PASS: BMFont includes glyph (
+  PASS: BMFont includes glyph )
+  PASS: Editable SVG source exists for A
+  PASS: Editable SVG source exists for B
+  PASS: Editable SVG source exists for C
+  PASS: Editable SVG source exists for D
+  PASS: Editable SVG source exists for E
+  PASS: Editable SVG source exists for F
+  PASS: Editable SVG source exists for G
+  PASS: Editable SVG source exists for H
+  PASS: Editable SVG source exists for I
+  PASS: Editable SVG source exists for J
+  PASS: Editable SVG source exists for K
+  PASS: Editable SVG source exists for L
+  PASS: Editable SVG source exists for M
+  PASS: Editable SVG source exists for N
+  PASS: Editable SVG source exists for O
+  PASS: Editable SVG source exists for P
+  PASS: Editable SVG source exists for Q
+  PASS: Editable SVG source exists for R
+  PASS: Editable SVG source exists for S
+  PASS: Editable SVG source exists for T
+  PASS: Editable SVG source exists for U
+  PASS: Editable SVG source exists for V
+  PASS: Editable SVG source exists for W
+  PASS: Editable SVG source exists for X
+  PASS: Editable SVG source exists for Y
+  PASS: Editable SVG source exists for Z
+  PASS: Editable SVG source exists for 0
+  PASS: Editable SVG source exists for 1
+  PASS: Editable SVG source exists for 2
+  PASS: Editable SVG source exists for 3
+  PASS: Editable SVG source exists for 4
+  PASS: Editable SVG source exists for 5
+  PASS: Editable SVG source exists for 6
+  PASS: Editable SVG source exists for 7
+  PASS: Editable SVG source exists for 8
+  PASS: Editable SVG source exists for 9
+  PASS: Editable SVG source exists for  
+  PASS: Editable SVG source exists for .
+  PASS: Editable SVG source exists for ,
+  PASS: Editable SVG source exists for !
+  PASS: Editable SVG source exists for ?
+  PASS: Editable SVG source exists for ;
+  PASS: Editable SVG source exists for :
+  PASS: Editable SVG source exists for '
+  PASS: Editable SVG source exists for -
+  PASS: Editable SVG source exists for /
+  PASS: Editable SVG source exists for (
+  PASS: Editable SVG source exists for )
+  PASS: Transcript scene assigns the shared font to live and archive labels
+  PASS: Paper forms use the same font for ruling metrics
+  PASS: Transcript keeps its ten-column layout

@@ -67,3 +67,5 @@ write_samples('door_hinge', [math.sin(2 * math.pi * (95 + 40 * math.sin(t * 2.3)
 write_samples('sheet_slide', filtered(.32, lambda t: math.sin(math.pi * t / .32) ** 2, 300, 3200, .55, 1103))
 # Wick wheel: a brass thumbwheel ratcheting the wick up, five small teeth.
 write('wick_turn', .62, lambda t, n: sum(impact(t, n, .03 + k * .105, 2300 - k * 90, 140, .09) for k in range(5)))
+# The register winding handle is lower and slower than the wick wheel.
+write('register_wind', .78, lambda t, n: sum(impact(t, n, .04 + k * .14, 520 - k * 45, 32, .14) for k in range(5)))

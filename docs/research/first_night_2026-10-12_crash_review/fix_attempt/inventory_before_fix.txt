@@ -1,0 +1,25 @@
+{
+  "engine_gui": {
+    "path": "C:\\Users\\YUSIF\\Desktop\\Godot_v4.7.1-stable_win64.exe\\Godot_v4.7.1-stable_win64.exe",
+    "sha256": "323f9c4cc5db674e98815cdd8e69da007d5efc779abedc8c0e42883b7fdea12a"
+  },
+  "engine_console": {
+    "path": "C:\\Users\\YUSIF\\Desktop\\Godot_v4.7.1-stable_win64.exe\\Godot_v4.7.1-stable_win64_console.exe",
+    "sha256": "35dab11e04ece16a2b93035e65204f4a944a3e00b020d43e54409193379d5eef"
+  },
+  "upstream_fix": {
+    "pr": 117991,
+    "merged": true,
+    "merge_commit": "0dd6299f7146362d36b130ac1dc42406cfb3ede6",
+    "milestone": "4.8",
+    "file": "modules/gdscript/gdscript.cpp",
+    "adds_to_clear": [
+      "base_cache = Ref<GDScript>(); (TOOLS_ENABLED)",
+      "base = Ref<GDScript>();"
+    ]
+  },
+  "our_engine_version": "4.7.1.stable.official.a13da4feb",
+  "fix_present_in_a13da4feb_sources": false,
+  "binary_loop_confirmed": "r13=script_list.first() @547ADC; crash mov r12,[r13+8] @547AF6; s->next()=[r13+0x10] @547C53; jne loop @547C69",
+  "dirty_paths_count": 199
+}

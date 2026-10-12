@@ -1,0 +1,414 @@
+{
+  "suites": 46,
+  "passed": 45,
+  "assertions": 2093,
+  "results": [
+    {
+      "suite": "tests/audio/intro_music_test.gd",
+      "exit": 1,
+      "assertions": 5,
+      "failures": [
+        "FAIL: Normal intro fade also stops source music before releasing controls"
+      ],
+      "errors": [
+        "ERROR: 1 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "suite": "tests/audio/office_ambience_test.gd",
+      "exit": 0,
+      "assertions": 59,
+      "failures": [],
+      "errors": [
+        "ERROR: 1 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "suite": "tests/debug/debug_inspector_telemetry_test.gd",
+      "exit": 0,
+      "assertions": 5,
+      "failures": [],
+      "errors": []
+    },
+    {
+      "suite": "tests/debug/debug_inspector_test.gd",
+      "exit": 0,
+      "assertions": 25,
+      "failures": [],
+      "errors": []
+    },
+    {
+      "suite": "tests/events/attention_timeline_test.gd",
+      "exit": 0,
+      "assertions": 14,
+      "failures": [],
+      "errors": []
+    },
+    {
+      "suite": "tests/events/door_attention_test.gd",
+      "exit": 0,
+      "assertions": 14,
+      "failures": [],
+      "errors": []
+    },
+    {
+      "suite": "tests/events/window_observation_test.gd",
+      "exit": 0,
+      "assertions": 31,
+      "failures": [],
+      "errors": []
+    },
+    {
+      "suite": "tests/integration/m1_office_integration_test.gd",
+      "exit": 0,
+      "assertions": 81,
+      "failures": [],
+      "errors": [
+        "ERROR: 3 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "suite": "tests/integration/main_scene_smoke_test.gd",
+      "exit": 0,
+      "assertions": 9,
+      "failures": [],
+      "errors": [
+        "ERROR: 1 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "suite": "tests/integration/night_recovery_test.gd",
+      "exit": 0,
+      "assertions": 48,
+      "failures": [],
+      "errors": [
+        "ERROR: 1 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "suite": "tests/integration/player_feedback_test.gd",
+      "exit": 0,
+      "assertions": 15,
+      "failures": [],
+      "errors": [
+        "ERROR: 9 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "suite": "tests/office/atmosphere_test.gd",
+      "exit": 0,
+      "assertions": 86,
+      "failures": [],
+      "errors": []
+    },
+    {
+      "suite": "tests/office/desk_geometry_test.gd",
+      "exit": 0,
+      "assertions": 26,
+      "failures": [],
+      "errors": [
+        "ERROR: 8 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "suite": "tests/office/m1_presentation_structure_test.gd",
+      "exit": 0,
+      "assertions": 23,
+      "failures": [],
+      "errors": [
+        "ERROR: 1 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "suite": "tests/office/m1_spatial_metrics_test.gd",
+      "exit": 0,
+      "assertions": 31,
+      "failures": [],
+      "errors": [
+        "ERROR: 1 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "suite": "tests/office/office_door_test.gd",
+      "exit": 0,
+      "assertions": 32,
+      "failures": [],
+      "errors": [
+        "ERROR: 3 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "suite": "tests/office/shift_director_test.gd",
+      "exit": 0,
+      "assertions": 132,
+      "failures": [],
+      "errors": [
+        "ERROR: Condition \"!is_inside_tree()\" is true. Returning: Transform3D()",
+        "ERROR: Condition \"!is_inside_tree()\" is true. Returning: Transform3D()",
+        "ERROR: Condition \"!is_inside_tree()\" is true. Returning: Transform3D()",
+        "ERROR: Condition \"!is_inside_tree()\" is true. Returning: Transform3D()",
+        "ERROR: Condition \"!is_inside_tree()\" is true. Returning: Transform3D()",
+        "ERROR: Condition \"!is_inside_tree()\" is true. Returning: Transform3D()",
+        "ERROR: Condition \"!is_inside_tree()\" is true. Returning: Transform3D()",
+        "ERROR: Condition \"!is_inside_tree()\" is true. Returning: Transform3D()",
+        "ERROR: Condition \"!is_inside_tree()\" is true. Returning: Transform3D()",
+        "ERROR: Condition \"!is_inside_tree()\" is true. Returning: Transform3D()",
+        "ERROR: Condition \"!is_inside_tree()\" is true. Returning: Transform3D()",
+        "ERROR: Condition \"!is_inside_tree()\" is true. Returning: Transform3D()",
+        "ERROR: Condition \"!is_inside_tree()\" is true. Returning: Transform3D()",
+        "ERROR: Condition \"!is_inside_tree()\" is true. Returning: Transform3D()",
+        "ERROR: Condition \"!is_inside_tree()\" is true. Returning: Transform3D()",
+        "ERROR: Condition \"!is_inside_tree()\" is true. Returning: Transform3D()",
+        "ERROR: Condition \"!is_inside_tree()\" is true. Returning: Transform3D()",
+        "ERROR: Condition \"!is_inside_tree()\" is true. Returning: Transform3D()",
+        "ERROR: Condition \"!is_inside_tree()\" is true. Returning: Transform3D()",
+        "ERROR: Condition \"!is_inside_tree()\" is true. Returning: Transform3D()",
+        "ERROR: Condition \"!is_inside_tree()\" is true. Returning: Transform3D()",
+        "ERROR: Condition \"!is_inside_tree()\" is true. Returning: Transform3D()",
+        "ERROR: Condition \"!is_inside_tree()\" is true. Returning: Transform3D()",
+        "ERROR: Condition \"!is_inside_tree()\" is true. Returning: Transform3D()",
+        "ERROR: Condition \"!is_inside_tree()\" is true. Returning: Transform3D()",
+        "ERROR: Condition \"!is_inside_tree()\" is true. Returning: Transform3D()",
+        "ERROR: Condition \"!is_inside_tree()\" is true. Returning: Transform3D()",
+        "ERROR: Condition \"!is_inside_tree()\" is true. Returning: Transform3D()",
+        "ERROR: Condition \"!is_inside_tree()\" is true. Returning: Transform3D()",
+        "ERROR: Condition \"!is_inside_tree()\" is true. Returning: Transform3D()",
+        "ERROR: Condition \"!is_inside_tree()\" is true. Returning: Transform3D()",
+        "ERROR: Condition \"!is_inside_tree()\" is true. Returning: Transform3D()",
+        "ERROR: Condition \"!is_inside_tree()\" is true. Returning: Transform3D()",
+        "ERROR: Condition \"!is_inside_tree()\" is true. Returning: Transform3D()",
+        "ERROR: Condition \"!is_inside_tree()\" is true. Returning: Transform3D()",
+        "ERROR: Condition \"!is_inside_tree()\" is true. Returning: Transform3D()",
+        "ERROR: 1 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "suite": "tests/office/worn_warmth_material_test.gd",
+      "exit": 0,
+      "assertions": 25,
+      "failures": [],
+      "errors": []
+    },
+    {
+      "suite": "tests/player/distance_gait_test.gd",
+      "exit": 0,
+      "assertions": 8,
+      "failures": [],
+      "errors": []
+    },
+    {
+      "suite": "tests/player/player_body_test.gd",
+      "exit": 0,
+      "assertions": 66,
+      "failures": [],
+      "errors": [
+        "ERROR: Condition \"!is_inside_tree()\" is true. Returning: Transform3D()",
+        "ERROR: Condition \"!is_inside_tree()\" is true. Returning: Transform3D()",
+        "ERROR: Condition \"!is_inside_tree()\" is true. Returning: Transform3D()",
+        "ERROR: Condition \"!is_inside_tree()\" is true. Returning: Transform3D()",
+        "ERROR: Condition \"!is_inside_tree()\" is true. Returning: Transform3D()",
+        "ERROR: Condition \"!is_inside_tree()\" is true. Returning: Transform3D()",
+        "ERROR: Condition \"!is_inside_tree()\" is true. Returning: Transform3D()",
+        "ERROR: Condition \"!is_inside_tree()\" is true. Returning: Transform3D()",
+        "ERROR: Condition \"!is_inside_tree()\" is true. Returning: Transform3D()",
+        "ERROR: Condition \"!is_inside_tree()\" is true. Returning: Transform3D()",
+        "ERROR: Condition \"!is_inside_tree()\" is true. Returning: Transform3D()",
+        "ERROR: Condition \"!is_inside_tree()\" is true. Returning: Transform3D()",
+        "ERROR: Condition \"!is_inside_tree()\" is true. Returning: Transform3D()",
+        "ERROR: Condition \"!is_inside_tree()\" is true. Returning: Transform3D()",
+        "ERROR: Condition \"!is_inside_tree()\" is true. Returning: Transform3D()",
+        "ERROR: Condition \"!is_inside_tree()\" is true. Returning: Transform3D()",
+        "ERROR: Condition \"!is_inside_tree()\" is true. Returning: Transform3D()",
+        "ERROR: Condition \"!is_inside_tree()\" is true. Returning: Transform3D()"
+      ]
+    },
+    {
+      "suite": "tests/state/state_separation_test.gd",
+      "exit": 0,
+      "assertions": 29,
+      "failures": [],
+      "errors": []
+    },
+    {
+      "suite": "tests/telegraph/american_morse_alphabet_data_test.gd",
+      "exit": 0,
+      "assertions": 263,
+      "failures": [],
+      "errors": []
+    },
+    {
+      "suite": "tests/telegraph/american_morse_encoder_test.gd",
+      "exit": 0,
+      "assertions": 92,
+      "failures": [],
+      "errors": []
+    },
+    {
+      "suite": "tests/telegraph/arm_anatomy_test.gd",
+      "exit": 0,
+      "assertions": 8,
+      "failures": [],
+      "errors": []
+    },
+    {
+      "suite": "tests/telegraph/copy_commit_desk_test.gd",
+      "exit": 0,
+      "assertions": 44,
+      "failures": [],
+      "errors": [
+        "ERROR: 7 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "suite": "tests/telegraph/duty_sheet_test.gd",
+      "exit": 0,
+      "assertions": 35,
+      "failures": [],
+      "errors": [
+        "ERROR: 2 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "suite": "tests/telegraph/instrument_art_test.gd",
+      "exit": 0,
+      "assertions": 72,
+      "failures": [],
+      "errors": []
+    },
+    {
+      "suite": "tests/telegraph/investigative_anchors_test.gd",
+      "exit": 0,
+      "assertions": 13,
+      "failures": [],
+      "errors": []
+    },
+    {
+      "suite": "tests/telegraph/morse_playback_profile_test.gd",
+      "exit": 0,
+      "assertions": 29,
+      "failures": [],
+      "errors": []
+    },
+    {
+      "suite": "tests/telegraph/morse_reference_card_test.gd",
+      "exit": 0,
+      "assertions": 65,
+      "failures": [],
+      "errors": []
+    },
+    {
+      "suite": "tests/telegraph/morse_runtime_scheduler_test.gd",
+      "exit": 0,
+      "assertions": 31,
+      "failures": [],
+      "errors": []
+    },
+    {
+      "suite": "tests/telegraph/morse_schedule_compiler_test.gd",
+      "exit": 0,
+      "assertions": 39,
+      "failures": [],
+      "errors": []
+    },
+    {
+      "suite": "tests/telegraph/morse_timing_model_test.gd",
+      "exit": 0,
+      "assertions": 38,
+      "failures": [],
+      "errors": []
+    },
+    {
+      "suite": "tests/telegraph/routing_board_test.gd",
+      "exit": 0,
+      "assertions": 30,
+      "failures": [],
+      "errors": []
+    },
+    {
+      "suite": "tests/telegraph/sounder_controller_test.gd",
+      "exit": 0,
+      "assertions": 15,
+      "failures": [],
+      "errors": []
+    },
+    {
+      "suite": "tests/telegraph/tape_register_test.gd",
+      "exit": 0,
+      "assertions": 35,
+      "failures": [],
+      "errors": []
+    },
+    {
+      "suite": "tests/telegraph/telegraph_hardware_test.gd",
+      "exit": 0,
+      "assertions": 17,
+      "failures": [],
+      "errors": []
+    },
+    {
+      "suite": "tests/telegraph/telegraph_scenario_data_test.gd",
+      "exit": 0,
+      "assertions": 32,
+      "failures": [],
+      "errors": []
+    },
+    {
+      "suite": "tests/telegraph/telegraph_session_controller_test.gd",
+      "exit": 0,
+      "assertions": 103,
+      "failures": [],
+      "errors": []
+    },
+    {
+      "suite": "tests/telegraph/transcript_paper_test.gd",
+      "exit": 0,
+      "assertions": 134,
+      "failures": [],
+      "errors": []
+    },
+    {
+      "suite": "tests/telegraph/transmission_data_test.gd",
+      "exit": 0,
+      "assertions": 40,
+      "failures": [],
+      "errors": []
+    },
+    {
+      "suite": "tests/telegraph/upper_arm_anchor_test.gd",
+      "exit": 0,
+      "assertions": 5,
+      "failures": [],
+      "errors": []
+    },
+    {
+      "suite": "tests/telegraph/writer_hand_test.gd",
+      "exit": 0,
+      "assertions": 37,
+      "failures": [],
+      "errors": []
+    },
+    {
+      "suite": "tests/telegraph/writer_rig_space_test.gd",
+      "exit": 0,
+      "assertions": 44,
+      "failures": [],
+      "errors": []
+    },
+    {
+      "suite": "tests/ui/document_viewer_test.gd",
+      "exit": 0,
+      "assertions": 15,
+      "failures": [],
+      "errors": []
+    },
+    {
+      "suite": "tests/ui/framing_test.gd",
+      "exit": 0,
+      "assertions": 93,
+      "failures": [],
+      "errors": [
+        "ERROR: 6 resources still in use at exit (run with --verbose for details)."
+      ]
+    }
+  ]
+}

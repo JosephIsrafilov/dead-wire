@@ -1,0 +1,64 @@
+FFFF...E.EE.
+======================================================================
+ERROR: test_output_inside_source_or_repository_root_is_refused (tools.package_windows_beta_test.PackageFilterTests.test_output_inside_source_or_repository_root_is_refused)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\YUSIF\Documents\dead-wire\tools\package_windows_beta_test.py", line 78, in test_output_inside_source_or_repository_root_is_refused
+    package_windows_beta.check_output(source, source / "pkg.zip")
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'package_windows_beta' has no attribute 'check_output'
+
+======================================================================
+ERROR: test_source_requires_matching_exe_and_pck (tools.package_windows_beta_test.PackageFilterTests.test_source_requires_matching_exe_and_pck)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\YUSIF\Documents\dead-wire\tools\package_windows_beta_test.py", line 70, in test_source_requires_matching_exe_and_pck
+    package_windows_beta.check_source(source, "dead-wire-windows-beta-x86_64")
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'package_windows_beta' has no attribute 'check_source'
+
+======================================================================
+ERROR: test_spoiler_sound_brief_is_not_packaged (tools.package_windows_beta_test.PackageFilterTests.test_spoiler_sound_brief_is_not_packaged)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\YUSIF\Documents\dead-wire\tools\package_windows_beta_test.py", line 61, in test_spoiler_sound_brief_is_not_packaged
+    self.assertTrue(package_windows_beta.is_spoiler_document(Path("SOUND_HANDOFF_SPOILERS.md")))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'package_windows_beta' has no attribute 'is_spoiler_document'
+
+======================================================================
+FAIL: test_archives_and_vcs_or_godot_cache_are_excluded (tools.package_windows_beta_test.PackageFilterTests.test_archives_and_vcs_or_godot_cache_are_excluded) (path='old-package.zip')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\YUSIF\Documents\dead-wire\tools\package_windows_beta_test.py", line 58, in test_archives_and_vcs_or_godot_cache_are_excluded
+    self.assertTrue(package_windows_beta.is_excluded(Path(path)))
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_archives_and_vcs_or_godot_cache_are_excluded (tools.package_windows_beta_test.PackageFilterTests.test_archives_and_vcs_or_godot_cache_are_excluded) (path='.git/HEAD')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\YUSIF\Documents\dead-wire\tools\package_windows_beta_test.py", line 58, in test_archives_and_vcs_or_godot_cache_are_excluded
+    self.assertTrue(package_windows_beta.is_excluded(Path(path)))
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_archives_and_vcs_or_godot_cache_are_excluded (tools.package_windows_beta_test.PackageFilterTests.test_archives_and_vcs_or_godot_cache_are_excluded) (path='.godot/imported/x.ctex')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\YUSIF\Documents\dead-wire\tools\package_windows_beta_test.py", line 58, in test_archives_and_vcs_or_godot_cache_are_excluded
+    self.assertTrue(package_windows_beta.is_excluded(Path(path)))
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_archives_and_vcs_or_godot_cache_are_excluded (tools.package_windows_beta_test.PackageFilterTests.test_archives_and_vcs_or_godot_cache_are_excluded) (path='export.pck.bak')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\YUSIF\Documents\dead-wire\tools\package_windows_beta_test.py", line 58, in test_archives_and_vcs_or_godot_cache_are_excluded
+    self.assertTrue(package_windows_beta.is_excluded(Path(path)))
+AssertionError: False is not true
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.018s
+
+FAILED (failures=4, errors=3)

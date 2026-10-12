@@ -1,0 +1,46 @@
+[
+  {
+    "branch": "water",
+    "exit": 0,
+    "passes": 60,
+    "failures": []
+  },
+  {
+    "branch": "wrong",
+    "exit": 1,
+    "passes": 42,
+    "failures": [
+      "FAIL: Seated key opens the watch",
+      "FAIL: Wire calls for slot 0",
+      "FAIL: E answers traffic 0",
+      "FAIL: Traffic requires transcript inspection",
+      "FAIL: Transcript lifts through E",
+      "FAIL: Routing board opens from reachable floor",
+      "FAIL: Route advances night exactly once",
+      "FAIL: Route advances night exactly once",
+      "FAIL: Ray reaches Option1Interactable (got <null>)",
+      "FAIL: Physical amendment opens an editor without filing",
+      "FAIL: Real typing preserves intended amendment word",
+      "FAIL: Physical wrong choice resolves only after explicit action",
+      "FAIL: Final consequence reaches shift end",
+      "FAIL: Dawn unlocks exit",
+      "FAIL: Ray reaches Interactable (got <null>)",
+      "FAIL: Handover can be inspected",
+      "FAIL: Door opens after night",
+      "FAIL: Walking through threshold starts ending",
+      "FAIL: Ending cannot be covered by pause menu"
+    ]
+  },
+  {
+    "branch": "watcher",
+    "exit": 0,
+    "passes": 58,
+    "failures": []
+  },
+  {
+    "branch": "lapsed",
+    "exit": 0,
+    "passes": 57,
+    "failures": []
+  }
+]

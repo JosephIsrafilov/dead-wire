@@ -1,0 +1,24 @@
+{
+  "suites": 1,
+  "passed": 0,
+  "failed": 1,
+  "assertions": 0,
+  "error_bearing_suites": 1,
+  "results": [
+    {
+      "suite": "tests/telegraph/reference_reading_example_test.gd",
+      "exit_code": 1,
+      "assertions": 0,
+      "passed": false,
+      "failures": [
+        "  FAIL: Reference labels its own AL example"
+      ],
+      "runtime_errors": [
+        "ERROR: 118 resources still in use at exit (run with --verbose for details)."
+      ],
+      "warnings": [
+        "WARNING: 121 ObjectDB instances were leaked at exit (run with `--verbose` for details)."
+      ]
+    }
+  ]
+}

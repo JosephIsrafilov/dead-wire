@@ -1,0 +1,35 @@
+{
+  "review_date": "2026-10-12",
+  "scope": "read-only code/log/archive inspection plus 15 Python tests; no engine runs",
+  "regression": {
+    "suites": 86,
+    "pass_lines": 2747,
+    "script_error_suites": 0,
+    "fail_suites": 0,
+    "saved_exit_codes": [
+      0
+    ],
+    "shutdown_error_suites": 18
+  },
+  "font": {
+    "sources": 48,
+    "changed": 47,
+    "vertical_points_changed": 0,
+    "vertical_metrics_changed": 0
+  },
+  "pck": {
+    "directory_entries": 548,
+    "forbidden_development_paths": [],
+    "class_count": 60,
+    "missing_script_payloads": [],
+    "legacy_footstep": [
+      ".godot/imported/footstep_wood.wav-27053a10b84cc01ebb63a166e35ffe06.sample",
+      "audio/sfx/foley/footstep_wood.wav.import"
+    ]
+  },
+  "hashes": {
+    "zip": "87a7775b0c766a636cad46d4b148b7e50b378cfaf86454e99702c651fd166794",
+    "exe": "6fb906a8a6797af980b82f77c9eecb3d097a74a49aa257b5fdff501b292698e9",
+    "pck": "3536aa389cc150832ab79f24e314f4b29c460e93b318a686c181cf296a9bada7"
+  }
+}

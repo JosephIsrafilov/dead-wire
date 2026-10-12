@@ -1,0 +1,9 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+  PASS: Production scene contains thought overlay
+  PASS: Intro suppresses manual and automatic thoughts
+  PASS: Entry exposes only the visible work procedure
+  PASS: Document opened signal clears existing thought immediately
+  PASS: Scheduler start clears thoughts before a protected mark
+  PASS: Applying options updates live guidance without scene reload
+  PASS: Thought overlay cannot steal input

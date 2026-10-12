@@ -1,0 +1,35 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+--- Starting M1 Spatial Metrics Test Suite (physical layout gate) ---
+  PASS: production office instantiates
+  PASS: 1. Chair is not a DeskSetup descendant
+  PASS: 2. Chair exists as a separate production-scene object
+  PASS: 3. Chair has positive scale
+  PASS: 4. Chair global up is upright
+  PASS: 5. Chair feet contact floor
+  PASS: 6. Chair faces the desk working surface
+  PASS: 7. Chair AABB does not intersect desk solid geometry
+  PASS: 8. Seat is not embedded in tabletop
+  PASS: 9. Desk contacts floor
+  PASS: 10. Cabinet does not intersect a room wall
+  PASS: 11. Bookcase does not intersect a room wall
+  PASS: 12. Stove avoids wall and furniture overlap
+  PASS: 13. Stove contains no SideTable
+  PASS: 14. Large furniture, filing desk, and board have collision shapes
+  PASS: 15. Main crossing uses a 0.70m player capsule clearance
+  PASS: 16. Player capsule passes spawn to desk
+  PASS: 17. Player capsule passes desk to Routing Board
+  PASS: 18. Player capsule passes desk to window
+  PASS: 19. Player capsule passes desk to door
+  PASS: 20. Interaction rays hit expected telegraph, documents, and Routing Board
+  PASS: 21. Gameplay documents have non-overlapping AABBs
+  PASS: 22. Decorative duplicate documents are absent
+  PASS: 23. Routing Board basis faces into room
+  PASS: 24. Routing Board basis is not mirrored
+  PASS: 25-26. Wall blocks outside aperture and LoS passes window aperture
+  PASS: 27. Door and Window are different attention directions
+  PASS: 28. Desk, Window, Door, and Board exceed central FOV
+  PASS: 28b. Filing desk stays east of the south-door approach
+  PASS: 29. All major props are inside room bounds
+  PASS: 30. Runtime scene contains no third-party high-poly reference assets
+--- All M1 Spatial Metrics Tests PASSED ---

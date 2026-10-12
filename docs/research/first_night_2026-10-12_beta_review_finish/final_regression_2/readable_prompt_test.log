@@ -1,0 +1,9 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+  PASS: Player prompt label exists
+  PASS: Interaction prompt uses 18px font
+  PASS: Interaction prompt wraps long instructions at word boundaries
+  PASS: Interaction prompt is 840px wide for two lines
+  PASS: Interaction prompt sits above the bottom edge with two-line height
+  PASS: Interaction prompt keeps its readable shadow
+Readable prompt assertions: 6

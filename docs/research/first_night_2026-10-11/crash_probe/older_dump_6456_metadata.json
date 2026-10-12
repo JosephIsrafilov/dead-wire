@@ -1,0 +1,250 @@
+{
+  "path": "C:/Users/YUSIF/AppData/Local/CrashDumps/Godot_v4.7.1-stable_win64.exe.6456.dmp",
+  "streams": [
+    0,
+    3,
+    4,
+    5,
+    6,
+    7,
+    13,
+    15,
+    21,
+    22,
+    24
+  ],
+  "modules": [
+    {
+      "base": 140698439712768,
+      "size": 180953088,
+      "name": "C:\\Users\\YUSIF\\Desktop\\Godot_v4.7.1-stable_win64.exe\\Godot_v4.7.1-stable_win64.exe"
+    },
+    {
+      "base": 140709306695680,
+      "size": 2519040,
+      "name": "C:\\Windows\\System32\\ntdll.dll"
+    },
+    {
+      "base": 140709293391872,
+      "size": 831488,
+      "name": "C:\\Windows\\System32\\kernel32.dll"
+    },
+    {
+      "base": 140709259247616,
+      "size": 4202496,
+      "name": "C:\\Windows\\System32\\KERNELBASE.dll"
+    },
+    {
+      "base": 140709286707200,
+      "size": 888832,
+      "name": "C:\\Windows\\System32\\oleaut32.dll"
+    },
+    {
+      "base": 140709263704064,
+      "size": 667648,
+      "name": "C:\\Windows\\System32\\msvcp_win.dll"
+    },
+    {
+      "base": 140709266063360,
+      "size": 1359872,
+      "name": "C:\\Windows\\System32\\ucrtbase.dll"
+    },
+    {
+      "base": 140709289656320,
+      "size": 3690496,
+      "name": "C:\\Windows\\System32\\combase.dll"
+    },
+    {
+      "base": 140709270126592,
+      "size": 1146880,
+      "name": "C:\\Windows\\System32\\rpcrt4.dll"
+    },
+    {
+      "base": 140709271306240,
+      "size": 1896448,
+      "name": "C:\\Windows\\System32\\user32.dll"
+    },
+    {
+      "base": 140709263507456,
+      "size": 159744,
+      "name": "C:\\Windows\\System32\\win32u.dll"
+    },
+    {
+      "base": 140709288542208,
+      "size": 176128,
+      "name": "C:\\Windows\\System32\\gdi32.dll"
+    },
+    {
+      "base": 140709268094976,
+      "size": 1216512,
+      "name": "C:\\Windows\\System32\\gdi32full.dll"
+    },
+    {
+      "base": 140709297848320,
+      "size": 770048,
+      "name": "C:\\Windows\\System32\\advapi32.dll"
+    },
+    {
+      "base": 140709295161344,
+      "size": 692224,
+      "name": "C:\\Windows\\System32\\msvcrt.dll"
+    },
+    {
+      "base": 140708878221312,
+      "size": 4325376,
+      "name": "C:\\Windows\\System32\\uiautomationcore.dll"
+    },
+    {
+      "base": 140709299879936,
+      "size": 692224,
+      "name": "C:\\Windows\\System32\\sechost.dll"
+    },
+    {
+      "base": 140709264424960,
+      "size": 1564672,
+      "name": "C:\\Windows\\System32\\crypt32.dll"
+    },
+    {
+      "base": 140709085446144,
+      "size": 45056,
+      "name": "C:\\Windows\\System32\\avrt.dll"
+    },
+    {
+      "base": 140709273665536,
+      "size": 200704,
+      "name": "C:\\Windows\\System32\\imm32.dll"
+    },
+    {
+      "base": 140709257347072,
+      "size": 172032,
+      "name": "C:\\Windows\\System32\\bcrypt.dll"
+    },
+    {
+      "base": 140709275369472,
+      "size": 1679360,
+      "name": "C:\\Windows\\System32\\ole32.dll"
+    },
+    {
+      "base": 140709213634560,
+      "size": 2408448,
+      "name": "C:\\Windows\\System32\\dbghelp.dll"
+    },
+    {
+      "base": 140709207146496,
+      "size": 192512,
+      "name": "C:\\Windows\\System32\\dwmapi.dll"
+    },
+    {
+      "base": 140709142265856,
+      "size": 2531328,
+      "name": "C:\\Windows\\System32\\DWrite.dll"
+    },
+    {
+      "base": 140709298700288,
+      "size": 1028096,
+      "name": "C:\\Windows\\System32\\SHCore.dll"
+    },
+    {
+      "base": 140709277663232,
+      "size": 7962624,
+      "name": "C:\\Windows\\System32\\shell32.dll"
+    },
+    {
+      "base": 140709203607552,
+      "size": 1290240,
+      "name": "C:\\Windows\\System32\\dxgi.dll"
+    },
+    {
+      "base": 140709227986944,
+      "size": 61440,
+      "name": "C:\\Windows\\System32\\hid.dll"
+    },
+    {
+      "base": 140709233033216,
+      "size": 208896,
+      "name": "C:\\Windows\\System32\\IPHLPAPI.DLL"
+    },
+    {
+      "base": 140709300600832,
+      "size": 417792,
+      "name": "C:\\Windows\\System32\\shlwapi.dll"
+    },
+    {
+      "base": 140709301059584,
+      "size": 524288,
+      "name": "C:\\Windows\\System32\\ws2_32.dll"
+    },
+    {
+      "base": 140709235982336,
+      "size": 385024,
+      "name": "C:\\Windows\\System32\\powrprof.dll"
+    },
+    {
+      "base": 140708992122880,
+      "size": 221184,
+      "name": "C:\\Windows\\System32\\winmm.dll"
+    },
+    {
+      "base": 140708872519680,
+      "size": 40960,
+      "name": "C:\\Windows\\System32\\wsock32.dll"
+    },
+    {
+      "base": 140709258461184,
+      "size": 704512,
+      "name": "C:\\Windows\\System32\\bcryptPrimitives.dll"
+    },
+    {
+      "base": 140709235851264,
+      "size": 86016,
+      "name": "C:\\Windows\\System32\\umpdc.dll"
+    },
+    {
+      "base": 140706836971520,
+      "size": 307200,
+      "name": "C:\\Windows\\System32\\dinput8.dll"
+    },
+    {
+      "base": 140708197892096,
+      "size": 1978368,
+      "name": "C:\\Windows\\System32\\inputhost.dll"
+    },
+    {
+      "base": 140709155438592,
+      "size": 1224704,
+      "name": "C:\\Windows\\System32\\CoreMessaging.dll"
+    },
+    {
+      "base": 140709239521280,
+      "size": 110592,
+      "name": "C:\\Windows\\System32\\kernel.appcore.dll"
+    },
+    {
+      "base": 140709162582016,
+      "size": 688128,
+      "name": "C:\\Windows\\System32\\uxtheme.dll"
+    },
+    {
+      "base": 140709248761856,
+      "size": 49152,
+      "name": "C:\\Windows\\System32\\CRYPTBASE.DLL"
+    },
+    {
+      "base": 140709250007040,
+      "size": 77824,
+      "name": "C:\\Windows\\System32\\msasn1.dll"
+    }
+  ],
+  "exception": {
+    "thread_id": 10400,
+    "code": "0xC0000005",
+    "address": "0x7FF6E8D97AF6",
+    "parameters": [
+      0,
+      1627109187776
+    ],
+    "module": "C:\\Users\\YUSIF\\Desktop\\Godot_v4.7.1-stable_win64.exe\\Godot_v4.7.1-stable_win64.exe",
+    "module_offset": "0x547AF6"
+  },
+  "caveat": "No symbolized call stack. This dump is not linked to the latest probe without separate provenance."
+}

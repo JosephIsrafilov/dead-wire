@@ -1,0 +1,141 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+--- Starting Shift Director Test Suite ---
+  PASS: m1_office.tscn loads
+  PASS: Office instantiates
+  PASS: Production scene contains a ShiftDirector
+  PASS: ShiftDirector is enabled in the production scene
+  PASS: Office reports the shift is directed
+  PASS: Session hands key ownership to the director
+  PASS: Shift starts in PRE_SHIFT
+  PASS: Production scene has an operator seat
+  PASS: Operator starts on his feet
+  PASS: Standing operator is told to sit, got 'Sit to Work the Key'
+  PASS: Key is dead while the operator is standing
+  PASS: A standing operator cannot open the line
+  PASS: Operator can sit at the desk
+  PASS: Sitting locks walking
+  PASS: Sitting leaves the head free
+  PASS: Seated operator is invited to open the line
+  PASS: Key is actionable once seated
+  PASS: Time alone never opens the line
+  PASS: Pressing the key opens the line
+  PASS: Shift begins at traffic slot 0
+  PASS: First message is loaded and waiting
+  PASS: Key reports a quiet line while waiting
+  PASS: Operator cannot start his own traffic
+  PASS: Line is still quiet before the interval elapses
+  PASS: Sounder is silent while the line is quiet
+  PASS: Wire calls without any player action
+  PASS: Key asks the operator to answer
+  PASS: Key is actionable during a call
+  PASS: The call is physically audible on the sounder
+  PASS: Call sign encodes in American Morse
+  PASS: Call sign compiles to a playable schedule
+  PASS: Answer window exceeds two room crossings (21.8s vs 4.9s)
+  PASS: An unanswered call is recorded as missed traffic
+  PASS: WorldState records the objective miss
+  PASS: Elias knows he missed the call
+  PASS: Elias never learns what the missed message said
+  PASS: The shift moves on to the next booked message
+  PASS: Missed traffic does not stall the shift
+  PASS: Next message loads normally after a miss
+  -- restarting with a fresh office for the answered path --
+  PASS: m1_office.tscn loads
+  PASS: Office instantiates
+  PASS: Operator sits for the answered path
+  PASS: Wire calls on the fresh shift
+  PASS: Answering the call opens a short beat before the message
+  PASS: The sender has not started inside the beat
+  PASS: The key is inert inside the beat
+  PASS: Answering moves the shift into RECEIVING
+  PASS: Session is receiving the real message
+  PASS: Key is inert while copy is coming in
+  PASS: t0 leaves the physical copy open
+  PASS: The key reports the copy being finished
+  PASS: Message completion waits for transcript verification
+  PASS: The key reports the finished copy waiting to be read
+  PASS: Transcript inspection unlocks route deadline
+  PASS: Message ends awaiting a route
+  PASS: Director opens the routing deadline
+  PASS: The key reports the route decision once the copy is verified
+  PASS: Elias knows he copied the message
+  PASS: Routing deadline is counting
+  PASS: Sender asks again on the wire while waiting for a route
+  PASS: A prod does not end the deadline
+  PASS: Correct route records the objective outcome
+  PASS: Elias knows he filed the message
+  PASS: Shift advances to the second message
+  PASS: Foreign traffic crossed the dead wire in the second silence
+  PASS: Second message waits for transcript verification
+  PASS: Second message also awaits a route
+  PASS: Expired deadline defaults the route
+  PASS: A defaulted route is not a filed message
+  PASS: Elias knows the freight order lapsed
+  PASS: Shift advances after a defaulted route
+  PASS: Final message leaves the copy open at t0
+  PASS: The key reports the final copy being finished
+  PASS: The key reports the final copy waiting to be read
+  PASS: Final message waits for transcript verification
+  PASS: Final transcript inspection unlocks the commit
+  PASS: Final message opens the commit desk
+  PASS: The key reports the filing decision
+  PASS: Commit inspection pauses call pacing while the deadline runs
+  PASS: A service signal occupies the wire for the deferral case
+  PASS: A warning on a busy wire is deferred, not played over traffic
+  PASS: Final message accepts an authored commit inside the deadline
+  PASS: Final message enters its consequence beat
+  PASS: The key reports a neutral standby during the consequence beat
+  PASS: A deferred warning is dropped once its slot is resolved
+  PASS: Last message closes the line
+  PASS: Shift reaches SHIFT_OVER
+  PASS: is_shift_over() agrees
+  PASS: Key is dead once the line closes
+  PASS: Closing never overshoots 6 A.M.
+  PASS: Key reports the shift is over
+  PASS: The night does not loop back around
+  PASS: The hands never ran backward across the close
+  PASS: The hands reach 6 A.M. at their bounded speed, got 6:00 A.M.
+  PASS: The clock rests at the end of the watch
+  PASS: Production scene contains the duty sheet
+  PASS: Duty sheet is interactable
+  PASS: Duty sheet lists the booked passenger traffic
+  PASS: Duty sheet shows the filed message
+  PASS: Unbooked traffic appears once it has been copied
+  PASS: Duty sheet records only the explicit chosen word after filing
+  PASS: WorldState recorded the defaulted freight route as no order sent
+  PASS: A defaulted route is not a misdirected one
+  PASS: Defaulted freight reads as no order sent
+  PASS: Storytelling props are present
+  PASS: Station clock is driven by a script
+  PASS: Clock hands resolve
+  PASS: Clock follows the shift director
+  PASS: m1_office.tscn loads
+  PASS: Office instantiates
+  PASS: Fresh office has a station clock
+  PASS: Watch begins at 11 P.M., got 11:00 P.M.
+  PASS: Hands do not move before the line is opened
+  PASS: The call beginning never rewinds the hands
+  PASS: Answering the call never rewinds the hands
+  PASS: Slot 0 resolved targets 02:00
+  PASS: The display moved toward 02:00 without snapping, got 23.52
+  PASS: The dial has left the start
+  PASS: Fresh watch reaches SHIFT_OVER
+  PASS: The hands never crossed 06:00 before the shift ended, got 27.37
+  PASS: Watch ends at 6 A.M., got 6:00 A.M.
+  PASS: The minute hand actually turned
+  PASS: The clock stops at the end of the watch
+  PASS: Merge-case office instantiates
+  PASS: Merge case opens the line
+  PASS: Merge case reaches the call
+  PASS: Merge case answers the call
+  PASS: Merge case leaves the copy open at t0
+  PASS: Merge case runs the route deadline from t0
+  PASS: Warning and nag in the same breath are a single wire call, got 1
+  PASS: The merged nag is still counted as delivered
+  PASS: Grace expiry moves the shift to the next slot
+--- All Shift Director Tests PASSED (132 assertions) ---
+WARNING: 20 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 3 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)

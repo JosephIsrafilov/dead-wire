@@ -1,0 +1,10 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+PASS: Office walking is deliberate, not a 2.35 m/s glide
+PASS: A walking step is shorter than one metre
+PASS: Velocity without floor travel causes no walking bob
+PASS: Real floor travel produces gait weight
+PASS: Distance-based gait stays under 5 cm
+PASS: Seated body never walks
+PASS: Transitioning chair reports status, not an ignored E action
+PASS: Chair offers sitting again when the body has finished standing

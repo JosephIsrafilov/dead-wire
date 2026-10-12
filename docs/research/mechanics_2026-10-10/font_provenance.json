@@ -1,0 +1,14 @@
+{
+  "source": "official Google Fonts repository ofl/courierprime",
+  "license": "SIL OFL 1.1 shipped with font",
+  "unchanged_file_hashes": {
+    "CourierPrime-Regular.ttf": "72f793376f8e2841656bf21d77a5de010f2929bd6956a22ee848ad0c7eb978af",
+    "OFL.txt": "9a755af092b494944c99f471be6fddd19b006a448fefdc4717e4ee0aa09a97b0"
+  },
+  "verified_symbols": [
+    "?",
+    "·",
+    "—"
+  ],
+  "missing_symbol_replaced": "◌"
+}

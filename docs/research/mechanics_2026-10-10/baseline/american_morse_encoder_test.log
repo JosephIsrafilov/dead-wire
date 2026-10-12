@@ -1,0 +1,96 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+--- Starting American Morse Encoder Test Suite (Gate 08B-2B) ---
+  PASS: AmericanMorseEncoder instantiates
+  PASS: AmericanMorseEncoder is RefCounted
+  PASS: INTER_LETTER_GAP_UNITS == 3
+  PASS: INTER_WORD_GAP_UNITS == 6
+  PASS: M1 Alphabet fixture loads
+  PASS: M1 Alphabet fixture is valid
+  PASS: Encode 'E' succeeds
+  PASS: 'E' has exactly 1 event
+  PASS: 'E' event is MARK(1)
+  PASS: 'E' total duration == 1
+  PASS: 'E' sequence has zero validation errors
+  PASS: Encode 'L' succeeds
+  PASS: 'L' has exactly 1 event
+  PASS: 'L' event is MARK(6)
+  PASS: 'L' total duration == 6
+  PASS: 'L' sequence has zero validation errors
+  PASS: Encode 'ET' succeeds
+  PASS: 'ET' has exactly 3 events
+  PASS: 'ET' ev0 is MARK(1)
+  PASS: 'ET' ev1 is GAP(3)
+  PASS: 'ET' ev2 is MARK(3)
+  PASS: 'ET' total duration == 7
+  PASS: 'ET' sequence has zero validation errors
+  PASS: Encode 'E T' succeeds
+  PASS: 'E T' has exactly 3 events
+  PASS: 'E T' ev0 is MARK(1)
+  PASS: 'E T' ev1 is GAP(6)
+  PASS: 'E T' ev2 is MARK(3)
+  PASS: 'E T' total duration == 10
+  PASS: 'E T' sequence has zero validation errors
+  PASS: Encode 'CO' succeeds
+  PASS: 'CO' has exactly 9 events
+  PASS: 'CO' retains C internal GAP(2) at ev3
+  PASS: 'CO' has inter-letter GAP(3) at ev5
+  PASS: 'CO' retains O internal GAP(2) at ev7
+  PASS: 'CO' total duration == 13
+  PASS: 'CO' sequence has zero validation errors
+  PASS: Encode '1 7' succeeds
+  PASS: '1 7' has exactly 15 events
+  PASS: '1 7' has inter-word GAP(6) at ev7
+  PASS: '1 7' total duration == 28
+  PASS: '1 7' sequence has zero validation errors
+  PASS: Encode 'WATER' succeeds
+  PASS: 'WATER' total duration == 36
+  PASS: 'WATER' sequence has zero validation errors
+  PASS: Encode 'WATCHER' succeeds
+  PASS: 'WATCHER' total duration == 55
+  PASS: 'WATCHER' sequence has zero validation errors
+  PASS: Encode 'TRAIN 17 CLEAR EAST' succeeds
+  PASS: 'TRAIN 17 CLEAR EAST' total duration == 136
+  PASS: 'TRAIN 17 CLEAR EAST' sequence has zero validation errors
+  PASS: Encode 'HOLD FREIGHT UNTIL TEN' succeeds
+  PASS: 'HOLD FREIGHT UNTIL TEN' total duration == 156
+  PASS: 'HOLD FREIGHT UNTIL TEN' sequence has zero validation errors
+  PASS: Empty message produces validation error
+  PASS: Encode empty message returns null
+  PASS: Whitespace-only message produces validation error
+  PASS: Encode whitespace-only returns null
+  PASS: Leading space produces validation error
+  PASS: Encode with leading space returns null
+  PASS: Trailing space produces validation error
+  PASS: Encode with trailing space returns null
+  PASS: Double space produces validation error
+  PASS: Encode with double space returns null
+  PASS: Lowercase message produces validation error
+  PASS: Encode lowercase returns null
+  PASS: Numeral 0 produces validation error
+  PASS: Encode with numeral 0 returns null
+  PASS: Period produces validation error
+  PASS: Encode with period returns null
+  PASS: Tab produces validation error
+  PASS: Encode with tab returns null
+  PASS: Newline produces validation error
+  PASS: Encode with newline returns null
+  PASS: Null alphabet produces validation error
+  PASS: Encode with null alphabet returns null
+  PASS: Invalid alphabet produces validation error
+  PASS: Encode with invalid alphabet returns null
+  PASS: Encode 'W' succeeds
+  PASS: Alphabet sequence duration unchanged after encode
+  PASS: Alphabet event untouched after mutating output event (deep-copy verified)
+  PASS: Output event has distinct instance ID from alphabet event
+  PASS: Output sequence has distinct instance ID from alphabet sequence
+  PASS: Both WATER encodes succeed
+  PASS: Two encode calls return distinct MorseSequenceData instances
+  PASS: Two encode results have identical event count
+  PASS: Two encode results have identical total duration
+  PASS: All event instances between two encode calls are distinct
+  PASS: WorldState untouched during encoder operations
+  PASS: KnowledgeState untouched during encoder operations
+  PASS: No scene tree nodes created by encoder
+  PASS: AmericanMorseEncoder is registered
+--- All American Morse Encoder Tests PASSED ---

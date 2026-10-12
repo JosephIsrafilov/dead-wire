@@ -11,7 +11,7 @@ func _init() -> void:
 
 	# 1. PSX Presentation Settings
 	if not assert_condition(office.enable_psx_rendering == true, "enable_psx_rendering is true"): return
-	if not assert_condition(is_equal_approx(office.render_scale, 0.5), "Half-resolution nearest render scale preserves PSX readability"): return
+	if not assert_condition(office.has_method("apply_presentation_mode"), "Production presentation is player-selectable instead of hardcoded 360 lines"): return
 
 	# 2. No placeholder nodes in production scene
 	var placeholder_nodes: Array[String] = []

@@ -1,0 +1,10 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+PASS: Nib keeps its authored offset, never a zeroed scene block
+PASS: Shaft keeps its own authored offset
+PASS: Upper bone stays 300mm throughout entry and every letter, error 0.000mm
+PASS: Forearm stays 270mm, error 0.000mm
+PASS: Upper sleeve never stretches with the pen
+PASS: Nib contacts remain accurate, error 0.000mm
+PASS: Sixteen letters still produce sixteen contacts
+PASS: Shoulder matches the authored seated anatomy

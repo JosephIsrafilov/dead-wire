@@ -3,8 +3,12 @@ extends Node
 
 @export var interaction_ray: RayCast3D
 @export var prompt_label: Label
+@export var reticle: ColorRect
 
 const STATUS_ALPHA: float = 0.55
+## Crosshair color: warm when E acts on the target, neutral and quiet otherwise.
+const ACTIONABLE_RETICLE_COLOR: Color = Color(0.95, 0.86, 0.68, 0.95)
+const INACTIVE_RETICLE_COLOR: Color = Color(0.86, 0.79, 0.63, 0.45)
 
 var current_target: Interactable = null
 var is_ui_blocked: bool = false
@@ -19,6 +23,8 @@ func _ready() -> void:
 		interaction_ray = get_node_or_null("../Head/Camera3D/InteractionRay") as RayCast3D
 	if not prompt_label:
 		prompt_label = get_node_or_null("../InteractionUI/PromptLabel") as Label
+	if not reticle:
+		reticle = get_node_or_null("../InteractionUI/Reticle") as ColorRect
 
 	_update_prompt_ui()
 
@@ -27,6 +33,7 @@ func _process(_delta: float) -> void:
 		if prompt_label != null and prompt_label.visible:
 			prompt_label.visible = false
 		current_target = null
+		refresh_reticle()
 		return
 
 	_update_target()
@@ -42,6 +49,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 
 	if event.is_action_pressed("interact") and not event.is_echo():
+		_update_target()
 		if current_target and current_target.can_interact():
 			current_target.interact()
 			get_viewport().set_input_as_handled()
@@ -61,6 +69,7 @@ func _update_target() -> void:
 		_update_prompt_ui()
 
 func _update_prompt_ui() -> void:
+	refresh_reticle()
 	if not prompt_label:
 		return
 
@@ -87,6 +96,23 @@ func _update_prompt_ui() -> void:
 func set_persistent_hint(text: String) -> void:
 	persistent_hint = text
 	_update_prompt_ui()
+
+## Crosshair feedback mirrors the real target. captured_override exists only so
+## tests can drive the mouse state; production always reads Input.
+func refresh_reticle(captured_override: Variant = null) -> void:
+	if not reticle:
+		return
+	var captured: bool = Input.mouse_mode == Input.MOUSE_MODE_CAPTURED
+	if captured_override != null:
+		captured = bool(captured_override)
+	if is_ui_blocked or not captured:
+		reticle.visible = false
+		return
+	reticle.visible = true
+	if current_target and current_target.can_interact() and current_target.is_actionable:
+		reticle.color = ACTIONABLE_RETICLE_COLOR
+	else:
+		reticle.color = INACTIVE_RETICLE_COLOR
 
 ## Public refresh hook for pause/resume and other systems that change input
 ## capture state without moving the camera.

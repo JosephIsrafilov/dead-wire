@@ -1,0 +1,5 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+  PASS: A detached capture callback cannot change the next scene's mouse ownership
+  PASS: A detached focus callback cannot put an off-tree input into edit mode
+Editor lifetime failures: 0

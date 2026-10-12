@@ -1,0 +1,9 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+--- Camera Evidence Contract Suite ---
+  PASS: Production evidence has no stale 1.65 standing eye height
+  PASS: Production evidence compares standing camera to player.head_rest_position.y
+  PASS: Filing capture has no hardcoded 78 FOV override
+  PASS: Filing capture records the current camera FOV before temporary overrides
+  PASS: Filing capture restores the current camera FOV for filing shots
+--- Camera Evidence Contract: 0 failure(s) ---

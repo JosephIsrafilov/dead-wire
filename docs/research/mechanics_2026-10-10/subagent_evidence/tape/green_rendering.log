@@ -1,0 +1,41 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+--- Starting Tape Evidence Test Suite ---
+  PASS: Real scheduler starts the evidence fixture
+  PASS: Started MARK exposes zero delivered units, not its future dot length
+  PASS: Started MARK exposes zero delivered seconds
+  PASS: Public record uses the tape-ink value type
+  PASS: Started ink is incomplete and not interrupted
+  PASS: Public ink has only observed fields, with no planned units, index, end or source metadata
+  PASS: snapshot creates an independent value with identical observed fields
+  PASS: Mutating every returned field and array leaves the register unchanged
+  PASS: Returned ink never aliases the scheduler's source event
+  PASS: Half a dot records only 0.05 seconds and 0.5 units
+  PASS: Advance observers see current ink before event callbacks
+  PASS: Advanced ink remains incomplete until finish
+  PASS: Earlier snapshots never gain later delivered time
+  PASS: Cancel keeps the exact fractional ink and invents no GAP
+  PASS: Cancelled MARK is interrupted, not a valid complete dot
+  PASS: Fractional cancellation leaves the source intact
+  PASS: Cancelled/idle time never grows ink
+  PASS: A completed fixture starts after cancellation
+  PASS: Completion records one real event with no phantom 12-unit GAP
+  PASS: Finished ink has the exact delivered full duration
+  PASS: Finished callbacks see finalized ink, not the hitch's extra elapsed time
+  PASS: Completed snapshots remain immutable through idle and mutation
+  PASS: Register binds finish and actual-time advance signals
+  PASS: Disconnect removes finish and actual-time advance signals
+  PASS: Long American Morse MARK starts
+  PASS: An unfinished MARK uses the incomplete-ink symbol, not a dot or dash
+  PASS: Three delivered units of a live long MARK do not reveal L or classify a dash
+  PASS: Interrupted MARK keeps the incomplete symbol even at an intermediate Morse threshold
+  PASS: The incomplete symbol retains exact actual duration through the record API
+  PASS: Mixed completed MARK lengths start
+  PASS: Completed MARK 1/3/6 agree with the reference card and preserve GAP columns
+  PASS: Rendering long marks adds no artificial ink events
+  PASS: Partial GAP fixture starts
+  PASS: A fractional GAP exposes actual units without a future blank column
+  PASS: Cancelled fractional GAP never renders its remaining planned silence
+  PASS: Two-unit completed fixture starts
+  PASS: Existing completed two-unit MARK remains dot-compatible
+--- All Tape Evidence Tests PASSED (37 assertions) ---

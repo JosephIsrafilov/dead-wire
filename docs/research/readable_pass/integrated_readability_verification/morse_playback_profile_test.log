@@ -1,0 +1,33 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+--- Starting Morse Playback Profile Test Suite (Gate 09A) ---
+  PASS: MorsePlaybackProfileData instantiates
+  PASS: MorsePlaybackProfileData is a Resource
+  PASS: MorsePlaybackProfileData is not a Node
+  PASS: Default seconds_per_unit is approx 0.10
+  PASS: Default profile has zero validation errors
+  PASS: Fixture m1_morse_playback_profile.tres loads
+  PASS: Fixture is of type MorsePlaybackProfileData
+  PASS: Fixture seconds_per_unit is approx 0.10
+  PASS: Fixture has zero validation errors
+  PASS: ResourceSaver saves playback profile
+  PASS: Roundtrip playback profile loads
+  PASS: Roundtrip seconds_per_unit matches
+  PASS: Roundtrip profile has zero validation errors
+  PASS: Zero seconds_per_unit produces validation error
+  PASS: Negative seconds_per_unit produces validation error
+  PASS: NAN seconds_per_unit produces validation error
+  PASS: Positive infinity produces validation error
+  PASS: Negative infinity produces validation error
+  PASS: Validation does not modify seconds_per_unit
+  PASS: 1 unit projected duration == 0.10s
+  PASS: 3 units projected duration == 0.30s
+  PASS: 6 units projected duration == 0.60s
+  PASS: 36 units (WATER) projected duration == 3.60s
+  PASS: 55 units (WATCHER) projected duration == 5.50s
+  PASS: 136 units (TRAIN 17 CLEAR EAST) projected duration == 13.60s
+  PASS: 156 units (HOLD FREIGHT UNTIL TEN) projected duration == 15.60s
+  PASS: WorldState untouched during profile operations
+  PASS: KnowledgeState untouched during profile operations
+  PASS: No scene tree nodes added by profile operations
+--- All Morse Playback Profile Tests PASSED ---

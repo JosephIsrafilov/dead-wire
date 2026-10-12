@@ -106,7 +106,14 @@ func get_reference_text() -> String:
 	var header := VIEWER_HEADER
 	var divider := "─".repeat(28)
 	var rows := render_rows(_load_alphabet())
-	return "%s\n%s\n%s" % [header, divider, "\n".join(rows)]
+	var example := AmericanMorseEncoder.new().encode("AL", _load_alphabet())
+	return "%s\n%s\n%s\n\nREADING THE STRIP\n" % [header, divider, "\n".join(rows)] \
+		+ "Dot: 1 unit; dash: 3; long dash: 6.\n" \
+		+ "Within a letter: 1 unit; internal pause: 2.\n" \
+		+ "Between letters — letter gap: 3; word gap: 6.\n" \
+		+ "Keep internal pauses: this is American Morse.\n\n" \
+		+ "WORKED EXAMPLE: AL (reference only)\n%s\n\n" % render_pattern(example) \
+		+ "Wire take numbers mark recording boundaries, not decoded words."
 
 func _load_alphabet() -> AmericanMorseAlphabetData:
 	if _alphabet == null:

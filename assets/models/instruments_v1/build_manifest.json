@@ -1,0 +1,78 @@
+{
+  "authoring": "Blender bpy; no generated AI meshes",
+  "units": "metres",
+  "atlas": "res://assets/textures/instruments_v1/instrument_atlas_256.png",
+  "assemblies": {
+    "key_static": {
+      "triangles": 708,
+      "vertices": 400,
+      "materials": [
+        "dw_wood",
+        "dw_brass",
+        "dw_ebonite",
+        "dw_iron"
+      ]
+    },
+    "key_lever": {
+      "triangles": 256,
+      "vertices": 140,
+      "materials": [
+        "dw_brass",
+        "dw_ebonite"
+      ]
+    },
+    "sounder_static": {
+      "triangles": 1004,
+      "vertices": 560,
+      "materials": [
+        "dw_wood",
+        "dw_brass",
+        "dw_iron",
+        "dw_coil",
+        "dw_ebonite"
+      ]
+    },
+    "sounder_armature": {
+      "triangles": 136,
+      "vertices": 76,
+      "materials": [
+        "dw_brass",
+        "dw_iron",
+        "dw_ebonite"
+      ]
+    },
+    "register_static": {
+      "triangles": 904,
+      "vertices": 508,
+      "materials": [
+        "dw_wood",
+        "dw_brass",
+        "dw_ebonite",
+        "dw_iron"
+      ]
+    },
+    "register_spool": {
+      "triangles": 260,
+      "vertices": 140,
+      "materials": [
+        "dw_paper",
+        "dw_brass"
+      ]
+    },
+    "register_stylus": {
+      "triangles": 64,
+      "vertices": 36,
+      "materials": [
+        "dw_brass",
+        "dw_iron"
+      ]
+    }
+  },
+  "total_triangles": 3332,
+  "reference_urls": [
+    "https://americanhistory.si.edu/collections/object/nmah_706904",
+    "https://americanhistory.si.edu/collections/object/nmah_712418",
+    "https://americanhistory.si.edu/collections/object/nmah_706654"
+  ],
+  "historical_claim": "period-plausible stylized instruments, not museum replicas"
+}

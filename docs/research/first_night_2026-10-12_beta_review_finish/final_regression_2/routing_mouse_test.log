@@ -1,0 +1,5 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+  PASS: Both route choices have mouse buttons
+  PASS: Mouse CLEAR EAST uses accepted route authority
+  PASS: Mouse HOLD uses the same accepted route authority

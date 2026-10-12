@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="NightGuidanceData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/office/night_guidance_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+entries = Array[Dictionary]([{"id": &"entry", "text": "Lamp first. Then the chair and the key.", "delay": 2.0, "duration": 6.0, "once": true},
+{"id": &"open_line", "text": "Open the line. I’ll copy while I’m seated.", "delay": 2.0, "duration": 6.0, "once": true},
+{"id": &"answer", "text": "The office is calling. Back to the chair and the key.", "delay": 2.0, "duration": 6.0, "once": true},
+{"id": &"read_copy", "text": "The copy is ready. I should read it.", "delay": 2.0, "duration": 6.0, "once": true},
+{"id": &"route", "text": "Orders are in the ledger. Routes go through the wall board.", "delay": 2.0, "duration": 6.0, "once": true},
+{"id": &"compare", "text": "I can compare the strip with the Morse card before the next call.", "delay": 2.0, "duration": 6.0, "once": true},
+{"id": &"filing", "text": "The filing table can seal this copy or record my amendment.", "delay": 2.0, "duration": 6.0, "once": true},
+{"id": &"dawn", "text": "The line is closed. Read the handover, then leave through the south door.", "delay": 2.0, "duration": 6.0, "once": true}])
+automatic_interval = 12.0

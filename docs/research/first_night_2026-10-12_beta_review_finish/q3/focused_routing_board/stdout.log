@@ -1,0 +1,8 @@
+OK tests/telegraph/routing_board_test.gd assertions 30 runtime_errors 0
+{
+  "suites": 1,
+  "passed": 1,
+  "failed": 0,
+  "assertions": 30,
+  "error_bearing_suites": 0
+}

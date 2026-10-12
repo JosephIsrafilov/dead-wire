@@ -14,6 +14,7 @@ signal evidence_inspected(text: String)
 const VARIANT_WATER: StringName = &"water"
 const VARIANT_WATCHER: StringName = &"watcher"
 const VARIANT_LAPSED: StringName = &"lapsed"
+const VARIANT_AMENDED: StringName = &"amended"
 
 var interactable: Interactable = null
 var _revealed: bool = false
@@ -76,6 +77,8 @@ func reset_for_new_watch() -> void:
 func _read_variant() -> StringName:
 	var world := _get_world_state()
 	if world != null:
+		if world.get_fact(&"core_hook_amended_wrong", false) == true:
+			return VARIANT_AMENDED
 		if world.get_fact(&"core_hook_filed_water", false) == true:
 			return VARIANT_WATER
 		if world.get_fact(&"core_hook_filed_watcher", false) == true:
@@ -86,8 +89,12 @@ func _read_variant() -> StringName:
 
 func _build_document(variant_id: StringName) -> String:
 	var copy := "No copy filed. The unscheduled call remains open."
-	if variant_id == VARIANT_WATER:
-		copy = "WATER\n\nCorrection entered by E. Crane. The original\nworking transcript is retained beneath this copy."
+	if variant_id == VARIANT_WATER or variant_id == VARIANT_AMENDED:
+		var world := _get_world_state()
+		if world != null:
+			var fallback := "WATER" if variant_id == VARIANT_WATER else ""
+			var word := str(world.get_fact(&"core_hook_filed_word", fallback))
+			copy = "%s\n\nCorrection entered by E. Crane. The original\nworking transcript is retained beneath this copy." % word
 	elif variant_id == VARIANT_WATCHER:
 		copy = "WATCHER\n\nFiled as written by E. Crane. No correction\nentered. Retain the working transcript."
 	return """BLACK CREEK STATION
@@ -113,9 +120,11 @@ func _update_labels() -> void:
 	if result == null or stamp == null or subtitle == null:
 		return
 	match _variant_id:
-		VARIANT_WATER:
-			result.text = "WATER"
-			stamp.text = "CORRECTED"
+		VARIANT_WATER, VARIANT_AMENDED:
+			var world := _get_world_state()
+			var fallback := "WATER" if _variant_id == VARIANT_WATER else ""
+			result.text = str(world.get_fact(&"core_hook_filed_word", fallback)) if world != null else ""
+			stamp.text = "AMENDED"
 			subtitle.text = "NIGHT COPY / RETAIN"
 		VARIANT_WATCHER:
 			result.text = "WATCHER"

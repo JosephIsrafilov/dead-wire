@@ -1,0 +1,69 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+--- Starting Morse Reference Card Test Suite ---
+  PASS: Alphabet resource loads with 18 entries
+  PASS: Both faces render non-empty
+  PASS: Symbol A renders a pattern from its own data
+  PASS: Card face matches the wire for A ('· —')
+  PASS: Viewer face matches the wire for A ('· —')
+  PASS: Symbol C renders a pattern from its own data
+  PASS: Card face matches the wire for C ('· ·  ·')
+  PASS: Viewer face matches the wire for C ('· ·  ·')
+  PASS: Symbol D renders a pattern from its own data
+  PASS: Card face matches the wire for D ('— · ·')
+  PASS: Viewer face matches the wire for D ('— · ·')
+  PASS: Symbol E renders a pattern from its own data
+  PASS: Card face matches the wire for E ('·')
+  PASS: Viewer face matches the wire for E ('·')
+  PASS: Symbol F renders a pattern from its own data
+  PASS: Card face matches the wire for F ('· — ·')
+  PASS: Viewer face matches the wire for F ('· — ·')
+  PASS: Symbol G renders a pattern from its own data
+  PASS: Card face matches the wire for G ('— — ·')
+  PASS: Viewer face matches the wire for G ('— — ·')
+  PASS: Symbol H renders a pattern from its own data
+  PASS: Card face matches the wire for H ('· · · ·')
+  PASS: Viewer face matches the wire for H ('· · · ·')
+  PASS: Symbol I renders a pattern from its own data
+  PASS: Card face matches the wire for I ('· ·')
+  PASS: Viewer face matches the wire for I ('· ·')
+  PASS: Symbol L renders a pattern from its own data
+  PASS: Card face matches the wire for L ('——— (long)')
+  PASS: Viewer face matches the wire for L ('——— (long)')
+  PASS: Symbol N renders a pattern from its own data
+  PASS: Card face matches the wire for N ('— ·')
+  PASS: Viewer face matches the wire for N ('— ·')
+  PASS: Symbol O renders a pattern from its own data
+  PASS: Card face matches the wire for O ('·  ·')
+  PASS: Viewer face matches the wire for O ('·  ·')
+  PASS: Symbol R renders a pattern from its own data
+  PASS: Card face matches the wire for R ('·  · ·')
+  PASS: Viewer face matches the wire for R ('·  · ·')
+  PASS: Symbol S renders a pattern from its own data
+  PASS: Card face matches the wire for S ('· · ·')
+  PASS: Viewer face matches the wire for S ('· · ·')
+  PASS: Symbol T renders a pattern from its own data
+  PASS: Card face matches the wire for T ('—')
+  PASS: Viewer face matches the wire for T ('—')
+  PASS: Symbol U renders a pattern from its own data
+  PASS: Card face matches the wire for U ('· · —')
+  PASS: Viewer face matches the wire for U ('· · —')
+  PASS: Symbol W renders a pattern from its own data
+  PASS: Card face matches the wire for W ('· — —')
+  PASS: Viewer face matches the wire for W ('· — —')
+  PASS: Symbol 1 renders a pattern from its own data
+  PASS: Card face matches the wire for 1 ('· — — ·')
+  PASS: Viewer face matches the wire for 1 ('· — — ·')
+  PASS: Symbol 7 renders a pattern from its own data
+  PASS: Card face matches the wire for 7 ('— — · ·')
+  PASS: Viewer face matches the wire for 7 ('— — · ·')
+  PASS: All 18 symbols checked, got 18
+  PASS: No three-dash numeral pattern on the card
+  PASS: W keeps its two dashes
+  PASS: O keeps the distinguishing pause
+  PASS: R keeps the distinguishing pause
+  PASS: C keeps the distinguishing pause
+  PASS: L keeps the long-dash annotation
+  PASS: get_card_text matches the printed label
+  PASS: Viewer header keeps its form
+--- All Morse Reference Card Tests PASSED (65 assertions) ---

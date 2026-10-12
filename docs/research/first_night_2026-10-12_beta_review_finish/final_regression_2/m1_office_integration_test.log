@@ -1,0 +1,89 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+--- Starting M1 Office Full Integration Test (M1 Final Acceptance Correction Gate) ---
+  PASS: m1_office.tscn loads
+  PASS: m1_office instantiates as M1OfficeController
+  PASS: 1st interaction with MorseReferenceCard opens DocumentViewer
+  PASS: Viewer doc_id is morse_reference
+  PASS: Viewer body is the real MorseReferenceCard text
+  PASS: Viewer Morse reference contains all 18 M1 characters
+  PASS: DocumentViewer closes
+  PASS: 2nd interaction with MorseReferenceCard opens DocumentViewer immediately
+  PASS: 1st interaction with DispatchLedger opens DocumentViewer
+  PASS: Viewer doc_id is dispatch_ledger
+  PASS: Ledger carries the live NIGHT ENTRIES section
+  PASS: Before any traffic the booked slots are honestly awaiting
+  PASS: Before any traffic nothing claims work was done
+  PASS: Unbooked traffic stays off the paper until the night produces it
+  PASS: DocumentViewer closes
+  PASS: 2nd interaction with DispatchLedger opens DocumentViewer immediately
+  PASS: Scenario 1 starts in READY state
+  PASS: Key prompt is 'Answer the Line'
+  PASS: Key is actionable in READY state
+  PASS: Transmission is RECEIVING
+  PASS: Key physically disabled while receiving
+  PASS: Key is not actionable while receiving (status only)
+  PASS: t0 with a live sheet lands in COPYING
+  PASS: Transmission end waits for transcript verification
+  PASS: 1st interaction with TranscriptPaper opens DocumentViewer
+  PASS: Transcript inspection unlocks routing
+  PASS: Viewer displays 'TRAIN 17 CLEAR EAST'
+  PASS: DocumentViewer closes
+  PASS: 2nd interaction with TranscriptPaper opens DocumentViewer immediately
+  PASS: Routing Board is open via interact()
+  PASS: Routing Board is_awaiting_route is true
+  PASS: Routing Board locks player movement and look while open
+  PASS: Routing Board blocks world interactions while open
+  PASS: Routing Board ignores echoed route input
+  PASS: Routing Board closed after selection
+  PASS: Seated operator keeps walk lock but regains look on board close
+  PASS: Closing Routing Board restores world interactions
+  PASS: Routing decision 1 completes Scenario 1
+  PASS: Ledger night entries record the filed CLEAR EAST order
+  PASS: WorldState recorded train_17_routed_clear = true
+  PASS: Repeated routed-board interaction cannot open stale modal or lock the seated operator's look
+  PASS: Current scenario index is 1 (Scenario 2)
+  PASS: Scenario 2 is in READY state
+  PASS: Scenario 2 transmission starts
+  PASS: Door attention active after 4.0s
+  PASS: Exactly 3 footsteps played
+  PASS: No footstep landed on a Morse mark
+  PASS: Door attention is completed and inactive
+  PASS: Scenario 2 waits for transcript verification
+  PASS: Scenario 2 transcript inspection unlocks routing
+  PASS: Routing decision 2 completes Scenario 2
+  PASS: WorldState recorded freight_held_correctly = true
+  PASS: Current scenario index is 2 (Scenario 3)
+  PASS: Scenario 3 is in READY state
+  PASS: Scenario 3 transmission starts
+  PASS: Window figure is inactive during RECEIVING
+  PASS: Window event fact is not recorded during RECEIVING
+  PASS: Scenario 3 waits for transcript verification
+  PASS: Commit desk is disabled before inspection
+  PASS: Commit before inspection is ignored
+  PASS: TransmissionData true_message is WATER
+  PASS: TransmissionData elias_perception is WATER
+  PASS: TransmissionData written_transcript is WATCHER
+  PASS: Sounder played exactly 10 clicks for WATER
+  PASS: Transcript inspection unlocks commit desk
+  PASS: Commit desk is enabled after inspection
+  PASS: Transcript paper displays WATCHER
+  PASS: Unknown commit action is ignored
+  PASS: Valid WATCHER commit is accepted
+  PASS: Valid commit enters CONSEQUENCE
+  PASS: WorldState records core_hook_filed_watcher
+  PASS: KnowledgeState records committed_watcher_core_hook
+  PASS: Second commit input is ignored
+  PASS: Window figure starts after commit recovery delay
+  PASS: Camera looking through window opening observes post-commit figure
+  PASS: KnowledgeState records saw_window_event after post-commit figure
+  PASS: Consequence hold is required before Scenario 3 completes
+  PASS: scenario_cycle_completed emitted exactly once
+  PASS: is_cycle_completed() is true
+  PASS: Key prompt indicates 'M1 Cycle Complete'
+  PASS: Key physical press is disabled after full cycle completion
+--- All M1 Office Full Integration Tests PASSED ---
+WARNING: 52 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 11 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)

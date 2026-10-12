@@ -13,19 +13,20 @@ written_transcript = "WATCHER"
 
 [sub_resource type="Resource" id="Resource_commit_water"]
 script = ExtResource("3_commit")
-action_id = &"file_water"
-display_label = "AMEND COPY\nWATER"
+action_id = &"amend_copy"
+display_label = "AMEND COPY"
+requires_correction = true
 world_fact = "core_hook_filed_water"
 knowledge_fact = "committed_water_core_hook"
-result_text = "WATER FILED"
+result_text = "CORRECTION FILED"
 
 [sub_resource type="Resource" id="Resource_commit_watcher"]
 script = ExtResource("3_commit")
 action_id = &"file_watcher"
-display_label = "RETAIN COPY\nWATCHER"
+display_label = "FILE AS COPIED"
 world_fact = "core_hook_filed_watcher"
 knowledge_fact = "committed_watcher_core_hook"
-result_text = "WATCHER FILED"
+result_text = "COPY FILED"
 
 [resource]
 script = ExtResource("1_scen")
@@ -46,3 +47,8 @@ commit_lapsed_knowledge_fact = "core_hook_commit_lapsed"
 consequence_event_id = "window_figure"
 consequence_delay_seconds = 1.0
 consequence_hold_seconds = 6.0
+amendment_wrong_world_fact = "core_hook_amended_wrong"
+amendment_knowledge_fact = "amendment_entered_core_hook"
+filed_word_world_fact = "core_hook_filed_word"
+filed_word_knowledge_key = "filed_word_core_hook"
+amendment_result_text = "CORRECTION FILED"

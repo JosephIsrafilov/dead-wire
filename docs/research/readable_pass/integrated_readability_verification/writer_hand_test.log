@@ -1,0 +1,47 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+--- Starting Writer Hand Test Suite ---
+  PASS: Hand, cuff and sleeve meshes stay on layers = 2
+  PASS: Cloth keeps SPECULAR_DISABLED
+  PASS: Hand mesh carries a material
+  PASS: Skin is matte: roughness 1.00 (was 0.74 with a lamp sheen)
+  PASS: Skin keeps SPECULAR_DISABLED like the cloth
+  PASS: Hand mesh carries vertex colours (1644 colours)
+  PASS: Skin albedo luminance 0.388 stays under the form's 0.544
+  PASS: Calibration: the shaft's own centre reads inside the shaft
+  PASS: Calibration: a point a metre away reads outside
+  PASS: Calibration: a point just inside the bottom rim reads inside
+  PASS: Calibration: a point just outside the top rim reads outside
+  PASS: The hand carries one named surface per part (6)
+  PASS: The complete skin is closed and manifold after welding named seams
+  PASS: Palm and all five fingers form one connected skin component
+  PASS: The palm has no zero-area triangles (0 degenerate)
+  PASS: The index has no zero-area triangles (0 degenerate)
+  PASS: The index has a closed tip and every boundary joins the skin
+  PASS: The middle has no zero-area triangles (0 degenerate)
+  PASS: The middle has a closed tip and every boundary joins the skin
+  PASS: The ring has no zero-area triangles (0 degenerate)
+  PASS: The ring has a closed tip and every boundary joins the skin
+  PASS: The little has no zero-area triangles (0 degenerate)
+  PASS: The little has a closed tip and every boundary joins the skin
+  PASS: The thumb has no zero-area triangles (0 degenerate)
+  PASS: The thumb has a closed tip and every boundary joins the skin
+  PASS: Surface names identify palm and all five fingers
+  PASS: Relaxed writing index stays below a 58 mm arch (50.3 mm)
+  PASS: Triangle calibration catches a crossing with all three vertices outside
+  PASS: Triangle calibration rejects a separate triangle
+  GEOMETRY: palm shaft crossings=0
+  GEOMETRY: index shaft crossings=0
+  GEOMETRY: middle shaft crossings=0
+  GEOMETRY: ring shaft crossings=0
+  GEOMETRY: little shaft crossings=0
+  GEOMETRY: thumb shaft crossings=0
+  PASS: No hand triangle crosses the shaft interior (0 crossings)
+  PASS: No hand vertex enters the pen shaft (worst 0.00 mm)
+  PASS: Shaft runs clear above the fingers: min clearance 11.09 mm
+  PASS: Hand vertices hold the shaft in the grip band (34 surface contacts)
+  PASS: The index holds the shaft from its own surface (5 contacts)
+  PASS: The middle holds the shaft from its own surface (18 contacts)
+  PASS: The thumb holds the shaft from its own surface (11 contacts)
+  PASS: No hand vertex leaks outside the cuff tube (0 leaks, worst 0.00 mm)
+--- All Writer Hand Tests PASSED (37 assertions) ---

@@ -1,0 +1,67 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+--- Starting Office Ambience Test Suite ---
+  PASS: Dedicated 'Ambience' audio bus exists
+  PASS: Ambience bus sends to Master
+  PASS: Dedicated 'Foley' audio bus exists
+  PASS: Foley bus sends to Master
+  PASS: Dedicated 'Telegraph' audio bus exists
+  PASS: Telegraph bus sends to Master
+  PASS: The sounder rides the Telegraph bus
+  PASS: Both sounder strokes ride the Telegraph bus
+  PASS: Room tone player is built
+  PASS: Window wind player is built
+  PASS: Stove fire player is built
+  PASS: Clock tick player is built
+  PASS: Room tone stream is loaded
+  PASS: Wind stream is loaded
+  PASS: Stove stream is loaded
+  PASS: Clock tick stream is loaded
+  PASS: Room tone bed is set to loop
+  PASS: Wind bed is set to loop
+  PASS: Stove bed is set to loop
+  PASS: Clock tick does not loop
+  PASS: Room tone is non-positional
+  PASS: Wind is positional
+  PASS: Stove is positional
+  PASS: Clock is positional
+  PASS: Wind and stove are audibly separate positions
+  PASS: Wind and clock are audibly separate positions
+  PASS: Stove and clock are audibly separate positions
+  PASS: Room tone routes to the Ambience bus
+  PASS: Wind routes to the Ambience bus
+  PASS: Stove routes to the Ambience bus
+  PASS: Clock routes to the Ambience bus
+  PASS: Room tone sits below the sounder level
+  PASS: Wind sits below the sounder level
+  PASS: Stove sits below the sounder level
+  PASS: Clock sits below the sounder level
+  PASS: Clock telemetry starts at zero
+  PASS: No tick before a full interval elapses
+  PASS: One tick after exactly one interval
+  PASS: Ticks accumulate one per interval
+  PASS: clock_ticked emits an increasing tick count
+  PASS: Disabled clock stops ticking
+  PASS: reset_telemetry clears the tick count
+  PASS: Room tone plays after start()
+  PASS: stop() halts the room tone
+  PASS: stop() halts the wind
+  PASS: stop() halts the stove
+  PASS: m1_office.tscn loads
+  PASS: Office instantiates
+  PASS: Production scene contains OfficeAmbience
+  PASS: Production room tone is running
+  PASS: Production wind bed is running
+  PASS: Production stove bed is running
+  PASS: Window and stove props exist
+  PASS: Wind bed is anchored at the north window
+  PASS: Stove bed is anchored at the corner stove
+  PASS: Ambience exposes no interactable
+  PASS: Production scene contains the foley node
+  PASS: Paper foley rides the Foley bus
+  PASS: The lever stop rides the Foley bus
+--- All Office Ambience Tests PASSED (59 assertions) ---
+WARNING: 8 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 1 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)

@@ -1,0 +1,85 @@
+[
+  {
+    "case": "input",
+    "exit": 0,
+    "passes": 13,
+    "failures": [],
+    "errors": []
+  },
+  {
+    "case": "pointer",
+    "exit": 0,
+    "passes": 2,
+    "failures": [],
+    "errors": []
+  },
+  {
+    "case": "route",
+    "exit": 1,
+    "passes": 42,
+    "failures": [
+      "FAIL: the telegraph key never came under the crosshair",
+      "FAIL: The call was answered through ray + E",
+      "FAIL: Key press answered the call",
+      "FAIL: p1 was captured seated and settled",
+      "FAIL: The copy finished on the live clock",
+      "FAIL: Telemetry: sheet_fed fired at least once",
+      "FAIL: Telemetry: copy_finished fired exactly once, got 0",
+      "FAIL: Telemetry: transmission_finished fired and is not replaced by copy_finished",
+      "FAIL: Telemetry: the tape inked the same transmission the hand transcribed",
+      "FAIL: the finished copy never came under the crosshair",
+      "FAIL: Reading the copy was ray + E",
+      "FAIL: The document viewer opened from the chair",
+      "FAIL: the routing board never came under the crosshair",
+      "FAIL: The board opened through ray + E",
+      "FAIL: Routing board opened from a real standing position",
+      "FAIL: The route went out through the board's own key",
+      "FAIL: Elias knows the message was filed"
+    ],
+    "errors": []
+  },
+  {
+    "case": "water",
+    "exit": 0,
+    "passes": 61,
+    "failures": [],
+    "errors": []
+  },
+  {
+    "case": "wrong",
+    "exit": 0,
+    "passes": 61,
+    "failures": [],
+    "errors": []
+  },
+  {
+    "case": "watcher",
+    "exit": 0,
+    "passes": 59,
+    "failures": [],
+    "errors": []
+  },
+  {
+    "case": "lapsed",
+    "exit": 1,
+    "passes": 43,
+    "failures": [
+      "FAIL: Traffic requires transcript inspection",
+      "FAIL: Transcript lifts through E",
+      "FAIL: Routing board opens from reachable floor",
+      "FAIL: Route advances night exactly once",
+      "FAIL: Wire calls for slot 1",
+      "FAIL: E answers traffic 1",
+      "FAIL: Route advances night exactly once",
+      "FAIL: Unfiled deadline resolves without a selected copy",
+      "FAIL: Final consequence reaches shift end",
+      "FAIL: Dawn unlocks exit",
+      "FAIL: Ray reaches Interactable (got <null>)",
+      "FAIL: Handover can be inspected",
+      "FAIL: Door opens after night",
+      "FAIL: Walking through threshold starts ending",
+      "FAIL: Ending cannot be covered by pause menu"
+    ],
+    "errors": []
+  }
+]

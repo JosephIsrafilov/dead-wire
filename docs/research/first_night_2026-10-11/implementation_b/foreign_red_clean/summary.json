@@ -1,0 +1,27 @@
+{
+  "suites": 1,
+  "passed": 0,
+  "failed": 1,
+  "assertions": 0,
+  "error_bearing_suites": 1,
+  "results": [
+    {
+      "suite": "tests/office/foreign_traffic_acceptance_test.gd",
+      "exit_code": 1,
+      "assertions": 0,
+      "passed": false,
+      "failures": [
+        "  FAIL: Rejected foreign traffic does not consume its played flag",
+        "SCRIPT ERROR: parser/runtime failure"
+      ],
+      "runtime_errors": [
+        "SCRIPT ERROR: Parse Error: Could not parse global class \"PauseMenu\" from \"res://scripts/ui/pause_menu.gd\".",
+        "SCRIPT ERROR: Parse Error: Cannot infer the type of \"pause_menu\" variable because the value doesn't have a set type.",
+        "SCRIPT ERROR: Compile Error: Failed to compile depended scripts.",
+        "SCRIPT ERROR: Compile Error: Failed to compile depended scripts.",
+        "ERROR: Failed to load script \"res://tests/office/foreign_traffic_acceptance_test.gd\" with error \"Compilation failed\"."
+      ],
+      "warnings": []
+    }
+  ]
+}

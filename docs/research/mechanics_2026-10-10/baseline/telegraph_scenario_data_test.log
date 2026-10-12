@@ -1,0 +1,36 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+--- Starting Telegraph Scenario Data Test Suite ---
+  PASS: Empty scenario has validation errors
+  PASS: Single commit option is rejected by validation
+  PASS: Scenario 1 loads
+  PASS: Scenario 1 is valid
+  PASS: Scenario 1 id matches
+  PASS: Scenario 1 true_message matches
+  PASS: Scenario 1 expected routing matches
+  PASS: Scenario 1 requires transcript verification
+  PASS: Scenario 1 has authored glyph cues
+  PASS: Scenario 2 loads
+  PASS: Scenario 2 is valid
+  PASS: Scenario 2 id matches
+  PASS: Scenario 2 true_message matches
+  PASS: Scenario 2 attention event matches
+  PASS: Scenario 2 start time is 4.0s
+  PASS: Scenario 2 requires transcript verification
+  PASS: Scenario 2 has authored glyph cues
+  PASS: Scenario 1 routing lapse world fact matches
+  PASS: Scenario 1 routing lapse knowledge fact matches
+  PASS: Scenario 2 routing lapse world fact matches
+  PASS: Scenario 2 routing lapse knowledge fact matches
+  PASS: Scenario 3 loads
+  PASS: Scenario 3 is valid
+  PASS: Scenario 3 id matches
+  PASS: Scenario 3 true_message is WATER
+  PASS: Scenario 3 written_transcript is WATCHER
+  PASS: Scenario 3 requires transcript verification
+  PASS: Scenario 3 exposes two commit options
+  PASS: Commit scenario leaves routing lapse fields empty (compatible default)
+  PASS: Scenario 3 water label names the act
+  PASS: Scenario 3 watcher label names the act
+  PASS: Scenario 3 consequence event is authored
+--- All Telegraph Scenario Data Tests PASSED ---

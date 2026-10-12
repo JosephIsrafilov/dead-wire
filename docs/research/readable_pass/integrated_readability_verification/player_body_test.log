@@ -1,0 +1,70 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+--- Starting Player Body Test Suite ---
+  PASS: m1_office.tscn loads
+  PASS: Office instantiates
+  PASS: Office exposes the player
+  PASS: set_movement_locked freezes walking and looking
+  PASS: set_walk_locked freezes walking
+  PASS: set_walk_locked leaves the head free
+  PASS: Movement decays over frames rather than snapping to zero
+  PASS: Movement actually decays
+  PASS: Walking moves the head at all
+  PASS: Head travel stays under 50 mm (peak 29.0 mm)
+  PASS: With bob and breathing off the head is still
+  PASS: Breathing moves the head while standing still
+  PASS: Breathing stays inside comfort bounds
+  PASS: Urgent breathing stays inside comfort bounds
+  PASS: Yaw clamps to the seated arc, got -90.0
+  PASS: Clearing the limit restores free look
+  PASS: A player below the world is recovered
+  PASS: m1_office.tscn loads
+  PASS: Office instantiates
+  PASS: Office exposes the operator seat
+  PASS: The chair is interactable
+  PASS: Chair invites the operator to sit
+  PASS: Key is inert while the operator stands
+  PASS: Operator sits
+  PASS: Both seat and player agree he is seated
+  PASS: Seated operator is at the chair
+  PASS: Key comes alive once seated
+  PASS: Prompt offers standing up
+  PASS: Seated operator can still look
+  PASS: Seated look is clamped to the arc, got 115.0 deg
+  PASS: Office exposes the document viewer
+  PASS: Opening a document locks seated movement and look
+  PASS: Closing a seated document keeps walking locked
+  PASS: Closing a seated document restores free look
+  PASS: Operator stands
+  PASS: Standing clears the seated state
+  PASS: Standing restores walking
+  PASS: Key goes inert again once he is on his feet
+  PASS: Standing eye height is restored
+  PASS: Can sit again after the body finished standing
+  PASS: Sitting while seated is a no-op
+  PASS: Can stand again
+  PASS: Standing while standing is a no-op
+  PASS: Sit with the production transition durations
+  PASS: The sit transition completes on frames
+  PASS: Stand with the production transition durations
+  PASS: Standing took real frames, not an assignment (87 frames)
+  PASS: No teleport frame during standing (max 0.021 m)
+  PASS: The body actually left the chair
+  PASS: The standing point is clear of furniture
+  PASS: The chair is solid again once the body is out
+  PASS: Sit from a 0.9 m offset works
+  PASS: Approach settles from every side
+  PASS: The body arrives at the chair
+  PASS: No teleport frame during the approach (max 0.036 m)
+  PASS: Stand again for the next side
+  PASS: Sit from a 0.9 m offset works
+  PASS: Approach settles from every side
+  PASS: The body arrives at the chair
+  PASS: No teleport frame during the approach (max 0.036 m)
+  PASS: Stand again for the next side
+  PASS: Sit from a 0.9 m offset works
+  PASS: Approach settles from every side
+  PASS: The body arrives at the chair
+  PASS: No teleport frame during the approach (max 0.036 m)
+  PASS: Stand again for the next side
+--- All Player Body Tests PASSED (66 assertions) ---

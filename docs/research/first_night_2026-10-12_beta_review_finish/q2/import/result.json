@@ -1,0 +1,17 @@
+{
+  "command": [
+    "C:/Users/YUSIF/Desktop/Godot_v4.7.1-stable_win64.exe/Godot_v4.7.1-stable_win64_console.exe",
+    "--headless",
+    "--audio-driver",
+    "Dummy",
+    "--path",
+    ".",
+    "--import"
+  ],
+  "returncode": 0,
+  "returncode_unsigned": 0,
+  "returncode_hex": "0x00000000",
+  "settings_path": "C:\\Users\\YUSIF\\AppData\\Roaming\\Godot\\app_userdata\\dead-wire\\settings.cfg",
+  "settings_existed_before": true,
+  "settings_preserved": true
+}

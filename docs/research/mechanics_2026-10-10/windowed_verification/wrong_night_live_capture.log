@@ -1,0 +1,109 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+D3D12 12_0 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 3070 Laptop GPU
+
+PASS: Title button enters production office
+PASS: Captured 01_entry
+RENDER FPS: 1.0
+PASS: Ray reaches Interactable (got Interactable:<Area3D#95311366720>)
+PASS: Duty sheet opens through E
+PASS: Captured 02_orders
+RENDER FPS: 1.0
+PASS: Ray reaches Interactable (got Interactable:<Area3D#90546637094>)
+PASS: Ledger is reachable and readable
+PASS: Ray reaches Interactable (got Interactable:<Area3D#88231381176>)
+PASS: Chair is reachable through production ray
+RAY DIAGNOSTIC: mode=0 blocked=false from=(-1.55, 1.168944, -0.6) forward=(-0.764835, -0.430297, -0.479449) target=(-2.22, 0.752, -1.02) hit=Interactable:<Area3D#89187682517>
+RAY DIAGNOSTIC: mode=0 blocked=false from=(-1.55, 1.168944, -0.6) forward=(-0.764835, -0.430297, -0.479449) target=(-2.22, 0.752, -1.02) hit=Interactable:<Area3D#89187682517>
+PASS: Captured 03_writing_0
+RENDER FPS: 154.0
+RAY DIAGNOSTIC: mode=0 blocked=false from=(-1.55, 1.191811, -0.6) forward=(-0.839846, -0.5222, -0.148208) target=(-2.23, 0.764, -0.72) hit=Interactable:<Area3D#89456117989>
+PASS: Captured 04_transcript_0
+RENDER FPS: 154.0
+PASS: E puts the transcript down
+RAY DIAGNOSTIC: mode=0 blocked=false from=(1.4, 1.191811, -0.75) forward=(0.989602, 0.119226, -0.080455) target=(2.74, 0.62, -0.85) hit=Interactable:<Area3D#91167394123>
+PASS: Captured 05_routing_0
+RENDER FPS: 127.0
+RAY DIAGNOSTIC: mode=0 blocked=false from=(1.4, 1.191811, -0.75) forward=(-0.991236, -0.109477, -0.073932) target=(-2.22, 0.752, -1.02) hit=<Object#null>
+PASS: Captured 03_writing_1
+RENDER FPS: 136.0
+RAY DIAGNOSTIC: mode=0 blocked=false from=(1.4, 1.191811, -0.75) forward=(-0.993251, -0.115691, 0.008209) target=(-2.23, 0.764, -0.72) hit=<Object#null>
+PASS: Captured 04_transcript_1
+RENDER FPS: 136.0
+PASS: E puts the transcript down
+RAY DIAGNOSTIC: mode=0 blocked=false from=(1.4, 1.191811, -0.75) forward=(0.989602, 0.119226, -0.080455) target=(2.74, 0.62, -0.85) hit=Interactable:<Area3D#91167394123>
+PASS: Captured 05_routing_1
+RENDER FPS: 94.0
+RAY DIAGNOSTIC: mode=0 blocked=false from=(1.4, 1.191811, -0.75) forward=(-0.991236, -0.109477, -0.073932) target=(-2.22, 0.752, -1.02) hit=<Object#null>
+PASS: Captured 03_writing_2
+RENDER FPS: 73.0
+RAY DIAGNOSTIC: mode=0 blocked=false from=(1.4, 1.191811, -0.75) forward=(-0.993251, -0.115691, 0.008209) target=(-2.23, 0.764, -0.72) hit=<Object#null>
+PASS: Number keys cannot file behind an open document
+PASS: Captured 04_transcript_2
+RENDER FPS: 73.0
+PASS: E puts the transcript down
+PASS: Unseen filing desk rejects remote shortcut
+RAY DIAGNOSTIC: mode=0 blocked=false from=(0.95, 1.191811, 0.45) forward=(0.198991, -0.350035, 0.915357) target=(1.15, 0.84, 1.37) hit=Option1Interactable:<Area3D#90261424405>
+PASS: Captured 06_amendment_blank
+RENDER FPS: 98.0
+PASS: Captured 06_amendment_typed
+RENDER FPS: 98.0
+PASS: Captured 06_filed
+RENDER FPS: 113.0
+PASS: Captured 07_window
+RENDER FPS: 93.0
+RAY DIAGNOSTIC: mode=2 blocked=false from=(0.0, 1.186157, 1.2) forward=(-0.019797, 0.310796, 0.95027) target=(-0.02, 1.5, 2.24) hit=Interactable:<Area3D#95512693324>
+PASS: Captured 08_handover
+RENDER FPS: 58.0
+PASS: Ray reaches Interactable (got Interactable:<Area3D#86855649382>)
+PASS: Captured 09_ending
+RENDER FPS: 146.0
+PASS: Restart button creates a fresh watch
+PASS: Restart clears both independent state stores
+PASS: Restart clears figure and filing presentation
+PASS: Recorded actual master audio
+PLAYTHROUGH: 43 failures; 16 screenshots
+FAIL: Chair transition actually settled before first key activation
+FAIL: Ray reaches Interactable (got <null>)
+FAIL: Seated key opens the watch
+FAIL: Wire calls for slot 0
+FAIL: Ray reaches Interactable (got <null>)
+FAIL: E answers traffic 0
+FAIL: Pause holds objective Morse clock
+FAIL: Escape resumes the same transmission
+FAIL: Traffic requires transcript inspection
+FAIL: Ray reaches Interactable (got <null>)
+FAIL: Transcript lifts through E
+FAIL: Movement rises from chair
+FAIL: Ray reaches Interactable (got <null>)
+FAIL: Routing board opens from reachable floor
+FAIL: Route advances night exactly once
+FAIL: Wire calls for slot 1
+FAIL: Ray reaches Interactable (got <null>)
+FAIL: E answers traffic 1
+FAIL: Traffic requires transcript inspection
+FAIL: Ray reaches Interactable (got <null>)
+FAIL: Transcript lifts through E
+FAIL: Movement rises from chair
+FAIL: Ray reaches Interactable (got <null>)
+FAIL: Routing board opens from reachable floor
+FAIL: Route advances night exactly once
+FAIL: Wire calls for slot 2
+FAIL: Ray reaches Interactable (got <null>)
+FAIL: E answers traffic 2
+FAIL: Traffic requires transcript inspection
+FAIL: Ray reaches Interactable (got <null>)
+FAIL: Transcript lifts through E
+FAIL: Movement rises from chair
+FAIL: Ray reaches Option1Interactable (got <null>)
+FAIL: Physical amendment opens an editor without filing
+FAIL: Real typing preserves intended amendment word
+FAIL: Physical wrong choice resolves only after explicit action
+FAIL: Final consequence reaches shift end
+FAIL: Dawn unlocks exit
+FAIL: Ray reaches Interactable (got <null>)
+FAIL: Handover can be inspected
+FAIL: Door opens after night
+FAIL: Walking through threshold starts ending
+FAIL: Ending cannot be covered by pause menu
+WARNING: 7 RIDs of type "Texture" were leaked.
+   at: finalize (servers/rendering/rendering_device.cpp:8900)

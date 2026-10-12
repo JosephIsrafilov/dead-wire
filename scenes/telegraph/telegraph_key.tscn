@@ -1,10 +1,13 @@
-[gd_scene load_steps=8 format=3 uid="uid://b1telkey001"]
+[gd_scene load_steps=13 format=3 uid="uid://b1telkey001"]
 
 [ext_resource type="Script" path="res://scripts/telegraph/hardware/telegraph_key.gd" id="1_key"]
 [ext_resource type="Script" path="res://scripts/interaction/interactable.gd" id="2_interact"]
 [ext_resource type="Material" path="res://materials/style_tests/metal_brass_aged.tres" id="3_brass"]
 [ext_resource type="Material" path="res://materials/style_tests/timber_trim.tres" id="4_wood"]
 [ext_resource type="Material" path="res://materials/style_tests/metal_oxidized.tres" id="5_iron"]
+
+[ext_resource type="ArrayMesh" path="res://assets/models/instruments_v1/key_static.res" id="6_authored_static"]
+[ext_resource type="ArrayMesh" path="res://assets/models/instruments_v1/key_lever.res" id="7_authored_lever"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_wood_base"]
 material = ExtResource("4_wood")
@@ -30,25 +33,33 @@ size = Vector3(0.12, 0.08, 0.22)
 [node name="TelegraphKey" type="Node3D"]
 script = ExtResource("1_key")
 
+[node name="AuthoredStatic" type="MeshInstance3D" parent="."]
+mesh = ExtResource("6_authored_static")
+
 [node name="WoodBase" type="MeshInstance3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.006, 0)
 mesh = SubResource("BoxMesh_wood_base")
 
 [node name="BaseMesh" type="MeshInstance3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.014, 0)
 mesh = SubResource("BoxMesh_base")
 
 [node name="TrunnionL" type="CSGBox3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.03, 0.026, 0.01)
 size = Vector3(0.01, 0.02, 0.02)
 material = ExtResource("3_brass")
 
 [node name="TrunnionR" type="CSGBox3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.03, 0.026, 0.01)
 size = Vector3(0.01, 0.02, 0.02)
 material = ExtResource("3_brass")
 
 [node name="BindingPost1" type="CSGCylinder3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.025, 0.025, -0.065)
 radius = 0.008
 height = 0.02
@@ -56,6 +67,7 @@ sides = 8
 material = ExtResource("3_brass")
 
 [node name="BindingPost2" type="CSGCylinder3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.025, 0.025, -0.065)
 radius = 0.008
 height = 0.02
@@ -65,11 +77,16 @@ material = ExtResource("3_brass")
 [node name="Lever" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.022, 0)
 
+[node name="AuthoredLever" type="MeshInstance3D" parent="Lever"]
+mesh = ExtResource("7_authored_lever")
+
 [node name="LeverArm" type="MeshInstance3D" parent="Lever"]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.006, 0.005)
 mesh = SubResource("BoxMesh_arm")
 
 [node name="Knob" type="MeshInstance3D" parent="Lever"]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.018, 0.06)
 mesh = SubResource("CylinderMesh_knob")
 

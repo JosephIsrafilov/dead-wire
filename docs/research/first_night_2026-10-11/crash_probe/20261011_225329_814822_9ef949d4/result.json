@@ -1,0 +1,62 @@
+{
+  "captured_at_utc": "2026-10-11T18:53:32.550500+00:00",
+  "command": [
+    "C:\\Users\\YUSIF\\Documents\\dead-wire\\.venv-tools\\Scripts\\python.exe",
+    "C:\\Users\\YUSIF\\Documents\\dead-wire\\tools\\with_preserved_settings.py",
+    "--settings",
+    "C:\\Users\\YUSIF\\AppData\\Roaming\\Godot\\app_userdata\\dead-wire\\settings.cfg",
+    "--result-json",
+    "C:\\Users\\YUSIF\\Documents\\dead-wire\\docs\\research\\first_night_2026-10-11\\crash_probe\\20261011_225329_814822_9ef949d4\\result.json",
+    "--",
+    "C:/Users/YUSIF/Desktop/Godot_v4.7.1-stable_win64.exe/Godot_v4.7.1-stable_win64_console.exe",
+    "--verbose",
+    "--headless",
+    "--audio-driver",
+    "Dummy",
+    "--path",
+    "C:\\Users\\YUSIF\\Documents\\dead-wire",
+    "--script",
+    "res://tests/office/shift_director_test.gd"
+  ],
+  "timeout_seconds": 120.0,
+  "timed_out": false,
+  "returncode": 3221225477,
+  "returncode_unsigned": 3221225477,
+  "returncode_hex": "0xC0000005",
+  "settings": {
+    "command": [
+      "C:/Users/YUSIF/Desktop/Godot_v4.7.1-stable_win64.exe/Godot_v4.7.1-stable_win64_console.exe",
+      "--verbose",
+      "--headless",
+      "--audio-driver",
+      "Dummy",
+      "--path",
+      "C:\\Users\\YUSIF\\Documents\\dead-wire",
+      "--script",
+      "res://tests/office/shift_director_test.gd"
+    ],
+    "returncode": 3221225477,
+    "returncode_unsigned": 3221225477,
+    "returncode_hex": "0xC0000005",
+    "settings_path": "C:\\Users\\YUSIF\\AppData\\Roaming\\Godot\\app_userdata\\dead-wire\\settings.cfg",
+    "settings_existed_before": true,
+    "settings_preserved": true
+  },
+  "artifacts": {
+    "stdout": "stdout.log",
+    "stderr": "stderr.log",
+    "result": "result.json"
+  },
+  "sha256": {
+    "engine": "35dab11e04ece16a2b93035e65204f4a944a3e00b020d43e54409193379d5eef",
+    "test": "93102bcca9189bc55df33596377a52c5c7642dcbc185e5cd7a32a872d357042b"
+  },
+  "platform": {
+    "system": "Windows",
+    "release": "11",
+    "version": "10.0.26200",
+    "machine": "AMD64",
+    "processor": "Intel64 Family 6 Model 154 Stepping 3, GenuineIntel",
+    "python": "3.12.7"
+  }
+}

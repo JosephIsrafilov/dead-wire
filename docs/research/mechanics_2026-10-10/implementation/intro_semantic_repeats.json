@@ -1,0 +1,42 @@
+[
+  {
+    "run": 0,
+    "exit": 0,
+    "pass": 6,
+    "errors": [
+      "ERROR: 1 resources still in use at exit (run with --verbose for details)."
+    ]
+  },
+  {
+    "run": 1,
+    "exit": 0,
+    "pass": 6,
+    "errors": [
+      "ERROR: 1 resources still in use at exit (run with --verbose for details)."
+    ]
+  },
+  {
+    "run": 2,
+    "exit": 0,
+    "pass": 6,
+    "errors": [
+      "ERROR: 1 resources still in use at exit (run with --verbose for details)."
+    ]
+  },
+  {
+    "run": 3,
+    "exit": 0,
+    "pass": 6,
+    "errors": [
+      "ERROR: 1 resources still in use at exit (run with --verbose for details)."
+    ]
+  },
+  {
+    "run": 4,
+    "exit": 0,
+    "pass": 6,
+    "errors": [
+      "ERROR: 1 resources still in use at exit (run with --verbose for details)."
+    ]
+  }
+]

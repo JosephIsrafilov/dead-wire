@@ -1,0 +1,40 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+--- Starting Foley Lifecycle Test Suite ---
+  PASS: Detached deferred bind creates no audio players
+  PASS: Detached deferred bind creates no viewer connections
+  PASS: Detached deferred bind creates no route connections
+  PASS: An earlier detached bind does not prevent later valid binding
+  PASS: Reattaching after rejected binding creates sources only once
+  PASS: Non-office parent cannot create foley players
+  PASS: Missing viewer refuses binding before any audio is created
+  PASS: Missing session refuses binding before any audio is created
+  PASS: Missing transcript refuses binding before any audio is created
+  PASS: Missing board refuses binding before any audio is created
+  PASS: Missing desk refuses binding before any audio is created
+  PASS: Missing door refuses binding before any audio is created
+  PASS: Missing seat refuses binding before any audio is created
+  PASS: Missing chair refuses binding before any audio is created
+  PASS: Detached spatial component refuses binding before transforms are read
+  PASS: Queued foley refuses binding before audio creation
+  PASS: Queued office refuses binding before audio creation
+  PASS: Queued desk refuses binding before audio creation
+  PASS: A valid office binds its physical lever source
+  PASS: Repeated binding keeps exactly one set of audio players
+  PASS: Repeated binding keeps exactly one viewer connection
+  PASS: Repeated binding keeps exactly one sheet-feed connection
+  PASS: Repeated binding keeps exactly one stamp-contact connection
+  PASS: Repeated binding preserves one latch and one hinge connection
+  PASS: Repeated binding keeps exactly one chair connection
+  PASS: Reattaching a bound office does not duplicate players
+  PASS: Reattaching a bound office does not duplicate connections
+  PASS: Rejected routing intent never plays the lever throw
+  PASS: Lever source subscribes once to accepted acknowledgement
+  PASS: Foley adds no intent listener
+  PASS: An accepted HOLD plays the physical lever throw
+  PASS: Accepted-only feedback keeps the authored mix
+  PASS: Injected paper stream reaches pickup source
+  PASS: Injected pickup stream stays distinct
+  PASS: Injected feed stream reaches feed source
+  PASS: Injected winding stream reaches register source
+--- All Foley Lifecycle Tests PASSED ---

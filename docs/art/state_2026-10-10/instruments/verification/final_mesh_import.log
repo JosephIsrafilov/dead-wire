@@ -1,0 +1,9 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+IMPORT key_static surfaces 4 aabb [P: (-0.045, 0.0, -0.095), S: (0.09, 0.04167, 0.19)] result 0
+IMPORT key_lever surfaces 2 aabb [P: (-0.025, 0.0, -0.065), S: (0.05, 0.036085, 0.15)] result 0
+IMPORT sounder_static surfaces 5 aabb [P: (-0.075, -0.002, -0.1), S: (0.15, 0.091165, 0.2)] result 0
+IMPORT sounder_armature surfaces 3 aabb [P: (-0.034, -0.0055, -0.05), S: (0.068, 0.010585, 0.1)] result 0
+IMPORT register_static surfaces 4 aabb [P: (-0.086, 0.0, -0.061), S: (0.181, 0.129085, 0.2615)] result 0
+IMPORT register_spool surfaces 2 aabb [P: (-0.029, -0.017, -0.029), S: (0.058, 0.034, 0.058)] result 0
+IMPORT register_stylus surfaces 2 aabb [P: (-0.002, -0.0095, -0.032), S: (0.004, 0.0115, 0.0408)] result 0

@@ -1,0 +1,4 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+ERROR: Main scene's path could not be resolved from UID. Make sure the project is imported first. Aborting.
+   at: start (main/main.cpp:4337)

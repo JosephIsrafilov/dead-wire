@@ -1,0 +1,35 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+--- Starting Morse Runtime Scheduler Test Suite (Gate 09C) ---
+  PASS: Initial state is IDLE
+  PASS: is_playing() is false initially
+  PASS: Start ET schedule succeeds
+  PASS: State is PLAYING
+  PASS: is_playing() is true
+  PASS: playback_started emitted
+  PASS: Event 0 started at t=0.0
+  PASS: Current event index is 0
+  PASS: Elapsed time is 0.05s
+  PASS: Event 0 still running at 0.05s
+  PASS: Elapsed time is 0.10s
+  PASS: Event 0 finished at t=0.10s
+  PASS: Event 1 started at t=0.10s
+  PASS: Current event index is 1
+  PASS: Elapsed time is 0.40s
+  PASS: Event 1 finished at t=0.40s
+  PASS: Event 2 started at t=0.40s
+  PASS: Elapsed time is 0.70s
+  PASS: Event 2 finished at t=0.70s
+  PASS: playback_completed emitted once
+  PASS: State is COMPLETED
+  PASS: Double start while playing is rejected
+  PASS: playback_started not emitted again
+  PASS: Cancel transitions to IDLE
+  PASS: playback_cancelled emitted
+  PASS: WATER event 0 started at t=0.0
+  PASS: WATER completed after large delta hitch
+  PASS: State is COMPLETED after hitch
+  PASS: All WATER events started in order
+  PASS: All WATER events finished in order
+  PASS: All events executed in strict index order
+--- All Morse Runtime Scheduler Tests PASSED ---

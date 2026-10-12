@@ -86,7 +86,7 @@ func _run() -> void:
 	if not assert_condition(paper != null and paper.get_interactable() != null, "Production transcript is available for verification"): return
 	paper.get_interactable().interact()
 	if not assert_condition(office.session_controller.get_state() == TelegraphSessionController.State.AWAITING_COMMIT, "Production transcript inspection opens the commit gate"): return
-	if not assert_condition(office.session_controller.submit_commit(&"file_water"), "Production core-hook commit resolves"): return
+	if not assert_condition(office.session_controller.submit_amendment("WATER"), "Production core-hook commit resolves"): return
 	# Production consequence waits for the observer's visible hold. This test is
 	# interested in the completed duty-sheet fact, so acknowledge the figure
 	# explicitly instead of relying on the bounded unattended fallback.
@@ -96,8 +96,8 @@ func _run() -> void:
 	if not assert_condition(office.session_controller.get_state() == TelegraphSessionController.State.COMPLETE, "Production consequence completes the shift segment"): return
 	var production_sheet := office.get_node_or_null("DutySheet") as DutySheet
 	if not assert_condition(production_sheet != null, "Production office exposes its duty sheet"): return
-	if not assert_condition(production_sheet.get_core_hook_outcome_status() == DutySheet.STATUS_CORE_HOOK_WATER, "Completed production commit resolves the sheet status"): return
-	if not assert_condition(production_sheet.get_sheet_text().contains(DutySheet.STATUS_CORE_HOOK_WATER), "Completed production commit is visible on the rendered duty sheet"): return
+	if not assert_condition(production_sheet.get_core_hook_outcome_status() == DutySheet.STATUS_CORE_HOOK_AMENDED, "Completed production commit resolves the sheet status"): return
+	if not assert_condition(production_sheet.get_sheet_text().contains(DutySheet.STATUS_CORE_HOOK_AMENDED), "Completed production commit is visible on the rendered duty sheet"): return
 
 	# --- the ledger shares the sheet's vocabulary, and invents nothing -----
 	# (H7) One knowledge-backed status computation for both documents; the
@@ -109,8 +109,8 @@ func _run() -> void:
 	if not assert_condition(not ledger.get_ledger_text().contains("23 APRIL"), "No day of month is invented anywhere in the setting"): return
 	# The production night above committed WATER: the sealed-copy vocabulary is
 	# shared with the duty sheet.
-	if not assert_condition(entries.contains("HEARD COPY SEALED"), "The core-hook entry uses the shared sealed-copy vocabulary"): return
-	if not assert_condition(not entries.contains("WATER") and not entries.contains("WATCHER"), "The ledger never leaks message content"): return
+	if not assert_condition(entries.contains("AMENDED COPY SEALED"), "The core-hook entry uses neutral amendment vocabulary"): return
+	if not assert_condition(entries.contains("WATER") and not entries.contains("WATCHER"), "The ledger records the chosen word only after explicit filing"): return
 
 	# filed without a route fact: the order went out, but the record does not
 	# say which way — the ledger must not turn that into HOLD.

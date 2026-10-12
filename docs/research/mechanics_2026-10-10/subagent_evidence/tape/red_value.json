@@ -1,0 +1,22 @@
+{
+  "command": [
+    "C:/Users/YUSIF/Desktop/Godot_v4.7.1-stable_win64.exe/Godot_v4.7.1-stable_win64_console.exe",
+    "--headless",
+    "--audio-driver",
+    "Dummy",
+    "--path",
+    "C:/Users/YUSIF/Documents/dead-wire",
+    "--script",
+    "res://tests/telegraph/tape_evidence_test.gd"
+  ],
+  "exit_code": 1,
+  "timed_out": false,
+  "pass_assertions": 1,
+  "fail_assertions": [
+    "  FAIL: Started MARK exposes zero delivered units, not its future dot length\r"
+  ],
+  "error_lines": [],
+  "warning_lines": [],
+  "suite_totals": [],
+  "log": "C:\\Users\\YUSIF\\.hermes\\cache\\scratch\\dead_wire_tape\\red_value.log"
+}

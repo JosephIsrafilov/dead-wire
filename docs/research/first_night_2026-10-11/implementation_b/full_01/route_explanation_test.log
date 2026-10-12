@@ -1,0 +1,11 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+--- Starting Route Explanation Test Suite ---
+  PASS: routing_board.tscn loads
+  PASS: Route prompt panel and label exist
+  PASS: Route prompt stays hidden until a decision is pending
+  PASS: Route prompt text matches the approved explanation exactly
+  PASS: Route explanation does not grade the pending choice
+  PASS: Route prompt uses the 18px font
+  PASS: Route prompt panel uses the planned bounds (350, 558, 930, 678)
+  FAIL: Route prompt label uses the planned inset bounds (14, 8, 566, 112)

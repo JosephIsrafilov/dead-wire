@@ -1,0 +1,43 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+--- Starting Morse Schedule Compiler Test Suite (Gate 09B) ---
+  PASS: MorseScheduleCompiler instantiates
+  PASS: MorseScheduleCompiler is RefCounted
+  PASS: MorseScheduledEvent is RefCounted
+  PASS: MorsePlaybackScheduleData is RefCounted
+  PASS: M1 Alphabet fixture loads cleanly
+  PASS: M1 Profile fixture loads cleanly
+  PASS: Encode 'ET' succeeds
+  PASS: Compile 'ET' succeeds
+  PASS: 'ET' schedule has zero validation errors
+  PASS: 'ET' schedule has 3 events
+  PASS: 'ET' ev0 is MARK 0.00..0.10
+  PASS: 'ET' ev1 is GAP 0.10..0.40
+  PASS: 'ET' ev2 is MARK 0.40..0.70
+  PASS: 'ET' total duration is exactly 0.70s
+  PASS: 'E T' schedule compiles cleanly
+  PASS: 'E T' schedule has 3 events
+  PASS: 'E T' ev0 is MARK 0.00..0.10
+  PASS: 'E T' ev1 is GAP 0.10..0.70
+  PASS: 'E T' ev2 is MARK 0.70..1.00
+  PASS: 'E T' total duration is exactly 1.00s
+  PASS: WATER schedule valid
+  PASS: WATER total duration == 3.60s
+  PASS: WATCHER schedule valid
+  PASS: WATCHER total duration == 5.50s
+  PASS: TRAIN 17 schedule valid
+  PASS: TRAIN 17 total duration == 13.60s
+  PASS: HOLD FREIGHT schedule valid
+  PASS: HOLD FREIGHT total duration == 15.60s
+  PASS: Null sequence rejected
+  PASS: Null profile rejected
+  PASS: Empty/invalid sequence rejected
+  PASS: Invalid profile rejected
+  PASS: Two compile calls yield distinct schedule instances
+  PASS: Two compile calls yield distinct event instances
+  PASS: Mutating one schedule does not affect another
+  PASS: Source sequence untouched by schedule mutation
+  PASS: WorldState untouched during compiler operations
+  PASS: KnowledgeState untouched during compiler operations
+  PASS: No scene tree nodes created by compiler
+--- All Morse Schedule Compiler Tests PASSED ---

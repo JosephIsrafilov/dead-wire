@@ -154,7 +154,7 @@ func _init() -> void:
 	board_act.interact()
 	if not assert_condition(not board.is_open and not office.player.is_look_locked, "Repeated routed-board interaction cannot open stale modal or lock the seated operator's look"): return
 
-	# 4. SCENARIO 2: ATTENTION (HOLD FREIGHT UNTIL TEN + 3 Door Footsteps)
+	# 4. SCENARIO 2: ATTENTION (FREIGHT 71 EAST + 3 Door Footsteps)
 	key_act.interact()
 	await process_frame
 

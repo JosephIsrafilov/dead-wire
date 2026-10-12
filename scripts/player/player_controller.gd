@@ -45,7 +45,7 @@ signal footstep_played(step_index: int)
 ## to keep the bed tactile without pretending there is a full foley library.
 @export var footstep_step_distance: float = 0.65
 @export var footstep_min_distance: float = 0.001
-@export var footstep_stream: AudioStream = preload("res://audio/sfx/foley/footstep_wood.wav")
+@export var footstep_stream: AudioStream = preload("res://audio/sfx/foley/footstep_wood_beta.wav")
 
 @export var settle_distance: float = 0.022
 @export var settle_duration: float = 0.22

@@ -1,0 +1,65 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+D3D12 12_0 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 3070 Laptop GPU
+
+PASS: Title button enters production office
+PASS: Ray reaches Interactable (got Interactable:<Area3D#95646911035>)
+PASS: Duty sheet opens through E
+PASS: Ray reaches Interactable (got Interactable:<Area3D#90882181409>)
+PASS: Ledger is reachable and readable
+PASS: Ray reaches Interactable (got Interactable:<Area3D#88566925491>)
+PASS: Chair is reachable through production ray
+PASS: Chair transition actually settled before first key activation
+PASS: Ray reaches Interactable (got Interactable:<Area3D#89523226832>)
+PASS: Seated key opens the watch
+PASS: Wire calls for slot 0
+PASS: Ray reaches Interactable (got Interactable:<Area3D#89523226832>)
+PASS: E answers traffic 0
+PASS: Pause holds objective Morse clock
+PASS: Escape resumes the same transmission
+PASS: Ray reaches Interactable (got Interactable:<Area3D#89791662304>)
+PASS: E puts the transcript down
+PASS: Movement rises from chair
+PASS: Ray reaches Interactable (got Interactable:<Area3D#91502938438>)
+PASS: Ray reaches Interactable (got Interactable:<Area3D#88566925491>)
+PASS: Ray reaches Interactable (got Interactable:<Area3D#89523226832>)
+PASS: Traffic requires transcript inspection
+PASS: Ray reaches Interactable (got Interactable:<Area3D#89791662304>)
+PASS: Transcript lifts through E
+PASS: E puts the transcript down
+PASS: Movement rises from chair
+PASS: Ray reaches Interactable (got Interactable:<Area3D#91502938438>)
+PASS: Routing board opens from reachable floor
+PASS: Wire calls for slot 2
+PASS: Ray reaches Interactable (got Interactable:<Area3D#88566925491>)
+PASS: Ray reaches Interactable (got Interactable:<Area3D#89523226832>)
+PASS: E answers traffic 2
+PASS: Traffic requires transcript inspection
+PASS: Ray reaches Interactable (got Interactable:<Area3D#89791662304>)
+PASS: Transcript lifts through E
+PASS: Number keys cannot file behind an open document
+PASS: E puts the transcript down
+PASS: Unseen filing desk rejects remote shortcut
+PASS: Movement rises from chair
+RAY DIAGNOSTIC: mode=2 blocked=false from=(0.0, 1.645567, 1.2) forward=(-0.020593, -0.149993, 0.988473) target=(-0.02, 1.5, 2.24) hit=Interactable:<Area3D#95848237639>
+PASS: Ray reaches Interactable (got Interactable:<Area3D#87191193697>)
+PASS: Restart button creates a fresh watch
+PASS: Restart clears both independent state stores
+PASS: Restart clears figure and filing presentation
+PLAYTHROUGH: 15 failures; 0 screenshots
+FAIL: Traffic requires transcript inspection
+FAIL: Transcript lifts through E
+FAIL: Routing board opens from reachable floor
+FAIL: Route advances night exactly once
+FAIL: Wire calls for slot 1
+FAIL: E answers traffic 1
+FAIL: Route advances night exactly once
+FAIL: Unfiled deadline resolves without a selected copy
+FAIL: Final consequence reaches shift end
+FAIL: Dawn unlocks exit
+FAIL: Ray reaches Interactable (got <null>)
+FAIL: Handover can be inspected
+FAIL: Door opens after night
+FAIL: Walking through threshold starts ending
+FAIL: Ending cannot be covered by pause menu
+WARNING: 7 RIDs of type "Texture" were leaked.
+   at: finalize (servers/rendering/rendering_device.cpp:8900)

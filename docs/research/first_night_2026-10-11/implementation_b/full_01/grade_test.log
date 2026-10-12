@@ -1,0 +1,5 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+  PASS: Production grade has an editable external shader
+  PASS: Production Grade references the external shader
+  PASS: Document UI renders above the retro grade

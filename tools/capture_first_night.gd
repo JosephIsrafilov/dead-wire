@@ -26,12 +26,13 @@ func _run() -> void:
 		await _shot("writing_%d" % int(ratio * 100))
 	office.session_controller.scheduler.advance_time(1.0)
 	await _shot("written")
+	var camera_fov: float = office.player.camera.fov
 	office.player.camera.fov = 48.0
 	var sound_direction := office.session_controller.sounder.global_position + Vector3(0, 0.05, 0) - office.player.camera.global_position
 	office.player.rotation.y = atan2(-sound_direction.x, -sound_direction.z)
 	office.player.head.rotation.x = atan2(sound_direction.y, Vector2(sound_direction.x, sound_direction.z).length())
 	await _shot("hardware")
-	office.player.camera.fov = 78.0
+	office.player.camera.fov = camera_fov
 	office.session_controller.mark_transcript_verified()
 	office.operator_seat.stand()
 	await create_timer(0.8).timeout

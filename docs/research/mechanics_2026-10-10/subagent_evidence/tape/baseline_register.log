@@ -1,0 +1,39 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+--- Starting Tape Register Test Suite ---
+  PASS: Tape starts empty
+  PASS: Two events recorded verbatim
+  PASS: Kinds preserved in order
+  PASS: connect_scheduler hooks timing_event_started
+  PASS: disconnect_scheduler unhooks cleanly
+  PASS: reset clears the tape
+  PASS: Mark/GAP render to dot/dash/spaces verbatim, got '· —   '
+  PASS: A 2-unit MARK is still a dot; gaps scale, got '· —   ·'
+  PASS: Session loads the scenario with the tape attached
+  PASS: Live transmission starts
+  PASS: A real transmission inked the tape
+  PASS: Tape count equals the schedule's events plus the between-transmissions gap (70 vs 69)
+  PASS: Recorded MARK/GAP kinds match the schedule verbatim
+  PASS: Completed transmission ends with the 12-unit between-gap
+  PASS: Record contains at least one MARK and one GAP
+  PASS: Tape text contains a dot
+  PASS: Tape text contains no Latin letters
+  PASS: Interaction emits tape_inspected with the inked tape text
+  PASS: get_interactable is null on a pure-code instance without crashing
+  PASS: Empty tape still emits an honest empty body
+  PASS: Office exposes the tape register through the session controller
+  PASS: Scene tape register carries an Interactable with the read prompt
+  PASS: Reading the tape opens the existing DocumentViewer
+  PASS: Viewer doc_id is tape_register
+  PASS: Viewer title is STATION REGISTER
+  PASS: Viewer closes after the tape read
+  PASS: connect_scheduler hooks all three signals
+  PASS: Completion appends a synthetic 12-unit between-transmissions GAP
+  PASS: Signal path appends the between-gap too
+  PASS: disconnect_scheduler unhooks all three signals
+  PASS: MARK(1) + completion renders dot then 12 spaces, got '·            '
+  PASS: Longest space run is the 12-unit between-gap
+  PASS: Between-gap sits between transmissions, not at index 0
+  PASS: Cancellation appends no between-gap
+  PASS: Cancelled transmission's partial ink stays unchanged
+--- All Tape Register Tests PASSED (35 assertions) ---

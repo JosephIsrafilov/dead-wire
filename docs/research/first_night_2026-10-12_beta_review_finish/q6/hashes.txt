@@ -1,0 +1,3 @@
+6fb906a8a6797af980b82f77c9eecb3d097a74a49aa257b5fdff501b292698e9 *builds/windows-beta/export_2026-10-12_p12/dead-wire-windows-beta-x86_64.exe
+c7e398705cbf3569657a4c6f4f2bfe9112704b74eb5c810260b5c4fb4fe6c97c *builds/windows-beta/export_2026-10-12_p12/dead-wire-windows-beta-x86_64.pck
+ff1eda2fe816aff1d5e66baa625610eceaba2eea8c017fc5fa02c1890a76efa9 *builds/windows-beta/dead-wire-windows-beta-f82939d9995e-2ed1b969852f.zip

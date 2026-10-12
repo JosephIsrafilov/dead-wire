@@ -1,0 +1,234 @@
+[
+  {
+    "run": 0,
+    "case": "shift_isolated_a02",
+    "command": [
+      "C:/Users/YUSIF/Desktop/Godot_v4.7.1-stable_win64.exe/Godot_v4.7.1-stable_win64_console.exe",
+      "--headless",
+      "--audio-driver",
+      "Dummy",
+      "--path",
+      "C:\\Users\\YUSIF\\Documents\\dead-wire",
+      "--script",
+      "res://tests/office/shift_director_test.gd"
+    ],
+    "hex_exit": "0x0",
+    "exit_code": 0,
+    "assertions": 132,
+    "passed": true,
+    "failures": [],
+    "runtime_errors": [
+      "ERROR: 3 resources still in use at exit (run with --verbose for details)."
+    ],
+    "warnings": [
+      "WARNING: 22 ObjectDB instances were leaked at exit (run with `--verbose` for details)."
+    ]
+  },
+  {
+    "run": 1,
+    "case": "shift_isolated_a02",
+    "command": [
+      "C:/Users/YUSIF/Desktop/Godot_v4.7.1-stable_win64.exe/Godot_v4.7.1-stable_win64_console.exe",
+      "--headless",
+      "--audio-driver",
+      "Dummy",
+      "--path",
+      "C:\\Users\\YUSIF\\Documents\\dead-wire",
+      "--script",
+      "res://tests/office/shift_director_test.gd"
+    ],
+    "hex_exit": "0x0",
+    "exit_code": 0,
+    "assertions": 132,
+    "passed": true,
+    "failures": [],
+    "runtime_errors": [],
+    "warnings": []
+  },
+  {
+    "run": 2,
+    "case": "shift_isolated_a02",
+    "command": [
+      "C:/Users/YUSIF/Desktop/Godot_v4.7.1-stable_win64.exe/Godot_v4.7.1-stable_win64_console.exe",
+      "--headless",
+      "--audio-driver",
+      "Dummy",
+      "--path",
+      "C:\\Users\\YUSIF\\Documents\\dead-wire",
+      "--script",
+      "res://tests/office/shift_director_test.gd"
+    ],
+    "hex_exit": "0x0",
+    "exit_code": 0,
+    "assertions": 132,
+    "passed": true,
+    "failures": [],
+    "runtime_errors": [
+      "ERROR: 3 resources still in use at exit (run with --verbose for details)."
+    ],
+    "warnings": [
+      "WARNING: 20 ObjectDB instances were leaked at exit (run with `--verbose` for details)."
+    ]
+  },
+  {
+    "run": 3,
+    "case": "shift_isolated_a02",
+    "command": [
+      "C:/Users/YUSIF/Desktop/Godot_v4.7.1-stable_win64.exe/Godot_v4.7.1-stable_win64_console.exe",
+      "--headless",
+      "--audio-driver",
+      "Dummy",
+      "--path",
+      "C:\\Users\\YUSIF\\Documents\\dead-wire",
+      "--script",
+      "res://tests/office/shift_director_test.gd"
+    ],
+    "hex_exit": "0x0",
+    "exit_code": 0,
+    "assertions": 132,
+    "passed": true,
+    "failures": [],
+    "runtime_errors": [],
+    "warnings": []
+  },
+  {
+    "run": 4,
+    "case": "shift_isolated_a02",
+    "command": [
+      "C:/Users/YUSIF/Desktop/Godot_v4.7.1-stable_win64.exe/Godot_v4.7.1-stable_win64_console.exe",
+      "--headless",
+      "--audio-driver",
+      "Dummy",
+      "--path",
+      "C:\\Users\\YUSIF\\Documents\\dead-wire",
+      "--script",
+      "res://tests/office/shift_director_test.gd"
+    ],
+    "hex_exit": "0xc0000005",
+    "exit_code": 3221225477,
+    "assertions": 132,
+    "passed": false,
+    "failures": [],
+    "runtime_errors": [],
+    "warnings": []
+  },
+  {
+    "run": 5,
+    "case": "shift_isolated_a02",
+    "command": [
+      "C:/Users/YUSIF/Desktop/Godot_v4.7.1-stable_win64.exe/Godot_v4.7.1-stable_win64_console.exe",
+      "--headless",
+      "--audio-driver",
+      "Dummy",
+      "--path",
+      "C:\\Users\\YUSIF\\Documents\\dead-wire",
+      "--script",
+      "res://tests/office/shift_director_test.gd"
+    ],
+    "hex_exit": "0x0",
+    "exit_code": 0,
+    "assertions": 132,
+    "passed": true,
+    "failures": [],
+    "runtime_errors": [],
+    "warnings": []
+  },
+  {
+    "run": 6,
+    "case": "shift_isolated_a02",
+    "command": [
+      "C:/Users/YUSIF/Desktop/Godot_v4.7.1-stable_win64.exe/Godot_v4.7.1-stable_win64_console.exe",
+      "--headless",
+      "--audio-driver",
+      "Dummy",
+      "--path",
+      "C:\\Users\\YUSIF\\Documents\\dead-wire",
+      "--script",
+      "res://tests/office/shift_director_test.gd"
+    ],
+    "hex_exit": "0x0",
+    "exit_code": 0,
+    "assertions": 132,
+    "passed": true,
+    "failures": [],
+    "runtime_errors": [
+      "ERROR: 3 resources still in use at exit (run with --verbose for details)."
+    ],
+    "warnings": [
+      "WARNING: 22 ObjectDB instances were leaked at exit (run with `--verbose` for details)."
+    ]
+  },
+  {
+    "run": 7,
+    "case": "shift_isolated_a02",
+    "command": [
+      "C:/Users/YUSIF/Desktop/Godot_v4.7.1-stable_win64.exe/Godot_v4.7.1-stable_win64_console.exe",
+      "--headless",
+      "--audio-driver",
+      "Dummy",
+      "--path",
+      "C:\\Users\\YUSIF\\Documents\\dead-wire",
+      "--script",
+      "res://tests/office/shift_director_test.gd"
+    ],
+    "hex_exit": "0x0",
+    "exit_code": 0,
+    "assertions": 132,
+    "passed": true,
+    "failures": [],
+    "runtime_errors": [
+      "ERROR: 1 resources still in use at exit (run with --verbose for details)."
+    ],
+    "warnings": [
+      "WARNING: 14 ObjectDB instances were leaked at exit (run with `--verbose` for details)."
+    ]
+  },
+  {
+    "run": 8,
+    "case": "shift_isolated_a02",
+    "command": [
+      "C:/Users/YUSIF/Desktop/Godot_v4.7.1-stable_win64.exe/Godot_v4.7.1-stable_win64_console.exe",
+      "--headless",
+      "--audio-driver",
+      "Dummy",
+      "--path",
+      "C:\\Users\\YUSIF\\Documents\\dead-wire",
+      "--script",
+      "res://tests/office/shift_director_test.gd"
+    ],
+    "hex_exit": "0x0",
+    "exit_code": 0,
+    "assertions": 132,
+    "passed": true,
+    "failures": [],
+    "runtime_errors": [
+      "ERROR: 3 resources still in use at exit (run with --verbose for details)."
+    ],
+    "warnings": [
+      "WARNING: 22 ObjectDB instances were leaked at exit (run with `--verbose` for details)."
+    ]
+  },
+  {
+    "run": 9,
+    "case": "shift_isolated_a02",
+    "command": [
+      "C:/Users/YUSIF/Desktop/Godot_v4.7.1-stable_win64.exe/Godot_v4.7.1-stable_win64_console.exe",
+      "--headless",
+      "--audio-driver",
+      "Dummy",
+      "--path",
+      "C:\\Users\\YUSIF\\Documents\\dead-wire",
+      "--script",
+      "res://tests/office/shift_director_test.gd"
+    ],
+    "hex_exit": "0x0",
+    "exit_code": 0,
+    "assertions": 132,
+    "passed": true,
+    "failures": [],
+    "runtime_errors": [],
+    "warnings": [
+      "WARNING: 12 ObjectDB instances were leaked at exit (run with `--verbose` for details)."
+    ]
+  }
+]

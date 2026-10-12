@@ -1,0 +1,21 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+PASS: Live ink rows fit the real sheet without reducing seated legibility
+PASS: Lifted copy uses the same printed sheet texture as the desk
+PASS: Logical viewer text preserves the exact transcript
+PASS: World and lifted sheet use the same line breaks
+PASS: Invisible archive has no collider to steal the active copy ray
+PASS: Start baseline in the seated office
+PASS: Looking away does not stop the copy
+PASS: Returning to the completed copy offers reading
+PASS: Look-away copy can be opened
+PASS: Real seated ray reaches active paper, not the invisible archived area
+PASS: Loading next order keeps the finished record
+PASS: Archived sheet has an interaction target
+PASS: Old copy remains readable while the next is being written
+PASS: Archived read shows only the old visible ink
+PASS: Archived inspection never verifies the new telegram
+WARNING: 30 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 9 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)

@@ -3,6 +3,97 @@
 Last updated: 2026-09-27. Audience: any model or person picking up the project cold.
 Docs are written in Russian, code and code comments in English. Keep that split.
 
+## Checkpoint 2026-10-12 (позже) — crash-review fix session: applicability подтверждена, краш НЕ исправлен
+
+Отчёт: `docs/research/first_night_2026-10-12_beta_review_finish/RESULT.md`.
+Crash review: `docs/research/first_night_2026-10-12_crash_review/` (REVIEW.md, fix_attempt/).
+
+**Краш остаётся ОТКРЫТЫМ. Сборка НЕ ready-to-send.**
+- Применимость godot#117991 (GDScript::clear отпускает base до s->next()) подтверждена на уровне кода и бинарника: фикса нет в a13da4feb и в нашем бинарнике; цикл GDScriptLanguage::finish на site +0x547AF6 совпадает со всеми тремя дампами. Официальный MRP из #117975 на нашем движке НЕ падает → INCONCLUSIVE, не «другая причина» (crash_review/fix_attempt/applicability_verdict.md).
+- Проектный speculative фикс НЕ применялся (trigger не найден; массовые cleanups запрещены). Нужен patched engine: конкретный запрос владельцу в crash_review/fix_attempt/approval_request.md (Option A 4.8 preview engine+matching templates ~1.4GB, или Option B локальная сборка 4.7.1+patch). Ничего не качалось/не ставилось.
+- Живое подтверждение краша в этой сессии: final_regression_2 — rule44_content_test.gd exit 0xC0000005 после 12/12 PASS. Лог сохранён, повтор не делался.
+- Исправлены ложные claims предыдущего отчёта: wrong-word ветка теперь реально пройдена (first_night_playthrough -- --capture --wrong, 78 PASS); 45s boot не был игровым маршрутом; graceful quit пакета p12 доказан (WM_CLOSE → raw exit 0x00000000, q4b/graceful). Shutdown-ошибки в suites = test-teardown аудио ownership (AudioStreamWAV leak), не дефект игры (q4b/shutdown_b_verdict.md).
+- Финал: 86 suites / 85 PASS / 2747 assertions / 0 FAIL / 0 SCRIPT ERROR / lint clean. Build p12 (dead-wire-windows-beta-f82939d9995e-2ed1b969852f) валиден, но НЕ исправлен от краша. Human listening, art approval, playtest, manual package route — открыты.
+
+## Checkpoint 2026-10-12 — beta review finish (после независимого review)
+
+Evidence: `docs/research/first_night_2026-10-12_beta_review_finish/RESULT.md`.
+План: `docs/plans/2026-10-12_BETA_REVIEW_REMAINDER.md`. Статус: **NOT READY TO SEND** — native crash 0xC0000005 остаётся открытым (см. q4).
+
+Q1: packager переписан — реальный PCK v4 directory reader (546 entries на p12), payload MD5-проверка, allowlist-манифест экспорта (--allow-extra), legacy footstep_wood.wav исключён из PCK (Windows-only exclude, 21 packager тест green). Notices согласованы (Noto static Regular, provenance closed механически; listening gate открыт). Sound brief обновлён (lever stop assignment, honest listening status).
+Q2: формы перегенерированы детерминированно (byte-identical повтор: a236bbea/8c79f7e8/364edb86); focused paper/font/layout/contact/guidance 287 assertions green; реальные captures 720p (UI 4 кадра, writing 3 кадра, production 6, night 16) — визуально проверены: ink на линовке, I/L и C/G различимы на начертании, клиппинга панелей нет (обрезка маршрутной доски — кадр камеры, не дефект).
+Q3: таблица stream/binding/provenance (q3/provenance_table.txt); foley 36, routing 30, readability 13 green. Слушание человеком НЕ выполнялось — gate открыт.
+Q4: crash остаётся; cdb/PDB отсутствуют (только dbghelp.dll без отладчика); конкретный запрос разрешения в q4/inventory.txt; shutdown-ошибки классифицированы отдельно (q4/shutdown_disposition.txt), слепые teardown-правки не применялись.
+Q5: production 58 PASS, night 78 PASS (16 shots), wrong-branch 17 PASS; perf p50 5.2/p95 5.9/p99 6.3 ms @720p (RTX 3070). Human playtest NOT RUN.
+Q6: build **dead-wire-windows-beta-f82939d9995e-2ed1b969852f** (p12; EXE 6fb906a8…, PCK c7e39870…, ZIP ff1eda2f…, 13 файлов, CRC ok, spoiler отсутствует, PCK 546 entries verified). Standalone: boot чистый (0 script/parse ошибок, settings не тронуты); полный UI-маршрут в пакете требует человеческого 5-минутного прохода (открыт).
+Финальный full regression на этом дереве: **86/86 suites, 2747 assertions, 0 FAIL, 0 SCRIPT ERROR**; 16 suites с exit-time «resources still in use» (P4-класс). Lint чистый. No commit/push.
+
+## Checkpoint 2026-10-11 — первая ночь, Rule 44 восстановлен
+
+Новый scoped checkpoint: `docs/research/first_night_2026-10-11/implementation_a/RESULT.md`.
+Спецификация: `docs/plans/2026-10-11_FIRST_NIGHT_FINISH.md`. R01 завершён: FREIGHT 71 EAST,
+13 cues, fictional company Rule 44; IDs/facts/HOLD сохранены. Свежие **79 suites / 2596 assertions /
+0 failed**, lint clean. **17 suites сохраняют shutdown resource ERROR**; boot exit0 с10 ObjectDB/2resources.
+Оконный production58PASS/0FAIL; wrong amendment61PASS/0FAIL (ускоренная ветка, не pacing playtest).
+Отдельный verbose shift control132PASS затем wrapper exit-1, без стека: точный child native exit
+не сохранён, crash НЕ fixed. Не повторять до зелёного/не применять слепые teardown fixes.
+Guidance/fonts/audio/export/human gates ещё не выполнены. No commit/push; прежние изменения сохранены.
+
+## Checkpoint — mechanics evidence/choice (после instrument pass)
+
+Owner/arbiter приняли ограниченный gameplay patch после research12developerURLs/38цитат.
+Реально внедрено:нейтральныеAMEND COPY/FILE AS COPIED; blanktypededitor1–24ASCIIletters;
+нет autoWATER, validwrongword сохраняется в отдельныхWorld/Knowledgevalues и утреннем
+документе безcorrectnessgrading. Deadline30s/t0не менялись. Ctrl/movement/interactgates,
+Escdraftcancel, Enter/pointerhandoff и timeoutпроверены; trappedunlockrace repaired сREDregression.
+
+Tape:actualdurationInkEvent, publicclones, interruptedfractionalmarks=`?`, MARK6различим,
+nofake12GAP, numberednoninkwiretakesбезdecodedtext, losslesswhitespacewrap, monoCourierPrimeOFL,
+boundedscrollopenlatest. Route:accepted-onlymemory/lever/foley, lateinputnofalseack, reentrantguard.
+Foleydeferredbindvalidateslifetime/idempotent. Авторскиеinstrument/hand/movement/introproduction
+сохраненыhash/diff; исправлена толькоsemanticintrotest(timer-before-tweenordering),6PASS×5repeats.
+
+Последнийfull послеreviewfixes:61suites/2396assertions/0FAIL, lintclean;18suitesretainshutdownresourceERRORs.
+NoSCRIPT/Parse/detachedtransformERRORinlatestsavedrun. Nativecrashнеобъявлятьfixed.
+Reviewfixes:sessionrouting/lapseresolutionguardcapturesoldscenariobeforefact/resultcallbacks;
+officepreflightmakesrejectedloadUI/indexno-op;editorpostawaitlifetimechecked;RouteActionshared.
+Newroute_reentrancy8/office_load_atomicity9/amendment_lifetime2regressions. Twoearlierpostreview
+fullrunsnativecrash3221225477AFTER132shiftassertions, threeisolatedexit0;latestsavedfullallpass.
+Cause/stabilityopen,notfixedbyrepeat. FINALserialroute57/lapse58/wrong61/input13/pointer2allpass.
+Bootlatestexit0безerrorlines, ноhistoryleaksнепринятыresolved; окна7TextureRIDwarningremain.
+Windowedrawinput13/pointer2/walkedroute57PASS, fourbranchrunsallpass. Serialfullwrongcapture78PASS,
+16shots+actualMasteraudio. Automatednightusesteleports/answerbeatadvance; неhumanpacingplaytest.
+
+Review/demo/results: `docs/research/mechanics_2026-10-10/`; plannedreference/story/onboardingpass
+следующий, НЕвнедрён. MovieMaker demo1280×720/30fps/15.53s сaudio — offline scriptdemo,
+неliveperformance/humanplaythrough. Доpassingserialcapture былconcurrentwindowcapture43FAIL
+(mode0):failedlogсохранён, нельзявыдаватьfailedshotsзаpassing. Imageanalysis404, ownerUX/visual
+acceptance и5noviceplaytestsостаютсяоткрыты. Никакихcommit/pushновойработы.
+
+## Checkpoint 2026-10-10 — instrument-first candidate, не финальная арт-приёмка
+
+Прежнее состояние сохранено и push-проверено: `f82939d` на
+`origin/codex/hand-rebuild-handoff`. Новая работа после него пока **не закоммичена**.
+Владелец подтвердил M1/PSX и выбрал instrument-first + gameplay design.
+
+Подключены7 Blender-authored assemblies для key/sounder/register,3332 triangles,
+один256px nearest atlas; static/moving части на прежних pivots, colliders/контент/
+signal/tape/рука/свет/аудио не менялись. Старые blockout-ноды скрыты, не удалены.
+Источник/GLB/.res и builder/importer сохранены. Арт-план и brainstorm:
+`docs/plans/2026-10-10_INSTRUMENT_FIRST.md`; новые gameplay-механики **не внедрены**.
+
+Последний полный regression: **46 suites /2094 assertions /0 FAIL**; новый instrument72
+прошёл RED→GREEN (включая clearance катушек). Lint чистый, production input/physics
+маршрут0FAIL/6shots/без teleport, full automated night0FAIL/14shots (с teleport/сжатым
+answer beat, не human playtest).720p before/after и90-frame silent motion clip:
+`docs/art/state_2026-10-10/instruments/review.html`; исходный `.blend` с packed atlas в sources.
+Image review404: **визуальная/эмоциональная приёмка владельца остаётся открытой**.
+
+Ранее в этой сессии intro_music normal fadeFAIL повторился, shift_director crash139;
+позднее оба green без исправлений — причины не установлены, не объявлять решёнными.
+В green-run всё ещё detached OfficeFoley/global_transform errors и shutdown resource
+errors; boot10ObjectDB/2resources, окна7TextureRID. Не называть весь run error-free.
+
 ## Checkpoint 2026-10-09 — цельная кисть, новый подключённый кандидат
 
 Последний полный повтор: **45 suites /2022 assertions /0 FAIL**, writer_hand37,

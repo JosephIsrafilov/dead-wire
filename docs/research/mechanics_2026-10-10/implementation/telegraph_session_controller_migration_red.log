@@ -1,0 +1,42 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+--- Starting Telegraph Session Controller Test Suite (Gate 12 / F2 contract) ---
+  PASS: Scenario 1 loaded -> state READY
+  PASS: Key press transitions to RECEIVING
+  PASS: t0 with unfinished sheet enters COPYING
+  PASS: Finished copy transitions to VERIFYING
+  PASS: copy_finished fired exactly once for the physical sheet
+  PASS: Paper text set to written_transcript
+  PASS: Paper is physically complete
+  PASS: Transcript verification unlocks routing
+  PASS: Verified transcript transitions to AWAITING_ROUTE
+  PASS: Transcript verification is exactly once
+  PASS: Routing decision submitted
+  PASS: State is COMPLETE after routing
+  PASS: WorldState recorded correct fact
+  PASS: Incorrect fact is NOT set
+  PASS: Lapse fact is NOT set on a correct route
+  PASS: Accepted route records the route_clear_east knowledge fact
+  PASS: Accepted route records filed_ knowledge fact
+  PASS: Correct route records no lapse fact
+  PASS: State is COMPLETE after incorrect routing
+  PASS: WorldState recorded incorrect consequence
+  PASS: Correct fact is NOT set on mistake
+  PASS: A wrong order is not a lapse
+  PASS: Accepted wrong route still records the action actually sent
+  PASS: Attention event not fired before 4.0s
+  PASS: Attention event 'door_footsteps' triggered at 4.0s
+  PASS: Scenario 2 reaches COPYING at t0
+  PASS: Scenario 2 reaches VERIFYING
+  PASS: Scenario 2 reaches AWAITING_ROUTE after inspection
+  PASS: Scenario 2 correct routing recorded
+  PASS: Scenario 2b in COPYING at t0
+  PASS: Service signal completion is not the telegram's t0
+  PASS: Nag does not change the sheet's target
+  PASS: Scenario 3 reaches COPYING at t0
+  PASS: Scenario 3 reaches VERIFYING
+  PASS: Paper displays WATCHER
+  PASS: Sounder played clicks during transmission
+  PASS: Commit before inspection is a no-op
+  PASS: Scenario 3 awaits commit after inspection
+FAIL: Assertion failed: Scenario 3 accepts authored commit

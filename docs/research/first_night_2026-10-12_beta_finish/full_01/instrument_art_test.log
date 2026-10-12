@@ -1,0 +1,75 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+  PASS: Key uses authored instrument assembly
+  PASS: Sounder uses authored instrument assembly
+  PASS: Register uses authored instrument assembly
+  PASS: AuthoredStatic has imported mesh surfaces
+  PASS: AuthoredStatic remains metre-scale desk geometry
+  PASS: AuthoredStatic surface has authored texture
+  PASS: AuthoredStatic uses nearest texture filtering
+  PASS: AuthoredStatic surface has authored texture
+  PASS: AuthoredStatic uses nearest texture filtering
+  PASS: AuthoredStatic surface has authored texture
+  PASS: AuthoredStatic uses nearest texture filtering
+  PASS: AuthoredStatic surface has authored texture
+  PASS: AuthoredStatic uses nearest texture filtering
+  PASS: AuthoredLever has imported mesh surfaces
+  PASS: AuthoredLever remains metre-scale desk geometry
+  PASS: AuthoredLever surface has authored texture
+  PASS: AuthoredLever uses nearest texture filtering
+  PASS: AuthoredLever surface has authored texture
+  PASS: AuthoredLever uses nearest texture filtering
+  PASS: AuthoredStatic has imported mesh surfaces
+  PASS: AuthoredStatic remains metre-scale desk geometry
+  PASS: AuthoredStatic surface has authored texture
+  PASS: AuthoredStatic uses nearest texture filtering
+  PASS: AuthoredStatic surface has authored texture
+  PASS: AuthoredStatic uses nearest texture filtering
+  PASS: AuthoredStatic surface has authored texture
+  PASS: AuthoredStatic uses nearest texture filtering
+  PASS: AuthoredStatic surface has authored texture
+  PASS: AuthoredStatic uses nearest texture filtering
+  PASS: AuthoredStatic surface has authored texture
+  PASS: AuthoredStatic uses nearest texture filtering
+  PASS: AuthoredArmature has imported mesh surfaces
+  PASS: AuthoredArmature remains metre-scale desk geometry
+  PASS: AuthoredArmature surface has authored texture
+  PASS: AuthoredArmature uses nearest texture filtering
+  PASS: AuthoredArmature surface has authored texture
+  PASS: AuthoredArmature uses nearest texture filtering
+  PASS: AuthoredArmature surface has authored texture
+  PASS: AuthoredArmature uses nearest texture filtering
+  PASS: AuthoredStatic has imported mesh surfaces
+  PASS: AuthoredStatic remains metre-scale desk geometry
+  PASS: AuthoredStatic surface has authored texture
+  PASS: AuthoredStatic uses nearest texture filtering
+  PASS: AuthoredStatic surface has authored texture
+  PASS: AuthoredStatic uses nearest texture filtering
+  PASS: AuthoredStatic surface has authored texture
+  PASS: AuthoredStatic uses nearest texture filtering
+  PASS: AuthoredStatic surface has authored texture
+  PASS: AuthoredStatic uses nearest texture filtering
+  PASS: AuthoredSpool has imported mesh surfaces
+  PASS: AuthoredSpool remains metre-scale desk geometry
+  PASS: AuthoredSpool surface has authored texture
+  PASS: AuthoredSpool uses nearest texture filtering
+  PASS: AuthoredSpool surface has authored texture
+  PASS: AuthoredSpool uses nearest texture filtering
+  PASS: AuthoredStylus has imported mesh surfaces
+  PASS: AuthoredStylus remains metre-scale desk geometry
+  PASS: AuthoredStylus surface has authored texture
+  PASS: AuthoredStylus uses nearest texture filtering
+  PASS: AuthoredStylus surface has authored texture
+  PASS: AuthoredStylus uses nearest texture filtering
+  PASS: All three desk instruments stay inside triangle budget
+  PASS: Key keeps existing moving pivot
+  PASS: Key interaction volume unchanged
+  PASS: Sounder captures original armature rest
+  PASS: Authored armature follows MARK travel
+  PASS: Authored armature returns on GAP
+  PASS: Register keeps original spool pivot
+  PASS: Register keeps original stylus pivot
+  PASS: Objective tape paper surfaces remain present
+  PASS: Wound coils clear the armature at full MARK travel
+  PASS: Old blockouts do not double-render over authored meshes
+Instrument art assertions: 72 triangles: 3332

@@ -1,0 +1,17 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+  PASS: Headless fixture opens the editor without pretending mouse capture
+  PASS: Correction remains open after activation
+  PASS: Opening activation is not entered into the draft
+  PASS: While editing, E is text rather than interaction
+  PASS: Typing never files behind the editor
+  PASS: Escape puts down editor without pausing the world
+  PASS: Opening/cancelling never reset original t0
+  PASS: A remote number key still cannot file
+  PASS: Cancel and reopen retain draft
+  PASS: Explicit Enter submits chosen correction
+  PASS: Enter preserves a wrong word exactly
+  PASS: Accepted submission closes the editor
+Amendment input failures: 0
+WARNING: 6 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)

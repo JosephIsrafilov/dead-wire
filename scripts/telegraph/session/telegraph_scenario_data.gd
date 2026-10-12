@@ -27,6 +27,12 @@ extends Resource
 @export var consequence_event_id: String = ""
 @export var consequence_delay_seconds: float = 0.0
 @export var consequence_hold_seconds: float = 0.0
+## An amendment's unknown/wrong valid text remains a terminal choice, not a fallback.
+@export var amendment_wrong_world_fact: String = ""
+@export var amendment_knowledge_fact: String = ""
+@export var filed_word_world_fact: String = ""
+@export var filed_word_knowledge_key: String = ""
+@export var amendment_result_text: String = "CORRECTION FILED"
 
 func get_validation_errors() -> PackedStringArray:
 	var errors := PackedStringArray()
@@ -90,4 +96,17 @@ func get_validation_errors() -> PackedStringArray:
 	if consequence_hold_seconds < 0.0 or not is_finite(consequence_hold_seconds):
 		errors.append("consequence_hold_seconds must be non-negative finite")
 
+	var amendment_count := 0
+	for option in commit_options:
+		if option != null and option.requires_correction:
+			amendment_count += 1
+	if amendment_count > 1:
+		errors.append("Only one amendment action is supported per scenario")
+	if amendment_count == 1:
+		if amendment_wrong_world_fact.is_empty() or amendment_knowledge_fact.is_empty():
+			errors.append("Amendment requires authored wrong outcome and neutral knowledge fact")
+		if filed_word_world_fact.is_empty() or filed_word_knowledge_key.is_empty():
+			errors.append("Amendment requires independent filed-word keys")
+		if amendment_result_text.is_empty():
+			errors.append("Amendment requires neutral result text")
 	return errors
