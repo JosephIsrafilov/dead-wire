@@ -1,0 +1,875 @@
+{
+  "suites": 86,
+  "passed": 85,
+  "failed": 1,
+  "assertions": 2746,
+  "error_bearing_suites": 22,
+  "results": [
+    {
+      "suite": "tests/audio/foley_lifecycle_test.gd",
+      "exit_code": 0,
+      "assertions": 36,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    },
+    {
+      "suite": "tests/audio/foley_timing_fairness_test.gd",
+      "exit_code": 0,
+      "assertions": 13,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    },
+    {
+      "suite": "tests/audio/intro_music_test.gd",
+      "exit_code": 0,
+      "assertions": 6,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [
+        "ERROR: 1 resources still in use at exit (run with --verbose for details)."
+      ],
+      "warnings": [
+        "WARNING: 3 ObjectDB instances were leaked at exit (run with `--verbose` for details)."
+      ]
+    },
+    {
+      "suite": "tests/audio/office_ambience_test.gd",
+      "exit_code": 0,
+      "assertions": 59,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [
+        "ERROR: 1 resources still in use at exit (run with --verbose for details)."
+      ],
+      "warnings": [
+        "WARNING: 8 ObjectDB instances were leaked at exit (run with `--verbose` for details)."
+      ]
+    },
+    {
+      "suite": "tests/debug/debug_inspector_telemetry_test.gd",
+      "exit_code": 0,
+      "assertions": 5,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    },
+    {
+      "suite": "tests/debug/debug_inspector_test.gd",
+      "exit_code": 0,
+      "assertions": 25,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    },
+    {
+      "suite": "tests/events/attention_timeline_test.gd",
+      "exit_code": 0,
+      "assertions": 14,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    },
+    {
+      "suite": "tests/events/door_attention_test.gd",
+      "exit_code": 0,
+      "assertions": 14,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    },
+    {
+      "suite": "tests/events/window_observation_test.gd",
+      "exit_code": 0,
+      "assertions": 31,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    },
+    {
+      "suite": "tests/guidance/guidance_production_test.gd",
+      "exit_code": 0,
+      "assertions": 7,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [
+        "ERROR: 3 resources still in use at exit (run with --verbose for details)."
+      ],
+      "warnings": [
+        "WARNING: 12 ObjectDB instances were leaked at exit (run with `--verbose` for details)."
+      ]
+    },
+    {
+      "suite": "tests/guidance/night_guidance_test.gd",
+      "exit_code": 0,
+      "assertions": 15,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    },
+    {
+      "suite": "tests/integration/amendment_input_test.gd",
+      "exit_code": 0,
+      "assertions": 13,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    },
+    {
+      "suite": "tests/integration/amendment_office_test.gd",
+      "exit_code": 0,
+      "assertions": 14,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [
+        "ERROR: 1 resources still in use at exit (run with --verbose for details)."
+      ],
+      "warnings": [
+        "WARNING: 8 ObjectDB instances were leaked at exit (run with `--verbose` for details)."
+      ]
+    },
+    {
+      "suite": "tests/integration/amendment_pointer_test.gd",
+      "exit_code": 0,
+      "assertions": 2,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [
+        "ERROR: 1 resources still in use at exit (run with --verbose for details)."
+      ],
+      "warnings": [
+        "WARNING: 8 ObjectDB instances were leaked at exit (run with `--verbose` for details)."
+      ]
+    },
+    {
+      "suite": "tests/integration/m1_office_integration_test.gd",
+      "exit_code": 0,
+      "assertions": 81,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [
+        "ERROR: 11 resources still in use at exit (run with --verbose for details)."
+      ],
+      "warnings": [
+        "WARNING: 52 ObjectDB instances were leaked at exit (run with `--verbose` for details)."
+      ]
+    },
+    {
+      "suite": "tests/integration/main_scene_smoke_test.gd",
+      "exit_code": 0,
+      "assertions": 9,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [
+        "ERROR: 1 resources still in use at exit (run with --verbose for details)."
+      ],
+      "warnings": [
+        "WARNING: 8 ObjectDB instances were leaked at exit (run with `--verbose` for details)."
+      ]
+    },
+    {
+      "suite": "tests/integration/night_recovery_test.gd",
+      "exit_code": 0,
+      "assertions": 48,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [
+        "ERROR: 2 resources still in use at exit (run with --verbose for details)."
+      ],
+      "warnings": [
+        "WARNING: 12 ObjectDB instances were leaked at exit (run with `--verbose` for details)."
+      ]
+    },
+    {
+      "suite": "tests/integration/office_load_atomicity_test.gd",
+      "exit_code": 0,
+      "assertions": 9,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [
+        "ERROR: 1 resources still in use at exit (run with --verbose for details)."
+      ],
+      "warnings": [
+        "WARNING: 8 ObjectDB instances were leaked at exit (run with `--verbose` for details)."
+      ]
+    },
+    {
+      "suite": "tests/integration/player_feedback_test.gd",
+      "exit_code": 0,
+      "assertions": 15,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    },
+    {
+      "suite": "tests/integration/route_deadline_test.gd",
+      "exit_code": 0,
+      "assertions": 8,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [
+        "ERROR: 1 resources still in use at exit (run with --verbose for details)."
+      ],
+      "warnings": [
+        "WARNING: 8 ObjectDB instances were leaked at exit (run with `--verbose` for details)."
+      ]
+    },
+    {
+      "suite": "tests/interaction/bounded_responsiveness_test.gd",
+      "exit_code": 0,
+      "assertions": 6,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    },
+    {
+      "suite": "tests/interaction/focus_feedback_test.gd",
+      "exit_code": 0,
+      "assertions": 13,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    },
+    {
+      "suite": "tests/office/atmosphere_test.gd",
+      "exit_code": 0,
+      "assertions": 86,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [
+        "ERROR: 2 resources still in use at exit (run with --verbose for details)."
+      ],
+      "warnings": [
+        "WARNING: 11 ObjectDB instances were leaked at exit (run with `--verbose` for details)."
+      ]
+    },
+    {
+      "suite": "tests/office/desk_geometry_test.gd",
+      "exit_code": 0,
+      "assertions": 26,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [
+        "ERROR: 8 resources still in use at exit (run with --verbose for details)."
+      ],
+      "warnings": [
+        "WARNING: 24 ObjectDB instances were leaked at exit (run with `--verbose` for details)."
+      ]
+    },
+    {
+      "suite": "tests/office/foreign_traffic_acceptance_test.gd",
+      "exit_code": 0,
+      "assertions": 1,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    },
+    {
+      "suite": "tests/office/m1_presentation_structure_test.gd",
+      "exit_code": 0,
+      "assertions": 23,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [
+        "ERROR: 1 resources still in use at exit (run with --verbose for details)."
+      ],
+      "warnings": [
+        "WARNING: 8 ObjectDB instances were leaked at exit (run with `--verbose` for details)."
+      ]
+    },
+    {
+      "suite": "tests/office/m1_spatial_metrics_test.gd",
+      "exit_code": 0,
+      "assertions": 31,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    },
+    {
+      "suite": "tests/office/office_door_test.gd",
+      "exit_code": 0,
+      "assertions": 32,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [
+        "ERROR: 3 resources still in use at exit (run with --verbose for details)."
+      ],
+      "warnings": [
+        "WARNING: 12 ObjectDB instances were leaked at exit (run with `--verbose` for details)."
+      ]
+    },
+    {
+      "suite": "tests/office/shift_director_test.gd",
+      "exit_code": 0,
+      "assertions": 132,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [
+        "ERROR: 3 resources still in use at exit (run with --verbose for details)."
+      ],
+      "warnings": [
+        "WARNING: 22 ObjectDB instances were leaked at exit (run with `--verbose` for details)."
+      ]
+    },
+    {
+      "suite": "tests/office/worn_warmth_material_test.gd",
+      "exit_code": 0,
+      "assertions": 25,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    },
+    {
+      "suite": "tests/player/distance_gait_test.gd",
+      "exit_code": 0,
+      "assertions": 8,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [
+        "ERROR: 1 resources still in use at exit (run with --verbose for details)."
+      ],
+      "warnings": [
+        "WARNING: 8 ObjectDB instances were leaked at exit (run with `--verbose` for details)."
+      ]
+    },
+    {
+      "suite": "tests/player/modal_input_ownership_test.gd",
+      "exit_code": 0,
+      "assertions": 22,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [
+        "ERROR: 2 resources still in use at exit (run with --verbose for details)."
+      ],
+      "warnings": [
+        "WARNING: 10 ObjectDB instances were leaked at exit (run with `--verbose` for details)."
+      ]
+    },
+    {
+      "suite": "tests/player/player_body_test.gd",
+      "exit_code": 0,
+      "assertions": 66,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": [
+        "WARNING: 6 ObjectDB instances were leaked at exit (run with `--verbose` for details)."
+      ]
+    },
+    {
+      "suite": "tests/player/readable_camera_test.gd",
+      "exit_code": 0,
+      "assertions": 5,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    },
+    {
+      "suite": "tests/presentation/camera_evidence_contract_test.gd",
+      "exit_code": 0,
+      "assertions": 5,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    },
+    {
+      "suite": "tests/presentation/grade_test.gd",
+      "exit_code": 0,
+      "assertions": 3,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    },
+    {
+      "suite": "tests/presentation/production_readability_test.gd",
+      "exit_code": 0,
+      "assertions": 2,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [
+        "ERROR: 1 resources still in use at exit (run with --verbose for details)."
+      ],
+      "warnings": [
+        "WARNING: 4 ObjectDB instances were leaked at exit (run with `--verbose` for details)."
+      ]
+    },
+    {
+      "suite": "tests/presentation/readability_policy_test.gd",
+      "exit_code": 0,
+      "assertions": 10,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    },
+    {
+      "suite": "tests/state/state_separation_test.gd",
+      "exit_code": 0,
+      "assertions": 29,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    },
+    {
+      "suite": "tests/telegraph/amendment_contract_test.gd",
+      "exit_code": 0,
+      "assertions": 42,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    },
+    {
+      "suite": "tests/telegraph/amendment_record_test.gd",
+      "exit_code": 0,
+      "assertions": 8,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    },
+    {
+      "suite": "tests/telegraph/american_morse_alphabet_data_test.gd",
+      "exit_code": 0,
+      "assertions": 263,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    },
+    {
+      "suite": "tests/telegraph/american_morse_encoder_test.gd",
+      "exit_code": 1,
+      "assertions": 91,
+      "passed": false,
+      "failures": [
+        "FAIL: Assertion failed: AmericanMorseEncoder is registered"
+      ],
+      "runtime_errors": [
+        "ERROR: Cannot get class 'AmericanMorseEncoder'."
+      ],
+      "warnings": []
+    },
+    {
+      "suite": "tests/telegraph/arm_anatomy_test.gd",
+      "exit_code": 0,
+      "assertions": 8,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    },
+    {
+      "suite": "tests/telegraph/copy_commit_desk_test.gd",
+      "exit_code": 0,
+      "assertions": 45,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [
+        "ERROR: 1 resources still in use at exit (run with --verbose for details)."
+      ],
+      "warnings": [
+        "WARNING: 8 ObjectDB instances were leaked at exit (run with `--verbose` for details)."
+      ]
+    },
+    {
+      "suite": "tests/telegraph/duty_sheet_test.gd",
+      "exit_code": 0,
+      "assertions": 35,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [
+        "ERROR: 3 resources still in use at exit (run with --verbose for details)."
+      ],
+      "warnings": [
+        "WARNING: 12 ObjectDB instances were leaked at exit (run with `--verbose` for details)."
+      ]
+    },
+    {
+      "suite": "tests/telegraph/elias_handwriting_font_test.gd",
+      "exit_code": 0,
+      "assertions": 106,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    },
+    {
+      "suite": "tests/telegraph/filing_default_text_test.gd",
+      "exit_code": 0,
+      "assertions": 4,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    },
+    {
+      "suite": "tests/telegraph/instrument_art_test.gd",
+      "exit_code": 0,
+      "assertions": 72,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    },
+    {
+      "suite": "tests/telegraph/investigative_anchors_test.gd",
+      "exit_code": 0,
+      "assertions": 13,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    },
+    {
+      "suite": "tests/telegraph/morse_playback_profile_test.gd",
+      "exit_code": 0,
+      "assertions": 29,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    },
+    {
+      "suite": "tests/telegraph/morse_reference_card_test.gd",
+      "exit_code": 0,
+      "assertions": 65,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    },
+    {
+      "suite": "tests/telegraph/morse_runtime_scheduler_test.gd",
+      "exit_code": 0,
+      "assertions": 31,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    },
+    {
+      "suite": "tests/telegraph/morse_schedule_compiler_test.gd",
+      "exit_code": 0,
+      "assertions": 39,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    },
+    {
+      "suite": "tests/telegraph/morse_timing_model_test.gd",
+      "exit_code": 0,
+      "assertions": 38,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    },
+    {
+      "suite": "tests/telegraph/procedural_clarity_test.gd",
+      "exit_code": 0,
+      "assertions": 11,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    },
+    {
+      "suite": "tests/telegraph/reference_reading_example_test.gd",
+      "exit_code": 0,
+      "assertions": 5,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    },
+    {
+      "suite": "tests/telegraph/route_acceptance_test.gd",
+      "exit_code": 0,
+      "assertions": 49,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    },
+    {
+      "suite": "tests/telegraph/route_authority_test.gd",
+      "exit_code": 0,
+      "assertions": 1,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    },
+    {
+      "suite": "tests/telegraph/route_explanation_test.gd",
+      "exit_code": 0,
+      "assertions": 8,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    },
+    {
+      "suite": "tests/telegraph/route_reentrancy_test.gd",
+      "exit_code": 0,
+      "assertions": 8,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    },
+    {
+      "suite": "tests/telegraph/routing_board_test.gd",
+      "exit_code": 0,
+      "assertions": 30,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    },
+    {
+      "suite": "tests/telegraph/routing_mouse_test.gd",
+      "exit_code": 0,
+      "assertions": 3,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    },
+    {
+      "suite": "tests/telegraph/rule44_content_test.gd",
+      "exit_code": 0,
+      "assertions": 12,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    },
+    {
+      "suite": "tests/telegraph/sounder_controller_test.gd",
+      "exit_code": 0,
+      "assertions": 15,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    },
+    {
+      "suite": "tests/telegraph/tape_evidence_test.gd",
+      "exit_code": 0,
+      "assertions": 85,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    },
+    {
+      "suite": "tests/telegraph/tape_register_test.gd",
+      "exit_code": 0,
+      "assertions": 35,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": [
+        "WARNING: 6 ObjectDB instances were leaked at exit (run with `--verbose` for details)."
+      ]
+    },
+    {
+      "suite": "tests/telegraph/telegraph_hardware_test.gd",
+      "exit_code": 0,
+      "assertions": 17,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    },
+    {
+      "suite": "tests/telegraph/telegraph_scenario_data_test.gd",
+      "exit_code": 0,
+      "assertions": 32,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    },
+    {
+      "suite": "tests/telegraph/telegraph_session_controller_test.gd",
+      "exit_code": 0,
+      "assertions": 103,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    },
+    {
+      "suite": "tests/telegraph/transcript_paper_test.gd",
+      "exit_code": 0,
+      "assertions": 134,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    },
+    {
+      "suite": "tests/telegraph/transmission_data_test.gd",
+      "exit_code": 0,
+      "assertions": 40,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    },
+    {
+      "suite": "tests/telegraph/upper_arm_anchor_test.gd",
+      "exit_code": 0,
+      "assertions": 5,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    },
+    {
+      "suite": "tests/telegraph/writer_hand_test.gd",
+      "exit_code": 0,
+      "assertions": 37,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    },
+    {
+      "suite": "tests/telegraph/writer_rig_space_test.gd",
+      "exit_code": 0,
+      "assertions": 44,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    },
+    {
+      "suite": "tests/ui/amendment_editor_test.gd",
+      "exit_code": 0,
+      "assertions": 10,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    },
+    {
+      "suite": "tests/ui/amendment_lifetime_test.gd",
+      "exit_code": 0,
+      "assertions": 2,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    },
+    {
+      "suite": "tests/ui/document_resize_test.gd",
+      "exit_code": 0,
+      "assertions": 20,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    },
+    {
+      "suite": "tests/ui/document_text_scale_test.gd",
+      "exit_code": 0,
+      "assertions": 27,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    },
+    {
+      "suite": "tests/ui/document_viewer_test.gd",
+      "exit_code": 0,
+      "assertions": 15,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    },
+    {
+      "suite": "tests/ui/framing_test.gd",
+      "exit_code": 0,
+      "assertions": 93,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [
+        "ERROR: 5 resources still in use at exit (run with --verbose for details)."
+      ],
+      "warnings": [
+        "WARNING: 16 ObjectDB instances were leaked at exit (run with `--verbose` for details)."
+      ]
+    },
+    {
+      "suite": "tests/ui/readability_options_test.gd",
+      "exit_code": 0,
+      "assertions": 13,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    },
+    {
+      "suite": "tests/ui/readable_prompt_test.gd",
+      "exit_code": 0,
+      "assertions": 6,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    },
+    {
+      "suite": "tests/ui/readable_settings_test.gd",
+      "exit_code": 0,
+      "assertions": 12,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    },
+    {
+      "suite": "tests/ui/settings_exit_paths_test.gd",
+      "exit_code": 0,
+      "assertions": 8,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    },
+    {
+      "suite": "tests/ui/tape_layout_test.gd",
+      "exit_code": 0,
+      "assertions": 28,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    }
+  ]
+}

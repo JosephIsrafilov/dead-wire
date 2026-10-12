@@ -1,0 +1,18 @@
+{
+  "command": [
+    "C:/Users/YUSIF/Desktop/Godot_4.8_dev7/Godot_v4.8-dev7_win64_console.exe",
+    "--headless",
+    "--audio-driver",
+    "Dummy",
+    "--path",
+    "C:/Users/YUSIF/.hermes/cache/scratch/dw48_snapshot",
+    "--script",
+    "res://tests/telegraph/rule44_content_test.gd"
+  ],
+  "returncode": 0,
+  "returncode_unsigned": 0,
+  "returncode_hex": "0x00000000",
+  "settings_path": "C:\\Users\\YUSIF\\AppData\\Roaming\\Godot\\app_userdata\\dead-wire\\settings.cfg",
+  "settings_existed_before": true,
+  "settings_preserved": true
+}

@@ -1,0 +1,30 @@
+WARNING: 'res://assets/m1_adapted/ph_books/m1_ledger_volumes.tscn': In external resource #0, invalid UID: 'uid://cskaqd4m44plr' - using text path instead: 'res://assets/third_party/polyhaven/A05_book_encyclopedia_set_01/textures/book_encyclopedia_set_01_cover_diff_1k.jpg'.
+   at: open (core/io/resource_format_binary.cpp:1013)
+WARNING: 'res://assets/m1_adapted/ph_books/m1_ledger_volumes.tscn': In external resource #1, invalid UID: 'uid://dck12effbv6tr' - using text path instead: 'res://assets/third_party/polyhaven/A05_book_encyclopedia_set_01/textures/book_encyclopedia_set_01_cover_arm_1k.jpg'.
+   at: open (core/io/resource_format_binary.cpp:1013)
+WARNING: 'res://assets/m1_adapted/ph_books/m1_ledger_volumes.tscn': In external resource #2, invalid UID: 'uid://bu5dwo7ukb3uw' - using text path instead: 'res://assets/third_party/polyhaven/A05_book_encyclopedia_set_01/textures/book_encyclopedia_set_01_cover_nor_gl_1k.jpg'.
+   at: open (core/io/resource_format_binary.cpp:1013)
+WARNING: 'res://assets/m1_adapted/ph_books/m1_ledger_volumes.tscn': In external resource #3, invalid UID: 'uid://bmcf6i6wwfv74' - using text path instead: 'res://assets/third_party/polyhaven/A05_book_encyclopedia_set_01/textures/book_encyclopedia_set_01_paper_diff_1k.jpg'.
+   at: open (core/io/resource_format_binary.cpp:1013)
+WARNING: 'res://assets/m1_adapted/ph_books/m1_ledger_volumes.tscn': In external resource #4, invalid UID: 'uid://ce744ggh0n44b' - using text path instead: 'res://assets/third_party/polyhaven/A05_book_encyclopedia_set_01/textures/book_encyclopedia_set_01_paper_roughness_1k.jpg'.
+   at: open (core/io/resource_format_binary.cpp:1013)
+WARNING: 'res://assets/m1_adapted/ph_books/m1_ledger_volumes.tscn': In external resource #5, invalid UID: 'uid://uiof6f0hsvgw' - using text path instead: 'res://assets/third_party/polyhaven/A05_book_encyclopedia_set_01/textures/book_encyclopedia_set_01_paper_nor_gl_1k.jpg'.
+   at: open (core/io/resource_format_binary.cpp:1013)
+ERROR: No loader found for resource: res://assets/third_party/polyhaven/A05_book_encyclopedia_set_01/textures/book_encyclopedia_set_01_cover_diff_1k.jpg (expected type: Texture2D)
+   at: _load (core/io/resource_loader.cpp:332)
+ERROR: No loader found for resource: res://assets/third_party/polyhaven/A05_book_encyclopedia_set_01/textures/book_encyclopedia_set_01_cover_arm_1k.jpg (expected type: Texture2D)
+   at: _load (core/io/resource_loader.cpp:332)
+ERROR: No loader found for resource: res://assets/third_party/polyhaven/A05_book_encyclopedia_set_01/textures/book_encyclopedia_set_01_cover_nor_gl_1k.jpg (expected type: Texture2D)
+   at: _load (core/io/resource_loader.cpp:332)
+ERROR: No loader found for resource: res://assets/third_party/polyhaven/A05_book_encyclopedia_set_01/textures/book_encyclopedia_set_01_paper_diff_1k.jpg (expected type: Texture2D)
+   at: _load (core/io/resource_loader.cpp:332)
+ERROR: No loader found for resource: res://assets/third_party/polyhaven/A05_book_encyclopedia_set_01/textures/book_encyclopedia_set_01_paper_roughness_1k.jpg (expected type: Texture2D)
+   at: _load (core/io/resource_loader.cpp:332)
+ERROR: No loader found for resource: res://assets/third_party/polyhaven/A05_book_encyclopedia_set_01/textures/book_encyclopedia_set_01_paper_nor_gl_1k.jpg (expected type: Texture2D)
+   at: _load (core/io/resource_loader.cpp:332)
+ERROR: Can't load dependency: 'res://assets/third_party/polyhaven/A05_book_encyclopedia_set_01/textures/book_encyclopedia_set_01_cover_diff_1k.jpg'.
+   at: parse_variant (core/io/resource_format_binary.cpp:441)
+ERROR: Failed loading resource: res://.godot/exported/133200997/export-da47e8452e4babeda3f20baef377a0ed-m1_ledger_volumes.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+WARNING: 7 RIDs of type "Texture" were leaked.
+   at: finalize (servers/rendering/rendering_device.cpp:9160)

@@ -1,0 +1,39 @@
+Godot Engine v4.8.dev7.official.c971f93e7 - https://godotengine.org
+
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Started Project initialization (5 steps)[39m[0m
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Scanning file structure...[39m[0m
+[  16% ] [90m[1mfirst_scan_filesystem[22m | Loading global class names...[39m[0m
+[  33% ] [90m[1mfirst_scan_filesystem[22m | Verifying GDExtensions...[39m[0m
+[  50% ] [90m[1mfirst_scan_filesystem[22m | Creating autoload scripts...[39m[0m
+[  66% ] [90m[1mfirst_scan_filesystem[22m | Initializing plugins...[39m[0m
+[  83% ] [90m[1mfirst_scan_filesystem[22m | Starting file scan...[39m[0m
+[92m[ DONE ][39m [1mfirst_scan_filesystem[22m
+[0m
+WARNING: UID duplicate detected between res://materials/style_tests/textures/psx/card_morse_stock.png and res://docs/research/first_night_2026-10-12_sound_handoff_final_2507287/q2_parity/card_morse_stock.png.
+   at: _process_file_system (editor/file_system/editor_file_system.cpp:1396)
+WARNING: UID duplicate detected between res://materials/style_tests/textures/psx/form_night_copy.png and res://docs/research/first_night_2026-10-12_sound_handoff_final_2507287/q2_parity/form_night_copy.png.
+   at: _process_file_system (editor/file_system/editor_file_system.cpp:1396)
+WARNING: UID duplicate detected between res://materials/style_tests/textures/psx/map_division.png and res://docs/research/first_night_2026-10-12_sound_handoff_final_2507287/q2_parity/map_division.png.
+   at: _process_file_system (editor/file_system/editor_file_system.cpp:1396)
+[   0% ] [90m[1m_update_scan_actions[22m | Started Scanning actions... (14 steps)[39m[0m
+[   0% ] [90m[1m_update_scan_actions[22m | elias_working_atlas.png[39m[0m
+[   6% ] [90m[1m_update_scan_actions[22m | 01_operator_desk_wide.png[39m[0m
+[  13% ] [90m[1m_update_scan_actions[22m | 02_telegraph_hardware_close.png[39m[0m
+[  20% ] [90m[1m_update_scan_actions[22m | 03_routing_board_view.png[39m[0m
+[  26% ] [90m[1m_update_scan_actions[22m | 04_bay_window_night.png[39m[0m
+[  33% ] [90m[1m_update_scan_actions[22m | 05_ticket_counter_divider.png[39m[0m
+[  40% ] [90m[1m_update_scan_actions[22m | 06_waiting_room_perspective.png[39m[0m
+[  46% ] [90m[1m_update_scan_actions[22m | 07_door_attention.png[39m[0m
+[  53% ] [90m[1m_update_scan_actions[22m | 08_corner_stove_warmth.png[39m[0m
+[  60% ] [90m[1m_update_scan_actions[22m | 09_storage_cabinet.png[39m[0m
+[  66% ] [90m[1m_update_scan_actions[22m | 10_overall_room_nw.png[39m[0m
+[  73% ] [90m[1m_update_scan_actions[22m | 11_overall_room_se.png[39m[0m
+[  80% ] [90m[1m_update_scan_actions[22m | 12_player_spawn_view.png[39m[0m
+[  86% ] [90m[1m_update_scan_actions[22m | elias_working_atlas.png[39m[0m
+[92m[ DONE ][39m [1m_update_scan_actions[22m
+[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Started Loading editor (5 steps)[39m[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Loading editor layout...[39m[0m
+[  16% ] [90m[1mloading_editor_layout[22m | Loading docks...[39m[0m
+[92m[ DONE ][39m [1mloading_editor_layout[22m
+[0m

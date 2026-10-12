@@ -1,0 +1,2789 @@
+Godot Engine v4.8.dev7.official.c971f93e7 - https://godotengine.org
+
+ERROR: Cannot open file 'res://.godot/imported/NotoSans-Regular.ttf-a2f6ef013cee47e28f92dbe72318bbb4.fontdata'.
+   at: load (core/io/resource_format_binary.cpp:1138)
+ERROR: Failed loading resource: res://.godot/imported/NotoSans-Regular.ttf-a2f6ef013cee47e28f92dbe72318bbb4.fontdata.
+   at: _load (core/io/resource_loader.cpp:317)
+ERROR: Failed loading resource: res://assets/fonts/noto/NotoSans-Regular.ttf.
+   at: _load (core/io/resource_loader.cpp:317)
+ERROR: res://assets/fonts/deadwire_theme.tres:8 - Parse Error: [ext_resource] referenced non-existent resource at: res://assets/fonts/noto/NotoSans-Regular.ttf.
+   at: _parse_ext_resource (scene/resources/resource_format_text.cpp:157)
+ERROR: res://assets/fonts/deadwire_theme.tres:8 - Parse Error: [ext_resource] referenced non-existent resource at: res://assets/fonts/noto/NotoSans-Regular.ttf.
+   at: load (scene/resources/resource_format_text.cpp:768)
+ERROR: Failed loading resource: res://assets/fonts/deadwire_theme.tres.
+   at: _load (core/io/resource_loader.cpp:317)
+ERROR: Error loading custom project theme 'res://assets/fonts/deadwire_theme.tres'
+   at: initialize_theme (scene/theme/theme_db.cpp:74)
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Started Project initialization (5 steps)[39m[0m
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Scanning file structure...[39m[0m
+[  16% ] [90m[1mfirst_scan_filesystem[22m | Loading global class names...[39m[0m
+[  33% ] [90m[1mfirst_scan_filesystem[22m | Verifying GDExtensions...[39m[0m
+[  50% ] [90m[1mfirst_scan_filesystem[22m | Creating autoload scripts...[39m[0m
+[  66% ] [90m[1mfirst_scan_filesystem[22m | Initializing plugins...[39m[0m
+[  83% ] [90m[1mfirst_scan_filesystem[22m | Starting file scan...[39m[0m
+[92m[ DONE ][39m [1mfirst_scan_filesystem[22m
+[0m
+WARNING: UID duplicate detected between res://materials/style_tests/textures/psx/card_morse_stock.png and res://docs/research/first_night_2026-10-12_sound_handoff_final_2507287/q2_parity/card_morse_stock.png.
+   at: _process_file_system (editor/file_system/editor_file_system.cpp:1396)
+WARNING: UID duplicate detected between res://materials/style_tests/textures/psx/form_night_copy.png and res://docs/research/first_night_2026-10-12_sound_handoff_final_2507287/q2_parity/form_night_copy.png.
+   at: _process_file_system (editor/file_system/editor_file_system.cpp:1396)
+WARNING: UID duplicate detected between res://materials/style_tests/textures/psx/map_division.png and res://docs/research/first_night_2026-10-12_sound_handoff_final_2507287/q2_parity/map_division.png.
+   at: _process_file_system (editor/file_system/editor_file_system.cpp:1396)
+[   0% ] [90m[1mupdate_scripts_classes[22m | Started Registering global classes... (182 steps)[39m[0m
+[   0% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[   0% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[   1% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[   1% ] [90m[1mupdate_scripts_classes[22m | OfficeAmbience[39m[0m
+[   2% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[   2% ] [90m[1mupdate_scripts_classes[22m | DebugInspector[39m[0m
+[   3% ] [90m[1mupdate_scripts_classes[22m | AttentionObservationTarget[39m[0m
+[   3% ] [90m[1mupdate_scripts_classes[22m | DoorAttentionSource[39m[0m
+[   4% ] [90m[1mupdate_scripts_classes[22m | Interactable[39m[0m
+[   4% ] [90m[1mupdate_scripts_classes[22m | InteractionController[39m[0m
+[   5% ] [90m[1mupdate_scripts_classes[22m | DawnEvidence[39m[0m
+[   6% ] [90m[1mupdate_scripts_classes[22m | DawnRitual[39m[0m
+[   6% ] [90m[1mupdate_scripts_classes[22m | LampLife[39m[0m
+[   7% ] [90m[1mupdate_scripts_classes[22m | M1OfficeController[39m[0m
+[   7% ] [90m[1mupdate_scripts_classes[22m | MoonWeather[39m[0m
+[   8% ] [90m[1mupdate_scripts_classes[22m | NightGuidanceController[39m[0m
+[   8% ] [90m[1mupdate_scripts_classes[22m | NightGuidanceData[39m[0m
+[   9% ] [90m[1mupdate_scripts_classes[22m | OfficeDoor[39m[0m
+[   9% ] [90m[1mupdate_scripts_classes[22m | ShiftDirector[39m[0m
+[  10% ] [90m[1mupdate_scripts_classes[22m | StationClock[39m[0m
+[  10% ] [90m[1mupdate_scripts_classes[22m | UneaseDirector[39m[0m
+[  11% ] [90m[1mupdate_scripts_classes[22m | OperatorSeat[39m[0m
+[  12% ] [90m[1mupdate_scripts_classes[22m | PlayerController[39m[0m
+[  12% ] [90m[1mupdate_scripts_classes[22m | ReadabilityPolicy[39m[0m
+[  13% ] [90m[1mupdate_scripts_classes[22m | PhLedgerVolumes[39m[0m
+[  13% ] [90m[1mupdate_scripts_classes[22m | PsxAssetAdapter[39m[0m
+[  14% ] [90m[1mupdate_scripts_classes[22m | KnowledgeStateStore[39m[0m
+[  14% ] [90m[1mupdate_scripts_classes[22m | WorldStateStore[39m[0m
+[  15% ] [90m[1mupdate_scripts_classes[22m | PSXStyleRuntime[39m[0m
+[  15% ] [90m[1mupdate_scripts_classes[22m | SounderController[39m[0m
+[  16% ] [90m[1mupdate_scripts_classes[22m | TapeInkEvent[39m[0m
+[  16% ] [90m[1mupdate_scripts_classes[22m | TapeRegisterController[39m[0m
+[  17% ] [90m[1mupdate_scripts_classes[22m | TelegraphKey[39m[0m
+[  18% ] [90m[1mupdate_scripts_classes[22m | AmericanMorseAlphabetData[39m[0m
+[  18% ] [90m[1mupdate_scripts_classes[22m | AmericanMorseCharacterData[39m[0m
+[  19% ] [90m[1mupdate_scripts_classes[22m | AmericanMorseEncoder[39m[0m
+[  19% ] [90m[1mupdate_scripts_classes[22m | MorsePlaybackProfileData[39m[0m
+[  20% ] [90m[1mupdate_scripts_classes[22m | MorsePlaybackScheduleData[39m[0m
+[  20% ] [90m[1mupdate_scripts_classes[22m | MorseRuntimeScheduler[39m[0m
+[  21% ] [90m[1mupdate_scripts_classes[22m | MorseScheduledEvent[39m[0m
+[  21% ] [90m[1mupdate_scripts_classes[22m | MorseScheduleCompiler[39m[0m
+[  22% ] [90m[1mupdate_scripts_classes[22m | MorseSequenceData[39m[0m
+[  22% ] [90m[1mupdate_scripts_classes[22m | MorseTimingEvent[39m[0m
+[  23% ] [90m[1mupdate_scripts_classes[22m | AmendmentText[39m[0m
+[  24% ] [90m[1mupdate_scripts_classes[22m | RouteAction[39m[0m
+[  24% ] [90m[1mupdate_scripts_classes[22m | TelegraphCommitOption[39m[0m
+[  25% ] [90m[1mupdate_scripts_classes[22m | TelegraphScenarioData[39m[0m
+[  25% ] [90m[1mupdate_scripts_classes[22m | TelegraphSessionController[39m[0m
+[  26% ] [90m[1mupdate_scripts_classes[22m | CopyCommitDesk[39m[0m
+[  26% ] [90m[1mupdate_scripts_classes[22m | DispatchLedger[39m[0m
+[  27% ] [90m[1mupdate_scripts_classes[22m | DutySheet[39m[0m
+[  27% ] [90m[1mupdate_scripts_classes[22m | MorseReferenceCard[39m[0m
+[  28% ] [90m[1mupdate_scripts_classes[22m | RoutingBoard[39m[0m
+[  28% ] [90m[1mupdate_scripts_classes[22m | TranscriptPaper[39m[0m
+[  29% ] [90m[1mupdate_scripts_classes[22m | WriterRig[39m[0m
+[  30% ] [90m[1mupdate_scripts_classes[22m | TransmissionData[39m[0m
+[  30% ] [90m[1mupdate_scripts_classes[22m | AmendmentEditor[39m[0m
+[  31% ] [90m[1mupdate_scripts_classes[22m | DocumentViewer[39m[0m
+[  31% ] [90m[1mupdate_scripts_classes[22m | GameSettings[39m[0m
+[  32% ] [90m[1mupdate_scripts_classes[22m | IntroCard[39m[0m
+[  32% ] [90m[1mupdate_scripts_classes[22m | MainMenu[39m[0m
+[  33% ] [90m[1mupdate_scripts_classes[22m | PauseMenu[39m[0m
+[  33% ] [90m[1mupdate_scripts_classes[22m | ReadabilityOptions[39m[0m
+[  34% ] [90m[1mupdate_scripts_classes[22m | ShiftEndCard[39m[0m
+[  34% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  35% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  36% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  36% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  37% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  37% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  38% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  38% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  39% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  39% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  40% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  40% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  41% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  42% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  42% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  43% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  43% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  44% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  44% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  45% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  45% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  46% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  46% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  47% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  48% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  48% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  49% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  49% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  50% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  50% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  51% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  51% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  52% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  53% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  53% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  54% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  54% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  55% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  55% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  56% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  56% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  57% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  57% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  58% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  59% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  59% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  60% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  60% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  61% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  61% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  62% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  62% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  63% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  63% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  64% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  65% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  65% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  66% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  66% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  67% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  67% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  68% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  68% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  69% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  69% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  70% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  71% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  71% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  72% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  72% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  73% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  73% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  74% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  74% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  75% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  75% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  76% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  77% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  77% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  78% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  78% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  79% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  79% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  80% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  80% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  81% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  81% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  82% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  83% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  83% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  84% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  84% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  85% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  85% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  86% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  86% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  87% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  87% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  88% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  89% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  89% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  90% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  90% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  91% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  91% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  92% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  92% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  93% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  93% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  94% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  95% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  95% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  96% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  96% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  97% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  97% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  98% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  98% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[92m[ DONE ][39m [1mupdate_scripts_classes[22m
+[0m
+[   0% ] [90m[1m_update_scan_actions[22m | Started Scanning actions... (813 steps)[39m[0m
+[   0% ] [90m[1m_update_scan_actions[22m | chair_settle.ogg[39m[0m
+[   0% ] [90m[1m_update_scan_actions[22m | lever_stop.ogg[39m[0m
+[   0% ] [90m[1m_update_scan_actions[22m | stamp.ogg[39m[0m
+[   0% ] [90m[1m_update_scan_actions[22m | Cedarville-Cursive.ttf[39m[0m
+[   0% ] [90m[1m_update_scan_actions[22m | CourierPrime-Regular.ttf[39m[0m
+[   0% ] [90m[1m_update_scan_actions[22m | elias_working.fnt[39m[0m
+[   0% ] [90m[1m_update_scan_actions[22m | elias_working_atlas.png[39m[0m
+[   0% ] [90m[1m_update_scan_actions[22m | glyph_space.svg[39m[0m
+[   0% ] [90m[1m_update_scan_actions[22m | glyph_u002C.svg[39m[0m
+[   1% ] [90m[1m_update_scan_actions[22m | glyph_u002D.svg[39m[0m
+[   1% ] [90m[1m_update_scan_actions[22m | glyph_u002E.svg[39m[0m
+[   1% ] [90m[1m_update_scan_actions[22m | glyph_u002F.svg[39m[0m
+[   1% ] [90m[1m_update_scan_actions[22m | glyph_u003A.svg[39m[0m
+[   1% ] [90m[1m_update_scan_actions[22m | glyph_u003B.svg[39m[0m
+[   1% ] [90m[1m_update_scan_actions[22m | glyph_u003F.svg[39m[0m
+[   1% ] [90m[1m_update_scan_actions[22m | glyph_u004A.svg[39m[0m
+[   1% ] [90m[1m_update_scan_actions[22m | glyph_u004B.svg[39m[0m
+[   2% ] [90m[1m_update_scan_actions[22m | glyph_u004C.svg[39m[0m
+[   2% ] [90m[1m_update_scan_actions[22m | glyph_u004D.svg[39m[0m
+[   2% ] [90m[1m_update_scan_actions[22m | glyph_u004E.svg[39m[0m
+[   2% ] [90m[1m_update_scan_actions[22m | glyph_u004F.svg[39m[0m
+[   2% ] [90m[1m_update_scan_actions[22m | glyph_u005A.svg[39m[0m
+[   2% ] [90m[1m_update_scan_actions[22m | glyph_u0021.svg[39m[0m
+[   2% ] [90m[1m_update_scan_actions[22m | glyph_u0027.svg[39m[0m
+[   2% ] [90m[1m_update_scan_actions[22m | glyph_u0028.svg[39m[0m
+[   3% ] [90m[1m_update_scan_actions[22m | glyph_u0029.svg[39m[0m
+[   3% ] [90m[1m_update_scan_actions[22m | glyph_u0030.svg[39m[0m
+[   3% ] [90m[1m_update_scan_actions[22m | glyph_u0031.svg[39m[0m
+[   3% ] [90m[1m_update_scan_actions[22m | glyph_u0032.svg[39m[0m
+[   3% ] [90m[1m_update_scan_actions[22m | glyph_u0033.svg[39m[0m
+[   3% ] [90m[1m_update_scan_actions[22m | glyph_u0034.svg[39m[0m
+[   3% ] [90m[1m_update_scan_actions[22m | glyph_u0035.svg[39m[0m
+[   3% ] [90m[1m_update_scan_actions[22m | glyph_u0036.svg[39m[0m
+[   4% ] [90m[1m_update_scan_actions[22m | glyph_u0037.svg[39m[0m
+[   4% ] [90m[1m_update_scan_actions[22m | glyph_u0038.svg[39m[0m
+[   4% ] [90m[1m_update_scan_actions[22m | glyph_u0039.svg[39m[0m
+[   4% ] [90m[1m_update_scan_actions[22m | glyph_u0041.svg[39m[0m
+[   4% ] [90m[1m_update_scan_actions[22m | glyph_u0042.svg[39m[0m
+[   4% ] [90m[1m_update_scan_actions[22m | glyph_u0043.svg[39m[0m
+[   4% ] [90m[1m_update_scan_actions[22m | glyph_u0044.svg[39m[0m
+[   4% ] [90m[1m_update_scan_actions[22m | glyph_u0045.svg[39m[0m
+[   5% ] [90m[1m_update_scan_actions[22m | glyph_u0046.svg[39m[0m
+[   5% ] [90m[1m_update_scan_actions[22m | glyph_u0047.svg[39m[0m
+[   5% ] [90m[1m_update_scan_actions[22m | glyph_u0048.svg[39m[0m
+[   5% ] [90m[1m_update_scan_actions[22m | glyph_u0049.svg[39m[0m
+[   5% ] [90m[1m_update_scan_actions[22m | glyph_u0050.svg[39m[0m
+[   5% ] [90m[1m_update_scan_actions[22m | glyph_u0051.svg[39m[0m
+[   5% ] [90m[1m_update_scan_actions[22m | glyph_u0052.svg[39m[0m
+[   5% ] [90m[1m_update_scan_actions[22m | glyph_u0053.svg[39m[0m
+[   6% ] [90m[1m_update_scan_actions[22m | glyph_u0054.svg[39m[0m
+[   6% ] [90m[1m_update_scan_actions[22m | glyph_u0055.svg[39m[0m
+[   6% ] [90m[1m_update_scan_actions[22m | glyph_u0056.svg[39m[0m
+[   6% ] [90m[1m_update_scan_actions[22m | glyph_u0057.svg[39m[0m
+[   6% ] [90m[1m_update_scan_actions[22m | glyph_u0058.svg[39m[0m
+[   6% ] [90m[1m_update_scan_actions[22m | glyph_u0059.svg[39m[0m
+[   6% ] [90m[1m_update_scan_actions[22m | IMFeENrm28P.ttf[39m[0m
+[   6% ] [90m[1m_update_scan_actions[22m | NotoSans-Regular.ttf[39m[0m
+[   7% ] [90m[1m_update_scan_actions[22m | OldStandardTT-Bold.ttf[39m[0m
+[   7% ] [90m[1m_update_scan_actions[22m | OldStandardTT-Regular.ttf[39m[0m
+[   7% ] [90m[1m_update_scan_actions[22m | book_encyclopedia_set_01_cover_arm_1k.jpg[39m[0m
+[   7% ] [90m[1m_update_scan_actions[22m | book_encyclopedia_set_01_cover_diff_1k.jpg[39m[0m
+[   7% ] [90m[1m_update_scan_actions[22m | book_encyclopedia_set_01_cover_nor_gl_1k.jpg[39m[0m
+[   7% ] [90m[1m_update_scan_actions[22m | book_encyclopedia_set_01_paper_diff_1k.jpg[39m[0m
+[   7% ] [90m[1m_update_scan_actions[22m | book_encyclopedia_set_01_paper_nor_gl_1k.jpg[39m[0m
+[   7% ] [90m[1m_update_scan_actions[22m | book_encyclopedia_set_01_paper_roughness_1k.jpg[39m[0m
+[   7% ] [90m[1m_update_scan_actions[22m | book_encyclopedia_set_01.gltf[39m[0m
+[   8% ] [90m[1m_update_scan_actions[22m | painted_wooden_cabinet_02_arm_1k.jpg[39m[0m
+[   8% ] [90m[1m_update_scan_actions[22m | painted_wooden_cabinet_02_diff_1k.jpg[39m[0m
+[   8% ] [90m[1m_update_scan_actions[22m | painted_wooden_cabinet_02_nor_gl_1k.jpg[39m[0m
+[   8% ] [90m[1m_update_scan_actions[22m | painted_wooden_cabinet_02.gltf[39m[0m
+[   8% ] [90m[1m_update_scan_actions[22m | painted_wooden_chair_01_arm_1k.jpg[39m[0m
+[   8% ] [90m[1m_update_scan_actions[22m | painted_wooden_chair_01_diff_1k.jpg[39m[0m
+[   8% ] [90m[1m_update_scan_actions[22m | painted_wooden_chair_01_nor_gl_1k.jpg[39m[0m
+[   8% ] [90m[1m_update_scan_actions[22m | painted_wooden_chair_01.gltf[39m[0m
+[   9% ] [90m[1m_update_scan_actions[22m | wooden_table_02_arm_1k.jpg[39m[0m
+[   9% ] [90m[1m_update_scan_actions[22m | wooden_table_02_diff_1k.jpg[39m[0m
+[   9% ] [90m[1m_update_scan_actions[22m | wooden_table_02_nor_gl_1k.jpg[39m[0m
+[   9% ] [90m[1m_update_scan_actions[22m | wooden_table_02.gltf[39m[0m
+[   9% ] [90m[1m_update_scan_actions[22m | key_lever.glb[39m[0m
+[   9% ] [90m[1m_update_scan_actions[22m | key_lever_instrument_atlas_256.png[39m[0m
+[   9% ] [90m[1m_update_scan_actions[22m | key_static.glb[39m[0m
+[   9% ] [90m[1m_update_scan_actions[22m | key_static_instrument_atlas_256.png[39m[0m
+[  10% ] [90m[1m_update_scan_actions[22m | register_spool.glb[39m[0m
+[  10% ] [90m[1m_update_scan_actions[22m | register_spool_instrument_atlas_256.png[39m[0m
+[  10% ] [90m[1m_update_scan_actions[22m | register_static.glb[39m[0m
+[  10% ] [90m[1m_update_scan_actions[22m | register_static_instrument_atlas_256.png[39m[0m
+[  10% ] [90m[1m_update_scan_actions[22m | register_stylus.glb[39m[0m
+[  10% ] [90m[1m_update_scan_actions[22m | register_stylus_instrument_atlas_256.png[39m[0m
+[  10% ] [90m[1m_update_scan_actions[22m | sounder_armature.glb[39m[0m
+[  10% ] [90m[1m_update_scan_actions[22m | sounder_armature_instrument_atlas_256.png[39m[0m
+[  11% ] [90m[1m_update_scan_actions[22m | sounder_static.glb[39m[0m
+[  11% ] [90m[1m_update_scan_actions[22m | sounder_static_instrument_atlas_256.png[39m[0m
+[  11% ] [90m[1m_update_scan_actions[22m | chimney.obj[39m[0m
+[  11% ] [90m[1m_update_scan_actions[22m | instrument_atlas_256.png[39m[0m
+[  11% ] [90m[1m_update_scan_actions[22m | baize_128_v1.png[39m[0m
+[  11% ] [90m[1m_update_scan_actions[22m | paper_128_v1.png[39m[0m
+[  11% ] [90m[1m_update_scan_actions[22m | wallpaper_128_v1.png[39m[0m
+[  11% ] [90m[1m_update_scan_actions[22m | wood_128_v1.png[39m[0m
+[  12% ] [90m[1m_update_scan_actions[22m | footstep_carpet_000.ogg[39m[0m
+[  12% ] [90m[1m_update_scan_actions[22m | footstep_carpet_001.ogg[39m[0m
+[  12% ] [90m[1m_update_scan_actions[22m | footstep_carpet_002.ogg[39m[0m
+[  12% ] [90m[1m_update_scan_actions[22m | footstep_carpet_003.ogg[39m[0m
+[  12% ] [90m[1m_update_scan_actions[22m | footstep_carpet_004.ogg[39m[0m
+[  12% ] [90m[1m_update_scan_actions[22m | footstep_concrete_000.ogg[39m[0m
+[  12% ] [90m[1m_update_scan_actions[22m | footstep_concrete_001.ogg[39m[0m
+[  12% ] [90m[1m_update_scan_actions[22m | footstep_concrete_002.ogg[39m[0m
+[  13% ] [90m[1m_update_scan_actions[22m | footstep_concrete_003.ogg[39m[0m
+[  13% ] [90m[1m_update_scan_actions[22m | footstep_concrete_004.ogg[39m[0m
+[  13% ] [90m[1m_update_scan_actions[22m | footstep_grass_000.ogg[39m[0m
+[  13% ] [90m[1m_update_scan_actions[22m | footstep_grass_001.ogg[39m[0m
+[  13% ] [90m[1m_update_scan_actions[22m | footstep_grass_002.ogg[39m[0m
+[  13% ] [90m[1m_update_scan_actions[22m | footstep_grass_003.ogg[39m[0m
+[  13% ] [90m[1m_update_scan_actions[22m | footstep_grass_004.ogg[39m[0m
+[  13% ] [90m[1m_update_scan_actions[22m | footstep_snow_000.ogg[39m[0m
+[  14% ] [90m[1m_update_scan_actions[22m | footstep_snow_001.ogg[39m[0m
+[  14% ] [90m[1m_update_scan_actions[22m | footstep_snow_002.ogg[39m[0m
+[  14% ] [90m[1m_update_scan_actions[22m | footstep_snow_003.ogg[39m[0m
+[  14% ] [90m[1m_update_scan_actions[22m | footstep_snow_004.ogg[39m[0m
+[  14% ] [90m[1m_update_scan_actions[22m | footstep_wood_000.ogg[39m[0m
+[  14% ] [90m[1m_update_scan_actions[22m | footstep_wood_001.ogg[39m[0m
+[  14% ] [90m[1m_update_scan_actions[22m | footstep_wood_002.ogg[39m[0m
+[  14% ] [90m[1m_update_scan_actions[22m | footstep_wood_003.ogg[39m[0m
+[  14% ] [90m[1m_update_scan_actions[22m | footstep_wood_004.ogg[39m[0m
+[  15% ] [90m[1m_update_scan_actions[22m | impactBell_heavy_000.ogg[39m[0m
+[  15% ] [90m[1m_update_scan_actions[22m | impactBell_heavy_001.ogg[39m[0m
+[  15% ] [90m[1m_update_scan_actions[22m | impactBell_heavy_002.ogg[39m[0m
+[  15% ] [90m[1m_update_scan_actions[22m | impactBell_heavy_003.ogg[39m[0m
+[  15% ] [90m[1m_update_scan_actions[22m | impactBell_heavy_004.ogg[39m[0m
+[  15% ] [90m[1m_update_scan_actions[22m | impactGeneric_light_000.ogg[39m[0m
+[  15% ] [90m[1m_update_scan_actions[22m | impactGeneric_light_001.ogg[39m[0m
+[  15% ] [90m[1m_update_scan_actions[22m | impactGeneric_light_002.ogg[39m[0m
+[  16% ] [90m[1m_update_scan_actions[22m | impactGeneric_light_003.ogg[39m[0m
+[  16% ] [90m[1m_update_scan_actions[22m | impactGeneric_light_004.ogg[39m[0m
+[  16% ] [90m[1m_update_scan_actions[22m | impactGlass_heavy_000.ogg[39m[0m
+[  16% ] [90m[1m_update_scan_actions[22m | impactGlass_heavy_001.ogg[39m[0m
+[  16% ] [90m[1m_update_scan_actions[22m | impactGlass_heavy_002.ogg[39m[0m
+[  16% ] [90m[1m_update_scan_actions[22m | impactGlass_heavy_003.ogg[39m[0m
+[  16% ] [90m[1m_update_scan_actions[22m | impactGlass_heavy_004.ogg[39m[0m
+[  16% ] [90m[1m_update_scan_actions[22m | impactGlass_light_000.ogg[39m[0m
+[  17% ] [90m[1m_update_scan_actions[22m | impactGlass_light_001.ogg[39m[0m
+[  17% ] [90m[1m_update_scan_actions[22m | impactGlass_light_002.ogg[39m[0m
+[  17% ] [90m[1m_update_scan_actions[22m | impactGlass_light_003.ogg[39m[0m
+[  17% ] [90m[1m_update_scan_actions[22m | impactGlass_light_004.ogg[39m[0m
+[  17% ] [90m[1m_update_scan_actions[22m | impactGlass_medium_000.ogg[39m[0m
+[  17% ] [90m[1m_update_scan_actions[22m | impactGlass_medium_001.ogg[39m[0m
+[  17% ] [90m[1m_update_scan_actions[22m | impactGlass_medium_002.ogg[39m[0m
+[  17% ] [90m[1m_update_scan_actions[22m | impactGlass_medium_003.ogg[39m[0m
+[  18% ] [90m[1m_update_scan_actions[22m | impactGlass_medium_004.ogg[39m[0m
+[  18% ] [90m[1m_update_scan_actions[22m | impactMetal_heavy_000.ogg[39m[0m
+[  18% ] [90m[1m_update_scan_actions[22m | impactMetal_heavy_001.ogg[39m[0m
+[  18% ] [90m[1m_update_scan_actions[22m | impactMetal_heavy_002.ogg[39m[0m
+[  18% ] [90m[1m_update_scan_actions[22m | impactMetal_heavy_003.ogg[39m[0m
+[  18% ] [90m[1m_update_scan_actions[22m | impactMetal_heavy_004.ogg[39m[0m
+[  18% ] [90m[1m_update_scan_actions[22m | impactMetal_light_000.ogg[39m[0m
+[  18% ] [90m[1m_update_scan_actions[22m | impactMetal_light_001.ogg[39m[0m
+[  19% ] [90m[1m_update_scan_actions[22m | impactMetal_light_002.ogg[39m[0m
+[  19% ] [90m[1m_update_scan_actions[22m | impactMetal_light_003.ogg[39m[0m
+[  19% ] [90m[1m_update_scan_actions[22m | impactMetal_light_004.ogg[39m[0m
+[  19% ] [90m[1m_update_scan_actions[22m | impactMetal_medium_000.ogg[39m[0m
+[  19% ] [90m[1m_update_scan_actions[22m | impactMetal_medium_001.ogg[39m[0m
+[  19% ] [90m[1m_update_scan_actions[22m | impactMetal_medium_002.ogg[39m[0m
+[  19% ] [90m[1m_update_scan_actions[22m | impactMetal_medium_003.ogg[39m[0m
+[  19% ] [90m[1m_update_scan_actions[22m | impactMetal_medium_004.ogg[39m[0m
+[  20% ] [90m[1m_update_scan_actions[22m | impactMining_000.ogg[39m[0m
+[  20% ] [90m[1m_update_scan_actions[22m | impactMining_001.ogg[39m[0m
+[  20% ] [90m[1m_update_scan_actions[22m | impactMining_002.ogg[39m[0m
+[  20% ] [90m[1m_update_scan_actions[22m | impactMining_003.ogg[39m[0m
+[  20% ] [90m[1m_update_scan_actions[22m | impactMining_004.ogg[39m[0m
+[  20% ] [90m[1m_update_scan_actions[22m | impactPlank_medium_000.ogg[39m[0m
+[  20% ] [90m[1m_update_scan_actions[22m | impactPlank_medium_001.ogg[39m[0m
+[  20% ] [90m[1m_update_scan_actions[22m | impactPlank_medium_002.ogg[39m[0m
+[  21% ] [90m[1m_update_scan_actions[22m | impactPlank_medium_003.ogg[39m[0m
+[  21% ] [90m[1m_update_scan_actions[22m | impactPlank_medium_004.ogg[39m[0m
+[  21% ] [90m[1m_update_scan_actions[22m | impactPlate_heavy_000.ogg[39m[0m
+[  21% ] [90m[1m_update_scan_actions[22m | impactPlate_heavy_001.ogg[39m[0m
+[  21% ] [90m[1m_update_scan_actions[22m | impactPlate_heavy_002.ogg[39m[0m
+[  21% ] [90m[1m_update_scan_actions[22m | impactPlate_heavy_003.ogg[39m[0m
+[  21% ] [90m[1m_update_scan_actions[22m | impactPlate_heavy_004.ogg[39m[0m
+[  21% ] [90m[1m_update_scan_actions[22m | impactPlate_light_000.ogg[39m[0m
+[  21% ] [90m[1m_update_scan_actions[22m | impactPlate_light_001.ogg[39m[0m
+[  22% ] [90m[1m_update_scan_actions[22m | impactPlate_light_002.ogg[39m[0m
+[  22% ] [90m[1m_update_scan_actions[22m | impactPlate_light_003.ogg[39m[0m
+[  22% ] [90m[1m_update_scan_actions[22m | impactPlate_light_004.ogg[39m[0m
+[  22% ] [90m[1m_update_scan_actions[22m | impactPlate_medium_000.ogg[39m[0m
+[  22% ] [90m[1m_update_scan_actions[22m | impactPlate_medium_001.ogg[39m[0m
+[  22% ] [90m[1m_update_scan_actions[22m | impactPlate_medium_002.ogg[39m[0m
+[  22% ] [90m[1m_update_scan_actions[22m | impactPlate_medium_003.ogg[39m[0m
+[  22% ] [90m[1m_update_scan_actions[22m | impactPlate_medium_004.ogg[39m[0m
+[  23% ] [90m[1m_update_scan_actions[22m | impactPunch_heavy_000.ogg[39m[0m
+[  23% ] [90m[1m_update_scan_actions[22m | impactPunch_heavy_001.ogg[39m[0m
+[  23% ] [90m[1m_update_scan_actions[22m | impactPunch_heavy_002.ogg[39m[0m
+[  23% ] [90m[1m_update_scan_actions[22m | impactPunch_heavy_003.ogg[39m[0m
+[  23% ] [90m[1m_update_scan_actions[22m | impactPunch_heavy_004.ogg[39m[0m
+[  23% ] [90m[1m_update_scan_actions[22m | impactPunch_medium_000.ogg[39m[0m
+[  23% ] [90m[1m_update_scan_actions[22m | impactPunch_medium_001.ogg[39m[0m
+[  23% ] [90m[1m_update_scan_actions[22m | impactPunch_medium_002.ogg[39m[0m
+[  24% ] [90m[1m_update_scan_actions[22m | impactPunch_medium_003.ogg[39m[0m
+[  24% ] [90m[1m_update_scan_actions[22m | impactPunch_medium_004.ogg[39m[0m
+[  24% ] [90m[1m_update_scan_actions[22m | impactSoft_heavy_000.ogg[39m[0m
+[  24% ] [90m[1m_update_scan_actions[22m | impactSoft_heavy_001.ogg[39m[0m
+[  24% ] [90m[1m_update_scan_actions[22m | impactSoft_heavy_002.ogg[39m[0m
+[  24% ] [90m[1m_update_scan_actions[22m | impactSoft_heavy_003.ogg[39m[0m
+[  24% ] [90m[1m_update_scan_actions[22m | impactSoft_heavy_004.ogg[39m[0m
+[  24% ] [90m[1m_update_scan_actions[22m | impactSoft_medium_000.ogg[39m[0m
+[  25% ] [90m[1m_update_scan_actions[22m | impactSoft_medium_001.ogg[39m[0m
+[  25% ] [90m[1m_update_scan_actions[22m | impactSoft_medium_002.ogg[39m[0m
+[  25% ] [90m[1m_update_scan_actions[22m | impactSoft_medium_003.ogg[39m[0m
+[  25% ] [90m[1m_update_scan_actions[22m | impactSoft_medium_004.ogg[39m[0m
+[  25% ] [90m[1m_update_scan_actions[22m | impactTin_medium_000.ogg[39m[0m
+[  25% ] [90m[1m_update_scan_actions[22m | impactTin_medium_001.ogg[39m[0m
+[  25% ] [90m[1m_update_scan_actions[22m | impactTin_medium_002.ogg[39m[0m
+[  25% ] [90m[1m_update_scan_actions[22m | impactTin_medium_003.ogg[39m[0m
+[  26% ] [90m[1m_update_scan_actions[22m | impactTin_medium_004.ogg[39m[0m
+[  26% ] [90m[1m_update_scan_actions[22m | impactWood_heavy_000.ogg[39m[0m
+[  26% ] [90m[1m_update_scan_actions[22m | impactWood_heavy_001.ogg[39m[0m
+[  26% ] [90m[1m_update_scan_actions[22m | impactWood_heavy_002.ogg[39m[0m
+[  26% ] [90m[1m_update_scan_actions[22m | impactWood_heavy_003.ogg[39m[0m
+[  26% ] [90m[1m_update_scan_actions[22m | impactWood_heavy_004.ogg[39m[0m
+[  26% ] [90m[1m_update_scan_actions[22m | impactWood_light_000.ogg[39m[0m
+[  26% ] [90m[1m_update_scan_actions[22m | impactWood_light_001.ogg[39m[0m
+[  27% ] [90m[1m_update_scan_actions[22m | impactWood_light_002.ogg[39m[0m
+[  27% ] [90m[1m_update_scan_actions[22m | impactWood_light_003.ogg[39m[0m
+[  27% ] [90m[1m_update_scan_actions[22m | impactWood_light_004.ogg[39m[0m
+[  27% ] [90m[1m_update_scan_actions[22m | impactWood_medium_000.ogg[39m[0m
+[  27% ] [90m[1m_update_scan_actions[22m | impactWood_medium_001.ogg[39m[0m
+[  27% ] [90m[1m_update_scan_actions[22m | impactWood_medium_002.ogg[39m[0m
+[  27% ] [90m[1m_update_scan_actions[22m | impactWood_medium_003.ogg[39m[0m
+[  27% ] [90m[1m_update_scan_actions[22m | impactWood_medium_004.ogg[39m[0m
+[  28% ] [90m[1m_update_scan_actions[22m | paper_sound_-_1.mp3[39m[0m
+[  28% ] [90m[1m_update_scan_actions[22m | paper_sound_-_2.mp3[39m[0m
+[  28% ] [90m[1m_update_scan_actions[22m | paper_sound_-_3.mp3[39m[0m
+[  28% ] [90m[1m_update_scan_actions[22m | paper_sound_-_4.mp3[39m[0m
+[  28% ] [90m[1m_update_scan_actions[22m | cz.wav[39m[0m
+[  28% ] [90m[1m_update_scan_actions[22m | mosin.wav[39m[0m
+[  28% ] [90m[1m_update_scan_actions[22m | shotty.wav[39m[0m
+[  28% ] [90m[1m_update_scan_actions[22m | sks.wav[39m[0m
+[  28% ] [90m[1m_update_scan_actions[22m | wooden_table_02_arm_1k.jpg[39m[0m
+[  29% ] [90m[1m_update_scan_actions[22m | wooden_table_02_diff_1k.jpg[39m[0m
+[  29% ] [90m[1m_update_scan_actions[22m | wooden_table_02_nor_gl_1k.jpg[39m[0m
+[  29% ] [90m[1m_update_scan_actions[22m | wooden_table_02.gltf[39m[0m
+[  29% ] [90m[1m_update_scan_actions[22m | painted_wooden_cabinet_02_arm_1k.jpg[39m[0m
+[  29% ] [90m[1m_update_scan_actions[22m | painted_wooden_cabinet_02_diff_1k.jpg[39m[0m
+[  29% ] [90m[1m_update_scan_actions[22m | painted_wooden_cabinet_02_nor_gl_1k.jpg[39m[0m
+[  29% ] [90m[1m_update_scan_actions[22m | painted_wooden_cabinet_02.gltf[39m[0m
+[  29% ] [90m[1m_update_scan_actions[22m | painted_wooden_chair_01_arm_1k.jpg[39m[0m
+[  30% ] [90m[1m_update_scan_actions[22m | painted_wooden_chair_01_diff_1k.jpg[39m[0m
+[  30% ] [90m[1m_update_scan_actions[22m | painted_wooden_chair_01_nor_gl_1k.jpg[39m[0m
+[  30% ] [90m[1m_update_scan_actions[22m | painted_wooden_chair_01.gltf[39m[0m
+[  30% ] [90m[1m_update_scan_actions[22m | book_encyclopedia_set_01_cover_arm_1k.jpg[39m[0m
+[  30% ] [90m[1m_update_scan_actions[22m | book_encyclopedia_set_01_cover_diff_1k.jpg[39m[0m
+[  30% ] [90m[1m_update_scan_actions[22m | book_encyclopedia_set_01_cover_nor_gl_1k.jpg[39m[0m
+[  30% ] [90m[1m_update_scan_actions[22m | book_encyclopedia_set_01_paper_diff_1k.jpg[39m[0m
+[  30% ] [90m[1m_update_scan_actions[22m | book_encyclopedia_set_01_paper_nor_gl_1k.jpg[39m[0m
+[  31% ] [90m[1m_update_scan_actions[22m | book_encyclopedia_set_01_paper_roughness_1k.jpg[39m[0m
+[  31% ] [90m[1m_update_scan_actions[22m | book_encyclopedia_set_01.gltf[39m[0m
+[  31% ] [90m[1m_update_scan_actions[22m | vintage_wooden_drawer_01_arm_1k.jpg[39m[0m
+[  31% ] [90m[1m_update_scan_actions[22m | vintage_wooden_drawer_01_diff_1k.jpg[39m[0m
+[  31% ] [90m[1m_update_scan_actions[22m | vintage_wooden_drawer_01_nor_gl_1k.jpg[39m[0m
+[  31% ] [90m[1m_update_scan_actions[22m | vintage_wooden_drawer_01.gltf[39m[0m
+[  31% ] [90m[1m_update_scan_actions[22m | long_note_one.mp3[39m[0m
+[  31% ] [90m[1m_update_scan_actions[22m | room_tone.wav[39m[0m
+[  32% ] [90m[1m_update_scan_actions[22m | stove_fire.wav[39m[0m
+[  32% ] [90m[1m_update_scan_actions[22m | wind_window.wav[39m[0m
+[  32% ] [90m[1m_update_scan_actions[22m | chair_settle_cc0.ogg[39m[0m
+[  32% ] [90m[1m_update_scan_actions[22m | clock_tick.wav[39m[0m
+[  32% ] [90m[1m_update_scan_actions[22m | door_hinge.wav[39m[0m
+[  32% ] [90m[1m_update_scan_actions[22m | door_latch.wav[39m[0m
+[  32% ] [90m[1m_update_scan_actions[22m | floor_creak_1.wav[39m[0m
+[  32% ] [90m[1m_update_scan_actions[22m | floor_creak_2.wav[39m[0m
+[  33% ] [90m[1m_update_scan_actions[22m | floor_creak_3.wav[39m[0m
+[  33% ] [90m[1m_update_scan_actions[22m | footstep_wood.wav[39m[0m
+[  33% ] [90m[1m_update_scan_actions[22m | footstep_wood_beta.wav[39m[0m
+[  33% ] [90m[1m_update_scan_actions[22m | ink_stamp.wav[39m[0m
+[  33% ] [90m[1m_update_scan_actions[22m | ink_stamp_cc0.ogg[39m[0m
+[  33% ] [90m[1m_update_scan_actions[22m | key_click.wav[39m[0m
+[  33% ] [90m[1m_update_scan_actions[22m | paper_sheet.mp3[39m[0m
+[  33% ] [90m[1m_update_scan_actions[22m | paper_turn.wav[39m[0m
+[  34% ] [90m[1m_update_scan_actions[22m | pen_scratch.wav[39m[0m
+[  34% ] [90m[1m_update_scan_actions[22m | register_wind.wav[39m[0m
+[  34% ] [90m[1m_update_scan_actions[22m | route_lever.wav[39m[0m
+[  34% ] [90m[1m_update_scan_actions[22m | sheet_slide.wav[39m[0m
+[  34% ] [90m[1m_update_scan_actions[22m | wick_turn.wav[39m[0m
+[  34% ] [90m[1m_update_scan_actions[22m | sounder_down.wav[39m[0m
+[  34% ] [90m[1m_update_scan_actions[22m | sounder_up.wav[39m[0m
+[  34% ] [90m[1m_update_scan_actions[22m | 01_operator_desk_wide.png[39m[0m
+[  35% ] [90m[1m_update_scan_actions[22m | 01_spawn_view.png[39m[0m
+[  35% ] [90m[1m_update_scan_actions[22m | 02_full_room_overview.png[39m[0m
+[  35% ] [90m[1m_update_scan_actions[22m | 02_telegraph_hardware_close.png[39m[0m
+[  35% ] [90m[1m_update_scan_actions[22m | 03_operator_desk_working_position.png[39m[0m
+[  35% ] [90m[1m_update_scan_actions[22m | 03_routing_board_view.png[39m[0m
+[  35% ] [90m[1m_update_scan_actions[22m | 04_bay_window_night.png[39m[0m
+[  35% ] [90m[1m_update_scan_actions[22m | 04_chair_clearance_side.png[39m[0m
+[  35% ] [90m[1m_update_scan_actions[22m | 05_telegraph_equipment_close.png[39m[0m
+[  35% ] [90m[1m_update_scan_actions[22m | 05_ticket_counter_divider.png[39m[0m
+[  36% ] [90m[1m_update_scan_actions[22m | 06_north_window_idle.png[39m[0m
+[  36% ] [90m[1m_update_scan_actions[22m | 06_waiting_room_perspective.png[39m[0m
+[  36% ] [90m[1m_update_scan_actions[22m | 07_door_attention.png[39m[0m
+[  36% ] [90m[1m_update_scan_actions[22m | 07_north_window_figure.png[39m[0m
+[  36% ] [90m[1m_update_scan_actions[22m | 08_corner_stove_warmth.png[39m[0m
+[  36% ] [90m[1m_update_scan_actions[22m | 08_south_door.png[39m[0m
+[  36% ] [90m[1m_update_scan_actions[22m | 09_routing_board_front.png[39m[0m
+[  36% ] [90m[1m_update_scan_actions[22m | 09_storage_cabinet.png[39m[0m
+[  37% ] [90m[1m_update_scan_actions[22m | 10_overall_room_nw.png[39m[0m
+[  37% ] [90m[1m_update_scan_actions[22m | 10_stove_and_storage.png[39m[0m
+[  37% ] [90m[1m_update_scan_actions[22m | 11_document_viewer.png[39m[0m
+[  37% ] [90m[1m_update_scan_actions[22m | 11_overall_room_se.png[39m[0m
+[  37% ] [90m[1m_update_scan_actions[22m | 12_player_spawn_view.png[39m[0m
+[  37% ] [90m[1m_update_scan_actions[22m | 12_scenario3_debug_telemetry.png[39m[0m
+[  37% ] [90m[1m_update_scan_actions[22m | 01_spawn_hero.png[39m[0m
+[  37% ] [90m[1m_update_scan_actions[22m | 02_full_room_overview.png[39m[0m
+[  38% ] [90m[1m_update_scan_actions[22m | 03_operator_workstation.png[39m[0m
+[  38% ] [90m[1m_update_scan_actions[22m | 04_chair_clearance.png[39m[0m
+[  38% ] [90m[1m_update_scan_actions[22m | 05_telegraph_equipment.png[39m[0m
+[  38% ] [90m[1m_update_scan_actions[22m | 06_north_window_idle.png[39m[0m
+[  38% ] [90m[1m_update_scan_actions[22m | 07_north_window_figure.png[39m[0m
+[  38% ] [90m[1m_update_scan_actions[22m | 08_south_door.png[39m[0m
+[  38% ] [90m[1m_update_scan_actions[22m | 09_routing_board.png[39m[0m
+[  38% ] [90m[1m_update_scan_actions[22m | 10_stove_storage.png[39m[0m
+[  39% ] [90m[1m_update_scan_actions[22m | 11_real_morse_document.png[39m[0m
+[  39% ] [90m[1m_update_scan_actions[22m | 12_scenario3_debug_telemetry.png[39m[0m
+[  39% ] [90m[1m_update_scan_actions[22m | 01_spawn_hero_before_final.png[39m[0m
+[  39% ] [90m[1m_update_scan_actions[22m | 02_full_room_overview_before_final.png[39m[0m
+[  39% ] [90m[1m_update_scan_actions[22m | 03_operator_workstation_before_final.png[39m[0m
+[  39% ] [90m[1m_update_scan_actions[22m | 05_telegraph_equipment_before_final.png[39m[0m
+[  39% ] [90m[1m_update_scan_actions[22m | 07_north_window_figure_before_final.png[39m[0m
+[  39% ] [90m[1m_update_scan_actions[22m | 08_south_door_before_final.png[39m[0m
+[  40% ] [90m[1m_update_scan_actions[22m | 09_routing_board_before_final.png[39m[0m
+[  40% ] [90m[1m_update_scan_actions[22m | 10_stove_storage_before_final.png[39m[0m
+[  40% ] [90m[1m_update_scan_actions[22m | 01_spawn_hero_before_final.png[39m[0m
+[  40% ] [90m[1m_update_scan_actions[22m | 02_full_room_overview_before_final.png[39m[0m
+[  40% ] [90m[1m_update_scan_actions[22m | 07_north_window_figure_before_final.png[39m[0m
+[  40% ] [90m[1m_update_scan_actions[22m | 09_routing_board_before_final.png[39m[0m
+[  40% ] [90m[1m_update_scan_actions[22m | 10_stove_storage_before_final.png[39m[0m
+[  40% ] [90m[1m_update_scan_actions[22m | 01_spawn_hero.png[39m[0m
+[  41% ] [90m[1m_update_scan_actions[22m | 02_full_room_overview.png[39m[0m
+[  41% ] [90m[1m_update_scan_actions[22m | 03_operator_workstation.png[39m[0m
+[  41% ] [90m[1m_update_scan_actions[22m | 04_chair_clearance.png[39m[0m
+[  41% ] [90m[1m_update_scan_actions[22m | 05_telegraph_equipment.png[39m[0m
+[  41% ] [90m[1m_update_scan_actions[22m | 06_north_window_idle.png[39m[0m
+[  41% ] [90m[1m_update_scan_actions[22m | 07_north_window_figure.png[39m[0m
+[  41% ] [90m[1m_update_scan_actions[22m | 08_south_door.png[39m[0m
+[  41% ] [90m[1m_update_scan_actions[22m | 09_routing_board.png[39m[0m
+[  42% ] [90m[1m_update_scan_actions[22m | 10_stove_storage.png[39m[0m
+[  42% ] [90m[1m_update_scan_actions[22m | 11_real_morse_document.png[39m[0m
+[  42% ] [90m[1m_update_scan_actions[22m | 12_scenario3_debug_telemetry.png[39m[0m
+[  42% ] [90m[1m_update_scan_actions[22m | 13_station_clock_detail.png[39m[0m
+[  42% ] [90m[1m_update_scan_actions[22m | 14_duty_roster_hatch.png[39m[0m
+[  42% ] [90m[1m_update_scan_actions[22m | 15_bookcase_records.png[39m[0m
+[  42% ] [90m[1m_update_scan_actions[22m | 16_storage_cabinet_detail.png[39m[0m
+[  42% ] [90m[1m_update_scan_actions[22m | 01_spawn_hero.png[39m[0m
+[  42% ] [90m[1m_update_scan_actions[22m | 02_full_room_overview.png[39m[0m
+[  43% ] [90m[1m_update_scan_actions[22m | 03_operator_workstation.png[39m[0m
+[  43% ] [90m[1m_update_scan_actions[22m | 04_chair_clearance.png[39m[0m
+[  43% ] [90m[1m_update_scan_actions[22m | 05_telegraph_equipment.png[39m[0m
+[  43% ] [90m[1m_update_scan_actions[22m | 06_north_window_idle.png[39m[0m
+[  43% ] [90m[1m_update_scan_actions[22m | 07_north_window_figure.png[39m[0m
+[  43% ] [90m[1m_update_scan_actions[22m | 08_south_door.png[39m[0m
+[  43% ] [90m[1m_update_scan_actions[22m | 09_routing_board.png[39m[0m
+[  43% ] [90m[1m_update_scan_actions[22m | 10_stove_storage.png[39m[0m
+[  44% ] [90m[1m_update_scan_actions[22m | 11_real_morse_document.png[39m[0m
+[  44% ] [90m[1m_update_scan_actions[22m | 12_scenario3_debug_telemetry.png[39m[0m
+[  44% ] [90m[1m_update_scan_actions[22m | diagnostic_overview.png[39m[0m
+[  44% ] [90m[1m_update_scan_actions[22m | diagnostic_routing_board.png[39m[0m
+[  44% ] [90m[1m_update_scan_actions[22m | diagnostic_spawn.png[39m[0m
+[  44% ] [90m[1m_update_scan_actions[22m | diagnostic_stove_storage.png[39m[0m
+[  44% ] [90m[1m_update_scan_actions[22m | diagnostic_window_figure.png[39m[0m
+[  44% ] [90m[1m_update_scan_actions[22m | 01_spawn_hero.png[39m[0m
+[  45% ] [90m[1m_update_scan_actions[22m | 02_full_room_overview.png[39m[0m
+[  45% ] [90m[1m_update_scan_actions[22m | 03_operator_workstation.png[39m[0m
+[  45% ] [90m[1m_update_scan_actions[22m | 04_chair_clearance.png[39m[0m
+[  45% ] [90m[1m_update_scan_actions[22m | 05_telegraph_equipment.png[39m[0m
+[  45% ] [90m[1m_update_scan_actions[22m | 06_north_window_idle.png[39m[0m
+[  45% ] [90m[1m_update_scan_actions[22m | 07_north_window_figure.png[39m[0m
+[  45% ] [90m[1m_update_scan_actions[22m | 08_south_door.png[39m[0m
+[  45% ] [90m[1m_update_scan_actions[22m | 09_routing_board.png[39m[0m
+[  46% ] [90m[1m_update_scan_actions[22m | 10_stove_storage.png[39m[0m
+[  46% ] [90m[1m_update_scan_actions[22m | 11_real_morse_document.png[39m[0m
+[  46% ] [90m[1m_update_scan_actions[22m | 12_scenario3_debug_telemetry.png[39m[0m
+[  46% ] [90m[1m_update_scan_actions[22m | 13_station_clock_detail.png[39m[0m
+[  46% ] [90m[1m_update_scan_actions[22m | 14_duty_roster_hatch.png[39m[0m
+[  46% ] [90m[1m_update_scan_actions[22m | 15_bookcase_records.png[39m[0m
+[  46% ] [90m[1m_update_scan_actions[22m | 16_storage_cabinet_detail.png[39m[0m
+[  46% ] [90m[1m_update_scan_actions[22m | 01_writer_mid.png[39m[0m
+[  47% ] [90m[1m_update_scan_actions[22m | 02_commit_ready.png[39m[0m
+[  47% ] [90m[1m_update_scan_actions[22m | 03_commit_water_stamped.png[39m[0m
+[  47% ] [90m[1m_update_scan_actions[22m | 04_consequence_figure.png[39m[0m
+[  47% ] [90m[1m_update_scan_actions[22m | 04_reset_idle.png[39m[0m
+[  47% ] [90m[1m_update_scan_actions[22m | 05_commit_watcher_stamped.png[39m[0m
+[  47% ] [90m[1m_update_scan_actions[22m | 05_reset_idle.png[39m[0m
+[  47% ] [90m[1m_update_scan_actions[22m | 06_commit_lapsed.png[39m[0m
+[  47% ] [90m[1m_update_scan_actions[22m | 07_reset_idle.png[39m[0m
+[  48% ] [90m[1m_update_scan_actions[22m | 01_spawn_hero.png[39m[0m
+[  48% ] [90m[1m_update_scan_actions[22m | 02_full_room_overview.png[39m[0m
+[  48% ] [90m[1m_update_scan_actions[22m | 03_operator_workstation.png[39m[0m
+[  48% ] [90m[1m_update_scan_actions[22m | 04_chair_clearance.png[39m[0m
+[  48% ] [90m[1m_update_scan_actions[22m | 05_telegraph_equipment.png[39m[0m
+[  48% ] [90m[1m_update_scan_actions[22m | 06_north_window_idle.png[39m[0m
+[  48% ] [90m[1m_update_scan_actions[22m | 07_north_window_figure.png[39m[0m
+[  48% ] [90m[1m_update_scan_actions[22m | 08_south_door.png[39m[0m
+[  49% ] [90m[1m_update_scan_actions[22m | 09_routing_board.png[39m[0m
+[  49% ] [90m[1m_update_scan_actions[22m | 10_stove_storage.png[39m[0m
+[  49% ] [90m[1m_update_scan_actions[22m | 11_real_morse_document.png[39m[0m
+[  49% ] [90m[1m_update_scan_actions[22m | 12_scenario3_debug_telemetry.png[39m[0m
+[  49% ] [90m[1m_update_scan_actions[22m | ui_01_intro.png[39m[0m
+[  49% ] [90m[1m_update_scan_actions[22m | ui_02_seated.png[39m[0m
+[  49% ] [90m[1m_update_scan_actions[22m | ui_03_pause.png[39m[0m
+[  49% ] [90m[1m_update_scan_actions[22m | ui_04_duty_sheet.png[39m[0m
+[  50% ] [90m[1m_update_scan_actions[22m | play_1_start_to_writing.png[39m[0m
+[  50% ] [90m[1m_update_scan_actions[22m | play_2_hook_to_dawn.png[39m[0m
+[  50% ] [90m[1m_update_scan_actions[22m | room_views.png[39m[0m
+[  50% ] [90m[1m_update_scan_actions[22m | t1_operator_eye.png[39m[0m
+[  50% ] [90m[1m_update_scan_actions[22m | t2_top_down.png[39m[0m
+[  50% ] [90m[1m_update_scan_actions[22m | t3_right_side.png[39m[0m
+[  50% ] [90m[1m_update_scan_actions[22m | t4_left_side.png[39m[0m
+[  50% ] [90m[1m_update_scan_actions[22m | t5_front_low.png[39m[0m
+[  50% ] [90m[1m_update_scan_actions[22m | t6_hand_macro.png[39m[0m
+[  51% ] [90m[1m_update_scan_actions[22m | w1_first_row_midglyph.png[39m[0m
+[  51% ] [90m[1m_update_scan_actions[22m | w2_second_row.png[39m[0m
+[  51% ] [90m[1m_update_scan_actions[22m | w3_finished_sheet.png[39m[0m
+[  51% ] [90m[1m_update_scan_actions[22m | c1_center_north.png[39m[0m
+[  51% ] [90m[1m_update_scan_actions[22m | sheet3.png[39m[0m
+[  51% ] [90m[1m_update_scan_actions[22m | sheet.png[39m[0m
+[  51% ] [90m[1m_update_scan_actions[22m | t1_operator_eye.png[39m[0m
+[  51% ] [90m[1m_update_scan_actions[22m | t2_top_down.png[39m[0m
+[  52% ] [90m[1m_update_scan_actions[22m | t3_right_side.png[39m[0m
+[  52% ] [90m[1m_update_scan_actions[22m | t4_left_side.png[39m[0m
+[  52% ] [90m[1m_update_scan_actions[22m | t5_front_low.png[39m[0m
+[  52% ] [90m[1m_update_scan_actions[22m | t6_hand_macro.png[39m[0m
+[  52% ] [90m[1m_update_scan_actions[22m | w1_first_row_midglyph.png[39m[0m
+[  52% ] [90m[1m_update_scan_actions[22m | w2_second_row.png[39m[0m
+[  52% ] [90m[1m_update_scan_actions[22m | w3_finished_sheet.png[39m[0m
+[  52% ] [90m[1m_update_scan_actions[22m | sheet3.png[39m[0m
+[  53% ] [90m[1m_update_scan_actions[22m | sheet.png[39m[0m
+[  53% ] [90m[1m_update_scan_actions[22m | t1_operator_eye.png[39m[0m
+[  53% ] [90m[1m_update_scan_actions[22m | t2_top_down.png[39m[0m
+[  53% ] [90m[1m_update_scan_actions[22m | t3_right_side.png[39m[0m
+[  53% ] [90m[1m_update_scan_actions[22m | t4_left_side.png[39m[0m
+[  53% ] [90m[1m_update_scan_actions[22m | t5_front_low.png[39m[0m
+[  53% ] [90m[1m_update_scan_actions[22m | t6_hand_macro.png[39m[0m
+[  53% ] [90m[1m_update_scan_actions[22m | w1_first_row_midglyph.png[39m[0m
+[  54% ] [90m[1m_update_scan_actions[22m | w2_second_row.png[39m[0m
+[  54% ] [90m[1m_update_scan_actions[22m | w3_finished_sheet.png[39m[0m
+[  54% ] [90m[1m_update_scan_actions[22m | t1_operator_eye.png[39m[0m
+[  54% ] [90m[1m_update_scan_actions[22m | t2_top_down.png[39m[0m
+[  54% ] [90m[1m_update_scan_actions[22m | t3_right_side.png[39m[0m
+[  54% ] [90m[1m_update_scan_actions[22m | t4_left_side.png[39m[0m
+[  54% ] [90m[1m_update_scan_actions[22m | t5_front_low.png[39m[0m
+[  54% ] [90m[1m_update_scan_actions[22m | t6_hand_macro.png[39m[0m
+[  55% ] [90m[1m_update_scan_actions[22m | w1_first_row_midglyph.png[39m[0m
+[  55% ] [90m[1m_update_scan_actions[22m | w2_second_row.png[39m[0m
+[  55% ] [90m[1m_update_scan_actions[22m | w3_finished_sheet.png[39m[0m
+[  55% ] [90m[1m_update_scan_actions[22m | t1_operator_eye.png[39m[0m
+[  55% ] [90m[1m_update_scan_actions[22m | t2_top_down.png[39m[0m
+[  55% ] [90m[1m_update_scan_actions[22m | t3_right_side.png[39m[0m
+[  55% ] [90m[1m_update_scan_actions[22m | t4_left_side.png[39m[0m
+[  55% ] [90m[1m_update_scan_actions[22m | t5_front_low.png[39m[0m
+[  56% ] [90m[1m_update_scan_actions[22m | t6_hand_macro.png[39m[0m
+[  56% ] [90m[1m_update_scan_actions[22m | w1_first_row_midglyph.png[39m[0m
+[  56% ] [90m[1m_update_scan_actions[22m | w2_second_row.png[39m[0m
+[  56% ] [90m[1m_update_scan_actions[22m | w3_finished_sheet.png[39m[0m
+[  56% ] [90m[1m_update_scan_actions[22m | sheet3.png[39m[0m
+[  56% ] [90m[1m_update_scan_actions[22m | sheet.png[39m[0m
+[  56% ] [90m[1m_update_scan_actions[22m | t1_operator_eye.png[39m[0m
+[  56% ] [90m[1m_update_scan_actions[22m | t2_top_down.png[39m[0m
+[  57% ] [90m[1m_update_scan_actions[22m | t3_right_side.png[39m[0m
+[  57% ] [90m[1m_update_scan_actions[22m | t4_left_side.png[39m[0m
+[  57% ] [90m[1m_update_scan_actions[22m | t5_front_low.png[39m[0m
+[  57% ] [90m[1m_update_scan_actions[22m | t6_hand_macro.png[39m[0m
+[  57% ] [90m[1m_update_scan_actions[22m | w1_first_row_midglyph.png[39m[0m
+[  57% ] [90m[1m_update_scan_actions[22m | w2_second_row.png[39m[0m
+[  57% ] [90m[1m_update_scan_actions[22m | w3_finished_sheet.png[39m[0m
+[  57% ] [90m[1m_update_scan_actions[22m | t1_operator_eye.png[39m[0m
+[  57% ] [90m[1m_update_scan_actions[22m | t2_top_down.png[39m[0m
+[  58% ] [90m[1m_update_scan_actions[22m | t3_right_side.png[39m[0m
+[  58% ] [90m[1m_update_scan_actions[22m | t4_left_side.png[39m[0m
+[  58% ] [90m[1m_update_scan_actions[22m | t5_front_low.png[39m[0m
+[  58% ] [90m[1m_update_scan_actions[22m | t6_hand_macro.png[39m[0m
+[  58% ] [90m[1m_update_scan_actions[22m | w1_first_row_midglyph.png[39m[0m
+[  58% ] [90m[1m_update_scan_actions[22m | w2_second_row.png[39m[0m
+[  58% ] [90m[1m_update_scan_actions[22m | w3_finished_sheet.png[39m[0m
+[  58% ] [90m[1m_update_scan_actions[22m | eye.png[39m[0m
+[  59% ] [90m[1m_update_scan_actions[22m | left.png[39m[0m
+[  59% ] [90m[1m_update_scan_actions[22m | macro.png[39m[0m
+[  59% ] [90m[1m_update_scan_actions[22m | right.png[39m[0m
+[  59% ] [90m[1m_update_scan_actions[22m | top.png[39m[0m
+[  59% ] [90m[1m_update_scan_actions[22m | eye.png[39m[0m
+[  59% ] [90m[1m_update_scan_actions[22m | left.png[39m[0m
+[  59% ] [90m[1m_update_scan_actions[22m | macro.png[39m[0m
+[  59% ] [90m[1m_update_scan_actions[22m | right.png[39m[0m
+[  60% ] [90m[1m_update_scan_actions[22m | top.png[39m[0m
+[  60% ] [90m[1m_update_scan_actions[22m | comparison.png[39m[0m
+[  60% ] [90m[1m_update_scan_actions[22m | c1_center_north.png[39m[0m
+[  60% ] [90m[1m_update_scan_actions[22m | c2_center_east.png[39m[0m
+[  60% ] [90m[1m_update_scan_actions[22m | c3_center_south.png[39m[0m
+[  60% ] [90m[1m_update_scan_actions[22m | c4_center_west.png[39m[0m
+[  60% ] [90m[1m_update_scan_actions[22m | o1_north_window.png[39m[0m
+[  60% ] [90m[1m_update_scan_actions[22m | o2_east_board.png[39m[0m
+[  61% ] [90m[1m_update_scan_actions[22m | o3_south_door.png[39m[0m
+[  61% ] [90m[1m_update_scan_actions[22m | o4_west_desk.png[39m[0m
+[  61% ] [90m[1m_update_scan_actions[22m | o5_desk_close.png[39m[0m
+[  61% ] [90m[1m_update_scan_actions[22m | o6_stove_corner.png[39m[0m
+[  61% ] [90m[1m_update_scan_actions[22m | o7_key_sounder.png[39m[0m
+[  61% ] [90m[1m_update_scan_actions[22m | o8_tape_register.png[39m[0m
+[  61% ] [90m[1m_update_scan_actions[22m | o9_seated_eye.png[39m[0m
+[  61% ] [90m[1m_update_scan_actions[22m | c1_center_north.png[39m[0m
+[  62% ] [90m[1m_update_scan_actions[22m | c2_center_east.png[39m[0m
+[  62% ] [90m[1m_update_scan_actions[22m | c3_center_south.png[39m[0m
+[  62% ] [90m[1m_update_scan_actions[22m | c4_center_west.png[39m[0m
+[  62% ] [90m[1m_update_scan_actions[22m | o1_north_window.png[39m[0m
+[  62% ] [90m[1m_update_scan_actions[22m | o2_east_board.png[39m[0m
+[  62% ] [90m[1m_update_scan_actions[22m | o3_south_door.png[39m[0m
+[  62% ] [90m[1m_update_scan_actions[22m | o4_west_desk.png[39m[0m
+[  62% ] [90m[1m_update_scan_actions[22m | o5_desk_close.png[39m[0m
+[  63% ] [90m[1m_update_scan_actions[22m | o6_stove_corner.png[39m[0m
+[  63% ] [90m[1m_update_scan_actions[22m | o7_key_sounder.png[39m[0m
+[  63% ] [90m[1m_update_scan_actions[22m | o8_tape_register.png[39m[0m
+[  63% ] [90m[1m_update_scan_actions[22m | o9_seated_eye.png[39m[0m
+[  63% ] [90m[1m_update_scan_actions[22m | baize_repeat.png[39m[0m
+[  63% ] [90m[1m_update_scan_actions[22m | material_sheet.png[39m[0m
+[  63% ] [90m[1m_update_scan_actions[22m | paper_repeat.png[39m[0m
+[  63% ] [90m[1m_update_scan_actions[22m | wallpaper_repeat.png[39m[0m
+[  64% ] [90m[1m_update_scan_actions[22m | wood_repeat.png[39m[0m
+[  64% ] [90m[1m_update_scan_actions[22m | n1_seated.png[39m[0m
+[  64% ] [90m[1m_update_scan_actions[22m | n2_top.png[39m[0m
+[  64% ] [90m[1m_update_scan_actions[22m | n3_right.png[39m[0m
+[  64% ] [90m[1m_update_scan_actions[22m | n4_left.png[39m[0m
+[  64% ] [90m[1m_update_scan_actions[22m | n5_rear.png[39m[0m
+[  64% ] [90m[1m_update_scan_actions[22m | n6_cuff.png[39m[0m
+[  64% ] [90m[1m_update_scan_actions[22m | 02_model_audit.png[39m[0m
+[  64% ] [90m[1m_update_scan_actions[22m | n1_seated.png[39m[0m
+[  65% ] [90m[1m_update_scan_actions[22m | n2_top.png[39m[0m
+[  65% ] [90m[1m_update_scan_actions[22m | n3_right.png[39m[0m
+[  65% ] [90m[1m_update_scan_actions[22m | n4_left.png[39m[0m
+[  65% ] [90m[1m_update_scan_actions[22m | n5_rear.png[39m[0m
+[  65% ] [90m[1m_update_scan_actions[22m | n6_cuff.png[39m[0m
+[  65% ] [90m[1m_update_scan_actions[22m | n1_seated.png[39m[0m
+[  65% ] [90m[1m_update_scan_actions[22m | n2_top.png[39m[0m
+[  65% ] [90m[1m_update_scan_actions[22m | n3_right.png[39m[0m
+[  66% ] [90m[1m_update_scan_actions[22m | n4_left.png[39m[0m
+[  66% ] [90m[1m_update_scan_actions[22m | n5_rear.png[39m[0m
+[  66% ] [90m[1m_update_scan_actions[22m | n6_cuff.png[39m[0m
+[  66% ] [90m[1m_update_scan_actions[22m | n1_seated.png[39m[0m
+[  66% ] [90m[1m_update_scan_actions[22m | n2_top.png[39m[0m
+[  66% ] [90m[1m_update_scan_actions[22m | n3_right.png[39m[0m
+[  66% ] [90m[1m_update_scan_actions[22m | n4_left.png[39m[0m
+[  66% ] [90m[1m_update_scan_actions[22m | n5_rear.png[39m[0m
+[  67% ] [90m[1m_update_scan_actions[22m | n6_cuff.png[39m[0m
+[  67% ] [90m[1m_update_scan_actions[22m | 01_entry.png[39m[0m
+[  67% ] [90m[1m_update_scan_actions[22m | 02_orders.png[39m[0m
+[  67% ] [90m[1m_update_scan_actions[22m | 03_writing_0.png[39m[0m
+[  67% ] [90m[1m_update_scan_actions[22m | 03_writing_1.png[39m[0m
+[  67% ] [90m[1m_update_scan_actions[22m | 03_writing_2.png[39m[0m
+[  67% ] [90m[1m_update_scan_actions[22m | 04_transcript_0.png[39m[0m
+[  67% ] [90m[1m_update_scan_actions[22m | 04_transcript_1.png[39m[0m
+[  68% ] [90m[1m_update_scan_actions[22m | 04_transcript_2.png[39m[0m
+[  68% ] [90m[1m_update_scan_actions[22m | 05_routing_0.png[39m[0m
+[  68% ] [90m[1m_update_scan_actions[22m | 05_routing_1.png[39m[0m
+[  68% ] [90m[1m_update_scan_actions[22m | 06_filed.png[39m[0m
+[  68% ] [90m[1m_update_scan_actions[22m | 07_window.png[39m[0m
+[  68% ] [90m[1m_update_scan_actions[22m | 08_handover.png[39m[0m
+[  68% ] [90m[1m_update_scan_actions[22m | 09_ending.png[39m[0m
+[  68% ] [90m[1m_update_scan_actions[22m | watch_audio.wav[39m[0m
+[  69% ] [90m[1m_update_scan_actions[22m | 01_seated_arm.png[39m[0m
+[  69% ] [90m[1m_update_scan_actions[22m | 02_desk_arm.png[39m[0m
+[  69% ] [90m[1m_update_scan_actions[22m | 03_finished_sheet.png[39m[0m
+[  69% ] [90m[1m_update_scan_actions[22m | 04_lifted_sheet.png[39m[0m
+[  69% ] [90m[1m_update_scan_actions[22m | 01_seated_arm.png[39m[0m
+[  69% ] [90m[1m_update_scan_actions[22m | 02_desk_arm.png[39m[0m
+[  69% ] [90m[1m_update_scan_actions[22m | 03_finished_sheet.png[39m[0m
+[  69% ] [90m[1m_update_scan_actions[22m | 04_lifted_sheet.png[39m[0m
+[  70% ] [90m[1m_update_scan_actions[22m | 01_seated_arm.png[39m[0m
+[  70% ] [90m[1m_update_scan_actions[22m | 02_desk_arm.png[39m[0m
+[  70% ] [90m[1m_update_scan_actions[22m | 03_finished_sheet.png[39m[0m
+[  70% ] [90m[1m_update_scan_actions[22m | 04_lifted_sheet.png[39m[0m
+[  70% ] [90m[1m_update_scan_actions[22m | 01_seated_arm.png[39m[0m
+[  70% ] [90m[1m_update_scan_actions[22m | 02_desk_arm.png[39m[0m
+[  70% ] [90m[1m_update_scan_actions[22m | 03_finished_sheet.png[39m[0m
+[  70% ] [90m[1m_update_scan_actions[22m | 04_lifted_sheet.png[39m[0m
+[  71% ] [90m[1m_update_scan_actions[22m | p1_seated_receiving.png[39m[0m
+[  71% ] [90m[1m_update_scan_actions[22m | p2_seated_window_look.png[39m[0m
+[  71% ] [90m[1m_update_scan_actions[22m | p3_seated_read.png[39m[0m
+[  71% ] [90m[1m_update_scan_actions[22m | p4_board_standing.png[39m[0m
+[  71% ] [90m[1m_update_scan_actions[22m | p5_route_result.png[39m[0m
+[  71% ] [90m[1m_update_scan_actions[22m | p6_door_route.png[39m[0m
+[  71% ] [90m[1m_update_scan_actions[22m | p1_seated_receiving.png[39m[0m
+[  71% ] [90m[1m_update_scan_actions[22m | p2_seated_window_look.png[39m[0m
+[  71% ] [90m[1m_update_scan_actions[22m | p3_seated_read.png[39m[0m
+[  72% ] [90m[1m_update_scan_actions[22m | p4_board_standing.png[39m[0m
+[  72% ] [90m[1m_update_scan_actions[22m | p5_route_result.png[39m[0m
+[  72% ] [90m[1m_update_scan_actions[22m | p6_door_route.png[39m[0m
+[  72% ] [90m[1m_update_scan_actions[22m | 01_clay_comparison.png[39m[0m
+[  72% ] [90m[1m_update_scan_actions[22m | 02_office_comparison.png[39m[0m
+[  72% ] [90m[1m_update_scan_actions[22m | 03_clay_views.png[39m[0m
+[  72% ] [90m[1m_update_scan_actions[22m | 04_motion_sequence.png[39m[0m
+[  72% ] [90m[1m_update_scan_actions[22m | n1_seated.png[39m[0m
+[  73% ] [90m[1m_update_scan_actions[22m | n2_top.png[39m[0m
+[  73% ] [90m[1m_update_scan_actions[22m | n3_right.png[39m[0m
+[  73% ] [90m[1m_update_scan_actions[22m | n4_left.png[39m[0m
+[  73% ] [90m[1m_update_scan_actions[22m | n5_rear.png[39m[0m
+[  73% ] [90m[1m_update_scan_actions[22m | n6_cuff.png[39m[0m
+[  73% ] [90m[1m_update_scan_actions[22m | n1_seated.png[39m[0m
+[  73% ] [90m[1m_update_scan_actions[22m | n2_top.png[39m[0m
+[  73% ] [90m[1m_update_scan_actions[22m | n3_right.png[39m[0m
+[  74% ] [90m[1m_update_scan_actions[22m | n4_left.png[39m[0m
+[  74% ] [90m[1m_update_scan_actions[22m | n5_rear.png[39m[0m
+[  74% ] [90m[1m_update_scan_actions[22m | n6_cuff.png[39m[0m
+[  74% ] [90m[1m_update_scan_actions[22m | 01_entry.png[39m[0m
+[  74% ] [90m[1m_update_scan_actions[22m | 02_orders.png[39m[0m
+[  74% ] [90m[1m_update_scan_actions[22m | 03_writing_0.png[39m[0m
+[  74% ] [90m[1m_update_scan_actions[22m | 03_writing_1.png[39m[0m
+[  74% ] [90m[1m_update_scan_actions[22m | 03_writing_2.png[39m[0m
+[  75% ] [90m[1m_update_scan_actions[22m | 04_transcript_0.png[39m[0m
+[  75% ] [90m[1m_update_scan_actions[22m | 04_transcript_1.png[39m[0m
+[  75% ] [90m[1m_update_scan_actions[22m | 04_transcript_2.png[39m[0m
+[  75% ] [90m[1m_update_scan_actions[22m | 05_routing_0.png[39m[0m
+[  75% ] [90m[1m_update_scan_actions[22m | 05_routing_1.png[39m[0m
+[  75% ] [90m[1m_update_scan_actions[22m | 06_filed.png[39m[0m
+[  75% ] [90m[1m_update_scan_actions[22m | 07_window.png[39m[0m
+[  75% ] [90m[1m_update_scan_actions[22m | 08_handover.png[39m[0m
+[  76% ] [90m[1m_update_scan_actions[22m | 09_ending.png[39m[0m
+[  76% ] [90m[1m_update_scan_actions[22m | 01_seated_arm.png[39m[0m
+[  76% ] [90m[1m_update_scan_actions[22m | 02_desk_arm.png[39m[0m
+[  76% ] [90m[1m_update_scan_actions[22m | 03_finished_sheet.png[39m[0m
+[  76% ] [90m[1m_update_scan_actions[22m | 04_lifted_sheet.png[39m[0m
+[  76% ] [90m[1m_update_scan_actions[22m | 01_seated_arm.png[39m[0m
+[  76% ] [90m[1m_update_scan_actions[22m | 02_desk_arm.png[39m[0m
+[  76% ] [90m[1m_update_scan_actions[22m | 03_finished_sheet.png[39m[0m
+[  77% ] [90m[1m_update_scan_actions[22m | 04_lifted_sheet.png[39m[0m
+[  77% ] [90m[1m_update_scan_actions[22m | 01_seated_arm.png[39m[0m
+[  77% ] [90m[1m_update_scan_actions[22m | 02_desk_arm.png[39m[0m
+[  77% ] [90m[1m_update_scan_actions[22m | 03_finished_sheet.png[39m[0m
+[  77% ] [90m[1m_update_scan_actions[22m | 04_lifted_sheet.png[39m[0m
+[  77% ] [90m[1m_update_scan_actions[22m | 01_seated_arm.png[39m[0m
+[  77% ] [90m[1m_update_scan_actions[22m | 02_desk_arm.png[39m[0m
+[  77% ] [90m[1m_update_scan_actions[22m | 03_finished_sheet.png[39m[0m
+[  78% ] [90m[1m_update_scan_actions[22m | 04_lifted_sheet.png[39m[0m
+[  78% ] [90m[1m_update_scan_actions[22m | p1_seated_receiving.png[39m[0m
+[  78% ] [90m[1m_update_scan_actions[22m | p2_seated_window_look.png[39m[0m
+[  78% ] [90m[1m_update_scan_actions[22m | p3_seated_read.png[39m[0m
+[  78% ] [90m[1m_update_scan_actions[22m | p4_board_standing.png[39m[0m
+[  78% ] [90m[1m_update_scan_actions[22m | p5_route_result.png[39m[0m
+[  78% ] [90m[1m_update_scan_actions[22m | p6_door_route.png[39m[0m
+[  78% ] [90m[1m_update_scan_actions[22m | live_first_row.png[39m[0m
+[  78% ] [90m[1m_update_scan_actions[22m | live_second_row.png[39m[0m
+[  79% ] [90m[1m_update_scan_actions[22m | live_withdrawn.png[39m[0m
+[  79% ] [90m[1m_update_scan_actions[22m | macro_comparison.png[39m[0m
+[  79% ] [90m[1m_update_scan_actions[22m | neutral_views.png[39m[0m
+[  79% ] [90m[1m_update_scan_actions[22m | seated_comparison.png[39m[0m
+[  79% ] [90m[1m_update_scan_actions[22m | 01_seated_arm.png[39m[0m
+[  79% ] [90m[1m_update_scan_actions[22m | 02_desk_arm.png[39m[0m
+[  79% ] [90m[1m_update_scan_actions[22m | 03_finished_sheet.png[39m[0m
+[  79% ] [90m[1m_update_scan_actions[22m | 04_lifted_sheet.png[39m[0m
+[  80% ] [90m[1m_update_scan_actions[22m | 01_seated_arm.png[39m[0m
+[  80% ] [90m[1m_update_scan_actions[22m | 02_desk_arm.png[39m[0m
+[  80% ] [90m[1m_update_scan_actions[22m | 03_finished_sheet.png[39m[0m
+[  80% ] [90m[1m_update_scan_actions[22m | 04_lifted_sheet.png[39m[0m
+[  80% ] [90m[1m_update_scan_actions[22m | comparison_native_1x.png[39m[0m
+[  80% ] [90m[1m_update_scan_actions[22m | comparison_psx_half.png[39m[0m
+[  80% ] [90m[1m_update_scan_actions[22m | psx_desk_close.png[39m[0m
+[  80% ] [90m[1m_update_scan_actions[22m | psx_desk_to_door.png[39m[0m
+[  81% ] [90m[1m_update_scan_actions[22m | psx_desk_to_window.png[39m[0m
+[  81% ] [90m[1m_update_scan_actions[22m | psx_material_closeup.png[39m[0m
+[  81% ] [90m[1m_update_scan_actions[22m | psx_overview.png[39m[0m
+[  81% ] [90m[1m_update_scan_actions[22m | p1_seated_receiving.png[39m[0m
+[  81% ] [90m[1m_update_scan_actions[22m | p4_board_standing.png[39m[0m
+[  81% ] [90m[1m_update_scan_actions[22m | elias_working.fnt[39m[0m
+[  81% ] [90m[1m_update_scan_actions[22m | elias_working_atlas.png[39m[0m
+[  81% ] [90m[1m_update_scan_actions[22m | glyph_space.svg[39m[0m
+[  82% ] [90m[1m_update_scan_actions[22m | glyph_u002C.svg[39m[0m
+[  82% ] [90m[1m_update_scan_actions[22m | glyph_u002D.svg[39m[0m
+[  82% ] [90m[1m_update_scan_actions[22m | glyph_u002E.svg[39m[0m
+[  82% ] [90m[1m_update_scan_actions[22m | glyph_u002F.svg[39m[0m
+[  82% ] [90m[1m_update_scan_actions[22m | glyph_u003A.svg[39m[0m
+[  82% ] [90m[1m_update_scan_actions[22m | glyph_u003B.svg[39m[0m
+[  82% ] [90m[1m_update_scan_actions[22m | glyph_u003F.svg[39m[0m
+[  82% ] [90m[1m_update_scan_actions[22m | glyph_u004A.svg[39m[0m
+[  83% ] [90m[1m_update_scan_actions[22m | glyph_u004B.svg[39m[0m
+[  83% ] [90m[1m_update_scan_actions[22m | glyph_u004C.svg[39m[0m
+[  83% ] [90m[1m_update_scan_actions[22m | glyph_u004D.svg[39m[0m
+[  83% ] [90m[1m_update_scan_actions[22m | glyph_u004E.svg[39m[0m
+[  83% ] [90m[1m_update_scan_actions[22m | glyph_u004F.svg[39m[0m
+[  83% ] [90m[1m_update_scan_actions[22m | glyph_u005A.svg[39m[0m
+[  83% ] [90m[1m_update_scan_actions[22m | glyph_u0021.svg[39m[0m
+[  83% ] [90m[1m_update_scan_actions[22m | glyph_u0027.svg[39m[0m
+[  84% ] [90m[1m_update_scan_actions[22m | glyph_u0028.svg[39m[0m
+[  84% ] [90m[1m_update_scan_actions[22m | glyph_u0029.svg[39m[0m
+[  84% ] [90m[1m_update_scan_actions[22m | glyph_u0030.svg[39m[0m
+[  84% ] [90m[1m_update_scan_actions[22m | glyph_u0031.svg[39m[0m
+[  84% ] [90m[1m_update_scan_actions[22m | glyph_u0032.svg[39m[0m
+[  84% ] [90m[1m_update_scan_actions[22m | glyph_u0033.svg[39m[0m
+[  84% ] [90m[1m_update_scan_actions[22m | glyph_u0034.svg[39m[0m
+[  84% ] [90m[1m_update_scan_actions[22m | glyph_u0035.svg[39m[0m
+[  85% ] [90m[1m_update_scan_actions[22m | glyph_u0036.svg[39m[0m
+[  85% ] [90m[1m_update_scan_actions[22m | glyph_u0037.svg[39m[0m
+[  85% ] [90m[1m_update_scan_actions[22m | glyph_u0038.svg[39m[0m
+[  85% ] [90m[1m_update_scan_actions[22m | glyph_u0039.svg[39m[0m
+[  85% ] [90m[1m_update_scan_actions[22m | glyph_u0041.svg[39m[0m
+[  85% ] [90m[1m_update_scan_actions[22m | glyph_u0042.svg[39m[0m
+[  85% ] [90m[1m_update_scan_actions[22m | glyph_u0043.svg[39m[0m
+[  85% ] [90m[1m_update_scan_actions[22m | glyph_u0044.svg[39m[0m
+[  85% ] [90m[1m_update_scan_actions[22m | glyph_u0045.svg[39m[0m
+[  86% ] [90m[1m_update_scan_actions[22m | glyph_u0046.svg[39m[0m
+[  86% ] [90m[1m_update_scan_actions[22m | glyph_u0047.svg[39m[0m
+[  86% ] [90m[1m_update_scan_actions[22m | glyph_u0048.svg[39m[0m
+[  86% ] [90m[1m_update_scan_actions[22m | glyph_u0049.svg[39m[0m
+[  86% ] [90m[1m_update_scan_actions[22m | glyph_u0050.svg[39m[0m
+[  86% ] [90m[1m_update_scan_actions[22m | glyph_u0051.svg[39m[0m
+[  86% ] [90m[1m_update_scan_actions[22m | glyph_u0052.svg[39m[0m
+[  86% ] [90m[1m_update_scan_actions[22m | glyph_u0053.svg[39m[0m
+[  87% ] [90m[1m_update_scan_actions[22m | glyph_u0054.svg[39m[0m
+[  87% ] [90m[1m_update_scan_actions[22m | glyph_u0055.svg[39m[0m
+[  87% ] [90m[1m_update_scan_actions[22m | glyph_u0056.svg[39m[0m
+[  87% ] [90m[1m_update_scan_actions[22m | glyph_u0057.svg[39m[0m
+[  87% ] [90m[1m_update_scan_actions[22m | glyph_u0058.svg[39m[0m
+[  87% ] [90m[1m_update_scan_actions[22m | glyph_u0059.svg[39m[0m
+[  87% ] [90m[1m_update_scan_actions[22m | 01_blank_amendment.png[39m[0m
+[  87% ] [90m[1m_update_scan_actions[22m | 02_explicit_wrong_draft.png[39m[0m
+[  88% ] [90m[1m_update_scan_actions[22m | 03_exact_choice_handover.png[39m[0m
+[  88% ] [90m[1m_update_scan_actions[22m | 04_objective_tape.png[39m[0m
+[  88% ] [90m[1m_update_scan_actions[22m | 01_blank_amendment.png[39m[0m
+[  88% ] [90m[1m_update_scan_actions[22m | 01_entry.png[39m[0m
+[  88% ] [90m[1m_update_scan_actions[22m | 02_explicit_wrong_draft.png[39m[0m
+[  88% ] [90m[1m_update_scan_actions[22m | 02_orders.png[39m[0m
+[  88% ] [90m[1m_update_scan_actions[22m | 03_exact_choice_handover.png[39m[0m
+[  88% ] [90m[1m_update_scan_actions[22m | 03_writing_0.png[39m[0m
+[  89% ] [90m[1m_update_scan_actions[22m | 03_writing_1.png[39m[0m
+[  89% ] [90m[1m_update_scan_actions[22m | 03_writing_2.png[39m[0m
+[  89% ] [90m[1m_update_scan_actions[22m | 04_objective_tape.png[39m[0m
+[  89% ] [90m[1m_update_scan_actions[22m | 04_transcript_0.png[39m[0m
+[  89% ] [90m[1m_update_scan_actions[22m | 04_transcript_1.png[39m[0m
+[  89% ] [90m[1m_update_scan_actions[22m | 04_transcript_2.png[39m[0m
+[  89% ] [90m[1m_update_scan_actions[22m | 05_routing_0.png[39m[0m
+[  89% ] [90m[1m_update_scan_actions[22m | 05_routing_1.png[39m[0m
+[  90% ] [90m[1m_update_scan_actions[22m | 06_amendment_blank.png[39m[0m
+[  90% ] [90m[1m_update_scan_actions[22m | 06_amendment_typed.png[39m[0m
+[  90% ] [90m[1m_update_scan_actions[22m | 06_filed.png[39m[0m
+[  90% ] [90m[1m_update_scan_actions[22m | 07_window.png[39m[0m
+[  90% ] [90m[1m_update_scan_actions[22m | 08_handover.png[39m[0m
+[  90% ] [90m[1m_update_scan_actions[22m | 09_ending.png[39m[0m
+[  90% ] [90m[1m_update_scan_actions[22m | p1_seated_receiving.png[39m[0m
+[  90% ] [90m[1m_update_scan_actions[22m | p2_seated_window_look.png[39m[0m
+[  91% ] [90m[1m_update_scan_actions[22m | p3_seated_read.png[39m[0m
+[  91% ] [90m[1m_update_scan_actions[22m | p4_board_standing.png[39m[0m
+[  91% ] [90m[1m_update_scan_actions[22m | p5_route_result.png[39m[0m
+[  91% ] [90m[1m_update_scan_actions[22m | p6_door_route.png[39m[0m
+[  91% ] [90m[1m_update_scan_actions[22m | w1_first_row_midglyph.png[39m[0m
+[  91% ] [90m[1m_update_scan_actions[22m | w2_second_row.png[39m[0m
+[  91% ] [90m[1m_update_scan_actions[22m | w3_finished_sheet.png[39m[0m
+[  91% ] [90m[1m_update_scan_actions[22m | card_morse_stock.png[39m[0m
+[  92% ] [90m[1m_update_scan_actions[22m | form_night_copy.png[39m[0m
+[  92% ] [90m[1m_update_scan_actions[22m | map_division.png[39m[0m
+[  92% ] [90m[1m_update_scan_actions[22m | card_morse_stock.png[39m[0m
+[  92% ] [90m[1m_update_scan_actions[22m | form_night_copy.png[39m[0m
+[  92% ] [90m[1m_update_scan_actions[22m | map_division.png[39m[0m
+[  92% ] [90m[1m_update_scan_actions[22m | card_morse_stock.png[39m[0m
+[  92% ] [90m[1m_update_scan_actions[22m | form_night_copy.png[39m[0m
+[  92% ] [90m[1m_update_scan_actions[22m | map_division.png[39m[0m
+[  92% ] [90m[1m_update_scan_actions[22m | psx_aged_metal_64.png[39m[0m
+[  93% ] [90m[1m_update_scan_actions[22m | psx_brass_32.png[39m[0m
+[  93% ] [90m[1m_update_scan_actions[22m | psx_ceiling_boards_128.png[39m[0m
+[  93% ] [90m[1m_update_scan_actions[22m | psx_dark_wood_64.png[39m[0m
+[  93% ] [90m[1m_update_scan_actions[22m | psx_floor_boards_128.png[39m[0m
+[  93% ] [90m[1m_update_scan_actions[22m | psx_light_wood_64.png[39m[0m
+[  93% ] [90m[1m_update_scan_actions[22m | psx_paper_64.png[39m[0m
+[  93% ] [90m[1m_update_scan_actions[22m | psx_slate_board_128.png[39m[0m
+[  93% ] [90m[1m_update_scan_actions[22m | psx_wainscot_128.png[39m[0m
+[  94% ] [90m[1m_update_scan_actions[22m | psx_wallpaper_stripe_128.png[39m[0m
+[  94% ] [90m[1m_update_scan_actions[22m | psx_wall_plaster_128.png[39m[0m
+[  94% ] [90m[1m_update_scan_actions[22m | psx_window_night_64.png[39m[0m
+[  94% ] [90m[1m_update_scan_actions[22m | paper_worn_diff.png[39m[0m
+[  94% ] [90m[1m_update_scan_actions[22m | weathered_brown_planks_diff.png[39m[0m
+[  94% ] [90m[1m_update_scan_actions[22m | wood_floor_worn_diff.png[39m[0m
+[  94% ] [90m[1m_update_scan_actions[22m | worn_plaster_wall_diff.png[39m[0m
+[  94% ] [90m[1m_update_scan_actions[22m | vintage_oil_lamp_arm_1k.jpg[39m[0m
+[  95% ] [90m[1m_update_scan_actions[22m | vintage_oil_lamp_diff_1k.jpg[39m[0m
+[  95% ] [90m[1m_update_scan_actions[22m | vintage_oil_lamp_flame_diff_1k.jpg[39m[0m
+[  95% ] [90m[1m_update_scan_actions[22m | vintage_oil_lamp_glass_arm_1k.jpg[39m[0m
+[  95% ] [90m[1m_update_scan_actions[22m | vintage_oil_lamp_glass_diff_1k.jpg[39m[0m
+[  95% ] [90m[1m_update_scan_actions[22m | vintage_oil_lamp_glass_nor_gl_1k.jpg[39m[0m
+[  95% ] [90m[1m_update_scan_actions[22m | vintage_oil_lamp_nor_gl_1k.jpg[39m[0m
+[  95% ] [90m[1m_update_scan_actions[22m | vintage_oil_lamp_1k.gltf[39m[0m
+[  95% ] [90m[1m_update_scan_actions[22m | kenney_bookcaseClosed.glb[39m[0m
+[  96% ] [90m[1m_update_scan_actions[22m | kenney_bookcaseOpen.glb[39m[0m
+[  96% ] [90m[1m_update_scan_actions[22m | kenney_books.glb[39m[0m
+[  96% ] [90m[1m_update_scan_actions[22m | kenney_chair.glb[39m[0m
+[  96% ] [90m[1m_update_scan_actions[22m | kenney_desk.glb[39m[0m
+[  96% ] [90m[1m_update_scan_actions[22m | kenney_sideTable.glb[39m[0m
+[  96% ] [90m[1m_update_scan_actions[22m | 01_start_desk_view.png[39m[0m
+[  96% ] [90m[1m_update_scan_actions[22m | 01_start_view.png[39m[0m
+[  96% ] [90m[1m_update_scan_actions[22m | 02_desk_equipment_close.png[39m[0m
+[  97% ] [90m[1m_update_scan_actions[22m | 02_north_window_view.png[39m[0m
+[  97% ] [90m[1m_update_scan_actions[22m | 03_document_viewer_open.png[39m[0m
+[  97% ] [90m[1m_update_scan_actions[22m | 03_east_routing_board_view.png[39m[0m
+[  97% ] [90m[1m_update_scan_actions[22m | 04_north_window_idle.png[39m[0m
+[  97% ] [90m[1m_update_scan_actions[22m | 04_south_door_view.png[39m[0m
+[  97% ] [90m[1m_update_scan_actions[22m | 05_north_window_figure_active.png[39m[0m
+[  97% ] [90m[1m_update_scan_actions[22m | 06_south_door_view.png[39m[0m
+[  97% ] [90m[1m_update_scan_actions[22m | 07_routing_board_close.png[39m[0m
+[  98% ] [90m[1m_update_scan_actions[22m | 08_f3_debug_telemetry_scenario3.png[39m[0m
+[  98% ] [90m[1m_update_scan_actions[22m | consequence.png[39m[0m
+[  98% ] [90m[1m_update_scan_actions[22m | document.png[39m[0m
+[  98% ] [90m[1m_update_scan_actions[22m | document_viewer.png[39m[0m
+[  98% ] [90m[1m_update_scan_actions[22m | door.png[39m[0m
+[  98% ] [90m[1m_update_scan_actions[22m | equipment.png[39m[0m
+[  98% ] [90m[1m_update_scan_actions[22m | equipment_close.png[39m[0m
+[  98% ] [90m[1m_update_scan_actions[22m | hero.png[39m[0m
+[  99% ] [90m[1m_update_scan_actions[22m | icon.svg[39m[0m
+[  99% ] [90m[1m_update_scan_actions[22m | overview.png[39m[0m
+[  99% ] [90m[1m_update_scan_actions[22m | routing.png[39m[0m
+[  99% ] [90m[1m_update_scan_actions[22m | waiting.png[39m[0m
+[  99% ] [90m[1m_update_scan_actions[22m | window_figure.png[39m[0m
+[  99% ] [90m[1m_update_scan_actions[22m | writer.png[39m[0m
+[  99% ] [90m[1m_update_scan_actions[22m | icon.svg[39m[0m
+[92m[ DONE ][39m [1m_update_scan_actions[22m
+[0m
+[   0% ] [90m[1mreimport[22m | Started (Re)Importing Assets (800 steps)[39m[0m
+[   0% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   0% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   0% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   0% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   0% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   0% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   0% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   0% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   0% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   1% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   1% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   1% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   1% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   1% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   1% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   1% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   1% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   2% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   2% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   2% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   2% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   2% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   2% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   2% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   2% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   3% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   3% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   3% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   3% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   3% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   3% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   3% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   3% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   4% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   4% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   4% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   4% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   4% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   4% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   4% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   4% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   5% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   5% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   5% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   5% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   5% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   5% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   5% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   5% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   6% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   6% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   6% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   6% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   6% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   6% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   6% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   6% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   7% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   7% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   7% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   7% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   7% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   7% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   7% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   7% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   8% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   8% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   8% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   8% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   8% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   8% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   8% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   8% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   9% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   9% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   9% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   9% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   9% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   9% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   9% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   9% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  10% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  10% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  10% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  10% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  10% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  10% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  10% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  10% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  11% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  11% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  11% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  11% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  11% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  11% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  11% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  11% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  12% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  12% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  12% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  12% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  12% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  12% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  12% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  12% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  13% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  13% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  13% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  13% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  13% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  13% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  13% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  13% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  14% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  14% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  14% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  14% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  14% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  14% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  14% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  14% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  15% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  15% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  15% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  15% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  15% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  15% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  15% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  15% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  16% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  16% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  16% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  16% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  16% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  16% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  16% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  16% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  17% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  17% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  17% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  17% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  17% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  17% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  17% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  17% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  18% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  18% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  18% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  18% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  18% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  18% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  18% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  18% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  19% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  19% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  19% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  19% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  19% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  19% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  19% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  19% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  20% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  20% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  20% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  20% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  20% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  20% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  20% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  20% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  21% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  21% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  21% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  21% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  21% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  21% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  21% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  21% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  22% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  22% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  22% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  22% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  22% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  22% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  22% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  22% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  23% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  23% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  23% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  23% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  23% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  23% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  23% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  23% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  24% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  24% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  24% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  24% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  24% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  24% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  24% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  24% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  25% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  25% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  25% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  25% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  25% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  25% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  25% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  25% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  26% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  26% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  26% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  26% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  26% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  26% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  26% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  26% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  27% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  27% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  27% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  27% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  27% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  27% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  27% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  27% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  28% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  28% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  28% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  28% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  28% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  28% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  28% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  28% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  29% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  29% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  29% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  29% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  29% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  29% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  29% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  29% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  30% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  30% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  30% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  30% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  30% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  30% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  30% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  30% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  31% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  31% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  31% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  31% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  31% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  31% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  31% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  31% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  32% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  32% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  32% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  32% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  32% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  32% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  32% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  32% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  33% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  33% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  33% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  33% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  33% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  33% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  33% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  33% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  34% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  34% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  34% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  34% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  34% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  34% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  34% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  34% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  35% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  35% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  35% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  35% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  35% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  35% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  35% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  35% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  36% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  36% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  36% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  36% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  36% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  36% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  36% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  36% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  37% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  37% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  37% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  37% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  37% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  37% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  37% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  37% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  38% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  38% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  38% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  38% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  38% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  38% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  38% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  38% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  39% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  39% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  39% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  39% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  39% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  39% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  39% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  39% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  40% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  40% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  40% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  40% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  40% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  40% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  40% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  40% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  41% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  41% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  41% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  41% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  41% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  41% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  41% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  41% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  42% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  42% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  42% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  42% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  42% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  42% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  42% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  42% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  43% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  43% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  43% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  43% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  43% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  43% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  43% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  43% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  44% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  44% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  44% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  44% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  44% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  44% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  44% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  44% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  45% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  45% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  45% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  45% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  45% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  45% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  45% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  45% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  46% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  46% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  46% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  46% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  46% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  46% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  46% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  46% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  47% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  47% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  47% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  47% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  47% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  47% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  47% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  47% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  48% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  48% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  48% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  48% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  48% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  48% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  48% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  48% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  49% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  49% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  49% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  49% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  49% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  49% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  49% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  49% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  50% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  50% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  50% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  50% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  50% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  50% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  50% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  50% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  51% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  51% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  51% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  51% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  51% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  51% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  51% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  51% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  52% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  52% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  52% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  52% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  52% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  52% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  52% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  52% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  53% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  53% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  53% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  53% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  53% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  53% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  53% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  53% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  54% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  54% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  54% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  54% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  54% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  54% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  54% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  54% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  55% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  55% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  55% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  55% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  55% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  55% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  55% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  55% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  56% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  56% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  56% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  56% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  56% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  56% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  56% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  56% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  57% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  57% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  57% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  57% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  57% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  57% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  57% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  57% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  58% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  58% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  58% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  58% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  58% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  58% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  58% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  58% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  59% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  59% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  59% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  59% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  59% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  59% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  59% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  59% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  60% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  60% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  60% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  60% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  60% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  60% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  60% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  60% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  61% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  61% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  61% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  61% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  61% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  61% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  61% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  61% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  62% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  62% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  62% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  62% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  62% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  62% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  62% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  62% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  63% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  63% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  63% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  63% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  63% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  63% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  63% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  63% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  64% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  64% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  64% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  64% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  64% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  64% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  64% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  64% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  65% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  65% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  65% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  65% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  65% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  65% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  65% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  65% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  66% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  66% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  66% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  66% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  66% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  66% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  66% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  66% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  67% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  67% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  67% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  67% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  67% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  67% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  67% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  67% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  68% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  68% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  68% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  68% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  68% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  68% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  68% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  68% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  69% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  69% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  69% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  69% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  69% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  69% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  69% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  69% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  70% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  70% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  70% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  70% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  70% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  70% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  70% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  70% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  71% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  71% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  71% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  71% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  71% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  71% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  71% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  71% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  72% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  72% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  72% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  72% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  72% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  72% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  72% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  72% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  73% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  73% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  73% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  73% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  73% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  73% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  73% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  73% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  74% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  74% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  74% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  74% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  74% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  74% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  74% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  74% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  75% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  75% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  75% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  75% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  75% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  75% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  75% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  75% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  76% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  76% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  76% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  76% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  76% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  76% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  76% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  76% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  77% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  77% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  77% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  77% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  77% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  77% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  77% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  77% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  78% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  78% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  78% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  78% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  78% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  78% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  78% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  78% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  79% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  79% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  79% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  79% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  79% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  79% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  79% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  79% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  80% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  80% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  80% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  80% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  80% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  80% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  80% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  80% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  81% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  81% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  81% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  81% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  81% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  81% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  81% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  81% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  82% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  82% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  82% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  82% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  82% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  82% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  82% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  82% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  83% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  83% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  83% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  83% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  83% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  83% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  83% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  83% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  84% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  84% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  84% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  84% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  84% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  84% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  84% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  84% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  85% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  85% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  85% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  85% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  85% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  85% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  85% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  85% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  86% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  86% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  86% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  86% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  86% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  86% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  86% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  86% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  87% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  87% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  87% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  87% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  87% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  87% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  87% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  87% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  88% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  88% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  88% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  88% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  88% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  88% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  88% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  88% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  89% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  89% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  89% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  89% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  89% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  89% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  89% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  89% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  90% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  90% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  90% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  90% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  90% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  90% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  90% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  90% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  91% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  91% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  91% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  91% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  91% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  91% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  91% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  91% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  92% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  92% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  92% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  92% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  92% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  92% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  92% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  92% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  93% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  93% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  93% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  93% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  93% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  93% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  93% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  93% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  94% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  94% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  94% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  94% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  94% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  94% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  94% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  94% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  95% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  95% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  95% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  95% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  95% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  95% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  95% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  95% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  96% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  96% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  96% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  96% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  96% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  96% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  96% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  96% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  97% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  97% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  97% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  97% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  97% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  97% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  97% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  97% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  98% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  98% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  98% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  98% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  98% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  98% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  98% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  98% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  99% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  99% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  99% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  99% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  99% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  99% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  99% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   0% ] [90m[1mreimport[22m | Executing pre-reimport operations...[39m[0m
+[   0% ] [90m[1mpreload_reimporting_scene[22m | Started Preparing scenes for reload (1 steps)[39m[0m
+[   0% ] [90m[1mpreload_reimporting_scene[22m | Analyzing scene [empty][39m[0m
+[  50% ] [90m[1mpreload_reimporting_scene[22m | Preparation done.[39m[0m
+[92m[ DONE ][39m [1mpreload_reimporting_scene[22m
+[0m
+[   0% ] [90m[1mreimport[22m | elias_working.fnt[39m[0m
+[   0% ] [90m[1mreimport[22m | elias_working.fnt[39m[0m
+[   0% ] [90m[1mreimport[22m | elias_working.fnt[39m[0m
+[   0% ] [90m[1mreimport[22m | elias_working.fnt[39m[0m
+[   0% ] [90m[1mreimport[22m | IMFeENrm28P.ttf[39m[0m
+[   0% ] [90m[1mreimport[22m | NotoSans-Regular.ttf[39m[0m
+[   0% ] [90m[1mreimport[22m | OldStandardTT-Bold.ttf[39m[0m
+[   0% ] [90m[1mreimport[22m | OldStandardTT-Regular.ttf[39m[0m
+[   0% ] [90m[1mreimport[22m | elias_working.fnt[39m[0m
+[   1% ] [90m[1mreimport[22m | elias_working.fnt[39m[0m
+[   1% ] [90m[1mreimport[22m | IMFeENrm28P.ttf[39m[0m
+[   1% ] [90m[1mreimport[22m | NotoSans-Regular.ttf[39m[0m
+[   1% ] [90m[1mreimport[22m | OldStandardTT-Bold.ttf[39m[0m
+[   1% ] [90m[1mreimport[22m | OldStandardTT-Regular.ttf[39m[0m
+[   1% ] [90m[1mreimport[22m | elias_working.fnt[39m[0m
+[   1% ] [90m[1mreimport[22m | elias_working.fnt[39m[0m
+[   1% ] [90m[1mreimport[22m | IMFeENrm28P.ttf[39m[0m
+[   2% ] [90m[1mreimport[22m | NotoSans-Regular.ttf[39m[0m
+[   2% ] [90m[1mreimport[22m | OldStandardTT-Bold.ttf[39m[0m
+[   2% ] [90m[1mreimport[22m | OldStandardTT-Regular.ttf[39m[0m
+[   2% ] [90m[1mreimport[22m | Cedarville-Cursive.ttf[39m[0m
+[   2% ] [90m[1mreimport[22m | CourierPrime-Regular.ttf[39m[0m
+[   2% ] [90m[1mreimport[22m | long_note_one.mp3[39m[0m
+[   2% ] [90m[1mreimport[22m | paper_sound_-_4.mp3[39m[0m
+[   2% ] [90m[1mreimport[22m | paper_sound_-_3.mp3[39m[0m
+[   3% ] [90m[1mreimport[22m | paper_sound_-_2.mp3[39m[0m
+[   3% ] [90m[1mreimport[22m | paper_sound_-_1.mp3[39m[0m
+[   3% ] [90m[1mreimport[22m | paper_sheet.mp3[39m[0m
+[   3% ] [90m[1mreimport[22m | impactMining_000.ogg[39m[0m
+[   3% ] [90m[1mreimport[22m | impactMetal_medium_004.ogg[39m[0m
+[   3% ] [90m[1mreimport[22m | impactMetal_medium_003.ogg[39m[0m
+[   3% ] [90m[1mreimport[22m | impactMetal_medium_002.ogg[39m[0m
+[   3% ] [90m[1mreimport[22m | impactMetal_medium_001.ogg[39m[0m
+[   4% ] [90m[1mreimport[22m | impactMetal_medium_000.ogg[39m[0m
+[   4% ] [90m[1mreimport[22m | impactMetal_light_004.ogg[39m[0m
+[   4% ] [90m[1mreimport[22m | impactMetal_light_003.ogg[39m[0m
+[   4% ] [90m[1mreimport[22m | impactMetal_light_002.ogg[39m[0m
+[   4% ] [90m[1mreimport[22m | impactMetal_light_001.ogg[39m[0m
+[   4% ] [90m[1mreimport[22m | impactMetal_light_000.ogg[39m[0m
+[   4% ] [90m[1mreimport[22m | impactMetal_heavy_004.ogg[39m[0m
+[   4% ] [90m[1mreimport[22m | impactMining_001.ogg[39m[0m
+[   5% ] [90m[1mreimport[22m | impactMining_002.ogg[39m[0m
+[   5% ] [90m[1mreimport[22m | impactMining_003.ogg[39m[0m
+[   5% ] [90m[1mreimport[22m | impactPlate_heavy_002.ogg[39m[0m
+[   5% ] [90m[1mreimport[22m | impactMining_004.ogg[39m[0m
+[   5% ] [90m[1mreimport[22m | impactPlank_medium_000.ogg[39m[0m
+[   5% ] [90m[1mreimport[22m | impactPlank_medium_001.ogg[39m[0m
+[   5% ] [90m[1mreimport[22m | impactPlank_medium_002.ogg[39m[0m
+[   5% ] [90m[1mreimport[22m | impactPlank_medium_003.ogg[39m[0m
+[   6% ] [90m[1mreimport[22m | impactPlank_medium_004.ogg[39m[0m
+[   6% ] [90m[1mreimport[22m | impactPlate_heavy_000.ogg[39m[0m
+[   6% ] [90m[1mreimport[22m | impactPlate_heavy_001.ogg[39m[0m
+[   6% ] [90m[1mreimport[22m | impactBell_heavy_000.ogg[39m[0m
+[   6% ] [90m[1mreimport[22m | impactBell_heavy_001.ogg[39m[0m
+[   6% ] [90m[1mreimport[22m | impactBell_heavy_002.ogg[39m[0m
+[   6% ] [90m[1mreimport[22m | impactBell_heavy_003.ogg[39m[0m
+[   6% ] [90m[1mreimport[22m | impactBell_heavy_004.ogg[39m[0m
+[   7% ] [90m[1mreimport[22m | impactGeneric_light_000.ogg[39m[0m
+[   7% ] [90m[1mreimport[22m | impactGeneric_light_001.ogg[39m[0m
+[   7% ] [90m[1mreimport[22m | impactGeneric_light_002.ogg[39m[0m
+[   7% ] [90m[1mreimport[22m | impactGeneric_light_003.ogg[39m[0m
+[   7% ] [90m[1mreimport[22m | impactGeneric_light_004.ogg[39m[0m
+[   7% ] [90m[1mreimport[22m | impactGlass_heavy_000.ogg[39m[0m
+[   7% ] [90m[1mreimport[22m | impactGlass_heavy_001.ogg[39m[0m
+[   7% ] [90m[1mreimport[22m | impactGlass_heavy_002.ogg[39m[0m
+[   8% ] [90m[1mreimport[22m | impactGlass_heavy_003.ogg[39m[0m
+[   8% ] [90m[1mreimport[22m | impactGlass_heavy_004.ogg[39m[0m
+[   8% ] [90m[1mreimport[22m | impactGlass_light_000.ogg[39m[0m
+[   8% ] [90m[1mreimport[22m | impactGlass_light_001.ogg[39m[0m
+[   8% ] [90m[1mreimport[22m | impactGlass_light_002.ogg[39m[0m
+[   8% ] [90m[1mreimport[22m | impactGlass_light_003.ogg[39m[0m
+[   8% ] [90m[1mreimport[22m | impactGlass_light_004.ogg[39m[0m
+[   8% ] [90m[1mreimport[22m | impactGlass_medium_000.ogg[39m[0m
+[   9% ] [90m[1mreimport[22m | impactGlass_medium_001.ogg[39m[0m
+[   9% ] [90m[1mreimport[22m | impactGlass_medium_002.ogg[39m[0m
+[   9% ] [90m[1mreimport[22m | impactGlass_medium_003.ogg[39m[0m
+[   9% ] [90m[1mreimport[22m | impactGlass_medium_004.ogg[39m[0m
+[   9% ] [90m[1mreimport[22m | impactMetal_heavy_000.ogg[39m[0m
+[   9% ] [90m[1mreimport[22m | impactMetal_heavy_001.ogg[39m[0m
+[   9% ] [90m[1mreimport[22m | impactMetal_heavy_002.ogg[39m[0m
+[   9% ] [90m[1mreimport[22m | impactMetal_heavy_003.ogg[39m[0m
+[  10% ] [90m[1mreimport[22m | impactSoft_medium_000.ogg[39m[0m
+[  10% ] [90m[1mreimport[22m | impactSoft_medium_001.ogg[39m[0m
+[  10% ] [90m[1mreimport[22m | impactSoft_medium_002.ogg[39m[0m
+[  10% ] [90m[1mreimport[22m | impactSoft_medium_003.ogg[39m[0m
+[  10% ] [90m[1mreimport[22m | impactSoft_medium_004.ogg[39m[0m
+[  10% ] [90m[1mreimport[22m | impactTin_medium_000.ogg[39m[0m
+[  10% ] [90m[1mreimport[22m | impactTin_medium_001.ogg[39m[0m
+[  10% ] [90m[1mreimport[22m | impactTin_medium_002.ogg[39m[0m
+[  11% ] [90m[1mreimport[22m | impactTin_medium_003.ogg[39m[0m
+[  11% ] [90m[1mreimport[22m | impactTin_medium_004.ogg[39m[0m
+[  11% ] [90m[1mreimport[22m | impactWood_heavy_000.ogg[39m[0m
+[  11% ] [90m[1mreimport[22m | impactWood_heavy_001.ogg[39m[0m
+[  11% ] [90m[1mreimport[22m | impactWood_heavy_002.ogg[39m[0m
+[  11% ] [90m[1mreimport[22m | impactWood_heavy_003.ogg[39m[0m
+[  11% ] [90m[1mreimport[22m | impactWood_heavy_004.ogg[39m[0m
+[  11% ] [90m[1mreimport[22m | impactWood_light_000.ogg[39m[0m
+[  12% ] [90m[1mreimport[22m | impactWood_light_001.ogg[39m[0m
+[  12% ] [90m[1mreimport[22m | impactWood_light_002.ogg[39m[0m
+[  12% ] [90m[1mreimport[22m | impactWood_light_003.ogg[39m[0m
+[  12% ] [90m[1mreimport[22m | impactWood_light_004.ogg[39m[0m
+[  12% ] [90m[1mreimport[22m | impactWood_medium_000.ogg[39m[0m
+[  12% ] [90m[1mreimport[22m | impactWood_medium_001.ogg[39m[0m
+[  12% ] [90m[1mreimport[22m | impactWood_medium_002.ogg[39m[0m
+[  12% ] [90m[1mreimport[22m | impactWood_medium_003.ogg[39m[0m
+[  13% ] [90m[1mreimport[22m | impactWood_medium_004.ogg[39m[0m
+[  13% ] [90m[1mreimport[22m | chair_settle_cc0.ogg[39m[0m
+[  13% ] [90m[1mreimport[22m | ink_stamp_cc0.ogg[39m[0m
+[  13% ] [90m[1mreimport[22m | impactPlate_heavy_003.ogg[39m[0m
+[  13% ] [90m[1mreimport[22m | impactPlate_heavy_004.ogg[39m[0m
+[  13% ] [90m[1mreimport[22m | impactPlate_light_000.ogg[39m[0m
+[  13% ] [90m[1mreimport[22m | impactPlate_light_001.ogg[39m[0m
+[  13% ] [90m[1mreimport[22m | impactPlate_light_002.ogg[39m[0m
+[  14% ] [90m[1mreimport[22m | impactPlate_light_003.ogg[39m[0m
+[  14% ] [90m[1mreimport[22m | impactPlate_light_004.ogg[39m[0m
+[  14% ] [90m[1mreimport[22m | impactPlate_medium_000.ogg[39m[0m
+[  14% ] [90m[1mreimport[22m | impactPlate_medium_001.ogg[39m[0m
+[  14% ] [90m[1mreimport[22m | impactPlate_medium_002.ogg[39m[0m
+[  14% ] [90m[1mreimport[22m | impactPlate_medium_003.ogg[39m[0m
+[  14% ] [90m[1mreimport[22m | impactPlate_medium_004.ogg[39m[0m
+[  14% ] [90m[1mreimport[22m | impactPunch_heavy_000.ogg[39m[0m
+[  15% ] [90m[1mreimport[22m | impactPunch_heavy_001.ogg[39m[0m
+[  15% ] [90m[1mreimport[22m | impactPunch_heavy_002.ogg[39m[0m
+[  15% ] [90m[1mreimport[22m | impactPunch_heavy_003.ogg[39m[0m
+[  15% ] [90m[1mreimport[22m | impactPunch_heavy_004.ogg[39m[0m
+[  15% ] [90m[1mreimport[22m | impactPunch_medium_000.ogg[39m[0m
+[  15% ] [90m[1mreimport[22m | impactPunch_medium_001.ogg[39m[0m
+[  15% ] [90m[1mreimport[22m | impactPunch_medium_002.ogg[39m[0m
+[  15% ] [90m[1mreimport[22m | impactPunch_medium_003.ogg[39m[0m
+[  16% ] [90m[1mreimport[22m | impactPunch_medium_004.ogg[39m[0m
+[  16% ] [90m[1mreimport[22m | impactSoft_heavy_000.ogg[39m[0m
+[  16% ] [90m[1mreimport[22m | impactSoft_heavy_001.ogg[39m[0m
+[  16% ] [90m[1mreimport[22m | impactSoft_heavy_002.ogg[39m[0m
+[  16% ] [90m[1mreimport[22m | impactSoft_heavy_003.ogg[39m[0m
+[  16% ] [90m[1mreimport[22m | impactSoft_heavy_004.ogg[39m[0m
+[  16% ] [90m[1mreimport[22m | chair_settle.ogg[39m[0m
+[  16% ] [90m[1mreimport[22m | lever_stop.ogg[39m[0m
+[  17% ] [90m[1mreimport[22m | stamp.ogg[39m[0m
+[  17% ] [90m[1mreimport[22m | footstep_carpet_000.ogg[39m[0m
+[  17% ] [90m[1mreimport[22m | footstep_carpet_001.ogg[39m[0m
+[  17% ] [90m[1mreimport[22m | footstep_carpet_002.ogg[39m[0m
+[  17% ] [90m[1mreimport[22m | footstep_carpet_003.ogg[39m[0m
+[  17% ] [90m[1mreimport[22m | footstep_carpet_004.ogg[39m[0m
+[  17% ] [90m[1mreimport[22m | footstep_concrete_000.ogg[39m[0m
+[  17% ] [90m[1mreimport[22m | footstep_concrete_001.ogg[39m[0m
+[  18% ] [90m[1mreimport[22m | footstep_concrete_002.ogg[39m[0m
+[  18% ] [90m[1mreimport[22m | footstep_concrete_003.ogg[39m[0m
+[  18% ] [90m[1mreimport[22m | footstep_concrete_004.ogg[39m[0m
+[  18% ] [90m[1mreimport[22m | footstep_grass_000.ogg[39m[0m
+[  18% ] [90m[1mreimport[22m | elias_working.fnt[39m[0m
+[  18% ] [90m[1mreimport[22m | elias_working.fnt[39m[0m
+[  18% ] [90m[1mreimport[22m | IMFeENrm28P.ttf[39m[0m
+[  18% ] [90m[1mreimport[22m | NotoSans-Regular.ttf[39m[0m
+[  19% ] [90m[1mreimport[22m | OldStandardTT-Bold.ttf[39m[0m
+[  19% ] [90m[1mreimport[22m | OldStandardTT-Regular.ttf[39m[0m
+[  19% ] [90m[1mreimport[22m | Cedarville-Cursive.ttf[39m[0m
+[  19% ] [90m[1mreimport[22m | CourierPrime-Regular.ttf[39m[0m
+[  19% ] [90m[1mreimport[22m | long_note_one.mp3[39m[0m
+[  19% ] [90m[1mreimport[22m | paper_sound_-_4.mp3[39m[0m
+[  19% ] [90m[1mreimport[22m | paper_sound_-_3.mp3[39m[0m
+[  19% ] [90m[1mreimport[22m | paper_sound_-_2.mp3[39m[0m
+[  20% ] [90m[1mreimport[22m | paper_sound_-_1.mp3[39m[0m
+[  20% ] [90m[1mreimport[22m | paper_sheet.mp3[39m[0m
+[  20% ] [90m[1mreimport[22m | impactMining_000.ogg[39m[0m
+[  20% ] [90m[1mreimport[22m | impactMetal_medium_004.ogg[39m[0m
+[  20% ] [90m[1mreimport[22m | impactMetal_medium_003.ogg[39m[0m
+[  20% ] [90m[1mreimport[22m | impactMetal_medium_002.ogg[39m[0m
+[  20% ] [90m[1mreimport[22m | impactMetal_medium_001.ogg[39m[0m
+[  20% ] [90m[1mreimport[22m | impactMetal_medium_000.ogg[39m[0m
+[  21% ] [90m[1mreimport[22m | impactMetal_light_004.ogg[39m[0m
+[  21% ] [90m[1mreimport[22m | impactMetal_light_003.ogg[39m[0m
+[  21% ] [90m[1mreimport[22m | impactMetal_light_002.ogg[39m[0m
+[  21% ] [90m[1mreimport[22m | impactMetal_light_001.ogg[39m[0m
+[  21% ] [90m[1mreimport[22m | impactMetal_light_000.ogg[39m[0m
+[  21% ] [90m[1mreimport[22m | impactMetal_heavy_004.ogg[39m[0m
+[  21% ] [90m[1mreimport[22m | impactMining_001.ogg[39m[0m
+[  21% ] [90m[1mreimport[22m | impactMining_002.ogg[39m[0m
+[  22% ] [90m[1mreimport[22m | impactMining_003.ogg[39m[0m
+[  22% ] [90m[1mreimport[22m | impactPlate_heavy_002.ogg[39m[0m
+[  22% ] [90m[1mreimport[22m | impactMining_004.ogg[39m[0m
+[  22% ] [90m[1mreimport[22m | impactPlank_medium_000.ogg[39m[0m
+[  22% ] [90m[1mreimport[22m | impactPlank_medium_001.ogg[39m[0m
+[  22% ] [90m[1mreimport[22m | impactPlank_medium_002.ogg[39m[0m
+[  22% ] [90m[1mreimport[22m | impactPlank_medium_003.ogg[39m[0m
+[  22% ] [90m[1mreimport[22m | impactPlank_medium_004.ogg[39m[0m
+[  23% ] [90m[1mreimport[22m | impactPlate_heavy_000.ogg[39m[0m
+[  23% ] [90m[1mreimport[22m | impactPlate_heavy_001.ogg[39m[0m
+[  23% ] [90m[1mreimport[22m | impactBell_heavy_000.ogg[39m[0m
+[  23% ] [90m[1mreimport[22m | impactBell_heavy_001.ogg[39m[0m
+[  23% ] [90m[1mreimport[22m | impactBell_heavy_002.ogg[39m[0m
+[  23% ] [90m[1mreimport[22m | impactBell_heavy_003.ogg[39m[0m
+[  23% ] [90m[1mreimport[22m | impactBell_heavy_004.ogg[39m[0m
+[  23% ] [90m[1mreimport[22m | impactGeneric_light_000.ogg[39m[0m
+[  24% ] [90m[1mreimport[22m | impactGeneric_light_001.ogg[39m[0m
+[  24% ] [90m[1mreimport[22m | impactGeneric_light_002.ogg[39m[0m
+[  24% ] [90m[1mreimport[22m | impactGeneric_light_003.ogg[39m[0m
+[  24% ] [90m[1mreimport[22m | impactGeneric_light_004.ogg[39m[0m
+[  24% ] [90m[1mreimport[22m | impactGlass_heavy_000.ogg[39m[0m
+[  24% ] [90m[1mreimport[22m | impactGlass_heavy_001.ogg[39m[0m
+[  24% ] [90m[1mreimport[22m | impactGlass_heavy_002.ogg[39m[0m
+[  24% ] [90m[1mreimport[22m | impactGlass_heavy_003.ogg[39m[0m
+[  25% ] [90m[1mreimport[22m | impactGlass_heavy_004.ogg[39m[0m
+[  25% ] [90m[1mreimport[22m | impactGlass_light_000.ogg[39m[0m
+[  25% ] [90m[1mreimport[22m | impactGlass_light_001.ogg[39m[0m
+[  25% ] [90m[1mreimport[22m | impactGlass_light_002.ogg[39m[0m
+[  25% ] [90m[1mreimport[22m | impactGlass_light_003.ogg[39m[0m
+[  25% ] [90m[1mreimport[22m | impactGlass_light_004.ogg[39m[0m
+[  25% ] [90m[1mreimport[22m | impactGlass_medium_000.ogg[39m[0m
+[  25% ] [90m[1mreimport[22m | impactGlass_medium_001.ogg[39m[0m
+[  26% ] [90m[1mreimport[22m | impactGlass_medium_002.ogg[39m[0m
+[  26% ] [90m[1mreimport[22m | impactGlass_medium_003.ogg[39m[0m
+[  26% ] [90m[1mreimport[22m | impactGlass_medium_004.ogg[39m[0m
+[  26% ] [90m[1mreimport[22m | impactMetal_heavy_000.ogg[39m[0m
+[  26% ] [90m[1mreimport[22m | impactMetal_heavy_001.ogg[39m[0m
+[  26% ] [90m[1mreimport[22m | impactMetal_heavy_002.ogg[39m[0m
+[  26% ] [90m[1mreimport[22m | impactMetal_heavy_003.ogg[39m[0m
+[  26% ] [90m[1mreimport[22m | impactSoft_medium_000.ogg[39m[0m
+[  27% ] [90m[1mreimport[22m | impactSoft_medium_001.ogg[39m[0m
+[  27% ] [90m[1mreimport[22m | impactSoft_medium_002.ogg[39m[0m
+[  27% ] [90m[1mreimport[22m | impactSoft_medium_003.ogg[39m[0m
+[  27% ] [90m[1mreimport[22m | impactSoft_medium_004.ogg[39m[0m
+[  27% ] [90m[1mreimport[22m | impactTin_medium_000.ogg[39m[0m
+[  27% ] [90m[1mreimport[22m | impactTin_medium_001.ogg[39m[0m
+[  27% ] [90m[1mreimport[22m | impactTin_medium_002.ogg[39m[0m
+[  27% ] [90m[1mreimport[22m | impactTin_medium_003.ogg[39m[0m
+[  28% ] [90m[1mreimport[22m | impactTin_medium_004.ogg[39m[0m
+[  28% ] [90m[1mreimport[22m | impactWood_heavy_000.ogg[39m[0m
+[  28% ] [90m[1mreimport[22m | impactWood_heavy_001.ogg[39m[0m
+[  28% ] [90m[1mreimport[22m | impactWood_heavy_002.ogg[39m[0m
+[  28% ] [90m[1mreimport[22m | impactWood_heavy_003.ogg[39m[0m
+[  28% ] [90m[1mreimport[22m | impactWood_heavy_004.ogg[39m[0m
+[  28% ] [90m[1mreimport[22m | impactWood_light_000.ogg[39m[0m
+[  28% ] [90m[1mreimport[22m | impactWood_light_001.ogg[39m[0m
+[  29% ] [90m[1mreimport[22m | impactWood_light_002.ogg[39m[0m
+[  29% ] [90m[1mreimport[22m | impactWood_light_003.ogg[39m[0m
+[  29% ] [90m[1mreimport[22m | impactWood_light_004.ogg[39m[0m
+[  29% ] [90m[1mreimport[22m | impactWood_medium_000.ogg[39m[0m
+[  29% ] [90m[1mreimport[22m | impactWood_medium_001.ogg[39m[0m
+[  29% ] [90m[1mreimport[22m | impactWood_medium_002.ogg[39m[0m
+[  29% ] [90m[1mreimport[22m | impactWood_medium_003.ogg[39m[0m
+[  29% ] [90m[1mreimport[22m | impactWood_medium_004.ogg[39m[0m
+[  30% ] [90m[1mreimport[22m | chair_settle_cc0.ogg[39m[0m
+[  30% ] [90m[1mreimport[22m | ink_stamp_cc0.ogg[39m[0m
+[  30% ] [90m[1mreimport[22m | impactPlate_heavy_003.ogg[39m[0m
+[  30% ] [90m[1mreimport[22m | impactPlate_heavy_004.ogg[39m[0m
+[  30% ] [90m[1mreimport[22m | impactPlate_light_000.ogg[39m[0m
+[  30% ] [90m[1mreimport[22m | impactPlate_light_001.ogg[39m[0m
+[  30% ] [90m[1mreimport[22m | impactPlate_light_002.ogg[39m[0m
+[  30% ] [90m[1mreimport[22m | impactPlate_light_003.ogg[39m[0m
+[  31% ] [90m[1mreimport[22m | impactPlate_light_004.ogg[39m[0m
+[  31% ] [90m[1mreimport[22m | impactPlate_medium_000.ogg[39m[0m
+[  31% ] [90m[1mreimport[22m | impactPlate_medium_001.ogg[39m[0m
+[  31% ] [90m[1mreimport[22m | impactPlate_medium_002.ogg[39m[0m
+[  31% ] [90m[1mreimport[22m | impactPlate_medium_003.ogg[39m[0m
+[  31% ] [90m[1mreimport[22m | impactPlate_medium_004.ogg[39m[0m
+[  31% ] [90m[1mreimport[22m | impactPunch_heavy_000.ogg[39m[0m
+[  31% ] [90m[1mreimport[22m | impactPunch_heavy_001.ogg[39m[0m
+[  32% ] [90m[1mreimport[22m | impactPunch_heavy_002.ogg[39m[0m
+[  32% ] [90m[1mreimport[22m | impactPunch_heavy_003.ogg[39m[0m
+[  32% ] [90m[1mreimport[22m | impactPunch_heavy_004.ogg[39m[0m
+[  32% ] [90m[1mreimport[22m | impactPunch_medium_000.ogg[39m[0m
+[  32% ] [90m[1mreimport[22m | impactPunch_medium_001.ogg[39m[0m
+[  32% ] [90m[1mreimport[22m | impactPunch_medium_002.ogg[39m[0m
+[  32% ] [90m[1mreimport[22m | impactPunch_medium_003.ogg[39m[0m
+[  32% ] [90m[1mreimport[22m | impactPunch_medium_004.ogg[39m[0m
+[  33% ] [90m[1mreimport[22m | impactSoft_heavy_000.ogg[39m[0m
+[  33% ] [90m[1mreimport[22m | impactSoft_heavy_001.ogg[39m[0m
+[  33% ] [90m[1mreimport[22m | impactSoft_heavy_002.ogg[39m[0m
+[  33% ] [90m[1mreimport[22m | impactSoft_heavy_003.ogg[39m[0m
+[  33% ] [90m[1mreimport[22m | impactSoft_heavy_004.ogg[39m[0m
+[  33% ] [90m[1mreimport[22m | chair_settle.ogg[39m[0m
+[  33% ] [90m[1mreimport[22m | lever_stop.ogg[39m[0m
+[  33% ] [90m[1mreimport[22m | stamp.ogg[39m[0m
+[  34% ] [90m[1mreimport[22m | footstep_carpet_000.ogg[39m[0m
+[  34% ] [90m[1mreimport[22m | footstep_carpet_001.ogg[39m[0m
+[  34% ] [90m[1mreimport[22m | footstep_carpet_002.ogg[39m[0m
+[  34% ] [90m[1mreimport[22m | footstep_carpet_003.ogg[39m[0m
+[  34% ] [90m[1mreimport[22m | footstep_carpet_004.ogg[39m[0m
+[  34% ] [90m[1mreimport[22m | footstep_concrete_000.ogg[39m[0m
+[  34% ] [90m[1mreimport[22m | footstep_concrete_001.ogg[39m[0m
+[  34% ] [90m[1mreimport[22m | footstep_concrete_002.ogg[39m[0m
+[  35% ] [90m[1mreimport[22m | footstep_concrete_003.ogg[39m[0m
+[  35% ] [90m[1mreimport[22m | footstep_concrete_004.ogg[39m[0m
+[  35% ] [90m[1mreimport[22m | footstep_grass_000.ogg[39m[0m
+[  35% ] [90m[1mreimport[22m | footstep_wood_004.ogg[39m[0m
+[  35% ] [90m[1mreimport[22m | footstep_wood_003.ogg[39m[0m
+[  35% ] [90m[1mreimport[22m | footstep_wood_002.ogg[39m[0m
+[  35% ] [90m[1mreimport[22m | footstep_wood_001.ogg[39m[0m
+[  35% ] [90m[1mreimport[22m | footstep_wood_000.ogg[39m[0m
+[  36% ] [90m[1mreimport[22m | footstep_snow_004.ogg[39m[0m
+[  36% ] [90m[1mreimport[22m | footstep_snow_003.ogg[39m[0m
+[  36% ] [90m[1mreimport[22m | footstep_grass_001.ogg[39m[0m
+[  36% ] [90m[1mreimport[22m | footstep_grass_002.ogg[39m[0m
+[  36% ] [90m[1mreimport[22m | footstep_grass_003.ogg[39m[0m
+[  36% ] [90m[1mreimport[22m | footstep_snow_002.ogg[39m[0m
+[  36% ] [90m[1mreimport[22m | footstep_snow_001.ogg[39m[0m
+[  36% ] [90m[1mreimport[22m | footstep_snow_000.ogg[39m[0m
+[  37% ] [90m[1mreimport[22m | footstep_grass_004.ogg[39m[0m
+[  37% ] [90m[1mreimport[22m | p6_door_route.png[39m[0m
+[  37% ] [90m[1mreimport[22m | 01_clay_comparison.png[39m[0m
+[  37% ] [90m[1mreimport[22m | 02_office_comparison.png[39m[0m
+[  37% ] [90m[1mreimport[22m | 03_clay_views.png[39m[0m
+[  37% ] [90m[1mreimport[22m | 04_motion_sequence.png[39m[0m
+[  37% ] [90m[1mreimport[22m | n1_seated.png[39m[0m
+[  37% ] [90m[1mreimport[22m | n2_top.png[39m[0m
+[  38% ] [90m[1mreimport[22m | n3_right.png[39m[0m
+[  38% ] [90m[1mreimport[22m | n4_left.png[39m[0m
+[  38% ] [90m[1mreimport[22m | top.png[39m[0m
+[  38% ] [90m[1mreimport[22m | n5_rear.png[39m[0m
+[  38% ] [90m[1mreimport[22m | n6_cuff.png[39m[0m
+[  38% ] [90m[1mreimport[22m | n5_rear.png[39m[0m
+[  38% ] [90m[1mreimport[22m | n1_seated.png[39m[0m
+[  38% ] [90m[1mreimport[22m | n4_left.png[39m[0m
+[  39% ] [90m[1mreimport[22m | right.png[39m[0m
+[  39% ] [90m[1mreimport[22m | n2_top.png[39m[0m
+[  39% ] [90m[1mreimport[22m | n3_right.png[39m[0m
+[  39% ] [90m[1mreimport[22m | macro.png[39m[0m
+[  39% ] [90m[1mreimport[22m | left.png[39m[0m
+[  39% ] [90m[1mreimport[22m | eye.png[39m[0m
+[  39% ] [90m[1mreimport[22m | 02_desk_arm.png[39m[0m
+[  39% ] [90m[1mreimport[22m | 03_finished_sheet.png[39m[0m
+[  40% ] [90m[1mreimport[22m | 04_lifted_sheet.png[39m[0m
+[  40% ] [90m[1mreimport[22m | 01_seated_arm.png[39m[0m
+[  40% ] [90m[1mreimport[22m | 02_desk_arm.png[39m[0m
+[  40% ] [90m[1mreimport[22m | 03_finished_sheet.png[39m[0m
+[  40% ] [90m[1mreimport[22m | 04_lifted_sheet.png[39m[0m
+[  40% ] [90m[1mreimport[22m | p1_seated_receiving.png[39m[0m
+[  40% ] [90m[1mreimport[22m | p2_seated_window_look.png[39m[0m
+[  40% ] [90m[1mreimport[22m | p3_seated_read.png[39m[0m
+[  41% ] [90m[1mreimport[22m | p4_board_standing.png[39m[0m
+[  41% ] [90m[1mreimport[22m | p5_route_result.png[39m[0m
+[  41% ] [90m[1mreimport[22m | p6_door_route.png[39m[0m
+[  41% ] [90m[1mreimport[22m | p1_seated_receiving.png[39m[0m
+[  41% ] [90m[1mreimport[22m | p2_seated_window_look.png[39m[0m
+[  41% ] [90m[1mreimport[22m | p3_seated_read.png[39m[0m
+[  41% ] [90m[1mreimport[22m | p4_board_standing.png[39m[0m
+[  41% ] [90m[1mreimport[22m | p5_route_result.png[39m[0m
+[  42% ] [90m[1mreimport[22m | 02_desk_arm.png[39m[0m
+[  42% ] [90m[1mreimport[22m | 03_finished_sheet.png[39m[0m
+[  42% ] [90m[1mreimport[22m | 04_lifted_sheet.png[39m[0m
+[  42% ] [90m[1mreimport[22m | 01_seated_arm.png[39m[0m
+[  42% ] [90m[1mreimport[22m | 02_desk_arm.png[39m[0m
+[  42% ] [90m[1mreimport[22m | 03_finished_sheet.png[39m[0m
+[  42% ] [90m[1mreimport[22m | 04_lifted_sheet.png[39m[0m
+[  42% ] [90m[1mreimport[22m | 01_seated_arm.png[39m[0m
+[  43% ] [90m[1mreimport[22m | 02_desk_arm.png[39m[0m
+[  43% ] [90m[1mreimport[22m | 03_finished_sheet.png[39m[0m
+[  43% ] [90m[1mreimport[22m | 04_lifted_sheet.png[39m[0m
+[  43% ] [90m[1mreimport[22m | p1_seated_receiving.png[39m[0m
+[  43% ] [90m[1mreimport[22m | p2_seated_window_look.png[39m[0m
+[  43% ] [90m[1mreimport[22m | p3_seated_read.png[39m[0m
+[  43% ] [90m[1mreimport[22m | p4_board_standing.png[39m[0m
+[  43% ] [90m[1mreimport[22m | p5_route_result.png[39m[0m
+[  44% ] [90m[1mreimport[22m | p6_door_route.png[39m[0m
+[  44% ] [90m[1mreimport[22m | live_first_row.png[39m[0m
+[  44% ] [90m[1mreimport[22m | live_second_row.png[39m[0m
+[  44% ] [90m[1mreimport[22m | n6_cuff.png[39m[0m
+[  44% ] [90m[1mreimport[22m | 01_entry.png[39m[0m
+[  44% ] [90m[1mreimport[22m | 02_orders.png[39m[0m
+[  44% ] [90m[1mreimport[22m | 03_writing_0.png[39m[0m
+[  44% ] [90m[1mreimport[22m | 03_writing_1.png[39m[0m
+[  45% ] [90m[1mreimport[22m | 03_writing_2.png[39m[0m
+[  45% ] [90m[1mreimport[22m | 04_transcript_0.png[39m[0m
+[  45% ] [90m[1mreimport[22m | 04_transcript_1.png[39m[0m
+[  45% ] [90m[1mreimport[22m | 04_transcript_2.png[39m[0m
+[  45% ] [90m[1mreimport[22m | 05_routing_0.png[39m[0m
+[  45% ] [90m[1mreimport[22m | 05_routing_1.png[39m[0m
+[  45% ] [90m[1mreimport[22m | 06_filed.png[39m[0m
+[  45% ] [90m[1mreimport[22m | 07_window.png[39m[0m
+[  46% ] [90m[1mreimport[22m | 08_handover.png[39m[0m
+[  46% ] [90m[1mreimport[22m | 09_ending.png[39m[0m
+[  46% ] [90m[1mreimport[22m | 01_seated_arm.png[39m[0m
+[  46% ] [90m[1mreimport[22m | 02_desk_arm.png[39m[0m
+[  46% ] [90m[1mreimport[22m | 03_finished_sheet.png[39m[0m
+[  46% ] [90m[1mreimport[22m | 04_lifted_sheet.png[39m[0m
+[  46% ] [90m[1mreimport[22m | 01_seated_arm.png[39m[0m
+[  46% ] [90m[1mreimport[22m | 02_orders.png[39m[0m
+[  47% ] [90m[1mreimport[22m | 01_entry.png[39m[0m
+[  47% ] [90m[1mreimport[22m | n6_cuff.png[39m[0m
+[  47% ] [90m[1mreimport[22m | n5_rear.png[39m[0m
+[  47% ] [90m[1mreimport[22m | n4_left.png[39m[0m
+[  47% ] [90m[1mreimport[22m | n3_right.png[39m[0m
+[  47% ] [90m[1mreimport[22m | n2_top.png[39m[0m
+[  47% ] [90m[1mreimport[22m | n1_seated.png[39m[0m
+[  47% ] [90m[1mreimport[22m | n6_cuff.png[39m[0m
+[  48% ] [90m[1mreimport[22m | n5_rear.png[39m[0m
+[  48% ] [90m[1mreimport[22m | n4_left.png[39m[0m
+[  48% ] [90m[1mreimport[22m | n3_right.png[39m[0m
+[  48% ] [90m[1mreimport[22m | n2_top.png[39m[0m
+[  48% ] [90m[1mreimport[22m | n1_seated.png[39m[0m
+[  48% ] [90m[1mreimport[22m | n6_cuff.png[39m[0m
+[  48% ] [90m[1mreimport[22m | n5_rear.png[39m[0m
+[  48% ] [90m[1mreimport[22m | n4_left.png[39m[0m
+[  49% ] [90m[1mreimport[22m | n3_right.png[39m[0m
+[  49% ] [90m[1mreimport[22m | n2_top.png[39m[0m
+[  49% ] [90m[1mreimport[22m | n1_seated.png[39m[0m
+[  49% ] [90m[1mreimport[22m | 01_seated_arm.png[39m[0m
+[  49% ] [90m[1mreimport[22m | 04_lifted_sheet.png[39m[0m
+[  49% ] [90m[1mreimport[22m | 03_finished_sheet.png[39m[0m
+[  49% ] [90m[1mreimport[22m | 02_desk_arm.png[39m[0m
+[  49% ] [90m[1mreimport[22m | 01_seated_arm.png[39m[0m
+[  50% ] [90m[1mreimport[22m | 04_lifted_sheet.png[39m[0m
+[  50% ] [90m[1mreimport[22m | 03_finished_sheet.png[39m[0m
+[  50% ] [90m[1mreimport[22m | 02_desk_arm.png[39m[0m
+[  50% ] [90m[1mreimport[22m | 01_seated_arm.png[39m[0m
+[  50% ] [90m[1mreimport[22m | 09_ending.png[39m[0m
+[  50% ] [90m[1mreimport[22m | 08_handover.png[39m[0m
+[  50% ] [90m[1mreimport[22m | 07_window.png[39m[0m
+[  50% ] [90m[1mreimport[22m | 06_filed.png[39m[0m
+[  51% ] [90m[1mreimport[22m | 05_routing_1.png[39m[0m
+[  51% ] [90m[1mreimport[22m | 05_routing_0.png[39m[0m
+[  51% ] [90m[1mreimport[22m | 04_transcript_2.png[39m[0m
+[  51% ] [90m[1mreimport[22m | 04_transcript_1.png[39m[0m
+[  51% ] [90m[1mreimport[22m | 04_transcript_0.png[39m[0m
+[  51% ] [90m[1mreimport[22m | 03_writing_2.png[39m[0m
+[  51% ] [90m[1mreimport[22m | 03_writing_1.png[39m[0m
+[  51% ] [90m[1mreimport[22m | 03_writing_0.png[39m[0m
+[  52% ] [90m[1mreimport[22m | c4_center_west.png[39m[0m
+[  52% ] [90m[1mreimport[22m | c3_center_south.png[39m[0m
+[  52% ] [90m[1mreimport[22m | c2_center_east.png[39m[0m
+[  52% ] [90m[1mreimport[22m | c1_center_north.png[39m[0m
+[  52% ] [90m[1mreimport[22m | o9_seated_eye.png[39m[0m
+[  52% ] [90m[1mreimport[22m | o8_tape_register.png[39m[0m
+[  52% ] [90m[1mreimport[22m | o7_key_sounder.png[39m[0m
+[  52% ] [90m[1mreimport[22m | o6_stove_corner.png[39m[0m
+[  53% ] [90m[1mreimport[22m | o5_desk_close.png[39m[0m
+[  53% ] [90m[1mreimport[22m | o4_west_desk.png[39m[0m
+[  53% ] [90m[1mreimport[22m | o3_south_door.png[39m[0m
+[  53% ] [90m[1mreimport[22m | o2_east_board.png[39m[0m
+[  53% ] [90m[1mreimport[22m | o1_north_window.png[39m[0m
+[  53% ] [90m[1mreimport[22m | c4_center_west.png[39m[0m
+[  53% ] [90m[1mreimport[22m | c3_center_south.png[39m[0m
+[  53% ] [90m[1mreimport[22m | c2_center_east.png[39m[0m
+[  54% ] [90m[1mreimport[22m | c1_center_north.png[39m[0m
+[  54% ] [90m[1mreimport[22m | comparison.png[39m[0m
+[  54% ] [90m[1mreimport[22m | top.png[39m[0m
+[  54% ] [90m[1mreimport[22m | right.png[39m[0m
+[  54% ] [90m[1mreimport[22m | 02_model_audit.png[39m[0m
+[  54% ] [90m[1mreimport[22m | n6_cuff.png[39m[0m
+[  54% ] [90m[1mreimport[22m | n5_rear.png[39m[0m
+[  54% ] [90m[1mreimport[22m | n4_left.png[39m[0m
+[  55% ] [90m[1mreimport[22m | n3_right.png[39m[0m
+[  55% ] [90m[1mreimport[22m | n2_top.png[39m[0m
+[  55% ] [90m[1mreimport[22m | n1_seated.png[39m[0m
+[  55% ] [90m[1mreimport[22m | wood_repeat.png[39m[0m
+[  55% ] [90m[1mreimport[22m | wallpaper_repeat.png[39m[0m
+[  55% ] [90m[1mreimport[22m | paper_repeat.png[39m[0m
+[  55% ] [90m[1mreimport[22m | material_sheet.png[39m[0m
+[  55% ] [90m[1mreimport[22m | baize_repeat.png[39m[0m
+[  56% ] [90m[1mreimport[22m | o9_seated_eye.png[39m[0m
+[  56% ] [90m[1mreimport[22m | o8_tape_register.png[39m[0m
+[  56% ] [90m[1mreimport[22m | o7_key_sounder.png[39m[0m
+[  56% ] [90m[1mreimport[22m | o6_stove_corner.png[39m[0m
+[  56% ] [90m[1mreimport[22m | o5_desk_close.png[39m[0m
+[  56% ] [90m[1mreimport[22m | o4_west_desk.png[39m[0m
+[  56% ] [90m[1mreimport[22m | o3_south_door.png[39m[0m
+[  56% ] [90m[1mreimport[22m | o2_east_board.png[39m[0m
+[  57% ] [90m[1mreimport[22m | o1_north_window.png[39m[0m
+[  57% ] [90m[1mreimport[22m | w2_second_row.png[39m[0m
+[  57% ] [90m[1mreimport[22m | w3_finished_sheet.png[39m[0m
+[  57% ] [90m[1mreimport[22m | card_morse_stock.png[39m[0m
+[  57% ] [90m[1mreimport[22m | form_night_copy.png[39m[0m
+[  57% ] [90m[1mreimport[22m | map_division.png[39m[0m
+[  57% ] [90m[1mreimport[22m | card_morse_stock.png[39m[0m
+[  57% ] [90m[1mreimport[22m | form_night_copy.png[39m[0m
+[  58% ] [90m[1mreimport[22m | map_division.png[39m[0m
+[  58% ] [90m[1mreimport[22m | card_morse_stock.png[39m[0m
+[  58% ] [90m[1mreimport[22m | form_night_copy.png[39m[0m
+[  58% ] [90m[1mreimport[22m | map_division.png[39m[0m
+[  58% ] [90m[1mreimport[22m | psx_aged_metal_64.png[39m[0m
+[  58% ] [90m[1mreimport[22m | psx_brass_32.png[39m[0m
+[  58% ] [90m[1mreimport[22m | psx_ceiling_boards_128.png[39m[0m
+[  58% ] [90m[1mreimport[22m | psx_dark_wood_64.png[39m[0m
+[  59% ] [90m[1mreimport[22m | psx_floor_boards_128.png[39m[0m
+[  59% ] [90m[1mreimport[22m | psx_light_wood_64.png[39m[0m
+[  59% ] [90m[1mreimport[22m | psx_paper_64.png[39m[0m
+[  59% ] [90m[1mreimport[22m | psx_slate_board_128.png[39m[0m
+[  59% ] [90m[1mreimport[22m | psx_wainscot_128.png[39m[0m
+[  59% ] [90m[1mreimport[22m | 03_writing_2.png[39m[0m
+[  59% ] [90m[1mreimport[22m | 04_objective_tape.png[39m[0m
+[  59% ] [90m[1mreimport[22m | 04_transcript_0.png[39m[0m
+[  60% ] [90m[1mreimport[22m | 04_transcript_1.png[39m[0m
+[  60% ] [90m[1mreimport[22m | 04_transcript_2.png[39m[0m
+[  60% ] [90m[1mreimport[22m | 05_routing_0.png[39m[0m
+[  60% ] [90m[1mreimport[22m | 05_routing_1.png[39m[0m
+[  60% ] [90m[1mreimport[22m | 06_amendment_blank.png[39m[0m
+[  60% ] [90m[1mreimport[22m | 06_amendment_typed.png[39m[0m
+[  60% ] [90m[1mreimport[22m | 06_filed.png[39m[0m
+[  60% ] [90m[1mreimport[22m | 07_window.png[39m[0m
+[  61% ] [90m[1mreimport[22m | 08_handover.png[39m[0m
+[  61% ] [90m[1mreimport[22m | 09_ending.png[39m[0m
+[  61% ] [90m[1mreimport[22m | p1_seated_receiving.png[39m[0m
+[  61% ] [90m[1mreimport[22m | p2_seated_window_look.png[39m[0m
+[  61% ] [90m[1mreimport[22m | p3_seated_read.png[39m[0m
+[  61% ] [90m[1mreimport[22m | p4_board_standing.png[39m[0m
+[  61% ] [90m[1mreimport[22m | p5_route_result.png[39m[0m
+[  61% ] [90m[1mreimport[22m | p6_door_route.png[39m[0m
+[  62% ] [90m[1mreimport[22m | w1_first_row_midglyph.png[39m[0m
+[  62% ] [90m[1mreimport[22m | 04_north_window_idle.png[39m[0m
+[  62% ] [90m[1mreimport[22m | 04_south_door_view.png[39m[0m
+[  62% ] [90m[1mreimport[22m | 05_north_window_figure_active.png[39m[0m
+[  62% ] [90m[1mreimport[22m | 06_south_door_view.png[39m[0m
+[  62% ] [90m[1mreimport[22m | 07_routing_board_close.png[39m[0m
+[  62% ] [90m[1mreimport[22m | 08_f3_debug_telemetry_scenario3.png[39m[0m
+[  62% ] [90m[1mreimport[22m | consequence.png[39m[0m
+[  63% ] [90m[1mreimport[22m | document.png[39m[0m
+[  63% ] [90m[1mreimport[22m | document_viewer.png[39m[0m
+[  63% ] [90m[1mreimport[22m | door.png[39m[0m
+[  63% ] [90m[1mreimport[22m | equipment.png[39m[0m
+[  63% ] [90m[1mreimport[22m | equipment_close.png[39m[0m
+[  63% ] [90m[1mreimport[22m | hero.png[39m[0m
+[  63% ] [90m[1mreimport[22m | icon.svg[39m[0m
+[  63% ] [90m[1mreimport[22m | overview.png[39m[0m
+[  64% ] [90m[1mreimport[22m | routing.png[39m[0m
+[  64% ] [90m[1mreimport[22m | waiting.png[39m[0m
+[  64% ] [90m[1mreimport[22m | window_figure.png[39m[0m
+[  64% ] [90m[1mreimport[22m | writer.png[39m[0m
+[  64% ] [90m[1mreimport[22m | icon.svg[39m[0m
+[  64% ] [90m[1mreimport[22m | psx_wallpaper_stripe_128.png[39m[0m
+[  64% ] [90m[1mreimport[22m | psx_wall_plaster_128.png[39m[0m
+[  64% ] [90m[1mreimport[22m | psx_window_night_64.png[39m[0m
+[  65% ] [90m[1mreimport[22m | paper_worn_diff.png[39m[0m
+[  65% ] [90m[1mreimport[22m | weathered_brown_planks_diff.png[39m[0m
+[  65% ] [90m[1mreimport[22m | wood_floor_worn_diff.png[39m[0m
+[  65% ] [90m[1mreimport[22m | worn_plaster_wall_diff.png[39m[0m
+[  65% ] [90m[1mreimport[22m | vintage_oil_lamp_arm_1k.jpg[39m[0m
+[  65% ] [90m[1mreimport[22m | vintage_oil_lamp_diff_1k.jpg[39m[0m
+[  65% ] [90m[1mreimport[22m | vintage_oil_lamp_flame_diff_1k.jpg[39m[0m
+[  65% ] [90m[1mreimport[22m | vintage_oil_lamp_glass_arm_1k.jpg[39m[0m
+[  66% ] [90m[1mreimport[22m | vintage_oil_lamp_glass_diff_1k.jpg[39m[0m
+[  66% ] [90m[1mreimport[22m | vintage_oil_lamp_glass_nor_gl_1k.jpg[39m[0m
+[  66% ] [90m[1mreimport[22m | vintage_oil_lamp_nor_gl_1k.jpg[39m[0m
+[  66% ] [90m[1mreimport[22m | 01_start_desk_view.png[39m[0m
+[  66% ] [90m[1mreimport[22m | 01_start_view.png[39m[0m
+[  66% ] [90m[1mreimport[22m | 02_desk_equipment_close.png[39m[0m
+[  66% ] [90m[1mreimport[22m | 02_north_window_view.png[39m[0m
+[  66% ] [90m[1mreimport[22m | 03_document_viewer_open.png[39m[0m
+[  67% ] [90m[1mreimport[22m | 03_east_routing_board_view.png[39m[0m
+[  67% ] [90m[1mreimport[22m | p4_board_standing.png[39m[0m
+[  67% ] [90m[1mreimport[22m | elias_working_atlas.png[39m[0m
+[  67% ] [90m[1mreimport[22m | glyph_space.svg[39m[0m
+[  67% ] [90m[1mreimport[22m | glyph_u002C.svg[39m[0m
+[  67% ] [90m[1mreimport[22m | glyph_u002D.svg[39m[0m
+[  67% ] [90m[1mreimport[22m | glyph_u002E.svg[39m[0m
+[  67% ] [90m[1mreimport[22m | glyph_u002F.svg[39m[0m
+[  68% ] [90m[1mreimport[22m | glyph_u003A.svg[39m[0m
+[  68% ] [90m[1mreimport[22m | glyph_u003B.svg[39m[0m
+[  68% ] [90m[1mreimport[22m | glyph_u003F.svg[39m[0m
+[  68% ] [90m[1mreimport[22m | glyph_u004A.svg[39m[0m
+[  68% ] [90m[1mreimport[22m | glyph_u004B.svg[39m[0m
+[  68% ] [90m[1mreimport[22m | glyph_u004C.svg[39m[0m
+[  68% ] [90m[1mreimport[22m | glyph_u004D.svg[39m[0m
+[  68% ] [90m[1mreimport[22m | glyph_u004E.svg[39m[0m
+[  69% ] [90m[1mreimport[22m | glyph_u004F.svg[39m[0m
+[  69% ] [90m[1mreimport[22m | glyph_u005A.svg[39m[0m
+[  69% ] [90m[1mreimport[22m | glyph_u0021.svg[39m[0m
+[  69% ] [90m[1mreimport[22m | glyph_u0027.svg[39m[0m
+[  69% ] [90m[1mreimport[22m | glyph_u0028.svg[39m[0m
+[  69% ] [90m[1mreimport[22m | live_withdrawn.png[39m[0m
+[  69% ] [90m[1mreimport[22m | macro_comparison.png[39m[0m
+[  69% ] [90m[1mreimport[22m | neutral_views.png[39m[0m
+[  70% ] [90m[1mreimport[22m | seated_comparison.png[39m[0m
+[  70% ] [90m[1mreimport[22m | 01_seated_arm.png[39m[0m
+[  70% ] [90m[1mreimport[22m | 02_desk_arm.png[39m[0m
+[  70% ] [90m[1mreimport[22m | 03_finished_sheet.png[39m[0m
+[  70% ] [90m[1mreimport[22m | 04_lifted_sheet.png[39m[0m
+[  70% ] [90m[1mreimport[22m | 01_seated_arm.png[39m[0m
+[  70% ] [90m[1mreimport[22m | 02_desk_arm.png[39m[0m
+[  70% ] [90m[1mreimport[22m | 03_finished_sheet.png[39m[0m
+[  71% ] [90m[1mreimport[22m | 04_lifted_sheet.png[39m[0m
+[  71% ] [90m[1mreimport[22m | comparison_native_1x.png[39m[0m
+[  71% ] [90m[1mreimport[22m | comparison_psx_half.png[39m[0m
+[  71% ] [90m[1mreimport[22m | psx_desk_close.png[39m[0m
+[  71% ] [90m[1mreimport[22m | psx_desk_to_door.png[39m[0m
+[  71% ] [90m[1mreimport[22m | psx_desk_to_window.png[39m[0m
+[  71% ] [90m[1mreimport[22m | psx_material_closeup.png[39m[0m
+[  71% ] [90m[1mreimport[22m | psx_overview.png[39m[0m
+[  72% ] [90m[1mreimport[22m | p1_seated_receiving.png[39m[0m
+[  72% ] [90m[1mreimport[22m | glyph_u0051.svg[39m[0m
+[  72% ] [90m[1mreimport[22m | glyph_u0052.svg[39m[0m
+[  72% ] [90m[1mreimport[22m | glyph_u0053.svg[39m[0m
+[  72% ] [90m[1mreimport[22m | glyph_u0054.svg[39m[0m
+[  72% ] [90m[1mreimport[22m | glyph_u0055.svg[39m[0m
+[  72% ] [90m[1mreimport[22m | glyph_u0056.svg[39m[0m
+[  72% ] [90m[1mreimport[22m | glyph_u0057.svg[39m[0m
+[  73% ] [90m[1mreimport[22m | glyph_u0058.svg[39m[0m
+[  73% ] [90m[1mreimport[22m | glyph_u0059.svg[39m[0m
+[  73% ] [90m[1mreimport[22m | 01_blank_amendment.png[39m[0m
+[  73% ] [90m[1mreimport[22m | 02_explicit_wrong_draft.png[39m[0m
+[  73% ] [90m[1mreimport[22m | 03_exact_choice_handover.png[39m[0m
+[  73% ] [90m[1mreimport[22m | 04_objective_tape.png[39m[0m
+[  73% ] [90m[1mreimport[22m | 01_blank_amendment.png[39m[0m
+[  73% ] [90m[1mreimport[22m | 01_entry.png[39m[0m
+[  74% ] [90m[1mreimport[22m | 02_explicit_wrong_draft.png[39m[0m
+[  74% ] [90m[1mreimport[22m | 02_orders.png[39m[0m
+[  74% ] [90m[1mreimport[22m | 03_exact_choice_handover.png[39m[0m
+[  74% ] [90m[1mreimport[22m | 03_writing_0.png[39m[0m
+[  74% ] [90m[1mreimport[22m | 03_writing_1.png[39m[0m
+[  74% ] [90m[1mreimport[22m | glyph_u0029.svg[39m[0m
+[  74% ] [90m[1mreimport[22m | glyph_u0030.svg[39m[0m
+[  74% ] [90m[1mreimport[22m | glyph_u0031.svg[39m[0m
+[  75% ] [90m[1mreimport[22m | glyph_u0032.svg[39m[0m
+[  75% ] [90m[1mreimport[22m | glyph_u0033.svg[39m[0m
+[  75% ] [90m[1mreimport[22m | glyph_u0034.svg[39m[0m
+[  75% ] [90m[1mreimport[22m | glyph_u0035.svg[39m[0m
+[  75% ] [90m[1mreimport[22m | glyph_u0036.svg[39m[0m
+[  75% ] [90m[1mreimport[22m | glyph_u0037.svg[39m[0m
+[  75% ] [90m[1mreimport[22m | glyph_u0038.svg[39m[0m
+[  75% ] [90m[1mreimport[22m | glyph_u0039.svg[39m[0m
+[  76% ] [90m[1mreimport[22m | glyph_u0041.svg[39m[0m
+[  76% ] [90m[1mreimport[22m | glyph_u0042.svg[39m[0m
+[  76% ] [90m[1mreimport[22m | glyph_u0043.svg[39m[0m
+[  76% ] [90m[1mreimport[22m | glyph_u0044.svg[39m[0m
+[  76% ] [90m[1mreimport[22m | glyph_u0045.svg[39m[0m
+[  76% ] [90m[1mreimport[22m | glyph_u0046.svg[39m[0m
+[  76% ] [90m[1mreimport[22m | glyph_u0047.svg[39m[0m
+[  76% ] [90m[1mreimport[22m | glyph_u0048.svg[39m[0m
+[  77% ] [90m[1mreimport[22m | glyph_u0049.svg[39m[0m
+[  77% ] [90m[1mreimport[22m | glyph_u0050.svg[39m[0m
+[  77% ] [90m[1mreimport[22m | book_encyclopedia_set_01_paper_nor_gl_1k.jpg[39m[0m
+[  77% ] [90m[1mreimport[22m | book_encyclopedia_set_01_paper_roughness_1k.jpg[39m[0m
+[  77% ] [90m[1mreimport[22m | vintage_wooden_drawer_01_arm_1k.jpg[39m[0m
+[  77% ] [90m[1mreimport[22m | vintage_wooden_drawer_01_diff_1k.jpg[39m[0m
+[  77% ] [90m[1mreimport[22m | vintage_wooden_drawer_01_nor_gl_1k.jpg[39m[0m
+[  77% ] [90m[1mreimport[22m | 01_spawn_view.png[39m[0m
+[  78% ] [90m[1mreimport[22m | 02_full_room_overview.png[39m[0m
+[  78% ] [90m[1mreimport[22m | 03_operator_desk_working_position.png[39m[0m
+[  78% ] [90m[1mreimport[22m | 04_chair_clearance_side.png[39m[0m
+[  78% ] [90m[1mreimport[22m | 05_telegraph_equipment_close.png[39m[0m
+[  78% ] [90m[1mreimport[22m | 06_north_window_idle.png[39m[0m
+[  78% ] [90m[1mreimport[22m | 07_north_window_figure.png[39m[0m
+[  78% ] [90m[1mreimport[22m | 08_south_door.png[39m[0m
+[  78% ] [90m[1mreimport[22m | 09_routing_board_front.png[39m[0m
+[  79% ] [90m[1mreimport[22m | 10_stove_and_storage.png[39m[0m
+[  79% ] [90m[1mreimport[22m | 11_document_viewer.png[39m[0m
+[  79% ] [90m[1mreimport[22m | 12_scenario3_debug_telemetry.png[39m[0m
+[  79% ] [90m[1mreimport[22m | instrument_atlas_256.png[39m[0m
+[  79% ] [90m[1mreimport[22m | baize_128_v1.png[39m[0m
+[  79% ] [90m[1mreimport[22m | paper_128_v1.png[39m[0m
+[  79% ] [90m[1mreimport[22m | wallpaper_128_v1.png[39m[0m
+[  79% ] [90m[1mreimport[22m | wood_128_v1.png[39m[0m
+[  80% ] [90m[1mreimport[22m | wooden_table_02_arm_1k.jpg[39m[0m
+[  80% ] [90m[1mreimport[22m | wooden_table_02_diff_1k.jpg[39m[0m
+[  80% ] [90m[1mreimport[22m | wooden_table_02_nor_gl_1k.jpg[39m[0m
+[  80% ] [90m[1mreimport[22m | painted_wooden_cabinet_02_arm_1k.jpg[39m[0m
+[  80% ] [90m[1mreimport[22m | painted_wooden_cabinet_02_diff_1k.jpg[39m[0m
+[  80% ] [90m[1mreimport[22m | painted_wooden_cabinet_02_nor_gl_1k.jpg[39m[0m
+[  80% ] [90m[1mreimport[22m | painted_wooden_chair_01_arm_1k.jpg[39m[0m
+[  80% ] [90m[1mreimport[22m | painted_wooden_chair_01_diff_1k.jpg[39m[0m
+[  81% ] [90m[1mreimport[22m | painted_wooden_chair_01_nor_gl_1k.jpg[39m[0m
+[  81% ] [90m[1mreimport[22m | book_encyclopedia_set_01_cover_arm_1k.jpg[39m[0m
+[  81% ] [90m[1mreimport[22m | book_encyclopedia_set_01_cover_diff_1k.jpg[39m[0m
+[  81% ] [90m[1mreimport[22m | book_encyclopedia_set_01_cover_nor_gl_1k.jpg[39m[0m
+[  81% ] [90m[1mreimport[22m | book_encyclopedia_set_01_paper_diff_1k.jpg[39m[0m
+[  81% ] [90m[1mreimport[22m | 09_routing_board_before_final.png[39m[0m
+[  81% ] [90m[1mreimport[22m | 10_stove_storage_before_final.png[39m[0m
+[  81% ] [90m[1mreimport[22m | 01_spawn_hero_before_final.png[39m[0m
+[  82% ] [90m[1mreimport[22m | 02_full_room_overview_before_final.png[39m[0m
+[  82% ] [90m[1mreimport[22m | 07_north_window_figure_before_final.png[39m[0m
+[  82% ] [90m[1mreimport[22m | 09_routing_board_before_final.png[39m[0m
+[  82% ] [90m[1mreimport[22m | 10_stove_storage_before_final.png[39m[0m
+[  82% ] [90m[1mreimport[22m | 01_spawn_hero.png[39m[0m
+[  82% ] [90m[1mreimport[22m | 02_full_room_overview.png[39m[0m
+[  82% ] [90m[1mreimport[22m | 03_operator_workstation.png[39m[0m
+[  82% ] [90m[1mreimport[22m | 04_chair_clearance.png[39m[0m
+[  83% ] [90m[1mreimport[22m | 05_telegraph_equipment.png[39m[0m
+[  83% ] [90m[1mreimport[22m | 06_north_window_idle.png[39m[0m
+[  83% ] [90m[1mreimport[22m | 07_north_window_figure.png[39m[0m
+[  83% ] [90m[1mreimport[22m | 08_south_door.png[39m[0m
+[  83% ] [90m[1mreimport[22m | 09_routing_board.png[39m[0m
+[  83% ] [90m[1mreimport[22m | 10_stove_storage.png[39m[0m
+[  83% ] [90m[1mreimport[22m | 01_spawn_hero.png[39m[0m
+[  83% ] [90m[1mreimport[22m | 02_full_room_overview.png[39m[0m
+[  84% ] [90m[1mreimport[22m | 03_operator_workstation.png[39m[0m
+[  84% ] [90m[1mreimport[22m | 04_chair_clearance.png[39m[0m
+[  84% ] [90m[1mreimport[22m | 05_telegraph_equipment.png[39m[0m
+[  84% ] [90m[1mreimport[22m | 06_north_window_idle.png[39m[0m
+[  84% ] [90m[1mreimport[22m | 07_north_window_figure.png[39m[0m
+[  84% ] [90m[1mreimport[22m | 08_south_door.png[39m[0m
+[  84% ] [90m[1mreimport[22m | 09_routing_board.png[39m[0m
+[  84% ] [90m[1mreimport[22m | 10_stove_storage.png[39m[0m
+[  85% ] [90m[1mreimport[22m | 11_real_morse_document.png[39m[0m
+[  85% ] [90m[1mreimport[22m | 12_scenario3_debug_telemetry.png[39m[0m
+[  85% ] [90m[1mreimport[22m | 01_spawn_hero_before_final.png[39m[0m
+[  85% ] [90m[1mreimport[22m | 02_full_room_overview_before_final.png[39m[0m
+[  85% ] [90m[1mreimport[22m | 03_operator_workstation_before_final.png[39m[0m
+[  85% ] [90m[1mreimport[22m | 05_telegraph_equipment_before_final.png[39m[0m
+[  85% ] [90m[1mreimport[22m | 07_north_window_figure_before_final.png[39m[0m
+[  85% ] [90m[1mreimport[22m | 08_south_door_before_final.png[39m[0m
+[  86% ] [90m[1mreimport[22m | glyph_u0029.svg[39m[0m
+[  86% ] [90m[1mreimport[22m | glyph_u0030.svg[39m[0m
+[  86% ] [90m[1mreimport[22m | glyph_u0031.svg[39m[0m
+[  86% ] [90m[1mreimport[22m | glyph_u0032.svg[39m[0m
+[  86% ] [90m[1mreimport[22m | glyph_u0033.svg[39m[0m
+[  86% ] [90m[1mreimport[22m | glyph_u0034.svg[39m[0m
+[  86% ] [90m[1mreimport[22m | glyph_u0035.svg[39m[0m
+[  86% ] [90m[1mreimport[22m | glyph_u0036.svg[39m[0m
+[  87% ] [90m[1mreimport[22m | glyph_u0037.svg[39m[0m
+[  87% ] [90m[1mreimport[22m | glyph_u0038.svg[39m[0m
+[  87% ] [90m[1mreimport[22m | glyph_u0039.svg[39m[0m
+[  87% ] [90m[1mreimport[22m | glyph_u0041.svg[39m[0m
+[  87% ] [90m[1mreimport[22m | glyph_u0042.svg[39m[0m
+[  87% ] [90m[1mreimport[22m | glyph_u0043.svg[39m[0m
+[  87% ] [90m[1mreimport[22m | glyph_u0044.svg[39m[0m
+[  87% ] [90m[1mreimport[22m | glyph_u0045.svg[39m[0m
+[  88% ] [90m[1mreimport[22m | glyph_u0046.svg[39m[0m
+[  88% ] [90m[1mreimport[22m | glyph_space.svg[39m[0m
+[  88% ] [90m[1mreimport[22m | glyph_u002C.svg[39m[0m
+[  88% ] [90m[1mreimport[22m | glyph_u002D.svg[39m[0m
+[  88% ] [90m[1mreimport[22m | glyph_u002E.svg[39m[0m
+[  88% ] [90m[1mreimport[22m | glyph_u002F.svg[39m[0m
+[  88% ] [90m[1mreimport[22m | glyph_u003A.svg[39m[0m
+[  88% ] [90m[1mreimport[22m | glyph_u003B.svg[39m[0m
+[  89% ] [90m[1mreimport[22m | glyph_u003F.svg[39m[0m
+[  89% ] [90m[1mreimport[22m | glyph_u004A.svg[39m[0m
+[  89% ] [90m[1mreimport[22m | glyph_u004B.svg[39m[0m
+[  89% ] [90m[1mreimport[22m | glyph_u004C.svg[39m[0m
+[  89% ] [90m[1mreimport[22m | glyph_u004D.svg[39m[0m
+[  89% ] [90m[1mreimport[22m | glyph_u004E.svg[39m[0m
+[  89% ] [90m[1mreimport[22m | glyph_u004F.svg[39m[0m
+[  89% ] [90m[1mreimport[22m | glyph_u005A.svg[39m[0m
+[  90% ] [90m[1mreimport[22m | glyph_u0021.svg[39m[0m
+[  90% ] [90m[1mreimport[22m | glyph_u0027.svg[39m[0m
+[  90% ] [90m[1mreimport[22m | glyph_u0028.svg[39m[0m
+[  90% ] [90m[1mreimport[22m | book_encyclopedia_set_01_paper_roughness_1k.jpg[39m[0m
+[  90% ] [90m[1mreimport[22m | painted_wooden_cabinet_02_arm_1k.jpg[39m[0m
+[  90% ] [90m[1mreimport[22m | painted_wooden_cabinet_02_diff_1k.jpg[39m[0m
+[  90% ] [90m[1mreimport[22m | painted_wooden_cabinet_02_nor_gl_1k.jpg[39m[0m
+[  90% ] [90m[1mreimport[22m | painted_wooden_chair_01_arm_1k.jpg[39m[0m
+[  91% ] [90m[1mreimport[22m | painted_wooden_chair_01_diff_1k.jpg[39m[0m
+[  91% ] [90m[1mreimport[22m | painted_wooden_chair_01_nor_gl_1k.jpg[39m[0m
+[  91% ] [90m[1mreimport[22m | wooden_table_02_arm_1k.jpg[39m[0m
+[  91% ] [90m[1mreimport[22m | wooden_table_02_diff_1k.jpg[39m[0m
+[  91% ] [90m[1mreimport[22m | wooden_table_02_nor_gl_1k.jpg[39m[0m
+[  91% ] [90m[1mreimport[22m | key_lever_instrument_atlas_256.png[39m[0m
+[  91% ] [90m[1mreimport[22m | key_static_instrument_atlas_256.png[39m[0m
+[  91% ] [90m[1mreimport[22m | register_spool_instrument_atlas_256.png[39m[0m
+[  92% ] [90m[1mreimport[22m | register_static_instrument_atlas_256.png[39m[0m
+[  92% ] [90m[1mreimport[22m | register_stylus_instrument_atlas_256.png[39m[0m
+[  92% ] [90m[1mreimport[22m | sounder_armature_instrument_atlas_256.png[39m[0m
+[  92% ] [90m[1mreimport[22m | sounder_static_instrument_atlas_256.png[39m[0m
+[  92% ] [90m[1mreimport[22m | glyph_u0047.svg[39m[0m
+[  92% ] [90m[1mreimport[22m | glyph_u0048.svg[39m[0m
+[  92% ] [90m[1mreimport[22m | glyph_u0049.svg[39m[0m
+[  92% ] [90m[1mreimport[22m | glyph_u0050.svg[39m[0m
+[  93% ] [90m[1mreimport[22m | glyph_u0051.svg[39m[0m
+[  93% ] [90m[1mreimport[22m | glyph_u0052.svg[39m[0m
+[  93% ] [90m[1mreimport[22m | glyph_u0053.svg[39m[0m
+[  93% ] [90m[1mreimport[22m | glyph_u0054.svg[39m[0m
+[  93% ] [90m[1mreimport[22m | glyph_u0055.svg[39m[0m
+[  93% ] [90m[1mreimport[22m | elias_working.fnt[39m[0m
+[  93% ] [90m[1mreimport[22m | elias_working.fnt[39m[0m
+[  93% ] [90m[1mreimport[22m | IMFeENrm28P.ttf[39m[0m
+[  94% ] [90m[1mreimport[22m | NotoSans-Regular.ttf[39m[0m
+[  94% ] [90m[1mreimport[22m | OldStandardTT-Bold.ttf[39m[0m
+[  94% ] [90m[1mreimport[22m | OldStandardTT-Regular.ttf[39m[0m
+[  94% ] [90m[1mreimport[22m | Cedarville-Cursive.ttf[39m[0m
+[  94% ] [90m[1mreimport[22m | CourierPrime-Regular.ttf[39m[0m
+[  94% ] [90m[1mreimport[22m | long_note_one.mp3[39m[0m
+[  94% ] [90m[1mreimport[22m | paper_sound_-_4.mp3[39m[0m
+[  94% ] [90m[1mreimport[22m | paper_sound_-_3.mp3[39m[0m
+[  95% ] [90m[1mreimport[22m | paper_sound_-_2.mp3[39m[0m
+[  95% ] [90m[1mreimport[22m | paper_sound_-_1.mp3[39m[0m
+[  95% ] [90m[1mreimport[22m | paper_sheet.mp3[39m[0m
+[  95% ] [90m[1mreimport[22m | impactMining_000.ogg[39m[0m
+[  95% ] [90m[1mreimport[22m | impactMetal_medium_004.ogg[39m[0m
+[  95% ] [90m[1mreimport[22m | impactMetal_medium_003.ogg[39m[0m
+[  95% ] [90m[1mreimport[22m | impactMetal_medium_002.ogg[39m[0m
+[  95% ] [90m[1mreimport[22m | impactMetal_medium_001.ogg[39m[0m
+[  96% ] [90m[1mreimport[22m | impactMetal_medium_000.ogg[39m[0m
+[  96% ] [90m[1mreimport[22m | impactMetal_light_004.ogg[39m[0m
+[  96% ] [90m[1mreimport[22m | impactMetal_light_003.ogg[39m[0m
+[  96% ] [90m[1mreimport[22m | impactMetal_light_002.ogg[39m[0m
+[  96% ] [90m[1mreimport[22m | impactMetal_light_001.ogg[39m[0m
+[  96% ] [90m[1mreimport[22m | impactMetal_light_000.ogg[39m[0m
+[  96% ] [90m[1mreimport[22m | impactMetal_heavy_004.ogg[39m[0m
+[  96% ] [90m[1mreimport[22m | chimney.obj[39m[0m
+[  97% ] [90m[1mreimport[22m | painted_wooden_chair_01.gltf[39m[0m
+[   0% ] [90m[1mimport[22m | Started Import Scene (104 steps)[39m[0m
+[   0% ] [90m[1mimport[22m | Importing Scene...[39m[0m
+[   1% ] [90m[1mimport[22m | Running Custom Script...[39m[0m
+[  99% ] [90m[1mimport[22m | Saving...[39m[0m
+[92m[ DONE ][39m [1mimport[22m
+[0m
+[  97% ] [90m[1mreimport[22m | painted_wooden_cabinet_02.gltf[39m[0m
+[   0% ] [90m[1mimport[22m | Started Import Scene (104 steps)[39m[0m
+[   0% ] [90m[1mimport[22m | Importing Scene...[39m[0m
+[   1% ] [90m[1mimport[22m | Running Custom Script...[39m[0m
+[  99% ] [90m[1mimport[22m | Saving...[39m[0m
+[92m[ DONE ][39m [1mimport[22m
+[0m
+[  97% ] [90m[1mreimport[22m | key_static.glb[39m[0m
+[   0% ] [90m[1mimport[22m | Started Import Scene (104 steps)[39m[0m
+[   0% ] [90m[1mimport[22m | Importing Scene...[39m[0m
+[   1% ] [90m[1mimport[22m | Running Custom Script...[39m[0m
+[  99% ] [90m[1mimport[22m | Saving...[39m[0m
+[92m[ DONE ][39m [1mimport[22m
+[0m
+[  97% ] [90m[1mreimport[22m | key_lever.glb[39m[0m
+[   0% ] [90m[1mimport[22m | Started Import Scene (104 steps)[39m[0m
+[   0% ] [90m[1mimport[22m | Importing Scene...[39m[0m
+[   1% ] [90m[1mimport[22m | Running Custom Script...[39m[0m
+[  99% ] [90m[1mimport[22m | Saving...[39m[0m
+[92m[ DONE ][39m [1mimport[22m
+[0m
+[  97% ] [90m[1mreimport[22m | register_spool.glb[39m[0m
+[   0% ] [90m[1mimport[22m | Started Import Scene (104 steps)[39m[0m
+[   0% ] [90m[1mimport[22m | Importing Scene...[39m[0m
+[   1% ] [90m[1mimport[22m | Running Custom Script...[39m[0m
+[  99% ] [90m[1mimport[22m | Saving...[39m[0m
+[92m[ DONE ][39m [1mimport[22m
+[0m
+[  97% ] [90m[1mreimport[22m | wooden_table_02.gltf[39m[0m
+[   0% ] [90m[1mimport[22m | Started Import Scene (104 steps)[39m[0m
+[   0% ] [90m[1mimport[22m | Importing Scene...[39m[0m
+[   1% ] [90m[1mimport[22m | Running Custom Script...[39m[0m
+[  99% ] [90m[1mimport[22m | Saving...[39m[0m
+[92m[ DONE ][39m [1mimport[22m
+[0m
+[  97% ] [90m[1mreimport[22m | wooden_table_02.gltf[39m[0m
+[   0% ] [90m[1mimport[22m | Started Import Scene (104 steps)[39m[0m
+[   0% ] [90m[1mimport[22m | Importing Scene...[39m[0m
+[   1% ] [90m[1mimport[22m | Running Custom Script...[39m[0m
+[  99% ] [90m[1mimport[22m | Saving...[39m[0m
+[92m[ DONE ][39m [1mimport[22m
+[0m
+[  97% ] [90m[1mreimport[22m | register_static.glb[39m[0m
+[   0% ] [90m[1mimport[22m | Started Import Scene (104 steps)[39m[0m
+[   0% ] [90m[1mimport[22m | Importing Scene...[39m[0m
+[   1% ] [90m[1mimport[22m | Running Custom Script...[39m[0m
+[  99% ] [90m[1mimport[22m | Saving...[39m[0m
+[92m[ DONE ][39m [1mimport[22m
+[0m
+[  98% ] [90m[1mreimport[22m | book_encyclopedia_set_01.gltf[39m[0m
+[   0% ] [90m[1mimport[22m | Started Import Scene (104 steps)[39m[0m
+[   0% ] [90m[1mimport[22m | Importing Scene...[39m[0m
+[   1% ] [90m[1mimport[22m | Running Custom Script...[39m[0m
+[  99% ] [90m[1mimport[22m | Saving...[39m[0m
+[92m[ DONE ][39m [1mimport[22m
+[0m
+[  98% ] [90m[1mreimport[22m | vintage_oil_lamp_1k.gltf[39m[0m
+[   0% ] [90m[1mimport[22m | Started Import Scene (104 steps)[39m[0m
+[   0% ] [90m[1mimport[22m | Importing Scene...[39m[0m
+[   1% ] [90m[1mimport[22m | Running Custom Script...[39m[0m
+[  99% ] [90m[1mimport[22m | Saving...[39m[0m
+[92m[ DONE ][39m [1mimport[22m
+[0m
+[  98% ] [90m[1mreimport[22m | kenney_bookcaseClosed.glb[39m[0m
+[   0% ] [90m[1mimport[22m | Started Import Scene (104 steps)[39m[0m
+[   0% ] [90m[1mimport[22m | Importing Scene...[39m[0m
+[   1% ] [90m[1mimport[22m | Running Custom Script...[39m[0m
+[  99% ] [90m[1mimport[22m | Saving...[39m[0m
+[92m[ DONE ][39m [1mimport[22m
+[0m
+[  98% ] [90m[1mreimport[22m | painted_wooden_cabinet_02.gltf[39m[0m
+[   0% ] [90m[1mimport[22m | Started Import Scene (104 steps)[39m[0m
+[   0% ] [90m[1mimport[22m | Importing Scene...[39m[0m
+[   1% ] [90m[1mimport[22m | Running Custom Script...[39m[0m
+[  99% ] [90m[1mimport[22m | Saving...[39m[0m
+[92m[ DONE ][39m [1mimport[22m
+[0m
+[  98% ] [90m[1mreimport[22m | kenney_bookcaseOpen.glb[39m[0m
+[   0% ] [90m[1mimport[22m | Started Import Scene (104 steps)[39m[0m
+[   0% ] [90m[1mimport[22m | Importing Scene...[39m[0m
+[   1% ] [90m[1mimport[22m | Running Custom Script...[39m[0m
+[  99% ] [90m[1mimport[22m | Saving...[39m[0m
+[92m[ DONE ][39m [1mimport[22m
+[0m
+[  98% ] [90m[1mreimport[22m | book_encyclopedia_set_01.gltf[39m[0m
+[   0% ] [90m[1mimport[22m | Started Import Scene (104 steps)[39m[0m
+[   0% ] [90m[1mimport[22m | Importing Scene...[39m[0m
+[   1% ] [90m[1mimport[22m | Running Custom Script...[39m[0m
+[  99% ] [90m[1mimport[22m | Saving...[39m[0m
+[92m[ DONE ][39m [1mimport[22m
+[0m
+[  98% ] [90m[1mreimport[22m | kenney_books.glb[39m[0m
+[   0% ] [90m[1mimport[22m | Started Import Scene (104 steps)[39m[0m
+[   0% ] [90m[1mimport[22m | Importing Scene...[39m[0m
+[   1% ] [90m[1mimport[22m | Running Custom Script...[39m[0m
+[  99% ] [90m[1mimport[22m | Saving...[39m[0m
+[92m[ DONE ][39m [1mimport[22m
+[0m
+[  98% ] [90m[1mreimport[22m | kenney_chair.glb[39m[0m
+[   0% ] [90m[1mimport[22m | Started Import Scene (104 steps)[39m[0m
+[   0% ] [90m[1mimport[22m | Importing Scene...[39m[0m
+[   1% ] [90m[1mimport[22m | Running Custom Script...[39m[0m
+[  99% ] [90m[1mimport[22m | Saving...[39m[0m
+[92m[ DONE ][39m [1mimport[22m
+[0m
+[  99% ] [90m[1mreimport[22m | painted_wooden_chair_01.gltf[39m[0m
+[   0% ] [90m[1mimport[22m | Started Import Scene (104 steps)[39m[0m
+[   0% ] [90m[1mimport[22m | Importing Scene...[39m[0m
+[   1% ] [90m[1mimport[22m | Running Custom Script...[39m[0m
+[  99% ] [90m[1mimport[22m | Saving...[39m[0m
+[92m[ DONE ][39m [1mimport[22m
+[0m
+[  99% ] [90m[1mreimport[22m | vintage_wooden_drawer_01.gltf[39m[0m
+[   0% ] [90m[1mimport[22m | Started Import Scene (104 steps)[39m[0m
+[   0% ] [90m[1mimport[22m | Importing Scene...[39m[0m
+[   1% ] [90m[1mimport[22m | Running Custom Script...[39m[0m
+[  99% ] [90m[1mimport[22m | Saving...[39m[0m
+[92m[ DONE ][39m [1mimport[22m
+[0m
+[  99% ] [90m[1mreimport[22m | sounder_static.glb[39m[0m
+[   0% ] [90m[1mimport[22m | Started Import Scene (104 steps)[39m[0m
+[   0% ] [90m[1mimport[22m | Importing Scene...[39m[0m
+[   1% ] [90m[1mimport[22m | Running Custom Script...[39m[0m
+[  99% ] [90m[1mimport[22m | Saving...[39m[0m
+[92m[ DONE ][39m [1mimport[22m
+[0m
+[  99% ] [90m[1mreimport[22m | kenney_desk.glb[39m[0m
+[   0% ] [90m[1mimport[22m | Started Import Scene (104 steps)[39m[0m
+[   0% ] [90m[1mimport[22m | Importing Scene...[39m[0m
+[   1% ] [90m[1mimport[22m | Running Custom Script...[39m[0m
+[  99% ] [90m[1mimport[22m | Saving...[39m[0m
+[92m[ DONE ][39m [1mimport[22m
+[0m
+[  99% ] [90m[1mreimport[22m | sounder_armature.glb[39m[0m
+[   0% ] [90m[1mimport[22m | Started Import Scene (104 steps)[39m[0m
+[   0% ] [90m[1mimport[22m | Importing Scene...[39m[0m
+[   1% ] [90m[1mimport[22m | Running Custom Script...[39m[0m
+[  99% ] [90m[1mimport[22m | Saving...[39m[0m
+[92m[ DONE ][39m [1mimport[22m
+[0m
+[  99% ] [90m[1mreimport[22m | kenney_sideTable.glb[39m[0m
+[   0% ] [90m[1mimport[22m | Started Import Scene (104 steps)[39m[0m
+[   0% ] [90m[1mimport[22m | Importing Scene...[39m[0m
+[   1% ] [90m[1mimport[22m | Running Custom Script...[39m[0m
+[  99% ] [90m[1mimport[22m | Saving...[39m[0m
+[92m[ DONE ][39m [1mimport[22m
+[0m
+[  99% ] [90m[1mreimport[22m | register_stylus.glb[39m[0m
+[   0% ] [90m[1mimport[22m | Started Import Scene (104 steps)[39m[0m
+[   0% ] [90m[1mimport[22m | Importing Scene...[39m[0m
+[   1% ] [90m[1mimport[22m | Running Custom Script...[39m[0m
+[  99% ] [90m[1mimport[22m | Saving...[39m[0m
+[92m[ DONE ][39m [1mimport[22m
+[0m
+[  99% ] [90m[1mreimport[22m | Finalizing Asset Import...[39m[0m
+[92m[ DONE ][39m [1mreimport[22m
+[0m
+[   0% ] [90m[1mreimport[22m | Started (Re)Importing Assets (800 steps)[39m[0m
+[   0% ] [90m[1mreimport[22m | Executing post-reimport operations...[39m[0m
+[92m[ DONE ][39m [1mreimport[22m
+[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Started Loading editor (5 steps)[39m[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Loading editor layout...[39m[0m
+[  16% ] [90m[1mloading_editor_layout[22m | Loading docks...[39m[0m
+[92m[ DONE ][39m [1mloading_editor_layout[22m
+[0m
