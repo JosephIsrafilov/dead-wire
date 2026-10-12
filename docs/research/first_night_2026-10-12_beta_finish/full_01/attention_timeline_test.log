@@ -1,0 +1,18 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+--- Starting Attention Timeline Hitch-Proof Test Suite (Phase H) ---
+  PASS: m1_scenario_2_attention loads
+  PASS: scenario has door_footsteps event
+  PASS: attention_event_start_time is 4.0s
+  PASS: Controller is in RECEIVING state
+  PASS: No event fired before 4.0s
+  PASS: Attention event emitted when crossing 4.0s
+  PASS: Exactly one event emitted during normal transmission
+  PASS: Transmission completed to VERIFYING
+  PASS: Transcript inspection unlocks routing
+  PASS: Verified transcript reaches AWAITING_ROUTE
+  PASS: Attention event emitted even with single giant 20s hitch step
+  PASS: Hitch reaches VERIFYING cleanly
+  PASS: Verified hitch reaches AWAITING_ROUTE
+  PASS: State is IDLE after reset
+--- All Attention Timeline Hitch-Proof Tests PASSED ---

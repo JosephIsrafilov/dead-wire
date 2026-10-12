@@ -1,0 +1,18 @@
+{
+  "suites": 1,
+  "passed": 1,
+  "failed": 0,
+  "assertions": 5,
+  "error_bearing_suites": 0,
+  "results": [
+    {
+      "suite": "tests/telegraph/rule44_content_test.gd",
+      "exit_code": 0,
+      "assertions": 5,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    }
+  ]
+}

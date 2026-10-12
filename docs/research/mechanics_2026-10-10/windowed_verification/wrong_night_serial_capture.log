@@ -1,0 +1,100 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+D3D12 12_0 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 3070 Laptop GPU
+
+PASS: Title button enters production office
+PASS: Captured 01_entry
+RENDER FPS: 1.0
+PASS: Ray reaches Interactable (got Interactable:<Area3D#95193926205>)
+PASS: Duty sheet opens through E
+PASS: Captured 02_orders
+RENDER FPS: 12.0
+PASS: Ray reaches Interactable (got Interactable:<Area3D#90429196579>)
+PASS: Ledger is reachable and readable
+PASS: Ray reaches Interactable (got Interactable:<Area3D#88113940661>)
+PASS: Chair is reachable through production ray
+PASS: Chair transition actually settled before first key activation
+PASS: Ray reaches Interactable (got Interactable:<Area3D#89070242002>)
+PASS: Seated key opens the watch
+PASS: Wire calls for slot 0
+PASS: Ray reaches Interactable (got Interactable:<Area3D#89070242002>)
+PASS: E answers traffic 0
+PASS: Pause holds objective Morse clock
+PASS: Escape resumes the same transmission
+PASS: Captured 03_writing_0
+RENDER FPS: 120.0
+PASS: Traffic requires transcript inspection
+PASS: Ray reaches Interactable (got Interactable:<Area3D#89338677474>)
+PASS: Transcript lifts through E
+PASS: Captured 04_transcript_0
+RENDER FPS: 113.0
+PASS: E puts the transcript down
+PASS: Movement rises from chair
+PASS: Ray reaches Interactable (got Interactable:<Area3D#91049953608>)
+PASS: Routing board opens from reachable floor
+PASS: Captured 05_routing_0
+RENDER FPS: 81.0
+PASS: Route advances night exactly once
+PASS: Wire calls for slot 1
+PASS: Ray reaches Interactable (got Interactable:<Area3D#88113940661>)
+PASS: Ray reaches Interactable (got Interactable:<Area3D#89070242002>)
+PASS: E answers traffic 1
+PASS: Captured 03_writing_1
+RENDER FPS: 176.0
+PASS: Traffic requires transcript inspection
+PASS: Ray reaches Interactable (got Interactable:<Area3D#89338677474>)
+PASS: Transcript lifts through E
+PASS: Captured 04_transcript_1
+RENDER FPS: 72.0
+PASS: E puts the transcript down
+PASS: Movement rises from chair
+PASS: Ray reaches Interactable (got Interactable:<Area3D#91049953608>)
+PASS: Routing board opens from reachable floor
+PASS: Captured 05_routing_1
+RENDER FPS: 49.0
+PASS: Route advances night exactly once
+PASS: Wire calls for slot 2
+PASS: Ray reaches Interactable (got Interactable:<Area3D#88113940661>)
+PASS: Ray reaches Interactable (got Interactable:<Area3D#89070242002>)
+PASS: E answers traffic 2
+PASS: Captured 03_writing_2
+RENDER FPS: 171.0
+PASS: Traffic requires transcript inspection
+PASS: Ray reaches Interactable (got Interactable:<Area3D#89338677474>)
+PASS: Transcript lifts through E
+PASS: Number keys cannot file behind an open document
+PASS: Captured 04_transcript_2
+RENDER FPS: 146.0
+PASS: E puts the transcript down
+PASS: Unseen filing desk rejects remote shortcut
+PASS: Movement rises from chair
+PASS: Ray reaches Option1Interactable (got Option1Interactable:<Area3D#90143983890>)
+PASS: Physical amendment opens an editor without filing
+PASS: Captured 06_amendment_blank
+RENDER FPS: 87.0
+PASS: Real typing preserves intended amendment word
+PASS: Captured 06_amendment_typed
+RENDER FPS: 87.0
+PASS: Physical wrong choice resolves only after explicit action
+PASS: Captured 06_filed
+RENDER FPS: 104.0
+PASS: Captured 07_window
+RENDER FPS: 150.0
+PASS: Final consequence reaches shift end
+PASS: Dawn unlocks exit
+PASS: Ray reaches Interactable (got Interactable:<Area3D#95395252809>)
+PASS: Handover can be inspected
+PASS: Captured 08_handover
+RENDER FPS: 112.0
+PASS: Ray reaches Interactable (got Interactable:<Area3D#86738208867>)
+PASS: Door opens after night
+PASS: Walking through threshold starts ending
+PASS: Captured 09_ending
+RENDER FPS: 68.0
+PASS: Ending cannot be covered by pause menu
+PASS: Restart button creates a fresh watch
+PASS: Restart clears both independent state stores
+PASS: Restart clears figure and filing presentation
+PASS: Recorded actual master audio
+PLAYTHROUGH: 0 failures; 16 screenshots
+WARNING: 7 RIDs of type "Texture" were leaked.
+   at: finalize (servers/rendering/rendering_device.cpp:8900)

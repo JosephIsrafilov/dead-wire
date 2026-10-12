@@ -1,0 +1,23 @@
+{
+  "suites": 1,
+  "passed": 0,
+  "failed": 1,
+  "assertions": 0,
+  "error_bearing_suites": 1,
+  "results": [
+    {
+      "suite": "tests/guidance/night_guidance_test.gd",
+      "exit_code": 1,
+      "assertions": 0,
+      "passed": false,
+      "failures": [
+        "  FAIL: Guidance controller exists"
+      ],
+      "runtime_errors": [
+        "ERROR: Attempt to open script 'res://scripts/office/night_guidance_controller.gd' resulted in error 'File not found'.",
+        "ERROR: Failed loading resource: res://scripts/office/night_guidance_controller.gd."
+      ],
+      "warnings": []
+    }
+  ]
+}

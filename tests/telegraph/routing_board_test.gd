@@ -32,6 +32,9 @@ func _init() -> void:
 	# 2. Input actions when board is CLOSED (Must do nothing)
 	var selected_actions: Array[String] = []
 	board_node.routing_action_selected.connect(func(a: String): selected_actions.append(a))
+	# Standalone presentation tests provide an explicit accepting authority;
+	# selecting an action is only an intent in production.
+	board_node.routing_action_selected.connect(func(a: String): board_node.play_route_accept(a, true))
 
 	var ev_1_closed: InputEventKey = InputEventKey.new()
 	ev_1_closed.physical_keycode = KEY_1
@@ -95,7 +98,7 @@ func _init() -> void:
 	# keeps the lever, the needle and the last route; only a watch reset
 	# clears them. Two throws land on authored absolute stops, not offsets.
 	var pivot: Node3D = board_node.get_node("LeverPivot")
-	var lever_rest_z: float = pivot.rotation.z
+	var lever_rest_z: float = board_node._lever_rest_rotation
 	board_node.play_route_accept("CLEAR EAST", true)
 	var clear_z: float = pivot.rotation.z
 	if not assert_condition(clear_z > lever_rest_z + 0.4, "CLEAR EAST throws to its absolute stop"): return
@@ -104,6 +107,7 @@ func _init() -> void:
 	if not assert_condition(hold_z < lever_rest_z - 0.4, "HOLD throws to its own absolute stop, not an offset"): return
 	board_node.play_route_accept("CLEAR EAST", true)
 	if not assert_condition(is_equal_approx(pivot.rotation.z, clear_z), "A repeated CLEAR EAST lands on the same authored stop, no drift"): return
+	board_node.play_route_accept("HOLD", true)
 	pivot.rotation.z = hold_z
 	board_node.reset_for_new_transmission()
 	if not assert_condition(is_equal_approx(pivot.rotation.z, hold_z), "Per-slot reset keeps the thrown lever where the night left it"): return

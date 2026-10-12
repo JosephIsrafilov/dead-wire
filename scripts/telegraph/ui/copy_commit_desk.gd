@@ -4,12 +4,14 @@ extends Node3D
 ## The filing surface for the night's one decision.
 ##
 ## Contract (B1): this desk never decides the outcome. Input expresses an
-## INTENT (`option_committed`); the session is the authority that accepts or
+## INTENT (`option_committed`) or requests a blank amendment; the session is the authority that accepts or
 ## rejects it; only the accepted result, arriving back through
 ## `apply_commit_result`, may stamp the surface and fire the contact sound.
 ## A rejected intent leaves no stamp, no sound and the desk still enabled.
 
 signal option_committed(action_id: StringName)
+signal amendment_requested()
+var _amendment_open: bool = false
 ## Fires exactly once per accepted outcome, immediately: the authority has
 ## spoken and the surface shows it. Facts never wait for an animation.
 signal commit_accepted(action_id: StringName)
@@ -68,6 +70,7 @@ func get_interactable() -> Interactable:
 func configure(options: Array) -> void:
 	_options = options.duplicate()
 	_committed = false
+	_amendment_open = false
 	_pending_intent = StringName()
 	_selected_action_id = StringName()
 	_result_text = ""
@@ -108,6 +111,12 @@ func select_option(index: int) -> bool:
 	var option = _options[index]
 	var action_id := _string_name_property(option, "action_id")
 	if action_id == StringName():
+		return false
+	if bool(_property(option, "requires_correction")):
+		if not _amendment_open and not amendment_requested.get_connections().is_empty():
+			_amendment_open = true
+			amendment_requested.emit()
+			return true
 		return false
 	_pending_intent = action_id
 	option_committed.emit(action_id)
@@ -208,6 +217,7 @@ func show_lapsed(result_text: String = "UNFILED") -> void:
 
 func reset() -> void:
 	_committed = false
+	_amendment_open = false
 	_pending_intent = StringName()
 	enabled = false
 	_selected_action_id = StringName()
@@ -220,6 +230,9 @@ func reset() -> void:
 	if _tool != null:
 		_tool.position = _tool_rest
 	_update_presentation()
+
+func set_amendment_open(open: bool) -> void:
+	_amendment_open = open
 
 func reset_for_new_transmission() -> void:
 	reset()

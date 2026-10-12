@@ -204,7 +204,7 @@ func _run() -> void:
 	if not assert_condition(director._play_on_wire("E") > 0.0, "A service signal occupies the wire for the deferral case"): return
 	session.advance_post_signal(10.15)
 	if not assert_condition(director._pending_warning != &"", "A warning on a busy wire is deferred, not played over traffic"): return
-	if not assert_condition(session.submit_commit(&"file_water"), "Final message accepts an authored commit inside the deadline"): return
+	if not assert_condition(session.submit_amendment("WATER"), "Final message accepts an authored commit inside the deadline"): return
 	if not assert_condition(session.get_state() == TelegraphSessionController.State.CONSEQUENCE, "Final message enters its consequence beat"): return
 	if not assert_condition(key.prompt_message == ShiftDirector.PROMPT_STAND_BY, "The key reports a neutral standby during the consequence beat"): return
 	director.advance(0.3)
@@ -239,7 +239,7 @@ func _run() -> void:
 	if not assert_condition(text.contains("TRAIN 17"), "Duty sheet lists the booked passenger traffic"): return
 	if not assert_condition(text.contains(DutySheet.STATUS_FILED), "Duty sheet shows the filed message"): return
 	if not assert_condition(text.contains("UNSCHEDULED TRAFFIC"), "Unbooked traffic appears once it has been copied"): return
-	if not assert_condition(not text.contains("WATCHER") and not text.contains("WATER"), "Duty sheet never leaks message content"): return
+	if not assert_condition(not text.contains("WATCHER") and text.contains("FILED WORD: WATER"), "Duty sheet records only the explicit chosen word after filing"): return
 
 	# 16. The sheet reports Elias, not the world. He believes he handled the
 	#     freight; WorldState knows the route was never given.
@@ -304,7 +304,7 @@ func _run() -> void:
 		if slot == 0:
 			fresh_office.session_controller.submit_routing_decision("HOLD")
 		else:
-			fresh_office.session_controller.submit_commit(&"file_water")
+			fresh_office.session_controller.submit_amendment("WATER")
 			fresh_office.session_controller.advance_consequence(1.5)
 			fresh_office.session_controller.notify_consequence_visible()
 			fresh_office.session_controller.advance_consequence(30.0)

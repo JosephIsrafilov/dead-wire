@@ -1,0 +1,20 @@
+{
+  "suites": 1,
+  "passed": 0,
+  "failed": 1,
+  "assertions": 0,
+  "error_bearing_suites": 0,
+  "results": [
+    {
+      "suite": "tests/office/foreign_traffic_acceptance_test.gd",
+      "exit_code": 1,
+      "assertions": 0,
+      "passed": false,
+      "failures": [
+        "  FAIL: Rejected foreign traffic does not consume its played flag"
+      ],
+      "runtime_errors": [],
+      "warnings": []
+    }
+  ]
+}

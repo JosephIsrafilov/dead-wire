@@ -148,10 +148,10 @@ func _init() -> void:
 	if not assert_condition(controller.get_state() == TelegraphSessionController.State.VERIFYING, "Scenario 3 reaches VERIFYING"): return
 	if not assert_condition(paper.get_transcript_text() == "WATCHER", "Paper displays WATCHER"): return
 	if not assert_condition(sounder.down_clicks_played > 0, "Sounder played clicks during transmission"): return
-	if not assert_condition(not controller.submit_commit(&"file_water"), "Commit before inspection is a no-op"): return
+	if not assert_condition(not controller.submit_amendment("WATER"), "Commit before inspection is a no-op"): return
 	controller.mark_transcript_verified()
 	if not assert_condition(controller.get_state() == TelegraphSessionController.State.AWAITING_COMMIT, "Scenario 3 awaits commit after inspection"): return
-	if not assert_condition(controller.submit_commit(&"file_water"), "Scenario 3 accepts authored commit"): return
+	if not assert_condition(controller.submit_amendment("WATER"), "Scenario 3 accepts authored commit"): return
 	if not assert_condition(controller.get_state() == TelegraphSessionController.State.CONSEQUENCE, "Commit starts consequence state"): return
 	if not assert_condition(not controller.submit_commit(&"file_watcher"), "Second commit is a no-op"): return
 	# A world-space figure can remain pending while the camera watches it. The
@@ -216,7 +216,7 @@ func _init() -> void:
 	controller.mark_transcript_verified()
 	controller.advance_post_signal(controller.commit_deadline_seconds + 0.1)
 	if not assert_condition(controller.get_state() == TelegraphSessionController.State.CONSEQUENCE, "Expired deadline resolved the slot"): return
-	if not assert_condition(not controller.submit_commit(&"file_water"), "Late input cannot file after the deadline"): return
+	if not assert_condition(not controller.submit_amendment("WATER"), "Late input cannot file after the deadline"): return
 	if not assert_condition(not world.has_fact("core_hook_filed_water"), "Rejected late input leaves no fact"): return
 
 	# 7. Unread order lapses without pretending it was verified.

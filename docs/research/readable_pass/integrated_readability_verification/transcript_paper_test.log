@@ -1,0 +1,138 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+--- Starting Transcript Paper Test Suite (Gate 11 / F2 two-cursor contract) ---
+  PASS: transcript_paper.tscn loads
+  PASS: instantiates as TranscriptPaper
+  PASS: paper has Interactable component
+  PASS: paper has Label3D
+  PASS: paper has WriterRig
+  PASS: Initial transcript text is empty
+  PASS: Initial paper state is EMPTY
+  PASS: Initial state is unrevealed
+  PASS: Label shows placeholder initially
+  PASS: Transcript text set to WATCHER
+  PASS: Label remains placeholder before writing
+  PASS: Reveal shows the finished sheet
+  PASS: Label displays WATCHER upon reveal
+  PASS: Authoring reveal is not a physical copy_finished
+  PASS: Interaction emits transcript_inspected with text
+  PASS: Authored cue map is accepted
+  PASS: Sheet records its owning scenario
+  PASS: Sheet is live and feeding the blank
+  PASS: The hand waits off the paper while the blank feeds
+  PASS: Cues arriving during the feed are buffered, not lost
+  PASS: No ink while the blank is still feeding
+  PASS: The sheet turns to writing once the blank is in place
+  PASS: Rig enters after the blank lands, before any ink
+  PASS: No ink before the hand reaches the paper
+  PASS: Label still blank during entry
+  PASS: Rig is still entering at 0.05 s of 0.18 s
+  PASS: Partial entry does not qualify as ready
+  PASS: Rig reports the hand at the paper after entry
+  PASS: Backlog drains to available after entry
+  PASS: Ink matches the authorized prefix
+  PASS: Out-of-order cue progress cannot reduce availability
+  PASS: No ink before the nib contacts the glyph
+  PASS: The on-pace glyph's motion is under way
+  PASS: On-pace ink lands with the contact, one motion after the cue
+  PASS: Nib sits on the glyph it just wrote
+  PASS: Hitch authorizes a backlog of at least two glyphs
+  PASS: A hitch reveals at most one glyph per tick, got 5
+  PASS: The next tick reveals the next glyph
+  PASS: Hand-cuff-forearm joints stay continuous through the line, total span 0.056 m
+  PASS: Wrist fine travel stays within its physical limit, 0.000 m
+  PASS: Suspend pauses the sheet
+  PASS: Suspend preserves the rig's glyph index (no re-init)
+  PASS: Signal keeps authorizing while the hand is away
+  PASS: Standing freezes the visible prefix
+  PASS: No ink drains while paused
+  PASS: Resume restores the live sheet without resetting cursors
+  PASS: Resume re-enters before ink
+  PASS: Resume keeps the rig's glyph index
+  PASS: Resume does not rewrite the visible prefix
+  PASS: Catch-up completes the sheet once
+  PASS: Finished sheet is READY_TO_INSPECT
+  PASS: Full transcript visible after completion
+  PASS: copy_finished fired exactly once with the owning scenario
+  PASS: Terminal sheet ignores further signal or resume
+  PASS: Closed partial is terminal
+  PASS: Partial keeps exactly the ink it had
+  PASS: Partial shows only the written prefix
+  PASS: Closed partial never accepts ink again
+  PASS: Closed partial never emits copy_finished
+  PASS: Clear resets writer rig lifecycle
+  PASS: Clear restores WriterRig rest transform (expected (0.0, 0.058, 0.18), got (0.0, 0.058, 0.18); rig rest (0.0, 0.058, 0.18) captured=true)
+  PASS: The paper root stays put: the interaction anchor never moves
+  PASS: The blank starts displaced from the hook side
+  PASS: Feed is mid-travel at half time
+  PASS: The blank lands exactly at rest
+  PASS: Feed case completes the sheet
+  PASS: The previous sheet is archived, not erased
+  PASS: The archived layer keeps the old ink, got 'WATER'
+  PASS: The old sheet settles at the stack edge
+  PASS: The archived sheet sits below the active blank
+  PASS: Cancel restores the rest position instantly
+  PASS: A full clear hides the archived layer
+  PASS: Both glyphs are authorized while the blank feeds
+  PASS: Entry is under way after the feed lands
+  PASS: Entry is still mid-flight at half duration
+  PASS: No ink and no contact during entry
+  PASS: A hitch tick that finishes entry does not also write the first glyph
+  PASS: No glyph_contact fired in the tick that finished entry
+  PASS: The next tick writes exactly one glyph
+  PASS: Exactly one contact event, for glyph 0
+  PASS: The sheet completes on the following tick
+  PASS: Two contacts in total, one per glyph
+  PASS: A glyph motion is in flight before the stand-up
+  PASS: Resume returns the sheet to COPYING
+  PASS: Resume re-enters before any ink
+  PASS: Resume keeps the rig's glyph index
+  PASS: Resume restores the pose the operator left
+  PASS: The withdrawal tween is cancelled by resume
+  PASS: The cancelled withdrawal no longer fights the resumed pose (drift 0.0000 m)
+  PASS: No ink appears while re-entering
+  PASS: The interrupted sheet still completes after resume
+  PASS: All seven glyphs are written exactly once
+  PASS: Exactly seven contact events after the interruption, got 7
+  PASS: The 8-cue map matches the 8 non-whitespace glyphs
+  PASS: Glyph 0 contacts character 0, not a whitespace slot
+  PASS: Glyph 1 contacts character 1, not a whitespace slot
+  PASS: Glyph 2 contacts character 3, not a whitespace slot
+  PASS: Glyph 3 contacts character 4, not a whitespace slot
+  PASS: Glyph 4 contacts character 6, not a whitespace slot
+  PASS: Glyph 5 contacts character 7, not a whitespace slot
+  PASS: Glyph 6 contacts character 9, not a whitespace slot
+  PASS: Glyph 7 contacts character 10, not a whitespace slot
+  PASS: The whitespace sheet completes
+  PASS: The full text is on the sheet
+  PASS: Eight contacts, one per non-whitespace glyph, got 8
+  PASS: copy_finished fires exactly once for the whitespace sheet
+  PASS: Cues during the feed are buffered, not written
+  PASS: The writer stays hidden until sheet_fed
+  PASS: The sheet moves monotonically toward rest
+  PASS: The writer stays hidden until sheet_fed
+  PASS: The sheet moves monotonically toward rest
+  PASS: The writer stays hidden until sheet_fed
+  PASS: The sheet moves monotonically toward rest
+  PASS: The writer stays hidden until sheet_fed
+  PASS: The sheet moves monotonically toward rest
+  PASS: The writer stays hidden until sheet_fed
+  PASS: The sheet moves monotonically toward rest
+  PASS: The sheet moves monotonically toward rest
+  PASS: sheet_fed fires exactly once
+  PASS: The paper root never moves during the feed
+  PASS: The sheet lands exactly at rest
+  PASS: Close during feed is terminal
+  PASS: A closed partial accepts no ink
+  PASS: The cancelled feed leaves the sheet at rest
+  PASS: No sheet_fed after a terminal close during feed
+  PASS: The writer is hidden after a terminal close
+  PASS: No copy_finished from a closed partial
+  PASS: Entry is under way before the close
+  PASS: Close during entry freezes the sheet with no ink
+  PASS: The writer hides after close during entry
+  PASS: A motion is in flight before the close
+  PASS: Close during motion is terminal
+  PASS: The in-flight glyph never contacts after close
+  PASS: No copy_finished ever fires for closed partials
+--- All Transcript Paper Tests PASSED ---

@@ -38,7 +38,11 @@ func _run() -> void:
 	var stamp_player := office.get_node("OfficeFoley/Stamp") as AudioStreamPlayer3D
 	var accepted_events: Array[StringName] = []
 	desk.commit_accepted.connect(func(id: StringName) -> void: accepted_events.append(id))
-	var requested := desk.commit_option(&"file_water")
+	var requested := desk.commit_option(&"amend_copy")
+	var late_editor := office.get_node("AmendmentEditor") as AmendmentEditor
+	late_editor.correction.text = "WATER"
+	late_editor.correction.text_changed.emit("WATER")
+	late_editor.submit_draft()
 	if not assert_condition(requested, "The intent itself is expressed"): return
 	if not assert_condition(not desk.has_committed(), "A rejected intent does not commit the desk"): return
 	if not assert_condition(desk.get_result_text() == "", "No filed result text appears, got '%s'" % desk.get_result_text()): return
@@ -67,10 +71,14 @@ func _run() -> void:
 	desk.commit_accepted.connect(func(id: StringName) -> void: accepted_events.append(id))
 
 	if not assert_condition(desk._handle_key_event(_key(KEY_1)), "Key 1 passes the desk's own input gate"): return
-	if not assert_condition(desk.has_committed(), "Key 1 files the first copy through the real input path"): return
-	if not assert_condition(desk.get_selected_action_id() == &"file_water", "The accepted action is WATER"): return
+	if not assert_condition(not desk.has_committed() and office.amendment_editor.is_open(), "Key 1 opens an unfiled amendment"): return
+	office.amendment_editor.correction.text = "WATER"
+	office.amendment_editor.correction.text_changed.emit("WATER")
+	office.amendment_editor.submit_draft()
+	if not assert_condition(desk.has_committed(), "Explicit typed submission files the first copy"): return
+	if not assert_condition(desk.get_selected_action_id() == &"amend_copy", "The accepted action is an explicit amendment"): return
 	if not assert_condition(world.get_fact("core_hook_filed_water", false), "WATER fact recorded"): return
-	if not assert_condition(knowledge.knows(&"committed_water_core_hook"), "WATER knowledge recorded"): return
+	if not assert_condition(knowledge.knows(&"amendment_entered_core_hook") and knowledge.recall_value(&"filed_word_core_hook") == "WATER", "Chosen amendment remembered without grading"): return
 	# The facts are already true while the press travels (authority first);
 	# the ink and the sound land with the physical contact.
 	if not assert_condition(desk.is_press_in_flight(), "The press travels after the acceptance"): return
@@ -78,7 +86,7 @@ func _run() -> void:
 	if not assert_condition(await _await_press(desk), "The press lands within its duration"): return
 	if not assert_condition(_stamp_visible(desk, 0) and _stamp_text(desk, 0) == "FILED", "The accepted copy is stamped FILED on contact"): return
 	if not assert_condition(_stamp_visible(desk, 1) and _stamp_text(desk, 1) == "VOID", "The other copy is voided, not filed"): return
-	if not assert_condition(accepted_events.size() == 1 and accepted_events[0] == &"file_water", "Exactly one accepted contact event"): return
+	if not assert_condition(accepted_events.size() == 1 and accepted_events[0] == &"amend_copy", "Exactly one accepted contact event"): return
 	if not assert_condition(stamp_player.playing, "The stamp sound fires on the press contact"): return
 
 	# Duplicate and unknown input after acceptance: exactly one outcome.
@@ -123,7 +131,10 @@ func _run() -> void:
 	session = office.session_controller
 	desk = office.copy_commit_desk
 	session._post_signal_elapsed = session.commit_deadline_seconds - 0.5
-	if not assert_condition(desk.commit_option(&"file_water"), "Intent before the deadline is expressed"): return
+	if not assert_condition(desk.commit_option(&"amend_copy"), "Intent before the deadline opens editing"): return
+	office.amendment_editor.correction.text = "WATER"
+	office.amendment_editor.correction.text_changed.emit("WATER")
+	office.amendment_editor.submit_draft()
 	if not assert_condition(desk.has_committed(), "An on-time intent is accepted and stamped in the same frame"): return
 	if not assert_condition(world.get_fact("core_hook_filed_water", false), "On-time WATER fact recorded"): return
 	_teardown(office)

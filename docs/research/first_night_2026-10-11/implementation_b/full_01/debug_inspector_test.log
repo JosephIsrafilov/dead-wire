@@ -1,0 +1,29 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+--- Starting Debug Inspector Test ---
+  PASS: DebugInspector scene loads
+  PASS: DebugInspector instantiates
+  PASS: Inspector is hidden by default
+  PASS: Output RichTextLabel found
+  PASS: Initial WorldState shows <EMPTY>
+  PASS: Initial KnowledgeState shows <EMPTY>
+  PASS: Shows CURRENT PHASE
+  PASS: Shows MORSE STATE NOT IMPLEMENTED
+  PASS: WorldState fact alpha_fact appears
+  PASS: WorldState fact beta_fact appears
+  PASS: KnowledgeState remains <EMPTY> after WorldState mutation
+  PASS: KnowledgeState does not contain alpha_fact
+  PASS: KnowledgeState contains alpha_fact after learn
+  PASS: WorldState keys are sorted in alphabetical order
+  PASS: KnowledgeState keys are sorted in alphabetical order
+  PASS: F3 press shows inspector
+  PASS: Second F3 press hides inspector
+  PASS: Keyboard echo does not toggle visibility
+  PASS: Inspector does not modify mouse mode
+  PASS: Inspector does not mutate WorldState
+  PASS: Inspector does not mutate KnowledgeState
+  PASS: WorldState cleared after test
+  PASS: KnowledgeState cleared after test
+  PASS: Inspector reflects cleared WorldState
+  PASS: Inspector reflects cleared KnowledgeState
+--- All Debug Inspector Tests PASSED ---

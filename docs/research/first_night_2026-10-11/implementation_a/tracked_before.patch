@@ -1,0 +1,3190 @@
+diff --git a/data/scenarios/m1_scenario_2_attention.tres b/data/scenarios/m1_scenario_2_attention.tres
+index c37b0e9..0b1f4cc 100644
+--- a/data/scenarios/m1_scenario_2_attention.tres
++++ b/data/scenarios/m1_scenario_2_attention.tres
+@@ -6,9 +6,9 @@
+ [sub_resource type="Resource" id="Resource_trans2"]
+ script = ExtResource("2_trans")
+ transmission_id = &"trans_m1_02_hold_freight"
+-true_message = "HOLD FREIGHT UNTIL TEN"
+-elias_perception = "HOLD FREIGHT UNTIL TEN"
+-written_transcript = "HOLD FREIGHT UNTIL TEN"
++true_message = "FREIGHT 71 EAST"
++elias_perception = "FREIGHT 71 EAST"
++written_transcript = "FREIGHT 71 EAST"
+ 
+ [resource]
+ script = ExtResource("1_scen")
+diff --git a/data/scenarios/m1_scenario_3_core_hook.tres b/data/scenarios/m1_scenario_3_core_hook.tres
+index d05639c..e573e4a 100644
+--- a/data/scenarios/m1_scenario_3_core_hook.tres
++++ b/data/scenarios/m1_scenario_3_core_hook.tres
+@@ -13,19 +13,20 @@ written_transcript = "WATCHER"
+ 
+ [sub_resource type="Resource" id="Resource_commit_water"]
+ script = ExtResource("3_commit")
+-action_id = &"file_water"
+-display_label = "AMEND COPY\nWATER"
++action_id = &"amend_copy"
++display_label = "AMEND COPY"
++requires_correction = true
+ world_fact = "core_hook_filed_water"
+ knowledge_fact = "committed_water_core_hook"
+-result_text = "WATER FILED"
++result_text = "CORRECTION FILED"
+ 
+ [sub_resource type="Resource" id="Resource_commit_watcher"]
+ script = ExtResource("3_commit")
+ action_id = &"file_watcher"
+-display_label = "RETAIN COPY\nWATCHER"
++display_label = "FILE AS COPIED"
+ world_fact = "core_hook_filed_watcher"
+ knowledge_fact = "committed_watcher_core_hook"
+-result_text = "WATCHER FILED"
++result_text = "COPY FILED"
+ 
+ [resource]
+ script = ExtResource("1_scen")
+@@ -46,3 +47,8 @@ commit_lapsed_knowledge_fact = "core_hook_commit_lapsed"
+ consequence_event_id = "window_figure"
+ consequence_delay_seconds = 1.0
+ consequence_hold_seconds = 6.0
++amendment_wrong_world_fact = "core_hook_amended_wrong"
++amendment_knowledge_fact = "amendment_entered_core_hook"
++filed_word_world_fact = "core_hook_filed_word"
++filed_word_knowledge_key = "filed_word_core_hook"
++amendment_result_text = "CORRECTION FILED"
+diff --git a/docs/HANDOVER.md b/docs/HANDOVER.md
+index 5921deb..f23f430 100644
+--- a/docs/HANDOVER.md
++++ b/docs/HANDOVER.md
+@@ -3,6 +3,61 @@
+ Last updated: 2026-09-27. Audience: any model or person picking up the project cold.
+ Docs are written in Russian, code and code comments in English. Keep that split.
+ 
++## Checkpoint — mechanics evidence/choice (после instrument pass)
++
++Owner/arbiter приняли ограниченный gameplay patch после research12developerURLs/38цитат.
++Реально внедрено:нейтральныеAMEND COPY/FILE AS COPIED; blanktypededitor1–24ASCIIletters;
++нет autoWATER, validwrongword сохраняется в отдельныхWorld/Knowledgevalues и утреннем
++документе безcorrectnessgrading. Deadline30s/t0не менялись. Ctrl/movement/interactgates,
++Escdraftcancel, Enter/pointerhandoff и timeoutпроверены; trappedunlockrace repaired сREDregression.
++
++Tape:actualdurationInkEvent, publicclones, interruptedfractionalmarks=`?`, MARK6различим,
++nofake12GAP, numberednoninkwiretakesбезdecodedtext, losslesswhitespacewrap, monoCourierPrimeOFL,
++boundedscrollopenlatest. Route:accepted-onlymemory/lever/foley, lateinputnofalseack, reentrantguard.
++Foleydeferredbindvalidateslifetime/idempotent. Авторскиеinstrument/hand/movement/introproduction
++сохраненыhash/diff; исправлена толькоsemanticintrotest(timer-before-tweenordering),6PASS×5repeats.
++
++Последнийfull послеreviewfixes:61suites/2396assertions/0FAIL, lintclean;18suitesretainshutdownresourceERRORs.
++NoSCRIPT/Parse/detachedtransformERRORinlatestsavedrun. Nativecrashнеобъявлятьfixed.
++Reviewfixes:sessionrouting/lapseresolutionguardcapturesoldscenariobeforefact/resultcallbacks;
++officepreflightmakesrejectedloadUI/indexno-op;editorpostawaitlifetimechecked;RouteActionshared.
++Newroute_reentrancy8/office_load_atomicity9/amendment_lifetime2regressions. Twoearlierpostreview
++fullrunsnativecrash3221225477AFTER132shiftassertions, threeisolatedexit0;latestsavedfullallpass.
++Cause/stabilityopen,notfixedbyrepeat. FINALserialroute57/lapse58/wrong61/input13/pointer2allpass.
++Bootlatestexit0безerrorlines, ноhistoryleaksнепринятыresolved; окна7TextureRIDwarningremain.
++Windowedrawinput13/pointer2/walkedroute57PASS, fourbranchrunsallpass. Serialfullwrongcapture78PASS,
++16shots+actualMasteraudio. Automatednightusesteleports/answerbeatadvance; неhumanpacingplaytest.
++
++Review/demo/results: `docs/research/mechanics_2026-10-10/`; plannedreference/story/onboardingpass
++следующий, НЕвнедрён. MovieMaker demo1280×720/30fps/15.53s сaudio — offline scriptdemo,
++неliveperformance/humanplaythrough. Доpassingserialcapture былconcurrentwindowcapture43FAIL
++(mode0):failedlogсохранён, нельзявыдаватьfailedshotsзаpassing. Imageanalysis404, ownerUX/visual
++acceptance и5noviceplaytestsостаютсяоткрыты. Никакихcommit/pushновойработы.
++
++## Checkpoint 2026-10-10 — instrument-first candidate, не финальная арт-приёмка
++
++Прежнее состояние сохранено и push-проверено: `f82939d` на
++`origin/codex/hand-rebuild-handoff`. Новая работа после него пока **не закоммичена**.
++Владелец подтвердил M1/PSX и выбрал instrument-first + gameplay design.
++
++Подключены7 Blender-authored assemblies для key/sounder/register,3332 triangles,
++один256px nearest atlas; static/moving части на прежних pivots, colliders/контент/
++signal/tape/рука/свет/аудио не менялись. Старые blockout-ноды скрыты, не удалены.
++Источник/GLB/.res и builder/importer сохранены. Арт-план и brainstorm:
++`docs/plans/2026-10-10_INSTRUMENT_FIRST.md`; новые gameplay-механики **не внедрены**.
++
++Последний полный regression: **46 suites /2094 assertions /0 FAIL**; новый instrument72
++прошёл RED→GREEN (включая clearance катушек). Lint чистый, production input/physics
++маршрут0FAIL/6shots/без teleport, full automated night0FAIL/14shots (с teleport/сжатым
++answer beat, не human playtest).720p before/after и90-frame silent motion clip:
++`docs/art/state_2026-10-10/instruments/review.html`; исходный `.blend` с packed atlas в sources.
++Image review404: **визуальная/эмоциональная приёмка владельца остаётся открытой**.
++
++Ранее в этой сессии intro_music normal fadeFAIL повторился, shift_director crash139;
++позднее оба green без исправлений — причины не установлены, не объявлять решёнными.
++В green-run всё ещё detached OfficeFoley/global_transform errors и shutdown resource
++errors; boot10ObjectDB/2resources, окна7TextureRID. Не называть весь run error-free.
++
+ ## Checkpoint 2026-10-09 — цельная кисть, новый подключённый кандидат
+ 
+ Последний полный повтор: **45 suites /2022 assertions /0 FAIL**, writer_hand37,
+diff --git a/docs/third_party_assets.md b/docs/third_party_assets.md
+index 72a2adf..84f1ab5 100644
+--- a/docs/third_party_assets.md
++++ b/docs/third_party_assets.md
+@@ -284,3 +284,33 @@ and `tools/build_worn_warmth.py`. Unchanged printed forms are not covered by the
+ The new `assets/third_party/ambientcg/worn_warmth/metadata.json` and `LICENSE_SOURCE.txt`
+ record a search for Fabric030/Paper003/Wood051, not downloaded/used assets (archive requests failed HTTP 403).
+ Visual acceptance remains pending; see `03_local_asset_integration.md` in the art directory.
++
++## Authored telegraph instrument pass — 2026-10-10
++
++`assets/models/instruments_v1/` contains seven Blender-authored GLB assemblies and their
++Godot ArrayMesh derivatives: key static/lever, sounder static/armature, register static/spool/stylus.
++`assets/textures/instruments_v1/instrument_atlas_256.png` is an original deterministic six-tile
++atlas (wood, brass, iron, coil, ebonite, paper), not a downloaded museum photograph or texture.
++Builder: `tools/build_instruments_blender.py`; importer: `tools/import_instruments.gd`.
++Editable source: `docs/art/state_2026-10-10/instruments/sources/dead_wire_instruments_v1.blend`.
++Total authored triangles:3332. Runtime references only the seven `.res` meshes and shared atlas.
++
++Museum catalogue text was consulted for material/mechanism plausibility, not copied as assets:
++- https://americanhistory.si.edu/collections/object/nmah_706904 — key/sounder combination, ca1890.
++- https://americanhistory.si.edu/collections/object/nmah_712418 — wood/brass frame, paired electromagnet.
++- https://americanhistory.si.edu/collections/object/nmah_706654 — clockwork register/stylus mechanism.
++
++These are stylized period-plausible instruments, not historically exact museum replicas.
++No museum images, brand logos, paid generation or third-party meshes were integrated.
++Artistic acceptance remains owner-review pending; automatic integration checks are not a visual verdict.
++
++## Timing evidence font — mechanics pass
++
++Courier Prime Regular is bundled unchanged at `assets/fonts/courierprime/CourierPrime-Regular.ttf`,
++with `OFL.txt` shipped beside it. Copyright2015 The Courier Prime Project Authors; SIL OFL1.1.
++Downloaded from the official Google Fonts repository:
++https://raw.githubusercontent.com/google/fonts/main/ofl/courierprime/CourierPrime-Regular.ttf
++https://raw.githubusercontent.com/google/fonts/main/ofl/courierprime/OFL.txt
++
++Used only for the tape/reference timing table in DocumentViewer, replacing host-dependent SystemFont
++fallback. Period letterpress and Elias handwriting remain unchanged. No modern sans face added.
+diff --git a/scenes/office/m1_office.tscn b/scenes/office/m1_office.tscn
+index f791b17..3937eb3 100644
+--- a/scenes/office/m1_office.tscn
++++ b/scenes/office/m1_office.tscn
+@@ -1,4 +1,4 @@
+-[gd_scene load_steps=46 format=3 uid="uid://m1office001"]
++[gd_scene load_steps=47 format=3 uid="uid://m1office001"]
+ 
+ [ext_resource type="Script" path="res://scripts/office/m1_office_controller.gd" id="1_controller"]
+ [ext_resource type="Material" path="res://materials/style_tests/floor_wood_planks.tres" id="2_floor"]
+@@ -36,6 +36,7 @@
+ [ext_resource type="Script" path="res://scripts/player/operator_seat.gd" id="33_seat"]
+ [ext_resource type="Script" path="res://scripts/office/office_door.gd" id="34_door"]
+ [ext_resource type="PackedScene" path="res://scenes/ui/shift_end_card.tscn" id="35_endcard"]
++[ext_resource type="Shader" uid="uid://d3sal3hcuxn1r" path="res://materials/shaders/psx_grade.gdshader" id="psx_grade"]
+ 
+ [ext_resource type="PackedScene" path="res://scenes/props/m1/ph_chair.tscn" id="50_phchair"]
+ [ext_resource type="PackedScene" path="res://scenes/props/m1/ph_cabinet.tscn" id="51_phcabinet"]
+@@ -50,6 +51,7 @@
+ [ext_resource type="PackedScene" path="res://scenes/telegraph/tape_register.tscn" id="43_tape"]
+ [ext_resource type="Script" path="res://scripts/office/moon_weather.gd" id="44_moon"]
+ [ext_resource type="Script" path="res://scripts/office/dawn_ritual.gd" id="45_dawn"]
++[ext_resource type="PackedScene" path="res://scenes/ui/amendment_editor.tscn" id="46_amendment"]
+ [ext_resource type="Material" path="res://materials/style_tests/map_division.tres" id="46_map"]
+ [ext_resource type="PackedScene" path="res://scenes/style_tests/props/oil_lamp_lowpoly.tscn" id="47_lamp"]
+ 
+@@ -116,11 +118,8 @@ fog_height = 1.15
+ fog_height_density = 0.08
+ fog_sky_affect = 0.35
+ 
+-[sub_resource type="Shader" id="Shader_psx_dither"]
+-code = "shader_type canvas_item;\nrender_mode unshaded;\n// 15-bit PSX colour: 32 levels per channel, ordered 4x4 Bayer dither on the\n// same pixel grid as the half-resolution 3D buffer, plus a soft lens falloff.\nuniform sampler2D screen_texture : hint_screen_texture, filter_nearest;\nuniform float pixel_size = 2.0;\nuniform float levels = 32.0;\nuniform float vignette = 0.3;\nconst float BAYER[16] = float[](0.0, 8.0, 2.0, 10.0, 12.0, 4.0, 14.0, 6.0, 3.0, 11.0, 1.0, 9.0, 15.0, 7.0, 13.0, 5.0);\nvoid fragment() {\n    vec2 cell = floor(FRAGCOORD.xy / pixel_size);\n    int i = int(mod(cell.x, 4.0)) + int(mod(cell.y, 4.0)) * 4;\n    float b = (BAYER[i] / 16.0 - 0.5) / levels;\n    vec3 c = texture(screen_texture, SCREEN_UV).rgb;\n    c = floor((c + b) * levels + 0.5) / levels;\n    vec2 d = SCREEN_UV - 0.5;\n    c *= 1.0 - vignette * dot(d, d) * 2.0;\n    COLOR = vec4(clamp(c, vec3(0.0), vec3(1.0)), 1.0);\n}"
+-
+ [sub_resource type="ShaderMaterial" id="ShaderMaterial_psx_dither"]
+-shader = SubResource("Shader_psx_dither")
++shader = ExtResource("psx_grade")
+ 
+ [node name="M1Office" type="Node3D" node_paths=PackedStringArray("session_controller", "routing_board", "copy_commit_desk", "door_attention", "window_observation", "document_viewer", "player", "dawn_evidence")]
+ script = ExtResource("1_controller")
+@@ -700,6 +699,8 @@ position = Vector3(-1.5, 1.18, -2.85)
+ position = Vector3(0, 0, 1.05)
+ rotation = Vector3(0, -0.18, 0)
+ 
++[node name="AmendmentEditor" parent="." instance=ExtResource("46_amendment")]
++
+ [node name="DocumentViewer" parent="." instance=ExtResource("23_docviewer")]
+ 
+ [node name="MorseRuntimeScheduler" type="Node" parent="."]
+diff --git a/scenes/player/player.tscn b/scenes/player/player.tscn
+index 41f4d5b..59a2ce5 100644
+--- a/scenes/player/player.tscn
++++ b/scenes/player/player.tscn
+@@ -19,10 +19,11 @@ shape = SubResource("CapsuleShape3D_1")
+ disabled = false
+ 
+ [node name="Head" type="Node3D" parent="."]
+-position = Vector3(0, 1.65, 0)
++position = Vector3(0, 1.56, 0)
+ 
+ [node name="Camera3D" type="Camera3D" parent="Head"]
+-fov = 78.0
++fov = 65.0
++keep_aspect = 1
+ current = true
+ 
+ [node name="FootstepPlayer" type="AudioStreamPlayer3D" parent="."]
+@@ -67,17 +68,18 @@ anchor_left = 0.5
+ anchor_top = 1.0
+ anchor_right = 0.5
+ anchor_bottom = 1.0
+-offset_left = -240.0
+-offset_top = -92.0
+-offset_right = 240.0
+-offset_bottom = -64.0
++offset_left = -420.0
++offset_top = -112.0
++offset_right = 420.0
++offset_bottom = -60.0
+ grow_horizontal = 2
+ grow_vertical = 0
++autowrap_mode = 2
+ theme_override_colors/font_color = Color(0.86, 0.79, 0.63, 1)
+ theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.85)
+ theme_override_constants/shadow_offset_x = 1
+ theme_override_constants/shadow_offset_y = 1
+-theme_override_font_sizes/font_size = 14
++theme_override_font_sizes/font_size = 18
+ theme_override_styles/normal = SubResource("StyleBoxFlat_prompt")
+ text = "[E] Interact"
+ horizontal_alignment = 1
+diff --git a/scenes/telegraph/copy_commit_desk.tscn b/scenes/telegraph/copy_commit_desk.tscn
+index 4a9f4af..e5d388c 100644
+--- a/scenes/telegraph/copy_commit_desk.tscn
++++ b/scenes/telegraph/copy_commit_desk.tscn
+@@ -118,7 +118,7 @@ outline_size = 0
+ horizontal_alignment = 1
+ vertical_alignment = 1
+ width = 180.0
+-text = "AMEND COPY\nWATER"
++text = "AMEND COPY"
+ visible = false
+ 
+ [node name="OptionTwoLabel" type="Label3D" parent="."]
+@@ -131,7 +131,7 @@ outline_size = 0
+ horizontal_alignment = 1
+ vertical_alignment = 1
+ width = 180.0
+-text = "RETAIN COPY\nWATCHER"
++text = "FILE AS COPIED"
+ visible = false
+ 
+ [node name="OptionOneStamp" type="Label3D" parent="."]
+@@ -200,6 +200,7 @@ position = Vector3(-0.2, 0.12, -0.02)
+ collision_layer = 2
+ collision_mask = 0
+ script = ExtResource("2_interact")
++prompt_text = "Amend Copy"
+ enabled = false
+ 
+ [node name="CollisionShape3D" type="CollisionShape3D" parent="Option1Interactable"]
+@@ -210,6 +211,7 @@ position = Vector3(0.2, 0.12, -0.02)
+ collision_layer = 2
+ collision_mask = 0
+ script = ExtResource("2_interact")
++prompt_text = "File As Copied"
+ enabled = false
+ 
+ [node name="CollisionShape3D" type="CollisionShape3D" parent="Option2Interactable"]
+diff --git a/scenes/telegraph/routing_board.tscn b/scenes/telegraph/routing_board.tscn
+index a123653..2b63bfb 100644
+--- a/scenes/telegraph/routing_board.tscn
++++ b/scenes/telegraph/routing_board.tscn
+@@ -260,23 +260,25 @@ layer = 8
+ 
+ [node name="Panel" type="ColorRect" parent="RoutePromptUI"]
+ visible = false
+-offset_left = 410.0
+-offset_top = 590.0
+-offset_right = 870.0
+-offset_bottom = 646.0
++offset_left = 350.0
++offset_top = 558.0
++offset_right = 930.0
++offset_bottom = 678.0
+ color = Color(0.035, 0.03, 0.022, 0.0)
+ 
+ [node name="Label" type="Label" parent="RoutePromptUI/Panel"]
+ layout_mode = 0
+ offset_left = 14.0
+ offset_top = 8.0
+-offset_right = 446.0
+-offset_bottom = 48.0
++offset_right = 566.0
++offset_bottom = 112.0
+ theme_override_colors/font_color = Color(0.86, 0.79, 0.63, 1)
+ theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.85)
+ theme_override_constants/shadow_offset_x = 1
+ theme_override_constants/shadow_offset_y = 1
+-theme_override_font_sizes/font_size = 16
+-text = "[2] HOLD          [1] CLEAR EAST"
++theme_override_font_sizes/font_size = 18
++text = "[1] CLEAR EAST — send on the main line
++[2] HOLD — keep on the siding
++[Esc] Put down board; the line clock keeps running"
+ horizontal_alignment = 1
+ vertical_alignment = 1
+diff --git a/scenes/telegraph/sounder.tscn b/scenes/telegraph/sounder.tscn
+index eb4ba61..ec93434 100644
+--- a/scenes/telegraph/sounder.tscn
++++ b/scenes/telegraph/sounder.tscn
+@@ -1,10 +1,13 @@
+-[gd_scene load_steps=8 format=3 uid="uid://b1sounder001"]
++[gd_scene load_steps=10 format=3 uid="uid://b1sounder001"]
+ 
+ [ext_resource type="Script" path="res://scripts/telegraph/hardware/sounder_controller.gd" id="1_sounder"]
+ [ext_resource type="Material" path="res://materials/style_tests/desk_wood.tres" id="2_wood"]
+ [ext_resource type="Material" path="res://materials/style_tests/metal_brass_aged.tres" id="3_brass"]
+ [ext_resource type="Material" path="res://materials/style_tests/metal_oxidized.tres" id="4_iron"]
+ 
++[ext_resource type="ArrayMesh" path="res://assets/models/instruments_v1/sounder_static.res" id="5_authored_static"]
++[ext_resource type="ArrayMesh" path="res://assets/models/instruments_v1/sounder_armature.res" id="6_authored_armature"]
++
+ [sub_resource type="BoxMesh" id="BoxMesh_base"]
+ material = ExtResource("2_wood")
+ size = Vector3(0.15, 0.024, 0.2)
+@@ -22,19 +25,26 @@ size = Vector3(0.012, 0.048, 0.014)
+ [node name="Sounder" type="Node3D"]
+ script = ExtResource("1_sounder")
+ 
++[node name="AuthoredStatic" type="MeshInstance3D" parent="."]
++mesh = ExtResource("5_authored_static")
++
+ [node name="BaseMesh" type="MeshInstance3D" parent="."]
++visible = false
+ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, 0)
+ mesh = SubResource("BoxMesh_base")
+ 
+ [node name="CoilLeft" type="MeshInstance3D" parent="."]
++visible = false
+ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.025, 0.04, -0.02)
+ mesh = SubResource("CylinderMesh_coil")
+ 
+ [node name="CoilRight" type="MeshInstance3D" parent="."]
++visible = false
+ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.025, 0.04, -0.02)
+ mesh = SubResource("CylinderMesh_coil")
+ 
+ [node name="CoilTopL" type="CSGCylinder3D" parent="."]
++visible = false
+ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.025, 0.063, -0.02)
+ radius = 0.019
+ height = 0.006
+@@ -42,6 +52,7 @@ sides = 10
+ material = ExtResource("3_brass")
+ 
+ [node name="CoilTopR" type="CSGCylinder3D" parent="."]
++visible = false
+ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.025, 0.063, -0.02)
+ radius = 0.019
+ height = 0.006
+@@ -49,15 +60,18 @@ sides = 10
+ material = ExtResource("3_brass")
+ 
+ [node name="Anvil" type="MeshInstance3D" parent="."]
++visible = false
+ position = Vector3(0, 0.041, 0.047)
+ mesh = SubResource("BoxMesh_anvil")
+ 
+-[node name="ArmatureBar" type="CSGBox3D" parent="."]
++[node name="ArmatureBar" type="Node3D" parent="."]
+ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.065, 0.005)
+-size = Vector3(0.018, 0.007, 0.1)
+-material = ExtResource("3_brass")
++
++[node name="AuthoredArmature" type="MeshInstance3D" parent="ArmatureBar"]
++mesh = ExtResource("6_authored_armature")
+ 
+ [node name="SounderScrew" type="CSGCylinder3D" parent="."]
++visible = false
+ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.08, 0.04)
+ radius = 0.006
+ height = 0.018
+diff --git a/scenes/telegraph/tape_register.tscn b/scenes/telegraph/tape_register.tscn
+index 5d130f0..758eb39 100644
+--- a/scenes/telegraph/tape_register.tscn
++++ b/scenes/telegraph/tape_register.tscn
+@@ -1,4 +1,4 @@
+-[gd_scene load_steps=10 format=3 uid="uid://b1tapereg01"]
++[gd_scene load_steps=14 format=3 uid="uid://b1tapereg01"]
+ 
+ [ext_resource type="Script" path="res://scripts/telegraph/hardware/tape_register_controller.gd" id="1_tape"]
+ [ext_resource type="Material" path="res://materials/style_tests/timber_trim.tres" id="2_wood"]
+@@ -6,6 +6,10 @@
+ [ext_resource type="Script" path="res://scripts/interaction/interactable.gd" id="4_interact"]
+ [ext_resource type="Material" path="res://materials/style_tests/metal_brass_aged.tres" id="5_brass"]
+ 
++[ext_resource type="ArrayMesh" path="res://assets/models/instruments_v1/register_static.res" id="6_authored_static"]
++[ext_resource type="ArrayMesh" path="res://assets/models/instruments_v1/register_spool.res" id="7_authored_spool"]
++[ext_resource type="ArrayMesh" path="res://assets/models/instruments_v1/register_stylus.res" id="8_authored_stylus"]
++
+ [sub_resource type="StandardMaterial3D" id="Ink"]
+ albedo_color = Color(0.05, 0.05, 0.07, 1)
+ roughness = 0.4
+@@ -52,32 +56,41 @@ shape = SubResource("WindShape")
+ 
+ [node name="Body" type="Node3D" parent="."]
+ 
++[node name="AuthoredStatic" type="MeshInstance3D" parent="Body"]
++mesh = ExtResource("6_authored_static")
++
+ [node name="Plinth" type="CSGBox3D" parent="Body"]
++visible = false
+ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.005, 0)
+ size = Vector3(0.172, 0.01, 0.122)
+ material = SubResource("DarkWood")
+ 
+ [node name="Cabinet" type="CSGBox3D" parent="Body"]
++visible = false
+ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0375, 0)
+ size = Vector3(0.16, 0.055, 0.11)
+ material = ExtResource("2_wood")
+ 
+ [node name="TopPlate" type="CSGBox3D" parent="Body"]
++visible = false
+ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.067, 0)
+ size = Vector3(0.15, 0.004, 0.1)
+ material = ExtResource("5_brass")
+ 
+ [node name="NamePlate" type="CSGBox3D" parent="Body"]
++visible = false
+ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.036, 0.0555)
+ size = Vector3(0.06, 0.012, 0.0012)
+ material = ExtResource("5_brass")
+ 
+ [node name="CheekLeft" type="CSGBox3D" parent="Body"]
++visible = false
+ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0145, 0.097, -0.025)
+ size = Vector3(0.004, 0.058, 0.05)
+ material = ExtResource("5_brass")
+ 
+ [node name="CheekRight" type="CSGBox3D" parent="Body"]
++visible = false
+ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0145, 0.097, -0.025)
+ size = Vector3(0.004, 0.058, 0.05)
+ material = ExtResource("5_brass")
+@@ -85,19 +98,25 @@ material = ExtResource("5_brass")
+ [node name="Spool" type="Node3D" parent="Body"]
+ transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0.105, -0.025)
+ 
++[node name="AuthoredSpool" type="MeshInstance3D" parent="Body/Spool"]
++mesh = ExtResource("7_authored_spool")
++
+ [node name="Roll" type="CSGCylinder3D" parent="Body/Spool"]
++visible = false
+ radius = 0.027
+ height = 0.02
+ sides = 14
+ material = ExtResource("3_paper")
+ 
+ [node name="Hub" type="CSGCylinder3D" parent="Body/Spool"]
++visible = false
+ radius = 0.008
+ height = 0.034
+ sides = 8
+ material = ExtResource("5_brass")
+ 
+ [node name="HubSpoke" type="CSGBox3D" parent="Body/Spool"]
++visible = false
+ size = Vector3(0.036, 0.021, 0.004)
+ material = ExtResource("5_brass")
+ 
+@@ -112,6 +131,7 @@ size = Vector3(0.014, 0.068, 0.001)
+ material = ExtResource("3_paper")
+ 
+ [node name="InkWheel" type="CSGCylinder3D" parent="Body"]
++visible = false
+ transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0.078, 0.052)
+ radius = 0.006
+ height = 0.012
+@@ -121,12 +141,17 @@ material = SubResource("Ink")
+ [node name="StylusPivot" type="Node3D" parent="Body"]
+ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.081, 0.03)
+ 
++[node name="AuthoredStylus" type="MeshInstance3D" parent="Body/StylusPivot"]
++mesh = ExtResource("8_authored_stylus")
++
+ [node name="StylusArm" type="CSGBox3D" parent="Body/StylusPivot"]
++visible = false
+ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.012)
+ size = Vector3(0.004, 0.004, 0.04)
+ material = ExtResource("5_brass")
+ 
+ [node name="StylusTip" type="CSGCylinder3D" parent="Body/StylusPivot"]
++visible = false
+ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0055, 0.007)
+ radius = 0.0018
+ height = 0.008
+@@ -134,6 +159,7 @@ sides = 6
+ material = SubResource("Ink")
+ 
+ [node name="WindingArbor" type="CSGCylinder3D" parent="Body"]
++visible = false
+ transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0.085, 0.04, -0.01)
+ radius = 0.004
+ height = 0.012
+@@ -141,6 +167,7 @@ sides = 8
+ material = ExtResource("5_brass")
+ 
+ [node name="WindingKey" type="CSGBox3D" parent="Body"]
++visible = false
+ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.092, 0.04, -0.01)
+ size = Vector3(0.003, 0.022, 0.012)
+ material = ExtResource("5_brass")
+@@ -150,11 +177,13 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0005, 0.1)
+ mesh = SubResource("BoxMesh_strip")
+ 
+ [node name="ReceivingTrayFloor" type="CSGBox3D" parent="Body"]
++visible = false
+ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.003, 0.172)
+ size = Vector3(0.06, 0.006, 0.055)
+ material = ExtResource("2_wood")
+ 
+ [node name="ReceivingTrayLip" type="CSGBox3D" parent="Body"]
++visible = false
+ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.012, 0.198)
+ size = Vector3(0.06, 0.024, 0.005)
+ material = ExtResource("2_wood")
+diff --git a/scenes/telegraph/telegraph_key.tscn b/scenes/telegraph/telegraph_key.tscn
+index 1c329cc..b124d5e 100644
+--- a/scenes/telegraph/telegraph_key.tscn
++++ b/scenes/telegraph/telegraph_key.tscn
+@@ -1,4 +1,4 @@
+-[gd_scene load_steps=8 format=3 uid="uid://b1telkey001"]
++[gd_scene load_steps=13 format=3 uid="uid://b1telkey001"]
+ 
+ [ext_resource type="Script" path="res://scripts/telegraph/hardware/telegraph_key.gd" id="1_key"]
+ [ext_resource type="Script" path="res://scripts/interaction/interactable.gd" id="2_interact"]
+@@ -6,6 +6,9 @@
+ [ext_resource type="Material" path="res://materials/style_tests/timber_trim.tres" id="4_wood"]
+ [ext_resource type="Material" path="res://materials/style_tests/metal_oxidized.tres" id="5_iron"]
+ 
++[ext_resource type="ArrayMesh" path="res://assets/models/instruments_v1/key_static.res" id="6_authored_static"]
++[ext_resource type="ArrayMesh" path="res://assets/models/instruments_v1/key_lever.res" id="7_authored_lever"]
++
+ [sub_resource type="BoxMesh" id="BoxMesh_wood_base"]
+ material = ExtResource("4_wood")
+ size = Vector3(0.09, 0.012, 0.19)
+@@ -30,25 +33,33 @@ size = Vector3(0.12, 0.08, 0.22)
+ [node name="TelegraphKey" type="Node3D"]
+ script = ExtResource("1_key")
+ 
++[node name="AuthoredStatic" type="MeshInstance3D" parent="."]
++mesh = ExtResource("6_authored_static")
++
+ [node name="WoodBase" type="MeshInstance3D" parent="."]
++visible = false
+ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.006, 0)
+ mesh = SubResource("BoxMesh_wood_base")
+ 
+ [node name="BaseMesh" type="MeshInstance3D" parent="."]
++visible = false
+ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.014, 0)
+ mesh = SubResource("BoxMesh_base")
+ 
+ [node name="TrunnionL" type="CSGBox3D" parent="."]
++visible = false
+ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.03, 0.026, 0.01)
+ size = Vector3(0.01, 0.02, 0.02)
+ material = ExtResource("3_brass")
+ 
+ [node name="TrunnionR" type="CSGBox3D" parent="."]
++visible = false
+ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.03, 0.026, 0.01)
+ size = Vector3(0.01, 0.02, 0.02)
+ material = ExtResource("3_brass")
+ 
+ [node name="BindingPost1" type="CSGCylinder3D" parent="."]
++visible = false
+ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.025, 0.025, -0.065)
+ radius = 0.008
+ height = 0.02
+@@ -56,6 +67,7 @@ sides = 8
+ material = ExtResource("3_brass")
+ 
+ [node name="BindingPost2" type="CSGCylinder3D" parent="."]
++visible = false
+ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.025, 0.025, -0.065)
+ radius = 0.008
+ height = 0.02
+@@ -65,11 +77,16 @@ material = ExtResource("3_brass")
+ [node name="Lever" type="Node3D" parent="."]
+ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.022, 0)
+ 
++[node name="AuthoredLever" type="MeshInstance3D" parent="Lever"]
++mesh = ExtResource("7_authored_lever")
++
+ [node name="LeverArm" type="MeshInstance3D" parent="Lever"]
++visible = false
+ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.006, 0.005)
+ mesh = SubResource("BoxMesh_arm")
+ 
+ [node name="Knob" type="MeshInstance3D" parent="Lever"]
++visible = false
+ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.018, 0.06)
+ mesh = SubResource("CylinderMesh_knob")
+ 
+diff --git a/scenes/ui/document_viewer.tscn b/scenes/ui/document_viewer.tscn
+index b1997c4..ffd591d 100644
+--- a/scenes/ui/document_viewer.tscn
++++ b/scenes/ui/document_viewer.tscn
+@@ -57,7 +57,13 @@ horizontal_alignment = 1
+ [node name="HSeparator" type="HSeparator" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
+ layout_mode = 2
+ 
+-[node name="BodyLabel" type="RichTextLabel" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
++[node name="BodyScroll" type="ScrollContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
++layout_mode = 2
++size_flags_vertical = 3
++horizontal_scroll_mode = 0
++vertical_scroll_mode = 0
++
++[node name="BodyLabel" type="RichTextLabel" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/BodyScroll"]
+ custom_minimum_size = Vector2(560, 260)
+ layout_mode = 2
+ size_flags_vertical = 3
+@@ -65,7 +71,7 @@ theme_override_colors/default_color = Color(0.15, 0.12, 0.08, 1)
+ theme_override_font_sizes/normal_font_size = 16
+ bbcode_enabled = false
+ text = ""
+-fit_content = true
++fit_content = false
+ 
+ [node name="FooterLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
+ layout_mode = 2
+diff --git a/scenes/ui/main_menu.tscn b/scenes/ui/main_menu.tscn
+index ccc51da..706a6e4 100644
+--- a/scenes/ui/main_menu.tscn
++++ b/scenes/ui/main_menu.tscn
+@@ -1,6 +1,7 @@
+-[gd_scene load_steps=3 format=3]
++[gd_scene load_steps=4 format=3]
+ 
+ [ext_resource type="Script" path="res://scripts/ui/main_menu.gd" id="1_menu"]
++[ext_resource type="Script" path="res://scripts/ui/readability_options.gd" id="2_readability"]
+ 
+ [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_options"]
+ bg_color = Color(0.06, 0.055, 0.05, 0.9)
+@@ -148,6 +149,10 @@ max_value = 6.0
+ step = 1.0
+ value = -4.0
+ 
++[node name="ReadabilityOptions" type="VBoxContainer" parent="CenterContainer/VBoxContainer/OptionsPanel/OptionsBox"]
++layout_mode = 2
++script = ExtResource("2_readability")
++
+ [node name="QuitButton" type="Button" parent="CenterContainer/VBoxContainer"]
+ layout_mode = 2
+ theme_override_font_sizes/font_size = 15
+diff --git a/scenes/ui/pause_menu.tscn b/scenes/ui/pause_menu.tscn
+index ccad0bb..edcca65 100644
+--- a/scenes/ui/pause_menu.tscn
++++ b/scenes/ui/pause_menu.tscn
+@@ -1,6 +1,7 @@
+-[gd_scene load_steps=3 format=3]
++[gd_scene load_steps=4 format=3]
+ 
+ [ext_resource type="Script" path="res://scripts/ui/pause_menu.gd" id="1_pause"]
++[ext_resource type="Script" path="res://scripts/ui/readability_options.gd" id="2_readability"]
+ 
+ [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+ bg_color = Color(0.07, 0.065, 0.06, 0.97)
+@@ -138,6 +139,10 @@ value = -4.0
+ [node name="HSeparator2" type="HSeparator" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
+ layout_mode = 2
+ 
++[node name="ReadabilityOptions" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
++layout_mode = 2
++script = ExtResource("2_readability")
++
+ [node name="ResumeButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
+ layout_mode = 2
+ theme_override_font_sizes/font_size = 15
+diff --git a/scripts/audio/office_foley.gd b/scripts/audio/office_foley.gd
+index 4d45966..6fb2301 100644
+--- a/scripts/audio/office_foley.gd
++++ b/scripts/audio/office_foley.gd
+@@ -22,12 +22,37 @@ const JITTER: float = 0.06
+ ## Local, physical sounds sit on their own bus so the room's fader never has to
+ ## choose between the wind and a hand closing on paper.
+ const FOLEY_BUS: StringName = &"Foley"
++var _bound: bool = false
+ 
+ func _ready() -> void:
+ 	_bind.call_deferred()
+ 
+ func _bind() -> void:
++	if _bound or not is_inside_tree() or is_queued_for_deletion():
++		return
+ 	var office := get_parent() as M1OfficeController
++	if not is_instance_valid(office) or not office.is_inside_tree() or office.is_queued_for_deletion():
++		return
++	var chair := office.get_node_or_null("Chair") as Node3D
++	for component in [office.document_viewer, office.session_controller, office.copy_commit_desk,
++			office.routing_board, office.office_door, office.operator_seat, chair]:
++		if not _can_bind_to(component):
++			return
++	var transcript := office.session_controller.transcript_paper
++	if not _can_bind_to(transcript):
++		return
++	var key := office.session_controller.telegraph_key
++	var lamp_life := office.get_node_or_null("LampLife") as LampLife
++	var lamp := office.get_node_or_null("DeskSetup/OilLamp") as Node3D
++	var register := office.get_node_or_null("TelegraphSessionController/TapeRegister") as TapeRegisterController
++	for component in [transcript.writer_rig, key, lamp_life, register]:
++		if component != null and not _can_bind_to(component):
++			return
++	if lamp_life != null and not _can_bind_to(lamp):
++		return
++	# Deferred removal is normal during watch changes. Validate the whole room
++	# before touching transforms or connecting even its first physical sound.
++	_bound = true
+ 	var paper := AudioStreamPlayer.new()
+ 	paper.name = "Paper"
+ 	paper.stream = PAPER
+@@ -50,7 +75,6 @@ func _bind() -> void:
+ 	feed.volume_db = -24.0
+ 	feed.bus = FOLEY_BUS
+ 	add_child(feed)
+-	var transcript := office.session_controller.transcript_paper
+ 	transcript.sheet_fed.connect(func(): _play_varied(feed))
+ 	var slide := _source("SheetSlide", SLIDE, transcript.global_position, -26.0)
+ 	transcript.sheet_archived.connect(func(): _play_varied(slide))
+@@ -58,7 +82,6 @@ func _bind() -> void:
+ 	var pen := _source("Pen", PEN, transcript.global_position, -30.0)
+ 	if transcript.writer_rig != null:
+ 		transcript.writer_rig.glyph_contact.connect(func(_i): _play_varied(pen))
+-	var key := office.session_controller.telegraph_key
+ 	if key != null:
+ 		var click := _source("KeyClick", KEY, key.global_position, -16.0)
+ 		key.key_touched.connect(func(): _play_varied(click))
+@@ -68,13 +91,11 @@ func _bind() -> void:
+ 	office.copy_commit_desk.stamp_contact.connect(func(_id): stamp.play())
+ 	# The hand takes the lever: the throw starts here, the stop lands on the board.
+ 	var lever := _source("LeverThrow", LEVER, office.routing_board.global_position + Vector3(0, 0.7, 0), -20.0)
+-	office.routing_board.routing_action_selected.connect(func(_a): _play_varied(lever))
+-	var lamp_life := office.get_node_or_null("LampLife") as LampLife
++	office.routing_board.route_accepted.connect(func(_a): _play_varied(lever))
+ 	if lamp_life != null:
+-		var wick := _source("Wick", WICK, office.get_node("DeskSetup/OilLamp").global_position, -20.0)
++		var wick := _source("Wick", WICK, lamp.global_position, -20.0)
+ 		lamp_life.wick_turned_up.connect(wick.play.bind(0.0))
+ 		lamp_life.wick_turned_down.connect(wick.play.bind(0.0))
+-	var register := office.get_node_or_null("TelegraphSessionController/TapeRegister") as TapeRegisterController
+ 	if register != null:
+ 		var winder := _source("RegisterWind", WICK, register.global_position, -18.0)
+ 		register.register_wound.connect(func(): _play_varied(winder))
+@@ -83,14 +104,18 @@ func _bind() -> void:
+ 	office.office_door.door_opened.connect(latch.play.bind(0.0))
+ 	var hinge := _source("Hinge", HINGE, Vector3(-2.05, 1.2, 2.3), -17.0)
+ 	office.office_door.door_opened.connect(hinge.play.bind(0.0))
+-	var chair := _source("Chair", CHAIR, office.get_node("Chair").global_position, -22.0)
++	var chair_sound := _source("Chair", CHAIR, chair.global_position, -22.0)
+ 	office.operator_seat.seated.connect(func():
+-		chair.pitch_scale = 1.0
+-		chair.play())
++		chair_sound.pitch_scale = 1.0
++		chair_sound.play())
+ 	# Standing drags the chair back: lower, heavier than the sit.
+ 	office.operator_seat.stood.connect(func():
+-		chair.pitch_scale = 0.8
+-		chair.play())
++		chair_sound.pitch_scale = 0.8
++		chair_sound.play())
++
++func _can_bind_to(component: Variant) -> bool:
++	# Typed Node arguments reject freed references before validation can run.
++	return is_instance_valid(component) and component.is_inside_tree() and not component.is_queued_for_deletion()
+ 
+ func _play_varied(player: Node) -> void:
+ 	player.pitch_scale = 1.0 + randf_range(-JITTER, JITTER)
+diff --git a/scripts/events/door_attention_source.gd b/scripts/events/door_attention_source.gd
+index 1fa774f..27c21bf 100644
+--- a/scripts/events/door_attention_source.gd
++++ b/scripts/events/door_attention_source.gd
+@@ -11,8 +11,10 @@ signal footsteps_completed()
+ 
+ var _player: AudioStreamPlayer3D = null
+ ## Audio fairness by construction (GDD §7): a step never lands on a Morse
+-## MARK. If the wire is marking when a step is due, the step waits for the gap.
++## MARK. A step only starts when its whole sample fits in the current gap,
++## and a MARK that arrives mid-sample cuts the optional foley short.
+ var scheduler: MorseRuntimeScheduler = null
++var _bound_scheduler: MorseRuntimeScheduler = null
+ var is_active: bool = false
+ var steps_played: int = 0
+ var _step_timer: float = 0.0
+@@ -21,6 +23,7 @@ var _step_timer: float = 0.0
+ ## muffled.
+ const PITCH_VARIATIONS: Array[float] = [0.84, 0.88, 0.82]
+ const THROUGH_DOOR_CUTOFF_HZ: float = 1400.0
++const FOLEY_SAFETY_MARGIN: float = 0.08
+ 
+ func _ready() -> void:
+ 	_setup_audio_player()
+@@ -45,7 +48,8 @@ func trigger_footsteps() -> void:
+ 	steps_played = 0
+ 	_step_timer = 0.0
+ 	footsteps_started.emit()
+-	if _wire_marking():
++	_bind_fairness()
++	if not _can_start_next_step():
+ 		return
+ 	_play_step()
+ 
+@@ -64,13 +68,39 @@ func _play_step() -> void:
+ 		footsteps_completed.emit()
+ 
+ func _process(delta: float) -> void:
++	_bind_fairness()
+ 	if is_active and steps_played < total_steps:
+ 		_step_timer -= delta
+-		if _step_timer <= 0.0 and not _wire_marking():
++		if _step_timer <= 0.0 and _can_start_next_step():
+ 			_play_step()
+ 
+-func _wire_marking() -> bool:
+-	if scheduler == null or not scheduler.is_playing():
++## True when a sample of [param seconds] (plus safety margin) finishes before
++## the next MARK. Only a GAP with enough room left admits optional foley.
++func can_fit_foley(seconds: float) -> bool:
++	if not is_finite(seconds) or seconds < 0.0:
+ 		return false
++	if scheduler == null or not scheduler.is_playing():
++		return true
+ 	var event := scheduler.get_current_event()
+-	return event != null and event.kind == MorseTimingEvent.Kind.MARK
++	if event == null or event.kind != MorseTimingEvent.Kind.GAP:
++		return false
++	return event.end_seconds - scheduler.get_elapsed_seconds() >= seconds + FOLEY_SAFETY_MARGIN
++
++func _can_start_next_step() -> bool:
++	if footstep_sound == null:
++		return true
++	var pitch := PITCH_VARIATIONS[steps_played % PITCH_VARIATIONS.size()]
++	return can_fit_foley(footstep_sound.get_length() / maxf(pitch, 0.01))
++
++func _bind_fairness() -> void:
++	if _bound_scheduler == scheduler:
++		return
++	if is_instance_valid(_bound_scheduler) and _bound_scheduler.timing_event_started.is_connected(_on_wire_event):
++		_bound_scheduler.timing_event_started.disconnect(_on_wire_event)
++	_bound_scheduler = scheduler
++	if scheduler != null:
++		scheduler.timing_event_started.connect(_on_wire_event)
++
++func _on_wire_event(event: MorseScheduledEvent) -> void:
++	if event.kind == MorseTimingEvent.Kind.MARK and _player != null and _player.playing:
++		_player.stop()
+diff --git a/scripts/interaction/interaction_controller.gd b/scripts/interaction/interaction_controller.gd
+index 259dc5a..ab100be 100644
+--- a/scripts/interaction/interaction_controller.gd
++++ b/scripts/interaction/interaction_controller.gd
+@@ -3,8 +3,12 @@ extends Node
+ 
+ @export var interaction_ray: RayCast3D
+ @export var prompt_label: Label
++@export var reticle: ColorRect
+ 
+ const STATUS_ALPHA: float = 0.55
++## Crosshair color: warm when E acts on the target, neutral and quiet otherwise.
++const ACTIONABLE_RETICLE_COLOR: Color = Color(0.95, 0.86, 0.68, 0.95)
++const INACTIVE_RETICLE_COLOR: Color = Color(0.86, 0.79, 0.63, 0.45)
+ 
+ var current_target: Interactable = null
+ var is_ui_blocked: bool = false
+@@ -19,6 +23,8 @@ func _ready() -> void:
+ 		interaction_ray = get_node_or_null("../Head/Camera3D/InteractionRay") as RayCast3D
+ 	if not prompt_label:
+ 		prompt_label = get_node_or_null("../InteractionUI/PromptLabel") as Label
++	if not reticle:
++		reticle = get_node_or_null("../InteractionUI/Reticle") as ColorRect
+ 
+ 	_update_prompt_ui()
+ 
+@@ -27,6 +33,7 @@ func _process(_delta: float) -> void:
+ 		if prompt_label != null and prompt_label.visible:
+ 			prompt_label.visible = false
+ 		current_target = null
++		refresh_reticle()
+ 		return
+ 
+ 	_update_target()
+@@ -61,6 +68,7 @@ func _update_target() -> void:
+ 		_update_prompt_ui()
+ 
+ func _update_prompt_ui() -> void:
++	refresh_reticle()
+ 	if not prompt_label:
+ 		return
+ 
+@@ -88,6 +96,23 @@ func set_persistent_hint(text: String) -> void:
+ 	persistent_hint = text
+ 	_update_prompt_ui()
+ 
++## Crosshair feedback mirrors the real target. captured_override exists only so
++## tests can drive the mouse state; production always reads Input.
++func refresh_reticle(captured_override: Variant = null) -> void:
++	if not reticle:
++		return
++	var captured: bool = Input.mouse_mode == Input.MOUSE_MODE_CAPTURED
++	if captured_override != null:
++		captured = bool(captured_override)
++	if is_ui_blocked or not captured:
++		reticle.visible = false
++		return
++	reticle.visible = true
++	if current_target and current_target.can_interact() and current_target.is_actionable:
++		reticle.color = ACTIONABLE_RETICLE_COLOR
++	else:
++		reticle.color = INACTIVE_RETICLE_COLOR
++
+ ## Public refresh hook for pause/resume and other systems that change input
+ ## capture state without moving the camera.
+ func refresh_prompt() -> void:
+diff --git a/scripts/office/dawn_evidence.gd b/scripts/office/dawn_evidence.gd
+index f31fa4d..113ba3a 100644
+--- a/scripts/office/dawn_evidence.gd
++++ b/scripts/office/dawn_evidence.gd
+@@ -14,6 +14,7 @@ signal evidence_inspected(text: String)
+ const VARIANT_WATER: StringName = &"water"
+ const VARIANT_WATCHER: StringName = &"watcher"
+ const VARIANT_LAPSED: StringName = &"lapsed"
++const VARIANT_AMENDED: StringName = &"amended"
+ 
+ var interactable: Interactable = null
+ var _revealed: bool = false
+@@ -76,6 +77,8 @@ func reset_for_new_watch() -> void:
+ func _read_variant() -> StringName:
+ 	var world := _get_world_state()
+ 	if world != null:
++		if world.get_fact(&"core_hook_amended_wrong", false) == true:
++			return VARIANT_AMENDED
+ 		if world.get_fact(&"core_hook_filed_water", false) == true:
+ 			return VARIANT_WATER
+ 		if world.get_fact(&"core_hook_filed_watcher", false) == true:
+@@ -86,8 +89,12 @@ func _read_variant() -> StringName:
+ 
+ func _build_document(variant_id: StringName) -> String:
+ 	var copy := "No copy filed. The unscheduled call remains open."
+-	if variant_id == VARIANT_WATER:
+-		copy = "WATER\n\nCorrection entered by E. Crane. The original\nworking transcript is retained beneath this copy."
++	if variant_id == VARIANT_WATER or variant_id == VARIANT_AMENDED:
++		var world := _get_world_state()
++		if world != null:
++			var fallback := "WATER" if variant_id == VARIANT_WATER else ""
++			var word := str(world.get_fact(&"core_hook_filed_word", fallback))
++			copy = "%s\n\nCorrection entered by E. Crane. The original\nworking transcript is retained beneath this copy." % word
+ 	elif variant_id == VARIANT_WATCHER:
+ 		copy = "WATCHER\n\nFiled as written by E. Crane. No correction\nentered. Retain the working transcript."
+ 	return """BLACK CREEK STATION
+@@ -113,9 +120,11 @@ func _update_labels() -> void:
+ 	if result == null or stamp == null or subtitle == null:
+ 		return
+ 	match _variant_id:
+-		VARIANT_WATER:
+-			result.text = "WATER"
+-			stamp.text = "CORRECTED"
++		VARIANT_WATER, VARIANT_AMENDED:
++			var world := _get_world_state()
++			var fallback := "WATER" if _variant_id == VARIANT_WATER else ""
++			result.text = str(world.get_fact(&"core_hook_filed_word", fallback)) if world != null else ""
++			stamp.text = "AMENDED"
+ 			subtitle.text = "NIGHT COPY / RETAIN"
+ 		VARIANT_WATCHER:
+ 			result.text = "WATCHER"
+diff --git a/scripts/office/m1_office_controller.gd b/scripts/office/m1_office_controller.gd
+index 51a2699..5ffdd31 100644
+--- a/scripts/office/m1_office_controller.gd
++++ b/scripts/office/m1_office_controller.gd
+@@ -4,6 +4,7 @@ extends Node3D
+ signal scenario_cycle_completed()
+ 
+ @export var enable_psx_rendering: bool = true
++# Legacy-not-authoritative: live resolution comes from ReadabilityPolicy via apply_presentation_mode.
+ @export var render_scale: float = 0.5
+ 
+ @export var session_controller: TelegraphSessionController = null
+@@ -19,6 +20,7 @@ signal scenario_cycle_completed()
+ @export var office_door: OfficeDoor = null
+ @export var shift_end_card: ShiftEndCard = null
+ @export var dawn_evidence: DawnEvidence = null
++var amendment_editor: AmendmentEditor = null
+ 
+ @export var scenario_1: TelegraphScenarioData = preload("res://data/scenarios/m1_scenario_1_baseline.tres")
+ @export var scenario_2: TelegraphScenarioData = preload("res://data/scenarios/m1_scenario_2_attention.tres")
+@@ -29,7 +31,10 @@ var _scenario_list: Array[TelegraphScenarioData] = []
+ var _cycle_completed: bool = false
+ var _exit_body_present: bool = false
+ 
++var _presentation_mode: int = 1
++
+ func _ready() -> void:
++	_presentation_mode = GameSettings.load_settings().presentation_mode
+ 	if enable_psx_rendering:
+ 		apply_psx_settings()
+ 	_apply_embedded_body_font()
+@@ -95,20 +100,34 @@ func apply_psx_settings() -> void:
+ 	vp.use_debanding = false
+ 	vp.canvas_item_default_texture_filter = Viewport.DEFAULT_CANVAS_ITEM_TEXTURE_FILTER_NEAREST
+ 
++func apply_presentation_mode(mode: int) -> void:
++	_presentation_mode = clampi(mode, 0, 2)
++	_apply_psx_scale()
++
+ func _apply_psx_scale() -> void:
+ 	var vp := get_viewport()
+ 	if vp == null:
+ 		return
+ 	var window := get_window()
+-	var height := float(window.size.y) if window != null and window.size.y > 0 else REFERENCE_HEIGHT
+-	var scale := clampf(render_scale * REFERENCE_HEIGHT / height, 0.1, 1.0)
+-	vp.scaling_3d_scale = scale
++	var height := window.size.y if window != null and window.size.y > 0 else 720
++	var profile := ReadabilityPolicy.profile(height, _presentation_mode)
++	vp.scaling_3d_scale = profile.scale
+ 	var grade := get_node_or_null("PSXDither/Grade") as CanvasItem
+-	if grade != null and grade.material is ShaderMaterial:
+-		# The dither cell is one 3D pixel, measured in window pixels.
+-		(grade.material as ShaderMaterial).set_shader_parameter("pixel_size", 1.0 / scale)
++	if grade != null:
++		grade.visible = enable_psx_rendering and profile.grade_enabled
++		if grade.material is ShaderMaterial:
++			var material := grade.material as ShaderMaterial
++			material.set_shader_parameter("pixel_size", float(profile.divisor))
++			material.set_shader_parameter("levels", profile.levels)
++			material.set_shader_parameter("vignette", profile.vignette)
+ 
+ func _bind_signals() -> void:
++	amendment_editor = get_node_or_null("AmendmentEditor") as AmendmentEditor
++	if amendment_editor != null:
++		if not amendment_editor.editor_opened.is_connected(_on_amendment_opened):
++			amendment_editor.editor_opened.connect(_on_amendment_opened)
++			amendment_editor.editor_closed.connect(_on_amendment_closed)
++			amendment_editor.correction_submitted.connect(_on_correction_submitted)
+ 	if session_controller == null:
+ 		session_controller = get_node_or_null("TelegraphSessionController") as TelegraphSessionController
+ 	if routing_board == null:
+@@ -205,6 +224,8 @@ func _bind_signals() -> void:
+ 			session_controller.routing_resolved.connect(_on_routing_resolved_board)
+ 
+ 	if copy_commit_desk != null:
++		if not copy_commit_desk.amendment_requested.is_connected(_on_amendment_requested):
++			copy_commit_desk.amendment_requested.connect(_on_amendment_requested)
+ 		if not copy_commit_desk.option_committed.is_connected(_on_commit_option_committed):
+ 			copy_commit_desk.option_committed.connect(_on_commit_option_committed)
+ 
+@@ -256,6 +277,9 @@ func load_scenario_by_index(idx: int) -> bool:
+ 	var list := _get_scenario_list()
+ 	if idx < 0 or idx >= list.size():
+ 		return false
++	# A refused authority load must not reset its existing office presentation.
++	if session_controller == null or not session_controller.can_load_scenario(list[idx]):
++		return false
+ 	_scenario_index = idx
+ 	if idx == 0:
+ 		_exit_body_present = false
+@@ -322,12 +346,15 @@ func _on_operator_sit_completed() -> void:
+ 
+ func _on_routing_action(action: String) -> void:
+ 	if session_controller == null:
++		routing_board.play_route_accept(action, false)
+ 		return
+-	# An expired route deadline rejects input at the door: the lapse resolves
++	# An expired route deadline rejects input at the door:
+ 	# the slot, and a late lever throw must not produce a route or a result.
+ 	if is_shift_directed() and shift_director.is_route_deadline_expired():
++		routing_board.play_route_accept(action, false)
+ 		return
+-	session_controller.submit_routing_decision(action)
++	if not session_controller.submit_routing_decision(action):
++		routing_board.play_route_accept(action, false)
+ 
+ ## The board's apparatus answers the session's verdict, not the keypress: the
+ ## lever reaches its stop only for an order that actually went out.
+@@ -369,6 +396,42 @@ func _on_commit_requested(options: Array[TelegraphCommitOption]) -> void:
+ 		and session_controller.get_state() == TelegraphSessionController.State.AWAITING_COMMIT
+ 	copy_commit_desk.set_enabled(awaiting_commit)
+ 
++func _on_amendment_requested() -> void:
++	if amendment_editor == null or session_controller == null:
++		return
++	if session_controller.get_state() != TelegraphSessionController.State.AWAITING_COMMIT:
++		copy_commit_desk.set_amendment_open(false)
++		return
++	amendment_editor.open_editor(session_controller.get_current_scenario().scenario_id)
++
++func _on_amendment_opened() -> void:
++	_on_document_opened("amendment")
++
++func _on_amendment_closed() -> void:
++	if copy_commit_desk != null:
++		copy_commit_desk.set_amendment_open(false)
++	_release_amendment_controls.call_deferred()
++
++func _release_amendment_controls() -> void:
++	if not is_inside_tree() or is_queued_for_deletion():
++		return
++	await get_tree().process_frame
++	if not is_inside_tree():
++		return
++	# process_frame resumes before the frame counter advances. Retain the lock
++	# until the triggering event's transition frame has actually ended.
++	if amendment_editor != null and amendment_editor.owns_transition_frame():
++		_release_amendment_controls.call_deferred()
++		return
++	if not is_world_view_blocked():
++		_on_document_closed("amendment")
++
++func _on_correction_submitted(word: String) -> void:
++	if session_controller == null or amendment_editor == null:
++		return
++	if not session_controller.submit_amendment(word):
++		amendment_editor.reject_submission("The correction could not be filed; check the line status.")
++
+ func _on_commit_option_committed(action_id: StringName) -> void:
+ 	# The desk expressed intent. The session is the authority: its answer
+ 	# comes back through commit_resolved and only that may change the
+@@ -412,7 +475,12 @@ func _on_session_state_changed(
+ 		new_state: TelegraphSessionController.State,
+ 		_prev_state: TelegraphSessionController.State
+ ) -> void:
++	if new_state != TelegraphSessionController.State.AWAITING_COMMIT \
++		and amendment_editor != null and amendment_editor.is_open():
++		amendment_editor.close_editor(false)
+ 	if new_state == TelegraphSessionController.State.IDLE:
++		if amendment_editor != null:
++			amendment_editor.close_editor(false)
+ 		if window_observation != null:
+ 			window_observation.reset_state()
+ 		if copy_commit_desk != null:
+@@ -475,24 +543,23 @@ func _on_tape_inspected(text: String) -> void:
+ 		return
+ 	document_viewer.open_document(TapeRegisterController.TAPE_DOC_ID,
+ 		TapeRegisterController.TAPE_TITLE, _wrap_tape_text(text),
+-		"[E / Esc] Put Down Tape")
++		"[E / Esc] Put Down Tape — ? unfinished mark; take labels are not timed ink")
+ 
+-## Paper strips are narrow: fold the mark sequence into ~40-column lines at
+-## space boundaries so the lamp-lit strip reads like the physical object.
++## Paper layout inserts line breaks only: every timing column survives.
++## This helper never treats a GAP as disposable prose whitespace.
+ static func _wrap_tape_text(text: String, columns: int = 40) -> String:
+-	if text.length() <= columns:
+-		return text
+-	var out := ""
+-	var line_start := 0
+-	while text.length() - line_start > columns:
+-		var window := text.substr(line_start, mini(columns + 1, text.length() - line_start))
+-		var space_at := window.rfind(" ")
+-		if space_at < 0:
+-			space_at = columns
+-		out += text.substr(line_start, space_at) + "\n"
+-		line_start += space_at + 1
+-	out += text.substr(line_start)
+-	return out
++	var width := maxi(columns, 1)
++	var lines: PackedStringArray = []
++	for original in text.split("\n"):
++		# Take labels are layout metadata, not columns of timed ink.
++		if original.begins_with("[WIRE TAKE") or original.is_empty():
++			lines.append(original)
++			continue
++		var index := 0
++		while index < original.length():
++			lines.append(original.substr(index, width))
++			index += width
++	return "\n".join(lines)
+ 
+ ## True while the current session's sheet is still being written: receiving the
+ ## signal or finishing the backlog after it.
+@@ -535,6 +602,8 @@ func _update_transcript_prompt() -> void:
+ ## Any full-screen surface that hides the world also blocks observation through
+ ## it. This is computed centrally so every caller shares one definition.
+ func is_world_view_blocked() -> bool:
++	if amendment_editor != null and (amendment_editor.is_open() or amendment_editor.owns_transition_frame()):
++		return true
+ 	if document_viewer != null and document_viewer.is_open():
+ 		return true
+ 	if routing_board != null and routing_board.is_open:
+@@ -728,7 +797,7 @@ func _refresh_guidance() -> void:
+ 		TelegraphSessionController.State.AWAITING_ROUTE:
+ 			hint = "Set the route on the east wall board"
+ 		TelegraphSessionController.State.AWAITING_COMMIT:
+-			hint = "File one copy at the table by the stove"
++			hint = "At the filing table: AMEND COPY to type a word, or FILE AS COPIED to seal the handwriting"
+ 	# A deadline warning is true everywhere the player can be, including behind
+ 	# an open document: the sender does not wait for the reader.
+ 	var warning := session_controller.get_deadline_warning_text()
+diff --git a/scripts/player/operator_seat.gd b/scripts/player/operator_seat.gd
+index 39f43c1..382a947 100644
+--- a/scripts/player/operator_seat.gd
++++ b/scripts/player/operator_seat.gd
+@@ -442,8 +442,6 @@ func _process(delta: float) -> void:
+ 		stand()
+ 
+ func _player_wants_to_walk() -> bool:
+-	if office != null and office.document_viewer != null and office.document_viewer.is_open():
+-		return false
+-	if office != null and office.routing_board != null and office.routing_board.is_open:
++	if office != null and office.is_world_view_blocked():
+ 		return false
+ 	return Input.get_vector("move_left", "move_right", "move_forward", "move_backward").length_squared() > 0.01
+diff --git a/scripts/state/knowledge_state.gd b/scripts/state/knowledge_state.gd
+index afa7fb1..6358b38 100644
+--- a/scripts/state/knowledge_state.gd
++++ b/scripts/state/knowledge_state.gd
+@@ -5,6 +5,19 @@ signal knowledge_learned(fact_id: StringName)
+ signal state_reset
+ 
+ var _known_facts: Dictionary[StringName, bool] = {}
++## Values the operator explicitly entered, independent from objective WorldState.
++var _known_values: Dictionary[StringName, String] = {}
++
++func remember_value(fact_id: StringName, value: String) -> void:
++	if fact_id.is_empty():
++		return
++	_known_values[fact_id] = value
++
++func recall_value(fact_id: StringName, default_value: String = "") -> String:
++	return _known_values.get(fact_id, default_value)
++
++func value_snapshot() -> Dictionary[StringName, String]:
++	return _known_values.duplicate(true)
+ 
+ func learn(fact_id: StringName) -> void:
+ 	if fact_id.is_empty():
+@@ -26,4 +39,5 @@ func snapshot() -> Dictionary[StringName, bool]:
+ 
+ func reset_for_new_game() -> void:
+ 	_known_facts.clear()
++	_known_values.clear()
+ 	state_reset.emit()
+diff --git a/scripts/telegraph/hardware/tape_register_controller.gd b/scripts/telegraph/hardware/tape_register_controller.gd
+index 0b05f82..b557346 100644
+--- a/scripts/telegraph/hardware/tape_register_controller.gd
++++ b/scripts/telegraph/hardware/tape_register_controller.gd
+@@ -2,20 +2,17 @@ class_name TapeRegisterController
+ extends Node3D
+ 
+ ## The paper-tape register (design doc §4): a mechanical recorder that inks
+-## every MARK/GAP of the objective scheduler timeline onto a continuously
++## every delivered MARK/GAP of the objective scheduler timeline onto a continuously
+ ## fed paper strip. It is the sounder's silent twin — same signals, no sound,
+ ## and NO access to message text whatsoever: it cannot lie by construction.
+ 
+-## The operator lifted the strip to the lamp. The payload is raw marks only;
+-## reading and comparing with the transcript is the player's own work.
++## The strip lifts to the lamp with numbered non-ink take boundaries, never decoded text.
++## Reading and comparing with the transcript is the player's own work.
+ signal tape_inspected(text: String)
+ 
+ const TAPE_DOC_ID := "tape_register"
+ const TAPE_TITLE := "STATION REGISTER"
+-
+-## Placeholder that visually separates transmissions on the strip; real pause
+-## length comes later from shift pacing.
+-const BETWEEN_TRANSMISSIONS_GAP_UNITS := 12
++const INCOMPLETE_MARK := "?"
+ 
+ @export var prompt_message: String = "Read Tape Register"
+ ## The inking stylus drops onto the tape on every MARK and lifts on every GAP —
+@@ -45,8 +42,13 @@ var _spool: Node3D = null
+ 
+ var interactable: Interactable = null
+ 
+-var _record: Array[MorseScheduledEvent] = []
++var _record: Array[TapeInkEvent] = []
++var _segments: Array[Dictionary] = []
++var _active_segment: Dictionary = {}
+ var _connected_scheduler: MorseRuntimeScheduler = null
++var _started_event: MorseScheduledEvent = null
++var _active_ink: TapeInkEvent = null
++var _seconds_per_unit: float = 0.0
+ 
+ func _ready() -> void:
+ 	_stylus = get_node_or_null("Body/StylusPivot") as Node3D
+@@ -73,18 +75,37 @@ func get_interactable() -> Interactable:
+ 	return interactable
+ 
+ func _on_interacted() -> void:
+-	tape_inspected.emit(get_tape_text())
++	tape_inspected.emit(get_tape_display_text())
++
++func get_record() -> Array[TapeInkEvent]:
++	return _snapshot_events(_record)
++
++func _snapshot_events(events: Array[TapeInkEvent]) -> Array[TapeInkEvent]:
++	var snapshots: Array[TapeInkEvent] = []
++	for ink in events:
++		snapshots.append(ink.snapshot())
++	return snapshots
+ 
+-func get_record() -> Array[MorseScheduledEvent]:
+-	return _record
++func get_segment_snapshots() -> Array[Dictionary]:
++	var snapshots: Array[Dictionary] = []
++	for segment in _segments:
++		snapshots.append({"number": segment.number, "interrupted": segment.interrupted,
++			"complete": segment.complete, "events": _snapshot_events(segment.events)})
++	return snapshots
+ 
+ func connect_scheduler(scheduler: MorseRuntimeScheduler) -> void:
+ 	if scheduler == null:
+ 		return
+ 	disconnect_scheduler()
+ 	_connected_scheduler = scheduler
++	if not scheduler.playback_started.is_connected(_on_playback_started):
++		scheduler.playback_started.connect(_on_playback_started)
+ 	if not scheduler.timing_event_started.is_connected(_on_timing_event_started):
+ 		scheduler.timing_event_started.connect(_on_timing_event_started)
++	if not scheduler.timing_event_finished.is_connected(_on_timing_event_finished):
++		scheduler.timing_event_finished.connect(_on_timing_event_finished)
++	if not scheduler.playback_time_advanced.is_connected(_on_playback_time_advanced):
++		scheduler.playback_time_advanced.connect(_on_playback_time_advanced)
+ 	if not scheduler.playback_completed.is_connected(_on_playback_completed):
+ 		scheduler.playback_completed.connect(_on_playback_completed)
+ 	if not scheduler.playback_cancelled.is_connected(_on_playback_cancelled):
+@@ -93,8 +114,14 @@ func connect_scheduler(scheduler: MorseRuntimeScheduler) -> void:
+ func disconnect_scheduler() -> void:
+ 	if _connected_scheduler == null:
+ 		return
++	if _connected_scheduler.playback_started.is_connected(_on_playback_started):
++		_connected_scheduler.playback_started.disconnect(_on_playback_started)
+ 	if _connected_scheduler.timing_event_started.is_connected(_on_timing_event_started):
+ 		_connected_scheduler.timing_event_started.disconnect(_on_timing_event_started)
++	if _connected_scheduler.timing_event_finished.is_connected(_on_timing_event_finished):
++		_connected_scheduler.timing_event_finished.disconnect(_on_timing_event_finished)
++	if _connected_scheduler.playback_time_advanced.is_connected(_on_playback_time_advanced):
++		_connected_scheduler.playback_time_advanced.disconnect(_on_playback_time_advanced)
+ 	if _connected_scheduler.playback_completed.is_connected(_on_playback_completed):
+ 		_connected_scheduler.playback_completed.disconnect(_on_playback_completed)
+ 	if _connected_scheduler.playback_cancelled.is_connected(_on_playback_cancelled):
+@@ -103,11 +130,54 @@ func disconnect_scheduler() -> void:
+ 
+ func reset() -> void:
+ 	_record.clear()
++	_segments.clear()
++	_active_segment = {}
++	_started_event = null
++	_active_ink = null
++	_seconds_per_unit = 0.0
++	_stylus_target_y = _stylus_rest_y
++
++func _on_playback_started(_schedule: MorsePlaybackScheduleData) -> void:
++	var events: Array[TapeInkEvent] = []
++	_active_segment = {"number": _segments.size() + 1, "interrupted": false, "complete": false, "events": events}
++	_segments.append(_active_segment)
+ 
+ func _on_timing_event_started(event: MorseScheduledEvent) -> void:
+-	_record.append(event)
++	# Controlled hardware fixtures may deliver events without a scheduler start signal.
++	if _active_segment.is_empty():
++		_on_playback_started(null)
++	var ink := TapeInkEvent.new()
++	ink.kind = event.kind
++	_record.append(ink)
++	_active_segment.events.append(ink)
++	_started_event = event
++	_active_ink = ink
++	_seconds_per_unit = event.duration_seconds / float(event.duration_units) if event.duration_units > 0 else 0.0
++	# A hitch advances the clock before emitting later starts; only that elapsed time is ink.
++	if _connected_scheduler != null:
++		_update_active_ink(_connected_scheduler.get_elapsed_seconds())
+ 	_stylus_target_y = _stylus_rest_y - (stylus_travel if event.kind == MorseTimingEvent.Kind.MARK else 0.0)
+ 
++func _on_playback_time_advanced(_previous_seconds: float, current_seconds: float) -> void:
++	_update_active_ink(current_seconds)
++
++func _update_active_ink(elapsed_seconds: float) -> void:
++	if _started_event == null or _active_ink == null:
++		return
++	_active_ink.duration_seconds = clampf(elapsed_seconds - _started_event.start_seconds,
++		0.0, _started_event.duration_seconds)
++	_active_ink.duration_units = _active_ink.duration_seconds / _seconds_per_unit if _seconds_per_unit > 0.0 else 0.0
++
++func _on_timing_event_finished(event: MorseScheduledEvent) -> void:
++	if event != _started_event or _active_ink == null:
++		return
++	_active_ink.duration_seconds = event.duration_seconds
++	_active_ink.duration_units = float(event.duration_units)
++	_active_ink.is_complete = true
++	_started_event = null
++	_active_ink = null
++	_seconds_per_unit = 0.0
++
+ func _process(delta: float) -> void:
+ 	if _stylus != null:
+ 		_stylus.position.y = move_toward(_stylus.position.y, _stylus_target_y, stylus_speed * delta)
+@@ -125,25 +195,49 @@ func wind() -> void:
+ 	register_wound.emit()
+ 
+ func _on_playback_completed(_schedule: MorsePlaybackScheduleData) -> void:
++	if not _active_segment.is_empty():
++		_active_segment.complete = true
++		_active_segment = {}
+ 	_stylus_target_y = _stylus_rest_y
+-	var gap := MorseScheduledEvent.new()
+-	gap.kind = MorseTimingEvent.Kind.GAP
+-	gap.duration_units = BETWEEN_TRANSMISSIONS_GAP_UNITS
+-	_record.append(gap)
+-
+-## No between-gap here: a cancelled transmission may resume or restart, so
+-## only the synthetic separator is withheld — the partial ink stays.
+-func _on_playback_cancelled(_schedule: MorsePlaybackScheduleData, _elapsed_seconds: float) -> void:
++
++func _on_playback_cancelled(_schedule: MorsePlaybackScheduleData, elapsed_seconds: float) -> void:
++	_update_active_ink(elapsed_seconds)
++	if _active_ink != null:
++		_active_ink.interrupted = true
++	if not _active_segment.is_empty():
++		_active_segment.interrupted = true
++		_active_segment = {}
++	_started_event = null
++	_active_ink = null
++	_seconds_per_unit = 0.0
+ 	_stylus_target_y = _stylus_rest_y
+ 
+-## Ink rendering. MARK <= 2 units is a dot, >= 3 units is a dash; every GAP
+-## unit is one blank column — exactly how paper strips looked, and exactly
+-## as readable with the Morse reference card.
++## Only finished marks classify as Morse. Fractional blanks remain exact in snapshots.
+ func get_tape_text() -> String:
++	var takes: PackedStringArray = []
++	for segment in _segments:
++		takes.append(_render_ink(segment.events))
++	return "\n".join(takes)
++
++func get_tape_display_text() -> String:
++	# Boundaries describe wire takes, including service calls, not telegram identities or idle time.
++	var takes: PackedStringArray = []
++	for segment in _segments:
++		var status := "INTERRUPTED" if segment.interrupted else ("COMPLETE" if segment.complete else "ACTIVE")
++		takes.append("[WIRE TAKE %d | %s | NON-INK BOUNDARY]\n%s"
++			% [segment.number, status, _render_ink(segment.events)])
++	return "\n".join(takes)
++
++func _render_ink(events: Array[TapeInkEvent]) -> String:
+ 	var out := ""
+-	for event in _record:
++	for event in events:
+ 		if event.kind == MorseTimingEvent.Kind.MARK:
+-			out += "·" if event.duration_units <= 2 else "—"
++			if not event.is_complete or event.interrupted:
++				out += INCOMPLETE_MARK
++			elif event.duration_units >= 6.0:
++				out += "———"
++			else:
++				out += "·" if event.duration_units <= 2.0 else "—"
+ 		else:
+-			out += " ".repeat(maxi(event.duration_units, 1))
++			out += " ".repeat(maxi(int(floor(event.duration_units)), 0))
+ 	return out
+diff --git a/scripts/telegraph/session/telegraph_commit_option.gd b/scripts/telegraph/session/telegraph_commit_option.gd
+index 6bb853f..e8cbfab 100644
+--- a/scripts/telegraph/session/telegraph_commit_option.gd
++++ b/scripts/telegraph/session/telegraph_commit_option.gd
+@@ -6,6 +6,8 @@ extends Resource
+ @export var world_fact: String = ""
+ @export var knowledge_fact: String = ""
+ @export var result_text: String = ""
++## This action opens a blank amendment; the session refuses it without explicit text.
++@export var requires_correction: bool = false
+ 
+ func get_validation_errors() -> PackedStringArray:
+ 	var errors := PackedStringArray()
+diff --git a/scripts/telegraph/session/telegraph_scenario_data.gd b/scripts/telegraph/session/telegraph_scenario_data.gd
+index 7456293..58695c2 100644
+--- a/scripts/telegraph/session/telegraph_scenario_data.gd
++++ b/scripts/telegraph/session/telegraph_scenario_data.gd
+@@ -27,6 +27,12 @@ extends Resource
+ @export var consequence_event_id: String = ""
+ @export var consequence_delay_seconds: float = 0.0
+ @export var consequence_hold_seconds: float = 0.0
++## An amendment's unknown/wrong valid text remains a terminal choice, not a fallback.
++@export var amendment_wrong_world_fact: String = ""
++@export var amendment_knowledge_fact: String = ""
++@export var filed_word_world_fact: String = ""
++@export var filed_word_knowledge_key: String = ""
++@export var amendment_result_text: String = "CORRECTION FILED"
+ 
+ func get_validation_errors() -> PackedStringArray:
+ 	var errors := PackedStringArray()
+@@ -90,4 +96,17 @@ func get_validation_errors() -> PackedStringArray:
+ 	if consequence_hold_seconds < 0.0 or not is_finite(consequence_hold_seconds):
+ 		errors.append("consequence_hold_seconds must be non-negative finite")
+ 
++	var amendment_count := 0
++	for option in commit_options:
++		if option != null and option.requires_correction:
++			amendment_count += 1
++	if amendment_count > 1:
++		errors.append("Only one amendment action is supported per scenario")
++	if amendment_count == 1:
++		if amendment_wrong_world_fact.is_empty() or amendment_knowledge_fact.is_empty():
++			errors.append("Amendment requires authored wrong outcome and neutral knowledge fact")
++		if filed_word_world_fact.is_empty() or filed_word_knowledge_key.is_empty():
++			errors.append("Amendment requires independent filed-word keys")
++		if amendment_result_text.is_empty():
++			errors.append("Amendment requires neutral result text")
+ 	return errors
+diff --git a/scripts/telegraph/session/telegraph_session_controller.gd b/scripts/telegraph/session/telegraph_session_controller.gd
+index b2774a6..cd3cded 100644
+--- a/scripts/telegraph/session/telegraph_session_controller.gd
++++ b/scripts/telegraph/session/telegraph_session_controller.gd
+@@ -32,6 +32,8 @@ signal routing_requested(expected_action: String)
+ signal routing_resolved(action_taken: String, outcome: RoutingOutcome)
+ signal commit_requested(options: Array[TelegraphCommitOption])
+ signal commit_resolved(action_id: StringName, result_text: String)
++## Immutable old-slot record, captured before any resolution callbacks.
++signal commit_recorded(scenario_id: String, action_id: StringName, word: String)
+ signal consequence_started(event_id: String, hold_seconds: float)
+ signal session_completed(scenario: TelegraphScenarioData)
+ signal attention_event_triggered(event_id: String)
+@@ -79,6 +81,7 @@ var _compiler := MorseScheduleCompiler.new()
+ var _attention_event_fired: bool = false
+ var _transcript_verified: bool = false
+ var _commit_resolved: bool = false
++var _decision_in_progress: bool = false
+ var _consequence_elapsed: float = 0.0
+ var _consequence_started: bool = false
+ var _consequence_requires_visibility: bool = false
+@@ -190,11 +193,11 @@ func get_state() -> State:
+ func get_current_scenario() -> TelegraphScenarioData:
+ 	return _current_scenario
+ 
++func can_load_scenario(scenario: TelegraphScenarioData) -> bool:
++	return not _decision_in_progress and scenario != null and scenario.get_validation_errors().is_empty()
++
+ func load_scenario(scenario: TelegraphScenarioData) -> bool:
+-	if scenario == null:
+-		return false
+-	var errs: PackedStringArray = scenario.get_validation_errors()
+-	if not errs.is_empty():
++	if not can_load_scenario(scenario):
+ 		return false
+ 
+ 	_bind_components()
+@@ -374,52 +377,86 @@ func get_commit_options() -> Array[TelegraphCommitOption]:
+ 		return []
+ 	return _current_scenario.commit_options
+ 
+-## Files one authored commit option exactly once. Unknown input, out-of-order
+-## input and input after the deadline has expired are deliberately no-ops so a
+-## stale control cannot alter WorldState.
++## Legacy authored options remain direct actions; amendments require an explicit word.
+ func submit_commit(action_id: StringName) -> bool:
+-	if _state != State.AWAITING_COMMIT or _current_scenario == null or _commit_resolved:
++	if not _can_commit():
+ 		return false
+-	if _is_commit_deadline_expired():
++	var selected := _find_commit_option(action_id)
++	if selected == null or selected.requires_correction:
+ 		return false
+-	var selected: TelegraphCommitOption = null
+-	for option in _current_scenario.commit_options:
+-		if option != null and option.action_id == action_id:
+-			selected = option
+-			break
+-	if selected == null:
++	var word := _current_scenario.transmission_data.written_transcript
++	return _accept_commit(selected, word, false)
++
++func submit_amendment(word: String) -> bool:
++	if not _can_commit() or not AmendmentText.validation_error(word).is_empty():
+ 		return false
++	for option in _current_scenario.commit_options:
++		if option != null and option.requires_correction:
++			return _accept_commit(option, word, true)
++	return false
++
++func _can_commit() -> bool:
++	return _state == State.AWAITING_COMMIT and _current_scenario != null \
++		and not _commit_resolved and not _decision_in_progress and not _is_commit_deadline_expired()
++
++func _find_commit_option(action_id: StringName) -> TelegraphCommitOption:
++	if _current_scenario != null:
++		for option in _current_scenario.commit_options:
++			if option != null and option.action_id == action_id:
++				return option
++	return null
++
++func _accept_commit(selected: TelegraphCommitOption, word: String, amended: bool) -> bool:
++	# Capture attribution before callbacks can request a different slot.
++	var scenario := _current_scenario
++	var scenario_id := scenario.scenario_id
++	var action_id := selected.action_id
++	var result := scenario.amendment_result_text if amended else selected.result_text
++	var objective_fact := selected.world_fact
++	if amended and word != scenario.transmission_data.true_message:
++		objective_fact = scenario.amendment_wrong_world_fact
++	_decision_in_progress = true
+ 	_commit_resolved = true
+ 	var world := _get_world_state()
+-	if world != null:
+-		world.set_fact(StringName(selected.world_fact), true)
+ 	var knowledge := _get_knowledge_state()
++	if world != null:
++		world.set_fact(StringName(objective_fact), true)
++		if not scenario.filed_word_world_fact.is_empty():
++			world.set_fact(StringName(scenario.filed_word_world_fact), word)
+ 	if knowledge != null:
+-		knowledge.learn(StringName(selected.knowledge_fact))
++		var fact := scenario.amendment_knowledge_fact if amended else selected.knowledge_fact
++		knowledge.learn(StringName(fact))
++		if not scenario.filed_word_knowledge_key.is_empty():
++			knowledge.remember_value(StringName(scenario.filed_word_knowledge_key), word)
+ 	_record_completion_fact()
+ 	_set_state(State.CONSEQUENCE)
+-	commit_resolved.emit(selected.action_id, selected.result_text)
++	commit_recorded.emit(scenario_id, action_id, word)
++	commit_resolved.emit(action_id, result)
++	_decision_in_progress = false
+ 	_begin_consequence()
+ 	return true
+ 
+ ## Explicit timeout path. It records lapsed facts without selecting either
+ ## authored version, then uses the same neutral consequence beat.
+ func lapse_commit() -> bool:
+-	if _state not in [State.COPYING, State.VERIFYING, State.AWAITING_COMMIT] \
++	if _decision_in_progress or _state not in [State.COPYING, State.VERIFYING, State.AWAITING_COMMIT] \
+ 			or _current_scenario == null or _commit_resolved \
+ 			or not _has_commit_options():
+ 		return false
++	var scenario := _current_scenario
++	_decision_in_progress = true
+ 	_commit_resolved = true
+ 	_close_live_sheet_for_terminal()
+ 	var world := _get_world_state()
+-	if world != null and not _current_scenario.commit_lapsed_world_fact.is_empty():
+-		world.set_fact(StringName(_current_scenario.commit_lapsed_world_fact), true)
++	if world != null and not scenario.commit_lapsed_world_fact.is_empty():
++		world.set_fact(StringName(scenario.commit_lapsed_world_fact), true)
+ 	var knowledge := _get_knowledge_state()
+-	if knowledge != null and not _current_scenario.commit_lapsed_knowledge_fact.is_empty():
+-		knowledge.learn(StringName(_current_scenario.commit_lapsed_knowledge_fact))
+-	_record_completion_fact()
++	if knowledge != null and not scenario.commit_lapsed_knowledge_fact.is_empty():
++		knowledge.learn(StringName(scenario.commit_lapsed_knowledge_fact))
++	_record_completion_fact(scenario)
+ 	_set_state(State.CONSEQUENCE)
+ 	commit_resolved.emit(LAPSED_ACTION_ID, LAPSED_RESULT_TEXT)
++	_decision_in_progress = false
+ 	_begin_consequence()
+ 	return true
+ 
+@@ -480,46 +517,55 @@ func _complete_consequence() -> void:
+ 		return
+ 	_finish_session()
+ 
+-func _finish_session() -> void:
+-	# A completion listener may synchronously load the next scenario. Passing
+-	# the member itself lets later listeners see that replacement resource.
+-	var completed_scenario := _current_scenario
++func _finish_session(scenario: TelegraphScenarioData = null) -> void:
++	# Capture attribution through state callbacks, then release resolution ownership
++	# so a legitimate completion listener may synchronously load the next scenario.
++	var completed_scenario := scenario if scenario != null else _current_scenario
+ 	_set_state(State.COMPLETE)
++	_decision_in_progress = false
+ 	session_completed.emit(completed_scenario)
+ 
+ ## A deadline can close an unread order without pretending it was verified.
+ ## "NO ORDER" is a distinct outcome: not correct, not incorrect.
+ func lapse_routing(action: String = "NO ORDER") -> bool:
++	if _decision_in_progress:
++		return false
+ 	if _current_scenario == null or not _current_scenario.requires_routing \
+ 		or _state not in [State.COPYING, State.VERIFYING, State.AWAITING_ROUTE]:
+ 		return false
+ 	return _resolve_routing(action, true)
+ 
+ func submit_routing_decision(action: String) -> bool:
++	if _decision_in_progress or not RouteAction.is_valid(action):
++		return false
+ 	if _state != State.AWAITING_ROUTE or _current_scenario == null:
+ 		return false
+ 	return _resolve_routing(action, false)
+ 
+ func _resolve_routing(action: String, is_lapse: bool) -> bool:
++	if _decision_in_progress or _current_scenario == null:
++		return false
++	var scenario := _current_scenario
++	var identifier := scenario.scenario_id
+ 	var outcome: RoutingOutcome = RoutingOutcome.LAPSED if is_lapse \
+-		else (RoutingOutcome.CORRECT if action == _current_scenario.expected_routing_action else RoutingOutcome.INCORRECT)
++		else (RoutingOutcome.CORRECT if action == scenario.expected_routing_action else RoutingOutcome.INCORRECT)
++	_decision_in_progress = true
+ 	_close_live_sheet_for_terminal()
+ 	var world := _get_world_state()
+ 
+ 	match outcome:
+ 		RoutingOutcome.CORRECT:
+-			if world != null and not _current_scenario.correct_world_fact.is_empty():
+-				world.set_fact(StringName(_current_scenario.correct_world_fact), true)
++			if world != null and not scenario.correct_world_fact.is_empty():
++				world.set_fact(StringName(scenario.correct_world_fact), true)
+ 		RoutingOutcome.INCORRECT:
+-			if world != null and not _current_scenario.incorrect_world_fact.is_empty():
+-				world.set_fact(StringName(_current_scenario.incorrect_world_fact), true)
++			if world != null and not scenario.incorrect_world_fact.is_empty():
++				world.set_fact(StringName(scenario.incorrect_world_fact), true)
+ 		RoutingOutcome.LAPSED:
+-			if world != null and not _current_scenario.routing_lapsed_world_fact.is_empty():
+-				world.set_fact(StringName(_current_scenario.routing_lapsed_world_fact), true)
++			if world != null and not scenario.routing_lapsed_world_fact.is_empty():
++				world.set_fact(StringName(scenario.routing_lapsed_world_fact), true)
+ 
+ 	var knowledge := _get_knowledge_state()
+ 	if knowledge != null:
+-		var identifier := _current_scenario.scenario_id
+ 		if not is_lapse:
+ 			# The journal records what was actually sent, not what was expected.
+ 			if action == "CLEAR EAST":
+@@ -527,15 +573,17 @@ func _resolve_routing(action: String, is_lapse: bool) -> bool:
+ 			elif action == "HOLD":
+ 				knowledge.learn(StringName("route_hold_%s" % identifier))
+ 			knowledge.learn(StringName("filed_%s" % identifier))
+-		elif not _current_scenario.routing_lapsed_knowledge_fact.is_empty():
+-			knowledge.learn(StringName(_current_scenario.routing_lapsed_knowledge_fact))
++		elif not scenario.routing_lapsed_knowledge_fact.is_empty():
++			knowledge.learn(StringName(scenario.routing_lapsed_knowledge_fact))
+ 
++	_record_completion_fact(scenario)
+ 	routing_resolved.emit(action, outcome)
+-	_record_completion_fact()
+-	_finish_session()
++	_finish_session(scenario)
+ 	return true
+ 
+ func reset_session() -> void:
++	if _decision_in_progress:
++		return
+ 	# An abandoned live sheet closes as an honest partial rather than
+ 	# vanishing. Terminal sheets are kept: the night's record is the paper on
+ 	# the desk until the next telegram physically replaces it.
+@@ -584,11 +632,12 @@ func notify_operator_seated() -> void:
+ 			and transcript_paper.is_copy_paused():
+ 		transcript_paper.resume_writing()
+ 
+-func _record_completion_fact() -> void:
+-	if _current_scenario != null and not _current_scenario.completion_fact.is_empty():
++func _record_completion_fact(scenario: TelegraphScenarioData = null) -> void:
++	var completed := scenario if scenario != null else _current_scenario
++	if completed != null and not completed.completion_fact.is_empty():
+ 		var world := _get_world_state()
+ 		if world != null:
+-			world.set_fact(StringName(_current_scenario.completion_fact), true)
++			world.set_fact(StringName(completed.completion_fact), true)
+ 
+ func _has_commit_options() -> bool:
+ 	return _current_scenario != null and not _current_scenario.commit_options.is_empty()
+diff --git a/scripts/telegraph/ui/copy_commit_desk.gd b/scripts/telegraph/ui/copy_commit_desk.gd
+index 6d04e1e..99f5a8c 100644
+--- a/scripts/telegraph/ui/copy_commit_desk.gd
++++ b/scripts/telegraph/ui/copy_commit_desk.gd
+@@ -4,12 +4,14 @@ extends Node3D
+ ## The filing surface for the night's one decision.
+ ##
+ ## Contract (B1): this desk never decides the outcome. Input expresses an
+-## INTENT (`option_committed`); the session is the authority that accepts or
++## INTENT (`option_committed`) or requests a blank amendment; the session is the authority that accepts or
+ ## rejects it; only the accepted result, arriving back through
+ ## `apply_commit_result`, may stamp the surface and fire the contact sound.
+ ## A rejected intent leaves no stamp, no sound and the desk still enabled.
+ 
+ signal option_committed(action_id: StringName)
++signal amendment_requested()
++var _amendment_open: bool = false
+ ## Fires exactly once per accepted outcome, immediately: the authority has
+ ## spoken and the surface shows it. Facts never wait for an animation.
+ signal commit_accepted(action_id: StringName)
+@@ -68,6 +70,7 @@ func get_interactable() -> Interactable:
+ func configure(options: Array) -> void:
+ 	_options = options.duplicate()
+ 	_committed = false
++	_amendment_open = false
+ 	_pending_intent = StringName()
+ 	_selected_action_id = StringName()
+ 	_result_text = ""
+@@ -109,6 +112,12 @@ func select_option(index: int) -> bool:
+ 	var action_id := _string_name_property(option, "action_id")
+ 	if action_id == StringName():
+ 		return false
++	if bool(_property(option, "requires_correction")):
++		if not _amendment_open and not amendment_requested.get_connections().is_empty():
++			_amendment_open = true
++			amendment_requested.emit()
++			return true
++		return false
+ 	_pending_intent = action_id
+ 	option_committed.emit(action_id)
+ 	# The authority answered within the intent (submit_commit is synchronous
+@@ -208,6 +217,7 @@ func show_lapsed(result_text: String = "UNFILED") -> void:
+ 
+ func reset() -> void:
+ 	_committed = false
++	_amendment_open = false
+ 	_pending_intent = StringName()
+ 	enabled = false
+ 	_selected_action_id = StringName()
+@@ -221,6 +231,9 @@ func reset() -> void:
+ 		_tool.position = _tool_rest
+ 	_update_presentation()
+ 
++func set_amendment_open(open: bool) -> void:
++	_amendment_open = open
++
+ func reset_for_new_transmission() -> void:
+ 	reset()
+ 
+diff --git a/scripts/telegraph/ui/dispatch_ledger.gd b/scripts/telegraph/ui/dispatch_ledger.gd
+index 0f5e33d..3a004aa 100644
+--- a/scripts/telegraph/ui/dispatch_ledger.gd
++++ b/scripts/telegraph/ui/dispatch_ledger.gd
+@@ -113,6 +113,9 @@ func _entry_for(
+ 				outcome = "COPY INCOMPLETE / UNFILED"
+ 			else:
+ 				outcome = commit_outcome
++				var word := knowledge.recall_value(&"filed_word_core_hook", "")
++				if not word.is_empty():
++					outcome += "    " + word
+ 		elif incomplete:
+ 			outcome = "COPY INCOMPLETE"
+ 		elif status == DutySheet.STATUS_COPIED:
+diff --git a/scripts/telegraph/ui/duty_sheet.gd b/scripts/telegraph/ui/duty_sheet.gd
+index 26cf01b..3c2209b 100644
+--- a/scripts/telegraph/ui/duty_sheet.gd
++++ b/scripts/telegraph/ui/duty_sheet.gd
+@@ -30,18 +30,26 @@ OPERATOR: E. CRANE
+ 
+ STANDING ORDERS
+ 
+-  1. Turn up the desk lamp. Sit at the desk and open
+-     the line on the key.
+-  2. Answer the office call (CR) on the key. Do not
+-     leave the wire calling.
+-  3. Copy every message in full on the night copy.
+-     Copy nothing you did not hear.          Rule 7.
+-  4. Read the finished copy, then set the route on
+-     the train-order board before the sender releases.
+-  5. File one copy at the filing table by the stove.
+-  6. Routing rules are in the Dispatch Ledger.
+-  7. The office door stays locked until the line
+-     closes. Leave the night handover for the day man.
++  1. Turn up the lamp. Sit at the desk. Open the
++     line on the key; answer the station call (CR).
++  2. Elias copies while seated. Read the finished
++     sheet before deciding what order to send.
++  3. Use the Dispatch Ledger for routing rules.
++     Set CLEAR EAST or HOLD on the east wall board.
++  4. For disputed wording, inspect the register strip
++     and the American Morse card. The strip records
++     marks and pauses, not a written translation.
++  5. For disputed wording, use the filing table by
++     the stove. AMEND COPY — enter the word you intend
++     to file. FILE AS COPIED — seal the current
++     handwriting. Enter sends your word to file.
++     Esc puts the paper down and keeps your draft;
++     nothing is filed.
++  6. The line clock keeps running while you read or
++     edit. A line warning means the decision is
++     nearly due.
++  7. Read the night handover before leaving through
++     the south door when the line closes.
+ 
+ ────────────────────────────────────────────
+ TONIGHT'S TRAFFIC
+@@ -70,10 +78,12 @@ const STATUS_INCOMPLETE: String = "COPY INCOMPLETE"
+ ## another knowledge-backed outcome does not require a second branch in the
+ ## sheet renderer.
+ const STATUS_CORE_HOOK_WATER: String = "HEARD COPY SEALED"
++const STATUS_CORE_HOOK_AMENDED: String = "AMENDED COPY SEALED"
+ const STATUS_CORE_HOOK_WATCHER: String = "WRITTEN COPY SEALED"
+ const STATUS_CORE_HOOK_LAPSED: String = "UNFILED"
+ const CORE_HOOK_OUTCOME_LABEL: String = "UNSCHEDULED COPY"
+ const CORE_HOOK_OUTCOME_BY_FACT: Dictionary = {
++	&"amendment_entered_core_hook": STATUS_CORE_HOOK_AMENDED,
+ 	&"committed_water_core_hook": STATUS_CORE_HOOK_WATER,
+ 	&"committed_watcher_core_hook": STATUS_CORE_HOOK_WATCHER,
+ 	&"core_hook_commit_lapsed": STATUS_CORE_HOOK_LAPSED,
+@@ -120,6 +130,10 @@ func get_sheet_text() -> String:
+ 	var core_hook_status := get_core_hook_outcome_status()
+ 	if not core_hook_status.is_empty():
+ 		body += "\n\n" + _pad_status(CORE_HOOK_OUTCOME_LABEL, core_hook_status)
++		var knowledge := _knowledge_state()
++		var word := knowledge.recall_value(&"filed_word_core_hook", "") if knowledge != null else ""
++		if not word.is_empty():
++			body += "\n  FILED WORD: " + word
+ 	return HEADER + body + (FOOTER_INCOMPLETE if _has_open_items() else FOOTER)
+ 
+ func get_watch_record() -> String:
+diff --git a/scripts/telegraph/ui/routing_board.gd b/scripts/telegraph/ui/routing_board.gd
+index c2829f8..68818b4 100644
+--- a/scripts/telegraph/ui/routing_board.gd
++++ b/scripts/telegraph/ui/routing_board.gd
+@@ -2,6 +2,8 @@ class_name RoutingBoard
+ extends Node3D
+ 
+ signal routing_action_selected(action: String)
++## Physical feedback acknowledges an accepted order, never the input that requested it.
++signal route_accepted(action: String)
+ signal board_opened()
+ signal board_closed()
+ 
+@@ -24,6 +26,17 @@ var has_submitted_this_session: bool = false
+ ## ability to submit, but the physical lever keeps the result until the watch
+ ## itself is reset (plan R01).
+ var _last_route_action: String = ""
++## Keep the dispatch guard until every synchronous authority listener returns,
++## even if one listener advances the slot while publishing acceptance.
++var _route_pending: bool = false
++var _pending_route_action: String = ""
++var _pending_route_resolved: bool = false
++var _pending_route_accepted: bool = false
++var _slot_generation: int = 0
++var _pending_slot_generation: int = 0
++var _watch_generation: int = 0
++var _pending_watch_generation: int = 0
++var _publishing_route_accept: bool = false
+ 
+ var _lever_rest_rotation: float = 0.0
+ var _lever_rest_captured: bool = false
+@@ -141,28 +154,52 @@ func close_board() -> void:
+ 
+ func select_action(action: String) -> bool:
+ 	# Only permit submission when session is awaiting route decision and board is open
+-	if not is_open or has_submitted_this_session or not is_awaiting_route:
++	if not is_open or has_submitted_this_session or not is_awaiting_route or _route_pending or _publishing_route_accept:
+ 		return false
+ 
+-	if action != "CLEAR EAST" and action != "HOLD":
++	if not RouteAction.is_valid(action):
+ 		return false
+ 
+-	has_submitted_this_session = true
+-	_last_route_action = action
+-	# The lever throw waits for the session's own confirmation: a rejected or
+-	# lapsed deadline must not leave the apparatus showing a route that never
+-	# entered the world.
++	# Intent is not a record. Only the authority's acknowledgement can submit
++	# this slot; a rejected request leaves the board available for a retry.
++	_route_pending = true
++	_pending_route_action = action
++	_pending_route_resolved = false
++	_pending_route_accepted = false
++	_pending_slot_generation = _slot_generation
++	_pending_watch_generation = _watch_generation
+ 	routing_action_selected.emit(action)
+-	close_board()
+-	return true
++	var accepted := _pending_route_accepted
++	_route_pending = false
++	_pending_route_action = ""
++	if accepted and _slot_generation == _pending_slot_generation:
++		close_board()
++	return accepted
+ 
+ ## The session resolved the slot: an accepted route (correct or not — the order
+ ## physically went out) throws the lever to its stop with the impact sound; a
+ ## lapsed "NO ORDER" leaves the lever exactly where it was.
+ func play_route_accept(action: String, accepted: bool) -> void:
++	if _publishing_route_accept:
++		return
++	if _route_pending:
++		if _pending_route_resolved or action != _pending_route_action or _watch_generation != _pending_watch_generation:
++			return
++		_pending_route_resolved = true
+ 	if not accepted or action.is_empty():
+ 		return
++	if _route_pending:
++		_pending_route_accepted = true
++	_publishing_route_accept = true
++	if not _route_pending or _slot_generation == _pending_slot_generation:
++		has_submitted_this_session = true
++	# A slot reset may have happened inside the intent. Its old payload still
++	# becomes watch memory, but must never submit the new slot.
++	_last_route_action = action
++	_update_presentation()
+ 	_throw_lever(action)
++	route_accepted.emit(action)
++	_publishing_route_accept = false
+ 
+ ## A route order is a physical act: the lever pivot swings to its stop, the
+ ## mechanical needle follows, and the stop announces itself on the wire-side
+@@ -207,6 +244,7 @@ func _throw_lever(action: String) -> void:
+ ## A new slot resets the ability to submit — nothing else. The lever, the
+ ## needle and the recorded route are the night's memory, not this slot's.
+ func reset_for_new_transmission() -> void:
++	_slot_generation += 1
+ 	has_submitted_this_session = false
+ 	is_open = false
+ 	is_awaiting_route = false
+@@ -215,6 +253,7 @@ func reset_for_new_transmission() -> void:
+ ## Only a new watch wipes the physical record: lever and needle return to
+ ## rest and the board forgets the last route.
+ func reset_for_new_watch() -> void:
++	_watch_generation += 1
+ 	reset_for_new_transmission()
+ 	_last_route_action = ""
+ 	if _lever_tween != null and is_instance_valid(_lever_tween):
+diff --git a/scripts/ui/document_viewer.gd b/scripts/ui/document_viewer.gd
+index c493719..70ed2d6 100644
+--- a/scripts/ui/document_viewer.gd
++++ b/scripts/ui/document_viewer.gd
+@@ -13,11 +13,18 @@ var _just_opened_frame: int = -1
+ ## The footer the document was opened with; a live status line may temporarily
+ ## replace it, and closing the situation restores it without reopening.
+ var _opened_footer: String = ""
++## The live status currently replacing the footer ("" = none). Kept so layout
++## refreshes (text scale, resize) re-present it instead of the opened footer.
++var _live_footer: String = ""
+ 
+ var panel_container: PanelContainer = null
+ var title_label: Label = null
+ var body_label: RichTextLabel = null
+ var footer_label: Label = null
++var text_scale: float = 1.2
++var _copy_pan_y: float = 32.0
++var _copy_reading_footer: Label = null
++var _copy_incomplete := false
+ 
+ ## Bundled faces only — never the host's fallback. Printed forms are letterpress;
+ ## the transcript is Elias's own hand, which is the whole point of reading it.
+@@ -25,12 +32,20 @@ const PAPER_FONT = preload("res://assets/fonts/imfell/IMFeENrm28P.ttf")
+ const HAND_FONT = preload("res://assets/fonts/cedarville/Cedarville-Cursive.ttf")
+ const HAND_DOC_ID := "transcript_paper"
+ const COPY_FACE = preload("res://materials/style_tests/textures/psx/form_night_copy.png")
+-const MORSE_FONT = preload("res://materials/typography/morse_mono.tres")
++const MORSE_FONT = preload("res://assets/fonts/courierprime/CourierPrime-Regular.ttf")
++## Tape body = measured widest line + inner padding; card chrome = side margins.
++const TAPE_LINE_PADDING := 12.0
++const CARD_CHROME_WIDTH := 56.0
++const CARD_MIN_WIDTH := 620.0
++const BODY_MIN_WIDTH := 560.0
+ 
+ func _ready() -> void:
+ 	visible = false
+ 	_is_open = false
+ 	_find_nodes()
++	text_scale = GameSettings.load_settings().text_scale
++	if not get_viewport().size_changed.is_connected(_on_viewport_resized):
++		get_viewport().size_changed.connect(_on_viewport_resized)
+ 
+ func _find_nodes() -> void:
+ 	if panel_container == null:
+@@ -38,7 +53,7 @@ func _find_nodes() -> void:
+ 	if title_label == null:
+ 		title_label = get_node_or_null("CenterContainer/PanelContainer/MarginContainer/VBoxContainer/TitleLabel") as Label
+ 	if body_label == null:
+-		var body_path := "CenterContainer/PanelContainer/MarginContainer/VBoxContainer/BodyLabel"
++		var body_path := "CenterContainer/PanelContainer/MarginContainer/VBoxContainer/BodyScroll/BodyLabel"
+ 		body_label = get_node_or_null(body_path) as RichTextLabel
+ 	if footer_label == null:
+ 		var footer_path := "CenterContainer/PanelContainer/MarginContainer/VBoxContainer/FooterLabel"
+@@ -56,22 +71,28 @@ func open_document(doc_id: String, title: String, body: String, footer: String =
+ 	_is_open = true
+ 	_just_opened_frame = Engine.get_process_frames()
+ 	_opened_footer = footer if not footer.is_empty() else default_footer
++	_live_footer = ""
+ 
+ 	if title_label != null:
+ 		title_label.text = title
+ 	if body_label != null:
+ 		var font: Font = PAPER_FONT
+ 		var font_size := 17
+-		if doc_id == "morse_reference":
++		if doc_id in ["morse_reference", "tape_register"]:
+ 			font = MORSE_FONT
+ 			font_size = 16
+ 		elif doc_id in [HAND_DOC_ID, "previous_transcript"]:
+ 			font = HAND_FONT
+ 			font_size = 24
+ 		body_label.add_theme_font_override("normal_font", font)
+-		body_label.add_theme_font_size_override("normal_font_size", font_size)
++		body_label.add_theme_font_size_override("normal_font_size", int(round(font_size * text_scale)))
++		body_label.autowrap_mode = TextServer.AUTOWRAP_OFF if doc_id == "tape_register" else TextServer.AUTOWRAP_WORD_SMART
++		body_label.fit_content = false
+ 		body_label.text = body
++		_fit_body_width()
+ 		body_label.scroll_to_line(0)
++		if doc_id == "tape_register":
++			show_latest_tape.call_deferred()
+ 	if footer_label != null:
+ 		footer_label.text = _opened_footer
+ 
+@@ -80,8 +101,80 @@ func open_document(doc_id: String, title: String, body: String, footer: String =
+ 	_animate_in()
+ 	document_opened.emit(_current_doc_id)
+ 
++func show_latest_tape() -> void:
++	if not is_inside_tree() or is_queued_for_deletion() or _current_doc_id != "tape_register":
++		return
++	var opened_frame := _just_opened_frame
++	await get_tree().process_frame
++	if _is_open and _current_doc_id == "tape_register" and opened_frame == _just_opened_frame \
++		and not is_queued_for_deletion():
++		body_label.scroll_to_line(maxi(body_label.get_line_count() - 1, 0))
++
+ ## Lift the same A4-like printed stock instead of inventing another wide card.
+ ## The hidden logical body remains exact for document consumers and inspection tests.
++func set_text_scale(value: float) -> void:
++	text_scale = clampf(value, 1.0, 1.5)
++	if not _is_open or body_label == null:
++		return
++	var base := 16 if _current_doc_id in ["morse_reference", "tape_register"] else 17
++	if _current_doc_id in [HAND_DOC_ID, "previous_transcript"]:
++		base = 24
++	body_label.add_theme_font_size_override("normal_font_size", int(round(base * text_scale)))
++	_fit_body_width()
++	_present_copy(_current_doc_id, body_label.text)
++
++## Timing ink is never clipped: the tape card grows to the measured widest line
++## (bundled mono face, current size), bounded by the viewport. Wider strips scroll
++## sideways inside the card; marks are never hidden or silently shrunk.
++func _fit_body_width() -> void:
++	var scroll_path := "CenterContainer/PanelContainer/MarginContainer/VBoxContainer/BodyScroll"
++	var scroll := get_node_or_null(scroll_path) as ScrollContainer
++	if body_label == null or scroll == null or panel_container == null:
++		return
++	if _current_doc_id != "tape_register":
++		scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
++		body_label.custom_minimum_size.x = BODY_MIN_WIDTH
++		panel_container.custom_minimum_size.x = CARD_MIN_WIDTH
++		return
++	var area := get_viewport().get_visible_rect().size
++	var font := body_label.get_theme_font("normal_font")
++	var font_size := body_label.get_theme_font_size("normal_font_size")
++	var widest := 0.0
++	for line in body_label.text.split("\n"):
++		widest = maxf(widest, font.get_string_size(line, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x)
++	var vbar_width := body_label.get_v_scroll_bar().get_combined_minimum_size().x
++	var body_width := maxf(BODY_MIN_WIDTH, ceilf(widest) + vbar_width + TAPE_LINE_PADDING)
++	var viewport_limit := maxf(area.x - 48.0, 1.0)
++	panel_container.custom_minimum_size.x = minf(maxf(CARD_MIN_WIDTH, body_width + CARD_CHROME_WIDTH), viewport_limit)
++	body_label.custom_minimum_size.x = body_width
++	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
++
++func _copy_footer(text: String) -> void:
++	if _copy_reading_footer == null:
++		# Opaque dark backing: light footer ink must never sit on pale paper.
++		var backing := ColorRect.new()
++		backing.name = "CopyReadingFooterBacking"
++		backing.mouse_filter = Control.MOUSE_FILTER_IGNORE
++		backing.color = Color(0.07, 0.06, 0.05, 1.0)
++		add_child(backing)
++		_copy_reading_footer = Label.new()
++		_copy_reading_footer.name = "CopyReadingFooter"
++		_copy_reading_footer.mouse_filter = Control.MOUSE_FILTER_IGNORE
++		_copy_reading_footer.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
++		_copy_reading_footer.add_theme_color_override("font_color", Color(0.86, 0.79, 0.63, 1.0))
++		_copy_reading_footer.add_theme_font_size_override("font_size", 16)
++		add_child(_copy_reading_footer)
++	var area := get_viewport().get_visible_rect().size
++	var backing := get_node("CopyReadingFooterBacking") as ColorRect
++	backing.position = Vector2(0, area.y - 52)
++	backing.size = Vector2(area.x, 40)
++	backing.visible = _is_open and _current_doc_id in [HAND_DOC_ID, "previous_transcript"]
++	_copy_reading_footer.position = Vector2(24, area.y - 48)
++	_copy_reading_footer.size = Vector2(maxf(area.x - 48, 1), 32)
++	var status := "COPY INCOMPLETE  ·  " if _copy_incomplete else ""
++	_copy_reading_footer.text = status + text + "  ·  [Wheel / PgUp PgDn Home End] Move sheet"
++	_copy_reading_footer.visible = _is_open and _current_doc_id in [HAND_DOC_ID, "previous_transcript"]
++
+ func _present_copy(doc_id: String, body: String) -> void:
+ 	var copy := get_node_or_null("TranscriptSheet") as TextureRect
+ 	var centre := get_node_or_null("CenterContainer") as Control
+@@ -90,20 +183,29 @@ func _present_copy(doc_id: String, body: String) -> void:
+ 	var is_copy := doc_id in [HAND_DOC_ID, "previous_transcript"]
+ 	copy.visible = is_copy
+ 	centre.visible = not is_copy
++	if _copy_reading_footer != null:
++		_copy_reading_footer.visible = is_copy
++	var backing := get_node_or_null("CopyReadingFooterBacking") as ColorRect
++	if backing != null:
++		backing.visible = is_copy
+ 	if not is_copy:
+ 		return
++	var mark := body.find("\n\n— COPY INCOMPLETE —")
++	_copy_incomplete = mark >= 0
+ 	copy.texture = COPY_FACE
+-	var height := minf(get_viewport().get_visible_rect().size.y - 64.0, 640.0)
+-	var width := height * 0.23 / 0.3
++	var area := get_viewport().get_visible_rect().size
++	var ratio := 0.23 / 0.3
++	var base_height := maxf(1.0, minf(area.y - 88.0, 640.0))
++	var height := minf(base_height * text_scale, maxf(1.0, (area.x - 64.0) / ratio))
++	var width := height * ratio
+ 	copy.size = Vector2(width, height)
+-	copy.position = (get_viewport().get_visible_rect().size - copy.size) * 0.5
++	_copy_pan_y = 32.0
++	copy.position = Vector2((area.x - width) * 0.5, _copy_pan_y)
+ 	var ink := copy.get_node("Ink") as Label
+ 	ink.position = Vector2(width * 0.1435, height * 0.2833)
+ 	ink.size = Vector2(width * 0.72, height * 0.60)
+ 	ink.add_theme_font_override("font", HAND_FONT)
+-	# Same column layout and physical glyph size, magnified with the sheet.
+ 	ink.add_theme_font_size_override("font_size", maxi(16, int(round(width * 16.0 * 0.00135 / 0.23))))
+-	var mark := body.find("\n\n— COPY INCOMPLETE —")
+ 	var written := body.substr(0, mark) if mark >= 0 else body
+ 	var result := ""
+ 	for i in written.length():
+@@ -113,10 +215,69 @@ func _present_copy(doc_id: String, body: String) -> void:
+ 	ink.text = result
+ 	var status := copy.get_node("Status") as Label
+ 	status.text = "COPY INCOMPLETE" if mark >= 0 else ""
+-	var footer := copy.get_node("Footer") as Label
+-	footer.text = _opened_footer
+-	footer.position = Vector2(0, height - 30)
+-	footer.size = Vector2(width, 24)
++	(copy.get_node("Footer") as Label).visible = false
++	_copy_footer(_active_footer())
++
++func _input(event: InputEvent) -> void:
++	if not _is_open or _current_doc_id not in [HAND_DOC_ID, "previous_transcript"]:
++		return
++	if event is InputEventKey and event.pressed:
++		if _copy_key_pan(event):
++			get_viewport().set_input_as_handled()
++		return
++	if not event is InputEventMouseButton or not event.pressed:
++		return
++	var direction := 0.0
++	if event.button_index == MOUSE_BUTTON_WHEEL_UP:
++		direction = 1.0
++	elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
++		direction = -1.0
++	else:
++		return
++	_pan_copy_to(_copy_pan_y + direction * 48.0)
++	get_viewport().set_input_as_handled()
++
++## Keyboard pan for the magnified sheet. Only page/line-navigation keys are taken
++## while a copy is open; letters (WASD) stay with the game and text entry.
++func _copy_key_pan(event: InputEventKey) -> bool:
++	var target: float
++	match event.keycode:
++		KEY_PAGEUP:
++			target = _copy_pan_y + 240.0
++		KEY_PAGEDOWN:
++			target = _copy_pan_y - 240.0
++		KEY_HOME:
++			target = 32.0
++		KEY_END:
++			target = -INF
++		_:
++			return false
++	_pan_copy_to(target)
++	return true
++
++## The single bounded pan path shared by wheel and keyboard.
++func _pan_copy_to(target: float) -> void:
++	var copy := get_node("TranscriptSheet") as Control
++	_copy_pan_y = clampf(target, _copy_pan_minimum(copy), 32.0)
++	copy.position.y = _copy_pan_y
++
++func _copy_pan_minimum(copy: Control) -> float:
++	var area := get_viewport().get_visible_rect().size
++	return minf(32.0, area.y - 64.0 - copy.size.y)
++
++## Resize re-presents the open sheet and fixed footer for the new viewport and
++## keeps the reader's pan (clamped to the new bounds). Logical content is untouched.
++func _on_viewport_resized() -> void:
++	if not _is_open or body_label == null:
++		return
++	_fit_body_width()
++	if _current_doc_id not in [HAND_DOC_ID, "previous_transcript"]:
++		return
++	var pan := _copy_pan_y
++	_present_copy(_current_doc_id, body_label.text)
++	var copy := get_node("TranscriptSheet") as Control
++	_copy_pan_y = clampf(pan, _copy_pan_minimum(copy), 32.0)
++	copy.position.y = _copy_pan_y
+ 
+ ## A live status line — a deadline warning — can replace the footer while the
+ ## document stays open, so the warning is readable behind the paper it concerns.
+@@ -126,13 +287,19 @@ func set_live_footer(text: String) -> void:
+ 	_find_nodes()
+ 	if footer_label == null or not _is_open:
+ 		return
+-	var target := text if not text.is_empty() else _opened_footer
++	_live_footer = text
++	var target := _active_footer()
+ 	if footer_label.text != target:
+ 		footer_label.text = target
++	if _current_doc_id in [HAND_DOC_ID, "previous_transcript"]:
++		_copy_footer(target)
+ 	var copy_footer := get_node_or_null("TranscriptSheet/Footer") as Label
+ 	if copy_footer != null:
+ 		copy_footer.text = target
+ 
++func _active_footer() -> String:
++	return _live_footer if not _live_footer.is_empty() else _opened_footer
++
+ ## Lifting a document into view takes a moment. Instant appearance is the single
+ ## most common reason a first-person game reads as a slideshow of states.
+ func _animate_in() -> void:
+@@ -165,6 +332,7 @@ func close_document() -> void:
+ 	var closed_id := _current_doc_id
+ 	_is_open = false
+ 	_current_doc_id = ""
++	_live_footer = ""
+ 	visible = false
+ 	document_closed.emit(closed_id)
+ 
+diff --git a/scripts/ui/game_settings.gd b/scripts/ui/game_settings.gd
+index 26fa204..bfba366 100644
+--- a/scripts/ui/game_settings.gd
++++ b/scripts/ui/game_settings.gd
+@@ -15,32 +15,56 @@ var mouse_sensitivity: float = 0.003
+ var head_bob_enabled: bool = true
+ var master_volume_db: float = 0.0
+ var ambience_volume_db: float = -4.0
++var presentation_mode: int = 1
++var vertical_fov: float = 65.0
++var text_scale: float = 1.2
+ 
+-static func load_settings() -> GameSettings:
++static func load_settings(path: String = CONFIG_PATH) -> GameSettings:
+ 	var settings := GameSettings.new()
+ 	var config := ConfigFile.new()
+-	if config.load(CONFIG_PATH) != OK:
++	if config.load(path) != OK:
+ 		return settings
+ 
+ 	settings.mouse_sensitivity = float(config.get_value(SECTION, "mouse_sensitivity", settings.mouse_sensitivity))
+ 	settings.head_bob_enabled = bool(config.get_value(SECTION, "head_bob_enabled", settings.head_bob_enabled))
+ 	settings.master_volume_db = float(config.get_value(SECTION, "master_volume_db", settings.master_volume_db))
+ 	settings.ambience_volume_db = float(config.get_value(SECTION, "ambience_volume_db", settings.ambience_volume_db))
++	settings.presentation_mode = int(config.get_value(SECTION, "presentation_mode", settings.presentation_mode))
++	settings.vertical_fov = float(config.get_value(SECTION, "vertical_fov", settings.vertical_fov))
++	settings.text_scale = float(config.get_value(SECTION, "text_scale", settings.text_scale))
++	settings.sanitize()
+ 	return settings
+ 
+-func save() -> Error:
++## Clamps every numeric option to its bounds; non-finite values fall back to default.
++func sanitize() -> void:
++	mouse_sensitivity = clampf(mouse_sensitivity if is_finite(mouse_sensitivity) else 0.003, 0.0005, 0.008)
++	master_volume_db = clampf(master_volume_db if is_finite(master_volume_db) else 0.0, -40.0, 6.0)
++	ambience_volume_db = clampf(ambience_volume_db if is_finite(ambience_volume_db) else -4.0, -40.0, 6.0)
++	presentation_mode = clampi(presentation_mode, 0, 2)
++	vertical_fov = clampf(vertical_fov if is_finite(vertical_fov) else 65.0, 55.0, 85.0)
++	text_scale = clampf(text_scale if is_finite(text_scale) else 1.2, 1.0, 1.5)
++
++func save(path: String = CONFIG_PATH) -> Error:
++	sanitize()
+ 	var config := ConfigFile.new()
+ 	config.set_value(SECTION, "mouse_sensitivity", mouse_sensitivity)
+ 	config.set_value(SECTION, "head_bob_enabled", head_bob_enabled)
+ 	config.set_value(SECTION, "master_volume_db", master_volume_db)
+ 	config.set_value(SECTION, "ambience_volume_db", ambience_volume_db)
+-	return config.save(CONFIG_PATH)
++	config.set_value(SECTION, "presentation_mode", presentation_mode)
++	config.set_value(SECTION, "vertical_fov", vertical_fov)
++	config.set_value(SECTION, "text_scale", text_scale)
++	return config.save(path)
+ 
+ ## Pushes the current values at the things they control.
+ func apply(player: PlayerController) -> void:
++	sanitize()
+ 	if player != null:
+ 		player.mouse_sensitivity = mouse_sensitivity
+ 		player.head_bob_enabled = head_bob_enabled
++		var camera := player.get_node_or_null("Head/Camera3D") as Camera3D
++		if camera != null:
++			camera.fov = vertical_fov
+ 
+ 	_set_bus_db("Master", master_volume_db)
+ 	_set_bus_db("Ambience", ambience_volume_db)
+diff --git a/scripts/ui/main_menu.gd b/scripts/ui/main_menu.gd
+index 77deb70..bc79aa0 100644
+--- a/scripts/ui/main_menu.gd
++++ b/scripts/ui/main_menu.gd
+@@ -93,13 +93,16 @@ func toggle_options() -> void:
+ 	if options_panel == null:
+ 		return
+ 	options_panel.visible = not options_panel.visible
++	if options_panel.visible:
++		var readability := options_panel.get_node_or_null("OptionsBox/ReadabilityOptions")
++		if readability != null and readability.has_method("refresh"):
++			readability.refresh()
+ 
+ ## Clears both state stores and opens the office. Everything that starts a watch
+ ## must come through here.
+ func begin_watch() -> bool:
+ 	clear_state()
+-	if settings != null:
+-		settings.save()
++	save_preferences()
+ 	watch_started.emit()
+ 
+ 	if not is_inside_tree():
+@@ -123,32 +126,35 @@ static func clear_state() -> void:
+ 	if knowledge != null:
+ 		knowledge.reset_for_new_game()
+ 
++func save_preferences() -> Error:
++	settings = GameSettings.load_settings()
++	return settings.save()
++
+ func quit_game() -> void:
+-	if settings != null:
+-		settings.save()
++	save_preferences()
+ 	if is_inside_tree() and get_tree() != null:
+ 		get_tree().quit()
+ 
+ func _on_sensitivity_changed(value: float) -> void:
+-	if settings == null:
+-		return
++	settings = GameSettings.load_settings()
+ 	settings.mouse_sensitivity = maxf(0.0002, value / 1000.0)
+ 	settings.apply(null)
++	settings.save()
+ 
+ func _on_head_bob_toggled(pressed: bool) -> void:
+-	if settings == null:
+-		return
++	settings = GameSettings.load_settings()
+ 	settings.head_bob_enabled = pressed
+ 	settings.apply(null)
++	settings.save()
+ 
+ func _on_master_changed(value: float) -> void:
+-	if settings == null:
+-		return
++	settings = GameSettings.load_settings()
+ 	settings.master_volume_db = value
+ 	settings.apply(null)
++	settings.save()
+ 
+ func _on_ambience_changed(value: float) -> void:
+-	if settings == null:
+-		return
++	settings = GameSettings.load_settings()
+ 	settings.ambience_volume_db = value
+ 	settings.apply(null)
++	settings.save()
+diff --git a/scripts/ui/pause_menu.gd b/scripts/ui/pause_menu.gd
+index 7de2645..3c006a6 100644
+--- a/scripts/ui/pause_menu.gd
++++ b/scripts/ui/pause_menu.gd
+@@ -94,6 +94,10 @@ func _connect_controls() -> void:
+ func _input(event: InputEvent) -> void:
+ 	if event.is_echo() or not event.is_action_pressed("ui_cancel"):
+ 		return
++	var office := get_parent() as M1OfficeController
++	var editor := office.get_node_or_null("AmendmentEditor") as AmendmentEditor if office != null else null
++	if editor != null and (editor.is_open() or editor.owns_transition_frame()):
++		return
+ 	# A document in hand takes the key first: Escape should put the paper down
+ 	# before it stops the shift. Input is left unhandled so the viewer consumes it.
+ 	if not is_paused and document_viewer != null and document_viewer.is_open():
+@@ -113,6 +117,9 @@ func pause() -> bool:
+ 		return false
+ 	var office := get_parent() as M1OfficeController
+ 	if office != null:
++		var editor := office.get_node_or_null("AmendmentEditor") as AmendmentEditor
++		if editor != null and (editor.is_open() or editor.owns_transition_frame()):
++			return false
+ 		if office.routing_board != null and office.routing_board.is_open:
+ 			return false
+ 		var intro := office.get_node_or_null("IntroCard") as IntroCard
+@@ -123,6 +130,9 @@ func pause() -> bool:
+ 		player.velocity.x = 0.0
+ 		player.velocity.z = 0.0
+ 	visible = true
++	var readability := get_node_or_null("CenterContainer/PanelContainer/MarginContainer/VBoxContainer/ReadabilityOptions")
++	if readability != null and readability.has_method("refresh"):
++		readability.refresh()
+ 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+ 	if is_inside_tree():
+ 		get_tree().paused = true
+@@ -148,33 +158,33 @@ func resume() -> bool:
+ 	return true
+ 
+ func _on_sensitivity_changed(value: float) -> void:
+-	if settings == null:
+-		return
+ 	# The slider works in thousandths so it has a usable range on screen.
++	settings = GameSettings.load_settings()
+ 	settings.mouse_sensitivity = maxf(0.0002, value / 1000.0)
+ 	settings.apply(player)
++	settings.save()
+ 
+ func _on_head_bob_toggled(pressed: bool) -> void:
+-	if settings == null:
+-		return
++	settings = GameSettings.load_settings()
+ 	settings.head_bob_enabled = pressed
+ 	settings.apply(player)
++	settings.save()
+ 
+ func _on_master_changed(value: float) -> void:
+-	if settings == null:
+-		return
++	settings = GameSettings.load_settings()
+ 	settings.master_volume_db = value
+ 	settings.apply(player)
++	settings.save()
+ 
+ func _on_ambience_changed(value: float) -> void:
+-	if settings == null:
+-		return
++	settings = GameSettings.load_settings()
+ 	settings.ambience_volume_db = value
+ 	settings.apply(player)
++	settings.save()
+ 
+ func _save() -> void:
+-	if settings != null:
+-		settings.save()
++	settings = GameSettings.load_settings()
++	settings.save()
+ 
+ ## Abandoning a watch clears it. There is no resuming a half-finished night.
+ func return_to_title() -> bool:
+diff --git a/tests/audio/intro_music_test.gd b/tests/audio/intro_music_test.gd
+index c2ce4b3..14d6646 100644
+--- a/tests/audio/intro_music_test.gd
++++ b/tests/audio/intro_music_test.gd
+@@ -16,9 +16,16 @@ func _run() -> void:
+ 	fading.fade_duration = 0.05
+ 	root.add_child(fading)
+ 	await process_frame
++	var releases: Array[bool] = []
++	fading.intro_finished.connect(func(): releases.append(not (fading.get_node("IntroMusic") as AudioStreamPlayer).playing))
+ 	fading.finish()
+-	await create_timer(0.1).timeout
+-	check(not (fading.get_node("IntroMusic") as AudioStreamPlayer).playing,
++	# SceneTree timers run before tween callbacks in the same frame. Wait for
++	# semantic release with a finite guard rather than assuming wall-clock order.
++	var guard := 0
++	while releases.is_empty() and guard < 120:
++		await process_frame
++		guard += 1
++	check(not releases.is_empty() and releases[0],
+ 		"Normal intro fade also stops source music before releasing controls")
+ 	fading.queue_free()
+ 	intro.queue_free()
+diff --git a/tests/integration/night_recovery_test.gd b/tests/integration/night_recovery_test.gd
+index e8332b7..8a2f7d8 100644
+--- a/tests/integration/night_recovery_test.gd
++++ b/tests/integration/night_recovery_test.gd
+@@ -55,7 +55,13 @@ func _run() -> void:
+ 				check(office.copy_commit_desk.get_result_text() == "UNFILED", "Uninspected final copy visibly lapses")
+ 			else:
+ 				session.mark_transcript_verified()
+-				office.copy_commit_desk.commit_option(StringName(outcome))
++				if outcome == "file_water":
++					office.copy_commit_desk.commit_option(&"amend_copy")
++					office.amendment_editor.correction.text = "WATER"
++					office.amendment_editor.correction.text_changed.emit("WATER")
++					office.amendment_editor.submit_draft()
++				else:
++					office.copy_commit_desk.commit_option(StringName(outcome))
+ 				check(not office.copy_commit_desk.commit_option(&"file_water"), "Terminal copy rejects duplicate filing")
+ 			# Watch the window throughout the trigger. No popping into view.
+ 			office.player.camera.look_at(office.window_observation.global_position)
+diff --git a/tests/office/m1_presentation_structure_test.gd b/tests/office/m1_presentation_structure_test.gd
+index 8ac15df..7100cb6 100644
+--- a/tests/office/m1_presentation_structure_test.gd
++++ b/tests/office/m1_presentation_structure_test.gd
+@@ -11,7 +11,7 @@ func _init() -> void:
+ 
+ 	# 1. PSX Presentation Settings
+ 	if not assert_condition(office.enable_psx_rendering == true, "enable_psx_rendering is true"): return
+-	if not assert_condition(is_equal_approx(office.render_scale, 0.5), "Half-resolution nearest render scale preserves PSX readability"): return
++	if not assert_condition(office.has_method("apply_presentation_mode"), "Production presentation is player-selectable instead of hardcoded 360 lines"): return
+ 
+ 	# 2. No placeholder nodes in production scene
+ 	var placeholder_nodes: Array[String] = []
+diff --git a/tests/office/shift_director_test.gd b/tests/office/shift_director_test.gd
+index c83c0f1..fe3c697 100644
+--- a/tests/office/shift_director_test.gd
++++ b/tests/office/shift_director_test.gd
+@@ -204,7 +204,7 @@ func _run() -> void:
+ 	if not assert_condition(director._play_on_wire("E") > 0.0, "A service signal occupies the wire for the deferral case"): return
+ 	session.advance_post_signal(10.15)
+ 	if not assert_condition(director._pending_warning != &"", "A warning on a busy wire is deferred, not played over traffic"): return
+-	if not assert_condition(session.submit_commit(&"file_water"), "Final message accepts an authored commit inside the deadline"): return
++	if not assert_condition(session.submit_amendment("WATER"), "Final message accepts an authored commit inside the deadline"): return
+ 	if not assert_condition(session.get_state() == TelegraphSessionController.State.CONSEQUENCE, "Final message enters its consequence beat"): return
+ 	if not assert_condition(key.prompt_message == ShiftDirector.PROMPT_STAND_BY, "The key reports a neutral standby during the consequence beat"): return
+ 	director.advance(0.3)
+@@ -239,7 +239,7 @@ func _run() -> void:
+ 	if not assert_condition(text.contains("TRAIN 17"), "Duty sheet lists the booked passenger traffic"): return
+ 	if not assert_condition(text.contains(DutySheet.STATUS_FILED), "Duty sheet shows the filed message"): return
+ 	if not assert_condition(text.contains("UNSCHEDULED TRAFFIC"), "Unbooked traffic appears once it has been copied"): return
+-	if not assert_condition(not text.contains("WATCHER") and not text.contains("WATER"), "Duty sheet never leaks message content"): return
++	if not assert_condition(not text.contains("WATCHER") and text.contains("FILED WORD: WATER"), "Duty sheet records only the explicit chosen word after filing"): return
+ 
+ 	# 16. The sheet reports Elias, not the world. He believes he handled the
+ 	#     freight; WorldState knows the route was never given.
+@@ -304,7 +304,7 @@ func _run() -> void:
+ 		if slot == 0:
+ 			fresh_office.session_controller.submit_routing_decision("HOLD")
+ 		else:
+-			fresh_office.session_controller.submit_commit(&"file_water")
++			fresh_office.session_controller.submit_amendment("WATER")
+ 			fresh_office.session_controller.advance_consequence(1.5)
+ 			fresh_office.session_controller.notify_consequence_visible()
+ 			fresh_office.session_controller.advance_consequence(30.0)
+diff --git a/tests/telegraph/copy_commit_desk_test.gd b/tests/telegraph/copy_commit_desk_test.gd
+index 024bab1..85a8a22 100644
+--- a/tests/telegraph/copy_commit_desk_test.gd
++++ b/tests/telegraph/copy_commit_desk_test.gd
+@@ -38,7 +38,11 @@ func _run() -> void:
+ 	var stamp_player := office.get_node("OfficeFoley/Stamp") as AudioStreamPlayer3D
+ 	var accepted_events: Array[StringName] = []
+ 	desk.commit_accepted.connect(func(id: StringName) -> void: accepted_events.append(id))
+-	var requested := desk.commit_option(&"file_water")
++	var requested := desk.commit_option(&"amend_copy")
++	var late_editor := office.get_node("AmendmentEditor") as AmendmentEditor
++	late_editor.correction.text = "WATER"
++	late_editor.correction.text_changed.emit("WATER")
++	late_editor.submit_draft()
+ 	if not assert_condition(requested, "The intent itself is expressed"): return
+ 	if not assert_condition(not desk.has_committed(), "A rejected intent does not commit the desk"): return
+ 	if not assert_condition(desk.get_result_text() == "", "No filed result text appears, got '%s'" % desk.get_result_text()): return
+@@ -67,10 +71,14 @@ func _run() -> void:
+ 	desk.commit_accepted.connect(func(id: StringName) -> void: accepted_events.append(id))
+ 
+ 	if not assert_condition(desk._handle_key_event(_key(KEY_1)), "Key 1 passes the desk's own input gate"): return
+-	if not assert_condition(desk.has_committed(), "Key 1 files the first copy through the real input path"): return
+-	if not assert_condition(desk.get_selected_action_id() == &"file_water", "The accepted action is WATER"): return
++	if not assert_condition(not desk.has_committed() and office.amendment_editor.is_open(), "Key 1 opens an unfiled amendment"): return
++	office.amendment_editor.correction.text = "WATER"
++	office.amendment_editor.correction.text_changed.emit("WATER")
++	office.amendment_editor.submit_draft()
++	if not assert_condition(desk.has_committed(), "Explicit typed submission files the first copy"): return
++	if not assert_condition(desk.get_selected_action_id() == &"amend_copy", "The accepted action is an explicit amendment"): return
+ 	if not assert_condition(world.get_fact("core_hook_filed_water", false), "WATER fact recorded"): return
+-	if not assert_condition(knowledge.knows(&"committed_water_core_hook"), "WATER knowledge recorded"): return
++	if not assert_condition(knowledge.knows(&"amendment_entered_core_hook") and knowledge.recall_value(&"filed_word_core_hook") == "WATER", "Chosen amendment remembered without grading"): return
+ 	# The facts are already true while the press travels (authority first);
+ 	# the ink and the sound land with the physical contact.
+ 	if not assert_condition(desk.is_press_in_flight(), "The press travels after the acceptance"): return
+@@ -78,7 +86,7 @@ func _run() -> void:
+ 	if not assert_condition(await _await_press(desk), "The press lands within its duration"): return
+ 	if not assert_condition(_stamp_visible(desk, 0) and _stamp_text(desk, 0) == "FILED", "The accepted copy is stamped FILED on contact"): return
+ 	if not assert_condition(_stamp_visible(desk, 1) and _stamp_text(desk, 1) == "VOID", "The other copy is voided, not filed"): return
+-	if not assert_condition(accepted_events.size() == 1 and accepted_events[0] == &"file_water", "Exactly one accepted contact event"): return
++	if not assert_condition(accepted_events.size() == 1 and accepted_events[0] == &"amend_copy", "Exactly one accepted contact event"): return
+ 	if not assert_condition(stamp_player.playing, "The stamp sound fires on the press contact"): return
+ 
+ 	# Duplicate and unknown input after acceptance: exactly one outcome.
+@@ -123,7 +131,10 @@ func _run() -> void:
+ 	session = office.session_controller
+ 	desk = office.copy_commit_desk
+ 	session._post_signal_elapsed = session.commit_deadline_seconds - 0.5
+-	if not assert_condition(desk.commit_option(&"file_water"), "Intent before the deadline is expressed"): return
++	if not assert_condition(desk.commit_option(&"amend_copy"), "Intent before the deadline opens editing"): return
++	office.amendment_editor.correction.text = "WATER"
++	office.amendment_editor.correction.text_changed.emit("WATER")
++	office.amendment_editor.submit_draft()
+ 	if not assert_condition(desk.has_committed(), "An on-time intent is accepted and stamped in the same frame"): return
+ 	if not assert_condition(world.get_fact("core_hook_filed_water", false), "On-time WATER fact recorded"): return
+ 	_teardown(office)
+diff --git a/tests/telegraph/duty_sheet_test.gd b/tests/telegraph/duty_sheet_test.gd
+index 675e992..8df6ba5 100644
+--- a/tests/telegraph/duty_sheet_test.gd
++++ b/tests/telegraph/duty_sheet_test.gd
+@@ -86,7 +86,7 @@ func _run() -> void:
+ 	if not assert_condition(paper != null and paper.get_interactable() != null, "Production transcript is available for verification"): return
+ 	paper.get_interactable().interact()
+ 	if not assert_condition(office.session_controller.get_state() == TelegraphSessionController.State.AWAITING_COMMIT, "Production transcript inspection opens the commit gate"): return
+-	if not assert_condition(office.session_controller.submit_commit(&"file_water"), "Production core-hook commit resolves"): return
++	if not assert_condition(office.session_controller.submit_amendment("WATER"), "Production core-hook commit resolves"): return
+ 	# Production consequence waits for the observer's visible hold. This test is
+ 	# interested in the completed duty-sheet fact, so acknowledge the figure
+ 	# explicitly instead of relying on the bounded unattended fallback.
+@@ -96,8 +96,8 @@ func _run() -> void:
+ 	if not assert_condition(office.session_controller.get_state() == TelegraphSessionController.State.COMPLETE, "Production consequence completes the shift segment"): return
+ 	var production_sheet := office.get_node_or_null("DutySheet") as DutySheet
+ 	if not assert_condition(production_sheet != null, "Production office exposes its duty sheet"): return
+-	if not assert_condition(production_sheet.get_core_hook_outcome_status() == DutySheet.STATUS_CORE_HOOK_WATER, "Completed production commit resolves the sheet status"): return
+-	if not assert_condition(production_sheet.get_sheet_text().contains(DutySheet.STATUS_CORE_HOOK_WATER), "Completed production commit is visible on the rendered duty sheet"): return
++	if not assert_condition(production_sheet.get_core_hook_outcome_status() == DutySheet.STATUS_CORE_HOOK_AMENDED, "Completed production commit resolves the sheet status"): return
++	if not assert_condition(production_sheet.get_sheet_text().contains(DutySheet.STATUS_CORE_HOOK_AMENDED), "Completed production commit is visible on the rendered duty sheet"): return
+ 
+ 	# --- the ledger shares the sheet's vocabulary, and invents nothing -----
+ 	# (H7) One knowledge-backed status computation for both documents; the
+@@ -109,8 +109,8 @@ func _run() -> void:
+ 	if not assert_condition(not ledger.get_ledger_text().contains("23 APRIL"), "No day of month is invented anywhere in the setting"): return
+ 	# The production night above committed WATER: the sealed-copy vocabulary is
+ 	# shared with the duty sheet.
+-	if not assert_condition(entries.contains("HEARD COPY SEALED"), "The core-hook entry uses the shared sealed-copy vocabulary"): return
+-	if not assert_condition(not entries.contains("WATER") and not entries.contains("WATCHER"), "The ledger never leaks message content"): return
++	if not assert_condition(entries.contains("AMENDED COPY SEALED"), "The core-hook entry uses neutral amendment vocabulary"): return
++	if not assert_condition(entries.contains("WATER") and not entries.contains("WATCHER"), "The ledger records the chosen word only after explicit filing"): return
+ 
+ 	# filed without a route fact: the order went out, but the record does not
+ 	# say which way — the ledger must not turn that into HOLD.
+diff --git a/tests/telegraph/routing_board_test.gd b/tests/telegraph/routing_board_test.gd
+index 89cdf5d..be22324 100644
+--- a/tests/telegraph/routing_board_test.gd
++++ b/tests/telegraph/routing_board_test.gd
+@@ -32,6 +32,9 @@ func _init() -> void:
+ 	# 2. Input actions when board is CLOSED (Must do nothing)
+ 	var selected_actions: Array[String] = []
+ 	board_node.routing_action_selected.connect(func(a: String): selected_actions.append(a))
++	# Standalone presentation tests provide an explicit accepting authority;
++	# selecting an action is only an intent in production.
++	board_node.routing_action_selected.connect(func(a: String): board_node.play_route_accept(a, true))
+ 
+ 	var ev_1_closed: InputEventKey = InputEventKey.new()
+ 	ev_1_closed.physical_keycode = KEY_1
+@@ -95,7 +98,7 @@ func _init() -> void:
+ 	# keeps the lever, the needle and the last route; only a watch reset
+ 	# clears them. Two throws land on authored absolute stops, not offsets.
+ 	var pivot: Node3D = board_node.get_node("LeverPivot")
+-	var lever_rest_z: float = pivot.rotation.z
++	var lever_rest_z: float = board_node._lever_rest_rotation
+ 	board_node.play_route_accept("CLEAR EAST", true)
+ 	var clear_z: float = pivot.rotation.z
+ 	if not assert_condition(clear_z > lever_rest_z + 0.4, "CLEAR EAST throws to its absolute stop"): return
+@@ -104,6 +107,7 @@ func _init() -> void:
+ 	if not assert_condition(hold_z < lever_rest_z - 0.4, "HOLD throws to its own absolute stop, not an offset"): return
+ 	board_node.play_route_accept("CLEAR EAST", true)
+ 	if not assert_condition(is_equal_approx(pivot.rotation.z, clear_z), "A repeated CLEAR EAST lands on the same authored stop, no drift"): return
++	board_node.play_route_accept("HOLD", true)
+ 	pivot.rotation.z = hold_z
+ 	board_node.reset_for_new_transmission()
+ 	if not assert_condition(is_equal_approx(pivot.rotation.z, hold_z), "Per-slot reset keeps the thrown lever where the night left it"): return
+diff --git a/tests/telegraph/tape_register_test.gd b/tests/telegraph/tape_register_test.gd
+index afdb97c..538074d 100644
+--- a/tests/telegraph/tape_register_test.gd
++++ b/tests/telegraph/tape_register_test.gd
+@@ -2,7 +2,7 @@ extends SceneTree
+ 
+ ## Tape register contract (design doc §4): the tape is a second renderer of
+ ## the SAME scheduler timeline the sounder plays. It records every MARK/GAP
+-## event verbatim and has no access to message text at all.
++## event's delivered duration and has no access to message text at all.
+ 
+ var _assertions: int = 0
+ 
+@@ -17,16 +17,14 @@ func _run() -> void:
+ 	await process_frame
+ 	if not _a(tape.get_record().is_empty(), "Tape starts empty"): return
+ 
+-	# 2. Records MARK/GAP verbatim from scheduler events.
+-	var ev_mark := MorseScheduledEvent.new()
+-	ev_mark.kind = MorseTimingEvent.Kind.MARK
+-	ev_mark.duration_units = 1
+-	var ev_gap := MorseScheduledEvent.new()
+-	ev_gap.kind = MorseTimingEvent.Kind.GAP
+-	ev_gap.duration_units = 3
+-	tape._on_timing_event_started(ev_mark)
+-	tape._on_timing_event_started(ev_gap)
+-	if not _a(tape.get_record().size() == 2, "Two events recorded verbatim"): return
++	# 2. Controlled hardware fixtures explicitly finish delivered MARK/GAP events.
++	var ev_mark := _ev(MorseTimingEvent.Kind.MARK, 1)
++	var ev_gap := _ev(MorseTimingEvent.Kind.GAP, 3)
++	_finish_fixture_event(tape, ev_mark)
++	_finish_fixture_event(tape, ev_gap)
++	if not _a(tape.get_record().size() == 2 and tape.get_record()[0].is_complete
++		and tape.get_record()[1].is_complete and is_equal_approx(tape.get_record()[0].duration_seconds, 0.1)
++		and is_equal_approx(tape.get_record()[1].duration_seconds, 0.3), "Two completed fixture events recorded exactly"): return
+ 	if not _a(tape.get_record()[0].kind == MorseTimingEvent.Kind.MARK
+ 		and tape.get_record()[1].kind == MorseTimingEvent.Kind.GAP,
+ 		"Kinds preserved in order"): return
+@@ -49,13 +47,13 @@ func _run() -> void:
+ 	var t2: TapeRegisterController = load("res://scripts/telegraph/hardware/tape_register_controller.gd").new()
+ 	root.add_child(t2)
+ 	await process_frame
+-	t2._on_timing_event_started(_ev(MorseTimingEvent.Kind.MARK, 1))
+-	t2._on_timing_event_started(_ev(MorseTimingEvent.Kind.GAP, 1))
+-	t2._on_timing_event_started(_ev(MorseTimingEvent.Kind.MARK, 3))
+-	t2._on_timing_event_started(_ev(MorseTimingEvent.Kind.GAP, 3))
++	_finish_fixture_event(t2, _ev(MorseTimingEvent.Kind.MARK, 1))
++	_finish_fixture_event(t2, _ev(MorseTimingEvent.Kind.GAP, 1))
++	_finish_fixture_event(t2, _ev(MorseTimingEvent.Kind.MARK, 3))
++	_finish_fixture_event(t2, _ev(MorseTimingEvent.Kind.GAP, 3))
+ 	if not _a(t2.get_tape_text() == "· —   ", "Mark/GAP render to dot/dash/spaces verbatim, got '%s'" % t2.get_tape_text()): return
+ 	# Word gap: long GAP renders as more spaces.
+-	t2._on_timing_event_started(_ev(MorseTimingEvent.Kind.MARK, 2))
++	_finish_fixture_event(t2, _ev(MorseTimingEvent.Kind.MARK, 2))
+ 	if not _a(t2.get_tape_text() == "· —   ·", "A 2-unit MARK is still a dot; gaps scale, got '%s'" % t2.get_tape_text()): return
+ 	t2.queue_free()
+ 
+@@ -80,18 +78,20 @@ func _run() -> void:
+ 	live_sched.advance_time(live_sched.get_total_duration_seconds() + 1.0)
+ 	var record := live_tape.get_record()
+ 	if not _a(record.size() > 0, "A real transmission inked the tape"): return
+-	if not _a(record.size() == expected_events + 1,
+-		"Tape count equals the schedule's events plus the between-transmissions gap (%d vs %d)" % [record.size(), expected_events]): return
++	if not _a(record.size() == expected_events,
++		"Tape count equals only the actual schedule events (%d vs %d)" % [record.size(), expected_events]): return
+ 	var kinds_ok := true
+ 	for i in range(expected_events):
+ 		if record[i].kind != sched_data.events[i].kind:
+ 			kinds_ok = false
+ 			break
+ 	if not _a(kinds_ok, "Recorded MARK/GAP kinds match the schedule verbatim"): return
+-	var last_ev: MorseScheduledEvent = record[record.size() - 1]
+-	if not _a(last_ev.kind == MorseTimingEvent.Kind.GAP
+-		and last_ev.duration_units == live_tape.BETWEEN_TRANSMISSIONS_GAP_UNITS,
+-		"Completed transmission ends with the 12-unit between-gap"): return
++	var last_ev: TapeInkEvent = record[record.size() - 1]
++	var last_source: MorseScheduledEvent = sched_data.events[expected_events - 1]
++	if not _a(last_ev.kind == last_source.kind and last_ev.is_complete
++		and is_equal_approx(last_ev.duration_units, float(last_source.duration_units))
++		and is_equal_approx(last_ev.duration_seconds, last_source.duration_seconds),
++		"Completed transmission ends with its exact last event, not a fabricated 12-unit GAP"): return
+ 	var has_mark := false
+ 	var has_gap := false
+ 	for ev in record:
+@@ -114,10 +114,12 @@ func _run() -> void:
+ 	await process_frame
+ 	var inspected: Array[String] = []
+ 	t3.tape_inspected.connect(func(text: String): inspected.append(text))
+-	t3._on_timing_event_started(_ev(MorseTimingEvent.Kind.MARK, 1))
++	_finish_fixture_event(t3, _ev(MorseTimingEvent.Kind.MARK, 1))
++	t3._on_playback_completed(MorsePlaybackScheduleData.new())
+ 	t3._on_interacted()
+-	if not _a(inspected.size() == 1 and inspected[0] == "\u00b7",
+-		"Interaction emits tape_inspected with the inked tape text"): return
++	if not _a(inspected.size() == 1
++		and inspected[0] == "[WIRE TAKE 1 | COMPLETE | NON-INK BOUNDARY]\n·",
++		"Interaction emits tape_inspected with a readable non-ink take header and physical ink"): return
+ 	if not _a(t3.get_interactable() == null,
+ 		"get_interactable is null on a pure-code instance without crashing"): return
+ 	t3.queue_free()
+@@ -174,69 +176,74 @@ func _run() -> void:
+ 	await process_frame
+ 	await process_frame
+ 
+-	# 9. Between-transmissions gap (design doc §4): completion inks a pause
+-	# longer than any word gap, so the strip shows where a transmission ends.
++	# 9. Lifecycle signals never invent ink or a take when no playback started.
+ 	var t5: TapeRegisterController = load("res://scripts/telegraph/hardware/tape_register_controller.gd").new()
+ 	root.add_child(t5)
+ 	var sched5: MorseRuntimeScheduler = MorseRuntimeScheduler.new()
+ 	root.add_child(sched5)
+ 	t5.connect_scheduler(sched5)
+ 	if not _a(sched5.timing_event_started.is_connected(t5._on_timing_event_started)
++		and sched5.timing_event_finished.is_connected(t5._on_timing_event_finished)
++		and sched5.playback_time_advanced.is_connected(t5._on_playback_time_advanced)
++		and sched5.playback_started.is_connected(t5._on_playback_started)
+ 		and sched5.playback_completed.is_connected(t5._on_playback_completed)
+ 		and sched5.playback_cancelled.is_connected(t5._on_playback_cancelled),
+-		"connect_scheduler hooks all three signals"): return
++		"connect_scheduler hooks all six actual-time and take-lifecycle signals"): return
+ 	t5._on_playback_completed(MorsePlaybackScheduleData.new())
+ 	var rec5 := t5.get_record()
+-	if not _a(rec5.size() == 1 and rec5[0].kind == MorseTimingEvent.Kind.GAP
+-		and rec5[0].duration_units == 12,
+-		"Completion appends a synthetic 12-unit between-transmissions GAP"): return
++	if not _a(rec5.is_empty() and t5.get_segment_snapshots().is_empty(),
++		"Completion with no start invents neither a GAP nor a wire take"): return
+ 	sched5.playback_completed.emit(MorsePlaybackScheduleData.new())
+-	if not _a(t5.get_record().size() == 2
+-		and t5.get_record()[1].duration_units == 12,
+-		"Signal path appends the between-gap too"): return
++	if not _a(t5.get_record().is_empty() and t5.get_tape_display_text().is_empty(),
++		"Repeated completion signal also preserves the honest empty strip"): return
+ 	t5.disconnect_scheduler()
+ 	if not _a(not sched5.timing_event_started.is_connected(t5._on_timing_event_started)
++		and not sched5.timing_event_finished.is_connected(t5._on_timing_event_finished)
++		and not sched5.playback_time_advanced.is_connected(t5._on_playback_time_advanced)
++		and not sched5.playback_started.is_connected(t5._on_playback_started)
+ 		and not sched5.playback_completed.is_connected(t5._on_playback_completed)
+ 		and not sched5.playback_cancelled.is_connected(t5._on_playback_cancelled),
+-		"disconnect_scheduler unhooks all three signals"): return
++		"disconnect_scheduler unhooks all six lifecycle signals"): return
+ 	t5.queue_free()
+ 	sched5.queue_free()
+ 
+-	# 10. Rendering: a dot then the between-gap -> dot followed by 12 spaces.
++	# 10. Completion is metadata only, never a measured pause.
+ 	var t6: TapeRegisterController = load("res://scripts/telegraph/hardware/tape_register_controller.gd").new()
+ 	root.add_child(t6)
+-	t6._on_timing_event_started(_ev(MorseTimingEvent.Kind.MARK, 1))
++	_finish_fixture_event(t6, _ev(MorseTimingEvent.Kind.MARK, 1))
+ 	t6._on_playback_completed(MorsePlaybackScheduleData.new())
+-	if not _a(t6.get_tape_text() == "\u00b7" + " ".repeat(12),
+-		"MARK(1) + completion renders dot then 12 spaces, got '%s'" % t6.get_tape_text()): return
++	if not _a(t6.get_tape_text() == "·" and t6.get_record().size() == 1
++		and t6.get_segment_snapshots()[0].complete,
++		"MARK(1) + completion retains just one dot and records completion outside ink"): return
+ 	t6.queue_free()
+ 
+-	# 11. Two transmissions: the between-gap (12) outgrows the word gap (3).
++	# 11. Separate takes do not falsify the observed internal three-unit pause.
+ 	var t7: TapeRegisterController = load("res://scripts/telegraph/hardware/tape_register_controller.gd").new()
+ 	root.add_child(t7)
+-	t7._on_timing_event_started(_ev(MorseTimingEvent.Kind.MARK, 1))
+-	t7._on_timing_event_started(_ev(MorseTimingEvent.Kind.GAP, 3))
+-	t7._on_timing_event_started(_ev(MorseTimingEvent.Kind.MARK, 1))
++	_finish_fixture_event(t7, _ev(MorseTimingEvent.Kind.MARK, 1))
++	_finish_fixture_event(t7, _ev(MorseTimingEvent.Kind.GAP, 3))
++	_finish_fixture_event(t7, _ev(MorseTimingEvent.Kind.MARK, 1))
+ 	t7._on_playback_completed(MorsePlaybackScheduleData.new())
+-	t7._on_timing_event_started(_ev(MorseTimingEvent.Kind.MARK, 2))
++	_finish_fixture_event(t7, _ev(MorseTimingEvent.Kind.MARK, 2))
+ 	var two_text := t7.get_tape_text()
+-	if not _a(_longest_space_run(two_text) == 12,
+-		"Longest space run is the 12-unit between-gap"): return
+-	if not _a(two_text.find(" ".repeat(12)) > 0,
+-		"Between-gap sits between transmissions, not at index 0"): return
++	if not _a(_longest_space_run(two_text) == 3 and t7.get_record().size() == 4,
++		"Only the observed three-unit GAP appears in the physical record"): return
++	if not _a(two_text == "·   ·\n·" and t7.get_segment_snapshots().size() == 2,
++		"Two chronological wire takes are separated by a non-ink newline, not 12 fake units"): return
+ 	t7.queue_free()
+ 
+ 	# 12. Cancellation: no between-gap, partial ink stays (honest break).
+ 	var t8: TapeRegisterController = load("res://scripts/telegraph/hardware/tape_register_controller.gd").new()
+ 	root.add_child(t8)
+-	t8._on_timing_event_started(_ev(MorseTimingEvent.Kind.MARK, 1))
+-	t8._on_timing_event_started(_ev(MorseTimingEvent.Kind.GAP, 3))
++	_finish_fixture_event(t8, _ev(MorseTimingEvent.Kind.MARK, 1))
++	_finish_fixture_event(t8, _ev(MorseTimingEvent.Kind.GAP, 3))
+ 	var before_cancel := t8.get_tape_text()
+ 	t8._on_playback_cancelled(MorsePlaybackScheduleData.new(), 0.5)
+ 	if not _a(t8.get_record().size() == 2,
+ 		"Cancellation appends no between-gap"): return
+-	if not _a(t8.get_tape_text() == before_cancel,
+-		"Cancelled transmission's partial ink stays unchanged"): return
++	if not _a(t8.get_tape_text() == before_cancel and t8.get_segment_snapshots()[0].interrupted
++		and not t8.get_segment_snapshots()[0].complete,
++		"Cancellation preserves already completed ink and marks the take interrupted outside ink"): return
+ 	t8.queue_free()
+ 
+ 
+@@ -257,8 +264,14 @@ func _ev(kind: MorseTimingEvent.Kind, units: int) -> MorseScheduledEvent:
+ 	var e := MorseScheduledEvent.new()
+ 	e.kind = kind
+ 	e.duration_units = units
++	e.duration_seconds = units * 0.1
++	e.end_seconds = e.duration_seconds
+ 	return e
+ 
++func _finish_fixture_event(tape: TapeRegisterController, event: MorseScheduledEvent) -> void:
++	tape._on_timing_event_started(event)
++	tape._on_timing_event_finished(event)
++
+ 
+ func _longest_space_run(text: String) -> int:
+ 	var longest := 0
+diff --git a/tests/telegraph/telegraph_scenario_data_test.gd b/tests/telegraph/telegraph_scenario_data_test.gd
+index 9558411..0d9e9f5 100644
+--- a/tests/telegraph/telegraph_scenario_data_test.gd
++++ b/tests/telegraph/telegraph_scenario_data_test.gd
+@@ -61,8 +61,8 @@ func _init() -> void:
+ 	if not assert_condition(scen3.requires_transcript_verification, "Scenario 3 requires transcript verification"): return
+ 	if not assert_condition(scen3.commit_options.size() == 2, "Scenario 3 exposes two commit options"): return
+ 	if not assert_condition(scen3.routing_lapsed_world_fact.is_empty() and scen3.routing_lapsed_knowledge_fact.is_empty(), "Commit scenario leaves routing lapse fields empty (compatible default)"): return
+-	if not assert_condition(scen3.commit_options[0].display_label == "AMEND COPY\nWATER", "Scenario 3 water label names the act"): return
+-	if not assert_condition(scen3.commit_options[1].display_label == "RETAIN COPY\nWATCHER", "Scenario 3 watcher label names the act"): return
++	if not assert_condition(scen3.commit_options[0].display_label == "AMEND COPY", "Scenario 3 amendment label names no answer"): return
++	if not assert_condition(scen3.commit_options[1].display_label == "FILE AS COPIED", "Scenario 3 retention label names no answer"): return
+ 	if not assert_condition(scen3.consequence_event_id == "window_figure", "Scenario 3 consequence event is authored"): return
+ 
+ 	print("--- All Telegraph Scenario Data Tests PASSED ---")
+diff --git a/tests/telegraph/telegraph_session_controller_test.gd b/tests/telegraph/telegraph_session_controller_test.gd
+index d992e14..e8aad15 100644
+--- a/tests/telegraph/telegraph_session_controller_test.gd
++++ b/tests/telegraph/telegraph_session_controller_test.gd
+@@ -148,10 +148,10 @@ func _init() -> void:
+ 	if not assert_condition(controller.get_state() == TelegraphSessionController.State.VERIFYING, "Scenario 3 reaches VERIFYING"): return
+ 	if not assert_condition(paper.get_transcript_text() == "WATCHER", "Paper displays WATCHER"): return
+ 	if not assert_condition(sounder.down_clicks_played > 0, "Sounder played clicks during transmission"): return
+-	if not assert_condition(not controller.submit_commit(&"file_water"), "Commit before inspection is a no-op"): return
++	if not assert_condition(not controller.submit_amendment("WATER"), "Commit before inspection is a no-op"): return
+ 	controller.mark_transcript_verified()
+ 	if not assert_condition(controller.get_state() == TelegraphSessionController.State.AWAITING_COMMIT, "Scenario 3 awaits commit after inspection"): return
+-	if not assert_condition(controller.submit_commit(&"file_water"), "Scenario 3 accepts authored commit"): return
++	if not assert_condition(controller.submit_amendment("WATER"), "Scenario 3 accepts authored commit"): return
+ 	if not assert_condition(controller.get_state() == TelegraphSessionController.State.CONSEQUENCE, "Commit starts consequence state"): return
+ 	if not assert_condition(not controller.submit_commit(&"file_watcher"), "Second commit is a no-op"): return
+ 	# A world-space figure can remain pending while the camera watches it. The
+@@ -216,7 +216,7 @@ func _init() -> void:
+ 	controller.mark_transcript_verified()
+ 	controller.advance_post_signal(controller.commit_deadline_seconds + 0.1)
+ 	if not assert_condition(controller.get_state() == TelegraphSessionController.State.CONSEQUENCE, "Expired deadline resolved the slot"): return
+-	if not assert_condition(not controller.submit_commit(&"file_water"), "Late input cannot file after the deadline"): return
++	if not assert_condition(not controller.submit_amendment("WATER"), "Late input cannot file after the deadline"): return
+ 	if not assert_condition(not world.has_fact("core_hook_filed_water"), "Rejected late input leaves no fact"): return
+ 
+ 	# 7. Unread order lapses without pretending it was verified.
+diff --git a/tools/capture_first_night.gd b/tools/capture_first_night.gd
+index a62804c..44b87c6 100644
+--- a/tools/capture_first_night.gd
++++ b/tools/capture_first_night.gd
+@@ -26,12 +26,13 @@ func _run() -> void:
+ 		await _shot("writing_%d" % int(ratio * 100))
+ 	office.session_controller.scheduler.advance_time(1.0)
+ 	await _shot("written")
++	var camera_fov: float = office.player.camera.fov
+ 	office.player.camera.fov = 48.0
+ 	var sound_direction := office.session_controller.sounder.global_position + Vector3(0, 0.05, 0) - office.player.camera.global_position
+ 	office.player.rotation.y = atan2(-sound_direction.x, -sound_direction.z)
+ 	office.player.head.rotation.x = atan2(sound_direction.y, Vector2(sound_direction.x, sound_direction.z).length())
+ 	await _shot("hardware")
+-	office.player.camera.fov = 78.0
++	office.player.camera.fov = camera_fov
+ 	office.session_controller.mark_transcript_verified()
+ 	office.operator_seat.stand()
+ 	await create_timer(0.8).timeout
+diff --git a/tools/commit_input_route_capture.gd b/tools/commit_input_route_capture.gd
+index 03ce67c..0121ee6 100644
+--- a/tools/commit_input_route_capture.gd
++++ b/tools/commit_input_route_capture.gd
+@@ -76,7 +76,7 @@ func _run() -> void:
+ 	while interaction.current_target != option1 and hold < 240:
+ 		await process_frame
+ 		hold += 1
+-	check(interaction.current_target == option1, "The ray holds the WATER option under the crosshair")
++	check(interaction.current_target == option1, "The ray holds the neutral amendment action under the crosshair")
+ 
+ 	# 2. Raw key through the input pipeline.
+ 	var key := InputEventKey.new()
+@@ -85,7 +85,27 @@ func _run() -> void:
+ 	Input.parse_input_event(key)
+ 	await process_frame
+ 	await process_frame
+-	check(desk.has_committed(), "Key 1 filed WATER through the real input pipeline")
++	check(office.amendment_editor.is_open() and not desk.has_committed(), "Key 1 opens amendment through the real input pipeline")
++	await process_frame
++	await process_frame
++	for character in "WATER":
++		var typed := InputEventKey.new()
++		typed.keycode = character.unicode_at(0)
++		typed.unicode = character.to_lower().unicode_at(0)
++		typed.pressed = true
++		Input.parse_input_event(typed)
++		await process_frame
++		typed = typed.duplicate()
++		typed.pressed = false
++		Input.parse_input_event(typed)
++		await process_frame
++	check(office.amendment_editor.correction.text == "WATER", "Actual typing sets the explicit correction")
++	var submit := InputEventKey.new()
++	submit.keycode = KEY_ENTER
++	submit.pressed = true
++	Input.parse_input_event(submit)
++	await process_frame
++	check(desk.has_committed(), "Enter accepts the explicit typed correction")
+ 	check(world.get_fact("core_hook_filed_water", false), "WATER world fact recorded")
+ 	check(desk.is_press_in_flight(), "The press travels")
+ 	var press_frames := 0
+diff --git a/tools/first_night_playthrough.gd b/tools/first_night_playthrough.gd
+index b641ba3..dae9c78 100644
+--- a/tools/first_night_playthrough.gd
++++ b/tools/first_night_playthrough.gd
+@@ -16,6 +16,8 @@ func _initialize() -> void:
+ 		branch = "watcher"
+ 	elif "--lapsed" in OS.get_cmdline_user_args():
+ 		branch = "lapsed"
++	elif "--wrong" in OS.get_cmdline_user_args():
++		branch = "wrong"
+ 	output_folder += "_" + branch
+ 	_run.call_deferred()
+ 
+@@ -62,7 +64,11 @@ func _run() -> void:
+ 		await create_timer(0.05).timeout
+ 		seat_guard += 1
+ 	check(office.operator_seat.is_seated, "Chair is reachable through production ray")
+-	await create_timer(1.6).timeout
++	var settle_guard := 0
++	while not office.operator_seat.is_settled() and settle_guard < 300:
++		await create_timer(0.01).timeout
++		settle_guard += 1
++	check(office.operator_seat.is_settled(), "Chair transition actually settled before first key activation")
+ 	await _aim_and_interact(office.session_controller.telegraph_key.get_interactable())
+ 	check(office.shift_director.get_phase() == ShiftDirector.Phase.WAITING, "Seated key opens the watch")
+ 	for slot in 3:
+@@ -131,7 +137,19 @@ func _run() -> void:
+ 				check(office.copy_commit_desk.get_result_text() == "UNFILED", "Unfiled deadline resolves without a selected copy")
+ 			else:
+ 				await _interact_at(Vector3(0.95, 0, 0.45), office.copy_commit_desk.get_node("Option2Interactable" if branch == "watcher" else "Option1Interactable"))
+-				check(office.copy_commit_desk.get_selected_action_id() == StringName("file_" + branch), "Physical %s paper commits through E" % branch)
++				if branch != "watcher":
++					check(office.amendment_editor.is_open(), "Physical amendment opens an editor without filing")
++					await _shot("06_amendment_blank")
++					await process_frame
++					await process_frame
++					var word := "WAITER" if branch == "wrong" else "WATER"
++					for character in word:
++						await _raw_key(character.unicode_at(0), character.to_lower().unicode_at(0))
++					check(office.amendment_editor.correction.text == word, "Real typing preserves intended amendment word")
++					await _shot("06_amendment_typed")
++					await _raw_key(KEY_ENTER)
++				var expected_action := &"file_watcher" if branch == "watcher" else &"amend_copy"
++				check(office.copy_commit_desk.get_selected_action_id() == expected_action, "Physical %s choice resolves only after explicit action" % branch)
+ 			await _shot("06_filed")
+ 	if capture:
+ 		await create_timer(0.8).timeout
+@@ -224,6 +242,19 @@ func _aim_and_interact(target: Node3D) -> void:
+ 	check(interaction.current_target == target, "Ray reaches %s (got %s)" % [target.name, interaction.current_target])
+ 	await _press("interact")
+ 
++func _raw_key(code: int, unicode: int = 0) -> void:
++	var event := InputEventKey.new()
++	event.keycode = code
++	event.physical_keycode = code
++	event.unicode = unicode
++	event.pressed = true
++	Input.parse_input_event(event)
++	await process_frame
++	event = event.duplicate()
++	event.pressed = false
++	Input.parse_input_event(event)
++	await process_frame
++
+ func _press(action: StringName) -> void:
+ 	var event := InputEventAction.new()
+ 	event.action = action
+diff --git a/tools/production_evidence_capture.gd b/tools/production_evidence_capture.gd
+index 1fc7bf6..81357a0 100644
+--- a/tools/production_evidence_capture.gd
++++ b/tools/production_evidence_capture.gd
+@@ -52,6 +52,7 @@ func _run() -> void:
+ 	office.get_node("IntroCard").skip_immediately()
+ 	player = office.player
+ 	interaction = player.get_node("InteractionController") as InteractionController
++	var authored_head_y: float = player.head_rest_position.y
+ 	var session := office.session_controller
+ 	var director := office.shift_director
+ 	_begin_paper_telemetry(session)
+@@ -121,8 +122,9 @@ func _run() -> void:
+ 	await _wait_until(func() -> bool: return not office.operator_seat.is_seated, 400)
+ 	Input.action_release("move_forward")
+ 	check(not office.operator_seat.is_seated, "Movement input stands the operator (seat rule)")
+-	await _wait_until(func() -> bool: return absf(player.camera.global_position.y - 1.65) < 0.05, 400)
+-	check(absf(player.camera.global_position.y - 1.65) < 0.05, "Standing camera height is the standing body's")
++	await _wait_until(func() -> bool: return absf(player.head_rest_position.y - authored_head_y) < 0.005, 400)
++	check(absf(player.head_rest_position.y - authored_head_y) < 0.005, "Standing head rest returned to the authored height (%.2f m)" % authored_head_y)
++	check(absf(player.camera.global_position.y - (player.global_position.y + player.head_rest_position.y)) < 0.05, "Standing camera height is the standing body's (head_rest %.2f m)" % player.head_rest_position.y)
+ 	var away := await _walk_to(Vector3(-0.65, 0, 0.45))
+ 	check(away.reached and away.teleports == 0, "A step away from the desk on real legs")
+ 	check(not office.operator_seat.is_seated, "Still standing away from the chair")
+diff --git a/tools/window_evidence_capture.gd b/tools/window_evidence_capture.gd
+index a192163..ee22808 100644
+--- a/tools/window_evidence_capture.gd
++++ b/tools/window_evidence_capture.gd
+@@ -50,7 +50,10 @@ func _run() -> void:
+ 	# Commit physically at the desk (real filing position by the door).
+ 	await _stand_and_walk(Vector3(0.95, 0, 0.45))
+ 	var desk_act := office.copy_commit_desk.get_node("Option1Interactable")
+-	check(office.copy_commit_desk.commit_option(&"file_water"), "Physical commit at the filing desk")
++	check(office.copy_commit_desk.commit_option(&"amend_copy"), "Physical amendment opens editing at the desk")
++	office.amendment_editor.correction.text = "WATER"
++	office.amendment_editor.correction.text_changed.emit("WATER")
++	office.amendment_editor.submit_draft()
+ 	check(session.get_state() == TelegraphSessionController.State.CONSEQUENCE, "Commit enters the consequence beat")
+ 
+ 	# 2. Look AWAY (south), let the consequence beat fire and the figure appear.
+@@ -92,7 +95,7 @@ func _run() -> void:
+ 	session.scheduler.advance_time(4.0)
+ 	_drain(paper)
+ 	session.mark_transcript_verified()
+-	session.submit_commit(&"file_water")
++	session.submit_amendment("WATER")
+ 	await _turn_to(figure.global_position)
+ 	session.advance_consequence(1.05)
+ 	check(figure.is_active and not figure.get_visual_indicator().visible, "Watched window defers the appearance (no pop-in)")

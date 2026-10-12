@@ -1,0 +1,21 @@
+{
+  "suites": 1,
+  "passed": 0,
+  "failed": 1,
+  "assertions": 3,
+  "error_bearing_suites": 0,
+  "results": [
+    {
+      "suite": "tests/telegraph/rule44_content_test.gd",
+      "exit_code": 1,
+      "assertions": 3,
+      "passed": false,
+      "failures": [
+        "  FAIL: Standing rule distinguishes a request from clearance",
+        "  FAIL: Scenario validates"
+      ],
+      "runtime_errors": [],
+      "warnings": []
+    }
+  ]
+}

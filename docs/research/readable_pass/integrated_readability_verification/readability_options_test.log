@@ -1,0 +1,17 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+--- Starting Readability Options Test Suite ---
+  PASS: Readable options wired in res://scenes/ui/main_menu.tscn
+  PASS: Readable options wired in res://scenes/ui/pause_menu.tscn
+  PASS: Shared readability options widget exists
+  PASS: Seed test settings (run only via with_preserved_settings wrapper)
+  PASS: Widget builds its mode, FOV and text controls
+  PASS: Widget exposes mode, FOV and text controls
+  PASS: Widget shows the saved presentation mode
+  PASS: Widget shows the saved vertical FOV
+  PASS: Widget shows the saved reading size
+  PASS: Mode change saves immediately
+  PASS: FOV change saves immediately
+  PASS: Reading size change saves immediately
+  PASS: Readability change keeps an unrelated saved sensitivity
+Readability options assertions: 13

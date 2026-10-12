@@ -1,0 +1,18 @@
+{
+  "suites": 1,
+  "passed": 1,
+  "failed": 0,
+  "assertions": 3,
+  "error_bearing_suites": 0,
+  "results": [
+    {
+      "suite": "tests/telegraph/routing_mouse_test.gd",
+      "exit_code": 0,
+      "assertions": 3,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    }
+  ]
+}

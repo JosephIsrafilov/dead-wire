@@ -1,0 +1,53 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+--- Starting Route Acceptance Test Suite ---
+  PASS: Rejected intent returns false
+  PASS: Rejected intent reaches authority once
+  PASS: Intent dispatch does not pre-record acceptance
+  PASS: Rejected intent leaves the slot unsubmitted
+  PASS: Rejected intent creates no accepted memory
+  PASS: Rejected intent never moves the lever
+  PASS: Rejected intent leaves the pending board actionable
+  PASS: Board exposes acceptance-only feedback
+  PASS: Accepted intent returns true
+  PASS: Accepted request reaches authority once
+  PASS: Acknowledgement submits the slot
+  PASS: Acknowledgement records its exact route
+  PASS: Accepted route publishes one physical feedback signal
+  PASS: Accepted state is committed before feedback is published
+  PASS: Acknowledgement moves the lever
+  PASS: Accepted request closes the board
+  PASS: Accepted board presents read-only route status
+  PASS: Terminal slot rejects another request
+  PASS: Original pending request is accepted
+  PASS: Reentrant pending requests never emit another intent
+  PASS: Duplicate and reentrant acknowledgements publish only once
+  PASS: Another payload cannot overwrite a resolved pending request
+  PASS: Duplicate acknowledgement keeps the accepted slot terminal
+  PASS: Accepted return value survives a synchronous slot reset
+  PASS: Slot reset cannot replay the old acknowledgement
+  PASS: Slot reset cannot reenter the still-dispatching request
+  PASS: Next slot preserves the old accepted route memory
+  PASS: Old acknowledgement never submits the new slot
+  PASS: Old request cannot close the new slot's board
+  PASS: Next slot can accept its own request after dispatch finishes
+  PASS: Next accepted request replaces only the prior memory
+  PASS: Captured old request can still receive its acknowledgement
+  PASS: Acknowledgement after reset cannot mark the next slot submitted
+  PASS: Acknowledgement after reset preserves the old accepted payload
+  PASS: Old accepted payload still drives its physical lever
+  PASS: Old acknowledgement leaves the new pending board open
+  PASS: New watch invalidates an old pending acknowledgement
+  PASS: New watch retains no old pending route state
+  PASS: New watch retains its rest position after stale acknowledgement
+  PASS: Stale watch request leaves the new watch actionable
+  PASS: Direct acceptance feedback cannot dispatch a reentrant request
+  PASS: Direct feedback slot reset preserves only the prior accepted memory
+  PASS: Intent alone never reports acceptance
+  PASS: Unacknowledged synchronous request clears its pending guard
+  PASS: Unacknowledged intent has no feedback or accepted state
+  PASS: Rejected next-slot request leaves that slot unsubmitted
+  PASS: Rejected next-slot request preserves prior accepted memory
+  PASS: Rejected and lapsed requests preserve both physical indicators
+  PASS: Rejected and lapsed requests publish no accepted feedback
+--- All Route Acceptance Tests PASSED ---

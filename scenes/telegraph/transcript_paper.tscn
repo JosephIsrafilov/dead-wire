@@ -7,7 +7,7 @@
 [ext_resource type="Material" path="res://materials/style_tests/metal_brass_aged.tres" id="6_brass"]
 
 [ext_resource type="ArrayMesh" path="res://assets/models/operator/hand_authored_v1.res" id="7_hand"]
-[ext_resource type="FontFile" path="res://assets/fonts/cedarville/Cedarville-Cursive.ttf" id="10_hand_font"]
+[ext_resource type="FontFile" path="res://assets/fonts/elias_working/elias_working.fnt" id="10_hand_font"]
 [ext_resource type="Material" path="res://materials/style_tests/form_night_copy.tres" id="11_form"]
 [ext_resource type="Material" path="res://materials/style_tests/desk_wood.tres" id="12_wood"]
 [ext_resource type="ArrayMesh" path="res://assets/models/operator/forearm_v3.res" id="8_sleeve"]
@@ -101,13 +101,13 @@ mesh = SubResource("FormFaceMesh")
 [node name="Label3D" type="Label3D" parent="Sheet"]
 transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, -0.082, 0.004, -0.065)
 font = ExtResource("10_hand_font")
-pixel_size = 0.00135
+pixel_size = 0.00148
 modulate = Color(0.12, 0.1, 0.08, 1)
 outline_modulate = Color(0.92, 0.88, 0.78, 1)
 text = ""
 horizontal_alignment = 0
 vertical_alignment = 0
-font_size = 16
+font_size = 18
 outline_size = 0
 autowrap_mode = 0
 width = 120.0
@@ -152,13 +152,13 @@ shape = SubResource("ArchivedInteract")
 [node name="PreviousSheetText" type="Label3D" parent="PreviousSheet"]
 transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, -0.082, 0.0035, -0.065)
 font = ExtResource("10_hand_font")
-pixel_size = 0.00135
+pixel_size = 0.00148
 modulate = Color(0.14, 0.12, 0.1, 1)
 outline_modulate = Color(0.92, 0.88, 0.78, 1)
 text = ""
 horizontal_alignment = 0
 vertical_alignment = 0
-font_size = 16
+font_size = 18
 outline_size = 0
 autowrap_mode = 0
 width = 120.0

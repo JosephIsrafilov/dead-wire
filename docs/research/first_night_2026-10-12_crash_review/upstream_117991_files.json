@@ -1,0 +1,14 @@
+[
+  {
+    "sha": "a8d996430d1b5c006fd0ce7ed66df7717efe0cb5",
+    "filename": "modules/gdscript/gdscript.cpp",
+    "status": "modified",
+    "additions": 5,
+    "deletions": 0,
+    "changes": 5,
+    "blob_url": "https://github.com/godotengine/godot/blob/03882915265bb35b7df5515d121ee0b904b7a845/modules%2Fgdscript%2Fgdscript.cpp",
+    "raw_url": "https://github.com/godotengine/godot/raw/03882915265bb35b7df5515d121ee0b904b7a845/modules%2Fgdscript%2Fgdscript.cpp",
+    "contents_url": "https://api.github.com/repos/godotengine/godot/contents/modules%2Fgdscript%2Fgdscript.cpp?ref=03882915265bb35b7df5515d121ee0b904b7a845",
+    "patch": "@@ -1482,6 +1482,11 @@ void GDScript::clear() {\n \t\tmemdelete(E);\n \t}\n \tfunctions_to_clear.clear();\n+\n+#ifdef TOOLS_ENABLED\n+\tbase_cache = Ref<GDScript>();\n+#endif\n+\tbase = Ref<GDScript>();\n }\n \n void GDScript::cancel_pending_functions(bool warn) {"
+  }
+]

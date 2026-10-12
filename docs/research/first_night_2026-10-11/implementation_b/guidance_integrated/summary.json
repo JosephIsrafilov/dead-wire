@@ -1,0 +1,53 @@
+{
+  "suites": 2,
+  "passed": 0,
+  "failed": 2,
+  "assertions": 20,
+  "error_bearing_suites": 2,
+  "results": [
+    {
+      "suite": "tests/guidance/guidance_production_test.gd",
+      "exit_code": 1,
+      "assertions": 5,
+      "passed": false,
+      "failures": [
+        "  FAIL: Applying options updates live guidance without scene reload",
+        "SCRIPT ERROR: parser/runtime failure"
+      ],
+      "runtime_errors": [
+        "SCRIPT ERROR: Parse Error: Preload file \"res://audio/sfx/foley/footstep_wood_beta.wav\" has no resource loaders (unrecognized file extension).",
+        "SCRIPT ERROR: Compile Error: Failed to compile depended scripts.",
+        "SCRIPT ERROR: Compile Error: Failed to compile depended scripts.",
+        "SCRIPT ERROR: Parse Error: Preload file \"res://audio/sfx/foley/footstep_wood_beta.wav\" has no resource loaders (unrecognized file extension).",
+        "SCRIPT ERROR: Compile Error: Failed to compile depended scripts.",
+        "SCRIPT ERROR: Compile Error: Failed to compile depended scripts.",
+        "ERROR: Failed to load script \"res://tests/guidance/guidance_production_test.gd\" with error \"Compilation failed\".",
+        "ERROR: No loader found for resource: res://audio/sfx/foley/footstep_wood_beta.wav (expected type: AudioStream)",
+        "ERROR: res://scenes/player/player.tscn:30 - Parse Error: [ext_resource] referenced non-existent resource at: res://audio/sfx/foley/footstep_wood_beta.wav.",
+        "ERROR: 3 resources still in use at exit (run with --verbose for details)."
+      ],
+      "warnings": [
+        "WARNING: 12 ObjectDB instances were leaked at exit (run with `--verbose` for details)."
+      ]
+    },
+    {
+      "suite": "tests/guidance/night_guidance_test.gd",
+      "exit_code": 0,
+      "assertions": 15,
+      "passed": false,
+      "failures": [
+        "SCRIPT ERROR: parser/runtime failure"
+      ],
+      "runtime_errors": [
+        "SCRIPT ERROR: Parse Error: Preload file \"res://audio/sfx/foley/footstep_wood_beta.wav\" has no resource loaders (unrecognized file extension).",
+        "SCRIPT ERROR: Compile Error: Failed to compile depended scripts.",
+        "SCRIPT ERROR: Compile Error: Failed to compile depended scripts.",
+        "SCRIPT ERROR: Parse Error: Preload file \"res://audio/sfx/foley/footstep_wood_beta.wav\" has no resource loaders (unrecognized file extension).",
+        "SCRIPT ERROR: Compile Error: Failed to compile depended scripts.",
+        "SCRIPT ERROR: Compile Error: Failed to compile depended scripts.",
+        "ERROR: Failed to load script \"res://scripts/office/night_guidance_controller.gd\" with error \"Compilation failed\"."
+      ],
+      "warnings": []
+    }
+  ]
+}

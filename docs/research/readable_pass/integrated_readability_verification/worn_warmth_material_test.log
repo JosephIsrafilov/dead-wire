@@ -1,0 +1,28 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+  PASS: wallpaper uses its versioned candidate texture
+  PASS: wallpaper uses the 128px grid
+  PASS: wallpaper uses nearest filtering
+  PASS: wallpaper has no new normal map
+  PASS: wallpaper has 32 levels per channel
+  PASS: wood uses its versioned candidate texture
+  PASS: wood uses the 128px grid
+  PASS: wood uses nearest filtering
+  PASS: wood has no new normal map
+  PASS: wood has 32 levels per channel
+  PASS: baize uses its versioned candidate texture
+  PASS: baize uses the 128px grid
+  PASS: baize uses nearest filtering
+  PASS: baize has no new normal map
+  PASS: baize has 32 levels per channel
+  PASS: paper uses its versioned candidate texture
+  PASS: paper uses the 128px grid
+  PASS: paper uses nearest filtering
+  PASS: paper has no new normal map
+  PASS: paper has 32 levels per channel
+  PASS: Wallpaper keeps the original stripe scale
+  PASS: Wallpaper keeps its original material tint
+  PASS: Baize remains fully matte
+  PASS: Baize keeps its original tint
+  PASS: Printed copy form is not replaced by blank stock
+--- Worn Warmth Material Tests PASSED (25 assertions) ---

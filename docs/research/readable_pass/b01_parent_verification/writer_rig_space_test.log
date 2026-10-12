@@ -1,0 +1,48 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+--- Starting Writer Rig Space Test Suite ---
+  PASS: Both variants write their sequences
+  PASS: Local sleeve pose is transform-invariant, 0.00 deg between origin and moved sheets
+  PASS: Local wrist offset is transform-invariant, 0.0000 m
+  PASS: Nib lands on the contact at the origin (0.0000 m)
+  PASS: Nib lands on the contact on the moved sheet (0.0000 m)
+  PASS: Twenty cycles: every joint returns to its authored position (sleeve 0.0000 wrist 0.0000 hand 0.0000)
+  PASS: Twenty cycles: the sleeve basis returns too, 0.00 deg
+  PASS: Twenty cycles: the wrist basis returns
+  PASS: Twenty cycles: the hand basis returns
+  PASS: Entry is mid-flight before the cancel
+  PASS: Cancel during entry restores the basis
+  PASS: Cancel during entry hides the arm
+  PASS: Entry is mid-flight before the suspend
+  PASS: Suspend during entry: resume re-enters
+  PASS: Suspend during entry: resume cancels the withdrawal tween
+  PASS: Suspend during entry: resume restores the mid-entry pose
+  PASS: Suspend during entry: the sheet still completes after resume
+  PASS: A glyph motion is mid-flight
+  PASS: Suspend clears the in-flight motion
+  PASS: Suspend withdraws the arm
+  PASS: Resume does not rewrite the visible prefix
+  PASS: The sheet still completes after the interruption
+  PASS: The completed sheet reads the authored transcript
+  PASS: At step 0.0333 s a motion is under way
+  PASS: At step 0.0333 s ink lands with the contact
+  PASS: At step 0.0167 s a motion is under way
+  PASS: At step 0.0167 s no ink before the contact
+  PASS: At step 0.0167 s ink lands with the contact
+  PASS: At step 0.0083 s a motion is under way
+  PASS: At step 0.0083 s no ink before the contact
+  PASS: At step 0.0083 s ink lands with the contact
+  PASS: Long line completes
+  PASS: Sampled 12 consecutive motion frames
+  PASS: Joints stay connected mid-motion, worst span deviation 0.0000 m
+  PASS: Row case: the hand is at the paper
+  PASS: Glyph 0 motion is accepted
+  PASS: The first glyph is not a row change
+  PASS: The first glyph uses the normal motion duration
+  PASS: A same-row glyph rides flat between poses, no lift
+  PASS: Glyph 0 contact has landed
+  PASS: First glyph beyond the current column count is accepted
+  PASS: The first glyph of the second row is a row change
+  PASS: A row change uses the longer row-change duration
+  PASS: The wrist lifts over the finished line mid row-change
+--- All Writer Rig Space Tests PASSED (44 assertions) ---

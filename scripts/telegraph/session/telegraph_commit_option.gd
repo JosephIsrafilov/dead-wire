@@ -6,6 +6,8 @@ extends Resource
 @export var world_fact: String = ""
 @export var knowledge_fact: String = ""
 @export var result_text: String = ""
+## This action opens a blank amendment; the session refuses it without explicit text.
+@export var requires_correction: bool = false
 
 func get_validation_errors() -> PackedStringArray:
 	var errors := PackedStringArray()

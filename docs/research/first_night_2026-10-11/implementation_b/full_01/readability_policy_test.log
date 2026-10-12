@@ -1,0 +1,13 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+  PASS: Readability policy script exists
+  PASS: Readable720 uses native720, not360 lines
+  PASS: Readable1080 keeps integer native scale
+  PASS: Readable1440 uses 2x nearest upscale
+  PASS: Readable4K retains 720 internal lines
+  PASS: Classic remains optional 360-line mode
+  PASS: Clean uses full native rendering
+  PASS: Invalid height cannot divide by zero
+  PASS: Readable grade does not crush small text to 32 levels
+  PASS: Clean can disable screen grade
+Readability policy assertions: 10

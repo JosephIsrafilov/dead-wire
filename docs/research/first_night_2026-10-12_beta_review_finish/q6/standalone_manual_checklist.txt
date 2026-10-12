@@ -1,0 +1,20 @@
+# Standalone package UI route — 5-minute manual checklist (owner/sound designer)
+Package: dead-wire-windows-beta-f82939d9995e-2ed1b969852f.zip (extract anywhere, run
+dead-wire-windows-beta-x86_64.exe from its own folder — no editor/repo needed).
+
+Automated evidence already recorded (crash-review fix session):
+- WM_CLOSE graceful quit: raw exit 0x00000000, 0 SCRIPT/parse/load errors (q4b/graceful/).
+- 45 s boot smoke: alive, clean (q6/standalone/).
+- settings.cfg byte-identical before/after (sha 627f0ee3…).
+
+Manual steps (what automation cannot verify without package modification):
+1. [ ] Double-click EXE → main menu renders, no visual artifacts.
+2. [ ] Begin Watch → office loads, intro card readable.
+3. [ ] Wait for first transmission → hand writes on the sheet.
+4. [ ] Esc → pause menu opens, Morse clock visibly holds (resume later).
+5. [ ] Esc again → resume, transmission continues from the same point.
+6. [ ] Esc → Options → change text scale → apply → readable, no clipping.
+7. [ ] Esc → Restart Watch → office resets, no stale ink/tape.
+8. [ ] Esc → Quit to Menu → menu returns clean.
+9. [ ] Quit (menu) → process exits without a crash dialog (Task Manager optional check).
+Record any failure with the step number + screenshot.

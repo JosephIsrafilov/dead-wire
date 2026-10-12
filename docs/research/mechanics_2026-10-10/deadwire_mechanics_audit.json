@@ -1,0 +1,1988 @@
+{
+  "schema_version": "1.0",
+  "language": "English",
+  "repository": "C:/Users/YUSIF/Documents/dead-wire",
+  "revision": {
+    "head": "f82939d9995ec2761e730b1fe8dcaa033bf0be41",
+    "branch": "codex/hand-rebuild-handoff",
+    "audited_worktree_includes_uncommitted_instrument_pass": true
+  },
+  "scope": "Read-only M1 core-mechanics audit for a novice PC single-player audience; research-quality source/contract assessment, not owner creative approval.",
+  "constraints": {
+    "code_modified": false,
+    "tests_modified": false,
+    "windowed_game_run": false,
+    "godot_import_run": false,
+    "fixes_applied": false,
+    "commit_or_push": false,
+    "art_pass_preserved": "No repository edits; final git status matches first read."
+  },
+  "method": {
+    "prerequisites": [
+      "AGENTS.md and current docs/HANDOVER.md read first",
+      "Graphify queried before runtime code inspection",
+      "Current .gd/.tres/.tscn source treated as authority; plans and prior evidence dated/status-qualified"
+    ],
+    "graphify": {
+      "queries": [
+        "tape_register_controller wrap duration segments tape readability",
+        "copy_commit_desk document_viewer routing_board ShiftDirector gates filing",
+        "Tape",
+        "Filing",
+        "Routing",
+        "Document Viewer"
+      ],
+      "built_at_commit": "be2d34b35fc7540b5deac9d6da056195d89dcddc",
+      "node_count": 205,
+      "runtime_gd_nodes": 0,
+      "outcome": "Only historical architecture/document nodes were available; no current tape/desk/viewer/director nodes. Did not rebuild the graph; used targeted current-code inspection."
+    },
+    "source_trace_limits": "Source-level proofs are distinguished from actual execution. Python timing/render calculations use current resource data and exact production rules, not fabricated Godot telemetry.",
+    "human_or_visual_acceptance": "None. No images assessed, no real audio listened to, no human playtest. Headless tests cannot supply those verdicts."
+  },
+  "status_definitions": {
+    "proven_source_level_bug": "A concrete current code path contradicts the intended contract; this audit did not add a reproducing Godot test.",
+    "proven_current_display_bug": "Current data plus current deterministic rendering proves player-facing information loss.",
+    "proven_current_design_defect": "Implemented content undermines a declared purpose, not a crash claim.",
+    "proven_current_model_limitation": "A current tested simplification leaves a stated fidelity gap; exact replacement semantics need agreement.",
+    "proven_configuration_with_usability_hypothesis": "Configuration is certain; player confusion/readability impact requires a novice test.",
+    "proven_timing_contract_with_unproven_novice_risk": "Clock rules/numbers are certain; adequacy for novices is not.",
+    "proven_missing_recovery_with_unproven_production_reachability": "Fault exists under cancellation; current authored play reachability is not demonstrated.",
+    "proven_safety_gap_with_unproven_audible_masking": "Code permits interval interference; perceptual masking has not been measured."
+  },
+  "findings": [
+    {
+      "id": "F01",
+      "area": "filing_and_agency",
+      "priority": "P0",
+      "status": "proven_current_design_defect",
+      "title": "The hook answer is disclosed before filing; amendment is an authored answer, not player-authored correction",
+      "evidence": [
+        "Scenario 3 carries TRUE=WATER, PERCEPTION=WATER, TRANSCRIPT=WATCHER separately, but its available labels explicitly print AMEND COPY / WATER and RETAIN COPY / WATCHER.",
+        "The desk copies display_label directly to both the option target prompt and physical labels when AWAITING_COMMIT becomes active. No tape/card visit or comparison is required.",
+        "submit_commit only accepts an authored action_id. There is no correction-text input or wrong-amendment outcome. Merely relabelling file_water to AMEND would still silently supply the correct word.",
+        "The scenario-data suite explicitly pins the two answer-revealing labels, so passing regression currently preserves this defect."
+      ],
+      "impact": "A novice can choose the exposed correct answer without independently noticing or decoding the discrepancy. This invalidates a blind hook-discovery playtest, but does not collapse the stored TRUE/PERCEPTION/TRANSCRIPT layers.",
+      "sources": [
+        {
+          "file": "data/scenarios/m1_scenario_3_core_hook.tres",
+          "lines": [
+            7,
+            28
+          ]
+        },
+        {
+          "file": "scripts/telegraph/ui/copy_commit_desk.gd",
+          "lines": [
+            68,
+            81
+          ]
+        },
+        {
+          "file": "scripts/telegraph/ui/copy_commit_desk.gd",
+          "lines": [
+            266,
+            287
+          ]
+        },
+        {
+          "file": "scripts/telegraph/session/telegraph_session_controller.gd",
+          "lines": [
+            355,
+            403
+          ]
+        },
+        {
+          "file": "scripts/telegraph/session/telegraph_commit_option.gd",
+          "lines": [
+            4,
+            22
+          ]
+        },
+        {
+          "file": "tests/telegraph/telegraph_scenario_data_test.gd",
+          "lines": [
+            59,
+            66
+          ]
+        }
+      ],
+      "tests_affected": [
+        "tests/telegraph/telegraph_scenario_data_test.gd",
+        "tests/telegraph/copy_commit_desk_test.gd",
+        "tests/telegraph/telegraph_session_controller_test.gd",
+        "tests/integration/m1_office_integration_test.gd",
+        "tests/integration/night_recovery_test.gd",
+        "tests/telegraph/duty_sheet_test.gd",
+        "tools/first_night_playthrough.gd",
+        "tools/commit_input_route_capture.gd",
+        "tools/window_evidence_capture.gd"
+      ],
+      "smallest_next_contract": "Before any new mechanics, assert no pre-decision prompt/label/hidden menu supplies the true word. Preserve file-as-written and lapse. Any approved amendment input must record exactly the player-selected/entered correction (including wrong corrections), with independent world/knowledge facts and a truthful dawn record; no automatic WATER substitution.",
+      "limits": "Free text versus a neutral candidate mechanism is an owner/product decision, not approved by this audit. WS2 and TACTILE proposals are not shipped features."
+    },
+    {
+      "id": "F02",
+      "area": "tape_integrity",
+      "priority": "P0",
+      "status": "proven_source_level_bug",
+      "title": "The tape viewer wrap removes timing columns and can split an internal American-Morse pause",
+      "evidence": [
+        "_wrap_tape_text emits text before the chosen space, adds a newline, then advances by space_at + 1: the selected space is not preserved.",
+        "Python reference execution of the exact current rules removes two GAP columns from TRAIN 17 CLEAR EAST and three from HOLD FREIGHT UNTIL TEN at 40 columns.",
+        "A valid C pattern positioned at the wrap boundary (36 leading timing blanks + dot-space-dot-double-space-dot) becomes dot-space-dot-space-newline-dot. The semantically distinguishing 2-unit pause is split/reduced without a continuation convention.",
+        "The no-space fallback drops the character at the boundary too: 41 consecutive dots become 40. This is a proven general helper defect, but a no-space 41-mark run is not produced by the current valid M1 encoder.",
+        "Current valid encoded messages retain their MARK count in the reference calculation: do not repeat the stronger claim that normal M1 tape wrapping necessarily drops dots/dashes. The demonstrated live-content loss is timing whitespace."
+      ],
+      "impact": "The raw event record remains intact, but the player-facing objective evidence is not a lossless rendering. Every blank column represents timing, unlike ordinary prose word-wrap.",
+      "sources": [
+        {
+          "file": "scripts/office/m1_office_controller.gd",
+          "lines": [
+            471,
+            495
+          ]
+        },
+        {
+          "file": "scripts/telegraph/hardware/tape_register_controller.gd",
+          "lines": [
+            139,
+            149
+          ]
+        },
+        {
+          "file": "scripts/telegraph/morse/american_morse_encoder.gd",
+          "lines": [
+            4,
+            5
+          ]
+        },
+        {
+          "file": "scripts/telegraph/ui/morse_reference_card.gd",
+          "lines": [
+            12,
+            18
+          ]
+        }
+      ],
+      "tests_affected": [
+        "tests/telegraph/tape_register_test.gd",
+        "tests/ui/document_viewer_test.gd",
+        "tests/integration/m1_office_integration_test.gd",
+        "tests/telegraph/morse_reference_card_test.gd"
+      ],
+      "smallest_next_contract": "Make layout reversible to the original MARK/GAP stream (including timing blanks), with explicit continuation semantics; do not treat any internal or inter-letter GAP as disposable prose whitespace. Add boundary tests for 1/2/3/6/12-unit gaps, exact-column cuts, empty tape, and a no-space fallback.",
+      "limits": "Verified by direct source inspection plus a Python reference implementation, not a new Godot test. Current tape-register tests never exercise the office wrap helper."
+    },
+    {
+      "id": "F03",
+      "area": "tape_integrity",
+      "priority": "P1",
+      "status": "proven_current_display_bug",
+      "title": "The tape collapses T and L despite a correct reference card",
+      "evidence": [
+        "get_tape_text renders every MARK >= 3 units as one em dash. M1 T is MARK(3), L is MARK(6), so both print the identical single dash.",
+        "The reference card correctly renders L as three em dashes annotated long. Its current 65-assertion suite passes; the old hand-typed-card mismatch is not current.",
+        "L occurs in both ordinary telegrams, so the ambiguity is not limited to hypothetical future content. WATER itself contains T but no L."
+      ],
+      "impact": "The tape is non-injective over the shipped alphabet: a novice cannot reliably distinguish a long dash from a short one using this purported independent source.",
+      "sources": [
+        {
+          "file": "scripts/telegraph/hardware/tape_register_controller.gd",
+          "lines": [
+            139,
+            149
+          ]
+        },
+        {
+          "file": "data/morse/m1_american_morse_alphabet.tres",
+          "lines": [
+            250,
+            262
+          ]
+        },
+        {
+          "file": "data/morse/m1_american_morse_alphabet.tres",
+          "lines": [
+            380,
+            392
+          ]
+        },
+        {
+          "file": "scripts/telegraph/ui/morse_reference_card.gd",
+          "lines": [
+            67,
+            85
+          ]
+        },
+        {
+          "file": "tests/telegraph/morse_reference_card_test.gd",
+          "lines": [
+            28,
+            46
+          ]
+        }
+      ],
+      "tests_affected": [
+        "tests/telegraph/tape_register_test.gd",
+        "tests/telegraph/morse_reference_card_test.gd",
+        "tests/telegraph/american_morse_alphabet_data_test.gd",
+        "tests/telegraph/morse_schedule_compiler_test.gd",
+        "tests/integration/m1_office_integration_test.gd"
+      ],
+      "smallest_next_contract": "Render distinguishable MARK duration from timing data only; keep the register free of letters, message text and answer comparisons. Test MARK(1), MARK(3), MARK(6), card/tape duration consistency, and lossless wrapping of longer marks."
+    },
+    {
+      "id": "F04",
+      "area": "tape_integrity",
+      "priority": "P1",
+      "status": "proven_current_model_limitation",
+      "title": "Cancelled calls run into telegrams; begun events are recorded at planned rather than completed duration",
+      "evidence": [
+        "The register appends the full scheduler event immediately at timing_event_started. It adds a synthetic 12-unit GAP only on completion; cancellation changes stylus position but appends no separator or elapsed silence.",
+        "Answering a live call cancels it, then waits 0.8 seconds before the telegram. That physical silent beat is not recorded.",
+        "Reference trace at call t=0.25 seconds contains dot-space-dot. The next TRAIN telegram begins with dash, producing dot-space-dot-dash with no boundary despite the real answer beat.",
+        "The event already stored at cancellation retains its originally scheduled duration. Sounder cancellation releases immediately, so the tape can represent a longer planned MARK/GAP than actually elapsed.",
+        "Existing cancellation tests intentionally assert no appended GAP and unchanged partial text. This is a current tested model, not a completed WS1 separator fix."
+      ],
+      "impact": "The anchor is faithful to begun scheduled events, but not a full elapsed-time tape. A cut CR prefix can contaminate the first telegram character; boundaries cannot currently identify the hook reliably.",
+      "sources": [
+        {
+          "file": "scripts/telegraph/hardware/tape_register_controller.gd",
+          "lines": [
+            81,
+            108
+          ]
+        },
+        {
+          "file": "scripts/telegraph/hardware/tape_register_controller.gd",
+          "lines": [
+            127,
+            148
+          ]
+        },
+        {
+          "file": "scripts/office/shift_director.gd",
+          "lines": [
+            103,
+            107
+          ]
+        },
+        {
+          "file": "scripts/office/shift_director.gd",
+          "lines": [
+            470,
+            483
+          ]
+        },
+        {
+          "file": "scripts/telegraph/morse/morse_runtime_scheduler.gd",
+          "lines": [
+            52,
+            80
+          ]
+        },
+        {
+          "file": "scripts/telegraph/hardware/sounder_controller.gd",
+          "lines": [
+            160,
+            162
+          ]
+        },
+        {
+          "file": "tests/telegraph/tape_register_test.gd",
+          "lines": [
+            229,
+            239
+          ]
+        }
+      ],
+      "tests_affected": [
+        "tests/telegraph/tape_register_test.gd",
+        "tests/telegraph/morse_runtime_scheduler_test.gd",
+        "tests/telegraph/sounder_controller_test.gd",
+        "tests/office/shift_director_test.gd",
+        "tests/integration/m1_office_integration_test.gd",
+        "tests/telegraph/instrument_art_test.gd"
+      ],
+      "smallest_next_contract": "Define honest interrupted-event and idle-gap recording before presentation segmentation. Supply real timeline/elapsed gap information or an explicitly documented separator contract, never content identity. Keep prior ink immutable except completing/truncating the in-flight event correctly. Intentionally replace the old no-cancel-gap assertion, do not silently weaken it.",
+      "limits": "An approved exact temporal model is needed; blindly adding 6 or 12 GAP units can invent unelapsed timing. The WS1 document numbers are proposals, not facts."
+    },
+    {
+      "id": "F05",
+      "area": "tape_readability",
+      "priority": "P1",
+      "status": "proven_configuration_with_usability_hypothesis",
+      "title": "The novice sees an oldest-first, unsegmented snapshot in a prose font",
+      "evidence": [
+        "The register returns one growing chronological string including calls, foreign traffic, telegrams and reminders; no latest-segment selection, decoding, segment labels or call identity is supplied.",
+        "open_document resets scroll to line 0. Tape uses default PAPER_FONT (IM FELL), size 17; only doc_id morse_reference selects MORSE_FONT, size 16. The mono resource is a host SystemFont, not a bundled face.",
+        "The tape body is a snapshot taken on interaction; the office updates only warning footer, not new tape ink while it is open. Reopening is needed to see later marks.",
+        "Morse card and tape share one modal viewer. The player must put one down to open the other; there is no side-by-side comparison. This is intentional divided attention, not automatically a modal bug.",
+        "An explicitly completed-call reference sequence through WATER is 640 characters / 16 wrapped lines and loses 15 timing spaces under current wrapping; that constructed sequence is not a captured human watch."
+      ],
+      "impact": "Finding the short last telegram and recalling the reference table may consume most of the verification budget. Proportional marks and unmarked line continuations add avoidable ambiguity. Actual novice failure rate and visual legibility remain unmeasured.",
+      "sources": [
+        {
+          "file": "scripts/telegraph/hardware/tape_register_controller.gd",
+          "lines": [
+            142,
+            149
+          ]
+        },
+        {
+          "file": "scripts/ui/document_viewer.gd",
+          "lines": [
+            22,
+            28
+          ]
+        },
+        {
+          "file": "scripts/ui/document_viewer.gd",
+          "lines": [
+            53,
+            81
+          ]
+        },
+        {
+          "file": "scripts/office/m1_office_controller.gd",
+          "lines": [
+            471,
+            495
+          ]
+        },
+        {
+          "file": "scripts/office/m1_office_controller.gd",
+          "lines": [
+            552,
+            578
+          ]
+        },
+        {
+          "file": "materials/typography/morse_mono.tres",
+          "lines": [
+            1,
+            4
+          ]
+        }
+      ],
+      "tests_affected": [
+        "tests/ui/document_viewer_test.gd",
+        "tests/telegraph/tape_register_test.gd",
+        "tests/telegraph/morse_reference_card_test.gd",
+        "tests/integration/m1_office_integration_test.gd",
+        "tools/first_night_playthrough.gd"
+      ],
+      "smallest_next_contract": "After lossless timing render is solved, make genuine GAP-delimited segments easy to locate without revealing letters or message identity; verify tape/card layout and snapshot freshness at supported PC resolutions. Instrument document timings locally before changing deadlines.",
+      "limits": "Not a visual acceptance verdict. The exact UX (latest-first versus strip navigation) is not approved here. A proportional font alone does not prove audible/visual decoding failure."
+    },
+    {
+      "id": "F06",
+      "area": "routing_logic_feedback",
+      "priority": "P1",
+      "status": "proven_source_level_boundary_bug",
+      "title": "Routing memory records intent before the session accepts it",
+      "evidence": [
+        "RoutingBoard.select_action sets has_submitted_this_session and _last_route_action before emitting the request.",
+        "At the expired route deadline, the office returns without calling submit_routing_decision. The board nevertheless closes and reports success to its caller.",
+        "The board then presents Route recorded: <intent>. A later per-slot reset preserves _last_route_action, so a rejected intent can survive into the next slot as false recorded status.",
+        "The lever movement correctly waits for routing_resolved and therefore does not move on that rejection. OfficeFoley LeverThrow, however, subscribes to routing_action_selected (intent), so rejected input can still make a mechanical action sound.",
+        "This is weaker than the commit desk B1 acceptance-first contract. Existing board tests have no rejecting authority; they assert recorded status directly after intent."
+      ],
+      "impact": "Near the deadline, status and intent foley can claim an order that never entered WorldState, while the physical lever stays on the prior route. This is an honesty/feedback defect, not just a cosmetic delay.",
+      "sources": [
+        {
+          "file": "scripts/telegraph/ui/routing_board.gd",
+          "lines": [
+            71,
+            79
+          ]
+        },
+        {
+          "file": "scripts/telegraph/ui/routing_board.gd",
+          "lines": [
+            142,
+            165
+          ]
+        },
+        {
+          "file": "scripts/telegraph/ui/routing_board.gd",
+          "lines": [
+            207,
+            213
+          ]
+        },
+        {
+          "file": "scripts/office/m1_office_controller.gd",
+          "lines": [
+            323,
+            337
+          ]
+        },
+        {
+          "file": "scripts/audio/office_foley.gd",
+          "lines": [
+            69,
+            71
+          ]
+        },
+        {
+          "file": "tests/telegraph/routing_board_test.gd",
+          "lines": [
+            56,
+            71
+          ]
+        }
+      ],
+      "tests_affected": [
+        "tests/telegraph/routing_board_test.gd",
+        "tests/integration/m1_office_integration_test.gd",
+        "tests/office/shift_director_test.gd",
+        "tests/integration/night_recovery_test.gd",
+        "tests/ui/framing_test.gd",
+        "tools/production_evidence_capture.gd"
+      ],
+      "smallest_next_contract": "Move terminal board memory/prompt and action foley behind an explicit accepted routing result, just as filing does. Test input at deadline-epsilon, exactly deadline and deadline+epsilon with the real office authority; rejection must leave previous route/status/sound unchanged and preserve a truthful lapse.",
+      "limits": "The production boundary path is proven by source trace; no new runtime probe or reproduction test was added during this read-only audit."
+    },
+    {
+      "id": "F07",
+      "area": "routing_logic_feedback",
+      "priority": "P2",
+      "status": "proven_current_design_limit",
+      "title": "Both routes are answered by the telegram; feedback exists but is mostly acknowledgement",
+      "evidence": [
+        "The ordinary messages explicitly say CLEAR EAST and HOLD; expected_routing_action is those same words. A novice can route without consulting the ledger.",
+        "Correct, incorrect and lapsed outcomes are distinct and write different WorldState facts. Incorrect routes count toward had_trouble and change the eventual closing sign from GN to OS 17.",
+        "The lever and recorded prompt persist; the live ledger now records the action actually sent from KnowledgeState. Thus old claims of no physical route feedback or a static-only ledger are stale.",
+        "There is no authored per-route reply/next-pause consequence field in current scenario data; the closing trouble sign aggregates misses, lapses and misroutes. DawnEvidence branches on hook filing, not route correctness."
+      ],
+      "impact": "There is action choice and a no-reload cost, but little need for procedural reasoning or immediate differentiated outcome evidence. The ledger is corroboration, not required investigation.",
+      "sources": [
+        {
+          "file": "data/scenarios/m1_scenario_1_baseline.tres",
+          "lines": [
+            9,
+            22
+          ]
+        },
+        {
+          "file": "data/scenarios/m1_scenario_2_attention.tres",
+          "lines": [
+            9,
+            22
+          ]
+        },
+        {
+          "file": "scripts/telegraph/session/telegraph_session_controller.gd",
+          "lines": [
+            503,
+            536
+          ]
+        },
+        {
+          "file": "scripts/office/shift_director.gd",
+          "lines": [
+            534,
+            547
+          ]
+        },
+        {
+          "file": "scripts/office/shift_director.gd",
+          "lines": [
+            619,
+            627
+          ]
+        },
+        {
+          "file": "scripts/telegraph/ui/dispatch_ledger.gd",
+          "lines": [
+            122,
+            150
+          ]
+        },
+        {
+          "file": "scripts/office/dawn_evidence.gd",
+          "lines": [
+            76,
+            107
+          ]
+        }
+      ],
+      "tests_affected": [
+        "tests/telegraph/telegraph_scenario_data_test.gd",
+        "tests/telegraph/american_morse_encoder_test.gd",
+        "tests/telegraph/morse_playback_profile_test.gd",
+        "tests/telegraph/transcript_paper_test.gd",
+        "tests/telegraph/duty_sheet_test.gd",
+        "tests/telegraph/investigative_anchors_test.gd",
+        "tests/office/shift_director_test.gd",
+        "tests/integration/m1_office_integration_test.gd",
+        "tools/first_night_playthrough.gd"
+      ],
+      "smallest_next_contract": "First make current route acknowledgement honest (F06). Only then decide whether one ordinary scenario should require ledger interpretation and receive local outcome feedback. Any content change must remain in resources, use the supported alphabet, regenerate cue timing intentionally, and preserve separate world/knowledge stores.",
+      "limits": "WS2 Rule-44/FREIGHT 71 EAST and route-reply proposals are unimplemented and not an approved replacement scenario from this audit."
+    },
+    {
+      "id": "F08",
+      "area": "filing_and_agency",
+      "priority": "P2",
+      "status": "proven_instruction_implementation_mismatch",
+      "title": "Standing order 5 implies physical filing for every copy, but only the hook uses the filing table",
+      "evidence": [
+        "Duty sheet orders the operator to read, route, then file one copy at the stove table.",
+        "Scenarios 1/2 have routing but no commit options. Route resolution immediately teaches filed_<id> and completes the session; it never enters AWAITING_COMMIT for these messages.",
+        "A one-option FILE COPY resource cannot simply be added: scenario validation rejects one commit option, and the desk enables only at least two and caps selection at two. Routing resolution would also need a post-route filing phase rather than completing."
+      ],
+      "impact": "The first two orders teach that setting a route counts as filing, then the hook abruptly requires a separate journey/table decision. A novice following standing orders can look for an unavailable filing action.",
+      "sources": [
+        {
+          "file": "scripts/telegraph/ui/duty_sheet.gd",
+          "lines": [
+            31,
+            44
+          ]
+        },
+        {
+          "file": "data/scenarios/m1_scenario_1_baseline.tres",
+          "lines": [
+            13,
+            27
+          ]
+        },
+        {
+          "file": "data/scenarios/m1_scenario_2_attention.tres",
+          "lines": [
+            13,
+            27
+          ]
+        },
+        {
+          "file": "scripts/telegraph/session/telegraph_session_controller.gd",
+          "lines": [
+            355,
+            369
+          ]
+        },
+        {
+          "file": "scripts/telegraph/session/telegraph_session_controller.gd",
+          "lines": [
+            523,
+            535
+          ]
+        },
+        {
+          "file": "scripts/telegraph/session/telegraph_scenario_data.gd",
+          "lines": [
+            73,
+            86
+          ]
+        },
+        {
+          "file": "scripts/telegraph/ui/copy_commit_desk.gd",
+          "lines": [
+            76,
+            81
+          ]
+        },
+        {
+          "file": "scripts/telegraph/ui/copy_commit_desk.gd",
+          "lines": [
+            103,
+            105
+          ]
+        },
+        {
+          "file": "tests/telegraph/telegraph_scenario_data_test.gd",
+          "lines": [
+            17,
+            24
+          ]
+        }
+      ],
+      "tests_affected": [
+        "tests/telegraph/duty_sheet_test.gd",
+        "tests/telegraph/telegraph_scenario_data_test.gd",
+        "tests/telegraph/telegraph_session_controller_test.gd",
+        "tests/telegraph/copy_commit_desk_test.gd",
+        "tests/integration/m1_office_integration_test.gd",
+        "tests/integration/night_recovery_test.gd",
+        "tests/office/shift_director_test.gd",
+        "tools/first_night_playthrough.gd"
+      ],
+      "smallest_next_contract": "The smallest behavior-neutral repair is truthful instructions for the shipped route-as-filing flow. Universal physical filing is a separate owner-approved mechanic: it requires one-option support, route->commit transition, fact timing, deadlines, recovery, and updated route/night tests; do not implement it as a captions-only change."
+    },
+    {
+      "id": "F09",
+      "area": "pacing_and_modal_gates",
+      "priority": "P1",
+      "status": "proven_timing_contract_with_unproven_novice_risk",
+      "title": "A novice must verify and travel inside a 30-second t0 budget; current pacing acceptance is not human evidence",
+      "evidence": [
+        "Commit deadline is 30 seconds on the controller, not the scenario, and starts at the objective signal end. It includes finishing ink, opening/reading documents, tape/card switching and walking to the table. Inspection never restarts it.",
+        "Unfinished-copy grace is 20 seconds; route deadline is 45 seconds on the shared post-signal clock. One grace warning suppresses later commit warning by policy.",
+        "Documents lock walking/look/world interaction but do not pause the clocks. Only PauseMenu pauses the SceneTree. Thus a paper can obstruct the room while work and deadlines advance; this is intentional, not a timer-reset bug.",
+        "Waits are 20/38/50 seconds (108 total) and messages calculate to 13.6/15.6/3.6 seconds at 0.1 seconds/unit. The 21.8-second call window still exceeds two ideal diagonal crossings at production speed 1.35 m/s (~10.96 seconds), but the fairness test hardcodes the stale 3.0 m/s (~4.93 seconds).",
+        "first_night_playthrough teleports in _interact_at even with capture, explicitly advances the answer beat, and sometimes disables process clocks. Its all-green run proves scripted reachability/branch integration, not unassisted novice pacing."
+      ],
+      "impact": "The window is mathematically adequate for simple travel but may be too short for first-time independent decoding. There is no measured novice budget for the complete verify->walk->commit task. Longer silences may feel meaningful or idle; neither claim is proven.",
+      "sources": [
+        {
+          "file": "scripts/telegraph/session/telegraph_session_controller.gd",
+          "lines": [
+            48,
+            60
+          ]
+        },
+        {
+          "file": "scripts/telegraph/session/telegraph_session_controller.gd",
+          "lines": [
+            145,
+            182
+          ]
+        },
+        {
+          "file": "scripts/telegraph/session/telegraph_session_controller.gd",
+          "lines": [
+            287,
+            301
+          ]
+        },
+        {
+          "file": "scripts/office/shift_director.gd",
+          "lines": [
+            49,
+            74
+          ]
+        },
+        {
+          "file": "scripts/office/m1_office_controller.gd",
+          "lines": [
+            636,
+            655
+          ]
+        },
+        {
+          "file": "scripts/ui/pause_menu.gd",
+          "lines": [
+            94,
+            104
+          ]
+        },
+        {
+          "file": "scripts/ui/pause_menu.gd",
+          "lines": [
+            111,
+            128
+          ]
+        },
+        {
+          "file": "scripts/player/player_controller.gd",
+          "lines": [
+            20,
+            21
+          ]
+        },
+        {
+          "file": "tests/office/shift_director_test.gd",
+          "lines": [
+            16,
+            17
+          ]
+        },
+        {
+          "file": "tests/office/shift_director_test.gd",
+          "lines": [
+            84,
+            94
+          ]
+        },
+        {
+          "file": "tools/first_night_playthrough.gd",
+          "lines": [
+            43,
+            47
+          ]
+        },
+        {
+          "file": "tools/first_night_playthrough.gd",
+          "lines": [
+            68,
+            113
+          ]
+        },
+        {
+          "file": "tools/first_night_playthrough.gd",
+          "lines": [
+            200,
+            204
+          ]
+        }
+      ],
+      "tests_affected": [
+        "tests/office/shift_director_test.gd",
+        "tests/telegraph/telegraph_session_controller_test.gd",
+        "tests/integration/night_recovery_test.gd",
+        "tests/ui/framing_test.gd",
+        "tests/telegraph/transcript_paper_test.gd",
+        "tests/player/distance_gait_test.gd",
+        "tools/first_night_playthrough.gd"
+      ],
+      "smallest_next_contract": "Read movement/deadline values from current production resources in fairness tests. Preserve single t0 and no extension on inspection. Fix evidence/choice honesty first, then measure real answer/read/decode/walk/decision times on novices before adjusting the data-driven budget.",
+      "limits": "50 seconds in WS2 is a proposed value, not current. No new telemetry or human/windowed playtest was performed."
+    },
+    {
+      "id": "F10",
+      "area": "reliability",
+      "priority": "P1",
+      "status": "proven_missing_recovery_with_unproven_production_reachability",
+      "title": "Service helper can cancel a live telegram, and the session has no cancellation recovery",
+      "evidence": [
+        "_play_on_wire unconditionally scheduler.cancel() before starting a service schedule; it has no live-telegram guard.",
+        "The session subscribes to playback_completed and playback_time_advanced, but not playback_cancelled. Completion from a replacement service schedule is explicitly ignored unless it equals _active_schedule.",
+        "Consequently, an external/errant _play_on_wire during RECEIVING would strand the session with the cancelled active schedule and no t0.",
+        "Current warnings already wait for _wire_idle and are invalidated on resolution; foreign traffic already checks fit. These protections are implemented and must not be described as missing. The general helper guard/recovery is still missing."
+      ],
+      "impact": "A latent state-machine fault remains for future callers, reentrancy or unexpected cancellation. No evidence from this audit proves ordinary authored M1 play currently invokes this unsafe path.",
+      "sources": [
+        {
+          "file": "scripts/office/shift_director.gd",
+          "lines": [
+            442,
+            456
+          ]
+        },
+        {
+          "file": "scripts/telegraph/session/telegraph_session_controller.gd",
+          "lines": [
+            106,
+            111
+          ]
+        },
+        {
+          "file": "scripts/telegraph/session/telegraph_session_controller.gd",
+          "lines": [
+            272,
+            279
+          ]
+        },
+        {
+          "file": "scripts/office/shift_director.gd",
+          "lines": [
+            268,
+            279
+          ]
+        },
+        {
+          "file": "scripts/office/shift_director.gd",
+          "lines": [
+            309,
+            322
+          ]
+        },
+        {
+          "file": "scripts/office/shift_director.gd",
+          "lines": [
+            580,
+            606
+          ]
+        }
+      ],
+      "tests_affected": [
+        "tests/office/shift_director_test.gd",
+        "tests/telegraph/telegraph_session_controller_test.gd",
+        "tests/telegraph/morse_runtime_scheduler_test.gd",
+        "tests/telegraph/tape_register_test.gd",
+        "tests/integration/night_recovery_test.gd"
+      ],
+      "smallest_next_contract": "Assert service playback refuses to replace an active telegram; separately define and test cancellation recovery/facts and interrupted tape behavior. Also test synchronous slot advance as a reentrancy risk before electing deferred transitions.",
+      "limits": "The still-synchronous _on_session_completed -> _advance_to_slot (shift_director.gd:529-532) is a proven coupling, not by itself a proven crash root cause. WS1 remains a plan, not a completion record."
+    },
+    {
+      "id": "F11",
+      "area": "audio_fairness",
+      "priority": "P1",
+      "status": "proven_safety_gap_with_unproven_audible_masking",
+      "title": "Footsteps protect only onset, and critical-copy protection is hardcoded to the hook",
+      "evidence": [
+        "Door steps start whenever current event is not MARK, without checking GAP remaining time or sample length. A 1-unit gap is 0.1 seconds; the WAV is 0.12 seconds, and door pitch 0.84/0.88/0.82 lengthens it to ~0.143/~0.136/~0.146 seconds. A start inside a short gap can therefore overlap the next MARK.",
+        "The integration assertion checks only the current event at the moment steps_played increments; it does not check the playback interval through the next MARK. The standalone door suite has no scheduler wired.",
+        "Unease protects RECEIVING/COPYING only when scenario_id equals core_hook_water_watcher; current scenario data has no critical_copy flag.",
+        "set_hush_db moves room/wind/stove levels but not the clock. The clock can tick through Morse. A dedicated Telegraph bus and unchanged scheduler timing are present, but buses alone do not prove perceptual readability."
+      ],
+      "impact": "No algorithm guarantees the documented critical Morse fairness for all route-relevant traffic. Audible interference is plausible, not demonstrated by Dummy-audio tests or volume numbers.",
+      "sources": [
+        {
+          "file": "scripts/events/door_attention_source.gd",
+          "lines": [
+            7,
+            22
+          ]
+        },
+        {
+          "file": "scripts/events/door_attention_source.gd",
+          "lines": [
+            41,
+            76
+          ]
+        },
+        {
+          "file": "tests/integration/m1_office_integration_test.gd",
+          "lines": [
+            170,
+            185
+          ]
+        },
+        {
+          "file": "tests/events/door_attention_test.gd",
+          "lines": [
+            20,
+            44
+          ]
+        },
+        {
+          "file": "scripts/office/unease_director.gd",
+          "lines": [
+            250,
+            262
+          ]
+        },
+        {
+          "file": "scripts/audio/office_ambience.gd",
+          "lines": [
+            37,
+            58
+          ]
+        },
+        {
+          "file": "scripts/telegraph/session/telegraph_scenario_data.gd",
+          "lines": [
+            4,
+            29
+          ]
+        },
+        {
+          "file": "scripts/telegraph/hardware/sounder_controller.gd",
+          "lines": [
+            7,
+            16
+          ]
+        },
+        {
+          "file": "docs/design/DEAD_WIRE_GDD_v1.0.md",
+          "lines": [
+            356,
+            374
+          ]
+        }
+      ],
+      "tests_affected": [
+        "tests/events/door_attention_test.gd",
+        "tests/integration/m1_office_integration_test.gd",
+        "tests/audio/office_ambience_test.gd",
+        "tests/office/atmosphere_test.gd",
+        "tests/audio/intro_music_test.gd",
+        "tests/telegraph/telegraph_scenario_data_test.gd"
+      ],
+      "smallest_next_contract": "Check the whole sample interval at actual pitch fits a GAP; make critical-copy policy an explicit scenario contract; keep Morse timing untouched. After code-level interval tests, assess listening readability with real audio before declaring fairness. Do not infer masking solely from amplitude."
+    },
+    {
+      "id": "F12",
+      "area": "reliability",
+      "priority": "P1",
+      "status": "proven_prior_execution_errors_with_unresolved_intermittency",
+      "title": "Green assertions coexist with real errors and unresolved intro/shift instability",
+      "evidence": [
+        "The saved current regression independently aggregates to 46 result entries / 2094 passed assertions / 0 assertion failures. Fourteen suites contain 66 ERROR lines; these are not an error-free run.",
+        "Saved shift_director log backtraces detached get_global_transform errors to OfficeFoley _bind lines 55/58 and _source line 108. _bind is deferred without a tree/lifetime guard; test _fresh_office removes old offices synchronously before queued bindings drain.",
+        "HANDOVER and instrument RESULT report intro normal-fade FAIL and shift_director crash exit139 followed by green repeats without fixes. A pre-existing sibling scratch test file also contains a real intro normal-fade FAIL/exit1. This audit did not rerun those unstable suites.",
+        "Intro fade test waits a fixed 0.1 seconds after a 0.05-second tween. Production stops music and releases controls from the same _release callback. A test scheduling race is a plausible explanation, not established root cause and not proof of production music leakage.",
+        "This audit freshly ran only tape_register, morse_reference_card and routing_board: 3 suites / 130 assertions / exit0 / no ERROR or WARNING lines. That narrow clean result does not resolve the earlier errors or crashes."
+      ],
+      "impact": "Assertion pass is not reliability acceptance. Detached-node diagnostics are grounded; intermittent native crash and fade failures remain open. Separate test teardown defects, resource leaks and production runtime risks rather than assign one guessed cause.",
+      "sources": [
+        {
+          "file": "docs/art/state_2026-10-10/instruments/verification/regression.json",
+          "lines": [
+            1,
+            6
+          ]
+        },
+        {
+          "file": "docs/art/state_2026-10-10/instruments/verification/regression.json",
+          "lines": [
+            153,
+            194
+          ]
+        },
+        {
+          "file": "docs/art/state_2026-10-10/instruments/verification/shift_director_test.log",
+          "lines": [
+            137,
+            155
+          ]
+        },
+        {
+          "file": "scripts/audio/office_foley.gd",
+          "lines": [
+            26,
+            29
+          ]
+        },
+        {
+          "file": "scripts/audio/office_foley.gd",
+          "lines": [
+            53,
+            71
+          ]
+        },
+        {
+          "file": "scripts/audio/office_foley.gd",
+          "lines": [
+            99,
+            109
+          ]
+        },
+        {
+          "file": "tests/office/shift_director_test.gd",
+          "lines": [
+            363,
+            389
+          ]
+        },
+        {
+          "file": "tests/audio/intro_music_test.gd",
+          "lines": [
+            15,
+            25
+          ]
+        },
+        {
+          "file": "scripts/ui/intro_card.gd",
+          "lines": [
+            103,
+            139
+          ]
+        },
+        {
+          "file": "docs/HANDOVER.md",
+          "lines": [
+            25,
+            28
+          ]
+        },
+        {
+          "file": "docs/art/state_2026-10-10/instruments/RESULT.md",
+          "lines": [
+            35,
+            44
+          ]
+        }
+      ],
+      "tests_affected": [
+        "tests/office/shift_director_test.gd",
+        "tests/player/player_body_test.gd",
+        "tests/audio/intro_music_test.gd",
+        "tests/telegraph/copy_commit_desk_test.gd",
+        "tests/integration/night_recovery_test.gd",
+        "tests/integration/main_scene_smoke_test.gd",
+        "tests/ui/framing_test.gd"
+      ],
+      "smallest_next_contract": "Bound engine runs externally; retain full output, assertion totals, exits, ERROR lines and leaks separately. Establish deterministic teardown/lifetime evidence and wait for a semantic intro_finished condition in tests before labelling failures flakes. Do not claim the native crash cause without reproduction/debug evidence.",
+      "limits": "Prior full regression is read from stored evidence, not rerun here. Fresh tests do not exercise the new findings. No windowed game or visual/audio acceptance was attempted."
+    },
+    {
+      "id": "F13",
+      "area": "reliability_and_test_trust",
+      "priority": "P1",
+      "status": "proven_runner_defect",
+      "title": "The shell regression runner has no watchdog and misses indented FAIL on a zero exit",
+      "evidence": [
+        "Each engine process runs in an unbounded command substitution with no timeout. A stopped test coroutine before quit can block the run indefinitely.",
+        "The pass condition is exit_code==0 and no ^FAIL: line. Standard tests print two-leading-space FAIL:. Normal failing suites quit1, which still catches them; a zero-exit failure line is misclassified.",
+        "Successful suites suppress all engine error text from the printed summary; ERROR lines and leaks do not prevent a pass. Windows binary discovery/native project-path conversion is present, so older claims that the runner cannot find Windows Godot are stale."
+      ],
+      "impact": "A green one-line regression summary is insufficient evidence for stability, and a hang can prevent future contract work from completing. This is a harness issue, not proof every existing assertion suite is unsound.",
+      "sources": [
+        {
+          "file": "tools/run_all_tests.sh",
+          "lines": [
+            12,
+            44
+          ]
+        },
+        {
+          "file": "tools/run_all_tests.sh",
+          "lines": [
+            54,
+            61
+          ]
+        },
+        {
+          "file": "tools/run_all_tests.sh",
+          "lines": [
+            68,
+            92
+          ]
+        },
+        {
+          "file": "AGENTS.md",
+          "lines": [
+            40,
+            45
+          ]
+        }
+      ],
+      "tests_affected": [
+        "tools/run_all_tests.sh",
+        "All existing suites through runner classification; new watchdog/classification tests needed outside production gameplay"
+      ],
+      "smallest_next_contract": "Add a bounded per-suite watchdog and whitespace-tolerant FAIL parsing; preserve assertion counts and expose runtime ERROR/leak diagnostics separately. Keep platform-native path conversion. No harness changes were made in this audit."
+    }
+  ],
+  "protected_current_mechanics": [
+    {
+      "contract": "TRUE/PERCEPTION/TRANSCRIPT and world/knowledge separation already exist",
+      "evidence": [
+        {
+          "file": "scripts/telegraph/transmission_data.gd",
+          "lines": [
+            4,
+            7
+          ]
+        },
+        {
+          "file": "scripts/telegraph/session/telegraph_session_controller.gd",
+          "lines": [
+            222,
+            246
+          ]
+        },
+        {
+          "file": "scripts/telegraph/session/telegraph_session_controller.gd",
+          "lines": [
+            393,
+            398
+          ]
+        },
+        {
+          "file": "scripts/telegraph/session/telegraph_session_controller.gd",
+          "lines": [
+            509,
+            531
+          ]
+        },
+        {
+          "file": "scripts/telegraph/ui/dispatch_ledger.gd",
+          "lines": [
+            54,
+            60
+          ]
+        }
+      ],
+      "guard_tests": [
+        "tests/state/state_separation_test.gd",
+        "tests/telegraph/transmission_data_test.gd",
+        "tests/integration/m1_office_integration_test.gd"
+      ]
+    },
+    {
+      "contract": "Register consumes scheduler MARK/GAP events and has no message-text input",
+      "evidence": [
+        {
+          "file": "scripts/telegraph/hardware/tape_register_controller.gd",
+          "lines": [
+            81,
+            91
+          ]
+        },
+        {
+          "file": "scripts/telegraph/hardware/tape_register_controller.gd",
+          "lines": [
+            107,
+            109
+          ]
+        },
+        {
+          "file": "tests/telegraph/tape_register_test.gd",
+          "lines": [
+            65,
+            107
+          ]
+        }
+      ],
+      "qualification": "Its player-facing duration, wrap and cancellation fidelity defects remain F02-F04; do not add decoded answers to cure them."
+    },
+    {
+      "contract": "Writing authorization is separate from physically written glyphs; ink lands on contact and tick time is passed sequentially",
+      "evidence": [
+        {
+          "file": "scripts/telegraph/ui/transcript_paper.gd",
+          "lines": [
+            128,
+            170
+          ]
+        },
+        {
+          "file": "scripts/telegraph/ui/transcript_paper.gd",
+          "lines": [
+            291,
+            319
+          ]
+        },
+        {
+          "file": "scripts/telegraph/ui/transcript_paper.gd",
+          "lines": [
+            534,
+            562
+          ]
+        },
+        {
+          "file": "scripts/telegraph/ui/writer_rig.gd",
+          "lines": [
+            331,
+            365
+          ]
+        },
+        {
+          "file": "tests/telegraph/transcript_paper_test.gd",
+          "lines": [
+            216,
+            246
+          ]
+        }
+      ],
+      "qualification": "Do not misread the second advance_presentation(leftover) as double spending: it receives only returned unused time. Whole-glyph ink at contact is current; stroke-path penmanship is not implemented."
+    },
+    {
+      "contract": "Standing suspends writing without stopping wire/deadlines; looking away does not suspend it; old/partial records do not verify current copy",
+      "evidence": [
+        {
+          "file": "scripts/telegraph/session/telegraph_session_controller.gd",
+          "lines": [
+            569,
+            585
+          ]
+        },
+        {
+          "file": "scripts/telegraph/session/telegraph_session_controller.gd",
+          "lines": [
+            628,
+            638
+          ]
+        },
+        {
+          "file": "scripts/telegraph/ui/transcript_paper.gd",
+          "lines": [
+            674,
+            680
+          ]
+        },
+        {
+          "file": "scripts/office/m1_office_controller.gd",
+          "lines": [
+            428,
+            463
+          ]
+        },
+        {
+          "file": "tests/telegraph/telegraph_session_controller_test.gd",
+          "lines": [
+            283,
+            297
+          ]
+        }
+      ],
+      "guard_tests": [
+        "tests/telegraph/transcript_paper_test.gd",
+        "tests/telegraph/telegraph_session_controller_test.gd",
+        "tests/ui/framing_test.gd"
+      ]
+    },
+    {
+      "contract": "One physical archived previous sheet is already separately readable; universal multi-sheet history is not",
+      "evidence": [
+        {
+          "file": "scripts/telegraph/ui/transcript_paper.gd",
+          "lines": [
+            376,
+            407
+          ]
+        },
+        {
+          "file": "scripts/telegraph/ui/transcript_paper.gd",
+          "lines": [
+            677,
+            680
+          ]
+        },
+        {
+          "file": "scripts/office/m1_office_controller.gd",
+          "lines": [
+            457,
+            463
+          ]
+        }
+      ],
+      "qualification": "Do not redo the earlier archive-reader fix; keep its non-verification event separate."
+    },
+    {
+      "contract": "Current document/key gates already protect normal player routes",
+      "evidence": [
+        {
+          "file": "scripts/interaction/interaction_controller.gd",
+          "lines": [
+            25,
+            47
+          ]
+        },
+        {
+          "file": "scripts/telegraph/ui/copy_commit_desk.gd",
+          "lines": [
+            235,
+            258
+          ]
+        },
+        {
+          "file": "tests/telegraph/copy_commit_desk_test.gd",
+          "lines": [
+            108,
+            117
+          ]
+        },
+        {
+          "file": "scripts/ui/document_viewer.gd",
+          "lines": [
+            162,
+            183
+          ]
+        },
+        {
+          "file": "tests/ui/framing_test.gd",
+          "lines": [
+            206,
+            222
+          ]
+        }
+      ],
+      "qualification": "Finished current-copy inspection unlocks decisions once, but is an inspection event, not proof the player compared tape. Shared boolean locks lack a generic overlapping-modal stack, yet no overlapping normal-player path was demonstrated; do not report it as a current player bug."
+    },
+    {
+      "contract": "Filing is authority-first and ink/sound follows physical stamp contact; lapse stamps neither authored version",
+      "evidence": [
+        {
+          "file": "scripts/telegraph/ui/copy_commit_desk.gd",
+          "lines": [
+            103,
+            145
+          ]
+        },
+        {
+          "file": "scripts/telegraph/ui/copy_commit_desk.gd",
+          "lines": [
+            156,
+            165
+          ]
+        },
+        {
+          "file": "scripts/telegraph/ui/copy_commit_desk.gd",
+          "lines": [
+            199,
+            207
+          ]
+        },
+        {
+          "file": "tests/telegraph/copy_commit_desk_test.gd",
+          "lines": [
+            25,
+            56
+          ]
+        },
+        {
+          "file": "tests/telegraph/copy_commit_desk_test.gd",
+          "lines": [
+            69,
+            89
+          ]
+        }
+      ],
+      "qualification": "Preserve this B1 contract when changing choice vocabulary/input. Routing has not yet achieved equivalent result-memory authority (F06)."
+    }
+  ],
+  "stale_plan_corrections": [
+    {
+      "claim": "WS2/TACTILE/Instruments brainstorm are already shipped mechanics",
+      "verdict": "False. Current scenario still discloses WATER; no player-entered amendment, segmented tape viewer, per-scenario commit deadline, universal filing, special Rule-44 telegram, route-reply fields or playtest telemetry was found in relevant current runtime/schema. The proposals are not approved implementations.",
+      "sources": [
+        {
+          "file": "docs/plans/2026-10-09_TACTILE_M1.md",
+          "lines": [
+            1,
+            4
+          ]
+        },
+        {
+          "file": "docs/plans/next/WS2_m1_playtest_ready.md",
+          "lines": [
+            30,
+            53
+          ]
+        },
+        {
+          "file": "docs/plans/next/WS2_m1_playtest_ready.md",
+          "lines": [
+            59,
+            116
+          ]
+        },
+        {
+          "file": "docs/art/state_2026-10-10/instruments/RESULT.md",
+          "lines": [
+            50,
+            56
+          ]
+        }
+      ]
+    },
+    {
+      "claim": "Everything in WS1 is still missing",
+      "verdict": "Too broad. Shared t0, explicit lapses/warnings, busy-wire warning deferral, foreign-traffic fit checks, correct ledger updates, physical lever, archive reading and modal input protections exist. Check each task against code; no blanket completed/not-completed statement.",
+      "sources": [
+        {
+          "file": "scripts/telegraph/session/telegraph_session_controller.gd",
+          "lines": [
+            89,
+            111
+          ]
+        },
+        {
+          "file": "scripts/office/shift_director.gd",
+          "lines": [
+            309,
+            322
+          ]
+        },
+        {
+          "file": "scripts/office/shift_director.gd",
+          "lines": [
+            580,
+            606
+          ]
+        }
+      ]
+    },
+    {
+      "claim": "Normal M1 tape wrap drops transmitted marks",
+      "verdict": "Overstated. Valid current encoded content loses timing spaces and can split characters at internal gaps; mark deletion is the no-space fallback defect, not demonstrated in current valid M1 messages.",
+      "sources": [
+        {
+          "file": "scripts/office/m1_office_controller.gd",
+          "lines": [
+            482,
+            495
+          ]
+        }
+      ]
+    },
+    {
+      "claim": "Morse card has wrong W/O/R/C/L patterns",
+      "verdict": "Stale. The card derives all patterns from the alphabet and passes its current 65-assertion suite. The current T/L collision is on tape only.",
+      "sources": [
+        {
+          "file": "scripts/telegraph/ui/morse_reference_card.gd",
+          "lines": [
+            67,
+            85
+          ]
+        },
+        {
+          "file": "tests/telegraph/morse_reference_card_test.gd",
+          "lines": [
+            28,
+            46
+          ]
+        }
+      ]
+    },
+    {
+      "claim": "Latest green means intro fade/crash/leaks were fixed or automated night proves pacing",
+      "verdict": "False. Later greens followed failures without fixes; shutdown/detached diagnostics persist, and full-night capture uses teleports/compressed answer beat.",
+      "sources": [
+        {
+          "file": "docs/HANDOVER.md",
+          "lines": [
+            18,
+            28
+          ]
+        },
+        {
+          "file": "tools/first_night_playthrough.gd",
+          "lines": [
+            78,
+            82
+          ]
+        },
+        {
+          "file": "tools/first_night_playthrough.gd",
+          "lines": [
+            200,
+            204
+          ]
+        }
+      ]
+    }
+  ],
+  "smallest_dependency_order": [
+    {
+      "step": 0,
+      "name": "Establish bounded and honest verification",
+      "depends_on": [],
+      "finding_ids": [
+        "F12",
+        "F13"
+      ],
+      "scope": "Keep uncommitted art and counts. Use bounded engine calls with full stdout/exit/error classification; separate flaky fade/crash/teardown diagnosis. No new gameplay prerequisites or broad architecture rewrite.",
+      "gate": "A test failure/hang cannot be mistaken for clean success."
+    },
+    {
+      "step": 1,
+      "name": "Restore trustworthy player evidence",
+      "depends_on": [
+        0
+      ],
+      "finding_ids": [
+        "F02",
+        "F03",
+        "F04"
+      ],
+      "scope": "Specify cancellation/idle-gap semantics, preserve timing in mark-duration rendering and wrap, then segment by real timing gaps. No decoded letters, message IDs or comparator on tape.",
+      "gate": "Every supported timing distinction survives to the viewer; cuts do not glue a call to the telegram."
+    },
+    {
+      "step": 2,
+      "name": "Make route results transactional",
+      "depends_on": [
+        0
+      ],
+      "finding_ids": [
+        "F06"
+      ],
+      "scope": "Acceptance-first board memory/status and foley. Existing lever, independent facts, lapse behavior and modal locks stay intact. This branch can run alongside step1.",
+      "gate": "Deadline rejection cannot claim a recorded route, move the lever, or sound an accepted action."
+    },
+    {
+      "step": 3,
+      "name": "Remove answer disclosure and preserve genuine amendment agency",
+      "depends_on": [
+        1
+      ],
+      "finding_ids": [
+        "F01"
+      ],
+      "scope": "Neutral pre-choice vocabulary can be isolated immediately; a complete amendment mechanic must record actual player input, including wrong corrections, through session authority and independent outcome facts. Choice UI design requires owner approval; no automatic true-word fallback. This hook path is independent of the route-result patch (step2).",
+      "gate": "A novice cannot obtain WATER from action labels or hidden correction logic; accepted/lapsed/wrong-amendment consequences are truthful."
+    },
+    {
+      "step": 4,
+      "name": "Align instructions and evidence access with shipped actions",
+      "depends_on": [
+        1
+      ],
+      "finding_ids": [
+        "F05",
+        "F08"
+      ],
+      "scope": "Truthful order text is independent and can be corrected immediately. Preserve archive reader and document gates. Evidence access follows the lossless tape contract (step1); universal filing is optional separate scope, not required to add new nights.",
+      "gate": "Players do not hunt for unavailable actions or need to memorize an unnecessarily ambiguous tape layout."
+    },
+    {
+      "step": 5,
+      "name": "Validate critical audio interval fairness",
+      "depends_on": [
+        0
+      ],
+      "finding_ids": [
+        "F11"
+      ],
+      "scope": "Whole-sample GAP fitting at actual pitch and explicit critical-copy policy. Can run alongside steps1-4. Real listening acceptance is later and cannot be replaced by Dummy output.",
+      "gate": "Critical information is not invalidated by authored transients, with scheduler timing unchanged."
+    },
+    {
+      "step": 6,
+      "name": "Measure before changing pacing or deepening routes",
+      "depends_on": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "finding_ids": [
+        "F07",
+        "F09"
+      ],
+      "scope": "Local document/decision timestamps and unassisted novice playtest; only then tune resource budgets or approve one ledger-dependent route and local feedback. No new chores/town/nights as a workaround.",
+      "gate": "Observed discovery, independent verification and completion at real movement speed; automated teleports do not qualify."
+    }
+  ],
+  "minimum_new_test_cases": [
+    {
+      "topic": "Tape",
+      "cases": [
+        "Every M1 duration distinction renders uniquely: T != L.",
+        "Wrap reconstructs exact MARK and GAP units across 1/2/3/6/12-unit pauses, including boundary splits.",
+        "Cancel at multiple positions inside MARK/GAP then answer beat then telegram: no glued boundary or invented elapsed duration.",
+        "Hook segment remains locatable among completed/cut calls, foreign traffic, nags and final sign; renderer knows no message text."
+      ],
+      "existing_files": [
+        "tests/telegraph/tape_register_test.gd",
+        "tests/integration/m1_office_integration_test.gd",
+        "tests/ui/document_viewer_test.gd"
+      ],
+      "existing_assertions_to_intentionally_replace": [
+        "tests/telegraph/tape_register_test.gd:229-239 currently require cancellation to append no gap; current render tests never compare 3 versus 6 units."
+      ]
+    },
+    {
+      "topic": "Filing",
+      "cases": [
+        "Pre-choice labels and menus cannot disclose true_message.",
+        "Actual approved correction input is not auto-filled, wrong amendment is an accepted distinct outcome, cancel/unknown does not silently file WATER.",
+        "Correct/as-written/wrong/lapsed/duplicate paths preserve independent facts and truthful dawn document.",
+        "No key behind an open document; archived sheet does not verify current copy; same-frame duplicate contact writes one stamp."
+      ],
+      "existing_files": [
+        "tests/telegraph/telegraph_scenario_data_test.gd",
+        "tests/telegraph/copy_commit_desk_test.gd",
+        "tests/telegraph/telegraph_session_controller_test.gd",
+        "tests/integration/night_recovery_test.gd",
+        "tests/telegraph/duty_sheet_test.gd"
+      ],
+      "existing_assertions_to_intentionally_replace": [
+        "tests/telegraph/telegraph_scenario_data_test.gd:64-65 pin answer-disclosing labels; do not delete coverage without replacing it with no-disclosure assertions."
+      ]
+    },
+    {
+      "topic": "Routing",
+      "cases": [
+        "Real authority accepts before boundary, rejects at/after deadline with unchanged memory/prompt/lever/foley.",
+        "Lapse is NO ORDER, not incorrect; per-slot reset preserves only accepted prior route.",
+        "A stale open board never changes world facts and closing restores seated walk lock/free look."
+      ],
+      "existing_files": [
+        "tests/telegraph/routing_board_test.gd",
+        "tests/office/shift_director_test.gd",
+        "tests/integration/m1_office_integration_test.gd"
+      ]
+    },
+    {
+      "topic": "Pacing/reliability",
+      "cases": [
+        "Fairness calculation reads live movement speed rather than constant 3.0.",
+        "Whole audio sample interval fits current GAP at configured pitch; no next-MARK overlap.",
+        "Service replacement refuses live telegram and explicit cancellation has a bounded state recovery.",
+        "Detached deferred foley bind and intro fade completion produce no unclassified runtime errors; watchdog catches stalled suites and indented zero-exit FAIL."
+      ],
+      "existing_files": [
+        "tests/office/shift_director_test.gd",
+        "tests/events/door_attention_test.gd",
+        "tests/audio/intro_music_test.gd",
+        "tests/audio/office_ambience_test.gd",
+        "tests/office/atmosphere_test.gd",
+        "tools/run_all_tests.sh"
+      ]
+    }
+  ],
+  "verification": {
+    "prior_saved_full_regression": {
+      "file": "docs/art/state_2026-10-10/instruments/verification/regression.json",
+      "suites": 46,
+      "assertions": 2094,
+      "failed_suites": 0,
+      "suites_with_error_lines": 14,
+      "error_lines": 66,
+      "recomputed_from_results": true,
+      "rerun_by_this_audit": false
+    },
+    "fresh_existing_focused_tests": {
+      "mode": "existing focused tests only; no --import; no windowed game",
+      "results": [
+        {
+          "suite": "tests/telegraph/tape_register_test.gd",
+          "command": [
+            "C:/Users/YUSIF/Desktop/Godot_v4.7.1-stable_win64.exe/Godot_v4.7.1-stable_win64_console.exe",
+            "--headless",
+            "--audio-driver",
+            "Dummy",
+            "--path",
+            "C:/Users/YUSIF/Documents/dead-wire",
+            "--log-file",
+            "C:/Users/YUSIF/.hermes/cache/scratch/deadwire_mechanics_audit_tape_register_test.log",
+            "--script",
+            "res://tests/telegraph/tape_register_test.gd"
+          ],
+          "exit_code": 0,
+          "assertions": 35,
+          "fail_lines": [],
+          "error_lines": [],
+          "warning_lines": [],
+          "log": "C:/Users/YUSIF/.hermes/cache/scratch/deadwire_mechanics_audit_tape_register_test.log",
+          "elapsed_wall_seconds": 2.92,
+          "assertion_pass": true
+        },
+        {
+          "suite": "tests/telegraph/morse_reference_card_test.gd",
+          "command": [
+            "C:/Users/YUSIF/Desktop/Godot_v4.7.1-stable_win64.exe/Godot_v4.7.1-stable_win64_console.exe",
+            "--headless",
+            "--audio-driver",
+            "Dummy",
+            "--path",
+            "C:/Users/YUSIF/Documents/dead-wire",
+            "--log-file",
+            "C:/Users/YUSIF/.hermes/cache/scratch/deadwire_mechanics_audit_morse_reference_card_test.log",
+            "--script",
+            "res://tests/telegraph/morse_reference_card_test.gd"
+          ],
+          "exit_code": 0,
+          "assertions": 65,
+          "fail_lines": [],
+          "error_lines": [],
+          "warning_lines": [],
+          "log": "C:/Users/YUSIF/.hermes/cache/scratch/deadwire_mechanics_audit_morse_reference_card_test.log",
+          "elapsed_wall_seconds": 0.457,
+          "assertion_pass": true
+        },
+        {
+          "suite": "tests/telegraph/routing_board_test.gd",
+          "command": [
+            "C:/Users/YUSIF/Desktop/Godot_v4.7.1-stable_win64.exe/Godot_v4.7.1-stable_win64_console.exe",
+            "--headless",
+            "--audio-driver",
+            "Dummy",
+            "--path",
+            "C:/Users/YUSIF/Documents/dead-wire",
+            "--log-file",
+            "C:/Users/YUSIF/.hermes/cache/scratch/deadwire_mechanics_audit_routing_board_test.log",
+            "--script",
+            "res://tests/telegraph/routing_board_test.gd"
+          ],
+          "exit_code": 0,
+          "assertions": 30,
+          "fail_lines": [],
+          "error_lines": [],
+          "warning_lines": [],
+          "log": "C:/Users/YUSIF/.hermes/cache/scratch/deadwire_mechanics_audit_routing_board_test.log",
+          "elapsed_wall_seconds": 0.424,
+          "assertion_pass": true
+        }
+      ],
+      "suites": 3,
+      "passed": 3,
+      "assertions": 130
+    },
+    "preexisting_sibling_scratch_evidence": {
+      "file": "C:/Users/YUSIF/.hermes/cache/scratch/deadwire_mechanics_current_tests.json",
+      "qualification": "Read, not created or rerun by this audit; carries intro normal-fade FAIL with exit1 and later focused passes/errors. Proven intermittent evidence, not root-cause diagnosis."
+    },
+    "calculations": {
+      "file": "C:/Users/YUSIF/.hermes/cache/scratch/deadwire_mechanics_calculations.json",
+      "data": {
+        "method": "Python reference calculation from current .tres data and exact encoder/tape/wrap rules; not a Godot runtime probe",
+        "seconds_per_unit": 0.1,
+        "messages": [
+          {
+            "message": "TRAIN 17 CLEAR EAST",
+            "events": 69,
+            "duration_seconds": 13.6,
+            "mark_count": 35,
+            "raw_tape_chars": 111,
+            "wrapped": "—   ·  · ·   · —   · ·   — ·      · — —\n·   — — · ·      · ·  ·   —   ·   · —  \n·  · ·      ·   · —   · · ·   —",
+            "dropped_characters": [
+              {
+                "original_index": 39,
+                "dropped": " ",
+                "context": "· — — ·   —"
+              },
+              {
+                "original_index": 79,
+                "dropped": " ",
+                "context": "· —   ·  · "
+              }
+            ]
+          },
+          {
+            "message": "HOLD FREIGHT UNTIL TEN",
+            "events": 79,
+            "duration_seconds": 15.6,
+            "mark_count": 40,
+            "raw_tape_chars": 126,
+            "wrapped": "· · · ·   ·  ·   —   — · ·      · — ·  \n·  · ·   ·   · ·   — — ·   · · · ·   —  \n   · · —   — ·   —   · ·   —      —   · \n — ·",
+            "dropped_characters": [
+              {
+                "original_index": 39,
+                "dropped": " ",
+                "context": "— ·   ·  · "
+              },
+              {
+                "original_index": 80,
+                "dropped": " ",
+                "context": "  —      · "
+              },
+              {
+                "original_index": 121,
+                "dropped": " ",
+                "context": "   ·   — ·"
+              }
+            ]
+          },
+          {
+            "message": "WATER",
+            "events": 19,
+            "duration_seconds": 3.6,
+            "mark_count": 10,
+            "raw_tape_chars": 28,
+            "wrapped": "· — —   · —   —   ·   ·  · ·",
+            "dropped_characters": []
+          },
+          {
+            "message": "CR CR",
+            "events": 23,
+            "duration_seconds": 3.6,
+            "mark_count": 12,
+            "raw_tape_chars": 36,
+            "wrapped": "· ·  ·   ·  · ·      · ·  ·   ·  · ·",
+            "dropped_characters": []
+          },
+          {
+            "message": "SLOW DANCER LEADS DIEGO SECOND",
+            "events": 115,
+            "duration_seconds": 21.7,
+            "mark_count": 58,
+            "raw_tape_chars": 183,
+            "wrapped": "· · ·   —   ·  ·   · — —      — · ·   ·\n—   — ·   · ·  ·   ·   ·  · ·      —   ·\n  · —   — · ·   · · ·      — · ·   · ·  \n·   — — ·   ·  ·      · · ·   ·   · ·  ·\n  ·  ·   — ·   — · ·",
+            "dropped_characters": [
+              {
+                "original_index": 39,
+                "dropped": " ",
+                "context": "·   · —   —"
+              },
+              {
+                "original_index": 80,
+                "dropped": " ",
+                "context": "—   ·   · —"
+              },
+              {
+                "original_index": 121,
+                "dropped": " ",
+                "context": "· ·   ·   —"
+              },
+              {
+                "original_index": 162,
+                "dropped": " ",
+                "context": " ·  ·   ·  "
+              }
+            ]
+          },
+          {
+            "message": "GN",
+            "events": 9,
+            "duration_seconds": 1.7,
+            "mark_count": 5,
+            "raw_tape_chars": 11,
+            "wrapped": "— — ·   — ·",
+            "dropped_characters": []
+          },
+          {
+            "message": "OS 17",
+            "events": 25,
+            "duration_seconds": 4.3,
+            "mark_count": 13,
+            "raw_tape_chars": 35,
+            "wrapped": "·  ·   · · ·      · — — ·   — — · ·",
+            "dropped_characters": []
+          }
+        ],
+        "cancel_at_0_25_seconds": {
+          "begun_events": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "cut_call_text": "· ·",
+          "next_telegram_prefix": "· ·—   ·  · ·   · —   · ·",
+          "elapsed_silence_after_answer_beat": 0.8,
+          "rendered_boundary_gap_units": 0
+        },
+        "illustrative_completed_call_watch": {
+          "qualification": "Explicit completed calls (not a captured playthrough); actual key answer can cut calls at other points",
+          "raw_chars": 640,
+          "line_count": 16,
+          "marks_before": 179,
+          "marks_after": 179,
+          "space_columns_removed": 15,
+          "wrap_drops": [
+            {
+              "original_index": 40,
+              "dropped": " ",
+              "context": "·          "
+            },
+            {
+              "original_index": 81,
+              "dropped": " ",
+              "context": "      · — —"
+            },
+            {
+              "original_index": 121,
+              "dropped": " ",
+              "context": "  ·   · —  "
+            },
+            {
+              "original_index": 162,
+              "dropped": " ",
+              "context": " —         "
+            },
+            {
+              "original_index": 202,
+              "dropped": " ",
+              "context": "    — · ·  "
+            },
+            {
+              "original_index": 243,
+              "dropped": " ",
+              "context": " ·      —  "
+            },
+            {
+              "original_index": 284,
+              "dropped": " ",
+              "context": "— · ·   · ·"
+            },
+            {
+              "original_index": 325,
+              "dropped": " ",
+              "context": "   ·   · · "
+            },
+            {
+              "original_index": 365,
+              "dropped": " ",
+              "context": "      · ·  "
+            },
+            {
+              "original_index": 406,
+              "dropped": " ",
+              "context": "·          "
+            },
+            {
+              "original_index": 447,
+              "dropped": " ",
+              "context": "    · — ·  "
+            },
+            {
+              "original_index": 488,
+              "dropped": " ",
+              "context": "· · ·   —  "
+            },
+            {
+              "original_index": 528,
+              "dropped": " ",
+              "context": "      —   ·"
+            },
+            {
+              "original_index": 569,
+              "dropped": " ",
+              "context": "· ·      · "
+            },
+            {
+              "original_index": 609,
+              "dropped": " ",
+              "context": "—   · —   —"
+            }
+          ],
+          "hook_raw_suffix": "     · — —   · —   —   ·   ·  · ·            ",
+          "hook_wrapped_suffix": "       · — —   ·\n—   —   ·   ·  · ·            "
+        },
+        "mark_length_collision": {
+          "T_duration_units": 3,
+          "L_duration_units": 6,
+          "T_tape": "—",
+          "L_tape": "—"
+        },
+        "fallback_no_space": {
+          "input_len": 41,
+          "output_marks": 40,
+          "lost_marks": 1,
+          "qualification": "Adversarial no-space text, not generated by current valid M1 encoder"
+        },
+        "configured_wait_seconds_total": 108
+      }
+    },
+    "citation_validation": {
+      "checked_count": 137,
+      "missing_files": 0,
+      "out_of_range_line_ranges": 0,
+      "method": "Each cited current file was checked on disk for path existence and line-range bounds."
+    },
+    "repository_end_state": {
+      "at": "2026-10-10T22:47:03.363443+04:00",
+      "head": "f82939d9995ec2761e730b1fe8dcaa033bf0be41",
+      "branch": "codex/hand-rebuild-handoff",
+      "git_status_matches_first_read": true,
+      "worktree_status": [
+        " M docs/HANDOVER.md",
+        " M docs/third_party_assets.md",
+        " M scenes/telegraph/sounder.tscn",
+        " M scenes/telegraph/tape_register.tscn",
+        " M scenes/telegraph/telegraph_key.tscn",
+        "?? assets/models/instruments_v1/",
+        "?? assets/textures/instruments_v1/",
+        "?? docs/art/state_2026-10-10/",
+        "?? docs/plans/2026-10-10_INSTRUMENT_FIRST.md",
+        "?? tests/telegraph/instrument_art_test.gd",
+        "?? tests/telegraph/instrument_art_test.gd.uid",
+        "?? tools/build_instruments_blender.py",
+        "?? tools/import_instruments.gd",
+        "?? tools/import_instruments.gd.uid",
+        "?? tools/instrument_motion_capture.gd",
+        "?? tools/instrument_motion_capture.gd.uid",
+        "?? tools/verify_instruments.py"
+      ]
+    },
+    "tests_intentionally_not_run": [
+      "Full regression unnecessary for read-only source audit; current saved baseline read instead.",
+      "No windowed evidence tools.",
+      "No new .gd reproduction files or --import.",
+      "framing_test writes user://settings.cfg and resets defaults (tests/ui/framing_test.gd:18-48); avoided in this read-only pass."
+    ]
+  },
+  "files_created_by_audit": [
+    "C:/Users/YUSIF/.hermes/cache/scratch/deadwire_mechanics_audit.json",
+    "C:/Users/YUSIF/.hermes/cache/scratch/deadwire_mechanics_calculations.json",
+    "C:/Users/YUSIF/.hermes/cache/scratch/deadwire_mechanics_audit_tests.json",
+    "C:/Users/YUSIF/.hermes/cache/scratch/deadwire_mechanics_audit_tape_register_test.log",
+    "C:/Users/YUSIF/.hermes/cache/scratch/deadwire_mechanics_audit_morse_reference_card_test.log",
+    "C:/Users/YUSIF/.hermes/cache/scratch/deadwire_mechanics_audit_routing_board_test.log"
+  ],
+  "issues_encountered": [
+    "Graphify had no current GDScript runtime nodes; used targeted current-source reads without rebuilding it.",
+    "Initial guesses for interaction/seat/dawn-evidence paths did not exist; discovered and read scripts/interaction, scripts/player and scripts/office locations instead.",
+    "An inline Python test wrapper first hit Windows quoting SyntaxError before launching any engine; retried using Path.as_posix and all three bounded existing suites executed normally.",
+    "No runtime/visual reproduction of source-level findings; new test creation and windowed games were prohibited."
+  ],
+  "finding_counts": {
+    "total": 13,
+    "by_priority": {
+      "P0": 2,
+      "P1": 9,
+      "P2": 2
+    }
+  }
+}

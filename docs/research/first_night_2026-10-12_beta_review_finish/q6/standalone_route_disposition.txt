@@ -1,0 +1,9 @@
+## Q6 standalone route — honest depth
+Done on the packaged EXE (dead-wire-windows-beta-f82939d9995e-2ed1b969852f):
+- Extracted to a clean scratch dir; game ran from its own directory (no repo/editor cwd), 45 s alive, settings.cfg unchanged (sha 627f0ee3... before/after).
+- 0 SCRIPT ERROR, 0 Parse Error / Failed to load / Cannot open file in stderr. Raw exit on terminate: 0x00000001 (terminate path, recorded as-is).
+NOT done on the packaged EXE:
+- Menu → Begin Watch → office → pause/resume → restart/menu → graceful Quit could NOT be automated without modifying the package (no test hooks inside the shipped build). Forcing UI input into a shipping process is out of scope for this pass.
+Equivalent in-development-tree evidence (same build inputs): first_night_playthrough --capture 78 PASS incl. "Title button enters production office", "Pause holds objective Morse clock", "Escape resumes the same transmission", dawn reached; production_evidence_capture 58 PASS.
+Graceful quit evidence in-tree: main_menu.quit_game() → get_tree().quit() exercised by intro/menu tests; the packaged graceful-quit check remains OPEN for a human: launch EXE, play one slot, Esc → Quit, confirm process exits 0.
+Disposition: standalone boot is clean; full in-package UI route needs a human 5-minute pass (part of the beta playtest the sound designer will do anyway). Not claimed as done.

@@ -1,0 +1,89 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+--- Starting Tape Evidence Test Suite ---
+  PASS: Real scheduler starts the evidence fixture
+  PASS: Started MARK exposes zero delivered units, not its future dot length
+  PASS: Started MARK exposes zero delivered seconds
+  PASS: Public record uses the tape-ink value type
+  PASS: Started ink is incomplete and not interrupted
+  PASS: Public ink has only observed fields, with no planned units, index, end or source metadata
+  PASS: snapshot creates an independent value with identical observed fields
+  PASS: Mutating every returned field and array leaves the register unchanged
+  PASS: Returned ink never aliases the scheduler's source event
+  PASS: Half a dot records only 0.05 seconds and 0.5 units
+  PASS: Advance observers see current ink before event callbacks
+  PASS: Advanced ink remains incomplete until finish
+  PASS: Earlier snapshots never gain later time or returned-value mutations
+  PASS: Cancel keeps the exact fractional ink and invents no GAP
+  PASS: Cancelled MARK is interrupted, not a valid complete dot
+  PASS: Fractional cancellation leaves the source intact
+  PASS: Cancelled/idle time never grows ink
+  PASS: A completed fixture starts after cancellation
+  PASS: Completion records one real event with no phantom 12-unit GAP
+  PASS: Finished ink has the exact delivered full duration
+  PASS: Finished callbacks see finalized ink, not the hitch's extra elapsed time
+  PASS: Completed snapshots remain immutable through idle and mutation
+  PASS: Register binds finish and actual-time advance signals
+  PASS: Disconnect removes finish and actual-time advance signals
+  PASS: Long American Morse MARK starts
+  PASS: An unfinished MARK uses the incomplete-ink symbol, not a dot or dash
+  PASS: Three delivered units of a live long MARK do not reveal L or classify a dash
+  PASS: Interrupted MARK keeps the incomplete symbol even at an intermediate Morse threshold
+  PASS: The incomplete symbol retains exact actual duration through the record API
+  PASS: Mixed completed MARK lengths start
+  PASS: Completed MARK 1/3/6 agree with the reference card and preserve GAP columns
+  PASS: Rendering long marks adds no artificial ink events
+  PASS: Partial GAP fixture starts
+  PASS: A fractional GAP exposes actual units without a future blank column
+  PASS: Cancelled fractional GAP never renders its remaining planned silence
+  PASS: Two-unit completed fixture starts
+  PASS: Existing completed two-unit MARK remains dot-compatible
+  PASS: Tape exposes readable wire-take metadata separately from raw ink
+  PASS: A blank register invents no take or boundary
+  PASS: First wire take starts
+  PASS: Playback start creates take metadata before its first MARK without future events
+  PASS: Take metadata contains only a number, completion/interruption and actual ink
+  PASS: Cancelled take retains only its actual fractional interrupted ink
+  PASS: Readable take header clearly distinguishes interruption and non-ink boundary
+  PASS: Real inter-take idle adds neither elapsed ink nor a synthetic GAP
+  PASS: Second wire take starts
+  PASS: Wire takes retain numbered oldest-to-newest chronology and independent status
+  PASS: Raw strip uses a non-ink newline between takes, never fake timed silence
+  PASS: Display puts newest ink last with no telegram identity or automatic decoding
+  PASS: Historical segment snapshots do not change when a later take completes
+  PASS: Returned segment dictionaries, arrays and ink values are all independent clones
+  PASS: Inspection emits the readable numbered take presentation
+  PASS: Scheduler start signal is connected exactly once
+  PASS: Reset clears all take metadata and physical ink
+  PASS: First take starts again after reset
+  PASS: Reset restarts take numbering without changing subscription
+  PASS: Disconnect removes take-start signal
+  PASS: Hitch fixture starts on the real scheduler
+  PASS: A hitch records completed earlier events exactly once
+  PASS: Hitch-started live MARK subtracts its start and exposes only actual elapsed time
+  PASS: Timing-start observers see delivered duration after the advance-before-callback ordering
+  PASS: Paused scene frames never advance the physical record
+  PASS: Hitch/pause reveals no future long-MARK classification
+  PASS: Alternate actual seconds-per-unit fixture starts
+  PASS: Fractional actual units use the private event profile, not a hardcoded speed
+  PASS: Current session loads the baseline telegram independently of its call
+  PASS: Current ShiftDirector call uses the shared scheduler and creates wire take one
+  PASS: Answering the actual call truncates its MARK and closes the interrupted take
+  PASS: The real answer beat is not fabricated as measured tape silence
+  PASS: Telegram starts a distinct second wire take with zero future ink
+  PASS: Cancelled call plus completed telegram has only delivered events and two boundaries
+  PASS: Every telegram event preserves exact completed actual units/seconds after the call
+  PASS: Call/telegram presentation has chronology but no message names or decoding
+  PASS: Current service/nag replacement cancels one take before starting the next without future ink
+  PASS: Real American Morse C fixture starts
+  PASS: C preserves its exact American Morse internal two-unit pause
+  PASS: Real American Morse O fixture starts
+  PASS: O preserves its exact American Morse internal two-unit pause
+  PASS: Real American Morse R fixture starts
+  PASS: R preserves its exact American Morse internal two-unit pause
+  PASS: Record is a typed tape-ink array with floating actual units and seconds
+  PASS: Segment snapshots expose typed dictionaries and typed cloned tape-ink events
+  PASS: Cancel's elapsed timestamp alone truncates the active event relative to its start
+  PASS: Cancellation never retroactively interrupts completed ink or invents silence
+  PASS: Truncating the physical tape never mutates source timing or its private planned length
+--- All Tape Evidence Tests PASSED (85 assertions) ---

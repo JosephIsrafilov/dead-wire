@@ -57,7 +57,13 @@ horizontal_alignment = 1
 [node name="HSeparator" type="HSeparator" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="BodyLabel" type="RichTextLabel" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
+[node name="BodyScroll" type="ScrollContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 0
+
+[node name="BodyLabel" type="RichTextLabel" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/BodyScroll"]
 custom_minimum_size = Vector2(560, 260)
 layout_mode = 2
 size_flags_vertical = 3
@@ -65,7 +71,7 @@ theme_override_colors/default_color = Color(0.15, 0.12, 0.08, 1)
 theme_override_font_sizes/normal_font_size = 16
 bbcode_enabled = false
 text = ""
-fit_content = true
+fit_content = false
 
 [node name="FooterLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2

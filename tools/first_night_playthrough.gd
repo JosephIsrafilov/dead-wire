@@ -16,6 +16,8 @@ func _initialize() -> void:
 		branch = "watcher"
 	elif "--lapsed" in OS.get_cmdline_user_args():
 		branch = "lapsed"
+	elif "--wrong" in OS.get_cmdline_user_args():
+		branch = "wrong"
 	output_folder += "_" + branch
 	_run.call_deferred()
 
@@ -62,7 +64,11 @@ func _run() -> void:
 		await create_timer(0.05).timeout
 		seat_guard += 1
 	check(office.operator_seat.is_seated, "Chair is reachable through production ray")
-	await create_timer(1.6).timeout
+	var settle_guard := 0
+	while not office.operator_seat.is_settled() and settle_guard < 300:
+		await create_timer(0.01).timeout
+		settle_guard += 1
+	check(office.operator_seat.is_settled(), "Chair transition actually settled before first key activation")
 	await _aim_and_interact(office.session_controller.telegraph_key.get_interactable())
 	check(office.shift_director.get_phase() == ShiftDirector.Phase.WAITING, "Seated key opens the watch")
 	for slot in 3:
@@ -131,7 +137,19 @@ func _run() -> void:
 				check(office.copy_commit_desk.get_result_text() == "UNFILED", "Unfiled deadline resolves without a selected copy")
 			else:
 				await _interact_at(Vector3(0.95, 0, 0.45), office.copy_commit_desk.get_node("Option2Interactable" if branch == "watcher" else "Option1Interactable"))
-				check(office.copy_commit_desk.get_selected_action_id() == StringName("file_" + branch), "Physical %s paper commits through E" % branch)
+				if branch != "watcher":
+					check(office.amendment_editor.is_open(), "Physical amendment opens an editor without filing")
+					await _shot("06_amendment_blank")
+					await process_frame
+					await process_frame
+					var word := "WAITER" if branch == "wrong" else "WATER"
+					for character in word:
+						await _raw_key(character.unicode_at(0), character.to_lower().unicode_at(0))
+					check(office.amendment_editor.correction.text == word, "Real typing preserves intended amendment word")
+					await _shot("06_amendment_typed")
+					await _raw_key(KEY_ENTER)
+				var expected_action := &"file_watcher" if branch == "watcher" else &"amend_copy"
+				check(office.copy_commit_desk.get_selected_action_id() == expected_action, "Physical %s choice resolves only after explicit action" % branch)
 			await _shot("06_filed")
 	if capture:
 		await create_timer(0.8).timeout
@@ -223,6 +241,19 @@ func _aim_and_interact(target: Node3D) -> void:
 		print("RAY DIAGNOSTIC: mode=", Input.mouse_mode, " blocked=", interaction.is_ui_blocked, " from=", office.player.camera.global_position, " forward=", -office.player.camera.global_basis.z, " target=", target.global_position, " hit=", interaction.interaction_ray.get_collider())
 	check(interaction.current_target == target, "Ray reaches %s (got %s)" % [target.name, interaction.current_target])
 	await _press("interact")
+
+func _raw_key(code: int, unicode: int = 0) -> void:
+	var event := InputEventKey.new()
+	event.keycode = code
+	event.physical_keycode = code
+	event.unicode = unicode
+	event.pressed = true
+	Input.parse_input_event(event)
+	await process_frame
+	event = event.duplicate()
+	event.pressed = false
+	Input.parse_input_event(event)
+	await process_frame
 
 func _press(action: StringName) -> void:
 	var event := InputEventAction.new()

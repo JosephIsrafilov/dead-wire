@@ -6,9 +6,9 @@
 [sub_resource type="Resource" id="Resource_trans2"]
 script = ExtResource("2_trans")
 transmission_id = &"trans_m1_02_hold_freight"
-true_message = "HOLD FREIGHT UNTIL TEN"
-elias_perception = "HOLD FREIGHT UNTIL TEN"
-written_transcript = "HOLD FREIGHT UNTIL TEN"
+true_message = "FREIGHT 71 EAST"
+elias_perception = "FREIGHT 71 EAST"
+written_transcript = "FREIGHT 71 EAST"
 
 [resource]
 script = ExtResource("1_scen")
@@ -24,4 +24,4 @@ attention_event_id = "door_footsteps"
 attention_event_start_time = 4.0
 completion_fact = ""
 requires_transcript_verification = true
-transcript_reveal_cues = PackedFloat32Array(0.04, 0.09, 0.14, 0.20, 0.27, 0.33, 0.39, 0.45, 0.51, 0.58, 0.64, 0.70, 0.76, 0.82, 0.87, 0.91, 0.95, 0.98, 1.0)
+transcript_reveal_cues = PackedFloat32Array(0.076923, 0.153846, 0.230769, 0.307692, 0.384615, 0.461538, 0.538462, 0.615385, 0.692308, 0.769231, 0.846154, 0.923077, 1.0)

@@ -1,0 +1,45 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+  PASS: Guidance implementation is available
+  PASS: Guidance controller exists
+  PASS: Entry thought appears after delay
+  PASS: Completed context immediately clears its thought
+  PASS: Automatic thoughts respect cooldown
+  PASS: F1 repeats current procedure despite cooldown
+  PASS: Protected wire or modal clears thought
+  PASS: F1 cannot enter blocked presentation
+  PASS: Disabling automatic help suppresses thoughts
+  PASS: Manual help remains available when automatic help disabled
+  PASS: Rapid progress never queues stale instructions
+  PASS: Repeated context does not restart or erase manual thought
+  PASS: Thought expires without typewriter or queue
+  PASS: Hidden route correctness cannot change procedural thought
+  PASS: Unknown or completed steps do not retain a stale reminder
+SCRIPT ERROR: Parse Error: Preload file "res://audio/sfx/foley/footstep_wood_beta.wav" has no resource loaders (unrecognized file extension).
+   at: GDScript::reload (res://scripts/player/player_controller.gd:48)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tests/guidance/night_guidance_test.gd:14)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/player/operator_seat.gd:0)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tests/guidance/night_guidance_test.gd:14)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/office/shift_director.gd:0)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tests/guidance/night_guidance_test.gd:14)
+SCRIPT ERROR: Parse Error: Preload file "res://audio/sfx/foley/footstep_wood_beta.wav" has no resource loaders (unrecognized file extension).
+   at: GDScript::reload (res://scripts/events/door_attention_source.gd:7)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tests/guidance/night_guidance_test.gd:14)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/office/m1_office_controller.gd:0)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tests/guidance/night_guidance_test.gd:14)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/office/night_guidance_controller.gd:0)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tests/guidance/night_guidance_test.gd:14)
+ERROR: Failed to load script "res://scripts/office/night_guidance_controller.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tests/guidance/night_guidance_test.gd:14)

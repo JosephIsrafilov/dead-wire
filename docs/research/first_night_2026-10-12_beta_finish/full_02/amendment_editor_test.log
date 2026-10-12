@@ -1,0 +1,13 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+  PASS: Paper amendment editor scene exists
+  PASS: Editor starts closed
+  PASS: Explicit amendment opens editor
+  PASS: Correction starts blank without an answer hint
+  PASS: Editor visibly displays the exact uppercase submitted word
+  PASS: Typed correction emits chosen word only
+  PASS: Cancel and reopen keep the operator's draft
+  PASS: A different scenario never receives the previous draft
+  PASS: Non-ASCII input is not silently repaired into ASCII text
+  PASS: Unsupported text is rejected without filing or auto-repair
+Amendment editor assertions: 10

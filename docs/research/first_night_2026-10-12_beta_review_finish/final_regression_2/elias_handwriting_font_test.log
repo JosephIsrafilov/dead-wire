@@ -1,0 +1,108 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+  PASS: Generated Elias BMFont exists
+  PASS: Generated Elias atlas exists
+  PASS: BMFont identifies Elias Working
+  PASS: BMFont keeps explicit vertical metrics
+  PASS: Metrics include A
+  PASS: Editable SVG exists for A
+  PASS: Metrics include B
+  PASS: Editable SVG exists for B
+  PASS: Metrics include C
+  PASS: Editable SVG exists for C
+  PASS: Metrics include D
+  PASS: Editable SVG exists for D
+  PASS: Metrics include E
+  PASS: Editable SVG exists for E
+  PASS: Metrics include F
+  PASS: Editable SVG exists for F
+  PASS: Metrics include G
+  PASS: Editable SVG exists for G
+  PASS: Metrics include H
+  PASS: Editable SVG exists for H
+  PASS: Metrics include I
+  PASS: Editable SVG exists for I
+  PASS: Metrics include J
+  PASS: Editable SVG exists for J
+  PASS: Metrics include K
+  PASS: Editable SVG exists for K
+  PASS: Metrics include L
+  PASS: Editable SVG exists for L
+  PASS: Metrics include M
+  PASS: Editable SVG exists for M
+  PASS: Metrics include N
+  PASS: Editable SVG exists for N
+  PASS: Metrics include O
+  PASS: Editable SVG exists for O
+  PASS: Metrics include P
+  PASS: Editable SVG exists for P
+  PASS: Metrics include Q
+  PASS: Editable SVG exists for Q
+  PASS: Metrics include R
+  PASS: Editable SVG exists for R
+  PASS: Metrics include S
+  PASS: Editable SVG exists for S
+  PASS: Metrics include T
+  PASS: Editable SVG exists for T
+  PASS: Metrics include U
+  PASS: Editable SVG exists for U
+  PASS: Metrics include V
+  PASS: Editable SVG exists for V
+  PASS: Metrics include W
+  PASS: Editable SVG exists for W
+  PASS: Metrics include X
+  PASS: Editable SVG exists for X
+  PASS: Metrics include Y
+  PASS: Editable SVG exists for Y
+  PASS: Metrics include Z
+  PASS: Editable SVG exists for Z
+  PASS: Metrics include 0
+  PASS: Editable SVG exists for 0
+  PASS: Metrics include 1
+  PASS: Editable SVG exists for 1
+  PASS: Metrics include 2
+  PASS: Editable SVG exists for 2
+  PASS: Metrics include 3
+  PASS: Editable SVG exists for 3
+  PASS: Metrics include 4
+  PASS: Editable SVG exists for 4
+  PASS: Metrics include 5
+  PASS: Editable SVG exists for 5
+  PASS: Metrics include 6
+  PASS: Editable SVG exists for 6
+  PASS: Metrics include 7
+  PASS: Editable SVG exists for 7
+  PASS: Metrics include 8
+  PASS: Editable SVG exists for 8
+  PASS: Metrics include 9
+  PASS: Editable SVG exists for 9
+  PASS: Metrics include  
+  PASS: Editable SVG exists for  
+  PASS: Metrics include .
+  PASS: Editable SVG exists for .
+  PASS: Metrics include ,
+  PASS: Editable SVG exists for ,
+  PASS: Metrics include !
+  PASS: Editable SVG exists for !
+  PASS: Metrics include ?
+  PASS: Editable SVG exists for ?
+  PASS: Metrics include ;
+  PASS: Editable SVG exists for ;
+  PASS: Metrics include :
+  PASS: Editable SVG exists for :
+  PASS: Metrics include '
+  PASS: Editable SVG exists for '
+  PASS: Metrics include -
+  PASS: Editable SVG exists for -
+  PASS: Metrics include /
+  PASS: Editable SVG exists for /
+  PASS: Metrics include (
+  PASS: Editable SVG exists for (
+  PASS: Metrics include )
+  PASS: Editable SVG exists for )
+  PASS: Live and archive labels share one font resource
+  PASS: Forms builder uses the matching handwriting metrics
+  PASS: Ten-column transcript layout is preserved
+  PASS: Transcript scene loads with the generated font
+  PASS: Both paper labels resolve the generated font
+  PASS: Font provides measured transcript advances

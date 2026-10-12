@@ -1,0 +1,982 @@
+{
+  "engine_path": "C:\\Users\\YUSIF\\Desktop\\Godot_v4.7.1-stable_win64.exe\\Godot_v4.7.1-stable_win64.exe",
+  "engine_sha256": "323f9c4cc5db674e98815cdd8e69da007d5efc779abedc8c0e42883b7fdea12a",
+  "pe": {
+    "machine": "0x8664",
+    "timestamp": 1783977241,
+    "imagebase": "0x140000000",
+    "imagesize": 180953088,
+    "symbol_pointer": 0,
+    "symbol_count": 0,
+    "sections": [
+      {
+        "name": ".text",
+        "va": 4096,
+        "vsize": 107407280,
+        "rawsize": 107407360,
+        "rawptr": 1024
+      },
+      {
+        "name": ".data",
+        "va": 107413504,
+        "vsize": 1154464,
+        "rawsize": 1154560,
+        "rawptr": 107408384
+      },
+      {
+        "name": ".rdata",
+        "va": 108568576,
+        "vsize": 64296272,
+        "rawsize": 64296448,
+        "rawptr": 108562944
+      },
+      {
+        "name": ".pdata",
+        "va": 172867584,
+        "vsize": 2575284,
+        "rawsize": 2575360,
+        "rawptr": 172859392
+      },
+      {
+        "name": ".xdata",
+        "va": 175443968,
+        "vsize": 2665188,
+        "rawsize": 2665472,
+        "rawptr": 175434752
+      },
+      {
+        "name": ".bss",
+        "va": 178110464,
+        "vsize": 1936192,
+        "rawsize": 0,
+        "rawptr": 0
+      },
+      {
+        "name": ".edata",
+        "va": 180047872,
+        "vsize": 170,
+        "rawsize": 512,
+        "rawptr": 178100224
+      },
+      {
+        "name": ".idata",
+        "va": 180051968,
+        "vsize": 28716,
+        "rawsize": 29184,
+        "rawptr": 178100736
+      },
+      {
+        "name": ".tls",
+        "va": 180084736,
+        "vsize": 16,
+        "rawsize": 512,
+        "rawptr": 178129920
+      },
+      {
+        "name": ".rsrc",
+        "va": 180088832,
+        "vsize": 144632,
+        "rawsize": 144896,
+        "rawptr": 178130432
+      },
+      {
+        "name": ".reloc",
+        "va": 180236288,
+        "vsize": 712740,
+        "rawsize": 713216,
+        "rawptr": 178275328
+      }
+    ],
+    "debug_records": []
+  },
+  "dumps": [
+    {
+      "name": "Godot_v4.7.1-stable_win64.exe.16504.dmp",
+      "sha256": "22fbb708aac6963c841406fdb363f1006b1fb2348bd72d78e9d8c80aadce006c",
+      "header_timestamp": 1791534955,
+      "flags": "0x200121",
+      "streams": [
+        0,
+        3,
+        4,
+        5,
+        6,
+        7,
+        13,
+        15,
+        21,
+        22,
+        24
+      ],
+      "thread": 868,
+      "exception_code": "0xc0000005",
+      "exception_address": "0x7ff68aa47af6",
+      "exception_module": "Godot_v4.7.1-stable_win64.exe+0x547af6",
+      "parameters": [
+        "0x0",
+        "0x28fb1d59510"
+      ],
+      "registers": {
+        "rax": "0x1",
+        "rcx": "0x0",
+        "rdx": "0x28faa8b0000",
+        "rbx": "0x0",
+        "rsp": "0xf30efff0b0",
+        "rbp": "0x28fb292b1f0",
+        "rsi": "0x0",
+        "rdi": "0x28fad825de0",
+        "r8": "0x7ffffffffffffffc",
+        "r9": "0xfeeefeeefeeefeee",
+        "r10": "0x8010",
+        "r11": "0xf30effef20",
+        "r12": "0x28fb1e7b9c0",
+        "r13": "0x28fb1d59508",
+        "r14": "0x1",
+        "r15": "0x28fb292b1d0",
+        "rip": "0x7ff68aa47af6"
+      },
+      "engine_module": {
+        "base": 140696859181056,
+        "size": 180953088,
+        "timestamp": 1783977241,
+        "name": "C:\\Users\\YUSIF\\Desktop\\Godot_v4.7.1-stable_win64.exe\\Godot_v4.7.1-stable_win64.exe",
+        "cv": ""
+      },
+      "matching_local_PE_timestamp_and_size": true,
+      "instruction_file_offset": "0x546ef6",
+      "instruction_window_start_relative": "0x547ad6",
+      "instruction_window_hex": "01e8347b05004c8bafd0010000488d44244848894424304d85ed0f84ba0200004d8b65084d85e40f844d0100004c89e1e805308e0384c00f843d010000498bb424900200004885f60f84b90000004c8b7e184531f6498b4720498d6f204885c0",
+      "memory_at_registers": {
+        "rcx": null,
+        "rbx": null,
+        "rdx": null,
+        "rax": null,
+        "rdi": null,
+        "rsi": null
+      },
+      "raw_stack_candidates_NOT_call_stack": [
+        {
+          "stack_offset": "0x18",
+          "address": "0x7ffc3272363c",
+          "module_offset": "ntdll.dll+0xa363c"
+        },
+        {
+          "stack_offset": "0x20",
+          "address": "0x7ffc2f8a2a20",
+          "module_offset": "KERNELBASE.dll+0x22a20"
+        },
+        {
+          "stack_offset": "0x98",
+          "address": "0x7ff68e339378",
+          "module_offset": "Godot_v4.7.1-stable_win64.exe+0x3e39378"
+        },
+        {
+          "stack_offset": "0xb0",
+          "address": "0x7ff6950aa1a0",
+          "module_offset": "Godot_v4.7.1-stable_win64.exe+0xabaa1a0"
+        },
+        {
+          "stack_offset": "0xc8",
+          "address": "0x7ffc326928f0",
+          "module_offset": "ntdll.dll+0x128f0"
+        },
+        {
+          "stack_offset": "0xd8",
+          "address": "0x7ffc326927f0",
+          "module_offset": "ntdll.dll+0x127f0"
+        },
+        {
+          "stack_offset": "0x118",
+          "address": "0x7ff68e3529b5",
+          "module_offset": "Godot_v4.7.1-stable_win64.exe+0x3e529b5"
+        },
+        {
+          "stack_offset": "0x168",
+          "address": "0x7ff68a55ffb1",
+          "module_offset": "Godot_v4.7.1-stable_win64.exe+0x5ffb1"
+        },
+        {
+          "stack_offset": "0x198",
+          "address": "0x7ff68c98e05d",
+          "module_offset": "Godot_v4.7.1-stable_win64.exe+0x248e05d"
+        },
+        {
+          "stack_offset": "0x1f8",
+          "address": "0x7ff68a55255f",
+          "module_offset": "Godot_v4.7.1-stable_win64.exe+0x5255f"
+        },
+        {
+          "stack_offset": "0x230",
+          "address": "0x7ff69242edc0",
+          "module_offset": "Godot_v4.7.1-stable_win64.exe+0x7f2edc0"
+        },
+        {
+          "stack_offset": "0x2b0",
+          "address": "0x7ff69253ac10",
+          "module_offset": "Godot_v4.7.1-stable_win64.exe+0x803ac10"
+        },
+        {
+          "stack_offset": "0x348",
+          "address": "0x7ff68d6b3860",
+          "module_offset": "Godot_v4.7.1-stable_win64.exe+0x31b3860"
+        },
+        {
+          "stack_offset": "0x388",
+          "address": "0x7ff6924de070",
+          "module_offset": "Godot_v4.7.1-stable_win64.exe+0x7fde070"
+        }
+      ],
+      "bounded_unwind": {
+        "frames": [
+          {
+            "rip": "0x7ff68aa47af6",
+            "rva": "0x547af6",
+            "function_begin_rva": "0x547aa0",
+            "rsp": "0xf30efff0b0",
+            "return_slot": "0xf30efff148",
+            "return_rva": "0x3e39378",
+            "return_address": "0x7ff68e339378",
+            "preceding_return_bytes": "89f1ff9278010000"
+          },
+          {
+            "rip": "0x7ff68e339378",
+            "rva": "0x3e39378",
+            "function_begin_rva": "0x3e39240",
+            "rsp": "0xf30efff150",
+            "return_slot": "0xf30efff218",
+            "return_rva": "0x5ffb1",
+            "return_address": "0x7ff68a55ffb1",
+            "preceding_return_bytes": "29df03e88f92dd03"
+          },
+          {
+            "rip": "0x7ff68a55ffb1",
+            "rva": "0x5ffb1",
+            "function_begin_rva": "0x5fcc0",
+            "rsp": "0xf30efff220",
+            "return_slot": "0xf30efff2a8",
+            "return_rva": "0x5255f",
+            "return_address": "0x7ff68a55255f",
+            "preceding_return_bytes": "0331c9e861d70000"
+          },
+          {
+            "rip": "0x7ff68a55255f",
+            "rva": "0x5255f",
+            "function_begin_rva": "0x52400",
+            "rsp": "0xf30efff2b0",
+            "return_slot": "0xf30efff688",
+            "return_rva": "0x525fe",
+            "return_address": "0x7ff68a5525fe",
+            "preceding_return_bytes": "4889c2e802feffff"
+          },
+          {
+            "rip": "0x7ff68a5525fe",
+            "rva": "0x525fe",
+            "function_begin_rva": "0x525d0",
+            "rsp": "0xf30efff690",
+            "return_slot": "0xf30efff6d8",
+            "return_rva": "0x10c9",
+            "return_address": "0x7ff68a5010c9",
+            "preceding_return_bytes": "af9d0ae8376b5e06"
+          },
+          {
+            "rip": "0x7ff68a5010c9",
+            "rva": "0x10c9",
+            "function_begin_rva": "0x1010",
+            "rsp": "0xf30efff6e0",
+            "return_slot": "0xf30efff778",
+            "return_rva": "0x13f6",
+            "return_address": "0x7ff68a5013f6",
+            "preceding_return_bytes": "000000e81afcffff"
+          },
+          {
+            "rip": "0x7ff68a5013f6",
+            "rva": "0x13f6",
+            "function_begin_rva": "0x13e0",
+            "rsp": "0xf30efff780",
+            "return_slot": "0xf30efff7a8",
+            "return_rva": "0x5a6adcd87",
+            "return_address": "0x7ffc30fdcd87",
+            "preceding_return_bytes": null
+          }
+        ],
+        "stop": "Not in engine function table at 0x7ffc30fdcd87",
+        "caveat": "Unsymbolized bounded AMD64 metadata unwind; review call sites, not a debugger stack."
+      }
+    },
+    {
+      "name": "Godot_v4.7.1-stable_win64.exe.16920.dmp",
+      "sha256": "ce50f0c0d04112c8c1eb8aadee4017fa87364bd36435a9060a351b28510b8595",
+      "header_timestamp": 1791477741,
+      "flags": "0x200121",
+      "streams": [
+        0,
+        3,
+        4,
+        5,
+        6,
+        7,
+        13,
+        15,
+        21,
+        22,
+        24
+      ],
+      "thread": 6192,
+      "exception_code": "0xc0000005",
+      "exception_address": "0x7ff6c26a7af6",
+      "exception_module": "Godot_v4.7.1-stable_win64.exe+0x547af6",
+      "parameters": [
+        "0x0",
+        "0x224dcc9cca0"
+      ],
+      "registers": {
+        "rax": "0x1",
+        "rcx": "0x0",
+        "rdx": "0x224d58e0000",
+        "rbx": "0x0",
+        "rsp": "0x65515ff400",
+        "rbp": "0x224dd85db90",
+        "rsi": "0x0",
+        "rdi": "0x224d88fdc40",
+        "r8": "0x7ffffffffffffffc",
+        "r9": "0x224dcdd6960",
+        "r10": "0x224d7500000",
+        "r11": "0x65515ff270",
+        "r12": "0x224dcdd7280",
+        "r13": "0x224dcc9cc98",
+        "r14": "0x1",
+        "r15": "0x224dd85db70",
+        "rip": "0x7ff6c26a7af6"
+      },
+      "engine_module": {
+        "base": 140697794904064,
+        "size": 180953088,
+        "timestamp": 1783977241,
+        "name": "C:\\Users\\YUSIF\\Desktop\\Godot_v4.7.1-stable_win64.exe\\Godot_v4.7.1-stable_win64.exe",
+        "cv": ""
+      },
+      "matching_local_PE_timestamp_and_size": true,
+      "instruction_file_offset": "0x546ef6",
+      "instruction_window_start_relative": "0x547ad6",
+      "instruction_window_hex": "01e8347b05004c8bafd0010000488d44244848894424304d85ed0f84ba0200004d8b65084d85e40f844d0100004c89e1e805308e0384c00f843d010000498bb424900200004885f60f84b90000004c8b7e184531f6498b4720498d6f204885c0",
+      "memory_at_registers": {
+        "rcx": null,
+        "rbx": null,
+        "rdx": null,
+        "rax": null,
+        "rdi": null,
+        "rsi": null
+      },
+      "raw_stack_candidates_NOT_call_stack": [
+        {
+          "stack_offset": "0x20",
+          "address": "0x7ffc2f8a2a20",
+          "module_offset": "KERNELBASE.dll+0x22a20"
+        },
+        {
+          "stack_offset": "0x98",
+          "address": "0x7ff6c5f99378",
+          "module_offset": "Godot_v4.7.1-stable_win64.exe+0x3e39378"
+        },
+        {
+          "stack_offset": "0xb0",
+          "address": "0x7ff6ccd0a1a0",
+          "module_offset": "Godot_v4.7.1-stable_win64.exe+0xabaa1a0"
+        },
+        {
+          "stack_offset": "0xc8",
+          "address": "0x7ffc326928f0",
+          "module_offset": "ntdll.dll+0x128f0"
+        },
+        {
+          "stack_offset": "0xd8",
+          "address": "0x7ffc326927f0",
+          "module_offset": "ntdll.dll+0x127f0"
+        },
+        {
+          "stack_offset": "0x118",
+          "address": "0x7ff6c5fb29b5",
+          "module_offset": "Godot_v4.7.1-stable_win64.exe+0x3e529b5"
+        },
+        {
+          "stack_offset": "0x168",
+          "address": "0x7ff6c21bffb1",
+          "module_offset": "Godot_v4.7.1-stable_win64.exe+0x5ffb1"
+        },
+        {
+          "stack_offset": "0x198",
+          "address": "0x7ff6c45ee05d",
+          "module_offset": "Godot_v4.7.1-stable_win64.exe+0x248e05d"
+        },
+        {
+          "stack_offset": "0x1f8",
+          "address": "0x7ff6c21b255f",
+          "module_offset": "Godot_v4.7.1-stable_win64.exe+0x5255f"
+        },
+        {
+          "stack_offset": "0x230",
+          "address": "0x7ff6ca08edc0",
+          "module_offset": "Godot_v4.7.1-stable_win64.exe+0x7f2edc0"
+        },
+        {
+          "stack_offset": "0x2b0",
+          "address": "0x7ff6ca19ac10",
+          "module_offset": "Godot_v4.7.1-stable_win64.exe+0x803ac10"
+        },
+        {
+          "stack_offset": "0x348",
+          "address": "0x7ff6c5313860",
+          "module_offset": "Godot_v4.7.1-stable_win64.exe+0x31b3860"
+        },
+        {
+          "stack_offset": "0x388",
+          "address": "0x7ff6ca13e070",
+          "module_offset": "Godot_v4.7.1-stable_win64.exe+0x7fde070"
+        }
+      ],
+      "bounded_unwind": {
+        "frames": [
+          {
+            "rip": "0x7ff6c26a7af6",
+            "rva": "0x547af6",
+            "function_begin_rva": "0x547aa0",
+            "rsp": "0x65515ff400",
+            "return_slot": "0x65515ff498",
+            "return_rva": "0x3e39378",
+            "return_address": "0x7ff6c5f99378",
+            "preceding_return_bytes": "89f1ff9278010000"
+          },
+          {
+            "rip": "0x7ff6c5f99378",
+            "rva": "0x3e39378",
+            "function_begin_rva": "0x3e39240",
+            "rsp": "0x65515ff4a0",
+            "return_slot": "0x65515ff568",
+            "return_rva": "0x5ffb1",
+            "return_address": "0x7ff6c21bffb1",
+            "preceding_return_bytes": "29df03e88f92dd03"
+          },
+          {
+            "rip": "0x7ff6c21bffb1",
+            "rva": "0x5ffb1",
+            "function_begin_rva": "0x5fcc0",
+            "rsp": "0x65515ff570",
+            "return_slot": "0x65515ff5f8",
+            "return_rva": "0x5255f",
+            "return_address": "0x7ff6c21b255f",
+            "preceding_return_bytes": "0331c9e861d70000"
+          },
+          {
+            "rip": "0x7ff6c21b255f",
+            "rva": "0x5255f",
+            "function_begin_rva": "0x52400",
+            "rsp": "0x65515ff600",
+            "return_slot": "0x65515ff9d8",
+            "return_rva": "0x525fe",
+            "return_address": "0x7ff6c21b25fe",
+            "preceding_return_bytes": "4889c2e802feffff"
+          },
+          {
+            "rip": "0x7ff6c21b25fe",
+            "rva": "0x525fe",
+            "function_begin_rva": "0x525d0",
+            "rsp": "0x65515ff9e0",
+            "return_slot": "0x65515ffa28",
+            "return_rva": "0x10c9",
+            "return_address": "0x7ff6c21610c9",
+            "preceding_return_bytes": "af9d0ae8376b5e06"
+          },
+          {
+            "rip": "0x7ff6c21610c9",
+            "rva": "0x10c9",
+            "function_begin_rva": "0x1010",
+            "rsp": "0x65515ffa30",
+            "return_slot": "0x65515ffac8",
+            "return_rva": "0x13f6",
+            "return_address": "0x7ff6c21613f6",
+            "preceding_return_bytes": "000000e81afcffff"
+          },
+          {
+            "rip": "0x7ff6c21613f6",
+            "rva": "0x13f6",
+            "function_begin_rva": "0x13e0",
+            "rsp": "0x65515ffad0",
+            "return_slot": "0x65515ffaf8",
+            "return_rva": "0x56ee7cd87",
+            "return_address": "0x7ffc30fdcd87",
+            "preceding_return_bytes": null
+          }
+        ],
+        "stop": "Not in engine function table at 0x7ffc30fdcd87",
+        "caveat": "Unsymbolized bounded AMD64 metadata unwind; review call sites, not a debugger stack."
+      }
+    },
+    {
+      "name": "Godot_v4.7.1-stable_win64.exe.6456.dmp",
+      "sha256": "b89603b34cb29d6607301adc48eb7a0c2bd3218440f9454b3666e37b4b986f8a",
+      "header_timestamp": 1791742331,
+      "flags": "0x200121",
+      "streams": [
+        0,
+        3,
+        4,
+        5,
+        6,
+        7,
+        13,
+        15,
+        21,
+        22,
+        24
+      ],
+      "thread": 10400,
+      "exception_code": "0xc0000005",
+      "exception_address": "0x7ff6e8d97af6",
+      "exception_module": "Godot_v4.7.1-stable_win64.exe+0x547af6",
+      "parameters": [
+        "0x0",
+        "0x17ad743e0c0"
+      ],
+      "registers": {
+        "rax": "0x1",
+        "rcx": "0x0",
+        "rdx": "0x17acfed0000",
+        "rbx": "0x0",
+        "rsp": "0x1c4fbff200",
+        "rbp": "0x17ad81f9f20",
+        "rsi": "0x0",
+        "rdi": "0x17ad339a5a0",
+        "r8": "0x7ffffffffffffffc",
+        "r9": "0xfeeefeeefeeefeee",
+        "r10": "0x410",
+        "r11": "0x1c4fbff070",
+        "r12": "0x17ad763a5a0",
+        "r13": "0x17ad743e0b8",
+        "r14": "0x1",
+        "r15": "0x17ad81f9f00",
+        "rip": "0x7ff6e8d97af6"
+      },
+      "engine_module": {
+        "base": 140698439712768,
+        "size": 180953088,
+        "timestamp": 1783977241,
+        "name": "C:\\Users\\YUSIF\\Desktop\\Godot_v4.7.1-stable_win64.exe\\Godot_v4.7.1-stable_win64.exe",
+        "cv": ""
+      },
+      "matching_local_PE_timestamp_and_size": true,
+      "instruction_file_offset": "0x546ef6",
+      "instruction_window_start_relative": "0x547ad6",
+      "instruction_window_hex": "01e8347b05004c8bafd0010000488d44244848894424304d85ed0f84ba0200004d8b65084d85e40f844d0100004c89e1e805308e0384c00f843d010000498bb424900200004885f60f84b90000004c8b7e184531f6498b4720498d6f204885c0",
+      "memory_at_registers": {
+        "rcx": null,
+        "rbx": null,
+        "rdx": null,
+        "rax": null,
+        "rdi": null,
+        "rsi": null
+      },
+      "raw_stack_candidates_NOT_call_stack": [
+        {
+          "stack_offset": "0x20",
+          "address": "0x7ff96d6c2a20",
+          "module_offset": "KERNELBASE.dll+0x22a20"
+        },
+        {
+          "stack_offset": "0x98",
+          "address": "0x7ff6ec689378",
+          "module_offset": "Godot_v4.7.1-stable_win64.exe+0x3e39378"
+        },
+        {
+          "stack_offset": "0xb0",
+          "address": "0x7ff6f33fa1a0",
+          "module_offset": "Godot_v4.7.1-stable_win64.exe+0xabaa1a0"
+        },
+        {
+          "stack_offset": "0xc8",
+          "address": "0x7ff9703f28f0",
+          "module_offset": "ntdll.dll+0x128f0"
+        },
+        {
+          "stack_offset": "0xd8",
+          "address": "0x7ff9703f27f0",
+          "module_offset": "ntdll.dll+0x127f0"
+        },
+        {
+          "stack_offset": "0x118",
+          "address": "0x7ff6ec6a29b5",
+          "module_offset": "Godot_v4.7.1-stable_win64.exe+0x3e529b5"
+        },
+        {
+          "stack_offset": "0x168",
+          "address": "0x7ff6e88affb1",
+          "module_offset": "Godot_v4.7.1-stable_win64.exe+0x5ffb1"
+        },
+        {
+          "stack_offset": "0x198",
+          "address": "0x7ff6eacde05d",
+          "module_offset": "Godot_v4.7.1-stable_win64.exe+0x248e05d"
+        },
+        {
+          "stack_offset": "0x1f8",
+          "address": "0x7ff6e88a255f",
+          "module_offset": "Godot_v4.7.1-stable_win64.exe+0x5255f"
+        },
+        {
+          "stack_offset": "0x230",
+          "address": "0x7ff6f077edc0",
+          "module_offset": "Godot_v4.7.1-stable_win64.exe+0x7f2edc0"
+        },
+        {
+          "stack_offset": "0x2b0",
+          "address": "0x7ff6f088ac10",
+          "module_offset": "Godot_v4.7.1-stable_win64.exe+0x803ac10"
+        },
+        {
+          "stack_offset": "0x348",
+          "address": "0x7ff6eba03860",
+          "module_offset": "Godot_v4.7.1-stable_win64.exe+0x31b3860"
+        },
+        {
+          "stack_offset": "0x388",
+          "address": "0x7ff6f082e070",
+          "module_offset": "Godot_v4.7.1-stable_win64.exe+0x7fde070"
+        }
+      ],
+      "bounded_unwind": {
+        "frames": [
+          {
+            "rip": "0x7ff6e8d97af6",
+            "rva": "0x547af6",
+            "function_begin_rva": "0x547aa0",
+            "rsp": "0x1c4fbff200",
+            "return_slot": "0x1c4fbff298",
+            "return_rva": "0x3e39378",
+            "return_address": "0x7ff6ec689378",
+            "preceding_return_bytes": "89f1ff9278010000"
+          },
+          {
+            "rip": "0x7ff6ec689378",
+            "rva": "0x3e39378",
+            "function_begin_rva": "0x3e39240",
+            "rsp": "0x1c4fbff2a0",
+            "return_slot": "0x1c4fbff368",
+            "return_rva": "0x5ffb1",
+            "return_address": "0x7ff6e88affb1",
+            "preceding_return_bytes": "29df03e88f92dd03"
+          },
+          {
+            "rip": "0x7ff6e88affb1",
+            "rva": "0x5ffb1",
+            "function_begin_rva": "0x5fcc0",
+            "rsp": "0x1c4fbff370",
+            "return_slot": "0x1c4fbff3f8",
+            "return_rva": "0x5255f",
+            "return_address": "0x7ff6e88a255f",
+            "preceding_return_bytes": "0331c9e861d70000"
+          },
+          {
+            "rip": "0x7ff6e88a255f",
+            "rva": "0x5255f",
+            "function_begin_rva": "0x52400",
+            "rsp": "0x1c4fbff400",
+            "return_slot": "0x1c4fbff7d8",
+            "return_rva": "0x525fe",
+            "return_address": "0x7ff6e88a25fe",
+            "preceding_return_bytes": "4889c2e802feffff"
+          },
+          {
+            "rip": "0x7ff6e88a25fe",
+            "rva": "0x525fe",
+            "function_begin_rva": "0x525d0",
+            "rsp": "0x1c4fbff7e0",
+            "return_slot": "0x1c4fbff828",
+            "return_rva": "0x10c9",
+            "return_address": "0x7ff6e88510c9",
+            "preceding_return_bytes": "af9d0ae8376b5e06"
+          },
+          {
+            "rip": "0x7ff6e88510c9",
+            "rva": "0x10c9",
+            "function_begin_rva": "0x1010",
+            "rsp": "0x1c4fbff830",
+            "return_slot": "0x1c4fbff8c8",
+            "return_rva": "0x13f6",
+            "return_address": "0x7ff6e88513f6",
+            "preceding_return_bytes": "000000e81afcffff"
+          },
+          {
+            "rip": "0x7ff6e88513f6",
+            "rva": "0x13f6",
+            "function_begin_rva": "0x13e0",
+            "rsp": "0x1c4fbff8d0",
+            "return_slot": "0x1c4fbff8f8",
+            "return_rva": "0x286f0cd87",
+            "return_address": "0x7ff96f75cd87",
+            "preceding_return_bytes": null
+          }
+        ],
+        "stop": "Not in engine function table at 0x7ff96f75cd87",
+        "caveat": "Unsymbolized bounded AMD64 metadata unwind; review call sites, not a debugger stack."
+      }
+    }
+  ],
+  "function_metadata": [
+    {
+      "target": "0x547af6",
+      "start": "0x547aa0",
+      "end": "0x547eb3",
+      "unwind_rva": "0xa77a8d8",
+      "unwind_header": "01100900",
+      "unwind_codes": "10a20c300b600a70095008c006d004e002f0",
+      "rip_string_candidates": [
+        {
+          "instruction_rva": "0x547d30",
+          "string_rva": "0x6da7e68",
+          "text": "FATAL: Condition \"_copy_on_write()\" is true."
+        },
+        {
+          "instruction_rva": "0x547d3d",
+          "string_rva": "0x6da6d58",
+          "text": "./core/templates/cowdata.h"
+        },
+        {
+          "instruction_rva": "0x547d4c",
+          "string_rva": "0x6da7e95",
+          "text": "ptrw"
+        },
+        {
+          "instruction_rva": "0x547e3b",
+          "string_rva": "0x6da75b0",
+          "text": "Condition \"p_elem->_root != this\" is true."
+        },
+        {
+          "instruction_rva": "0x547e48",
+          "string_rva": "0x6da7433",
+          "text": "./core/templates/self_list.h"
+        },
+        {
+          "instruction_rva": "0x547e57",
+          "string_rva": "0x6da75db",
+          "text": "remove"
+        },
+        {
+          "instruction_rva": "0x547e7b",
+          "string_rva": "0x6da75b0",
+          "text": "Condition \"p_elem->_root != this\" is true."
+        },
+        {
+          "instruction_rva": "0x547e88",
+          "string_rva": "0x6da7433",
+          "text": "./core/templates/self_list.h"
+        },
+        {
+          "instruction_rva": "0x547e97",
+          "string_rva": "0x6da75db",
+          "text": "remove"
+        }
+      ]
+    },
+    {
+      "target": "0x5ffb1",
+      "start": "0x5fcc0",
+      "end": "0x607f4",
+      "unwind_rva": "0xa7558e4",
+      "unwind_header": "010c0700",
+      "unwind_codes": "0ca2083007600670055004c002d0",
+      "rip_string_candidates": [
+        {
+          "instruction_rva": "0x5fced",
+          "string_rva": "0x6795d48",
+          "text": "Main::Cleanup"
+        },
+        {
+          "instruction_rva": "0x5fd2c",
+          "string_rva": "0x6795d56",
+          "text": "Shutdown"
+        },
+        {
+          "instruction_rva": "0x60398",
+          "string_rva": "0x6795d48",
+          "text": "Main::Cleanup"
+        },
+        {
+          "instruction_rva": "0x603d7",
+          "string_rva": "0x6795d56",
+          "text": "Shutdown"
+        },
+        {
+          "instruction_rva": "0x60608",
+          "string_rva": "0x6795de8",
+          "text": "Condition \"_data->size_cache\" is true."
+        },
+        {
+          "instruction_rva": "0x60615",
+          "string_rva": "0x6795dc8",
+          "text": "./core/templates/list.h"
+        },
+        {
+          "instruction_rva": "0x60624",
+          "string_rva": "0x6795e0f",
+          "text": "~List"
+        },
+        {
+          "instruction_rva": "0x60648",
+          "string_rva": "0x6795de8",
+          "text": "Condition \"_data->size_cache\" is true."
+        },
+        {
+          "instruction_rva": "0x60655",
+          "string_rva": "0x6795dc8",
+          "text": "./core/templates/list.h"
+        },
+        {
+          "instruction_rva": "0x60664",
+          "string_rva": "0x6795e0f",
+          "text": "~List"
+        },
+        {
+          "instruction_rva": "0x606b0",
+          "string_rva": "0x6795d60",
+          "text": "Condition \"!_start_success\" is true."
+        },
+        {
+          "instruction_rva": "0x606bd",
+          "string_rva": "0x679569b",
+          "text": "main/main.cpp"
+        },
+        {
+          "instruction_rva": "0x606cc",
+          "string_rva": "0x6795d85",
+          "text": "cleanup"
+        },
+        {
+          "instruction_rva": "0x606f8",
+          "string_rva": "0x6795d90",
+          "text": "Condition \"p_I->data != this\" is true. Returning: false"
+        },
+        {
+          "instruction_rva": "0x60705",
+          "string_rva": "0x6795dc8",
+          "text": "./core/templates/list.h"
+        },
+        {
+          "instruction_rva": "0x60714",
+          "string_rva": "0x6795de0",
+          "text": "erase"
+        },
+        {
+          "instruction_rva": "0x60730",
+          "string_rva": "0x6795d90",
+          "text": "Condition \"p_I->data != this\" is true. Returning: false"
+        },
+        {
+          "instruction_rva": "0x6073d",
+          "string_rva": "0x6795dc8",
+          "text": "./core/templates/list.h"
+        },
+        {
+          "instruction_rva": "0x6074c",
+          "string_rva": "0x6795de0",
+          "text": "erase"
+        },
+        {
+          "instruction_rva": "0x60792",
+          "string_rva": "0x6795d90",
+          "text": "Condition \"p_I->data != this\" is true. Returning: false"
+        },
+        {
+          "instruction_rva": "0x6079f",
+          "string_rva": "0x6795dc8",
+          "text": "./core/templates/list.h"
+        },
+        {
+          "instruction_rva": "0x607ae",
+          "string_rva": "0x6795de0",
+          "text": "erase"
+        },
+        {
+          "instruction_rva": "0x607c7",
+          "string_rva": "0x6795d90",
+          "text": "Condition \"p_I->data != this\" is true. Returning: false"
+        },
+        {
+          "instruction_rva": "0x607d4",
+          "string_rva": "0x6795dc8",
+          "text": "./core/templates/list.h"
+        },
+        {
+          "instruction_rva": "0x607e3",
+          "string_rva": "0x6795de0",
+          "text": "erase"
+        }
+      ]
+    },
+    {
+      "target": "0x248e05d",
+      "start": "0x248de70",
+      "end": "0x248e165",
+      "unwind_rva": "0xa870650",
+      "unwind_header": "01070400",
+      "unwind_codes": "0772033002600170",
+      "rip_string_candidates": [
+        {
+          "instruction_rva": "0x248e100",
+          "string_rva": "0x71f3c88",
+          "text": "Condition \"p_I->data != this\" is true. Returning: false"
+        },
+        {
+          "instruction_rva": "0x248e10d",
+          "string_rva": "0x71f3cc0",
+          "text": "./core/templates/list.h"
+        },
+        {
+          "instruction_rva": "0x248e11c",
+          "string_rva": "0x71f3cd8",
+          "text": "erase"
+        },
+        {
+          "instruction_rva": "0x248e138",
+          "string_rva": "0x71f3c88",
+          "text": "Condition \"p_I->data != this\" is true. Returning: false"
+        },
+        {
+          "instruction_rva": "0x248e145",
+          "string_rva": "0x71f3cc0",
+          "text": "./core/templates/list.h"
+        },
+        {
+          "instruction_rva": "0x248e154",
+          "string_rva": "0x71f3cd8",
+          "text": "erase"
+        }
+      ]
+    },
+    {
+      "target": "0x5255f",
+      "start": "0x52400",
+      "end": "0x525c4",
+      "unwind_rva": "0xa7537d8",
+      "unwind_header": "01110900",
+      "unwind_codes": "110174000a3009600870075006c004d002e0",
+      "rip_string_candidates": []
+    },
+    {
+      "target": "0x3e529b5",
+      "start": "0x3e528f0",
+      "end": "0x3e529d7",
+      "unwind_rva": "0xa95c4a0",
+      "unwind_header": "01080500",
+      "unwind_codes": "08420430036002700150",
+      "rip_string_candidates": []
+    },
+    {
+      "target": "0x3e39378",
+      "start": "0x3e39240",
+      "end": "0x3e39487",
+      "unwind_rva": "0xa95bcd0",
+      "unwind_header": "01130a00",
+      "unwind_codes": "130111000c300b600a70095008c006d004e002f0",
+      "rip_string_candidates": []
+    }
+  ]
+}

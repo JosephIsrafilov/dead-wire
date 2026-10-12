@@ -1,0 +1,13 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+--- Starting Tape Evidence Test Suite ---
+  PASS: Real scheduler starts the evidence fixture
+  PASS: Started MARK exposes zero delivered units, not its future dot length
+  PASS: Started MARK exposes zero delivered seconds
+  PASS: Public record uses the tape-ink value type
+  PASS: Started ink is incomplete and not interrupted
+  PASS: Public ink has only observed fields, with no planned units, index, end or source metadata
+  PASS: snapshot creates an independent value with identical observed fields
+  PASS: Mutating every returned field and array leaves the register unchanged
+  PASS: Returned ink never aliases the scheduler's source event
+--- All Tape Evidence Tests PASSED (9 assertions) ---

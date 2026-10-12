@@ -1,0 +1,13 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+--- Starting Main Scene Smoke Test ---
+  PASS: State autoloads are present
+  PASS: Main menu scene loads
+  PASS: Main menu instantiates
+  PASS: Main menu exposes the watch entry point
+  PASS: Begin the Watch changes scene successfully
+  PASS: Main menu lands in the production office scene
+  PASS: Office startup wires session and shift director
+  PASS: Office starts before the line is opened
+  PASS: Starting a watch clears prior world and knowledge facts
+--- Main Scene Smoke Test PASSED ---

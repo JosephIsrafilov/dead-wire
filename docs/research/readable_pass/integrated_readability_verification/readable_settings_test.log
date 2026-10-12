@@ -1,0 +1,12 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+--- Starting Readable Settings Test Suite ---
+  PASS: Settings expose a presentation choice
+  PASS: New install defaults to readable
+  PASS: New install defaults to 65 degree vertical FOV
+  PASS: New install defaults to 1.2 text scale
+  PASS: Isolated test settings saved
+  PASS: Mode and vertical FOV survive reload
+  PASS: Text scale survives reload
+  PASS: Invalid preferences clamp to explicit bounds
+Readable settings assertions: 8

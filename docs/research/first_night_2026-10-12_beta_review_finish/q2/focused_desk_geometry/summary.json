@@ -1,0 +1,22 @@
+{
+  "suites": 1,
+  "passed": 1,
+  "failed": 0,
+  "assertions": 26,
+  "error_bearing_suites": 1,
+  "results": [
+    {
+      "suite": "tests/office/desk_geometry_test.gd",
+      "exit_code": 0,
+      "assertions": 26,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [
+        "ERROR: 8 resources still in use at exit (run with --verbose for details)."
+      ],
+      "warnings": [
+        "WARNING: 24 ObjectDB instances were leaked at exit (run with `--verbose` for details)."
+      ]
+    }
+  ]
+}

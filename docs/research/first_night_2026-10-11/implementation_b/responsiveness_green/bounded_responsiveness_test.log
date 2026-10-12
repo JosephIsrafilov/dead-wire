@@ -1,0 +1,8 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+  PASS: Seat approach retains its physical 0.34-second glide
+  PASS: Seat head settle is bounded to 0.45 seconds
+  PASS: Standing transition is bounded to 0.45 seconds
+  PASS: Document lift-in is bounded to 0.16 seconds
+  PASS: Explicit intro skip has its own 0.35-second transition
+  PASS: Normal intro fade retains its authored presentation

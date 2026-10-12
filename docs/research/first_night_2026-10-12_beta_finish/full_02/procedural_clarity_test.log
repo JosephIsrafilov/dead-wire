@@ -1,0 +1,15 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+--- Starting Procedural Clarity Test Suite ---
+  PASS: Duty sheet still carries standing orders
+  PASS: Standing orders name the AMEND COPY action
+  PASS: Standing orders name the FILE AS COPIED action
+  PASS: Standing orders say what Enter and Esc do
+  PASS: Standing orders never name either side of the surprise
+  PASS: Standing orders point routing to the ledger and board
+  PASS: Standing orders say the line clock keeps running while reading or editing
+  PASS: Standing orders drop the contradictory sender-waiting claims
+  PASS: Standing orders say Enter sends the word to file
+  PASS: Standing orders say Esc keeps the draft and files nothing
+  PASS: Standing orders no longer use the vague Enter wording
+--- All Procedural Clarity Tests PASSED (11 assertions) ---

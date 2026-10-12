@@ -11,16 +11,17 @@ extends SceneTree
 ## Layout is authored in the sheet's own metres and mapped to texels, so the
 ## form and the Label3D ink share one geometry. Deterministic.
 
-const PRINT := preload("res://assets/fonts/imfell/IMFeENrm28P.ttf")
-const HAND := preload("res://assets/fonts/cedarville/Cedarville-Cursive.ttf")
+const PRINT := preload("res://assets/fonts/oldstandard/OldStandardTT-Regular.ttf")
+const PRINT_BOLD := preload("res://assets/fonts/oldstandard/OldStandardTT-Bold.ttf")
+const HAND := preload("res://assets/fonts/elias_working/elias_working.fnt")
 
 const SHEET_W := 0.23
 const SHEET_H := 0.30
 const FORM_PX := Vector2i(368, 480) ## 16 px per cm
 ## Must match the transcript Label3D in transcript_paper.tscn.
 const INK_ORIGIN := Vector2(-0.082, -0.065)
-const INK_PIXEL_SIZE := 0.00165
-const INK_FONT_SIZE := 16
+const INK_PIXEL_SIZE := 0.00148
+const INK_FONT_SIZE := 18
 
 const INK_PRINT := Color(0.16, 0.12, 0.09)
 const RULE := Color(0.46, 0.50, 0.58, 0.55)
@@ -88,10 +89,10 @@ func _to_px(sheet: Vector2, px: Vector2) -> Vector2:
 	return Vector2((sheet.x + SHEET_W * 0.5) / SHEET_W * px.x, (sheet.y + SHEET_H * 0.5) / SHEET_H * px.y)
 
 func _label(parent: Node, text: String, pos: Vector2, size: int, align: HorizontalAlignment, width: float,
-		color: Color = INK_PRINT) -> void:
+		color: Color = INK_PRINT, bold: bool = false) -> void:
 	var l := Label.new()
 	l.text = text
-	l.add_theme_font_override("font", PRINT)
+	l.add_theme_font_override("font", PRINT_BOLD if bold else PRINT)
 	l.add_theme_font_size_override("font_size", size)
 	l.add_theme_color_override("font_color", color)
 	l.horizontal_alignment = align
@@ -124,10 +125,10 @@ func _frame(parent: Node, rect: Rect2, thickness: float, color: Color) -> void:
 func _night_copy(vp: Node, px: Vector2) -> void:
 	var w := px.x
 	_frame(vp, Rect2(10, 10, w - 20, px.y - 20), 1.0, INK_PRINT.lerp(Color(0.8, 0.75, 0.6), 0.35))
-	_label(vp, "BLACK CREEK & WESTERN RAILWAY", Vector2(0, 16), 17, HORIZONTAL_ALIGNMENT_CENTER, w)
-	_label(vp, "TELEGRAPH  DEPARTMENT", Vector2(0, 38), 11, HORIZONTAL_ALIGNMENT_CENTER, w)
+	_label(vp, "BLACK CREEK & WESTERN RAILWAY", Vector2(0, 16), 17, HORIZONTAL_ALIGNMENT_CENTER, w, INK_PRINT, true)
+	_label(vp, "TELEGRAPH  DEPARTMENT", Vector2(0, 38), 11, HORIZONTAL_ALIGNMENT_CENTER, w, INK_PRINT, true)
 	_line(vp, Vector2(w * 0.3, 55), w * 0.4, 1.0, INK_PRINT)
-	_label(vp, "NIGHT  COPY", Vector2(0, 58), 13, HORIZONTAL_ALIGNMENT_CENTER, w)
+	_label(vp, "NIGHT  COPY", Vector2(0, 58), 13, HORIZONTAL_ALIGNMENT_CENTER, w, INK_PRINT, true)
 	# Header fields.
 	var fy := 84.0
 	_label(vp, "No.", Vector2(22, fy), 10, HORIZONTAL_ALIGNMENT_LEFT, 40)
@@ -170,7 +171,7 @@ func _division_map(vp: Node, px: Vector2) -> void:
 	var ink := INK_PRINT
 	var faint := INK_PRINT.lerp(Color(0.74, 0.68, 0.54), 0.45)
 	_frame(vp, Rect2(6, 6, px.x - 12, px.y - 12), 2.0, ink)
-	_label(vp, "BLACK CREEK & WESTERN RY. — EAST DIVISION", Vector2(0, 12), 12, HORIZONTAL_ALIGNMENT_CENTER, px.x)
+	_label(vp, "BLACK CREEK & WESTERN RY. — EAST DIVISION", Vector2(0, 12), 12, HORIZONTAL_ALIGNMENT_CENTER, px.x, INK_PRINT, true)
 	# Main line west-east with stations.
 	_line(vp, Vector2(30, 120), px.x - 60, 3.0, ink)
 	var stations := [[40.0, "SUMMIT"], [150.0, "BLACK CREEK"], [270.0, "HOLLIS"], [345.0, "DENVER \u2192"]]

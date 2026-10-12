@@ -1,0 +1,195 @@
+ M assets/fonts/deadwire_theme.tres
+ M data/scenarios/m1_scenario_2_attention.tres
+ M data/scenarios/m1_scenario_3_core_hook.tres
+ M docs/HANDOVER.md
+ M docs/third_party_assets.md
+ M export_presets.cfg
+ M scenes/office/m1_office.tscn
+ M scenes/player/player.tscn
+ M scenes/telegraph/copy_commit_desk.tscn
+ M scenes/telegraph/routing_board.tscn
+ M scenes/telegraph/sounder.tscn
+ M scenes/telegraph/tape_register.tscn
+ M scenes/telegraph/telegraph_key.tscn
+ M scenes/telegraph/transcript_paper.tscn
+ M scenes/ui/document_viewer.tscn
+ M scenes/ui/main_menu.tscn
+ M scenes/ui/pause_menu.tscn
+ M scripts/audio/office_foley.gd
+ M scripts/events/door_attention_source.gd
+ M scripts/interaction/interaction_controller.gd
+ M scripts/office/dawn_evidence.gd
+ M scripts/office/m1_office_controller.gd
+ M scripts/office/shift_director.gd
+ M scripts/player/operator_seat.gd
+ M scripts/player/player_controller.gd
+ M scripts/state/knowledge_state.gd
+ M scripts/telegraph/hardware/tape_register_controller.gd
+ M scripts/telegraph/session/telegraph_commit_option.gd
+ M scripts/telegraph/session/telegraph_scenario_data.gd
+ M scripts/telegraph/session/telegraph_session_controller.gd
+ M scripts/telegraph/ui/copy_commit_desk.gd
+ M scripts/telegraph/ui/dispatch_ledger.gd
+ M scripts/telegraph/ui/duty_sheet.gd
+ M scripts/telegraph/ui/morse_reference_card.gd
+ M scripts/telegraph/ui/routing_board.gd
+ M scripts/ui/document_viewer.gd
+ M scripts/ui/game_settings.gd
+ M scripts/ui/intro_card.gd
+ M scripts/ui/main_menu.gd
+ M scripts/ui/pause_menu.gd
+ M tests/audio/intro_music_test.gd
+ M tests/integration/m1_office_integration_test.gd
+ M tests/integration/night_recovery_test.gd
+ M tests/office/m1_presentation_structure_test.gd
+ M tests/office/shift_director_test.gd
+ M tests/telegraph/copy_commit_desk_test.gd
+ M tests/telegraph/duty_sheet_test.gd
+ M tests/telegraph/routing_board_test.gd
+ M tests/telegraph/tape_register_test.gd
+ M tests/telegraph/telegraph_scenario_data_test.gd
+ M tests/telegraph/telegraph_session_controller_test.gd
+ M tools/build_paper_forms.gd
+ M tools/capture_first_night.gd
+ M tools/commit_input_route_capture.gd
+ M tools/first_night_playthrough.gd
+ M tools/generate_action_foley.py
+ M tools/production_evidence_capture.gd
+ M tools/window_evidence_capture.gd
+?? .hermes/
+?? assets/fonts/courierprime/
+?? assets/fonts/elias_working/
+?? assets/fonts/noto/
+?? assets/fonts/oldstandard/
+?? assets/models/instruments_v1/
+?? assets/textures/instruments_v1/
+?? audio/sfx/foley/footstep_wood_beta.wav
+?? audio/sfx/foley/register_wind.wav
+?? builds/windows-beta/
+?? data/night_guidance/
+?? docs/art/readable_pass/
+?? docs/art/state_2026-10-10/
+?? docs/beta/
+?? docs/plans/2026-10-10_INSTRUMENT_FIRST.md
+?? docs/plans/2026-10-10_MECHANICS_EVIDENCE_CHOICE.md
+?? docs/plans/2026-10-11_FIRST_NIGHT_FINISH.md
+?? docs/plans/2026-10-12_BETA_HANDOFF_EXECUTION.md
+?? docs/plans/2026-10-12_BETA_REVIEW_REMAINDER.md
+?? docs/research/first_night_2026-10-11/
+?? docs/research/first_night_2026-10-12_beta_finish/
+?? docs/research/first_night_2026-10-12_beta_review_finish/
+?? docs/research/mechanics_2026-10-10/
+?? docs/research/readable_pass/
+?? findings.md
+?? materials/shaders/
+?? progress.md
+?? scenes/ui/amendment_editor.tscn
+?? scripts/office/night_guidance_controller.gd
+?? scripts/office/night_guidance_controller.gd.uid
+?? scripts/office/night_guidance_data.gd
+?? scripts/office/night_guidance_data.gd.uid
+?? scripts/presentation/
+?? scripts/telegraph/hardware/tape_ink_event.gd
+?? scripts/telegraph/hardware/tape_ink_event.gd.uid
+?? scripts/telegraph/session/amendment_text.gd
+?? scripts/telegraph/session/amendment_text.gd.uid
+?? scripts/telegraph/session/route_action.gd
+?? scripts/telegraph/session/route_action.gd.uid
+?? scripts/ui/amendment_editor.gd
+?? scripts/ui/amendment_editor.gd.uid
+?? scripts/ui/readability_options.gd
+?? scripts/ui/readability_options.gd.uid
+?? task_plan.md
+?? tests/audio/foley_lifecycle_test.gd
+?? tests/audio/foley_lifecycle_test.gd.uid
+?? tests/audio/foley_timing_fairness_test.gd
+?? tests/audio/foley_timing_fairness_test.gd.uid
+?? tests/guidance/
+?? tests/integration/amendment_input_test.gd
+?? tests/integration/amendment_input_test.gd.uid
+?? tests/integration/amendment_office_test.gd
+?? tests/integration/amendment_office_test.gd.uid
+?? tests/integration/amendment_pointer_test.gd
+?? tests/integration/amendment_pointer_test.gd.uid
+?? tests/integration/office_load_atomicity_test.gd
+?? tests/integration/office_load_atomicity_test.gd.uid
+?? tests/integration/route_deadline_test.gd
+?? tests/integration/route_deadline_test.gd.uid
+?? tests/interaction/
+?? tests/office/foreign_traffic_acceptance_test.gd
+?? tests/office/foreign_traffic_acceptance_test.gd.uid
+?? tests/player/modal_input_ownership_test.gd
+?? tests/player/modal_input_ownership_test.gd.uid
+?? tests/player/readable_camera_test.gd
+?? tests/player/readable_camera_test.gd.uid
+?? tests/presentation/
+?? tests/python/
+?? tests/telegraph/amendment_contract_test.gd
+?? tests/telegraph/amendment_contract_test.gd.uid
+?? tests/telegraph/amendment_record_test.gd
+?? tests/telegraph/amendment_record_test.gd.uid
+?? tests/telegraph/elias_handwriting_font_test.gd
+?? tests/telegraph/elias_handwriting_font_test.gd.uid
+?? tests/telegraph/filing_default_text_test.gd
+?? tests/telegraph/filing_default_text_test.gd.uid
+?? tests/telegraph/instrument_art_test.gd
+?? tests/telegraph/instrument_art_test.gd.uid
+?? tests/telegraph/procedural_clarity_test.gd
+?? tests/telegraph/procedural_clarity_test.gd.uid
+?? tests/telegraph/reference_reading_example_test.gd
+?? tests/telegraph/reference_reading_example_test.gd.uid
+?? tests/telegraph/route_acceptance_test.gd
+?? tests/telegraph/route_acceptance_test.gd.uid
+?? tests/telegraph/route_authority_test.gd
+?? tests/telegraph/route_authority_test.gd.uid
+?? tests/telegraph/route_explanation_test.gd
+?? tests/telegraph/route_explanation_test.gd.uid
+?? tests/telegraph/route_reentrancy_test.gd
+?? tests/telegraph/route_reentrancy_test.gd.uid
+?? tests/telegraph/routing_mouse_test.gd
+?? tests/telegraph/routing_mouse_test.gd.uid
+?? tests/telegraph/rule44_content_test.gd
+?? tests/telegraph/rule44_content_test.gd.uid
+?? tests/telegraph/tape_evidence_test.gd
+?? tests/telegraph/tape_evidence_test.gd.uid
+?? tests/ui/amendment_editor_test.gd
+?? tests/ui/amendment_editor_test.gd.uid
+?? tests/ui/amendment_lifetime_test.gd
+?? tests/ui/amendment_lifetime_test.gd.uid
+?? tests/ui/document_resize_test.gd
+?? tests/ui/document_resize_test.gd.uid
+?? tests/ui/document_text_scale_test.gd
+?? tests/ui/document_text_scale_test.gd.uid
+?? tests/ui/readability_options_test.gd
+?? tests/ui/readability_options_test.gd.uid
+?? tests/ui/readable_prompt_test.gd
+?? tests/ui/readable_prompt_test.gd.uid
+?? tests/ui/readable_settings_test.gd
+?? tests/ui/readable_settings_test.gd.uid
+?? tests/ui/settings_exit_paths_test.gd
+?? tests/ui/settings_exit_paths_test.gd.uid
+?? tests/ui/tape_layout_test.gd
+?? tests/ui/tape_layout_test.gd.uid
+?? tools/build_elias_font.py
+?? tools/build_instruments_blender.py
+?? tools/capture_engine_run.py
+?? tools/generate_beta_footstep.py
+?? tools/import_instruments.gd
+?? tools/import_instruments.gd.uid
+?? tools/instrument_motion_capture.gd
+?? tools/instrument_motion_capture.gd.uid
+?? tools/mechanics_demo.gd
+?? tools/mechanics_demo.gd.uid
+?? tools/mechanics_ui_capture.gd
+?? tools/mechanics_ui_capture.gd.uid
+?? tools/package_windows_beta.py
+?? tools/package_windows_beta_test.py
+?? tools/readability_capture.gd
+?? tools/readability_capture.gd.uid
+?? tools/repeat_engine_exit.py
+?? tools/repro/
+?? tools/verify_instruments.py
+?? tools/verify_mechanics.py
+?? tools/verify_mechanics_test.py
+?? tools/with_preserved_settings.py
+?? tools/with_preserved_settings_test.py

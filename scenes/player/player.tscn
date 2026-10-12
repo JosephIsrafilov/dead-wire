@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://scripts/player/player_controller.gd" id="1_controller"]
 [ext_resource type="Script" path="res://scripts/interaction/interaction_controller.gd" id="2_interaction"]
-[ext_resource type="AudioStream" path="res://audio/sfx/foley/footstep_wood.wav" id="3_footstep"]
+[ext_resource type="AudioStream" path="res://audio/sfx/foley/footstep_wood_beta.wav" id="3_footstep"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_1"]
 radius = 0.35
@@ -19,10 +19,11 @@ shape = SubResource("CapsuleShape3D_1")
 disabled = false
 
 [node name="Head" type="Node3D" parent="."]
-position = Vector3(0, 1.65, 0)
+position = Vector3(0, 1.56, 0)
 
 [node name="Camera3D" type="Camera3D" parent="Head"]
-fov = 78.0
+fov = 65.0
+keep_aspect = 1
 current = true
 
 [node name="FootstepPlayer" type="AudioStreamPlayer3D" parent="."]
@@ -67,17 +68,18 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -240.0
-offset_top = -92.0
-offset_right = 240.0
-offset_bottom = -64.0
+offset_left = -420.0
+offset_top = -112.0
+offset_right = 420.0
+offset_bottom = -60.0
 grow_horizontal = 2
 grow_vertical = 0
+autowrap_mode = 2
 theme_override_colors/font_color = Color(0.86, 0.79, 0.63, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.85)
 theme_override_constants/shadow_offset_x = 1
 theme_override_constants/shadow_offset_y = 1
-theme_override_font_sizes/font_size = 14
+theme_override_font_sizes/font_size = 18
 theme_override_styles/normal = SubResource("StyleBoxFlat_prompt")
 text = "[E] Interact"
 horizontal_alignment = 1

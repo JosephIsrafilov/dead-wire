@@ -55,7 +55,13 @@ func _run() -> void:
 				check(office.copy_commit_desk.get_result_text() == "UNFILED", "Uninspected final copy visibly lapses")
 			else:
 				session.mark_transcript_verified()
-				office.copy_commit_desk.commit_option(StringName(outcome))
+				if outcome == "file_water":
+					office.copy_commit_desk.commit_option(&"amend_copy")
+					office.amendment_editor.correction.text = "WATER"
+					office.amendment_editor.correction.text_changed.emit("WATER")
+					office.amendment_editor.submit_draft()
+				else:
+					office.copy_commit_desk.commit_option(StringName(outcome))
 				check(not office.copy_commit_desk.commit_option(&"file_water"), "Terminal copy rejects duplicate filing")
 			# Watch the window throughout the trigger. No popping into view.
 			office.player.camera.look_at(office.window_observation.global_position)

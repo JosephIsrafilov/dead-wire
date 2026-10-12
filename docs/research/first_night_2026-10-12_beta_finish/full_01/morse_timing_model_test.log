@@ -1,0 +1,42 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+--- Starting Morse Timing Model Permanent Test (Gate 08A) ---
+  PASS: MorseTimingEvent instantiates
+  PASS: MorseTimingEvent is a Resource
+  PASS: MorseSequenceData instantiates
+  PASS: MorseSequenceData is a Resource
+  PASS: MorseTimingEvent retains MARK kind
+  PASS: MorseTimingEvent retains GAP kind
+  PASS: MARK duration_units preserved
+  PASS: GAP duration_units preserved
+  PASS: Fixture timing_sequence.tres loads successfully
+  PASS: Fixture has exactly 5 events
+  PASS: Fixture Event 0: MARK 1
+  PASS: Fixture Event 1: GAP 1
+  PASS: Fixture Event 2: MARK 3
+  PASS: Fixture Event 3: GAP 3
+  PASS: Fixture Event 4: MARK 1
+  PASS: Fixture total_duration_units() equals 9
+  PASS: MorseSequenceData saves to .tres
+  PASS: Roundtrip saved timing sequence loads successfully
+  PASS: Roundtrip event count matches
+  PASS: Roundtrip total duration matches 9
+  PASS: Zero duration produces validation error
+  PASS: Negative duration produces validation error
+  PASS: Empty sequence produces validation error
+  PASS: Null event in sequence produces validation error
+  PASS: Sequence starting with GAP produces validation error
+  PASS: Sequence ending with GAP produces validation error
+  PASS: Consecutive MARK events produce validation error
+  PASS: Consecutive GAP events produce validation error
+  PASS: Valid fixture sequence has 0 validation errors
+  PASS: Event array size unchanged after validation
+  PASS: Event 0 unchanged
+  PASS: Event 1 unchanged
+  PASS: Event 2 unchanged
+  PASS: No scene tree nodes added
+  PASS: No MorseScheduler class exists
+  PASS: No SounderController class exists
+  PASS: No MorsePlayer class exists
+  PASS: TransmissionData remains functional
+--- All Morse Timing Model Permanent Tests PASSED ---

@@ -1,0 +1,10 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+  PASS: Sensitivity change preserves graphics and reading choice
+  PASS: Head bob change preserves graphics and reading choice
+  PASS: Title Quit does not save stale preferences
+  PASS: Begin Watch preserves the latest preferences
+  PASS: Pause volume change preserves the reading choice
+  PASS: Resume preserves all three new choices
+  PASS: Leave Post preserves all three new choices
+  PASS: Pause Quit preserves all three new choices

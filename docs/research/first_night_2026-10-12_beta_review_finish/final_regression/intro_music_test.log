@@ -1,0 +1,8 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+PASS: Temporary source music is loaded
+PASS: Intro music respects ambience and master settings
+PASS: Opening cue never loops
+PASS: Author attribution is visible in game
+PASS: Skip stops music before handing controls to Morse operator
+PASS: Normal intro fade also stops source music before releasing controls

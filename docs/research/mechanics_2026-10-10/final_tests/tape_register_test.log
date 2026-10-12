@@ -1,0 +1,43 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+--- Starting Tape Register Test Suite ---
+  PASS: Tape starts empty
+  PASS: Two completed fixture events recorded exactly
+  PASS: Kinds preserved in order
+  PASS: connect_scheduler hooks timing_event_started
+  PASS: disconnect_scheduler unhooks cleanly
+  PASS: reset clears the tape
+  PASS: Mark/GAP render to dot/dash/spaces verbatim, got '· —   '
+  PASS: A 2-unit MARK is still a dot; gaps scale, got '· —   ·'
+  PASS: Session loads the scenario with the tape attached
+  PASS: Live transmission starts
+  PASS: A real transmission inked the tape
+  PASS: Tape count equals only the actual schedule events (69 vs 69)
+  PASS: Recorded MARK/GAP kinds match the schedule verbatim
+  PASS: Completed transmission ends with its exact last event, not a fabricated 12-unit GAP
+  PASS: Record contains at least one MARK and one GAP
+  PASS: Tape text contains a dot
+  PASS: Tape text contains no Latin letters
+  PASS: Interaction emits tape_inspected with a readable non-ink take header and physical ink
+  PASS: get_interactable is null on a pure-code instance without crashing
+  PASS: Empty tape still emits an honest empty body
+  PASS: Office exposes the tape register through the session controller
+  PASS: Scene tape register carries an Interactable with the read prompt
+  PASS: Reading the tape opens the existing DocumentViewer
+  PASS: Viewer doc_id is tape_register
+  PASS: Viewer title is STATION REGISTER
+  PASS: Viewer closes after the tape read
+  PASS: connect_scheduler hooks all six actual-time and take-lifecycle signals
+  PASS: Completion with no start invents neither a GAP nor a wire take
+  PASS: Repeated completion signal also preserves the honest empty strip
+  PASS: disconnect_scheduler unhooks all six lifecycle signals
+  PASS: MARK(1) + completion retains just one dot and records completion outside ink
+  PASS: Only the observed three-unit GAP appears in the physical record
+  PASS: Two chronological wire takes are separated by a non-ink newline, not 12 fake units
+  PASS: Cancellation appends no between-gap
+  PASS: Cancellation preserves already completed ink and marks the take interrupted outside ink
+--- All Tape Register Tests PASSED (35 assertions) ---
+WARNING: 10 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 2 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)

@@ -1,0 +1,104 @@
+ERROR: Cannot open file 'res://assets/fonts/deadwire_theme.tres'.
+   at: load (scene/resources/resource_format_text.cpp:1442)
+ERROR: Failed loading resource: res://assets/fonts/deadwire_theme.tres.
+   at: _load (core/io/resource_loader.cpp:317)
+ERROR: Error loading custom project theme 'res://assets/fonts/deadwire_theme.tres'
+   at: initialize_theme (scene/theme/theme_db.cpp:74)
+SCRIPT ERROR: Parse Error: Could not find type "GameSettings" in the current scope.
+   at: GDScript::reload (res://scripts/ui/main_menu.gd:18)
+SCRIPT ERROR: Parse Error: Identifier "GameSettings" not declared in the current scope.
+   at: GDScript::reload (res://scripts/ui/main_menu.gd:34)
+SCRIPT ERROR: Parse Error: Identifier "GameSettings" not declared in the current scope.
+   at: GDScript::reload (res://scripts/ui/main_menu.gd:152)
+SCRIPT ERROR: Parse Error: Identifier "GameSettings" not declared in the current scope.
+   at: GDScript::reload (res://scripts/ui/main_menu.gd:161)
+SCRIPT ERROR: Parse Error: Identifier "GameSettings" not declared in the current scope.
+   at: GDScript::reload (res://scripts/ui/main_menu.gd:167)
+SCRIPT ERROR: Parse Error: Identifier "GameSettings" not declared in the current scope.
+   at: GDScript::reload (res://scripts/ui/main_menu.gd:173)
+SCRIPT ERROR: Parse Error: Identifier "GameSettings" not declared in the current scope.
+   at: GDScript::reload (res://scripts/ui/main_menu.gd:179)
+SCRIPT ERROR: Parse Error: Identifier "GameSettings" not declared in the current scope.
+   at: GDScript::reload (res://scripts/ui/main_menu.gd:185)
+SCRIPT ERROR: Parse Error: Identifier "GameSettings" not declared in the current scope.
+   at: GDScript::reload (res://scripts/ui/main_menu.gd:191)
+SCRIPT ERROR: Parse Error: Identifier "GameSettings" not declared in the current scope.
+   at: GDScript::reload (res://scripts/ui/main_menu.gd:197)
+ERROR: Failed to load script "res://scripts/ui/main_menu.gd" with error "Parse error".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+SCRIPT ERROR: Parse Error: Could not find type "GameSettings" in the current scope.
+   at: GDScript::reload (res://scripts/ui/readability_options.gd:71)
+SCRIPT ERROR: Parse Error: Identifier "GameSettings" not declared in the current scope.
+   at: GDScript::reload (res://scripts/ui/readability_options.gd:51)
+SCRIPT ERROR: Parse Error: Cannot infer the type of "settings" variable because the value doesn't have a set type.
+   at: GDScript::reload (res://scripts/ui/readability_options.gd:51)
+SCRIPT ERROR: Parse Error: Identifier "GameSettings" not declared in the current scope.
+   at: GDScript::reload (res://scripts/ui/readability_options.gd:57)
+SCRIPT ERROR: Parse Error: Cannot infer the type of "settings" variable because the value doesn't have a set type.
+   at: GDScript::reload (res://scripts/ui/readability_options.gd:57)
+SCRIPT ERROR: Parse Error: Identifier "GameSettings" not declared in the current scope.
+   at: GDScript::reload (res://scripts/ui/readability_options.gd:62)
+SCRIPT ERROR: Parse Error: Cannot infer the type of "settings" variable because the value doesn't have a set type.
+   at: GDScript::reload (res://scripts/ui/readability_options.gd:62)
+SCRIPT ERROR: Parse Error: Identifier "GameSettings" not declared in the current scope.
+   at: GDScript::reload (res://scripts/ui/readability_options.gd:67)
+SCRIPT ERROR: Parse Error: Cannot infer the type of "settings" variable because the value doesn't have a set type.
+   at: GDScript::reload (res://scripts/ui/readability_options.gd:67)
+ERROR: Failed to load script "res://scripts/ui/readability_options.gd" with error "Parse error".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+ERROR: BUG: Unreferenced static string to 0: _draw
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: _physics_process
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: _process
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: _unhandled_key_input
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: _unhandled_input
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: _shortcut_input
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: _input
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: _shaped_text_get_line_breaks
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: _enter_tree
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: _initialize
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: _toggled
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: _get_maximum_size
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: _get_minimum_size
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: Variant
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: _set_path_cache
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: _exists
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: _recognize_path
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: _reset_state
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: ShaderCompilation
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: @warning_ignore_restore
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: @warning_ignore_start
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: @warning_ignore
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: @export_range
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: @export_multiline
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: @export
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: @icon
+   at: unref (core/string/string_name.cpp:117)
+ERROR: 7 RID allocations of type '23NavMeshGeometryParser2D' were leaked at exit.
+ERROR: 6 RID allocations of type '23NavMeshGeometryParser3D' were leaked at exit.
+ERROR: Pages in use exist at exit in PagedAllocator: N12VariantPools11BucketLargeE
+   at: ~PagedAllocator (./core/templates/paged_allocator.h:170)

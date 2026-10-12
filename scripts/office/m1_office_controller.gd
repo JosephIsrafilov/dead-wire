@@ -4,6 +4,7 @@ extends Node3D
 signal scenario_cycle_completed()
 
 @export var enable_psx_rendering: bool = true
+# Legacy-not-authoritative: live resolution comes from ReadabilityPolicy via apply_presentation_mode.
 @export var render_scale: float = 0.5
 
 @export var session_controller: TelegraphSessionController = null
@@ -19,6 +20,7 @@ signal scenario_cycle_completed()
 @export var office_door: OfficeDoor = null
 @export var shift_end_card: ShiftEndCard = null
 @export var dawn_evidence: DawnEvidence = null
+var amendment_editor: AmendmentEditor = null
 
 @export var scenario_1: TelegraphScenarioData = preload("res://data/scenarios/m1_scenario_1_baseline.tres")
 @export var scenario_2: TelegraphScenarioData = preload("res://data/scenarios/m1_scenario_2_attention.tres")
@@ -29,7 +31,10 @@ var _scenario_list: Array[TelegraphScenarioData] = []
 var _cycle_completed: bool = false
 var _exit_body_present: bool = false
 
+var _presentation_mode: int = 1
+
 func _ready() -> void:
+	_presentation_mode = GameSettings.load_settings().presentation_mode
 	if enable_psx_rendering:
 		apply_psx_settings()
 	_apply_embedded_body_font()
@@ -67,7 +72,7 @@ func _fade_room(from_db: float, to_db: float, seconds: float) -> void:
 ## OFL, bundled), never whatever the host machine's fallback happens to be.
 ## Labels with an explicitly authored font (Elias's hand) keep theirs.
 func _apply_embedded_body_font() -> void:
-	var font := load("res://assets/fonts/imfell/IMFeENrm28P.ttf") as Font
+	var font := load("res://assets/fonts/oldstandard/OldStandardTT-Regular.ttf") as Font
 	if font == null:
 		return
 	for label in find_children("*", "Label3D", true, false):
@@ -95,20 +100,34 @@ func apply_psx_settings() -> void:
 	vp.use_debanding = false
 	vp.canvas_item_default_texture_filter = Viewport.DEFAULT_CANVAS_ITEM_TEXTURE_FILTER_NEAREST
 
+func apply_presentation_mode(mode: int) -> void:
+	_presentation_mode = clampi(mode, 0, 2)
+	_apply_psx_scale()
+
 func _apply_psx_scale() -> void:
 	var vp := get_viewport()
 	if vp == null:
 		return
 	var window := get_window()
-	var height := float(window.size.y) if window != null and window.size.y > 0 else REFERENCE_HEIGHT
-	var scale := clampf(render_scale * REFERENCE_HEIGHT / height, 0.1, 1.0)
-	vp.scaling_3d_scale = scale
+	var height := window.size.y if window != null and window.size.y > 0 else 720
+	var profile := ReadabilityPolicy.profile(height, _presentation_mode)
+	vp.scaling_3d_scale = profile.scale
 	var grade := get_node_or_null("PSXDither/Grade") as CanvasItem
-	if grade != null and grade.material is ShaderMaterial:
-		# The dither cell is one 3D pixel, measured in window pixels.
-		(grade.material as ShaderMaterial).set_shader_parameter("pixel_size", 1.0 / scale)
+	if grade != null:
+		grade.visible = enable_psx_rendering and profile.grade_enabled
+		if grade.material is ShaderMaterial:
+			var material := grade.material as ShaderMaterial
+			material.set_shader_parameter("pixel_size", float(profile.divisor))
+			material.set_shader_parameter("levels", profile.levels)
+			material.set_shader_parameter("vignette", profile.vignette)
 
 func _bind_signals() -> void:
+	amendment_editor = get_node_or_null("AmendmentEditor") as AmendmentEditor
+	if amendment_editor != null:
+		if not amendment_editor.editor_opened.is_connected(_on_amendment_opened):
+			amendment_editor.editor_opened.connect(_on_amendment_opened)
+			amendment_editor.editor_closed.connect(_on_amendment_closed)
+			amendment_editor.correction_submitted.connect(_on_correction_submitted)
 	if session_controller == null:
 		session_controller = get_node_or_null("TelegraphSessionController") as TelegraphSessionController
 	if routing_board == null:
@@ -205,6 +224,8 @@ func _bind_signals() -> void:
 			session_controller.routing_resolved.connect(_on_routing_resolved_board)
 
 	if copy_commit_desk != null:
+		if not copy_commit_desk.amendment_requested.is_connected(_on_amendment_requested):
+			copy_commit_desk.amendment_requested.connect(_on_amendment_requested)
 		if not copy_commit_desk.option_committed.is_connected(_on_commit_option_committed):
 			copy_commit_desk.option_committed.connect(_on_commit_option_committed)
 
@@ -255,6 +276,9 @@ func load_scenario_by_index(idx: int) -> bool:
 	_bind_signals()
 	var list := _get_scenario_list()
 	if idx < 0 or idx >= list.size():
+		return false
+	# A refused authority load must not reset its existing office presentation.
+	if session_controller == null or not session_controller.can_load_scenario(list[idx]):
 		return false
 	_scenario_index = idx
 	if idx == 0:
@@ -322,12 +346,15 @@ func _on_operator_sit_completed() -> void:
 
 func _on_routing_action(action: String) -> void:
 	if session_controller == null:
+		routing_board.play_route_accept(action, false)
 		return
-	# An expired route deadline rejects input at the door: the lapse resolves
+	# An expired route deadline rejects input at the door:
 	# the slot, and a late lever throw must not produce a route or a result.
 	if is_shift_directed() and shift_director.is_route_deadline_expired():
+		routing_board.play_route_accept(action, false)
 		return
-	session_controller.submit_routing_decision(action)
+	if not session_controller.submit_routing_decision(action):
+		routing_board.play_route_accept(action, false)
 
 ## The board's apparatus answers the session's verdict, not the keypress: the
 ## lever reaches its stop only for an order that actually went out.
@@ -368,6 +395,42 @@ func _on_commit_requested(options: Array[TelegraphCommitOption]) -> void:
 	var awaiting_commit := session_controller != null \
 		and session_controller.get_state() == TelegraphSessionController.State.AWAITING_COMMIT
 	copy_commit_desk.set_enabled(awaiting_commit)
+
+func _on_amendment_requested() -> void:
+	if amendment_editor == null or session_controller == null:
+		return
+	if session_controller.get_state() != TelegraphSessionController.State.AWAITING_COMMIT:
+		copy_commit_desk.set_amendment_open(false)
+		return
+	amendment_editor.open_editor(session_controller.get_current_scenario().scenario_id)
+
+func _on_amendment_opened() -> void:
+	_on_document_opened("amendment")
+
+func _on_amendment_closed() -> void:
+	if copy_commit_desk != null:
+		copy_commit_desk.set_amendment_open(false)
+	_release_amendment_controls.call_deferred()
+
+func _release_amendment_controls() -> void:
+	if not is_inside_tree() or is_queued_for_deletion():
+		return
+	await get_tree().process_frame
+	if not is_inside_tree():
+		return
+	# process_frame resumes before the frame counter advances. Retain the lock
+	# until the triggering event's transition frame has actually ended.
+	if amendment_editor != null and amendment_editor.owns_transition_frame():
+		_release_amendment_controls.call_deferred()
+		return
+	if not is_world_view_blocked():
+		_on_document_closed("amendment")
+
+func _on_correction_submitted(word: String) -> void:
+	if session_controller == null or amendment_editor == null:
+		return
+	if not session_controller.submit_amendment(word):
+		amendment_editor.reject_submission("The correction could not be filed; check the line status.")
 
 func _on_commit_option_committed(action_id: StringName) -> void:
 	# The desk expressed intent. The session is the authority: its answer
@@ -412,7 +475,12 @@ func _on_session_state_changed(
 		new_state: TelegraphSessionController.State,
 		_prev_state: TelegraphSessionController.State
 ) -> void:
+	if new_state != TelegraphSessionController.State.AWAITING_COMMIT \
+		and amendment_editor != null and amendment_editor.is_open():
+		amendment_editor.close_editor(false)
 	if new_state == TelegraphSessionController.State.IDLE:
+		if amendment_editor != null:
+			amendment_editor.close_editor(false)
 		if window_observation != null:
 			window_observation.reset_state()
 		if copy_commit_desk != null:
@@ -475,24 +543,23 @@ func _on_tape_inspected(text: String) -> void:
 		return
 	document_viewer.open_document(TapeRegisterController.TAPE_DOC_ID,
 		TapeRegisterController.TAPE_TITLE, _wrap_tape_text(text),
-		"[E / Esc] Put Down Tape")
+		"[E / Esc] Put Down Tape — ? unfinished mark; take labels are not timed ink")
 
-## Paper strips are narrow: fold the mark sequence into ~40-column lines at
-## space boundaries so the lamp-lit strip reads like the physical object.
+## Paper layout inserts line breaks only: every timing column survives.
+## This helper never treats a GAP as disposable prose whitespace.
 static func _wrap_tape_text(text: String, columns: int = 40) -> String:
-	if text.length() <= columns:
-		return text
-	var out := ""
-	var line_start := 0
-	while text.length() - line_start > columns:
-		var window := text.substr(line_start, mini(columns + 1, text.length() - line_start))
-		var space_at := window.rfind(" ")
-		if space_at < 0:
-			space_at = columns
-		out += text.substr(line_start, space_at) + "\n"
-		line_start += space_at + 1
-	out += text.substr(line_start)
-	return out
+	var width := maxi(columns, 1)
+	var lines: PackedStringArray = []
+	for original in text.split("\n"):
+		# Take labels are layout metadata, not columns of timed ink.
+		if original.begins_with("[WIRE TAKE") or original.is_empty():
+			lines.append(original)
+			continue
+		var index := 0
+		while index < original.length():
+			lines.append(original.substr(index, width))
+			index += width
+	return "\n".join(lines)
 
 ## True while the current session's sheet is still being written: receiving the
 ## signal or finishing the backlog after it.
@@ -535,6 +602,8 @@ func _update_transcript_prompt() -> void:
 ## Any full-screen surface that hides the world also blocks observation through
 ## it. This is computed centrally so every caller shares one definition.
 func is_world_view_blocked() -> bool:
+	if amendment_editor != null and (amendment_editor.is_open() or amendment_editor.owns_transition_frame()):
+		return true
 	if document_viewer != null and document_viewer.is_open():
 		return true
 	if routing_board != null and routing_board.is_open:
@@ -728,7 +797,7 @@ func _refresh_guidance() -> void:
 		TelegraphSessionController.State.AWAITING_ROUTE:
 			hint = "Set the route on the east wall board"
 		TelegraphSessionController.State.AWAITING_COMMIT:
-			hint = "File one copy at the table by the stove"
+			hint = "At the filing table: AMEND COPY to type a word, or FILE AS COPIED to seal the handwriting"
 	# A deadline warning is true everywhere the player can be, including behind
 	# an open document: the sender does not wait for the reader.
 	var warning := session_controller.get_deadline_warning_text()

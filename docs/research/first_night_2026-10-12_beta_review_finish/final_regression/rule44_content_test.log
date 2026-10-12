@@ -1,0 +1,14 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+  PASS: Second request does not dictate HOLD
+  PASS: All three signal layers agree for ordinary freight
+  PASS: Standing rule distinguishes a request from clearance
+  PASS: Scenario validates
+  PASS: Existing authority still requires HOLD
+  PASS: Rule 44 is a fictional company order
+  PASS: Freight 71 has no booked division clearance
+  PASS: Reveal cues cover exactly thirteen non-space glyphs
+  PASS: Scenario identity is preserved
+  PASS: Transmission identity is preserved
+  PASS: Existing route consequences are preserved
+  PASS: Existing lapse consequences are preserved

@@ -1,0 +1,45 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+  PASS: Hook scenario remains valid
+  PASS: Pre-decision label supplies no answer
+  PASS: Pre-decision label supplies no answer
+  PASS: Session loads neutral hook scenario
+  PASS: Inspection enters filing gate
+  PASS: Bare amendment cannot silently file WATER
+  PASS: Untyped amendment leaves decision pending
+  PASS: Session owns typed amendment validation and acceptance
+  PASS: Authority rejects noncanonical correction ''
+  PASS: Rejected text changes neither independent store
+  PASS: Authority rejects noncanonical correction 'water'
+  PASS: Rejected text changes neither independent store
+  PASS: Authority rejects noncanonical correction ' WATER'
+  PASS: Rejected text changes neither independent store
+  PASS: Authority rejects noncanonical correction 'WATER '
+  PASS: Rejected text changes neither independent store
+  PASS: Authority rejects noncanonical correction 'WÄTER'
+  PASS: Rejected text changes neither independent store
+  PASS: Authority rejects noncanonical correction '1'
+  PASS: Rejected text changes neither independent store
+  PASS: Authority rejects noncanonical correction 'AAAAAAAAAAAAAAAAAAAAAAAAA'
+  PASS: Rejected text changes neither independent store
+  PASS: A valid wrong amendment is a real accepted choice
+  PASS: Wrong amendment has a distinct objective outcome
+  PASS: Objective filed word remains exactly WAITER
+  PASS: Knowledge has its own chosen-word record
+  PASS: Operator remembers chosen word, not an automatic WATER answer
+  PASS: Knowledge confirms amendment only, never correctness
+  PASS: Duplicate typed amendment cannot replace the first choice
+  PASS: Correct explicit amendment is accepted
+  PASS: Reentrant callbacks cannot double-file or erase accepted outcome
+  PASS: Resolution carries captured old-slot and exact word
+  PASS: Correct amendment still does not reveal grading in knowledge
+  PASS: Correction at exact original deadline changes no facts
+  PASS: Authority accepts canonical length/word 'A'
+  PASS: Valid words are never silently replaced by a candidate answer
+  PASS: Authority accepts canonical length/word 'AAAAAAAAAAAAAAAAAAAAAAAA'
+  PASS: Valid words are never silently replaced by a candidate answer
+  PASS: Authority accepts canonical length/word 'WATCHER'
+  PASS: Valid words are never silently replaced by a candidate answer
+  PASS: Authority accepts canonical length/word 'UNLISTED'
+  PASS: Valid words are never silently replaced by a candidate answer
+Amendment contract assertions: 42

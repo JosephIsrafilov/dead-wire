@@ -76,7 +76,7 @@ func _run() -> void:
 	while interaction.current_target != option1 and hold < 240:
 		await process_frame
 		hold += 1
-	check(interaction.current_target == option1, "The ray holds the WATER option under the crosshair")
+	check(interaction.current_target == option1, "The ray holds the neutral amendment action under the crosshair")
 
 	# 2. Raw key through the input pipeline.
 	var key := InputEventKey.new()
@@ -85,7 +85,27 @@ func _run() -> void:
 	Input.parse_input_event(key)
 	await process_frame
 	await process_frame
-	check(desk.has_committed(), "Key 1 filed WATER through the real input pipeline")
+	check(office.amendment_editor.is_open() and not desk.has_committed(), "Key 1 opens amendment through the real input pipeline")
+	await process_frame
+	await process_frame
+	for character in "WATER":
+		var typed := InputEventKey.new()
+		typed.keycode = character.unicode_at(0)
+		typed.unicode = character.to_lower().unicode_at(0)
+		typed.pressed = true
+		Input.parse_input_event(typed)
+		await process_frame
+		typed = typed.duplicate()
+		typed.pressed = false
+		Input.parse_input_event(typed)
+		await process_frame
+	check(office.amendment_editor.correction.text == "WATER", "Actual typing sets the explicit correction")
+	var submit := InputEventKey.new()
+	submit.keycode = KEY_ENTER
+	submit.pressed = true
+	Input.parse_input_event(submit)
+	await process_frame
+	check(desk.has_committed(), "Enter accepts the explicit typed correction")
 	check(world.get_fact("core_hook_filed_water", false), "WATER world fact recorded")
 	check(desk.is_press_in_flight(), "The press travels")
 	var press_frames := 0

@@ -1,0 +1,26 @@
+{
+  "command": [
+    "C:/Users/YUSIF/Desktop/Godot_v4.7.1-stable_win64.exe/Godot_v4.7.1-stable_win64_console.exe",
+    "--headless",
+    "--audio-driver",
+    "Dummy",
+    "--path",
+    "C:/Users/YUSIF/Documents/dead-wire",
+    "--script",
+    "res://tests/telegraph/tape_evidence_test.gd"
+  ],
+  "exit_code": 1,
+  "timed_out": false,
+  "pass_assertions": 25,
+  "fail_assertions": [
+    "  FAIL: An unfinished MARK uses the incomplete-ink symbol, not a dot or dash\r"
+  ],
+  "error_lines": [
+    "ERROR: 5 resources still in use at exit (run with --verbose for details)."
+  ],
+  "warning_lines": [
+    "WARNING: 13 ObjectDB instances were leaked at exit (run with `--verbose` for details)."
+  ],
+  "suite_totals": [],
+  "log": "C:\\Users\\YUSIF\\.hermes\\cache\\scratch\\dead_wire_tape\\red_rendering.log"
+}

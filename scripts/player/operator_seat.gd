@@ -40,8 +40,8 @@ enum BodyPhase {
 ## is a wall with the work somewhere below the bottom of the screen.
 @export var seat_pitch_degrees: float = -17.0
 
-@export var sit_duration: float = 0.8
-@export var stand_duration: float = 0.6
+@export var sit_duration: float = 0.45
+@export var stand_duration: float = 0.45
 ## Body approach to the chair, in seconds. The capsule glides to the seat
 ## instead of snapping: a seated view that starts where the player stood.
 @export var approach_duration: float = 0.34
@@ -442,8 +442,6 @@ func _process(delta: float) -> void:
 		stand()
 
 func _player_wants_to_walk() -> bool:
-	if office != null and office.document_viewer != null and office.document_viewer.is_open():
-		return false
-	if office != null and office.routing_board != null and office.routing_board.is_open:
+	if office != null and office.is_world_view_blocked():
 		return false
 	return Input.get_vector("move_left", "move_right", "move_forward", "move_backward").length_squared() > 0.01

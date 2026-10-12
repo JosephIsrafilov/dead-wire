@@ -1,0 +1,11 @@
+{
+  "cwd": "C:\\Users\\YUSIF\\.hermes\\cache\\scratch\\q6_standalone_final\\dead-wire-windows-beta",
+  "ran_seconds": 45,
+  "alive_at_45s": true,
+  "raw_exit_code": 1,
+  "exit_hex": "0x00000001",
+  "settings_sha_before": "627f0ee303322c9b",
+  "settings_sha_after": "627f0ee303322c9b",
+  "stdout_tail": "Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org\r\nD3D12 12_0 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 3070 Laptop GPU\r\n\r\n",
+  "stderr_tail": ""
+}

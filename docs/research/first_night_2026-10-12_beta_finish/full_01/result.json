@@ -1,0 +1,14 @@
+{
+  "command": [
+    ".venv-tools/Scripts/python.exe",
+    "tools/verify_mechanics.py",
+    "--out",
+    "docs/research/first_night_2026-10-12_beta_finish/full_01"
+  ],
+  "returncode": 1,
+  "returncode_unsigned": 1,
+  "returncode_hex": "0x00000001",
+  "settings_path": "C:\\Users\\YUSIF\\AppData\\Roaming\\Godot\\app_userdata\\dead-wire\\settings.cfg",
+  "settings_existed_before": true,
+  "settings_preserved": true
+}

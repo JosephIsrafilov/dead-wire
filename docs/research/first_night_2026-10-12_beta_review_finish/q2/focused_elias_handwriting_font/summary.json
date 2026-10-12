@@ -1,0 +1,18 @@
+{
+  "suites": 1,
+  "passed": 1,
+  "failed": 0,
+  "assertions": 106,
+  "error_bearing_suites": 0,
+  "results": [
+    {
+      "suite": "tests/telegraph/elias_handwriting_font_test.gd",
+      "exit_code": 0,
+      "assertions": 106,
+      "passed": true,
+      "failures": [],
+      "runtime_errors": [],
+      "warnings": []
+    }
+  ]
+}

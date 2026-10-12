@@ -16,3 +16,22 @@ __pycache__/
 .env
 .env.*
 !.env.example
+
+# Built beta artifacts (rebuilt via export+package; delivered out-of-band)
+builds/
+
+# Downloaded analysis dependencies (crash review)
+docs/research/first_night_2026-10-12_crash_review/local_deps/
+
+# Large binary capture media (regenerable; kept on disk only)
+docs/art/state_2026-10-09/hand_authored/first_night/watch_audio.wav
+docs/art/state_2026-10-09/hand_authored/writing_baseline.mp4
+docs/art/state_2026-10-09/hand_authored/writing_hook.mp4
+docs/art/state_2026-10-09/hand_grip/writing_live.mp4
+docs/art/state_2026-10-10/instruments/motion_preview.mp4
+docs/research/mechanics_2026-10-10/demo/mechanics_demo.avi
+docs/research/mechanics_2026-10-10/first_night_wrong/watch_audio.wav
+docs/research/mechanics_2026-10-10/mechanics_demo.mp4
+
+# Local Hermes agent workspace
+.hermes/

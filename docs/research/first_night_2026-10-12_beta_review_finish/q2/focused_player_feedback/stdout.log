@@ -1,0 +1,8 @@
+OK tests/integration/player_feedback_test.gd assertions 15 runtime_errors 1
+{
+  "suites": 1,
+  "passed": 1,
+  "failed": 0,
+  "assertions": 15,
+  "error_bearing_suites": 1
+}

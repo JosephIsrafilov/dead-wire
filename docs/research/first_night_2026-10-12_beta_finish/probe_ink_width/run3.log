@@ -1,0 +1,9 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+ROW 'TRAIN 17 C' width_m=0.17611999728251
+ROW 'LEAR EAST' width_m=0.17167999735102
+WIDEST_M=0.17611999728251 LIMIT=0.18
+WARNING: 8 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 1 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)

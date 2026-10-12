@@ -1,0 +1,4 @@
+ERROR: Prepare Template: The given export path doesn't exist.
+   at: add_message (./editor/export/editor_export_platform.h:270)
+ERROR: Project export for preset "Windows Beta x86_64" failed.
+   at: _fs_changed (editor/editor_node.cpp:1417)

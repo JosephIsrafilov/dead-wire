@@ -50,7 +50,10 @@ func _run() -> void:
 	# Commit physically at the desk (real filing position by the door).
 	await _stand_and_walk(Vector3(0.95, 0, 0.45))
 	var desk_act := office.copy_commit_desk.get_node("Option1Interactable")
-	check(office.copy_commit_desk.commit_option(&"file_water"), "Physical commit at the filing desk")
+	check(office.copy_commit_desk.commit_option(&"amend_copy"), "Physical amendment opens editing at the desk")
+	office.amendment_editor.correction.text = "WATER"
+	office.amendment_editor.correction.text_changed.emit("WATER")
+	office.amendment_editor.submit_draft()
 	check(session.get_state() == TelegraphSessionController.State.CONSEQUENCE, "Commit enters the consequence beat")
 
 	# 2. Look AWAY (south), let the consequence beat fire and the figure appear.
@@ -92,7 +95,7 @@ func _run() -> void:
 	session.scheduler.advance_time(4.0)
 	_drain(paper)
 	session.mark_transcript_verified()
-	session.submit_commit(&"file_water")
+	session.submit_amendment("WATER")
 	await _turn_to(figure.global_position)
 	session.advance_consequence(1.05)
 	check(figure.is_active and not figure.get_visual_indicator().visible, "Watched window defers the appearance (no pop-in)")

@@ -284,3 +284,47 @@ and `tools/build_worn_warmth.py`. Unchanged printed forms are not covered by the
 The new `assets/third_party/ambientcg/worn_warmth/metadata.json` and `LICENSE_SOURCE.txt`
 record a search for Fabric030/Paper003/Wood051, not downloaded/used assets (archive requests failed HTTP 403).
 Visual acceptance remains pending; see `03_local_asset_integration.md` in the art directory.
+
+## Authored telegraph instrument pass — 2026-10-10
+
+`assets/models/instruments_v1/` contains seven Blender-authored GLB assemblies and their
+Godot ArrayMesh derivatives: key static/lever, sounder static/armature, register static/spool/stylus.
+`assets/textures/instruments_v1/instrument_atlas_256.png` is an original deterministic six-tile
+atlas (wood, brass, iron, coil, ebonite, paper), not a downloaded museum photograph or texture.
+Builder: `tools/build_instruments_blender.py`; importer: `tools/import_instruments.gd`.
+Editable source: `docs/art/state_2026-10-10/instruments/sources/dead_wire_instruments_v1.blend`.
+Total authored triangles:3332. Runtime references only the seven `.res` meshes and shared atlas.
+
+Museum catalogue text was consulted for material/mechanism plausibility, not copied as assets:
+- https://americanhistory.si.edu/collections/object/nmah_706904 — key/sounder combination, ca1890.
+- https://americanhistory.si.edu/collections/object/nmah_712418 — wood/brass frame, paired electromagnet.
+- https://americanhistory.si.edu/collections/object/nmah_706654 — clockwork register/stylus mechanism.
+
+These are stylized period-plausible instruments, not historically exact museum replicas.
+No museum images, brand logos, paid generation or third-party meshes were integrated.
+Artistic acceptance remains owner-review pending; automatic integration checks are not a visual verdict.
+
+## Timing evidence font — mechanics pass
+
+Courier Prime Regular is bundled unchanged at `assets/fonts/courierprime/CourierPrime-Regular.ttf`,
+with `OFL.txt` shipped beside it. Copyright2015 The Courier Prime Project Authors; SIL OFL1.1.
+Downloaded from the official Google Fonts repository:
+https://raw.githubusercontent.com/google/fonts/main/ofl/courierprime/CourierPrime-Regular.ttf
+https://raw.githubusercontent.com/google/fonts/main/ofl/courierprime/OFL.txt
+
+Used only for the tape/reference timing table in DocumentViewer, replacing host-dependent SystemFont
+fallback. Period letterpress and Elias handwriting remain unchanged. No modern sans face added.
+
+## First-night font roles (2026-10-11)
+
+- Noto Sans variable font: Google Fonts ofl/notosans/NotoSans[wdth,wght].ttf, bundled as assets/fonts/noto/NotoSans.ttf; SIL OFL 1.1 in adjacent OFL.txt. Source: https://github.com/google/fonts/tree/main/ofl/notosans . UI/control readability, not historical print.
+- Old Standard TT Regular/Bold: Google Fonts ofl/oldstandardtt/OldStandard-Regular.ttf and OldStandard-Bold.ttf, bundled under assets/fonts/oldstandard/; adjacent SIL OFL 1.1. Source: https://github.com/google/fonts/tree/main/ofl/oldstandardtt . Period-inspired styling, not a certified 1894 railway face.
+- Courier Prime retained for American Morse timing and whitespace. No implicit system fallback intended.
+
+### Beta sound provenance closure — 2026-10-11
+
+The earlier open sounder item is superseded: tools/generate_sounder.py regenerated both runtime files byte-identically. SHA256 sounder_down: 937b0e802a3a4e050e4134cb8d1daf4465113dcf37e8d378e63437cad1edd7f5; sounder_up: 21abfe483cb0a9f4ef6157430b04d4c7960804add4d324d1b36c308bf44847d1. These are deterministic project-authored synthesis.
+
+Unknown legacy footstep_wood.wav is retained for rollback but no longer referenced by runtime scripts/scenes. Runtime uses project-authored audio/sfx/foley/footstep_wood_beta.wav from tools/generate_beta_footstep.py (independent seeded RNG). Temporary synthesis, not final recorded Foley.
+
+Register winding: audio/sfx/foley/register_wind.wav appended to tools/generate_action_foley.py without changing prior RNG order. Wick uses wick_turn.wav; feed uses sheet_slide.wav; pickup uses paper_turn.wav.

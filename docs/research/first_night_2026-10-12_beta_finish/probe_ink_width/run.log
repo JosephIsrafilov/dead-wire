@@ -1,0 +1,48 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+ROW TRAIN 17 C width_m=0.19091999705415 font_size=18
+ROW LEAR EAST width_m=0.18351999716833 font_size=18
+WIDEST_M=0.19091999705415 LIMIT=0.18 SHEET_W=0.23 label_pos=(-0.082, 0.004, -0.065) label_basis_x=(1.0, 0.0, 0.0)
+SCRIPT ERROR: Invalid call. Nonexistent function 'get_theme_font_size' in base 'Label3D'.
+   at: _run (res://docs/research/first_night_2026-10-12_beta_finish/probe_ink_width/probe.gd:21)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://docs/research/first_night_2026-10-12_beta_finish/probe_ink_width/probe.gd:21)
+ERROR: BUG: Unreferenced static string to 0: _request_gizmo_for_id
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: _enter_world
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: use_dynamic_gi
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: use_in_baked_light
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: .
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: servers
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: Variant
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: @warning_ignore_restore
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: @warning_ignore_start
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: @warning_ignore
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: @export_range
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: @export_multiline
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: @export
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: @icon
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: Array
+   at: unref (core/string/string_name.cpp:117)
+ERROR: BUG: Unreferenced static string to 0: Dictionary
+   at: unref (core/string/string_name.cpp:117)
+WARNING: A Thread object is being destroyed without its completion having been realized.
+Please call wait_to_finish() on it to ensure correct cleanup.
+   at: ~Thread (core/os/thread.cpp:102)
+ERROR: 7 RID allocations of type '23NavMeshGeometryParser2D' were leaked at exit.
+ERROR: 6 RID allocations of type '23NavMeshGeometryParser3D' were leaked at exit.
+ERROR: Pages in use exist at exit in PagedAllocator: N12VariantPools11BucketLargeE
+   at: ~PagedAllocator (./core/templates/paged_allocator.h:170)

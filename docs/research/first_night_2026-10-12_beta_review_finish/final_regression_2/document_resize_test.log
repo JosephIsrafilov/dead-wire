@@ -1,0 +1,22 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+  PASS: Fixed footer sits on an opaque dark backing, not light ink on pale paper
+  PASS: Footer text lies fully inside its dark backing
+  PASS: Viewport resize keeps the live deadline on the fixed footer
+  PASS: Viewport resize signal re-presents the open transcript sheet and re-clamps its pan
+  PASS: Viewport resize recomputes the fixed footer to the bottom of the viewport
+  PASS: Footer backing still encloses footer after resize
+  PASS: Resize keeps logical content and evidence unchanged
+  PASS: Resize keeps the sheet pan within bounded limits
+  PASS: Opening tape_register after copy hides the copy reading footer backing
+  PASS: Opening tape_register after copy hides copy footer and shows the printed card
+  PASS: Opening tape_register after copy keeps its logical body and doc id
+  PASS: Opening morse_reference after copy hides the copy reading footer backing
+  PASS: Opening morse_reference after copy hides copy footer and shows the printed card
+  PASS: Opening morse_reference after copy keeps its logical body and doc id
+  PASS: Opening duty_sheet after copy hides the copy reading footer backing
+  PASS: Opening duty_sheet after copy hides copy footer and shows the printed card
+  PASS: Opening duty_sheet after copy keeps its logical body and doc id
+  PASS: Opening shift_card after copy hides the copy reading footer backing
+  PASS: Opening shift_card after copy hides copy footer and shows the printed card
+  PASS: Opening shift_card after copy keeps its logical body and doc id

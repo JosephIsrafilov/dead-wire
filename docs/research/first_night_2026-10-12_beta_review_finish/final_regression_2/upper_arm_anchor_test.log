@@ -1,0 +1,7 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+PASS: Upper arm is separate from the moving forearm
+PASS: Shoulder sampled over writing motion
+PASS: Glyph motion never translates the shoulder
+PASS: Upper arm stays connected to the moving elbow
+PASS: Upper arm preserves layer contract

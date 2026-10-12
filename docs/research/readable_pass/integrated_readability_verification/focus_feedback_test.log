@@ -1,0 +1,17 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+--- Starting Focus Feedback Test Suite ---
+  PASS: InteractionController exposes refresh_reticle()
+  PASS: Idle captured crosshair keeps a reticle visible
+  PASS: Idle reticle uses the neutral inactive color at alpha .45
+  PASS: Actionable target keeps the reticle visible
+  PASS: Actionable target uses the warm focus color at alpha .95
+  PASS: Status-only target keeps the reticle visible so the ray stays readable
+  PASS: Status-only target uses the inactive color, not a dimmer alpha
+  PASS: Status target never looks like an actionable focus
+  PASS: UI-blocked view hides the reticle even with an actionable target
+  PASS: Uncaptured mouse (menus, pause) hides the reticle
+  PASS: Losing the target returns the reticle to inactive
+  PASS: Prompt update re-evaluates the reticle before the missing-label return (headless is uncaptured, so it hides)
+  PASS: Blocked prompt update hides the reticle even when the prompt label is missing
+--- All Focus Feedback Tests PASSED ---

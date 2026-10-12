@@ -1,0 +1,14 @@
+{
+  "command": [
+    "C:/Users/YUSIF/Desktop/Godot_v4.7.1-stable_win64.exe/Godot_v4.7.1-stable_win64_console.exe",
+    "--headless",
+    "--audio-driver",
+    "Dummy",
+    "--path",
+    ".",
+    "--export-release",
+    "Windows Beta x86_64"
+  ],
+  "exit_code": 0,
+  "exit_hex": "0x00000000"
+}

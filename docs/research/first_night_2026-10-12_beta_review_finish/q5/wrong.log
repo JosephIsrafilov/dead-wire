@@ -1,0 +1,27 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+D3D12 12_0 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 3070 Laptop GPU
+
+PASS: Desk armed after verification
+PASS: Mouse captured the way the game captures it
+PASS: The operator rose from the chair
+PASS: The operator walked to the commit desk
+PASS: The ray holds the neutral amendment action under the crosshair
+PASS: Key 1 opens amendment through the real input pipeline
+PASS: Actual typing sets the explicit correction
+PASS: Enter accepts the explicit typed correction
+PASS: WATER world fact recorded
+PASS: The press travels
+PASS: The press landed on the paper
+PASS: FILED ink shows on the filed copy
+PASS: The other copy is voided
+PASS: The stamp sound plays at the contact
+PASS: Captured c1_commit_water_filed
+PASS: The ray holds the option again
+PASS: A key behind an open document files nothing
+COMMIT ROUTE: 0 failures; 1 screenshots
+WARNING: 7 RIDs of type "Texture" were leaked.
+   at: finalize (servers/rendering/rendering_device.cpp:8900)
+WARNING: 12 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 3 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)

@@ -1,0 +1,28 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+  PASS: Operator sits before editing
+  PASS: AMEND opens through the real desk
+  PASS: Amendment editor is open
+  PASS: Typed direction cannot leave seat: move_forward
+  PASS: Typed direction cannot leave seat: move_left
+  PASS: Typed direction cannot leave seat: move_backward
+  PASS: Typed direction cannot leave seat: move_right
+  PASS: Closing frame holds a nonzero walk input
+  PASS: Closing frame is owned by the editor transition
+  PASS: Closing frame blocks the world view
+  PASS: Held walk input is ignored during the editor's closing frame
+  PASS: Transition ownership ends after the frame
+  PASS: Walk input is held after modal release
+  PASS: World view is unblocked after modal release
+  PASS: World walk becomes available after modal release
+  PASS: Pause menu opens
+  PASS: Paused shift blocks the world view with walk held
+  PASS: Held walk input is ignored while paused
+  PASS: Pause menu resumes
+  PASS: Held walk input counts again after resume
+  PASS: Running end card blocks the world view with walk held
+  PASS: Held walk input is ignored while the end card runs
+WARNING: 12 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 3 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)

@@ -1,0 +1,38 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+--- Starting Office Door Test Suite ---
+  PASS: m1_office.tscn loads
+  PASS: Office instantiates
+  PASS: South door is in the scene
+  PASS: Door carries a collision body
+  PASS: Door blocker sits on the world collision layer
+  PASS: Door blocker has a shape
+  PASS: Door blocker starts enabled
+  PASS: The closed doorway stops a ray leaving the office
+  PASS: There is a floor beyond the door
+  PASS: Door controller is wired
+  PASS: Door starts locked
+  PASS: Door is interactable
+  PASS: Locked prompt is shown
+  PASS: Trying a locked door is still an action
+  PASS: Trying the handle rattles it
+  PASS: Rattling does not open the door
+  PASS: The door stays locked
+  PASS: Shift director is wired
+  PASS: Closing the line unlocks the door
+  PASS: Prompt now offers a way out
+  PASS: Door leaf hangs on a hinge
+  PASS: The door opens
+  PASS: Opening clears the doorway collision
+  PASS: The leaf actually swings
+  PASS: There is a threshold trigger
+  PASS: End card is wired
+  PASS: End card is idle before the operator leaves
+  PASS: Walking out plays the end card
+  PASS: End card is shown
+  PASS: The operator stops walking once the slice ends
+  PASS: The record is the operator's duty sheet
+  PASS: The record never leaks message content
+--- All Office Door Tests PASSED (32 assertions) ---
+WARNING: 6 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)

@@ -1,0 +1,35 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+--- Starting Window Observation Event Test Suite (Phase J / Gate 18) ---
+  PASS: window_observation_event.tscn loads
+  PASS: instantiates as AttentionObservationTarget
+  PASS: Initially inactive
+  PASS: Initially unobserved
+  PASS: Visual indicator initially hidden
+  PASS: Event is active after trigger
+  PASS: Visual indicator visible during event
+  PASS: WorldState recorded window_event_occurred on trigger
+  PASS: KnowledgeState does NOT know about event before looking
+  PASS: Looking away does not trigger observation
+  PASS: KnowledgeState remains false when looking away
+  PASS: Occlusion blocks observation
+  PASS: KnowledgeState remains false when occluded
+  PASS: Unobstructed view of window observes target
+  PASS: is_observed is true
+  PASS: KnowledgeState recorded saw_window_event
+  PASS: Event expires after duration
+  PASS: Visual indicator hidden on expiration
+  PASS: Watched target instantiates
+  PASS: Watched trigger remains pending while in view
+  PASS: Pending trigger does not expire off-screen
+  PASS: Pending figure appears after the player looks away
+  PASS: Visible figure keeps its full post-appearance lifetime
+  PASS: Visible figure expires after its hold
+  PASS: UI-blocked target instantiates
+  PASS: UI-blocked case: figure appears while camera looks away
+  PASS: Observation blocked while a UI surface hides the world
+  PASS: No knowledge assigned through a covering UI
+  PASS: UI block does not cancel or pause the event
+  PASS: Same view observes once the surface is gone
+  PASS: Knowledge assigned after the surface closes
+--- All Window Observation Event Tests PASSED ---

@@ -1,0 +1,30 @@
+{
+  "packager_tests": 21,
+  "failures": 0,
+  "errors": 0,
+  "PCK_entries": 546,
+  "PCK_payloads_classes_exclusions": "PASS",
+  "zip_crc": null,
+  "zip_count": 13,
+  "zip_exe_pck_equal_export": true,
+  "zip_sha256": "ff1eda2fe816aff1d5e66baa625610eceaba2eea8c017fc5fa02c1890a76efa9",
+  "runtime_manifest": [
+    "dead-wire-windows-beta-x86_64.exe",
+    "dead-wire-windows-beta-x86_64.pck"
+  ],
+  "zip_names": [
+    "dead-wire-windows-beta/dead-wire-windows-beta-x86_64.exe",
+    "dead-wire-windows-beta/dead-wire-windows-beta-x86_64.pck",
+    "dead-wire-windows-beta/hand-off/BETA_REPORT_FORM.md",
+    "dead-wire-windows-beta/hand-off/README_WINDOWS_BETA.md",
+    "dead-wire-windows-beta/hand-off/THIRD_PARTY_NOTICES.md",
+    "dead-wire-windows-beta/THIRD_PARTY_NOTICES.md",
+    "dead-wire-windows-beta/licenses/fonts/cedarville/OFL.txt",
+    "dead-wire-windows-beta/licenses/fonts/courierprime/OFL.txt",
+    "dead-wire-windows-beta/licenses/fonts/imfell/OFL.txt",
+    "dead-wire-windows-beta/licenses/fonts/noto/OFL.txt",
+    "dead-wire-windows-beta/licenses/fonts/oldstandard/OFL.txt",
+    "dead-wire-windows-beta/licenses/audio/ATTRIBUTION.txt",
+    "dead-wire-windows-beta/hand-off/BUILD_PROVENANCE.txt"
+  ]
+}

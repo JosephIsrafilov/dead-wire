@@ -1,0 +1,34 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+--- Starting Routing Board Test Suite (Phase F / Gate 13A) ---
+  PASS: routing_board.tscn loads
+  PASS: instantiates as RoutingBoard
+  PASS: board has Interactable component
+  PASS: prompt text matches
+  PASS: Initially closed
+  PASS: Idle board (not awaiting route) does not open on demand
+  PASS: Idle board interaction is a no-op, not a modal
+  PASS: Board is open after open_board() while awaiting route
+  PASS: Board is closed after close_board()
+  PASS: Idle board prompt is truthful line status without an action
+  PASS: Key 1 does nothing when board is closed
+  PASS: Key 1 rejected when not awaiting route
+  PASS: has_submitted_this_session remains false on rejected early input
+  PASS: Keyboard echo is ignored
+  PASS: Key 1 selects CLEAR EAST when awaiting route
+  PASS: Board automatically closes after selection
+  PASS: has_submitted_this_session is true after submission
+  PASS: Repeated board interaction is safe read-only status
+  PASS: Duplicate input in same session rejected
+  PASS: Key 2 selects HOLD after reset
+  PASS: Board automatically closes after HOLD
+  PASS: CLEAR EAST throws to its absolute stop
+  PASS: HOLD throws to its own absolute stop, not an offset
+  PASS: A repeated CLEAR EAST lands on the same authored stop, no drift
+  PASS: Per-slot reset keeps the thrown lever where the night left it
+  PASS: Per-slot reset keeps the recorded route
+  PASS: Per-slot reset restores the ability to submit
+  PASS: Watch reset returns the lever to rest
+  PASS: Watch reset forgets the last route
+  PASS: Board closes on Esc (ui_cancel)
+--- All Routing Board Tests PASSED ---

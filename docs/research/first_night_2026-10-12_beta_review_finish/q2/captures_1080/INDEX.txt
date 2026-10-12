@@ -1,0 +1,4 @@
+01_blank_amendment.png 1920x1061 sha256=3d44384a7001c126
+02_explicit_wrong_draft.png 1920x1061 sha256=5cf8868002aa1059
+03_exact_choice_handover.png 1920x1061 sha256=ab33f9a2b4aae710
+04_objective_tape.png 1920x1061 sha256=634da63a0406d1e1

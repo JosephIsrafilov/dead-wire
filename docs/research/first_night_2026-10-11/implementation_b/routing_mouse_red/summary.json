@@ -1,0 +1,20 @@
+{
+  "suites": 1,
+  "passed": 0,
+  "failed": 1,
+  "assertions": 0,
+  "error_bearing_suites": 0,
+  "results": [
+    {
+      "suite": "tests/telegraph/routing_mouse_test.gd",
+      "exit_code": 1,
+      "assertions": 0,
+      "passed": false,
+      "failures": [
+        "  FAIL: Both route choices have mouse buttons"
+      ],
+      "runtime_errors": [],
+      "warnings": []
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+--- Starting Copy Commit Desk Test Suite ---
+  PASS: State autoloads available
+  PASS: Desk is armed after verification
+  PASS: Session awaits the commit
+  PASS: The intent itself is expressed
+  PASS: A rejected intent does not commit the desk
+  PASS: No filed result text appears, got ''
+  PASS: No stamp is drawn on a rejected intent
+  PASS: No stamp sound on a rejected intent
+  PASS: No world fact from a rejected intent
+  PASS: Deadline expiry resolves through the lapse path
+  PASS: Lapse records its world fact
+  PASS: The lapse resolves the desk
+  PASS: The surface reads the honest lapse outcome, got 'UNFILED'
+  PASS: A lapse stamps neither copy as filed
+  PASS: A lapse never fires the accepted contact sound
+  PASS: Key 1 passes the desk's own input gate
+  PASS: Key 1 opens an unfiled amendment
+  PASS: Explicit typed submission files the first copy
+  PASS: The accepted action is an explicit amendment
+  PASS: WATER fact recorded
+  PASS: Chosen amendment remembered without grading
+  PASS: The press travels after the acceptance
+  PASS: No ink before the press contacts the paper
+  PASS: The press lands within its duration
+  PASS: The accepted copy is stamped FILED on contact
+  PASS: The other copy is voided, not filed
+  PASS: Exactly one accepted contact event
+  PASS: The stamp sound fires on the press contact
+  PASS: Duplicate input records nothing further
+  PASS: Filing the other copy after acceptance is refused
+  PASS: Still exactly one accepted event
+  PASS: WATCHER was never filed
+  PASS: Unknown action id is refused before reaching the session
+  PASS: Refused unknown id leaves the desk armed
+  PASS: Key 2 passes the desk's input gate
+  PASS: Key 2 files the second copy
+  PASS: WATCHER filed, WATER untouched
+  PASS: The second press lands
+  PASS: The second copy carries FILED
+  PASS: The first copy is voided
+  PASS: A keypress behind an open document is gated
+  PASS: A keypress behind an open document files nothing
+  PASS: Intent before the deadline opens editing
+  PASS: An on-time intent is accepted and stamped in the same frame
+  PASS: On-time WATER fact recorded
+--- All Copy Commit Desk Tests PASSED (45 assertions) ---
+WARNING: 31 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 9 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)

@@ -1,0 +1,8 @@
+OK tests/audio/foley_lifecycle_test.gd assertions 36 runtime_errors 0
+{
+  "suites": 1,
+  "passed": 1,
+  "failed": 0,
+  "assertions": 36,
+  "error_bearing_suites": 0
+}

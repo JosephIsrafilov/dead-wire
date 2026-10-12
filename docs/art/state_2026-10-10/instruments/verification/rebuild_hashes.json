@@ -1,0 +1,19 @@
+{
+  "identical": 5,
+  "total": 8,
+  "changed": [
+    "assets\\models\\instruments_v1\\key_static.glb",
+    "assets\\models\\instruments_v1\\register_static.glb",
+    "assets\\models\\instruments_v1\\sounder_static.glb"
+  ],
+  "hashes": {
+    "assets\\models\\instruments_v1\\key_lever.glb": "e27526f60f55aceff7fb261279f4988c260bfe5e31ed5b268f7807c2e81ba769",
+    "assets\\models\\instruments_v1\\key_static.glb": "2d7a8bcb29ff6fe049c9f141c4f3a1e6b379d3f52602d2317533fd17ee58e11a",
+    "assets\\models\\instruments_v1\\register_spool.glb": "6c5fe1d259329732677b58e1e01471e95c9246618c0ec5e6fa580ff5bff0441f",
+    "assets\\models\\instruments_v1\\register_static.glb": "8ed64b801735f78c6f1c2bcedc8ec6e587b831118cc269bcea06900acf33572e",
+    "assets\\models\\instruments_v1\\register_stylus.glb": "ed36d27bad30f61613caeaebdfd177fae3e85ce72865c1134dbf6bc375d0a065",
+    "assets\\models\\instruments_v1\\sounder_armature.glb": "1733dd7de2c707837d2f75f56fdda0aed83d2cd72699bebd691d29e922706451",
+    "assets\\models\\instruments_v1\\sounder_static.glb": "0cafea5a533a8d4149fa565e78c634a03f03edf6e002913cb10739845efdd2ae",
+    "assets\\textures\\instruments_v1\\instrument_atlas_256.png": "7f2d79ea18d491197920ba454d50eabde3ede428eac5d7fe90914a194b9f19f0"
+  }
+}

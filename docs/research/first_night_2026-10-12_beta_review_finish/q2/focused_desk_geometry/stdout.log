@@ -1,0 +1,8 @@
+OK tests/office/desk_geometry_test.gd assertions 26 runtime_errors 1
+{
+  "suites": 1,
+  "passed": 1,
+  "failed": 0,
+  "assertions": 26,
+  "error_bearing_suites": 1
+}

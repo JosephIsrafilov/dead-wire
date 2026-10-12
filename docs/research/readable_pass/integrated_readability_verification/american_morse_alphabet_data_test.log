@@ -1,0 +1,267 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+--- Starting American Morse Alphabet Data Foundation Test (Gate 08B-2A) ---
+  PASS: AmericanMorseCharacterData instantiates
+  PASS: AmericanMorseCharacterData is a Resource
+  PASS: AmericanMorseAlphabetData instantiates
+  PASS: AmericanMorseAlphabetData is a Resource
+  PASS: Fixture m1_american_morse_alphabet.tres loads successfully
+  PASS: Fixture is of type AmericanMorseAlphabetData
+  PASS: Fixture has zero validation errors
+  PASS: Fixture contains exactly 18 entries
+  PASS: Found exactly 18 non-null entry symbols
+  PASS: Expected symbol 'A' is present in fixture
+  PASS: Expected symbol 'C' is present in fixture
+  PASS: Expected symbol 'D' is present in fixture
+  PASS: Expected symbol 'E' is present in fixture
+  PASS: Expected symbol 'F' is present in fixture
+  PASS: Expected symbol 'G' is present in fixture
+  PASS: Expected symbol 'H' is present in fixture
+  PASS: Expected symbol 'I' is present in fixture
+  PASS: Expected symbol 'L' is present in fixture
+  PASS: Expected symbol 'N' is present in fixture
+  PASS: Expected symbol 'O' is present in fixture
+  PASS: Expected symbol 'R' is present in fixture
+  PASS: Expected symbol 'S' is present in fixture
+  PASS: Expected symbol 'T' is present in fixture
+  PASS: Expected symbol 'U' is present in fixture
+  PASS: Expected symbol 'W' is present in fixture
+  PASS: Expected symbol '1' is present in fixture
+  PASS: Expected symbol '7' is present in fixture
+  PASS: Found symbol 'A' belongs to expected M1 set
+  PASS: Found symbol 'C' belongs to expected M1 set
+  PASS: Found symbol 'D' belongs to expected M1 set
+  PASS: Found symbol 'E' belongs to expected M1 set
+  PASS: Found symbol 'F' belongs to expected M1 set
+  PASS: Found symbol 'G' belongs to expected M1 set
+  PASS: Found symbol 'H' belongs to expected M1 set
+  PASS: Found symbol 'I' belongs to expected M1 set
+  PASS: Found symbol 'L' belongs to expected M1 set
+  PASS: Found symbol 'N' belongs to expected M1 set
+  PASS: Found symbol 'O' belongs to expected M1 set
+  PASS: Found symbol 'R' belongs to expected M1 set
+  PASS: Found symbol 'S' belongs to expected M1 set
+  PASS: Found symbol 'T' belongs to expected M1 set
+  PASS: Found symbol 'U' belongs to expected M1 set
+  PASS: Found symbol 'W' belongs to expected M1 set
+  PASS: Found symbol '1' belongs to expected M1 set
+  PASS: Found symbol '7' belongs to expected M1 set
+  PASS: Duplicate symbol produces validation error
+  PASS: Error message specifies Duplicate symbol
+  PASS: Null entry in alphabet produces validation error
+  PASS: Empty alphabet produces validation error
+  PASS: Empty symbol produces validation error
+  PASS: Multi-character symbol produces validation error
+  PASS: Whitespace symbol produces validation error
+  PASS: Tab whitespace symbol produces validation error
+  PASS: Lowercase symbol produces validation error
+  PASS: Null sequence produces validation error
+  PASS: Invalid child sequence produces validation error
+  PASS: Sequence for 'A' is valid MorseSequenceData
+  PASS: Sequence for 'C' is valid MorseSequenceData
+  PASS: Sequence for 'D' is valid MorseSequenceData
+  PASS: Sequence for 'E' is valid MorseSequenceData
+  PASS: Sequence for 'F' is valid MorseSequenceData
+  PASS: Sequence for 'G' is valid MorseSequenceData
+  PASS: Sequence for 'H' is valid MorseSequenceData
+  PASS: Sequence for 'I' is valid MorseSequenceData
+  PASS: Sequence for 'L' is valid MorseSequenceData
+  PASS: Sequence for 'N' is valid MorseSequenceData
+  PASS: Sequence for 'O' is valid MorseSequenceData
+  PASS: Sequence for 'R' is valid MorseSequenceData
+  PASS: Sequence for 'S' is valid MorseSequenceData
+  PASS: Sequence for 'T' is valid MorseSequenceData
+  PASS: Sequence for 'U' is valid MorseSequenceData
+  PASS: Sequence for 'W' is valid MorseSequenceData
+  PASS: Sequence for '1' is valid MorseSequenceData
+  PASS: Sequence for '7' is valid MorseSequenceData
+  PASS: Symbol 'A' starts with MARK
+  PASS: Symbol 'A' ends with MARK
+  PASS: Symbol 'C' starts with MARK
+  PASS: Symbol 'C' ends with MARK
+  PASS: Symbol 'D' starts with MARK
+  PASS: Symbol 'D' ends with MARK
+  PASS: Symbol 'E' starts with MARK
+  PASS: Symbol 'E' ends with MARK
+  PASS: Symbol 'F' starts with MARK
+  PASS: Symbol 'F' ends with MARK
+  PASS: Symbol 'G' starts with MARK
+  PASS: Symbol 'G' ends with MARK
+  PASS: Symbol 'H' starts with MARK
+  PASS: Symbol 'H' ends with MARK
+  PASS: Symbol 'I' starts with MARK
+  PASS: Symbol 'I' ends with MARK
+  PASS: Symbol 'L' starts with MARK
+  PASS: Symbol 'L' ends with MARK
+  PASS: Symbol 'N' starts with MARK
+  PASS: Symbol 'N' ends with MARK
+  PASS: Symbol 'O' starts with MARK
+  PASS: Symbol 'O' ends with MARK
+  PASS: Symbol 'R' starts with MARK
+  PASS: Symbol 'R' ends with MARK
+  PASS: Symbol 'S' starts with MARK
+  PASS: Symbol 'S' ends with MARK
+  PASS: Symbol 'T' starts with MARK
+  PASS: Symbol 'T' ends with MARK
+  PASS: Symbol 'U' starts with MARK
+  PASS: Symbol 'U' ends with MARK
+  PASS: Symbol 'W' starts with MARK
+  PASS: Symbol 'W' ends with MARK
+  PASS: Symbol '1' starts with MARK
+  PASS: Symbol '1' ends with MARK
+  PASS: Symbol '7' starts with MARK
+  PASS: Symbol '7' ends with MARK
+  PASS: Lookup get_sequence('A') returns non-null
+  PASS: Symbol 'A' event count == 3
+  PASS: Symbol 'A' total duration == 5
+  PASS: Symbol 'A' Event 0: kind=0, dur=1
+  PASS: Symbol 'A' Event 1: kind=1, dur=1
+  PASS: Symbol 'A' Event 2: kind=0, dur=3
+  PASS: Lookup get_sequence('C') returns non-null
+  PASS: Symbol 'C' event count == 5
+  PASS: Symbol 'C' total duration == 6
+  PASS: Symbol 'C' Event 0: kind=0, dur=1
+  PASS: Symbol 'C' Event 1: kind=1, dur=1
+  PASS: Symbol 'C' Event 2: kind=0, dur=1
+  PASS: Symbol 'C' Event 3: kind=1, dur=2
+  PASS: Symbol 'C' Event 4: kind=0, dur=1
+  PASS: Lookup get_sequence('D') returns non-null
+  PASS: Symbol 'D' event count == 5
+  PASS: Symbol 'D' total duration == 7
+  PASS: Symbol 'D' Event 0: kind=0, dur=3
+  PASS: Symbol 'D' Event 1: kind=1, dur=1
+  PASS: Symbol 'D' Event 2: kind=0, dur=1
+  PASS: Symbol 'D' Event 3: kind=1, dur=1
+  PASS: Symbol 'D' Event 4: kind=0, dur=1
+  PASS: Lookup get_sequence('E') returns non-null
+  PASS: Symbol 'E' event count == 1
+  PASS: Symbol 'E' total duration == 1
+  PASS: Symbol 'E' Event 0: kind=0, dur=1
+  PASS: Lookup get_sequence('F') returns non-null
+  PASS: Symbol 'F' event count == 5
+  PASS: Symbol 'F' total duration == 7
+  PASS: Symbol 'F' Event 0: kind=0, dur=1
+  PASS: Symbol 'F' Event 1: kind=1, dur=1
+  PASS: Symbol 'F' Event 2: kind=0, dur=3
+  PASS: Symbol 'F' Event 3: kind=1, dur=1
+  PASS: Symbol 'F' Event 4: kind=0, dur=1
+  PASS: Lookup get_sequence('G') returns non-null
+  PASS: Symbol 'G' event count == 5
+  PASS: Symbol 'G' total duration == 9
+  PASS: Symbol 'G' Event 0: kind=0, dur=3
+  PASS: Symbol 'G' Event 1: kind=1, dur=1
+  PASS: Symbol 'G' Event 2: kind=0, dur=3
+  PASS: Symbol 'G' Event 3: kind=1, dur=1
+  PASS: Symbol 'G' Event 4: kind=0, dur=1
+  PASS: Lookup get_sequence('H') returns non-null
+  PASS: Symbol 'H' event count == 7
+  PASS: Symbol 'H' total duration == 7
+  PASS: Symbol 'H' Event 0: kind=0, dur=1
+  PASS: Symbol 'H' Event 1: kind=1, dur=1
+  PASS: Symbol 'H' Event 2: kind=0, dur=1
+  PASS: Symbol 'H' Event 3: kind=1, dur=1
+  PASS: Symbol 'H' Event 4: kind=0, dur=1
+  PASS: Symbol 'H' Event 5: kind=1, dur=1
+  PASS: Symbol 'H' Event 6: kind=0, dur=1
+  PASS: Lookup get_sequence('I') returns non-null
+  PASS: Symbol 'I' event count == 3
+  PASS: Symbol 'I' total duration == 3
+  PASS: Symbol 'I' Event 0: kind=0, dur=1
+  PASS: Symbol 'I' Event 1: kind=1, dur=1
+  PASS: Symbol 'I' Event 2: kind=0, dur=1
+  PASS: Lookup get_sequence('L') returns non-null
+  PASS: Symbol 'L' event count == 1
+  PASS: Symbol 'L' total duration == 6
+  PASS: Symbol 'L' Event 0: kind=0, dur=6
+  PASS: Lookup get_sequence('N') returns non-null
+  PASS: Symbol 'N' event count == 3
+  PASS: Symbol 'N' total duration == 5
+  PASS: Symbol 'N' Event 0: kind=0, dur=3
+  PASS: Symbol 'N' Event 1: kind=1, dur=1
+  PASS: Symbol 'N' Event 2: kind=0, dur=1
+  PASS: Lookup get_sequence('O') returns non-null
+  PASS: Symbol 'O' event count == 3
+  PASS: Symbol 'O' total duration == 4
+  PASS: Symbol 'O' Event 0: kind=0, dur=1
+  PASS: Symbol 'O' Event 1: kind=1, dur=2
+  PASS: Symbol 'O' Event 2: kind=0, dur=1
+  PASS: Lookup get_sequence('R') returns non-null
+  PASS: Symbol 'R' event count == 5
+  PASS: Symbol 'R' total duration == 6
+  PASS: Symbol 'R' Event 0: kind=0, dur=1
+  PASS: Symbol 'R' Event 1: kind=1, dur=2
+  PASS: Symbol 'R' Event 2: kind=0, dur=1
+  PASS: Symbol 'R' Event 3: kind=1, dur=1
+  PASS: Symbol 'R' Event 4: kind=0, dur=1
+  PASS: Lookup get_sequence('S') returns non-null
+  PASS: Symbol 'S' event count == 5
+  PASS: Symbol 'S' total duration == 5
+  PASS: Symbol 'S' Event 0: kind=0, dur=1
+  PASS: Symbol 'S' Event 1: kind=1, dur=1
+  PASS: Symbol 'S' Event 2: kind=0, dur=1
+  PASS: Symbol 'S' Event 3: kind=1, dur=1
+  PASS: Symbol 'S' Event 4: kind=0, dur=1
+  PASS: Lookup get_sequence('T') returns non-null
+  PASS: Symbol 'T' event count == 1
+  PASS: Symbol 'T' total duration == 3
+  PASS: Symbol 'T' Event 0: kind=0, dur=3
+  PASS: Lookup get_sequence('U') returns non-null
+  PASS: Symbol 'U' event count == 5
+  PASS: Symbol 'U' total duration == 7
+  PASS: Symbol 'U' Event 0: kind=0, dur=1
+  PASS: Symbol 'U' Event 1: kind=1, dur=1
+  PASS: Symbol 'U' Event 2: kind=0, dur=1
+  PASS: Symbol 'U' Event 3: kind=1, dur=1
+  PASS: Symbol 'U' Event 4: kind=0, dur=3
+  PASS: Lookup get_sequence('W') returns non-null
+  PASS: Symbol 'W' event count == 5
+  PASS: Symbol 'W' total duration == 9
+  PASS: Symbol 'W' Event 0: kind=0, dur=1
+  PASS: Symbol 'W' Event 1: kind=1, dur=1
+  PASS: Symbol 'W' Event 2: kind=0, dur=3
+  PASS: Symbol 'W' Event 3: kind=1, dur=1
+  PASS: Symbol 'W' Event 4: kind=0, dur=3
+  PASS: Lookup get_sequence('1') returns non-null
+  PASS: Symbol '1' event count == 7
+  PASS: Symbol '1' total duration == 11
+  PASS: Symbol '1' Event 0: kind=0, dur=1
+  PASS: Symbol '1' Event 1: kind=1, dur=1
+  PASS: Symbol '1' Event 2: kind=0, dur=3
+  PASS: Symbol '1' Event 3: kind=1, dur=1
+  PASS: Symbol '1' Event 4: kind=0, dur=3
+  PASS: Symbol '1' Event 5: kind=1, dur=1
+  PASS: Symbol '1' Event 6: kind=0, dur=1
+  PASS: Lookup get_sequence('7') returns non-null
+  PASS: Symbol '7' event count == 7
+  PASS: Symbol '7' total duration == 11
+  PASS: Symbol '7' Event 0: kind=0, dur=3
+  PASS: Symbol '7' Event 1: kind=1, dur=1
+  PASS: Symbol '7' Event 2: kind=0, dur=3
+  PASS: Symbol '7' Event 3: kind=1, dur=1
+  PASS: Symbol '7' Event 4: kind=0, dur=1
+  PASS: Symbol '7' Event 5: kind=1, dur=1
+  PASS: Symbol '7' Event 6: kind=0, dur=1
+  PASS: C contains internal GAP(2) at event 3
+  PASS: O contains internal GAP(2) at event 1
+  PASS: R contains internal GAP(2) at event 1
+  PASS: L is exactly single MARK(6)
+  PASS: Numeral 1 total duration is 11
+  PASS: Numeral 7 total duration is 11
+  PASS: Alphabet has_symbol(' ') is false
+  PASS: Alphabet get_sequence(' ') is null
+  PASS: Alphabet has_symbol('0') is false
+  PASS: Alphabet get_sequence('0') is null
+  PASS: Alphabet has_symbol('Z') is false
+  PASS: Alphabet get_sequence('Z') is null
+  PASS: Alphabet has_symbol('a') is false (case-sensitive)
+  PASS: Alphabet get_sequence('a') is null (case-sensitive)
+  PASS: Alphabet has_symbol('') is false
+  PASS: Alphabet get_sequence('') is null
+  PASS: Validation and lookup do not modify entry count
+  PASS: First entry remains 'A'
+  PASS: All MorseTimingEvent instances in fixture are distinct (no shared mutable state)
+  PASS: All MorseSequenceData instances in fixture are distinct
+  PASS: WorldState untouched during AmericanMorseAlphabetData operations
+  PASS: KnowledgeState untouched during AmericanMorseAlphabetData operations
+  PASS: No scene tree nodes added by alphabet data operations
+--- All American Morse Alphabet Data Tests PASSED ---

@@ -1,0 +1,55 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+PASS: Unread first order waits for inspection
+PASS: Unread first order deadline advances the night
+PASS: Unread order records lapse rather than fabricated filing
+PASS: Terminal copy rejects duplicate filing
+PASS: Watched window defers appearance
+PASS: Bounded fallback cancels pending figure
+PASS: Resolved copy creates handover
+PASS: Handover does not certify an interpretation
+PASS: file_water path reaches unlocked exit
+PASS: Hand has made contact with written ink
+PASS: Writing never detaches nib from shaft
+PASS: Pen tip reaches glyph position within one millimetre
+PASS: Reset clears hand, figure, and filing
+PASS: Unread first order waits for inspection
+PASS: Unread first order deadline advances the night
+PASS: Unread order records lapse rather than fabricated filing
+PASS: Terminal copy rejects duplicate filing
+PASS: Watched window defers appearance
+PASS: Bounded fallback cancels pending figure
+PASS: Resolved copy creates handover
+PASS: Handover does not certify an interpretation
+PASS: file_watcher path reaches unlocked exit
+PASS: Hand has made contact with written ink
+PASS: Writing never detaches nib from shaft
+PASS: Pen tip reaches glyph position within one millimetre
+PASS: Reset clears hand, figure, and filing
+PASS: Unread first order waits for inspection
+PASS: Unread first order deadline advances the night
+PASS: Unread order records lapse rather than fabricated filing
+PASS: Uninspected final copy visibly lapses
+PASS: Watched window defers appearance
+PASS: Bounded fallback cancels pending figure
+PASS: Resolved copy creates handover
+PASS: Handover does not certify an interpretation
+PASS: lapsed path reaches unlocked exit
+PASS: Hand has made contact with written ink
+PASS: Writing never detaches nib from shaft
+PASS: Pen tip reaches glyph position within one millimetre
+PASS: Reset clears hand, figure, and filing
+PASS: Unread first order waits for inspection
+PASS: Unread first order deadline advances the night
+PASS: Unread order records lapse rather than fabricated filing
+PASS: Missed final call does not invent a copied document
+PASS: missed path reaches unlocked exit
+PASS: Hand has made contact with written ink
+PASS: Writing never detaches nib from shaft
+PASS: Pen tip reaches glyph position within one millimetre
+PASS: Reset clears hand, figure, and filing
+Night recovery failures: 0
+WARNING: 9 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 1 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)

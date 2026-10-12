@@ -1,0 +1,43 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+--- Starting Duty Sheet Test Suite ---
+  PASS: KnowledgeState autoload is available
+  PASS: WorldState autoload is available
+  PASS: WorldState alone does not create a core-hook sheet status
+  PASS: WorldState alone does not add a core-hook record line
+  PASS: Water commit maps to the heard-copy status
+  PASS: Water commit is visible on the duty sheet
+  PASS: Core-hook status does not leak message content
+  PASS: Watcher commit maps to the written-copy status
+  PASS: Watcher commit is visible on the duty sheet
+  PASS: Lapsed commit maps to the unfiled status
+  PASS: Lapsed outcome is visible on the duty sheet
+  PASS: incomplete_copy_ fact maps to the COPY INCOMPLETE status
+  PASS: A lapse outranks an incomplete copy on the sheet
+  PASS: A filed route outranks an incomplete copy on the sheet
+  PASS: Production office scene loads for consequence check
+  PASS: Production office instantiates for consequence check
+  PASS: Production office loads the core-hook scenario
+  PASS: Core-hook production session reaches verification
+  PASS: Production transcript is available for verification
+  PASS: Production transcript inspection opens the commit gate
+  PASS: Production core-hook commit resolves
+  PASS: Production consequence completes the shift segment
+  PASS: Production office exposes its duty sheet
+  PASS: Completed production commit resolves the sheet status
+  PASS: Completed production commit is visible on the rendered duty sheet
+  PASS: Production office exposes its dispatch ledger
+  PASS: The entries header agrees with the night's date
+  PASS: No day of month is invented anywhere in the setting
+  PASS: The core-hook entry uses the shared sealed-copy vocabulary
+  PASS: The ledger never leaks message content
+  PASS: A filed record without a route fact invents no direction
+  PASS: The recorded route shows the action that actually went out
+  PASS: An incomplete lapse reads as exactly what happened
+  PASS: An incomplete unfiled commit is its own honest outcome
+  PASS: A missed call leaves no copy and no invented content
+--- All Duty Sheet Tests PASSED (35 assertions) ---
+WARNING: 11 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 2 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)

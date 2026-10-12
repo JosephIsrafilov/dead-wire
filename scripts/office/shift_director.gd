@@ -311,7 +311,6 @@ func _maybe_foreign_traffic() -> void:
 		return
 	if _phase_timer < foreign_traffic_after_seconds or not _wire_idle():
 		return
-	foreign_traffic_played = true
 	var remaining := _current_wait_seconds() - _phase_timer
 	var sequence := _encoder.encode(foreign_traffic_text, alphabet) if alphabet != null else null
 	if sequence == null or playback_profile == null:
@@ -319,7 +318,7 @@ func _maybe_foreign_traffic() -> void:
 	var schedule := _compiler.compile(sequence, playback_profile)
 	if schedule == null or schedule.total_duration_seconds > remaining - 3.0:
 		return
-	_play_on_wire(foreign_traffic_text)
+	foreign_traffic_played = _play_on_wire(foreign_traffic_text) > 0.0
 
 ## The one deliberate act the player makes before the night takes over.
 func open_line() -> bool:

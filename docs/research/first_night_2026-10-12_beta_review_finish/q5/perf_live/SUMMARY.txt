@@ -1,0 +1,5 @@
+Real-time perf sample (crash-review fix session): windowed 1280x720, D3D12 Forward+, RTX 3070 laptop.
+Director ENABLED, live WATER transmission running (MARK/GAP + tape ink), seated camera.
+Warmup 120 frames; 300 measured frames: p50 5.129 ms / p95 5.994 / p99 8.414.
+Document-viewer open transition, 120 frames: p50 5.021 / p95 5.478.
+Not a full-night benchmark; one machine, one scenario. Well inside 20 ms target.
