@@ -1,0 +1,36 @@
+{
+  "authoring": "Blender 5.2 bpy; deterministic depot potbelly stove and wall flue",
+  "units": "metres",
+  "atlas": "res://assets/textures/stove_v1/stove_atlas_256.png",
+  "assemblies": {
+    "stove_static": {
+      "triangles": 2900,
+      "materials": [
+        "dw_stove_sheet_iron",
+        "dw_stove_iron",
+        "dw_stove_brass",
+        "dw_stove_brick",
+        "dw_stove_coal",
+        "dw_stove_wood"
+      ],
+      "source_vertices": 1484,
+      "source_vertices_unverified": true,
+      "source_vertices_note": "Blender mesh vertex count reported by the original build; UNVERIFIED while the Blender source-rebuild gate is closed",
+      "glb_vertices": 5482,
+      "glb_vertices_note": "engine glTF importer surface POSITION vertices, summed over 6 surfaces",
+      "glb_accessor_vertices": 5465,
+      "glb_accessor_vertices_note": "sum of POSITION accessor counts in the GLB JSON (independent parser); differs from surface vertices by material/normal splits",
+      "res_surface_vertices": 5482
+    }
+  },
+  "total_triangles": 2900,
+  "verification": {
+    "glb_sha256": "627ecfc761cd95b8fea5ef653bb6416687ea22a7a250c04637c62a98bf60589e",
+    "res_sha256": "cb674d169be054e7d844eab3c3485dd65374acf4cc7d22efe6bd80c8a712e601",
+    "atlas_sha256": "19fd2e898777e9f78a86feb82a1f1c4b7f181d8bb7396f19b59fb73ed80a645e",
+    "blend_sha256": "19c46dab7abf3c6289fcbbb4c8d43886cdafba1a3656d2dce3f5726f73f39ec5",
+    "glb_to_res_rebuild": "reproducible: two independent scratch copies (rebuild_A, rebuild_B) imported and rebuilt via tools/import_stove.gd; both generated res byte-identical to the live res (sha256 above) and engine-verified equal on surfaces, arrays, AABB and materials",
+    "counts_measured_by": "Godot 4.8-dev7 engine load of the shipped GLB and RES, cross-checked by an independent GLB chunk/accessor parser",
+    "source_blender_rebuild": "BLOCKED: Blender execution forbidden in this session; source-to-GLB parity and the Blender vertex count are not verified"
+  }
+}

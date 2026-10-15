@@ -117,7 +117,10 @@ func _apply_psx_scale() -> void:
 		grade.visible = enable_psx_rendering and profile.grade_enabled
 		if grade.material is ShaderMaterial:
 			var material := grade.material as ShaderMaterial
-			material.set_shader_parameter("pixel_size", float(profile.divisor))
+			# The fallback mirrors the policy's own contract (cell = render
+			# divisor), never a second rule that re-pixelates READABLE.
+			var psx_cell: float = float(profile.get("pixel_size", profile.divisor))
+			material.set_shader_parameter("pixel_size", psx_cell)
 			material.set_shader_parameter("levels", profile.levels)
 			material.set_shader_parameter("vignette", profile.vignette)
 
@@ -506,6 +509,10 @@ func _on_transcript_inspected(text: String) -> void:
 	# document_opened event for a sheet that never received a message.
 	if paper != null and paper.get_state() in [TranscriptPaper.PaperState.EMPTY, TranscriptPaper.PaperState.PREPARING]:
 		return
+	if paper != null:
+		# The paper owns the lift: the current physical sheet rises, and its
+		# own feed/archive/clear motions cancel or compose with it.
+		paper.lift_sheet_for_reading(false)
 	# A closed partial shows exactly the ink it has, with the honest mark. It
 	# never reveals the hidden remainder and never verifies anything.
 	if paper != null and paper.is_incomplete_closed():
@@ -522,19 +529,24 @@ func _on_transcript_inspected(text: String) -> void:
 		"[E / Esc] Put Down Transcript"
 	)
 
-## The preceding physical sheet stays readable even while the next is live.
-func _on_previous_transcript_inspected(text: String, incomplete: bool) -> void:
-	if document_viewer == null:
-		return
-	var body := text + ("\n\n— COPY INCOMPLETE —" if incomplete else "")
-	document_viewer.open_document("previous_transcript", "NIGHT COPY — E. CRANE", body,
-		"[E / Esc] Put Down Previous Copy")
-
 func _get_transcript_paper() -> TranscriptPaper:
 	var paper := get_node_or_null("TranscriptPaper") as TranscriptPaper
 	if paper == null and session_controller != null:
 		paper = session_controller.transcript_paper
 	return paper
+
+## The preceding physical sheet stays readable even while the next is live.
+func _on_previous_transcript_inspected(text: String, incomplete: bool) -> void:
+	if document_viewer == null:
+		return
+	var paper := _get_transcript_paper()
+	if paper != null:
+		# The archived sheet itself rises to be read — never the fresh blank
+		# that is feeding onto the writing zone.
+		paper.lift_sheet_for_reading(true)
+	var body := text + ("\n\n— COPY INCOMPLETE —" if incomplete else "")
+	document_viewer.open_document("previous_transcript", "NIGHT COPY — E. CRANE", body,
+		"[E / Esc] Put Down Previous Copy")
 
 func _on_tape_inspected(text: String) -> void:
 	# Dots and dashes only. No transcript on this surface, no comparison,
@@ -722,6 +734,13 @@ func _on_document_closed(doc_id: String) -> void:
 		if ic != null:
 			ic.is_ui_blocked = false
 			ic.refresh_prompt()
+	if doc_id in ["transcript_paper", "previous_transcript"]:
+		var paper := _get_transcript_paper()
+		if paper != null:
+			# The document that was lifted goes back down — the archived sheet
+			# for a previous read, the current sheet for the copy itself. The
+			# paper returns each to its own rest, never an absolute pose.
+			paper.return_sheet_from_reading(doc_id == "previous_transcript")
 	if doc_id == "dawn_evidence":
 		_try_end_shift()
 

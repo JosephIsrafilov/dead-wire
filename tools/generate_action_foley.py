@@ -69,3 +69,12 @@ write_samples('sheet_slide', filtered(.32, lambda t: math.sin(math.pi * t / .32)
 write('wick_turn', .62, lambda t, n: sum(impact(t, n, .03 + k * .105, 2300 - k * 90, 140, .09) for k in range(5)))
 # The register winding handle is lower and slower than the wick wheel.
 write('register_wind', .78, lambda t, n: sum(impact(t, n, .04 + k * .14, 520 - k * 45, 32, .14) for k in range(5)))
+
+# --- third pass: multi-variant foley for natural physical variation (WS3.12) ---
+write_samples('pen_scratch_2', filtered(.052, lambda t: math.sin(math.pi * t / .052) ** 1.4 * (.55 + .45 * math.sin(2 * math.pi * 165 * t) ** 2),
+                                        2300, 6600, .85, 2101))
+write_samples('pen_scratch_3', filtered(.058, lambda t: math.sin(math.pi * t / .058) ** 1.6 * (.65 + .35 * math.sin(2 * math.pi * 125 * t) ** 2),
+                                        2700, 7200, .88, 2102))
+write('paper_turn_2', .44, lambda t, n: n * .17 * math.sin(math.pi * t / .44) ** 2 * (.35 + .65 * math.sin(2 * math.pi * 22 * t) ** 2))
+write('paper_turn_3', .48, lambda t, n: n * .16 * math.sin(math.pi * t / .48) ** 2 * (.28 + .72 * math.sin(2 * math.pi * 16 * t) ** 2))
+

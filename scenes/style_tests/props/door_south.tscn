@@ -27,7 +27,7 @@ material = ExtResource("1_trim")
 
 [node name="Threshold" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.04, -0.02)
-size = Vector3(0.98, 0.04, 0.14)
+size = Vector3(0.98, 0.02, 0.14)
 material = ExtResource("1_trim")
 
 [node name="HingeTop" type="CSGBox3D" parent="."]

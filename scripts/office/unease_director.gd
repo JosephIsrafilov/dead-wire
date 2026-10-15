@@ -255,9 +255,10 @@ func _critical_writing_window() -> bool:
 	if office == null or office.session_controller == null:
 		return false
 	var session := office.session_controller
-	if session.get_current_scenario() == null:
+	var scen := session.get_current_scenario()
+	if scen == null:
 		return false
-	if session.get_current_scenario().scenario_id != "core_hook_water_watcher":
+	if not scen.critical_copy and scen.scenario_id != "core_hook_water_watcher":
 		return false
 	return session.get_state() in [TelegraphSessionController.State.RECEIVING, TelegraphSessionController.State.COPYING]
 

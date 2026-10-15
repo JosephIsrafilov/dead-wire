@@ -64,7 +64,7 @@ func _run() -> void:
 		stand_wait += 1
 	Input.action_release("move_forward")
 	check(not office.operator_seat.is_seated, "The operator rose from the chair")
-	var desk_side := Vector3(1.35, 0.0, 0.7)
+	var desk_side := Vector3(0.45, 0.0, 0.95)
 	await _walk_to(player, desk_side)
 	check(player.global_position.distance_to(desk_side) < 0.5, "The operator walked to the commit desk")
 

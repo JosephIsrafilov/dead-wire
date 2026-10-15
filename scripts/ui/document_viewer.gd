@@ -60,6 +60,11 @@ func _find_nodes() -> void:
 	if footer_label == null:
 		var footer_path := "CenterContainer/PanelContainer/MarginContainer/VBoxContainer/FooterLabel"
 		footer_label = get_node_or_null(footer_path) as Label
+	if panel_container != null:
+		panel_container.texture_filter = Control.TEXTURE_FILTER_NEAREST
+	var copy_sheet := get_node_or_null("TranscriptSheet") as TextureRect
+	if copy_sheet != null:
+		copy_sheet.texture_filter = Control.TEXTURE_FILTER_NEAREST
 
 func is_open() -> bool:
 	return _is_open
@@ -99,9 +104,27 @@ func open_document(doc_id: String, title: String, body: String, footer: String =
 		footer_label.text = _opened_footer
 
 	_present_copy(doc_id, body)
+	_apply_lamp_light_to_paper()
 	visible = true
 	_animate_in()
 	document_opened.emit(_current_doc_id)
+
+func apply_wick_dimming(wick_level: float) -> void:
+	var factor := clampf(lerpf(0.68, 1.0, clampf(wick_level, 0.0, 1.0)), 0.68, 1.0)
+	var tint := Color(factor, factor * 0.97 + 0.03, factor * 0.92 + 0.08, 1.0)
+	if panel_container != null:
+		panel_container.self_modulate = tint
+	var copy := get_node_or_null("TranscriptSheet") as Control
+	if copy != null:
+		copy.self_modulate = tint
+
+func _apply_lamp_light_to_paper() -> void:
+	var office := get_parent()
+	var lamp_life := office.get_node_or_null("LampLife") as LampLife if office != null else null
+	if lamp_life != null:
+		apply_wick_dimming(lamp_life.wick)
+	else:
+		apply_wick_dimming(1.0)
 
 func show_latest_tape() -> void:
 	if not is_inside_tree() or is_queued_for_deletion() or _current_doc_id != "tape_register":

@@ -340,7 +340,13 @@ func _advance_motion(delta: float) -> float:
 	var sleeve := _get_assembly()
 	var wrist := get_node_or_null("Sleeve/Wrist") as Node3D
 	if sleeve != null:
-		sleeve.transform = _motion_sleeve_start.interpolate_with(_motion_sleeve_target, eased)
+		var base_sleeve := _motion_sleeve_start.interpolate_with(_motion_sleeve_target, eased)
+		# Micro-stroke inside the glyph cell before contact (TACTILE_M1 P1):
+		# the pen scribes a small down-right arc inside the cell and lands on
+		# the exact target at t = 1.0, keeping wrist_stray and joint span exact.
+		var stroke_wave := sin(PI * t) * sin(TAU * t)
+		base_sleeve.origin += Vector3(0.0018 * stroke_wave, 0.0008 * sin(PI * t), 0.0022 * sin(PI * t))
+		sleeve.transform = base_sleeve
 	if wrist != null:
 		var lerped := _motion_wrist_start.lerp(_motion_wrist_target, eased)
 		if _motion_is_row_change or _motion_is_word_start:

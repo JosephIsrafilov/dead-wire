@@ -61,7 +61,44 @@ func _ready() -> void:
 			interactable.interacted.connect(_on_interacted)
 
 	_add_route_buttons()
+	_add_direct_stop_targets()
 	_update_presentation()
+
+func _add_direct_stop_targets() -> void:
+	if get_node_or_null("ClearStopInteractable") != null:
+		return
+	var configs := [
+		["ClearStopInteractable", "CLEAR EAST", "Throw Lever: CLEAR EAST", Vector3(-0.19, 0.43, -0.09)],
+		["HoldStopInteractable", "HOLD", "Throw Lever: HOLD", Vector3(0.19, 0.43, -0.09)],
+	]
+	for cfg in configs:
+		var area := Interactable.new()
+		area.name = cfg[0]
+		area.collision_layer = 2
+		area.collision_mask = 0
+		area.prompt_text = cfg[2]
+		area.enabled = false
+		var shape := CollisionShape3D.new()
+		shape.name = "CollisionShape3D"
+		var box := BoxShape3D.new()
+		# Tall enough to own the whole lever band between the split modal
+		# boxes, so a real aim at the lever never falls through to the slate.
+		box.size = Vector3(0.18, 0.34, 0.12)
+		shape.shape = box
+		area.add_child(shape)
+		area.position = cfg[3]
+		var route_name: String = cfg[1]
+		area.interacted.connect(func() -> void: throw_direct_route(route_name))
+		add_child(area)
+
+func throw_direct_route(action: String) -> bool:
+	# A direct lever throw is not a modal. It needs a closed board, a pending
+	# decision and direct eligibility; it never opens or closes the modal,
+	# never fakes a board_opened/board_closed lifecycle and never touches the
+	# mouse. Only the authority's acknowledgement can throw the lever.
+	if is_open or not is_awaiting_route or has_submitted_this_session or _route_pending or _publishing_route_accept:
+		return false
+	return _request_route(action)
 
 func _add_route_buttons() -> void:
 	if route_prompt == null:
@@ -91,10 +128,21 @@ func set_awaiting_route(awaiting: bool) -> void:
 	_update_presentation()
 
 func _update_presentation() -> void:
+	_add_direct_stop_targets()
 	if route_prompt == null:
 		route_prompt = get_node_or_null("RoutePromptUI/Panel") as Control
 	if route_prompt != null:
 		route_prompt.visible = is_open and is_awaiting_route and not has_submitted_this_session
+	var can_direct := is_awaiting_route and not has_submitted_this_session and not is_open
+	for stop_name in ["ClearStopInteractable", "HoldStopInteractable"]:
+		var stop_act := get_node_or_null(stop_name) as Interactable
+		if stop_act != null:
+			stop_act.enabled = can_direct
+			stop_act.is_actionable = can_direct
+			# An off-state target must not eat the interaction ray either: a
+			# disabled stop leaves the layer so the ray reaches the board's
+			# own surface behind it.
+			stop_act.collision_layer = 2 if can_direct else 0
 	if interactable == null:
 		return
 	if is_awaiting_route and not has_submitted_this_session:
@@ -171,8 +219,20 @@ func close_board() -> void:
 	board_closed.emit()
 
 func select_action(action: String) -> bool:
-	# Only permit submission when session is awaiting route decision and board is open
-	if not is_open or has_submitted_this_session or not is_awaiting_route or _route_pending or _publishing_route_accept:
+	# Only the real modal may submit through its own key path.
+	if not is_open:
+		return false
+	var accepted := _request_route(action)
+	# Only the modal caller closes a really-open modal after an acceptance.
+	if accepted and _slot_generation == _pending_slot_generation:
+		close_board()
+	return accepted
+
+## Common guarded submission, shared by the modal keys and the direct lever
+## stops. Emits the intent to the session authority; success is the authority's
+## synchronous acknowledgement, never the emit itself.
+func _request_route(action: String) -> bool:
+	if has_submitted_this_session or not is_awaiting_route or _route_pending or _publishing_route_accept:
 		return false
 
 	if not RouteAction.is_valid(action):
@@ -190,8 +250,6 @@ func select_action(action: String) -> bool:
 	var accepted := _pending_route_accepted
 	_route_pending = false
 	_pending_route_action = ""
-	if accepted and _slot_generation == _pending_slot_generation:
-		close_board()
 	return accepted
 
 ## The session resolved the slot: an accepted route (correct or not — the order

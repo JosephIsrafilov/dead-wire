@@ -56,6 +56,8 @@ func set_hush_db(value: float) -> void:
 		wind_player.volume_db = wind_volume_db + value
 	if stove_player != null:
 		stove_player.volume_db = stove_volume_db + value
+	if clock_player != null:
+		clock_player.volume_db = clock_volume_db + value
 
 func _ready() -> void:
 	build_players()

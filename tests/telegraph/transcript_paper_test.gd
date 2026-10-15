@@ -404,6 +404,28 @@ func _run() -> void:
 	if not assert_condition(close_finished.is_empty(), "No copy_finished ever fires for closed partials"): return
 	close_paper.queue_free()
 
+	# 17. Micro-stroke nibble motion before glyph_contact (TACTILE_M1 P1)
+	var stroke_paper: TranscriptPaper = paper_scene.instantiate() as TranscriptPaper
+	root.add_child(stroke_paper)
+	await process_frame
+	stroke_paper.set_process(false)
+	stroke_paper.feed_seconds = 0.0
+	var stroke_rig := stroke_paper.get_writer_rig()
+	stroke_rig.enter_duration = 0.0
+	stroke_paper.begin_writing("WATER")
+	stroke_paper.advance_paper(0.01)
+	if not assert_condition(stroke_rig.request_glyph_motion(0, "WATER"), "Micro-stroke case accepts glyph 0"): return
+	var nib_node := stroke_rig.get_node("Sleeve/Wrist/Hand/Pen/Nib") as Node3D
+	var target_world := stroke_paper.to_global(stroke_paper.get_glyph_contact(0))
+	stroke_rig.advance_presentation(stroke_rig._motion_duration * 0.78)
+	var mid_stroke_tip := nib_node.to_global(Vector3(0, -0.011, 0))
+	var linear_mid := stroke_rig.to_global(stroke_rig._motion_sleeve_start.origin.lerp(stroke_rig._motion_sleeve_target.origin, 0.78 * 0.78 * (3.0 - 2.0 * 0.78)))
+	if not assert_condition(mid_stroke_tip.distance_to(target_world) > 0.0005 and stroke_rig.get_node("Sleeve").position.distance_to(stroke_rig._motion_sleeve_start.origin.lerp(stroke_rig._motion_sleeve_target.origin, 0.78 * 0.78 * (3.0 - 2.0 * 0.78))) > 0.0004, "Pen performs a physical micro-stroke inside the glyph cell before contact"): return
+	stroke_rig.advance_presentation(stroke_rig._motion_duration)
+	var landed_tip := nib_node.to_global(Vector3(0, -0.011, 0))
+	if not assert_condition(landed_tip.distance_to(target_world) < 0.001, "Micro-stroke lands accurately on the glyph contact point"): return
+	stroke_paper.queue_free()
+
 	# Clean up
 	paper_node.queue_free()
 

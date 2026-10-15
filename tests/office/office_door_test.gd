@@ -98,6 +98,44 @@ func _run() -> void:
 	if not assert_condition(body_text.contains("TRAIN 17"), "The record is the operator's duty sheet"): return
 	if not assert_condition(not body_text.contains("WATER") and not body_text.contains("WATCHER"), "The record never leaks message content"): return
 
+	# 8. No door-zone z-fighting, overlapping walls, or doorway furniture clutter.
+	var floor_node := office.get_node_or_null("Floor") as CSGBox3D
+	var landing_floor := office.get_node_or_null("LandingFloor") as CSGBox3D
+	if not assert_condition(floor_node != null and landing_floor != null, "Office and landing floors exist"): return
+	var floor_end_z := floor_node.global_position.z + floor_node.size.z * 0.5
+	var landing_start_z := landing_floor.global_position.z - landing_floor.size.z * 0.5
+	if not assert_condition(landing_start_z >= floor_end_z - 0.001, "LandingFloor does not overlap coplanarly with Office Floor (no z-fighting at threshold)"): return
+
+	var sw_left := office.get_node_or_null("SouthWall_Left") as CSGBox3D
+	var sw_right := office.get_node_or_null("SouthWall_Right") as CSGBox3D
+	var sw_top := office.get_node_or_null("SouthWall_Top") as CSGBox3D
+	var frame_left := door_node.get_node_or_null("FrameLeft") as CSGBox3D
+	var frame_right := door_node.get_node_or_null("FrameRight") as CSGBox3D
+	var frame_top := door_node.get_node_or_null("FrameTop") as CSGBox3D
+	if not assert_condition(sw_left != null and sw_right != null and sw_top != null and frame_left != null and frame_right != null and frame_top != null, "South wall segments and door frame exist"): return
+	var sw_left_max_x := sw_left.global_position.x + sw_left.size.x * 0.5
+	var sw_right_min_x := sw_right.global_position.x - sw_right.size.x * 0.5
+	var sw_top_min_y := sw_top.global_position.y - sw_top.size.y * 0.5
+	var frame_min_x := frame_left.global_position.x - frame_left.size.x * 0.5
+	var frame_max_x := frame_right.global_position.x + frame_right.size.x * 0.5
+	var frame_max_y := frame_top.global_position.y + frame_top.size.y * 0.5
+	if not assert_condition(sw_left_max_x <= frame_min_x + 0.005 and sw_right_min_x >= frame_max_x - 0.005 and sw_top_min_y >= frame_max_y - 0.005, "SouthWall segments do not overlap coplanarly with SouthDoor frame"): return
+
+	var threshold := door_node.get_node_or_null("Threshold") as CSGBox3D
+	var gap_glow := office.get_node_or_null("DoorGapGlow") as CSGBox3D
+	if not assert_condition(threshold != null and gap_glow != null, "Door threshold and gap glow exist"): return
+	if not assert_condition(threshold.size.y >= 0.015 and threshold.size.y <= 0.025 and gap_glow.global_position.y > threshold.global_position.y + threshold.size.y * 0.5 + 0.002, "Door threshold sits cleanly on the floor and DoorGapGlow clears it without z-fighting"): return
+
+	var service_table := office.get_node_or_null("PhFilingTable") as Node3D
+	var commit_desk := office.get_node_or_null("CopyCommitDesk") as Node3D
+	var dawn_board := office.get_node_or_null("DawnEvidence") as Node3D
+	if not assert_condition(service_table != null and commit_desk != null and dawn_board != null, "South-side furniture and handover board exist"): return
+	var commit_top := commit_desk.get_node_or_null("DeskTop") as CSGBox3D
+	if not assert_condition(commit_top != null and not commit_top.visible, "Toy CSG CopyCommitDesk frame is hidden in favor of real table geometry"): return
+	if not assert_condition(service_table.global_position.distance_to(Vector3(commit_desk.global_position.x, 0.0, commit_desk.global_position.z)) < 0.08, "Real wooden table carries CopyCommitDesk as one integrated filing station"): return
+	if not assert_condition(service_table.global_position.x > -0.2 and commit_desk.global_position.x >= 0.35 and commit_desk.global_position.x <= 0.65, "Integrated filing station is clear of the doorway and separated from the hot stove"): return
+	if not assert_condition(absf(dawn_board.global_position.x - commit_desk.global_position.x) < 0.15, "Night Handover board hangs directly above the filing station"): return
+
 	print("--- All Office Door Tests PASSED (%d assertions) ---" % _assertions_passed)
 	quit(0)
 

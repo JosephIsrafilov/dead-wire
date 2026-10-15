@@ -199,22 +199,22 @@ outline_size = 1
 outline_modulate = Color(0.9, 0.82, 0.62, 1)
 
 [node name="CoatRackBoard" type="CSGBox3D" parent="."]
-position = Vector3(0.62, 2.05, 2.27)
+position = Vector3(-0.35, 2.05, 2.27)
 size = Vector3(0.5, 0.12, 0.025)
 material = ExtResource("2_trim")
 
 [node name="CoatHook" type="CSGBox3D" parent="."]
-position = Vector3(0.62, 2.05, 2.24)
+position = Vector3(-0.35, 2.05, 2.24)
 size = Vector3(0.04, 0.1, 0.05)
 material = ExtResource("4_brass")
 
 [node name="OperatorCoat" type="CSGBox3D" parent="."]
-position = Vector3(0.62, 1.57, 2.23)
+position = Vector3(-0.35, 1.57, 2.23)
 size = Vector3(0.38, 0.82, 0.07)
 material = ExtResource("6_soot")
 
 [node name="OperatorHat" type="CSGCylinder3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0.62, 2.08, 2.21)
+transform = Transform3D(1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, -0.35, 2.08, 2.21)
 radius = 0.14
 height = 0.08
 sides = 8
