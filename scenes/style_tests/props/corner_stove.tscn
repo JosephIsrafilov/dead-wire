@@ -3,45 +3,56 @@
 [ext_resource type="Material" path="res://materials/style_tests/metal_oxidized.tres" id="1_iron"]
 [ext_resource type="Material" path="res://materials/style_tests/timber_trim.tres" id="2_trim"]
 [ext_resource type="Material" path="res://materials/style_tests/paper_log.tres" id="3_paper"]
+[ext_resource type="ArrayMesh" path="res://assets/models/stove_v1/stove_static.res" id="4_stove_mesh"]
 
 [sub_resource type="BoxShape3D" id="StoveSolid"]
 size = Vector3(0.7, 1.75, 0.7)
 
 [sub_resource type="StandardMaterial3D" id="Ember"]
-albedo_color = Color(0.85, 0.22, 0.04, 1)
+shading_mode = 0
+albedo_color = Color(0.95, 0.34, 0.06, 1)
 emission_enabled = true
-emission = Color(0.95, 0.28, 0.05, 1)
-emission_energy_multiplier = 0.42
+emission = Color(1.0, 0.36, 0.06, 1)
+emission_energy_multiplier = 0.65
 roughness = 0.8
 
 [node name="CornerStove" type="Node3D"]
 
+[node name="AuthoredStove" type="MeshInstance3D" parent="."]
+mesh = ExtResource("4_stove_mesh")
+
 [node name="HearthPad" type="CSGBox3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.008, 0)
 size = Vector3(0.78, 0.015, 0.78)
 material = ExtResource("1_iron")
 
 [node name="LegFL" type="CSGBox3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.22, 0.08, -0.22)
 size = Vector3(0.06, 0.15, 0.06)
 material = ExtResource("1_iron")
 
 [node name="LegFR" type="CSGBox3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.22, 0.08, -0.22)
 size = Vector3(0.06, 0.15, 0.06)
 material = ExtResource("1_iron")
 
 [node name="LegBL" type="CSGBox3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.22, 0.08, 0.22)
 size = Vector3(0.06, 0.15, 0.06)
 material = ExtResource("1_iron")
 
 [node name="LegBR" type="CSGBox3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.22, 0.08, 0.22)
 size = Vector3(0.06, 0.15, 0.06)
 material = ExtResource("1_iron")
 
 [node name="StoveBase" type="CSGCylinder3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.18, 0)
 radius = 0.3
 height = 0.08
@@ -49,6 +60,7 @@ sides = 12
 material = ExtResource("1_iron")
 
 [node name="AshPit" type="CSGCylinder3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.32, 0)
 radius = 0.26
 height = 0.22
@@ -56,6 +68,7 @@ sides = 12
 material = ExtResource("1_iron")
 
 [node name="PotbellyRing" type="CSGTorus3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.54, 0)
 inner_radius = 0.22
 outer_radius = 0.32
@@ -64,6 +77,7 @@ ring_segments = 12
 material = ExtResource("1_iron")
 
 [node name="StoveBody" type="CSGSphere3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 0.86, 0, 0, 0, 1, 0, 0.76, 0)
 radius = 0.34
 radial_segments = 12
@@ -71,6 +85,7 @@ rings = 8
 material = ExtResource("1_iron")
 
 [node name="TopPlate" type="CSGCylinder3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.02, 0)
 radius = 0.31
 height = 0.08
@@ -78,16 +93,18 @@ sides = 12
 material = ExtResource("1_iron")
 
 [node name="FireDoor" type="CSGBox3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.72, -0.28)
 size = Vector3(0.28, 0.32, 0.04)
 material = ExtResource("1_iron")
 
 [node name="EmberSeam" type="CSGBox3D" parent="."]
-position = Vector3(0, 0.62, -0.305)
-size = Vector3(0.18, 0.035, 0.015)
+position = Vector3(0, 0.62, -0.322)
+size = Vector3(0.18, 0.045, 0.016)
 material = SubResource("Ember")
 
 [node name="DoorHandle" type="CSGCylinder3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.11, 0.72, -0.32)
 radius = 0.02
 height = 0.1
@@ -95,6 +112,7 @@ sides = 8
 material = ExtResource("1_iron")
 
 [node name="PipeCollar" type="CSGCylinder3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0)
 radius = 0.12
 height = 0.08
@@ -102,6 +120,7 @@ sides = 10
 material = ExtResource("1_iron")
 
 [node name="StovePipe" type="CSGCylinder3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.76, 0)
 radius = 0.085
 height = 1.25
@@ -109,6 +128,7 @@ sides = 10
 material = ExtResource("1_iron")
 
 [node name="PipeElbow" type="CSGTorus3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 2.38, 0.09)
 inner_radius = 0.02
 outer_radius = 0.18
@@ -117,6 +137,7 @@ ring_segments = 8
 material = ExtResource("1_iron")
 
 [node name="PipeWallEntry" type="CSGCylinder3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 2.47, 0.28)
 radius = 0.085
 height = 0.32
@@ -124,11 +145,13 @@ sides = 10
 material = ExtResource("1_iron")
 
 [node name="HeatShield" type="CSGBox3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.15, 0.42)
 size = Vector3(0.92, 1.8, 0.03)
 material = ExtResource("1_iron")
 
 [node name="CoalScuttle" type="CSGCylinder3D" parent="."]
+visible = false
 position = Vector3(-0.36, 0.16, 0.22)
 radius = 0.15
 height = 0.28
@@ -136,6 +159,7 @@ sides = 10
 material = ExtResource("1_iron")
 
 [node name="CoalRim" type="CSGTorus3D" parent="."]
+visible = false
 position = Vector3(-0.36, 0.3, 0.22)
 inner_radius = 0.11
 outer_radius = 0.16
@@ -144,6 +168,7 @@ ring_segments = 8
 material = ExtResource("1_iron")
 
 [node name="CoalLumps" type="CSGSphere3D" parent="."]
+visible = false
 position = Vector3(-0.36, 0.27, 0.22)
 radius = 0.13
 radial_segments = 8
@@ -151,6 +176,7 @@ rings = 6
 material = ExtResource("1_iron")
 
 [node name="CoalShovelHandle" type="CSGCylinder3D" parent="."]
+visible = false
 transform = Transform3D(0.939693, 0.34202, 0, -0.34202, 0.939693, 0, 0, 0, 1, -0.4, 0.52, 0.22)
 radius = 0.016
 height = 0.68
@@ -158,11 +184,13 @@ sides = 6
 material = ExtResource("2_trim")
 
 [node name="CoalShovelBlade" type="CSGBox3D" parent="."]
+visible = false
 transform = Transform3D(0.939693, 0.34202, 0, -0.34202, 0.939693, 0, 0, 0, 1, -0.51, 0.2, 0.22)
 size = Vector3(0.16, 0.12, 0.03)
 material = ExtResource("1_iron")
 
 [node name="AshPan" type="CSGBox3D" parent="."]
+visible = false
 position = Vector3(0.18, 0.08, 0.36)
 size = Vector3(0.28, 0.06, 0.18)
 material = ExtResource("1_iron")

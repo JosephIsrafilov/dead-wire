@@ -33,6 +33,7 @@ extends Resource
 @export var filed_word_world_fact: String = ""
 @export var filed_word_knowledge_key: String = ""
 @export var amendment_result_text: String = "CORRECTION FILED"
+@export var critical_copy: bool = false
 
 func get_validation_errors() -> PackedStringArray:
 	var errors := PackedStringArray()

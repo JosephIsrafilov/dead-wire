@@ -40,6 +40,7 @@ attention_event_id = "window_figure"
 attention_event_start_time = 0.8
 completion_fact = "water_watcher_transmission_received"
 requires_transcript_verification = true
+critical_copy = true
 transcript_reveal_cues = PackedFloat32Array(0.08, 0.20, 0.35, 0.52, 0.68, 0.84, 1.0)
 commit_options = [SubResource("Resource_commit_water"), SubResource("Resource_commit_watcher")]
 commit_lapsed_world_fact = "core_hook_commit_lapsed"

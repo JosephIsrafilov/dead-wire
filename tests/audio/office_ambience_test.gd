@@ -144,6 +144,11 @@ func _run() -> void:
 	var board := office.routing_board
 	if not assert_condition(board != null and board.lever_impact_bus == &"Foley", "The lever stop rides the Foley bus"): return
 
+	# 16. Clock player also ducks under set_hush_db so ticks never compete with Morse or hushes.
+	ambience.set_hush_db(-12.0)
+	if not assert_condition(is_equal_approx(ambience.clock_player.volume_db, ambience.clock_volume_db - 12.0), "set_hush_db attenuates the clock tick player alongside the room beds"): return
+	ambience.set_hush_db(0.0)
+
 	print("--- All Office Ambience Tests PASSED (%d assertions) ---" % _assertions_passed)
 	quit(0)
 

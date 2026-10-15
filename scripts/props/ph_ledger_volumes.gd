@@ -21,7 +21,19 @@ func _ready() -> void:
 	for vol in _meshes(inst):
 		vol.position = Vector3(offset, 0.0, 0.0)
 		vol.rotation = Vector3(0.0, 0.0, deg_to_rad(spine_tilt_degrees))
+		_apply_psx_surface_filter(vol)
 		offset += spine_spacing
+
+func _apply_psx_surface_filter(mi: MeshInstance3D) -> void:
+	var mesh := mi.mesh
+	if mesh == null:
+		return
+	for s in mesh.get_surface_count():
+		var mat := mesh.surface_get_material(s) as StandardMaterial3D
+		if mat != null:
+			mat.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
+			mat.shading_mode = BaseMaterial3D.SHADING_MODE_PER_VERTEX
+			mat.normal_enabled = false
 
 func _meshes(node: Node) -> Array[MeshInstance3D]:
 	var out: Array[MeshInstance3D] = []

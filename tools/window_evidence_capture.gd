@@ -48,7 +48,7 @@ func _run() -> void:
 	_drain(paper)
 	session.mark_transcript_verified()
 	# Commit physically at the desk (real filing position by the door).
-	await _stand_and_walk(Vector3(0.95, 0, 0.45))
+	await _stand_and_walk(Vector3(0.45, 0, 0.95))
 	var desk_act := office.copy_commit_desk.get_node("Option1Interactable")
 	check(office.copy_commit_desk.commit_option(&"amend_copy"), "Physical amendment opens editing at the desk")
 	office.amendment_editor.correction.text = "WATER"

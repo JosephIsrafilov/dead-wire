@@ -60,6 +60,12 @@ enum PaperState {
 ## board (the board, pad and sheet stack 11 mm above the blotter).
 @export var previous_sheet_offset: Vector3 = Vector3(0.0, -0.0115, 0.27)
 @export var previous_slide_seconds: float = 0.35
+## How far the read sheet rises toward the lamp while the viewer shows it, and
+## how long the rise/settle takes. The paper owns this motion so the feed, the
+## archive slide and clear can cancel or compose with it — never fight over
+## the same node.
+const READING_LIFT_HEIGHT: float = 0.018
+const READING_LIFT_SECONDS: float = 0.14
 
 var interactable: Interactable = null
 var label_3d: Label3D = null
@@ -94,6 +100,13 @@ var _feed_elapsed: float = 0.0
 var _feed_paused: bool = false
 var _previous_slide_elapsed: float = 0.0
 var _previous_slide_active: bool = false
+## Reading-lift channels: one offset per physical sheet, so the lift composes
+## on top of the feed/slide base instead of racing another writer for the
+## node. A single tween owns each channel at a time.
+var _sheet_lift: float = 0.0
+var _sheet_lift_tween: Tween = null
+var _previous_lift: float = 0.0
+var _previous_lift_tween: Tween = null
 
 func _ready() -> void:
 	interactable = get_node_or_null("Interactable") as Interactable
@@ -202,6 +215,85 @@ func _get_sheet_node() -> Node3D:
 
 func get_previous_sheet_node() -> Node3D:
 	return get_node_or_null("PreviousSheet") as Node3D
+
+## Lifts the physical sheet the viewer is about to show toward the lamp, and
+## settles it back where it came from when the reader puts it down. The office
+## picks the sheet (current copy or archived previous); the paper owns the
+## motion, so feed, archive slide and clear cancel or compose with it instead
+## of tweening some other node to an invented absolute pose.
+func lift_sheet_for_reading(previous: bool) -> void:
+	if previous:
+		_kill_previous_lift_tween()
+		_tween_previous_lift(READING_LIFT_HEIGHT)
+	else:
+		_kill_sheet_lift_tween()
+		_tween_sheet_lift(READING_LIFT_HEIGHT)
+
+func return_sheet_from_reading(previous: bool) -> void:
+	if previous:
+		_kill_previous_lift_tween()
+		if _previous_lift > 0.0001:
+			_tween_previous_lift(0.0)
+	else:
+		_kill_sheet_lift_tween()
+		if _sheet_lift > 0.0001:
+			_tween_sheet_lift(0.0)
+
+func _tween_sheet_lift(target: float) -> void:
+	if not is_inside_tree():
+		_sheet_lift = target
+		return
+	_sheet_lift_tween = create_tween()
+	_sheet_lift_tween.tween_method(_set_sheet_lift, _sheet_lift, target,
+		READING_LIFT_SECONDS).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+
+func _tween_previous_lift(target: float) -> void:
+	if not is_inside_tree():
+		_previous_lift = target
+		return
+	_previous_lift_tween = create_tween()
+	_previous_lift_tween.tween_method(_set_previous_lift, _previous_lift, target,
+		READING_LIFT_SECONDS).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+
+func _kill_sheet_lift_tween() -> void:
+	if _sheet_lift_tween != null and is_instance_valid(_sheet_lift_tween):
+		_sheet_lift_tween.kill()
+	_sheet_lift_tween = null
+
+func _kill_previous_lift_tween() -> void:
+	if _previous_lift_tween != null and is_instance_valid(_previous_lift_tween):
+		_previous_lift_tween.kill()
+	_previous_lift_tween = null
+
+func _set_sheet_lift(value: float) -> void:
+	_sheet_lift = value
+	var sheet := _get_sheet_node()
+	if sheet != null and _sheet_rest_captured:
+		sheet.position = _sheet_rest_position + Vector3(0.0, _sheet_lift, 0.0)
+
+func _set_previous_lift(value: float) -> void:
+	var previous_node := get_previous_sheet_node()
+	if previous_node == null:
+		_previous_lift = value
+		return
+	# The base must be read from the pose the OLD lift is baked into, before
+	# the new value replaces it — otherwise the write cancels itself out.
+	var base := _previous_reading_base()
+	_previous_lift = value
+	previous_node.global_position = base + Vector3(0.0, _previous_lift, 0.0)
+
+## The archived sheet's base under the lift: where the archive slide puts it
+## right now, so a mid-slide read composes with the slide and never freezes a
+## travelling pose as the sheet's rest.
+func _previous_reading_base() -> Vector3:
+	if _previous_slide_active:
+		var t := clampf(_previous_slide_elapsed / maxf(previous_slide_seconds, 0.0001), 0.0, 1.0)
+		var eased := 1.0 - pow(1.0 - t, 2.0)
+		return _previous_slide_world(eased)
+	var previous_node := get_previous_sheet_node()
+	if previous_node != null:
+		return previous_node.global_position - Vector3(0.0, _previous_lift, 0.0)
+	return to_global(_sheet_rest_position)
 
 func get_transcript_text() -> String:
 	return _transcript_text
@@ -347,6 +439,11 @@ func reveal_transcript() -> void:
 func clear_transcript() -> void:
 	_cancel_writer_animation()
 	_cancel_sheet_feed()
+	# Nothing keeps moving once the pad is cleared: both lift channels die.
+	_kill_sheet_lift_tween()
+	_sheet_lift = 0.0
+	_kill_previous_lift_tween()
+	_previous_lift = 0.0
 	_previous_slide_active = false
 	_previous_text = ""
 	var previous_act := get_node_or_null("PreviousSheet/Interactable") as Interactable
@@ -379,6 +476,10 @@ func _archive_visible_sheet() -> void:
 	var previous := get_previous_sheet_node()
 	var previous_label := get_node_or_null("PreviousSheet/PreviousSheetText") as Label3D
 	var previous_act := get_node_or_null("PreviousSheet/Interactable") as Interactable
+	# A new archived document starts its own slide flat: any lift still alive
+	# from reading the old archive is cancelled before the node is reused.
+	_kill_previous_lift_tween()
+	_previous_lift = 0.0
 	if previous_act != null:
 		previous_act.enabled = false
 		previous_act.collision_layer = 0
@@ -411,22 +512,28 @@ func _advance_previous_slide(delta: float) -> void:
 	if previous == null:
 		_previous_slide_active = false
 		return
-	var rest_world := to_global(_sheet_rest_position)
 	if previous_slide_seconds <= 0.0:
-		previous.global_position = rest_world + previous_sheet_offset
+		previous.global_position = _previous_slide_world(1.0) + Vector3(0.0, _previous_lift, 0.0)
 		_previous_slide_active = false
 		return
 	_previous_slide_elapsed += delta
 	var t := clampf(_previous_slide_elapsed / previous_slide_seconds, 0.0, 1.0)
 	var eased := 1.0 - pow(1.0 - t, 2.0)
+	# The lift rides on top of the slide: both keep moving, neither wins.
+	previous.global_position = _previous_slide_world(eased) + Vector3(0.0, _previous_lift, 0.0)
+	if t >= 1.0:
+		_previous_slide_active = false
+
+## World pose of the archived sheet at the slide's eased progress, without any
+## reading lift: the shared base both the slide and the lift compose from.
+func _previous_slide_world(eased: float) -> Vector3:
+	var rest_world := to_global(_sheet_rest_position)
 	# Slide across the pad first; drop onto the blotter only past the board's
 	# edge — never down through the stack of blanks.
 	var drop := clampf((eased - 0.6) / 0.4, 0.0, 1.0)
 	var offset := previous_sheet_offset * eased
 	offset.y = previous_sheet_offset.y * drop
-	previous.global_position = rest_world + offset
-	if t >= 1.0:
-		_previous_slide_active = false
+	return rest_world + offset
 
 ## The fresh blank slides onto the writing zone: short travel from the message
 ## hook side, eased, ending exactly at the rest position. Consumes at most
@@ -452,6 +559,10 @@ func _start_sheet_feed() -> void:
 	_feed_elapsed = 0.0
 	_feed_paused = false
 	paper_state = PaperState.PREPARING
+	# The fresh blank replaces whatever was lifted: kill the read lift before
+	# the feed takes the sheet over, so only one motion owns the node.
+	_kill_sheet_lift_tween()
+	_sheet_lift = 0.0
 	var sheet := _get_sheet_node()
 	if sheet == null or not _sheet_rest_captured:
 		_finish_sheet_feed()

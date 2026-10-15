@@ -31,6 +31,9 @@ func _flat_from_source(mi: MeshInstance3D) -> StandardMaterial3D:
 		return null
 	var src := mesh.surface_get_material(0)
 	var out := StandardMaterial3D.new()
+	out.shading_mode = BaseMaterial3D.SHADING_MODE_PER_VERTEX
+	out.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
+	out.specular_mode = BaseMaterial3D.SPECULAR_DISABLED
 	out.roughness = roughness
 	out.metallic = 0.0
 	out.metallic_specular = 0.0

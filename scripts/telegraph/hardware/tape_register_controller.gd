@@ -30,6 +30,9 @@ signal register_wound()
 @export var spring_floor: float = 0.35
 @export var wind_prompt_below: float = 0.75
 const PROMPT_WIND := "Wind the Register"
+## Below this tension the feed lags the stylus: new marks stay under the
+## rollers until the register is wound. Availability never goes backwards.
+const SLACK_TENSION := 0.55
 var spring_tension: float = 1.0
 ## False once the line has closed for the night: the spool stops.
 var line_live: bool = true
@@ -49,6 +52,11 @@ var _connected_scheduler: MorseRuntimeScheduler = null
 var _started_event: MorseScheduledEvent = null
 var _active_ink: TapeInkEvent = null
 var _seconds_per_unit: float = 0.0
+## Viewer-visible event count per wire take number: the paper feed cursor.
+## It only ever grows (events inked while the clockwork keeps up, plus winding);
+## a run-down spring holds the tail back, it never rewinds the strip. Kept
+## apart from _record so public snapshots stay schema-identical.
+var _feed_cursors: Dictionary = {}
 
 func _ready() -> void:
 	_stylus = get_node_or_null("Body/StylusPivot") as Node3D
@@ -75,7 +83,7 @@ func get_interactable() -> Interactable:
 	return interactable
 
 func _on_interacted() -> void:
-	tape_inspected.emit(get_tape_display_text())
+	tape_inspected.emit(get_tape_text_for_viewer())
 
 func get_record() -> Array[TapeInkEvent]:
 	return _snapshot_events(_record)
@@ -135,6 +143,7 @@ func reset() -> void:
 	_started_event = null
 	_active_ink = null
 	_seconds_per_unit = 0.0
+	_feed_cursors.clear()
 	_stylus_target_y = _stylus_rest_y
 
 func _on_playback_started(_schedule: MorsePlaybackScheduleData) -> void:
@@ -150,6 +159,10 @@ func _on_timing_event_started(event: MorseScheduledEvent) -> void:
 	ink.kind = event.kind
 	_record.append(ink)
 	_active_segment.events.append(ink)
+	# The paper feeds out only while the clockwork keeps up: this mark reaches
+	# the readable strip immediately, or waits under the rollers for a winding.
+	if spring_tension >= SLACK_TENSION:
+		_advance_feed_cursor(_active_segment, _active_segment.events.size())
 	_started_event = event
 	_active_ink = ink
 	_seconds_per_unit = event.duration_seconds / float(event.duration_units) if event.duration_units > 0 else 0.0
@@ -190,9 +203,17 @@ func _process(delta: float) -> void:
 
 func wind() -> void:
 	spring_tension = 1.0
+	# Winding transports the whole strip in one motion: every mark still under
+	# the feed rollers is carried out. The record itself never changes.
+	for segment in _segments:
+		_advance_feed_cursor(segment, segment.events.size())
 	if _wind_interactable != null:
 		_wind_interactable.enabled = false
 	register_wound.emit()
+
+## Monotonic feed cursor for one take: never shrinks, never exceeds the record.
+func _advance_feed_cursor(segment: Dictionary, available: int) -> void:
+	_feed_cursors[segment.number] = maxi(int(_feed_cursors.get(segment.number, 0)), available)
 
 func _on_playback_completed(_schedule: MorsePlaybackScheduleData) -> void:
 	if not _active_segment.is_empty():
@@ -226,6 +247,26 @@ func get_tape_display_text() -> String:
 		var status := "INTERRUPTED" if segment.interrupted else ("COMPLETE" if segment.complete else "ACTIVE")
 		takes.append("[WIRE TAKE %d | %s | NON-INK BOUNDARY]\n%s"
 			% [segment.number, status, _render_ink(segment.events)])
+	return "\n".join(takes)
+
+## Viewer-facing strip: the paper feeds out only while the clockwork keeps up.
+## Marks inked on a slack spring stay under the feed rollers until the register
+## is wound, and the strip never rewinds — what has been fed out stays
+## readable. The objective _record and get_tape_display_text() are untouched.
+func get_tape_text_for_viewer() -> String:
+	var takes: PackedStringArray = []
+	for segment in _segments:
+		var status := "INTERRUPTED" if segment.interrupted else ("COMPLETE" if segment.complete else "ACTIVE")
+		var evs: Array[TapeInkEvent] = segment.events
+		var visible_count := mini(int(_feed_cursors.get(segment.number, 0)), evs.size())
+		if visible_count < evs.size():
+			# Real backlog: these recorded marks are still under the rollers.
+			var slice_events: Array[TapeInkEvent] = evs.slice(0, visible_count)
+			takes.append("[WIRE TAKE %d | %s | NON-INK BOUNDARY]\n%s\n[SPRING SLACK — WIND REGISTER TO ADVANCE STRIP]"
+				% [segment.number, status, _render_ink(slice_events)])
+		else:
+			takes.append("[WIRE TAKE %d | %s | NON-INK BOUNDARY]\n%s"
+				% [segment.number, status, _render_ink(evs)])
 	return "\n".join(takes)
 
 func _render_ink(events: Array[TapeInkEvent]) -> String:

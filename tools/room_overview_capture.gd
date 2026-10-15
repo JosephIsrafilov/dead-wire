@@ -48,6 +48,8 @@ func _run() -> void:
 	var director := office.get_node_or_null("ShiftDirector")
 	if director != null:
 		director.set("enabled", false)
+	if "--classic" in OS.get_cmdline_user_args():
+		office.call("apply_presentation_mode", 0)
 	var player := office.get_node("Player") as Node3D
 	player.set_process(false)
 	player.set_physics_process(false)

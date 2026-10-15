@@ -136,7 +136,7 @@ func _run() -> void:
 					office.session_controller._process(office.session_controller.commit_deadline_seconds + 0.1)
 				check(office.copy_commit_desk.get_result_text() == "UNFILED", "Unfiled deadline resolves without a selected copy")
 			else:
-				await _interact_at(Vector3(0.95, 0, 0.45), office.copy_commit_desk.get_node("Option2Interactable" if branch == "watcher" else "Option1Interactable"))
+				await _interact_at(Vector3(0.45, 0, 0.95), office.copy_commit_desk.get_node("Option2Interactable" if branch == "watcher" else "Option1Interactable"))
 				if branch != "watcher":
 					check(office.amendment_editor.is_open(), "Physical amendment opens an editor without filing")
 					await _shot("06_amendment_blank")
@@ -163,7 +163,7 @@ func _run() -> void:
 		office.shift_director.advance(5.0)
 	check(office.shift_director.is_shift_over(), "Final consequence reaches shift end")
 	check(not office.office_door.is_locked(), "Dawn unlocks exit")
-	await _interact_at(Vector3(0, 0, 1.2), office.dawn_evidence.get_interactable())
+	await _interact_at(Vector3(0.45, 0, 1.2), office.dawn_evidence.get_interactable())
 	check(office.dawn_evidence.is_inspected(), "Handover can be inspected")
 	await _shot("08_handover")
 	await _press("interact")

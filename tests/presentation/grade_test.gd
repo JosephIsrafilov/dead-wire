@@ -34,5 +34,17 @@ func _run() -> void:
 	if not require(ok, "Production Grade references the external shader"): return
 	var grade_layer := (_office.get_node("PSXDither") as CanvasLayer).layer
 	var viewer_layer := (_office.get_node("DocumentViewer") as CanvasLayer).layer
-	if not require(grade_layer < viewer_layer, "Document UI renders above the retro grade"): return
+	if not require(grade_layer >= 0 and grade_layer < viewer_layer, "PSXDither sits at layer >= 0 so screen_texture captures the 3D viewport, while Document UI stays above it"): return
+	var shader_code := FileAccess.get_file_as_string(path)
+	if not require(shader_code.contains("snapped_uv") and shader_code.contains("textureLod(screen_texture, snapped_uv"), "PSX grade shader snaps screen UVs to hard pixel cells (no blurry bilinear screen pass)"): return
+	var adapter := PsxAssetAdapter.new()
+	var test_mi := MeshInstance3D.new()
+	var box_mesh := BoxMesh.new()
+	var src_mat := StandardMaterial3D.new()
+	box_mesh.surface_set_material(0, src_mat)
+	test_mi.mesh = box_mesh
+	var adapted := adapter._flat_from_source(test_mi)
+	adapter.free()
+	test_mi.free()
+	if not require(adapted != null and adapted.texture_filter == BaseMaterial3D.TEXTURE_FILTER_NEAREST and adapted.shading_mode == BaseMaterial3D.SHADING_MODE_PER_VERTEX, "PsxAssetAdapter enforces nearest texture filtering and vertex shading on furniture"): return
 	_finish(0)

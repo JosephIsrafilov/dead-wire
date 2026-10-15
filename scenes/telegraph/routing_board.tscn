@@ -16,7 +16,10 @@ roughness = 1.0
 size = Vector3(0.78, 1.4, 0.16)
 
 [sub_resource type="BoxShape3D" id="BoardInteract"]
-size = Vector3(0.88, 1.5, 0.35)
+size = Vector3(0.88, 0.81, 0.35)
+
+[sub_resource type="BoxShape3D" id="BoardInteractLow"]
+size = Vector3(0.88, 0.23, 0.35)
 
 [node name="RoutingBoard" type="Node3D"]
 script = ExtResource("1_route")
@@ -215,21 +218,21 @@ text = "SIDING"
 font_size = 13
 
 [node name="ClearEastLabel3D" type="Label3D" parent="."]
-position = Vector3(-0.25, 0.385, -0.048)
+position = Vector3(-0.22, 0.275, -0.048)
 rotation = Vector3(0, 3.141593, 0)
-pixel_size = 0.003
-modulate = Color(0.7, 0.64, 0.5, 1)
+pixel_size = 0.0028
+modulate = Color(0.76, 0.70, 0.56, 1)
 outline_size = 0
-text = "CLEAR EAST"
+text = "◄ CLEAR EAST"
 font_size = 13
 
 [node name="HoldLabel3D" type="Label3D" parent="."]
-position = Vector3(0.25, 0.385, -0.048)
+position = Vector3(0.22, 0.275, -0.048)
 rotation = Vector3(0, 3.141593, 0)
-pixel_size = 0.003
-modulate = Color(0.7, 0.64, 0.5, 1)
+pixel_size = 0.0028
+modulate = Color(0.76, 0.70, 0.56, 1)
 outline_size = 0
-text = "HOLD"
+text = "HOLD ►"
 font_size = 13
 
 [node name="BoardSolid" type="StaticBody3D" parent="."]
@@ -240,6 +243,9 @@ collision_mask = 1
 position = Vector3(0, 0.72, 0)
 shape = SubResource("BoardSolid")
 
+; The board's modal/status surface is split around the lever band: the direct
+; lever stops own the lever height, the readable face above (and the frame
+; below) keep the modal. Same depth and side reach as the original single box.
 [node name="Interactable" type="Area3D" parent="."]
 collision_layer = 2
 collision_mask = 0
@@ -247,8 +253,12 @@ script = ExtResource("2_interact")
 prompt_text = "Train-Order Board"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Interactable"]
-position = Vector3(0, 0.72, -0.11)
+position = Vector3(0, 1.065, -0.11)
 shape = SubResource("BoardInteract")
+
+[node name="CollisionShape3DLow" type="CollisionShape3D" parent="Interactable"]
+position = Vector3(0, 0.085, -0.11)
+shape = SubResource("BoardInteractLow")
 
 [node name="LeverSfx" type="AudioStreamPlayer3D" parent="."]
 position = Vector3(0, 0.7, -0.1)

@@ -46,6 +46,7 @@ position = Vector3(0.35, -0.34, -0.18)
 shape = SubResource("DeskLegSolid")
 
 [node name="DeskTop" type="CSGBox3D" parent="."]
+visible = false
 position = Vector3(0, 0.04, 0)
 size = Vector3(0.86, 0.08, 0.48)
 material = ExtResource("3_wood")
@@ -56,21 +57,25 @@ size = Vector3(0.36, 0.012, 0.24)
 material = ExtResource("4_paper")
 
 [node name="LegFrontLeft" type="CSGBox3D" parent="."]
+visible = false
 position = Vector3(-0.35, -0.34, 0.18)
 size = Vector3(0.05, 0.72, 0.05)
 material = ExtResource("3_wood")
 
 [node name="LegFrontRight" type="CSGBox3D" parent="."]
+visible = false
 position = Vector3(0.35, -0.34, 0.18)
 size = Vector3(0.05, 0.72, 0.05)
 material = ExtResource("3_wood")
 
 [node name="LegBackLeft" type="CSGBox3D" parent="."]
+visible = false
 position = Vector3(-0.35, -0.34, -0.18)
 size = Vector3(0.05, 0.72, 0.05)
 material = ExtResource("3_wood")
 
 [node name="LegBackRight" type="CSGBox3D" parent="."]
+visible = false
 position = Vector3(0.35, -0.34, -0.18)
 size = Vector3(0.05, 0.72, 0.05)
 material = ExtResource("3_wood")

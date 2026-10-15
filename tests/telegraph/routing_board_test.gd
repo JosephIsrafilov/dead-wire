@@ -128,6 +128,21 @@ func _init() -> void:
 	board_node._input(ev_esc)
 	if not assert_condition(not board_node.is_open, "Board closes on Esc (ui_cancel)"): return
 
+	# 8. ClearEastLabel3D and HoldLabel3D stay clear of the lever sweep
+	var clear_lbl := board_node.get_node_or_null("ClearEastLabel3D") as Label3D
+	var hold_lbl := board_node.get_node_or_null("HoldLabel3D") as Label3D
+	if not assert_condition(clear_lbl != null and hold_lbl != null, "Route board carries both route labels"): return
+	if not assert_condition(clear_lbl.position.y <= 0.30 and hold_lbl.position.y <= 0.30, "Route labels sit below the lever throw arc so the stem never crosses CLEAR EAST"): return
+
+	# 9. Physical lever stop interactables allow direct routing without opening the modal
+	board_node.reset_for_new_transmission()
+	board_node.set_awaiting_route(true)
+	var clear_stop := board_node.get_node_or_null("ClearStopInteractable") as Interactable
+	var hold_stop := board_node.get_node_or_null("HoldStopInteractable") as Interactable
+	if not assert_condition(clear_stop != null and hold_stop != null and clear_stop.can_interact() and hold_stop.can_interact(), "Direct physical lever stop interactables are active while awaiting route"): return
+	clear_stop.interact()
+	if not assert_condition(board_node.has_submitted_this_session and board_node._last_route_action == "CLEAR EAST" and not clear_stop.can_interact(), "Direct physical lever throw submits route and disables stops"): return
+
 	# Clean up
 	board_node.queue_free()
 

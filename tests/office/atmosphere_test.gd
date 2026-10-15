@@ -95,6 +95,11 @@ func _run() -> void:
 	if not assert_condition(paper != null, "Transcript pad is wired"): return
 
 	seat.sit()
+	# The register's clockwork is already run down for this fixture, so the
+	# telegram below is inked on a slack spring: its tail stays under the feed
+	# rollers (a real backlog) until the operator winds it.
+	var register := office.get_node("TelegraphSessionController/TapeRegister") as TapeRegisterController
+	register.spring_tension = 0.42
 	session.telegraph_key.press()
 	office.shift_director.advance(office.shift_director.answer_beat_seconds + 0.05)
 	if not assert_condition(session.get_state() == TelegraphSessionController.State.RECEIVING, "Message is coming in"): return
@@ -316,15 +321,31 @@ func _run() -> void:
 	if not assert_condition(is_equal_approx(wick_life.wick, 1.0), "Trimming brings the flame back to full"): return
 
 	# --- the register's clockwork runs down and is wound ---------------------
-	var register := office.get_node("TelegraphSessionController/TapeRegister") as TapeRegisterController
 	var record_before := register.get_record().size()
-	register.spring_tension = register.wind_prompt_below - 0.1
+	register.spring_tension = 0.42
 	register._process(1.0 / 60.0)
 	var wind_act := register.get_node("WindInteractable") as Interactable
 	if not assert_condition(wind_act.can_interact(), "A run-down register asks to be wound"): return
+	if not assert_condition(register.get_tape_text_for_viewer().contains("SPRING SLACK"), "A slack register spring holds back the tail of the strip in the viewer until wound"): return
 	wind_act.interact()
 	if not assert_condition(is_equal_approx(register.spring_tension, 1.0) and not wind_act.can_interact(), "Winding restores the spring"): return
+	if not assert_condition(not register.get_tape_text_for_viewer().contains("SPRING SLACK"), "Winding advances the full strip into the viewer"): return
 	if not assert_condition(register.get_record().size() == record_before, "Winding never touches the record"): return
+
+	# --- Stove authored mesh & wall connection check -------------------------
+	var stove_node := office.get_node_or_null("CornerStove/AuthoredStove") as MeshInstance3D
+	if not assert_condition(stove_node != null and stove_node.mesh != null, "CornerStove uses the Blender-authored stove_static mesh"): return
+	var stove_world_aabb := stove_node.global_transform * stove_node.get_aabb()
+	if not assert_condition(stove_world_aabb.end.x >= 2.84 and stove_world_aabb.end.x <= 2.86, "Stovepipe and wall thimble reach the east wall cleanly within room bounds (end.x = %.3f)" % stove_world_aabb.end.x): return
+
+	# --- Audio bus layout & critical copy protection -------------------------
+	var master_fx := AudioServer.get_bus_effect_count(0)
+	var foley_bus := AudioServer.get_bus_index("Foley")
+	if not assert_condition(master_fx >= 1 and AudioServer.get_bus_effect(0, 0) is AudioEffectLimiter, "Master bus carries an AudioEffectLimiter"): return
+	if not assert_condition(foley_bus >= 0 and AudioServer.get_bus_effect_count(foley_bus) >= 1 and AudioServer.get_bus_effect(foley_bus, 0) is AudioEffectReverb, "Foley bus carries subtle room reverb while Telegraph stays dry"): return
+	office.document_viewer.apply_wick_dimming(0.6)
+	if not assert_condition(office.document_viewer.panel_container.self_modulate.r < 0.95, "Low lamp wick dims document paper in the viewer"): return
+	office.document_viewer.apply_wick_dimming(1.0)
 
 	# --- dawn: the line stops, the sky turns, the lamp is offered down -------
 	var dawn := office.get_node_or_null("DawnRitual") as DawnRitual
