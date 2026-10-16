@@ -1,0 +1,17 @@
+[remap]
+
+importer="font_data_bmfont"
+type="FontFile"
+uid="uid://b202kaemof1lq"
+path="res://.godot/imported/elias_working.fnt-53cce00b7ce920c830f46dfea3e4fc44.fontdata"
+
+[deps]
+
+source_file="res://docs/research/first_night_2026-10-12_beta_finish/font_before/elias_working.fnt"
+dest_files=["res://.godot/imported/elias_working.fnt-53cce00b7ce920c830f46dfea3e4fc44.fontdata"]
+
+[params]
+
+fallbacks=[]
+compress=true
+scaling_mode=2

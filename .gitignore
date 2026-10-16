@@ -1,7 +1,7 @@
 # Godot 4+ specific ignores
 .godot/
 /android/
-*.import
+# NOTE: *.import files ARE tracked (ROADMAP 0.4) — import settings must be reproducible.
 
 # Out-of-scope tooling output
 graphify-out/
