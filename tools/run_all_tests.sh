@@ -71,8 +71,14 @@ failed_names=""
 # wedged runner. Overridable: SUITE_TIMEOUT=300 bash tools/run_all_tests.sh
 SUITE_TIMEOUT="${SUITE_TIMEOUT:-180}"
 
+# Full output of every FAILED suite is preserved here (gitignored) so flake
+# evidence survives without manual capture; a suite passing again clears its log.
+log_dir="$PROJECT_DIR/test_logs"
+mkdir -p "$log_dir"
+
 for suite in $(find "$PROJECT_DIR/tests" -name "*_test.gd" | sort); do
 	relative="${suite#"$PROJECT_DIR"/}"
+	log_name="$(echo "$relative" | tr '/' '_').log"
 	# Match the Windows runner: tests validate the audio graph/telemetry, not a
 	# host device, so use a deterministic headless backend.
 	# Portable watchdog (macOS has no coreutils `timeout`, HANDOVER trap 19):
@@ -107,16 +113,19 @@ for suite in $(find "$PROJECT_DIR/tests" -name "*_test.gd" | sort); do
 	if [ $timed_out -eq 1 ]; then
 		failed_suites=$((failed_suites + 1))
 		failed_names="$failed_names $relative"
-		printf 'FAIL %-58s TIMEOUT after %ss (exit %d)\n' "$relative" "$SUITE_TIMEOUT" "$exit_code"
+		printf '%s\n' "$output" > "$log_dir/$log_name"
+		printf 'FAIL %-58s TIMEOUT after %ss (exit %d, log: test_logs/%s)\n' "$relative" "$SUITE_TIMEOUT" "$exit_code" "$log_name"
 		echo "$output" | tail -8 | sed 's/^/       /'
 	elif [ $exit_code -eq 0 ] && ! echo "$output" | grep -qE '^[[:space:]]*FAIL:'; then
 		passed_suites=$((passed_suites + 1))
 		total_assertions=$((total_assertions + assertions))
+		rm -f "$log_dir/$log_name"
 		printf 'OK   %-58s %4d assertions\n' "$relative" "$assertions"
 	else
 		failed_suites=$((failed_suites + 1))
 		failed_names="$failed_names $relative"
-		printf 'FAIL %-58s exit %d\n' "$relative" "$exit_code"
+		printf '%s\n' "$output" > "$log_dir/$log_name"
+		printf 'FAIL %-58s exit %d (log: test_logs/%s)\n' "$relative" "$exit_code" "$log_name"
 		echo "$output" | grep -i "fail\|error" | head -8 | sed 's/^/       /'
 	fi
 done

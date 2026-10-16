@@ -83,6 +83,16 @@ check "runner does not wait out the hang (elapsed ${elapsed}s < 60s)" "[ $elapse
 check "summary counts 1 passed / 2 failed" \
 	"echo \"\$output\" | grep -q 'suites passed: 1   failed: 2'"
 
+# ROADMAP 0.10: failed suites must leave their full log behind in test_logs/.
+check "failed suite log saved (indented fail)" \
+	"[ -f \"\$SANDBOX/test_logs/tests_indented_fail_test.gd.log\" ] && grep -q 'FAIL: deliberate indented failure' \"\$SANDBOX/test_logs/tests_indented_fail_test.gd.log\""
+check "failed suite log saved (timeout)" \
+	"[ -f \"\$SANDBOX/test_logs/tests_hanging_test.gd.log\" ] && grep -q 'PASS: before the hang' \"\$SANDBOX/test_logs/tests_hanging_test.gd.log\""
+check "passing suite leaves no log behind" \
+	"[ ! -f \"\$SANDBOX/test_logs/tests_passing_test.gd.log\" ]"
+check "FAIL line advertises the log path" \
+	"echo \"\$output\" | grep -qE '^FAIL +tests/indented_fail_test\.gd +exit 0 \(log: test_logs/'"
+
 if [ $failures -eq 0 ]; then
 	echo "--- run_all_tests selftest PASSED ---"
 	exit 0
