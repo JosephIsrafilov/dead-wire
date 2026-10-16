@@ -1,0 +1,9 @@
+FULL RUN (failed) — runner summary, verbatim tail:
+suites passed: 97   failed: 1   assertions: 2862
+failed suites: tests/office/shift_director_test.gd
+
+Note: runner echoes only first 8 fail/error lines to stdout; that detail
+was truncated by the operator tail and is NOT recoverable. Assertion math
+(2994-2862=132) shows the suite contributed 0 PASS lines: non-zero exit
+with lost pipe-buffered stdout — native crash signature (cf. godot#117991,
+docs/research/first_night_2026-10-12_crash_review/).

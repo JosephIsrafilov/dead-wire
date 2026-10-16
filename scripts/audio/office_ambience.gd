@@ -82,9 +82,9 @@ func build_players() -> void:
 		clock_player = _build_positional(
 			"ClockPlayer", clock_tick_stream, clock_volume_db, clock_position, clock_max_distance)
 
-## The WAV importer stores loop settings in .import files, which this repository
-## does not track, so a fresh checkout would import these beds as one-shots and
-## the room would fall silent. Guarantee the loop on a private copy instead.
+## The beds' loop is pinned in their tracked .import files (edit/loop_mode=1), so the
+## importer already delivers looping streams. This guard stays: if a bed is ever
+## re-exported without the flag, the room must not fall silent on a fresh checkout.
 static func as_looping(stream: AudioStream) -> AudioStream:
 	var wav := stream as AudioStreamWAV
 	if wav == null or wav.loop_mode != AudioStreamWAV.LOOP_DISABLED:
