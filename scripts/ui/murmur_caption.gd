@@ -12,6 +12,10 @@ extends CanvasLayer
 ## and how slowly it fades afterwards.
 @export var hold_seconds: float = 4.0
 @export var fade_seconds: float = 1.5
+## Reading the sheet or leaving the chair cuts the whisper short — faster than
+## the natural fade, so the voice never doubles as a cheat sheet the player
+## holds next to the ink or carries across the room.
+@export var dismiss_fade_seconds: float = 0.6
 
 ## Letter and word spacing of the whispered string; a word gap is a double
 ## interval so two words never read as one long letter run.
@@ -25,6 +29,7 @@ enum VoiceState {
 	WHISPERING,
 	HOLDING,
 	FADING,
+	DISMISSING,
 }
 
 var _state: VoiceState = VoiceState.SILENT
@@ -33,6 +38,8 @@ var _revealed: int = 0
 var _label: Label = null
 var _hold_elapsed: float = 0.0
 var _fade_elapsed: float = 0.0
+## Alpha the current dismissal started from, so a dismiss mid-fade never pops.
+var _dismiss_from_alpha: float = 1.0
 
 func _ready() -> void:
 	# Pausing the night pauses the whisper with it (default pausable mode).
@@ -65,6 +72,11 @@ func _bind_session() -> void:
 		session.perception_glyph.connect(_on_perception_glyph)
 	if not session.transmission_finished.is_connected(_on_transmission_finished):
 		session.transmission_finished.connect(_on_transmission_finished)
+	if not session.operator_stood.is_connected(_on_operator_stood):
+		session.operator_stood.connect(_on_operator_stood)
+	var paper: TranscriptPaper = session.transcript_paper
+	if paper != null and not paper.transcript_inspected.is_connected(_on_transcript_inspected):
+		paper.transcript_inspected.connect(_on_transcript_inspected)
 
 ## A new telegram clears the murmur: the voice only ever spells the message
 ## currently being heard.
@@ -103,8 +115,33 @@ func _process(delta: float) -> void:
 				_label.modulate.a = 1.0 - clampf(_fade_elapsed / maxf(fade_seconds, 0.01), 0.0, 1.0)
 			if _fade_elapsed >= fade_seconds:
 				_go_silent()
+		VoiceState.DISMISSING:
+			_fade_elapsed += delta
+			if _label != null:
+				var progress := clampf(_fade_elapsed / maxf(dismiss_fade_seconds, 0.01), 0.0, 1.0)
+				_label.modulate.a = _dismiss_from_alpha * (1.0 - progress)
+			if _fade_elapsed >= dismiss_fade_seconds:
+				_go_silent()
 		_:
 			pass
+
+## The sheet is in the player's hands: the voice stops being a reference.
+func _on_transcript_inspected(_text: String) -> void:
+	_dismiss()
+
+## Leaving the chair takes the ear with it.
+func _on_operator_stood() -> void:
+	_dismiss()
+
+## Cut the current whisper short, from whatever alpha it has right now.
+func _dismiss() -> void:
+	match _state:
+		VoiceState.SILENT, VoiceState.DISMISSING:
+			return
+		_:
+			_dismiss_from_alpha = _label.modulate.a if _label != null else 1.0
+			_state = VoiceState.DISMISSING
+			_fade_elapsed = 0.0
 
 func get_display_text() -> String:
 	return _label.text if _label != null else ""
@@ -114,6 +151,9 @@ func is_holding() -> bool:
 
 func is_fading() -> bool:
 	return _state == VoiceState.FADING
+
+func is_dismissing() -> bool:
+	return _state == VoiceState.DISMISSING
 
 func is_visible_on_screen() -> bool:
 	return _label != null and _label.is_visible_in_tree()

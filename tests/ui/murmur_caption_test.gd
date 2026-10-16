@@ -140,6 +140,38 @@ func _run() -> void:
 	if not _a(caption.process_mode == Node.PROCESS_MODE_INHERIT,
 		"The whisper keeps the default process mode, so pausing the night pauses it"): return
 
+	# --- 7. The whisper is no cheat sheet: reading the sheet dismisses it fast ---
+	scheduler.cancel()
+	controller.load_scenario(scen3)
+	key.press()
+	scheduler.advance_time(3.7)
+	if not _a(caption.get_display_text() == "w · a · t · e · r",
+		"The finished hook whisper is holding before the sheet is read"): return
+	paper._on_interacted()
+	if not _a(caption.is_dismissing(), "Reading the sheet starts the dismissal"): return
+	caption._process(0.3)
+	if not _a(not caption.get_display_text().is_empty(),
+		"Halfway through the dismissal the whisper is still legible"): return
+	caption._process(0.35)
+	if not _a(caption.get_display_text().is_empty(),
+		"Reading the sheet empties the whisper within 0.6 s"): return
+
+	# --- 8. Standing up mid-copy silences the whisper too ---
+	var stood_events: Array[int] = []
+	controller.operator_stood.connect(func() -> void: stood_events.append(1))
+	controller.load_scenario(scen3)
+	key.press()
+	scheduler.advance_time(2.35)
+	if not _a(caption.get_display_text() == "w · a · t",
+		"The whisper is mid-copy before the operator stands"): return
+	controller.notify_operator_stood()
+	if not _a(stood_events.size() == 1,
+		"Standing up is announced on the session's operator_stood signal"): return
+	if not _a(caption.is_dismissing(), "Standing up starts the dismissal"): return
+	caption._process(0.65)
+	if not _a(caption.get_display_text().is_empty(),
+		"Standing up empties the whisper within 0.6 s"): return
+
 	controller.queue_free()
 	caption.queue_free()
 	print("--- All Murmur Caption Tests PASSED (%d assertions) ---" % _assertions)

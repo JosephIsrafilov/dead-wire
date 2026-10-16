@@ -38,6 +38,11 @@ func _run() -> void:
 		"The whisper's session export resolves to the office session controller"): return
 	if not _a(office.session_controller.perception_glyph.is_connected(murmur._on_perception_glyph),
 		"The whisper is subscribed to the session's perception signal"): return
+	if not _a(office.session_controller.operator_stood.is_connected(murmur._on_operator_stood),
+		"The whisper hears the operator leaving the chair"): return
+	var scene_paper: TranscriptPaper = office.session_controller.transcript_paper
+	if not _a(scene_paper != null and scene_paper.transcript_inspected.is_connected(murmur._on_transcript_inspected),
+		"The whisper hears the sheet being read"): return
 	if not _a(murmur.layer < office.document_viewer.layer,
 		"An open document draws over the whisper (layer %d under the viewer's %d)" % [murmur.layer, office.document_viewer.layer]): return
 

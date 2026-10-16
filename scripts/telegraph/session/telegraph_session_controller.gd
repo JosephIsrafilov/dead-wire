@@ -42,6 +42,9 @@ signal consequence_started(event_id: String, hold_seconds: float)
 signal session_completed(scenario: TelegraphScenarioData)
 signal attention_event_triggered(event_id: String)
 signal deadline_warning(kind: StringName)
+## The operator left the chair. Emitted on every stand regardless of paper
+## state; consumers (the whisper, later the body) decide what it means.
+signal operator_stood()
 
 @export var alphabet: AmericanMorseAlphabetData = preload("res://data/morse/m1_american_morse_alphabet.tres")
 @export var playback_profile: MorsePlaybackProfileData = preload("res://data/morse/m1_morse_playback_profile.tres")
@@ -648,8 +651,10 @@ func reset_session() -> void:
 	_set_state(State.IDLE)
 
 ## The operator stood up: the hand leaves the paper and the visible prefix
-## freezes. The signal, deadlines and grace all keep running.
+## freezes. The signal, deadlines and grace all keep running. Listeners that
+## care about attention (the whisper) hear `operator_stood` on every stand.
 func notify_operator_stood() -> void:
+	operator_stood.emit()
 	if transcript_paper == null or _current_scenario == null:
 		return
 	if transcript_paper.get_paper_scenario_id() == _current_scenario.scenario_id \
