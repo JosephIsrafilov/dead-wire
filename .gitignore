@@ -35,3 +35,9 @@ docs/research/mechanics_2026-10-10/mechanics_demo.mp4
 
 # Local Hermes agent workspace
 .hermes/
+
+# Repo hygiene (ROADMAP 0.1): OS junk, local user data, scratch backups, root logs
+.DS_Store
+.godot_user/
+scratch/**/*.bak
+/*.log
