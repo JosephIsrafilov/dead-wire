@@ -51,8 +51,10 @@ func _run() -> void:
 	await _stand_and_walk(Vector3(0.45, 0, 0.95))
 	var desk_act := office.copy_commit_desk.get_node("Option1Interactable")
 	check(office.copy_commit_desk.commit_option(&"amend_copy"), "Physical amendment opens editing at the desk")
-	office.amendment_editor.correction.text = "WATER"
-	office.amendment_editor.correction.text_changed.emit("WATER")
+	# WAITER, not WATER: since ROADMAP 2.2 the figure answers the outcomes
+	# that did NOT file the true word; amending WATER now brings a cloud.
+	office.amendment_editor.correction.text = "WAITER"
+	office.amendment_editor.correction.text_changed.emit("WAITER")
 	office.amendment_editor.submit_draft()
 	check(session.get_state() == TelegraphSessionController.State.CONSEQUENCE, "Commit enters the consequence beat")
 
@@ -95,7 +97,7 @@ func _run() -> void:
 	session.scheduler.advance_time(4.0)
 	_drain(paper)
 	session.mark_transcript_verified()
-	session.submit_amendment("WATER")
+	session.submit_amendment("WAITER")
 	await _turn_to(figure.global_position)
 	session.advance_consequence(1.05)
 	check(figure.is_active and not figure.get_visual_indicator().visible, "Watched window defers the appearance (no pop-in)")

@@ -101,6 +101,9 @@ var _consequence_visibility_timeout: float = 0.0
 ## closing) run on the same scheduler; their completion must never be mistaken
 ## for the telegram ending.
 var _active_schedule: MorsePlaybackScheduleData = null
+## How the current slot's filing decision resolved (TelegraphScenarioData
+## OUTCOME_* ids). Drives the scenario's per-outcome consequence event.
+var _resolved_outcome: StringName = &""
 ## Seconds since t0, advanced exactly once per simulation tick. Negative means
 ## the signal has not ended. Commit deadline, grace and the director's route
 ## deadline all read this one clock so there is a single t0.
@@ -220,6 +223,11 @@ func get_current_scenario() -> TelegraphScenarioData:
 ## signals check this before touching the line: a live telegram is never cut.
 func get_active_telegram_schedule() -> MorsePlaybackScheduleData:
 	return _active_schedule
+
+## How the slot's filing decision resolved, as a TelegraphScenarioData
+## OUTCOME_* id. Empty until a commit or lapse resolves it; reset per slot.
+func get_resolved_outcome() -> StringName:
+	return _resolved_outcome
 
 func can_load_scenario(scenario: TelegraphScenarioData) -> bool:
 	return not _decision_in_progress and scenario != null and scenario.get_validation_errors().is_empty()
@@ -474,6 +482,13 @@ func _accept_commit(selected: TelegraphCommitOption, word: String, amended: bool
 	var action_id := selected.action_id
 	var result := scenario.amendment_result_text if amended else selected.result_text
 	var objective_fact := selected.world_fact
+	if amended:
+		if word == scenario.transmission_data.true_message:
+			_resolved_outcome = TelegraphScenarioData.OUTCOME_AMENDED_TRUE
+		else:
+			_resolved_outcome = TelegraphScenarioData.OUTCOME_AMENDED_OTHER
+	else:
+		_resolved_outcome = TelegraphScenarioData.OUTCOME_FILED_AS_COPIED
 	if amended and word != scenario.transmission_data.true_message:
 		objective_fact = scenario.amendment_wrong_world_fact
 	_decision_in_progress = true
@@ -507,6 +522,7 @@ func lapse_commit() -> bool:
 	var scenario := _current_scenario
 	_decision_in_progress = true
 	_commit_resolved = true
+	_resolved_outcome = TelegraphScenarioData.OUTCOME_LAPSED
 	_close_live_sheet_for_terminal()
 	var world := _get_world_state()
 	if world != null and not scenario.commit_lapsed_world_fact.is_empty():
@@ -536,6 +552,18 @@ func _begin_consequence() -> void:
 	_consequence_visibility_timeout = 0.0
 	advance_consequence(0.0)
 
+## The consequence event the scenario authors for how this decision resolved;
+## an unmapped outcome falls back to the scenario's single event id.
+func _consequence_event_for_outcome() -> String:
+	if _current_scenario == null:
+		return ""
+	var outcome_map := _current_scenario.consequence_events_by_outcome
+	if _resolved_outcome != &"" and not outcome_map.is_empty():
+		var mapped: Variant = outcome_map.get(String(_resolved_outcome), "")
+		if mapped is String and not (mapped as String).is_empty():
+			return mapped as String
+	return _current_scenario.consequence_event_id
+
 ## Office presentation registers that this consequence has a real visible
 ## target. Without an observer (for example in logic-only tests), the legacy
 ## delay+hold path remains deterministic.
@@ -564,7 +592,7 @@ func advance_consequence(delta: float) -> void:
 	if not _consequence_started and _consequence_elapsed >= delay:
 		_consequence_started = true
 		_consequence_visibility_timeout = delay + hold + maxf(consequence_visibility_timeout_seconds, 0.0)
-		consequence_started.emit(_current_scenario.consequence_event_id, hold)
+		consequence_started.emit(_consequence_event_for_outcome(), hold)
 	if _consequence_started and _consequence_requires_visibility and not _consequence_visible \
 		and _consequence_elapsed >= _consequence_visibility_timeout:
 		_complete_consequence()
@@ -656,6 +684,7 @@ func reset_session() -> void:
 				knowledge.learn(StringName("incomplete_copy_%s" % _current_scenario.scenario_id))
 		transcript_paper.close_incomplete()
 	_active_schedule = null
+	_resolved_outcome = &""
 	_post_signal_elapsed = -1.0
 	_grace_active = false
 	_deadline_warning_fired = false

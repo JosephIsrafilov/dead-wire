@@ -49,6 +49,12 @@ commit_lapsed_knowledge_fact = "core_hook_commit_lapsed"
 consequence_event_id = "window_figure"
 consequence_delay_seconds = 1.0
 consequence_hold_seconds = 6.0
+consequence_events_by_outcome = {
+"amended_other": "window_figure",
+"amended_true": "moon_cloud",
+"filed_as_copied": "window_figure",
+"lapsed": "window_figure"
+}
 amendment_wrong_world_fact = "core_hook_amended_wrong"
 amendment_knowledge_fact = "amendment_entered_core_hook"
 filed_word_world_fact = "core_hook_filed_word"

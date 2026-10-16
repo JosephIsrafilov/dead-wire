@@ -12,6 +12,7 @@ signal scenario_cycle_completed()
 @export var copy_commit_desk: CopyCommitDesk = null
 @export var door_attention: DoorAttentionSource = null
 @export var window_observation: AttentionObservationTarget = null
+@export var moon_weather: MoonWeather = null
 @export var document_viewer: DocumentViewer = null
 @export var player_camera: Camera3D = null
 @export var player: PlayerController = null
@@ -143,6 +144,8 @@ func _bind_signals() -> void:
 		door_attention.scheduler = session_controller.scheduler
 	if window_observation == null:
 		window_observation = get_node_or_null("WindowObservationEvent") as AttentionObservationTarget
+	if moon_weather == null:
+		moon_weather = get_node_or_null("MoonWeather") as MoonWeather
 	if window_observation != null:
 		if not window_observation.visibility_started.is_connected(_on_consequence_visibility_started):
 			window_observation.visibility_started.connect(_on_consequence_visibility_started)
@@ -453,6 +456,10 @@ func _on_commit_resolved(action_id: StringName, result_text: String) -> void:
 func _on_consequence_started(event_id: String, hold_seconds: float) -> void:
 	if event_id == "window_figure" and window_observation != null:
 		window_observation.trigger_event(maxf(hold_seconds, 0.0))
+	elif event_id == "moon_cloud" and moon_weather != null:
+		# A cloud crosses the moon: the light goes down and comes back, and
+		# there is nothing standing in the window and nothing to explain.
+		moon_weather.force_cloud(maxf(hold_seconds, 0.0))
 
 func _on_consequence_visibility_started() -> void:
 	if session_controller != null:

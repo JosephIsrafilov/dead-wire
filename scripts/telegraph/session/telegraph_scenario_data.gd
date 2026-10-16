@@ -1,6 +1,18 @@
 class_name TelegraphScenarioData
 extends Resource
 
+## Commit-outcome ids for per-outcome consequence events (ROADMAP 2.2). One
+## registry: the session resolves decisions to these, scenario .tres files map
+## them to attention-event ids, and no code hardcodes an outcome string.
+const OUTCOME_FILED_AS_COPIED := &"filed_as_copied"
+const OUTCOME_AMENDED_TRUE := &"amended_true"
+const OUTCOME_AMENDED_OTHER := &"amended_other"
+const OUTCOME_LAPSED := &"lapsed"
+const OUTCOME_IDS := [
+	OUTCOME_FILED_AS_COPIED, OUTCOME_AMENDED_TRUE,
+	OUTCOME_AMENDED_OTHER, OUTCOME_LAPSED,
+]
+
 @export var scenario_id: String = ""
 @export var transmission_data: TransmissionData = null
 @export var requires_routing: bool = false
@@ -30,6 +42,10 @@ extends Resource
 @export var consequence_event_id: String = ""
 @export var consequence_delay_seconds: float = 0.0
 @export var consequence_hold_seconds: float = 0.0
+## Consequence event per commit outcome (keys = OUTCOME_* ids, values =
+## attention-event ids). An outcome missing from the map falls back to
+## consequence_event_id, so legacy scenarios keep working untouched.
+@export var consequence_events_by_outcome: Dictionary = {}
 ## An amendment's unknown/wrong valid text remains a terminal choice, not a fallback.
 @export var amendment_wrong_world_fact: String = ""
 @export var amendment_knowledge_fact: String = ""
@@ -101,6 +117,12 @@ func get_validation_errors() -> PackedStringArray:
 		errors.append("consequence_delay_seconds must be non-negative finite")
 	if consequence_hold_seconds < 0.0 or not is_finite(consequence_hold_seconds):
 		errors.append("consequence_hold_seconds must be non-negative finite")
+	for outcome_key in consequence_events_by_outcome.keys():
+		if StringName(str(outcome_key)) not in OUTCOME_IDS:
+			errors.append("consequence_events_by_outcome has unknown outcome '%s'" % str(outcome_key))
+		var event_value: Variant = consequence_events_by_outcome[outcome_key]
+		if not (event_value is String) or (event_value as String).is_empty():
+			errors.append("consequence_events_by_outcome['%s'] must be a non-empty event id" % str(outcome_key))
 
 	var amendment_count := 0
 	for option in commit_options:

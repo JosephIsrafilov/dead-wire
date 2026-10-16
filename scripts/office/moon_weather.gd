@@ -60,6 +60,12 @@ func is_dimmed_now() -> bool:
 func begin_dawn() -> void:
 	_dawn_running = true
 
+## An authored cloud shadow (the moon_cloud consequence): the same dim a
+## natural cloud brings, held for the given seconds. Light only — no figure,
+## no objects, nothing in the room to explain (GDD §10).
+func force_cloud(hold_seconds: float) -> void:
+	_cloud_left = maxf(_cloud_left, maxf(hold_seconds, 0.0))
+
 ## Separated from _process so tests can drive the sky deterministically.
 func advance(delta: float) -> void:
 	if delta <= 0.0:
