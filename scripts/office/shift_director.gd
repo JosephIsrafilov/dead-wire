@@ -632,7 +632,44 @@ func _begin_closing() -> void:
 	_station_target_hours = maxf(_station_target_hours, STATION_CLOSING_HOURS)
 	_station_ceiling_hours = STATION_CLOSING_HOURS
 	_set_phase(Phase.CLOSING)
-	_play_on_wire(closing_sign_trouble if had_trouble() else closing_sign)
+	_play_on_wire(_closing_wire_text())
+
+## The sender's parting word rides out with the closing sign as ONE schedule:
+## "<reply> <sign>" (ROADMAP 2.3). The reply comes from the resolved slot's
+## data, so the night quotes the operator's own filing back at him.
+func _closing_wire_text() -> String:
+	var sign := closing_sign_trouble if had_trouble() else closing_sign
+	var reply := _wire_reply_text()
+	if reply.is_empty():
+		return sign
+	return reply + " " + sign
+
+## The authored reply for the outcome that just resolved. A "{word}" template
+## quoting a word the M1 wire cannot carry (letters outside the 18-character
+## alphabet) falls back to the scenario's authored plain text.
+func _wire_reply_text() -> String:
+	if session == null:
+		return ""
+	var scenario := session.get_current_scenario()
+	var outcome := session.get_resolved_outcome()
+	if scenario == null or outcome == &"":
+		return ""
+	var template: Variant = scenario.wire_reply_by_outcome.get(String(outcome), "")
+	if not (template is String) or (template as String).is_empty():
+		return ""
+	var reply: String = (template as String).replace("{word}", session.get_filed_word())
+	if not _wire_text_sendable(reply):
+		reply = scenario.wire_reply_fallback
+	if not _wire_text_sendable(reply):
+		return ""
+	return reply
+
+func _wire_text_sendable(text: String) -> bool:
+	if text.is_empty():
+		return false
+	if alphabet == null:
+		return true
+	return _encoder.encode(text, alphabet) != null
 
 func _set_phase(new_phase: Phase) -> void:
 	if _phase == new_phase:

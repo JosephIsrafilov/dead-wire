@@ -104,6 +104,9 @@ var _active_schedule: MorsePlaybackScheduleData = null
 ## How the current slot's filing decision resolved (TelegraphScenarioData
 ## OUTCOME_* ids). Drives the scenario's per-outcome consequence event.
 var _resolved_outcome: StringName = &""
+## The word physically filed for the resolved slot ("" on a lapse). The
+## sender's parting reply may quote it back on the wire.
+var _filed_word: String = ""
 ## Seconds since t0, advanced exactly once per simulation tick. Negative means
 ## the signal has not ended. Commit deadline, grace and the director's route
 ## deadline all read this one clock so there is a single t0.
@@ -228,6 +231,10 @@ func get_active_telegram_schedule() -> MorsePlaybackScheduleData:
 ## OUTCOME_* id. Empty until a commit or lapse resolves it; reset per slot.
 func get_resolved_outcome() -> StringName:
 	return _resolved_outcome
+
+## The word physically filed for the resolved slot; empty on a lapse.
+func get_filed_word() -> String:
+	return _filed_word
 
 func can_load_scenario(scenario: TelegraphScenarioData) -> bool:
 	return not _decision_in_progress and scenario != null and scenario.get_validation_errors().is_empty()
@@ -489,6 +496,7 @@ func _accept_commit(selected: TelegraphCommitOption, word: String, amended: bool
 			_resolved_outcome = TelegraphScenarioData.OUTCOME_AMENDED_OTHER
 	else:
 		_resolved_outcome = TelegraphScenarioData.OUTCOME_FILED_AS_COPIED
+	_filed_word = word
 	if amended and word != scenario.transmission_data.true_message:
 		objective_fact = scenario.amendment_wrong_world_fact
 	_decision_in_progress = true
@@ -523,6 +531,7 @@ func lapse_commit() -> bool:
 	_decision_in_progress = true
 	_commit_resolved = true
 	_resolved_outcome = TelegraphScenarioData.OUTCOME_LAPSED
+	_filed_word = ""
 	_close_live_sheet_for_terminal()
 	var world := _get_world_state()
 	if world != null and not scenario.commit_lapsed_world_fact.is_empty():
@@ -685,6 +694,7 @@ func reset_session() -> void:
 		transcript_paper.close_incomplete()
 	_active_schedule = null
 	_resolved_outcome = &""
+	_filed_word = ""
 	_post_signal_elapsed = -1.0
 	_grace_active = false
 	_deadline_warning_fired = false

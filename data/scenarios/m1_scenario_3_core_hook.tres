@@ -55,6 +55,13 @@ consequence_events_by_outcome = {
 "filed_as_copied": "window_figure",
 "lapsed": "window_figure"
 }
+wire_reply_by_outcome = {
+"amended_other": "SAID WHAT",
+"amended_true": "WATER TO HAND",
+"filed_as_copied": "WHAT IS WATCHER",
+"lapsed": "LINE CLOSED"
+}
+wire_reply_fallback = "SAID WHAT"
 amendment_wrong_world_fact = "core_hook_amended_wrong"
 amendment_knowledge_fact = "amendment_entered_core_hook"
 filed_word_world_fact = "core_hook_filed_word"

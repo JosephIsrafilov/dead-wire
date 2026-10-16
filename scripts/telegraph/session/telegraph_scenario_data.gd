@@ -46,6 +46,12 @@ const OUTCOME_IDS := [
 ## attention-event ids). An outcome missing from the map falls back to
 ## consequence_event_id, so legacy scenarios keep working untouched.
 @export var consequence_events_by_outcome: Dictionary = {}
+## The sender's parting word per commit outcome (keys = OUTCOME_* ids, values
+## = wire text, optionally a "{word}" template quoting the filed word). Rides
+## out with the closing sign as one schedule; a template the M1 alphabet
+## cannot carry falls back to wire_reply_fallback.
+@export var wire_reply_by_outcome: Dictionary = {}
+@export var wire_reply_fallback: String = ""
 ## An amendment's unknown/wrong valid text remains a terminal choice, not a fallback.
 @export var amendment_wrong_world_fact: String = ""
 @export var amendment_knowledge_fact: String = ""
@@ -123,6 +129,12 @@ func get_validation_errors() -> PackedStringArray:
 		var event_value: Variant = consequence_events_by_outcome[outcome_key]
 		if not (event_value is String) or (event_value as String).is_empty():
 			errors.append("consequence_events_by_outcome['%s'] must be a non-empty event id" % str(outcome_key))
+	for reply_key in wire_reply_by_outcome.keys():
+		if StringName(str(reply_key)) not in OUTCOME_IDS:
+			errors.append("wire_reply_by_outcome has unknown outcome '%s'" % str(reply_key))
+		var reply_value: Variant = wire_reply_by_outcome[reply_key]
+		if not (reply_value is String) or (reply_value as String).is_empty():
+			errors.append("wire_reply_by_outcome['%s'] must be a non-empty reply text" % str(reply_key))
 
 	var amendment_count := 0
 	for option in commit_options:
