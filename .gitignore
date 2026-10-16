@@ -44,3 +44,14 @@ scratch/**/*.bak
 
 # Failed-suite logs saved by tools/run_all_tests.sh (ROADMAP 0.10)
 test_logs/
+
+# Evidence stays out of git (ROADMAP 0.9, owner decision 2026-10-16): new logs,
+# frames and media under docs/ are local only; already-tracked files are unaffected.
+docs/**/*.log
+docs/**/*.png
+docs/**/*.png.import
+docs/**/*.jpg
+docs/**/*.jpg.import
+docs/**/*.mp4
+docs/**/*.avi
+docs/**/*.wav
