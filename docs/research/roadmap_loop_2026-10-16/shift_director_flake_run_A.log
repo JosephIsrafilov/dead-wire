@@ -7,3 +7,8 @@ was truncated by the operator tail and is NOT recoverable. Assertion math
 (2994-2862=132) shows the suite contributed 0 PASS lines: non-zero exit
 with lost pipe-buffered stdout — native crash signature (cf. godot#117991,
 docs/research/first_night_2026-10-12_crash_review/).
+
+--- SUPERSEDED 2026-10-16 (task 0.5): the "0 PASS lines / lost stdout" inference below
+--- was WRONG. The runner excludes failed suites from the assertion total; the repro shows
+--- all 132 PASS captured even in crashed runs (exit 139, teardown SIGSEGV).
+--- See shift_director_flake_analysis.md. Original text kept verbatim above.
