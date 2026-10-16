@@ -17,10 +17,11 @@ extends CanvasLayer
 ## holds next to the ink or carries across the room.
 @export var dismiss_fade_seconds: float = 0.6
 
-## Letter and word spacing of the whispered string; a word gap is a double
-## interval so two words never read as one long letter run.
+## Letter and word spacing of the whispered string; the word gap is pure
+## space — a dot there would read as one more murmured letter, and on the
+## 2026-10-16 frames the dotted gap merged into the letter run.
 const GLYPH_SEPARATOR := " · "
-const WORD_SEPARATOR := "  ·  "
+const WORD_SEPARATOR := "     "
 ## Quieter than a spoken thought: the murmur stays below full attention.
 const MURMUR_ALPHA := 0.55
 

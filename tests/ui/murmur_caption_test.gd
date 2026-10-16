@@ -130,6 +130,8 @@ func _run() -> void:
 	if not _a(shown.contains("1 · 7"), "The fair whisper spells its second word"): return
 	var between := shown.trim_prefix("t · r · a · i · n").trim_suffix("1 · 7")
 	if not _a(between.length() > 3, "A word gap is wider than a letter gap, got '%s'" % between): return
+	if not _a(not between.contains("·") and between.strip_edges(false, true).is_empty(),
+		"A word gap is pure space without a dot, got '%s'" % between): return
 
 	# --- 6. Layer contract: the whisper node never reads the other two layers ---
 	var source := FileAccess.get_file_as_string("res://scripts/ui/murmur_caption.gd")
