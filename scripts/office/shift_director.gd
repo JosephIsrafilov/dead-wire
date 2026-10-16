@@ -65,6 +65,13 @@ var foreign_traffic_played: bool = false
 @export var call_sign: String = "CR CR"
 @export var call_repeat_gap_seconds: float = 3.5
 @export var max_calls_per_message: int = 3
+## The sender's short surrender, inked on the tape when traffic is missed
+## (ROADMAP 2.5). Restricted to the same 18 characters; validated by test.
+@export var missed_call_sign: String = "LINE CLOSED"
+## A critical slot cannot be missed: its sender keeps calling, and the gap
+## between calls tightens by this factor per call down to the floor.
+@export var critical_call_gap_factor: float = 0.7
+@export var critical_call_gap_floor_seconds: float = 1.5
 
 ## Time the operator still has to answer after the final call dies away.
 @export var answer_grace_seconds: float = 4.0
@@ -295,7 +302,7 @@ func _advance_step(delta: float) -> void:
 		Phase.CALLING:
 			_phase_timer += delta
 			if _phase_timer >= _call_window_seconds:
-				if _calls_sent < max_calls_per_message:
+				if _calls_sent < max_calls_per_message or _current_slot_is_critical():
 					_send_call()
 				else:
 					_miss_current_traffic()
@@ -481,9 +488,19 @@ func _send_call() -> void:
 	var duration := _play_on_wire(call_sign)
 	# The final call carries the extra grace period; earlier ones only the gap.
 	var tail := answer_grace_seconds if _calls_sent >= max_calls_per_message else call_repeat_gap_seconds
+	if _calls_sent > max_calls_per_message and _current_slot_is_critical():
+		# The critical sender does not give up: past the ordinary limit every
+		# call tightens the gap toward the floor (ROADMAP 2.5).
+		tail = maxf(critical_call_gap_floor_seconds,
+			answer_grace_seconds * pow(critical_call_gap_factor, float(_calls_sent - max_calls_per_message)))
 	_call_window_seconds = duration + tail
 	_phase_timer = 0.0
 	call_started.emit(_slot_index, _calls_sent)
+
+## The critical copy cannot be missed: its sender simply keeps calling.
+func _current_slot_is_critical() -> bool:
+	var scenario := _current_scenario()
+	return scenario != null and scenario.critical_copy
 
 ## Compiles text through the same encoder and scheduler the real traffic uses, so
 ## service signals are physically the same American Morse as the messages.
@@ -563,6 +580,11 @@ func _miss_current_traffic() -> void:
 
 	traffic_missed.emit(_slot_index, scenario)
 	_advance_to_slot(_slot_index + 1)
+	# The sender's short surrender opens the next silence — played AFTER the
+	# slot advanced, because the incoming scenario's reset would cancel it,
+	# and only in WAITING, so it never talks over the closing sign (ROADMAP 2.5).
+	if _phase == Phase.WAITING and not missed_call_sign.is_empty():
+		_play_on_wire(missed_call_sign)
 
 ## t0: the telegram's own signal ended. For routing scenarios the route
 ## deadline starts here, even if the operator is still finishing the copy; the

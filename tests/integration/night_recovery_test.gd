@@ -43,8 +43,23 @@ func _run() -> void:
 		session.submit_routing_decision("HOLD")
 		director.advance(director.wait_seconds_before_call[2] + 1.0)
 		if outcome == "missed":
+			# ROADMAP 2.5: the critical call cannot be missed — the sender keeps
+			# calling on tightening intervals until it is answered. This branch
+			# proves the relentlessness, then lets the waited-out copy lapse.
+			var calls_before := director.calls_sent_total
 			director.advance(40.0)
-			check(not office.dawn_evidence.is_revealed(), "Missed final call does not invent a copied document")
+			check(director.get_phase() == ShiftDirector.Phase.CALLING, "The critical call cannot be missed")
+			check(director.calls_sent_total >= calls_before + 5, "The critical sender keeps calling on tightening intervals")
+			check(not office.dawn_evidence.is_revealed(), "An unanswered critical call invents no copied document")
+			session.telegraph_key.press()
+			director.advance(director.answer_beat_seconds + 0.05)
+			session.scheduler.advance_time(4.0)
+			_drain_paper(paper)
+			session._process(session.get_commit_deadline_seconds() + 0.1)
+			check(office.copy_commit_desk.get_result_text() == "UNFILED", "The waited-out critical copy visibly lapses")
+			session.advance_consequence(1.0)
+			session.advance_consequence(20.0)
+			check(office.dawn_evidence.is_revealed(), "The waited-out critical night still produces a handover")
 		else:
 			session.telegraph_key.press()
 			director.advance(director.answer_beat_seconds + 0.05)
