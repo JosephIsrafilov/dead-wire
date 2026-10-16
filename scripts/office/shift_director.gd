@@ -442,6 +442,15 @@ func _play_on_wire(text: String) -> float:
 	if session == null or session.scheduler == null or alphabet == null or playback_profile == null:
 		return 0.0
 
+	# A live telegram owns the wire: a service signal is refused, never cut
+	# through (WS1.2 / ROADMAP 2.1). The caller decides whether to try again
+	# later; the tape must never show a BROKEN OFF take because a nag was due.
+	var live_telegram := session.get_active_telegram_schedule()
+	if live_telegram != null \
+			and session.scheduler.get_active_schedule() == live_telegram \
+			and session.scheduler.is_playing():
+		return 0.0
+
 	var sequence := _encoder.encode(text, alphabet)
 	if sequence == null:
 		return 0.0

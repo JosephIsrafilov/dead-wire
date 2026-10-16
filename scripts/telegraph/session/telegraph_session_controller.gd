@@ -123,6 +123,8 @@ func _bind_components() -> void:
 	if scheduler != null:
 		if not scheduler.playback_completed.is_connected(_on_scheduler_completed):
 			scheduler.playback_completed.connect(_on_scheduler_completed)
+		if not scheduler.playback_cancelled.is_connected(_on_playback_cancelled):
+			scheduler.playback_cancelled.connect(_on_playback_cancelled)
 		if not scheduler.playback_time_advanced.is_connected(_on_playback_time_advanced):
 			scheduler.playback_time_advanced.connect(_on_playback_time_advanced)
 
@@ -212,6 +214,12 @@ func get_state() -> State:
 
 func get_current_scenario() -> TelegraphScenarioData:
 	return _current_scenario
+
+## The compiled schedule of the live telegram, or null when the wire carries
+## something else (calls, nags, the closing sign). The director's service
+## signals check this before touching the line: a live telegram is never cut.
+func get_active_telegram_schedule() -> MorsePlaybackScheduleData:
+	return _active_schedule
 
 func can_load_scenario(scenario: TelegraphScenarioData) -> bool:
 	return not _decision_in_progress and scenario != null and scenario.get_validation_errors().is_empty()
@@ -339,6 +347,25 @@ func _on_scheduler_completed(schedule: MorsePlaybackScheduleData) -> void:
 
 func _is_copy_complete() -> bool:
 	return transcript_paper == null or not transcript_paper.is_copy_in_progress()
+
+## A cancelled telegram is a telegram that objectively ended early: t0 starts,
+## the sheet keeps whatever ink it has, and nothing unplayed is whispered or
+## authorized. Calls and service signals being cancelled are not t0 — the same
+## ownership rule as completion: only the active telegram's own schedule is.
+func _on_playback_cancelled(schedule: MorsePlaybackScheduleData, _elapsed_seconds: float) -> void:
+	if schedule != _active_schedule:
+		return
+	if _state != State.RECEIVING or _current_scenario == null:
+		return
+	_active_schedule = null
+	transmission_finished.emit(_current_scenario)
+	_post_signal_elapsed = 0.0
+	_deadline_warning_fired = false
+	if _is_copy_complete():
+		_enter_post_copy_state()
+	else:
+		_grace_active = unfinished_copy_grace_seconds > 0.0
+		_set_state(State.COPYING)
 
 func _enter_post_copy_state() -> void:
 	_grace_active = false
