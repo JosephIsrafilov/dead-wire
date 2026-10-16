@@ -4,6 +4,8 @@
 #   bash tools/run_all_tests.sh
 #
 # Override the engine binary with GODOT_BIN when it lives somewhere else.
+# Per-suite wall-clock budget: SUITE_TIMEOUT seconds (default 180); a hung
+# suite is reported as `FAIL … TIMEOUT`, never a wedged runner.
 
 set -u
 
@@ -65,14 +67,49 @@ failed_suites=0
 total_assertions=0
 failed_names=""
 
+# Per-suite wall-clock budget; a hung suite is a FAIL marked TIMEOUT, not a
+# wedged runner. Overridable: SUITE_TIMEOUT=300 bash tools/run_all_tests.sh
+SUITE_TIMEOUT="${SUITE_TIMEOUT:-180}"
+
 for suite in $(find "$PROJECT_DIR/tests" -name "*_test.gd" | sort); do
 	relative="${suite#"$PROJECT_DIR"/}"
 	# Match the Windows runner: tests validate the audio graph/telemetry, not a
 	# host device, so use a deterministic headless backend.
-	output=$("$GODOT_BIN" --headless --audio-driver Dummy --path "$GODOT_PROJECT_DIR" --script "res://$relative" 2>&1)
+	# Portable watchdog (macOS has no coreutils `timeout`, HANDOVER trap 19):
+	# the suite runs in the background; if the budget expires the watchdog
+	# marks the timeout file and kills it. Watchdog stdout goes to /dev/null so
+	# an orphaned `sleep` can never hold the runner's output pipe open.
+	out_file="$(mktemp)"
+	timeout_marker="$(mktemp)"
+	rm -f "$timeout_marker"
+	"$GODOT_BIN" --headless --audio-driver Dummy --path "$GODOT_PROJECT_DIR" --script "res://$relative" >"$out_file" 2>&1 &
+	suite_pid=$!
+	(
+		sleep "$SUITE_TIMEOUT"
+		touch "$timeout_marker"
+		kill -TERM "$suite_pid" 2>/dev/null
+		sleep 10
+		kill -KILL "$suite_pid" 2>/dev/null
+	) >/dev/null 2>&1 &
+	watchdog_pid=$!
+	wait "$suite_pid"
 	exit_code=$?
+	kill "$watchdog_pid" 2>/dev/null
+	wait "$watchdog_pid" 2>/dev/null
+	timed_out=0
+	if [ -f "$timeout_marker" ]; then
+		timed_out=1
+	fi
+	rm -f "$timeout_marker"
+	output="$(cat "$out_file")"
+	rm -f "$out_file"
 	assertions=$(echo "$output" | grep -c "PASS:")
-	if [ $exit_code -eq 0 ] && ! echo "$output" | grep -q '^FAIL:'; then
+	if [ $timed_out -eq 1 ]; then
+		failed_suites=$((failed_suites + 1))
+		failed_names="$failed_names $relative"
+		printf 'FAIL %-58s TIMEOUT after %ss (exit %d)\n' "$relative" "$SUITE_TIMEOUT" "$exit_code"
+		echo "$output" | tail -8 | sed 's/^/       /'
+	elif [ $exit_code -eq 0 ] && ! echo "$output" | grep -qE '^[[:space:]]*FAIL:'; then
 		passed_suites=$((passed_suites + 1))
 		total_assertions=$((total_assertions + assertions))
 		printf 'OK   %-58s %4d assertions\n' "$relative" "$assertions"
