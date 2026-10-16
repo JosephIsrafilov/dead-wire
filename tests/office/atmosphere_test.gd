@@ -326,10 +326,10 @@ func _run() -> void:
 	register._process(1.0 / 60.0)
 	var wind_act := register.get_node("WindInteractable") as Interactable
 	if not assert_condition(wind_act.can_interact(), "A run-down register asks to be wound"): return
-	if not assert_condition(register.get_tape_text_for_viewer().contains("SPRING SLACK"), "A slack register spring holds back the tail of the strip in the viewer until wound"): return
+	if not assert_condition(register.get_tape_text_for_viewer().contains(TapeRegisterController.SLACK_NOTE), "A slack register spring holds back the tail of the strip in the viewer until wound"): return
 	wind_act.interact()
 	if not assert_condition(is_equal_approx(register.spring_tension, 1.0) and not wind_act.can_interact(), "Winding restores the spring"): return
-	if not assert_condition(not register.get_tape_text_for_viewer().contains("SPRING SLACK"), "Winding advances the full strip into the viewer"): return
+	if not assert_condition(not register.get_tape_text_for_viewer().contains(TapeRegisterController.SLACK_NOTE), "Winding advances the full strip into the viewer"): return
 	if not assert_condition(register.get_record().size() == record_before, "Winding never touches the record"): return
 
 	# --- Stove authored mesh & wall connection check -------------------------

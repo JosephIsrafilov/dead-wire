@@ -25,8 +25,10 @@ func _ready() -> void:
 	enabled = GameSettings.load_settings().contextual_thoughts_enabled
 	_label = Label.new()
 	_label.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
-	_label.offset_top = -124.0
-	_label.offset_bottom = -72.0
+	# Stacked text channels: the whisper sits above (MurmurCaption), the
+	# interaction prompt below — no band may overlap another.
+	_label.offset_top = -176.0
+	_label.offset_bottom = -124.0
 	_label.offset_left = 24.0
 	_label.offset_right = -24.0
 	_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -120,8 +122,12 @@ func _refresh_visible_context() -> void:
 			TelegraphSessionController.State.AWAITING_COMMIT: context = &"filing"
 			TelegraphSessionController.State.RECEIVING, TelegraphSessionController.State.COPYING:
 				blocked = true
-		if director.get_phase() == ShiftDirector.Phase.WAITING and director.get_slot_index() == 1:
-			context = &"compare"
+		if director.get_phase() == ShiftDirector.Phase.WAITING:
+			var register := session.get_tape_register()
+			if register != null and register.needs_winding():
+				context = &"wind"
+			elif director.get_slot_index() == 1:
+				context = &"compare"
 	set_context(context, blocked)
 
 func _unhandled_input(event: InputEvent) -> void:

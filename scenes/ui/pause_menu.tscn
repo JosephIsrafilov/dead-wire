@@ -205,5 +205,5 @@ text = "Quit to Desktop"
 layout_mode = 2
 theme_override_colors/font_color = Color(0.42, 0.38, 0.31, 1)
 theme_override_font_sizes/font_size = 12
-text = "W A S D  move      E  handle      1 / 2  set route      F3  telemetry"
+text = "W A S D  move      E  handle      1 / 2  set route      F1  recall thought"
 horizontal_alignment = 1

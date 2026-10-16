@@ -118,7 +118,7 @@ func _run() -> void:
 	t3._on_playback_completed(MorsePlaybackScheduleData.new())
 	t3._on_interacted()
 	if not _a(inspected.size() == 1
-		and inspected[0] == "[WIRE TAKE 1 | COMPLETE | NON-INK BOUNDARY]\n·",
+		and inspected[0] == "%s\n·" % (TapeRegisterController.TAKE_HEADER_FORMAT % [1, TapeRegisterController.STATUS_COMPLETE]),
 		"Interaction emits tape_inspected with a readable non-ink take header and physical ink"): return
 	if not _a(t3.get_interactable() == null,
 		"get_interactable is null on a pure-code instance without crashing"): return

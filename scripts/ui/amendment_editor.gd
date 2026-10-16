@@ -72,7 +72,7 @@ func _on_text_changed(text: String) -> void:
 	_draft = canonical
 	_submitting = false
 	var error := AmendmentText.validation_error(canonical)
-	status.text = "Ready to file exactly: " + canonical if error.is_empty() else error
+	status.text = "To be filed: " + canonical if error.is_empty() else error
 
 func _on_text_submitted(_text: String) -> void:
 	submit_draft()

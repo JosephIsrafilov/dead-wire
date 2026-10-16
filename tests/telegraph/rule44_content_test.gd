@@ -12,7 +12,7 @@ func _run() -> void:
 		"Standing rule distinguishes a request from clearance": ledger.get_ledger_text().contains("not permission") and ledger.get_ledger_text().contains("HOLD unverified"),
 		"Scenario validates": scenario.get_validation_errors().is_empty(),
 		"Existing authority still requires HOLD": scenario.expected_routing_action == "HOLD",
-		"Rule 44 is a fictional company order": ledger.get_ledger_text().contains("fictional Black Creek company order"),
+		"Rule 44 is a division order": ledger.get_ledger_text().contains("Black Creek division order"),
 		"Freight 71 has no booked division clearance": ledger.get_ledger_text().contains("No division clearance is booked for Freight 71 tonight"),
 		"Reveal cues cover exactly thirteen non-space glyphs": scenario.transcript_reveal_cues.size() == 13,
 		"Scenario identity is preserved": scenario.scenario_id == "attention_hold_freight",

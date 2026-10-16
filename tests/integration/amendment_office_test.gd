@@ -46,7 +46,7 @@ func _run() -> void:
 	session.mark_transcript_verified()
 	desk.select_option(0)
 	if not check(editor.call("is_open"), "A later unfinished amendment opens normally"): return
-	session.advance_post_signal(session.commit_deadline_seconds)
+	session.advance_post_signal(session.get_commit_deadline_seconds())
 	if not check(not editor.call("is_open") and desk.get_result_text() == "UNFILED", "Original deadline closes editing into honest unfiled outcome"): return
 	await process_frame
 	await process_frame

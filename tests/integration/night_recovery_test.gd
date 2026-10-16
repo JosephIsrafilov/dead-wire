@@ -51,7 +51,7 @@ func _run() -> void:
 			session.scheduler.advance_time(4.0)
 			_drain_paper(paper)
 			if outcome == "lapsed":
-				session._process(session.commit_deadline_seconds + 0.1)
+				session._process(session.get_commit_deadline_seconds() + 0.1)
 				check(office.copy_commit_desk.get_result_text() == "UNFILED", "Uninspected final copy visibly lapses")
 			else:
 				session.mark_transcript_verified()

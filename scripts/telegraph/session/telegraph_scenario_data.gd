@@ -22,6 +22,9 @@ extends Resource
 ## An empty array keeps the legacy ratio fallback for unmigrated resources.
 @export var transcript_reveal_cues: PackedFloat32Array = PackedFloat32Array()
 @export var commit_options: Array[TelegraphCommitOption] = []
+## Seconds the sender waits after t0 before releasing the line. Negative
+## defers to the session's fallback; zero disables the deadline.
+@export var commit_deadline_seconds: float = -1.0
 @export var commit_lapsed_world_fact: String = ""
 @export var commit_lapsed_knowledge_fact: String = ""
 @export var consequence_event_id: String = ""
@@ -92,6 +95,8 @@ func get_validation_errors() -> PackedStringArray:
 			errors.append("commit_options action_id values must be unique")
 		commit_ids[option.action_id] = true
 
+	if not is_finite(commit_deadline_seconds):
+		errors.append("commit_deadline_seconds must be finite")
 	if consequence_delay_seconds < 0.0 or not is_finite(consequence_delay_seconds):
 		errors.append("consequence_delay_seconds must be non-negative finite")
 	if consequence_hold_seconds < 0.0 or not is_finite(consequence_hold_seconds):

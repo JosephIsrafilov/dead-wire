@@ -23,10 +23,10 @@ func _run() -> void:
 		quit(1)
 		return
 	viewer.open_duration=0.0
-	viewer.open_document("tape_register","STRIP","[WIRE TAKE1]\n.   -\n")
+	viewer.open_document("tape_register","STRIP","— STRIP 1 · ENDED —\n.   -\n")
 	viewer.call("set_text_scale",1.5)
 	check(viewer.body_label.get_theme_font_size("normal_font_size")==24 \
-		and viewer.body_label.text=="[WIRE TAKE1]\n.   -\n","Tape size preserves timing blanks and raw content")
+		and viewer.body_label.text=="— STRIP 1 · ENDED —\n.   -\n","Tape size preserves timing blanks and raw content")
 	viewer.close_document()
 	viewer.open_document("dispatch_ledger","LEDGER","PRINTED RECORD")
 	check(viewer.body_label.get_theme_font_size("normal_font_size")==26,

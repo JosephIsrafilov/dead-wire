@@ -179,7 +179,7 @@ func _test_take_boundaries() -> bool:
 		"Cancelled take retains only its actual fractional interrupted ink"): return false
 	var first_take_copy: Dictionary = segments[0]
 	var cancelled_display: String = tape.get_tape_display_text()
-	if not _a(cancelled_display == "[WIRE TAKE 1 | INTERRUPTED | NON-INK BOUNDARY]\n?",
+	if not _a(cancelled_display == "%s\n?" % (TapeRegisterController.TAKE_HEADER_FORMAT % [1, TapeRegisterController.STATUS_INTERRUPTED]),
 		"Readable take header clearly distinguishes interruption and non-ink boundary"): return false
 	scheduler.advance_time(999.0)
 	if not _a(tape.get_tape_display_text() == cancelled_display and tape.get_record().size() == 1,
@@ -193,7 +193,7 @@ func _test_take_boundaries() -> bool:
 	if not _a(tape.get_record().size() == 2 and tape.get_tape_text() == "?\n—",
 		"Raw strip uses a non-ink newline between takes, never fake timed silence"): return false
 	if not _a(tape.get_tape_display_text() == cancelled_display
-		+ "\n[WIRE TAKE 2 | COMPLETE | NON-INK BOUNDARY]\n—",
+		+ "\n%s\n—" % (TapeRegisterController.TAKE_HEADER_FORMAT % [2, TapeRegisterController.STATUS_COMPLETE]),
 		"Display puts newest ink last with no telegram identity or automatic decoding"): return false
 	if not _a(first_take_copy.interrupted and first_take_copy.events.size() == 1
 		and is_equal_approx(first_take_copy.events[0].duration_seconds, 0.05),
@@ -333,8 +333,8 @@ func _test_current_call_answer_path() -> bool:
 			and is_equal_approx(ink.duration_seconds, source.duration_seconds)
 	if not _a(source_match, "Every telegram event preserves exact completed actual units/seconds after the call"): return false
 	var display := tape.get_tape_display_text()
-	if not _a(display.begins_with("[WIRE TAKE 1 | INTERRUPTED | NON-INK BOUNDARY]\n?\n")
-		and display.contains("[WIRE TAKE 2 | COMPLETE | NON-INK BOUNDARY]\n")
+	if not _a(display.begins_with("%s\n?\n" % (TapeRegisterController.TAKE_HEADER_FORMAT % [1, TapeRegisterController.STATUS_INTERRUPTED]))
+		and display.contains("%s\n" % (TapeRegisterController.TAKE_HEADER_FORMAT % [2, TapeRegisterController.STATUS_COMPLETE]))
 		and not display.contains("baseline_train_17") and not display.contains("CR CR")
 		and not display.contains("TRAIN"), "Call/telegram presentation has chronology but no message names or decoding"): return false
 	director._play_on_wire(director.call_sign)

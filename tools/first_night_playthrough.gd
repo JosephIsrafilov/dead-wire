@@ -131,9 +131,9 @@ func _run() -> void:
 			await _stand()
 			if branch == "lapsed":
 				if capture:
-					await create_timer(office.session_controller.commit_deadline_seconds + 0.1).timeout
+					await create_timer(office.session_controller.get_commit_deadline_seconds() + 0.1).timeout
 				else:
-					office.session_controller._process(office.session_controller.commit_deadline_seconds + 0.1)
+					office.session_controller._process(office.session_controller.get_commit_deadline_seconds() + 0.1)
 				check(office.copy_commit_desk.get_result_text() == "UNFILED", "Unfiled deadline resolves without a selected copy")
 			else:
 				await _interact_at(Vector3(0.45, 0, 0.95), office.copy_commit_desk.get_node("Option2Interactable" if branch == "watcher" else "Option1Interactable"))

@@ -37,13 +37,17 @@ STANDING ORDERS
 
 ROUTING
   Set CLEAR EAST or HOLD using the Dispatch Ledger.
-  Sending a route is not filing a disputed copy.
+  Sending a route is not filing a copy.
 
 READING THE WIRE
   The register strip records marks and pauses,
   not a translation. Use the American Morse card.
+  Wind the register at its side key when the
+  strip slows.
 
-DISPUTED COPY
+FILING
+  Unscheduled copy is filed at the table: as
+  copied, or amended in your own hand.
   AMEND COPY — type the word you intend to file.
   FILE AS COPIED — seal the current handwriting.
   Enter sends your word to file.

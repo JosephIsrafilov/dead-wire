@@ -23,6 +23,10 @@ enum RoutingOutcome {
 signal session_state_changed(new_state: State, previous_state: State)
 signal scenario_loaded(scenario: TelegraphScenarioData)
 signal transmission_started(scenario: TelegraphScenarioData)
+## Elias's inner voice: one glyph of what he HEARS, in message order, as the
+## wire's own timing crosses the end of that letter. The whisper layer's only
+## input; it never learns what the hand writes.
+signal perception_glyph(scenario_id: String, index: int, glyph: String)
 ## t0: the objective signal of the active telegram ended. Exactly once.
 signal transmission_finished(scenario: TelegraphScenarioData)
 ## The last glyph of this sheet was physically written. Exactly once.
@@ -48,6 +52,7 @@ signal deadline_warning(kind: StringName)
 @export var tape_register: TapeRegisterController = null
 @export var world_state: WorldStateStore = null
 ## A commit scenario cannot strand the shift forever if the player walks away.
+## Fallback only: a scenario's authored commit_deadline_seconds wins.
 ## Zero disables the deadline for authored experiments.
 ## Runs from t0 (end of the objective signal) through COPYING, VERIFYING and
 ## AWAITING_COMMIT; inspection never restarts or extends it.
@@ -98,6 +103,11 @@ var _active_schedule: MorsePlaybackScheduleData = null
 ## deadline all read this one clock so there is a single t0.
 var _post_signal_elapsed: float = -1.0
 var _grace_active: bool = false
+## The whisper layer's own schedule: letter-end fractions of the message
+## Elias hears, and the glyph stream, each said exactly once.
+var _perception_fractions: PackedFloat32Array = PackedFloat32Array()
+var _perception_glyphs: PackedStringArray = PackedStringArray()
+var _perception_next: int = 0
 ## One deadline warning per scenario, whichever threshold comes first: an
 ## unfinished-copy grace warning replaces the later commit warning, exactly as
 ## the plan requires. Inspect, resume and stand/return never re-arm it.
@@ -164,13 +174,20 @@ func advance_post_signal(delta: float) -> void:
 
 	# Commit deadline. One warning per scenario: if the grace warning already
 	# spoke, this stays silent and the deadline itself still runs.
-	if _has_commit_options() and not _commit_resolved and commit_deadline_seconds > 0.0:
+	var deadline := get_commit_deadline_seconds()
+	if _has_commit_options() and not _commit_resolved and deadline > 0.0:
 		if not _deadline_warning_fired and commit_warning_seconds > 0.0 \
-				and _post_signal_elapsed >= commit_deadline_seconds - commit_warning_seconds:
+				and _post_signal_elapsed >= deadline - commit_warning_seconds:
 			_deadline_warning_fired = true
 			deadline_warning.emit(WARNING_COMMIT)
-		if _post_signal_elapsed >= commit_deadline_seconds:
+		if _post_signal_elapsed >= deadline:
 			lapse_commit()
+
+## The deadline the sender actually keeps for the loaded scenario.
+func get_commit_deadline_seconds() -> float:
+	if _current_scenario != null and _current_scenario.commit_deadline_seconds >= 0.0:
+		return _current_scenario.commit_deadline_seconds
+	return commit_deadline_seconds
 
 ## Status line for guidance while a deadline warning is live. Empty otherwise.
 func get_deadline_warning_text() -> String:
@@ -179,7 +196,7 @@ func get_deadline_warning_text() -> String:
 	if _state == State.COPYING and _grace_active:
 		return "Finish the copy — the sender is waiting"
 	if not _commit_resolved and _has_commit_options() \
-			and commit_deadline_seconds > 0.0 and _post_signal_elapsed < commit_deadline_seconds \
+			and get_commit_deadline_seconds() > 0.0 and _post_signal_elapsed < get_commit_deadline_seconds() \
 			and _state in [State.COPYING, State.VERIFYING, State.AWAITING_COMMIT]:
 		return "The sender is about to release the line"
 	return ""
@@ -240,6 +257,9 @@ func start_transmission() -> bool:
 		return false
 	# Ownership: only this schedule's completion is the telegram ending.
 	_active_schedule = sched
+	# The whisper follows the same schedule the sounder plays: each letter of
+	# what Elias hears is authorized exactly when the wire finishes it.
+	_prepare_perception(_current_scenario.transmission_data.elias_perception)
 
 	# Elias starts writing as the signal starts arriving, not after it ends.
 	if transcript_paper != null:
@@ -258,6 +278,14 @@ func _on_playback_time_advanced(prev_time: float, curr_time: float) -> void:
 		var total := scheduler.get_total_duration_seconds()
 		if total > 0.0:
 			transcript_paper.set_writing_progress(curr_time / total)
+
+	# The whisper spells what is heard, but only while the active telegram's
+	# own schedule is the one ticking — before any attention-event shortcut.
+	if _state == State.RECEIVING and _active_schedule != null and scheduler != null \
+			and scheduler.get_active_schedule() == _active_schedule:
+		var whisper_total := _active_schedule.total_duration_seconds
+		if whisper_total > 0.0:
+			_advance_perception(curr_time / whisper_total)
 
 	if _state == State.RECEIVING and _current_scenario != null:
 		# A consequence event with the same id is intentionally deferred until the
@@ -279,6 +307,9 @@ func _on_scheduler_completed(schedule: MorsePlaybackScheduleData) -> void:
 		return
 	if _state != State.RECEIVING or _current_scenario == null:
 		return
+	# The whisper finishes its word before t0: letters the clock never crossed
+	# are said now, so the voice is complete when the sender stops.
+	_flush_perception()
 	_active_schedule = null
 
 	# Fallback check for attention event before completion
@@ -461,9 +492,10 @@ func lapse_commit() -> bool:
 	return true
 
 func _is_commit_deadline_expired() -> bool:
-	return commit_deadline_seconds > 0.0 \
+	var deadline := get_commit_deadline_seconds()
+	return deadline > 0.0 \
 		and _post_signal_elapsed >= 0.0 \
-		and _post_signal_elapsed >= commit_deadline_seconds \
+		and _post_signal_elapsed >= deadline \
 		and _state in [State.COPYING, State.VERIFYING, State.AWAITING_COMMIT] \
 		and _has_commit_options() and not _commit_resolved
 
@@ -597,6 +629,7 @@ func reset_session() -> void:
 	_post_signal_elapsed = -1.0
 	_grace_active = false
 	_deadline_warning_fired = false
+	_prepare_perception("")
 
 	if scheduler != null:
 		scheduler.cancel()
@@ -641,6 +674,36 @@ func _record_completion_fact(scenario: TelegraphScenarioData = null) -> void:
 
 func _has_commit_options() -> bool:
 	return _current_scenario != null and not _current_scenario.commit_options.is_empty()
+
+## Builds the whisper layer's schedule: one end fraction per heard letter, in
+## the encoder's own gap rules, plus the glyph stream those fractions name.
+func _prepare_perception(text: String) -> void:
+	_perception_fractions = MorseLetterTiming.letter_end_fractions(text, alphabet)
+	_perception_glyphs = PackedStringArray()
+	for i in range(text.length()):
+		if text[i] != " ":
+			_perception_glyphs.append(text[i])
+	_perception_next = 0
+
+## Says every heard letter whose end the wire's clock has crossed.
+func _advance_perception(ratio: float) -> void:
+	while _perception_next < _perception_fractions.size() \
+			and _perception_fractions[_perception_next] <= ratio + 0.00001:
+		_emit_perception_glyph()
+
+## Says the letters the clock never reached. A cancelled telegram never
+## flushes: only the sender stopping does.
+func _flush_perception() -> void:
+	while _perception_next < _perception_fractions.size():
+		_emit_perception_glyph()
+
+func _emit_perception_glyph() -> void:
+	var glyph := ""
+	if _perception_next < _perception_glyphs.size():
+		glyph = _perception_glyphs[_perception_next]
+	var id := _current_scenario.scenario_id if _current_scenario != null else ""
+	perception_glyph.emit(id, _perception_next, glyph)
+	_perception_next += 1
 
 func _get_world_state() -> WorldStateStore:
 	if world_state != null:

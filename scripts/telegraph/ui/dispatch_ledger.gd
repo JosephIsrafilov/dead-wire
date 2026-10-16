@@ -20,7 +20,7 @@ SPECIAL ORDERS & ROUTING RULES:
    - Do NOT hold on siding track unless express obstruction reported.
 
 2. UNVERIFIED NIGHT FREIGHT:
-   - Rule 44 (fictional Black Creek company order):
+   - Rule 44 (Black Creek division order):
      HOLD unverified night freight until division clearance arrives.
    - An EAST request reports where freight wishes to go; it is not permission.
    - No division clearance is booked for Freight 71 tonight.

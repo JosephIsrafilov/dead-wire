@@ -13,6 +13,17 @@ signal tape_inspected(text: String)
 const TAPE_DOC_ID := "tape_register"
 const TAPE_TITLE := "STATION REGISTER"
 const INCOMPLETE_MARK := "?"
+## Strip language, 1894: takes are "strips" of the record; an interrupted
+## take is broken off, a live one is running. The prefix is a named constant
+## so the office's layout wrapper recognizes strip headers without a magic
+## literal.
+const TAKE_HEADER_PREFIX := "— STRIP "
+const TAKE_HEADER_FORMAT := "— STRIP %d · %s —"
+const STATUS_INTERRUPTED := "BROKEN OFF"
+const STATUS_COMPLETE := "ENDED"
+const STATUS_ACTIVE := "RUNNING"
+## What a slack spring means to the reader: the tail waits under the rollers.
+const SLACK_NOTE := "(strip held under the rollers — wind the register)"
 
 @export var prompt_message: String = "Read Tape Register"
 ## The inking stylus drops onto the tape on every MARK and lifts on every GAP —
@@ -24,9 +35,13 @@ const INCOMPLETE_MARK := "?"
 @export var spool_turn_rate: float = 0.5
 ## Clockwork: the spring runs down over the watch and the spool slows; the
 ## operator winds it at the side key. The RECORD never depends on it — the
-## ink comes from the scheduler — only the mechanism's life does.
+## ink comes from the scheduler — only the mechanism's life does. The
+## clockwork starts with the first playback on the line, not at scene load:
+## PRE_SHIFT silence spends no spring, so the slowdown lines up with the
+## watch's wire time. At the authored 360 s pace the wind prompt comes ~90 s
+## after the first call and slack ~162 s, keeping the hook's take readable.
 signal register_wound()
-@export var spring_run_down_seconds: float = 240.0
+@export var spring_run_down_seconds: float = 360.0
 @export var spring_floor: float = 0.35
 @export var wind_prompt_below: float = 0.75
 const PROMPT_WIND := "Wind the Register"
@@ -37,6 +52,9 @@ var spring_tension: float = 1.0
 ## False once the line has closed for the night: the spool stops.
 var line_live: bool = true
 var _wind_interactable: Interactable = null
+## True once the first playback has run on the connected line: only then does
+## the spring start spending itself.
+var _clockwork_running: bool = false
 
 var _stylus: Node3D = null
 var _stylus_rest_y: float = 0.0
@@ -145,11 +163,14 @@ func reset() -> void:
 	_seconds_per_unit = 0.0
 	_feed_cursors.clear()
 	_stylus_target_y = _stylus_rest_y
+	_clockwork_running = false
 
 func _on_playback_started(_schedule: MorsePlaybackScheduleData) -> void:
 	var events: Array[TapeInkEvent] = []
 	_active_segment = {"number": _segments.size() + 1, "interrupted": false, "complete": false, "events": events}
 	_segments.append(_active_segment)
+	# The first signal on the line starts the mechanism's watch.
+	_clockwork_running = true
 
 func _on_timing_event_started(event: MorseScheduledEvent) -> void:
 	# Controlled hardware fixtures may deliver events without a scheduler start signal.
@@ -194,12 +215,18 @@ func _on_timing_event_finished(event: MorseScheduledEvent) -> void:
 func _process(delta: float) -> void:
 	if _stylus != null:
 		_stylus.position.y = move_toward(_stylus.position.y, _stylus_target_y, stylus_speed * delta)
-	if _connected_scheduler != null and line_live:
+	if _connected_scheduler != null and line_live and _clockwork_running:
 		spring_tension = maxf(spring_tension - delta / maxf(spring_run_down_seconds, 0.01), spring_floor)
 		if _spool != null:
 			_spool.rotate_object_local(Vector3.UP, spool_turn_rate * spring_tension * delta)
 		if _wind_interactable != null:
-			_wind_interactable.enabled = spring_tension < wind_prompt_below
+			_wind_interactable.enabled = needs_winding()
+
+## The clockwork has run down far enough that the side key is due. Mirrors the
+## wind interactable's enable condition, for callers that should not reach into
+## the node tree for it.
+func needs_winding() -> bool:
+	return spring_tension < wind_prompt_below
 
 func wind() -> void:
 	spring_tension = 1.0
@@ -244,9 +271,8 @@ func get_tape_display_text() -> String:
 	# Boundaries describe wire takes, including service calls, not telegram identities or idle time.
 	var takes: PackedStringArray = []
 	for segment in _segments:
-		var status := "INTERRUPTED" if segment.interrupted else ("COMPLETE" if segment.complete else "ACTIVE")
-		takes.append("[WIRE TAKE %d | %s | NON-INK BOUNDARY]\n%s"
-			% [segment.number, status, _render_ink(segment.events)])
+		var status := STATUS_INTERRUPTED if segment.interrupted else (STATUS_COMPLETE if segment.complete else STATUS_ACTIVE)
+		takes.append("%s\n%s" % [TAKE_HEADER_FORMAT % [segment.number, status], _render_ink(segment.events)])
 	return "\n".join(takes)
 
 ## Viewer-facing strip: the paper feeds out only while the clockwork keeps up.
@@ -256,17 +282,17 @@ func get_tape_display_text() -> String:
 func get_tape_text_for_viewer() -> String:
 	var takes: PackedStringArray = []
 	for segment in _segments:
-		var status := "INTERRUPTED" if segment.interrupted else ("COMPLETE" if segment.complete else "ACTIVE")
+		var status := STATUS_INTERRUPTED if segment.interrupted else (STATUS_COMPLETE if segment.complete else STATUS_ACTIVE)
 		var evs: Array[TapeInkEvent] = segment.events
 		var visible_count := mini(int(_feed_cursors.get(segment.number, 0)), evs.size())
 		if visible_count < evs.size():
 			# Real backlog: these recorded marks are still under the rollers.
 			var slice_events: Array[TapeInkEvent] = evs.slice(0, visible_count)
-			takes.append("[WIRE TAKE %d | %s | NON-INK BOUNDARY]\n%s\n[SPRING SLACK — WIND REGISTER TO ADVANCE STRIP]"
-				% [segment.number, status, _render_ink(slice_events)])
+			takes.append("%s\n%s\n%s" % [TAKE_HEADER_FORMAT % [segment.number, status],
+				_render_ink(slice_events), SLACK_NOTE])
 		else:
-			takes.append("[WIRE TAKE %d | %s | NON-INK BOUNDARY]\n%s"
-				% [segment.number, status, _render_ink(evs)])
+			takes.append("%s\n%s" % [TAKE_HEADER_FORMAT % [segment.number, status],
+				_render_ink(evs)])
 	return "\n".join(takes)
 
 func _render_ink(events: Array[TapeInkEvent]) -> String:

@@ -8,6 +8,12 @@ signal event_expired()
 
 @export var max_view_angle_degrees: float = 45.0
 @export var max_distance: float = 10.0
+## The silhouette's AABB is grown by this margin before the frustum test, so
+## a figure a hair outside the frame still counts as watched (conservative
+## = honest: it never pops in or out while nearly visible).
+@export var watch_margin: float = 0.15
+## Fallback silhouette radius when the indicator carries no geometry.
+const FALLBACK_WATCH_RADIUS: float = 0.6
 @export var world_fact_id: StringName = &"window_event_occurred"
 @export var knowledge_fact_id: StringName = &"saw_window_event"
 
@@ -69,6 +75,9 @@ func cancel_pending_appearance() -> void:
 	if _pending_show:
 		reset_state()
 
+## Low-level cone API for fixtures that drive positions and forwards by hand;
+## production observation goes through check_camera, which frames the whole
+## silhouette (see _silhouette_in_frustum) before it grants knowledge.
 func evaluate_observation(camera_global_pos: Vector3, camera_forward: Vector3, is_occluded: bool = false) -> bool:
 	if not is_active or is_observed or is_occluded:
 		return false
@@ -89,27 +98,40 @@ func evaluate_observation(camera_global_pos: Vector3, camera_forward: Vector3, i
 	var max_angle_rad := deg_to_rad(max_view_angle_degrees)
 
 	if angle_rad <= max_angle_rad:
-		is_observed = true
-		var knowledge := _get_knowledge_state()
-		if knowledge != null and not knowledge_fact_id.is_empty():
-			knowledge.learn(knowledge_fact_id)
-		event_observed.emit()
-		return true
+		return _mark_observed()
 
 	return false
+
+## Records the one observation the event will ever make: the knowledge fact
+## and the event_observed signal, in the same order the cone path always used.
+func _mark_observed() -> bool:
+	is_observed = true
+	var knowledge := _get_knowledge_state()
+	if knowledge != null and not knowledge_fact_id.is_empty():
+		knowledge.learn(knowledge_fact_id)
+	event_observed.emit()
+	return true
 
 ## A full-screen UI surface (document, board, cards) hides the world without
 ## cancelling the event: the figure keeps its pending/appearance rules, only the
 ## assignment of knowledge is gated while the player cannot actually see.
+## Observation means the same thing visibility means: the silhouette is in the
+## frame, the view is unobstructed, and the player is not reading a document.
 func check_camera(camera: Camera3D, ui_blocked: bool = false) -> bool:
-	if camera == null or not is_active:
+	if camera == null or not is_active or is_observed:
+		return false
+	# Nothing can be seen that has not actually appeared yet.
+	var indicator := get_visual_indicator()
+	if indicator != null and not indicator.visible:
+		return false
+	if ui_blocked:
+		return false
+	if not _silhouette_in_frustum(camera):
 		return false
 
 	var cam_pos := camera.global_position if camera.is_inside_tree() else camera.position
-	var cam_fwd := -camera.global_transform.basis.z if camera.is_inside_tree() else -camera.transform.basis.z
-
-	# Raycast line-of-sight check
-	var is_occluded := ui_blocked
+	# Raycast line-of-sight to the figure's origin: walls between the player
+	# and the window keep the event pending without granting knowledge.
 	var space_state := get_world_3d().direct_space_state if is_inside_tree() and get_world_3d() != null else null
 	if space_state != null:
 		var target_pos := global_position if is_inside_tree() else position
@@ -129,9 +151,9 @@ func check_camera(camera: Camera3D, ui_blocked: bool = false) -> bool:
 		if not result.is_empty():
 			var hit_collider: Object = result.get("collider", null)
 			if hit_collider != null and hit_collider != self:
-				is_occluded = true
+				return false
 
-	return evaluate_observation(cam_pos, cam_fwd, is_occluded)
+	return _mark_observed()
 
 func _process(delta: float) -> void:
 	# Pending visibility is not time on screen. Do not consume the hold while the
@@ -168,6 +190,15 @@ func _resolve_pending_visibility() -> void:
 		vi.visible = false
 		_pending_hide = false
 
+## Watched means the figure's silhouette touches the camera frustum: the
+## figure exists only between observations, so any part of it on screen —
+## head above the frame edge, arm at the corner — holds appearance and
+## disappearance. The old 45° cone on the origin let the figure blink in and
+## out while fully or partially framed; the frustum test cannot. The test is
+## conservative in the player's favour: the AABB counts as outside only when
+## every corner is beyond one frustum plane. Occlusion is deliberately NOT
+## considered here — walls hiding the figure still hold its state; only the
+## knowledge assignment (check_camera) cares about line of sight.
 func _is_being_watched() -> bool:
 	if not is_inside_tree():
 		return false
@@ -177,12 +208,74 @@ func _is_being_watched() -> bool:
 	var camera := viewport.get_camera_3d()
 	if camera == null or not camera.is_inside_tree():
 		return false
+	return _silhouette_in_frustum(camera)
 
+## The shared silhouette predicate: the figure's whole box — grown by the
+## watch margin — intersects the camera frustum, within max_distance.
+func _silhouette_in_frustum(camera: Camera3D) -> bool:
 	var to_target := global_position - camera.global_position
 	if to_target.length() > max_distance or to_target.length() < 0.001:
 		return false
-	var forward := -camera.global_transform.basis.z
-	return forward.normalized().angle_to(to_target.normalized()) <= deg_to_rad(max_view_angle_degrees)
+
+	var bounds := _watched_aabb()
+	var frustum: Array[Plane] = camera.get_frustum()
+	for plane in frustum:
+		if _aabb_fully_behind_plane(bounds, plane):
+			return false
+	return true
+
+## The world-space box of the whole silhouette — union of every geometry
+## child's AABB, head and hat included — grown by the watch margin. Without
+## geometry, a sphere's box around the figure's position stands in.
+func _watched_aabb() -> AABB:
+	var indicator := get_visual_indicator()
+	if indicator == null:
+		return _fallback_watch_aabb()
+	var bounds := AABB()
+	var found := false
+	for child in _geometry_descendants(indicator, []):
+		var local: AABB = child.get_aabb()
+		if local.size.length_squared() <= 0.000001:
+			continue
+		for corner in _aabb_corners(local):
+			var world_corner: Vector3 = child.global_transform * corner
+			if not found:
+				bounds = AABB(world_corner, Vector3.ZERO)
+				found = true
+			else:
+				bounds = bounds.expand(world_corner)
+	if not found:
+		return _fallback_watch_aabb()
+	return bounds.grow(watch_margin)
+
+func _fallback_watch_aabb() -> AABB:
+	var center: Vector3 = global_position if is_inside_tree() else position
+	return AABB(center - Vector3.ONE * FALLBACK_WATCH_RADIUS,
+		Vector3.ONE * FALLBACK_WATCH_RADIUS * 2.0).grow(watch_margin)
+
+func _geometry_descendants(node: Node, accumulator: Array) -> Array:
+	for child in node.get_children():
+		if child is GeometryInstance3D:
+			accumulator.append(child)
+		if child is Node:
+			_geometry_descendants(child, accumulator)
+	return accumulator
+
+func _aabb_corners(bounds: AABB) -> Array[Vector3]:
+	var corners: Array[Vector3] = []
+	for x in [bounds.position.x, bounds.end.x]:
+		for y in [bounds.position.y, bounds.end.y]:
+			for z in [bounds.position.z, bounds.end.z]:
+				corners.append(Vector3(x, y, z))
+	return corners
+
+## Conservative outside test: the box is behind a frustum plane only when
+## every one of its corners is.
+func _aabb_fully_behind_plane(bounds: AABB, plane: Plane) -> bool:
+	for corner in _aabb_corners(bounds):
+		if not plane.is_point_over(corner):
+			return false
+	return true
 
 func _get_world_state() -> WorldStateStore:
 	if world_state != null:

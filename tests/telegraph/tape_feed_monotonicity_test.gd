@@ -36,13 +36,13 @@ func _test_weakening_spring_never_retracts_visible_ink() -> bool:
 	if not _a(snap.size() == 1 and snap[0].complete and snap[0].events.size() == 9,
 		"The fixture take completes with nine alternating MARK/GAP events"): return false
 	var weak := _parse_takes(_inspect(tape, 0.54))
-	if not _a(weak.size() == 1 and weak[0]["header"].contains("COMPLETE"),
+	if not _a(weak.size() == 1 and weak[0]["header"].contains(TapeRegisterController.STATUS_COMPLETE),
 		"A first read at 0.54 still labels the finished take COMPLETE"): return false
 	# The spring clock keeps running while no new wire events arrive.
 	for _step in 120:
 		tape._process(1.0 / 60.0)
 	var weaker := _parse_takes(_inspect(tape, 0.35))
-	if not _a(weaker.size() == 1 and weaker[0]["header"].contains("COMPLETE"),
+	if not _a(weaker.size() == 1 and weaker[0]["header"].contains(TapeRegisterController.STATUS_COMPLETE),
 		"The later read keeps the COMPLETE boundary metadata"): return false
 	if not _a(weaker[0]["ink"].begins_with(weak[0]["ink"]) and weak[0]["ink"].length() > 0,
 		"Ink already fed out survives a weakening spring: first read is an exact prefix of the second ('%s' then '%s')"
@@ -76,7 +76,7 @@ func _test_full_take_stays_full_while_the_watch_runs_down() -> bool:
 	for _step in 120:
 		tape._process(1.0 / 60.0)
 	var low := _parse_takes(_inspect(tape, 0.35))
-	if not _a(low[0]["ink"] == full[0]["ink"] and not low[0]["slack"] and low[0]["header"].contains("COMPLETE"),
+	if not _a(low[0]["ink"] == full[0]["ink"] and not low[0]["slack"] and low[0]["header"].contains(TapeRegisterController.STATUS_COMPLETE),
 		"A take read in full stays full at 0.35 with no new wire events"): return false
 	var after := tape.get_segment_snapshots()
 	var snapshots_match: bool = after.size() == 1 and after[0].complete and after[0].events.size() == 9
@@ -146,7 +146,7 @@ func _test_new_take_keeps_history_and_reset_clears_the_feed() -> bool:
 	var read := _parse_takes(_inspect(tape, 0.35))
 	if not _a(read.size() == 2 and read[0]["ink"] == "·  ·   ·" and not read[0]["slack"],
 		"A new take never hides the older take's fed-out ink"): return false
-	if not _a(read[1]["header"].contains("INTERRUPTED") and read[1]["slack"],
+	if not _a(read[1]["header"].contains(TapeRegisterController.STATUS_INTERRUPTED) and read[1]["slack"],
 		"The weak take is held under the rollers with its honest interrupted boundary"): return false
 	var snaps := tape.get_segment_snapshots()
 	var interrupted_ink: TapeInkEvent = snaps[1].events[2]
@@ -271,13 +271,13 @@ func _parse_takes(text: String) -> Array[Dictionary]:
 	var ink := ""
 	var slack := false
 	for line in lines:
-		if line.begins_with("[WIRE TAKE"):
+		if line.begins_with(TapeRegisterController.TAKE_HEADER_PREFIX):
 			if not header.is_empty():
 				takes.append({"header": header, "ink": ink, "slack": slack})
 			header = line
 			ink = ""
 			slack = false
-		elif line.begins_with("[SPRING SLACK"):
+		elif line.begins_with(TapeRegisterController.SLACK_NOTE):
 			slack = true
 		else:
 			ink += line

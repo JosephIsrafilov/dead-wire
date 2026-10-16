@@ -28,6 +28,7 @@ var ambience_slider: HSlider = null
 var telegraph_slider: HSlider = null
 var foley_slider: HSlider = null
 var contextual_thoughts_check: CheckButton = null
+var build_footer: Label = null
 
 func _ready() -> void:
 	_find_nodes()
@@ -35,6 +36,10 @@ func _ready() -> void:
 	settings.apply(null)
 	_push_settings_to_controls()
 	_connect_controls()
+	# The build tag is a development marker, not period furniture: players of
+	# a release build never see it.
+	if build_footer != null:
+		build_footer.visible = OS.is_debug_build()
 
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	if options_panel != null:
@@ -44,6 +49,8 @@ func _ready() -> void:
 
 func _find_nodes() -> void:
 	var box := "CenterContainer/VBoxContainer/"
+	if build_footer == null:
+		build_footer = get_node_or_null(box + "FooterLabel") as Label
 	if begin_button == null:
 		begin_button = get_node_or_null(box + "BeginButton") as Button
 	if options_button == null:

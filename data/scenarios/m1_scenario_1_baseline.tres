@@ -24,4 +24,4 @@ attention_event_id = ""
 attention_event_start_time = 0.0
 completion_fact = ""
 requires_transcript_verification = true
-transcript_reveal_cues = PackedFloat32Array(0.05, 0.11, 0.18, 0.25, 0.32, 0.40, 0.47, 0.55, 0.61, 0.68, 0.75, 0.82, 0.88, 0.93, 0.97, 1.0)
+transcript_reveal_cues = PackedFloat32Array(0.022059, 0.088235, 0.147059, 0.191176, 0.25, 0.375, 0.477941, 0.566176, 0.632353, 0.661765, 0.720588, 0.786765, 0.838235, 0.897059, 0.955882, 1.0)

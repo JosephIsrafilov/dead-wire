@@ -555,23 +555,51 @@ func _on_tape_inspected(text: String) -> void:
 		return
 	document_viewer.open_document(TapeRegisterController.TAPE_DOC_ID,
 		TapeRegisterController.TAPE_TITLE, _wrap_tape_text(text),
-		"[E / Esc] Put Down Tape — ? unfinished mark; take labels are not timed ink")
+		"[E / Esc] Put Down Tape — ? marks a broken-off signal")
 
 ## Paper layout inserts line breaks only: every timing column survives.
 ## This helper never treats a GAP as disposable prose whitespace.
+## A break lands on a letter gap of 3+ spaces; only a group wider than the
+## strip is cut mid-letter, exactly as before.
 static func _wrap_tape_text(text: String, columns: int = 40) -> String:
 	var width := maxi(columns, 1)
 	var lines: PackedStringArray = []
 	for original in text.split("\n"):
 		# Take labels are layout metadata, not columns of timed ink.
-		if original.begins_with("[WIRE TAKE") or original.is_empty():
+		if original.begins_with(TapeRegisterController.TAKE_HEADER_PREFIX) or original.is_empty():
 			lines.append(original)
 			continue
-		var index := 0
-		while index < original.length():
-			lines.append(original.substr(index, width))
-			index += width
+		var start := 0
+		while start < original.length():
+			if original.length() - start <= width:
+				lines.append(original.substr(start))
+				break
+			# The latest legal break inside the window: a letter gap. The line
+			# stays as full as the strip allows without ever cutting a mark.
+			var break_at := -1
+			for i in range(start + 1, start + width + 1):
+				if original[i - 1] == " " and _is_letter_gap(original, i - 1):
+					break_at = i
+			if break_at > start:
+				lines.append(original.substr(start, break_at - start))
+				start = break_at
+			else:
+				lines.append(original.substr(start, width))
+				start += width
 	return "\n".join(lines)
+
+## A letter boundary in rendered ink: the space run containing `pos` spans at
+## least 3 columns — the encoder's inter-letter gap of 3 units or wider.
+static func _is_letter_gap(row: String, pos: int) -> bool:
+	if pos < 0 or pos >= row.length() or row[pos] != " ":
+		return false
+	var start := pos
+	while start > 0 and row[start - 1] == " ":
+		start -= 1
+	var end := pos
+	while end < row.length() and row[end] == " ":
+		end += 1
+	return end - start >= 3
 
 ## True while the current session's sheet is still being written: receiving the
 ## signal or finishing the backlog after it.
@@ -816,7 +844,7 @@ func _refresh_guidance() -> void:
 		TelegraphSessionController.State.AWAITING_ROUTE:
 			hint = "Set the route on the east wall board"
 		TelegraphSessionController.State.AWAITING_COMMIT:
-			hint = "At the filing table: AMEND COPY to type a word, or FILE AS COPIED to seal the handwriting"
+			hint = "File the copy at the table by the stove"
 	# A deadline warning is true everywhere the player can be, including behind
 	# an open document: the sender does not wait for the reader.
 	var warning := session_controller.get_deadline_warning_text()

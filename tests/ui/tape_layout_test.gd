@@ -16,6 +16,16 @@ func _run() -> void:
 	if not check(M1OfficeController._wrap_tape_text("·".repeat(41)).replace("\n", "").length() == 41, "No-space fallback cannot drop a mark"): return
 	if not check(M1OfficeController._wrap_tape_text("") == "", "Empty tape stays empty"): return
 	if not check(M1OfficeController._wrap_tape_text("·  —", 0).replace("\n", "") == "·  —", "Invalid columns cannot trap wrapping loop"): return
+	# Letters are never split across rows while a letter gap (3+ spaces) can
+	# carry the break; a mid-mark cut is only the last resort.
+	var letter_row := "·   ".repeat(9) + "· · · ·" + "   ·"
+	var wrapped_letter := M1OfficeController._wrap_tape_text(letter_row, 40)
+	var letter_intact := false
+	for line in wrapped_letter.split("\n"):
+		if line.contains("· · · ·"):
+			letter_intact = true
+	if not check(letter_intact and wrapped_letter.replace("\n", "") == letter_row,
+		"A letter straddling the strip width stays whole when a letter gap can carry the break"): return
 	var viewer := load("res://scenes/ui/document_viewer.tscn").instantiate() as DocumentViewer
 	root.add_child(viewer)
 	await process_frame
@@ -27,12 +37,12 @@ func _run() -> void:
 	if not check(viewer.body_label.autowrap_mode == TextServer.AUTOWRAP_OFF, "Tape never receives lossy prose wrapping from UI"): return
 	if not check(not viewer.body_label.fit_content and viewer.panel_container.size.y <= 520, "Long tape stays in a bounded scrollable paper surface"): return
 	if not check(viewer.has_method("show_latest_tape"), "Tape inspection can locate latest delivered ink"): return
-	var displayed := M1OfficeController._wrap_tape_text("[WIRE TAKE 1 | COMPLETE | NON-INK BOUNDARY]\n" + "·".repeat(70))
-	if not check(displayed.begins_with("[WIRE TAKE 1 | COMPLETE | NON-INK BOUNDARY]\n"), "Presentation boundary labels are not split into fake ink lines"): return
+	var strip_header := TapeRegisterController.TAKE_HEADER_FORMAT % [1, TapeRegisterController.STATUS_COMPLETE]
+	var displayed := M1OfficeController._wrap_tape_text(strip_header + "\n" + "·".repeat(70))
+	if not check(displayed.begins_with(strip_header + "\n"), "Presentation boundary labels are not split into fake ink lines"): return
 	root.size = Vector2i(1280, 720)
 	var wide_row := "·  —".repeat(10)
-	var header := "[WIRE TAKE 1 | COMPLETE | NON-INK BOUNDARY]"
-	var sample := header + "\n" + wide_row + "\n" + wide_row
+	var sample := strip_header + "\n" + wide_row + "\n" + wide_row
 	var mono: Font = DocumentViewer.MORSE_FONT
 	for scale in [1.0, 1.2, 1.4, 1.5]:
 		viewer.open_document("tape_register", "STATION REGISTER", sample)

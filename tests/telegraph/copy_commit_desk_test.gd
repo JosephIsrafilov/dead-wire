@@ -34,7 +34,7 @@ func _run() -> void:
 
 	# Park the clock exactly on the deadline, then express intent through the
 	# desk's own API (same path _input uses) before the next process tick.
-	session._post_signal_elapsed = session.commit_deadline_seconds
+	session._post_signal_elapsed = session.get_commit_deadline_seconds()
 	var stamp_player := office.get_node("OfficeFoley/Stamp") as AudioStreamPlayer3D
 	var accepted_events: Array[StringName] = []
 	desk.commit_accepted.connect(func(id: StringName) -> void: accepted_events.append(id))
@@ -130,7 +130,7 @@ func _run() -> void:
 	world.reset_for_new_game()
 	session = office.session_controller
 	desk = office.copy_commit_desk
-	session._post_signal_elapsed = session.commit_deadline_seconds - 0.5
+	session._post_signal_elapsed = session.get_commit_deadline_seconds() - 0.5
 	if not assert_condition(desk.commit_option(&"amend_copy"), "Intent before the deadline opens editing"): return
 	office.amendment_editor.correction.text = "WATER"
 	office.amendment_editor.correction.text_changed.emit("WATER")

@@ -173,8 +173,10 @@ func _init() -> void:
 	# silently choosing either copy. The clock starts at t0.
 	world.reset_for_new_game()
 	knowledge.reset_for_new_game()
-	controller.commit_deadline_seconds = 0.5
-	controller.load_scenario(scen3)
+	# The hook authors its own deadline; a fast copy keeps this branch short.
+	var scen3_fast: TelegraphScenarioData = scen3.duplicate()
+	scen3_fast.commit_deadline_seconds = 0.5
+	controller.load_scenario(scen3_fast)
 	key.press()
 	scheduler.advance_time(4.0)
 	if not assert_condition(controller.get_state() == TelegraphSessionController.State.COPYING, "Automatic timeout branch starts in COPYING"): return
@@ -214,7 +216,7 @@ func _init() -> void:
 	scheduler.advance_time(4.0)
 	_drain_paper(paper)
 	controller.mark_transcript_verified()
-	controller.advance_post_signal(controller.commit_deadline_seconds + 0.1)
+	controller.advance_post_signal(controller.get_commit_deadline_seconds() + 0.1)
 	if not assert_condition(controller.get_state() == TelegraphSessionController.State.CONSEQUENCE, "Expired deadline resolved the slot"): return
 	if not assert_condition(not controller.submit_amendment("WATER"), "Late input cannot file after the deadline"): return
 	if not assert_condition(not world.has_fact("core_hook_filed_water"), "Rejected late input leaves no fact"): return
@@ -306,7 +308,7 @@ func _init() -> void:
 	scheduler.advance_time(4.0)
 	_drain_paper(paper)
 	controller.mark_transcript_verified()
-	controller.advance_post_signal(controller.commit_deadline_seconds - controller.commit_warning_seconds + 0.1)
+	controller.advance_post_signal(controller.get_commit_deadline_seconds() - controller.commit_warning_seconds + 0.1)
 	if not assert_condition(warnings.count(TelegraphSessionController.WARNING_COMMIT) == 1, "Commit warning fires exactly once"): return
 	controller.advance_post_signal(controller.commit_warning_seconds)
 	if not assert_condition(warnings.count(TelegraphSessionController.WARNING_COMMIT) == 1, "Warning is not repeated on later ticks"): return
@@ -333,11 +335,11 @@ func _init() -> void:
 	if not assert_condition(controller._grace_active == false, "Completing the copy cancels the grace"): return
 	# Past the commit-warning threshold: the scenario already had its warning.
 	# The clock is cumulative — advance only the remaining distance.
-	var commit_warn_at: float = controller.commit_deadline_seconds - controller.commit_warning_seconds + 0.1
+	var commit_warn_at: float = controller.get_commit_deadline_seconds() - controller.commit_warning_seconds + 0.1
 	controller.advance_post_signal(maxf(commit_warn_at - controller.get_post_signal_elapsed(), 0.0))
 	if not assert_condition(warnings.size() == 1, "The commit warning stays silent after the grace warning (one per scenario)"): return
 	if not assert_condition(controller.get_deadline_warning_text().begins_with("The sender is about to release the line"), "The live status names the deadline that still runs"): return
-	var commit_expire_at: float = controller.commit_deadline_seconds + 0.1
+	var commit_expire_at: float = controller.get_commit_deadline_seconds() + 0.1
 	controller.advance_post_signal(maxf(commit_expire_at - controller.get_post_signal_elapsed(), 0.0))
 	if not assert_condition(controller.get_state() == TelegraphSessionController.State.CONSEQUENCE, "The commit deadline itself still runs and lapses"): return
 

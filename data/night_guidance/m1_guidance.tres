@@ -10,6 +10,7 @@ entries = Array[Dictionary]([{"id": &"entry", "text": "Lamp first. Then the chai
 {"id": &"read_copy", "text": "The copy is ready. I should read it.", "delay": 2.0, "duration": 6.0, "once": true},
 {"id": &"route", "text": "Orders are in the ledger. Routes go through the wall board.", "delay": 2.0, "duration": 6.0, "once": true},
 {"id": &"compare", "text": "I can compare the strip with the Morse card before the next call.", "delay": 2.0, "duration": 6.0, "once": true},
+{"id": &"wind", "text": "The register is slowing. I should wind it before the next call.", "delay": 1.0, "duration": 6.0, "once": true},
 {"id": &"filing", "text": "The filing table can seal this copy or record my amendment.", "delay": 2.0, "duration": 6.0, "once": true},
 {"id": &"dawn", "text": "The line is closed. Read the handover, then leave through the south door.", "delay": 2.0, "duration": 6.0, "once": true}])
 automatic_interval = 12.0

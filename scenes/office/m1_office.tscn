@@ -59,6 +59,8 @@
 
 [ext_resource type="Script" path="res://scripts/office/night_guidance_controller.gd" id="guidance"]
 
+[ext_resource type="Script" path="res://scripts/ui/murmur_caption.gd" id="murmur"]
+
 [sub_resource type="BoxShape3D" id="SeatInteract"]
 size = Vector3(0.52, 0.76, 0.52)
 
@@ -803,3 +805,8 @@ script = ExtResource("42_foley")
 [node name="NightGuidance" type="CanvasLayer" parent="."]
 layer = 4
 script = ExtResource("guidance")
+
+[node name="MurmurCaption" type="CanvasLayer" parent="." node_paths=PackedStringArray("session")]
+layer = 4
+script = ExtResource("murmur")
+session = NodePath("../TelegraphSessionController")

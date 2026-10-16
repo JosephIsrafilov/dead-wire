@@ -202,7 +202,10 @@ func _run() -> void:
 	# (R8) A warning on a busy wire is deferred, never played over traffic, and
 	# is dropped once its slot resolves.
 	if not assert_condition(director._play_on_wire("E") > 0.0, "A service signal occupies the wire for the deferral case"): return
-	session.advance_post_signal(10.15)
+	# The warning rides the authored commit deadline (scenario data, T1), so the
+	# deferral case cranks the shared clock to that threshold, plus 0.15 s.
+	var warning_due_at := session.get_commit_deadline_seconds() - session.commit_warning_seconds
+	session.advance_post_signal(warning_due_at - 10.0 + 0.15)
 	if not assert_condition(director._pending_warning != &"", "A warning on a busy wire is deferred, not played over traffic"): return
 	if not assert_condition(session.submit_amendment("WATER"), "Final message accepts an authored commit inside the deadline"): return
 	if not assert_condition(session.get_state() == TelegraphSessionController.State.CONSEQUENCE, "Final message enters its consequence beat"): return

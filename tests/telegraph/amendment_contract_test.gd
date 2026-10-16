@@ -57,7 +57,7 @@ func _run() -> void:
 	session.load_scenario(scenario)
 	session._state = TelegraphSessionController.State.VERIFYING
 	session.mark_transcript_verified()
-	session._post_signal_elapsed = session.commit_deadline_seconds
+	session._post_signal_elapsed = session.get_commit_deadline_seconds()
 	var facts_before := world.snapshot()
 	if not check(not session.submit_amendment("WAITER") and world.snapshot() == facts_before, "Correction at exact original deadline changes no facts"): return
 	for word in ["A", "A".repeat(24), "WATCHER", "UNLISTED"]:
