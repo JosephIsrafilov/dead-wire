@@ -9,8 +9,9 @@ operator in 1894; the core hook: you hear one thing, your hand writes another.
 ## Commands
 
 ```bash
-# Full regression (38 suites / 1915 assertions at 2026-09-27; MUST be green, counts never drop)
+# Full regression (98 suites / 2994 assertions at 2026-10-16; MUST be green, counts never drop)
 bash tools/run_all_tests.sh
+# Windows: GODOT_BIN="/c/Users/YUSIF/Desktop/Godot_v4.7.1-stable_win64.exe/Godot_v4.7.1-stable_win64_console.exe" bash tools/run_all_tests.sh
 
 # Focused suite
 godot --headless --audio-driver Dummy --path . --script tests/telegraph/<suite>_test.gd
@@ -28,6 +29,7 @@ godot --headless --path . --import
 
 # Lint production scripts (tests/tools are exempt — established style)
 .venv-tools/bin/gdlint scripts/
+# Windows: .venv-tools/Scripts/gdlint.exe scripts/
 
 # Vision check via glm-5.3-flash (never trust a headless result as visual acceptance)
 python3 tools/vision_check.py <image.png> ["question"]

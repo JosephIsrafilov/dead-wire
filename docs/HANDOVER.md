@@ -3,6 +3,10 @@
 Last updated: 2026-09-27. Audience: any model or person picking up the project cold.
 Docs are written in Russian, code and code comments in English. Keep that split.
 
+## Checkpoint 2026-10-16 — Фаза 1: хук читаем
+
+Фаза 1 (T1–T6 + интеграционные хвосты) выполнена на HEAD `c35c612`, не запушена. T1 — дедлайн хука 55 с в `.tres`. T2 — cues трёх сценариев выровнены по концам букв (`MorseLetterTiming`), хвост WATCHER спешит (0.325 с/глиф против 0.887 с у честной копии). T3 — пружина регистра стартует с первого вызова и идёт 360 с, есть `needs_winding()` и обучение заводу (duty sheet + мысль). T4 — шёпот Элиаса: сигнал `perception_glyph` и `MurmurCaption`, «w · a · t · e · r» при WATCHER на листе. T5 — нейтральные тексты эпохи, каналы текста разнесены, перенос ленты по гэпам. T6 — фигура в окне: видимость и наблюдение считают по frustum силуэта (AABB + margin). Хвосты: интеграционный тест проводки шёпота в сцене и согласование `check_camera` с frustum. Полный прогон: **98 suites / 2994 assertions / 0 FAIL**, lint чистый, boot exit 0. Не проверено: оконные прогоны, человеческий плейтест; аудио-шёпота нет (только текст). Источники: `docs/reviews/2026-10-16_SENIOR_REVIEW.md`, `docs/plans/next/PHASE1_HOOK_LEGIBILITY_PROMPT.md`, `docs/plans/next/PHASE1_CLOSEOUT_PROMPT.md`.
+
 ## Checkpoint 2026-10-12 (позже) — crash-review fix session: applicability подтверждена, краш НЕ исправлен
 
 Отчёт: `docs/research/first_night_2026-10-12_beta_review_finish/RESULT.md`.
