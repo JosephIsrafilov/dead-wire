@@ -316,8 +316,8 @@ Verify an export with `godot --headless --main-pack <pck> --quit-after 120 res:/
 11. **`vision_check.py` is machine-specific.** It reads provider keys from the owner's `~/.config/opencode/`
     and `~/.local/share/opencode/`. Elsewhere it has no targets; skip it and review the frames yourself.
 12. **System Python has no PIL/numpy** (PEP 668). Use `.venv-tools/bin/python`, and never `pip install` system-wide.
-13. **`rewrite.py` at the repo root is dangerous.** It overwrites the wall nodes of `m1_office.tscn` with stale values.
-    Never run it. Its deletion is WS1.8, pending the owner's OK.
+13. **`rewrite.py` at the repo root was dangerous** (it overwrote the wall nodes of `m1_office.tscn`
+    with stale values). Removed 2026-10-16 by ROADMAP 0.2; the commit hash is in the ROADMAP cycle journal.
 14. **GDScript lambdas capture `int` by value.** Use arrays for counters in signal lambdas.
 15. **Multiline lambdas inside call arguments** fail to parse. Use named functions.
 16. **Arm rendering**:
