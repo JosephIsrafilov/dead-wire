@@ -20,6 +20,7 @@ correct_world_fact = "train_17_routed_clear"
 incorrect_world_fact = "train_17_held_in_error"
 routing_lapsed_world_fact = "train_17_no_order_sent"
 routing_lapsed_knowledge_fact = "lapsed_baseline_train_17"
+misroute_wire_signal = "WHERE IS 17"
 attention_event_id = ""
 attention_event_start_time = 0.0
 completion_fact = ""

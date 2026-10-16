@@ -23,6 +23,10 @@ const OUTCOME_IDS := [
 ## resources may leave these empty; M1 routing scenarios fill them.
 @export var routing_lapsed_world_fact: String = ""
 @export var routing_lapsed_knowledge_fact: String = ""
+## The wire's answer to this order being misrouted (ROADMAP 2.4): played once
+## during the NEXT slot's waiting stretch, armed only by incorrect_world_fact.
+## Must ride the M1 alphabet; validated by the closing/misroute tests.
+@export var misroute_wire_signal: String = ""
 @export var attention_event_id: String = ""
 @export var attention_event_start_time: float = 0.0
 @export var completion_fact: String = ""

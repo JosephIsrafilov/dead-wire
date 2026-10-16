@@ -73,6 +73,11 @@ var foreign_traffic_played: bool = false
 @export var route_nag_interval_seconds: float = 15.0
 @export var default_route_action: String = "NO ORDER"
 
+## Earliest second of the NEXT waiting stretch when a misrouted order's wire
+## answer may ride (ROADMAP 2.4). It waits out a busy wire and a hush rather
+## than cutting either; nothing about it extends a deadline.
+@export var misroute_signal_after_seconds: float = 6.0
+
 ## Station time targets per plan §8: the director owns the night's clock.
 ## Stage events set targets; the display chases them monotonically at a
 ## bounded speed. Nothing here snaps, and the hands never run backward.
@@ -131,6 +136,9 @@ var _compiler := MorseScheduleCompiler.new()
 ## A deadline warning waiting for the wire to free up. Never extends anything;
 ## dropped the moment the situation it described is gone.
 var _pending_warning: StringName = &""
+## The previous slot's misroute answer, armed only by its recorded world fact
+## and spoken once during this slot's waiting stretch (ROADMAP 2.4).
+var _misroute_signal_text: String = ""
 ## Post-signal time of the last nag, so a warning landing in the same breath as
 ## a nag does not rattle the sounder twice for one reminder.
 var _last_nag_elapsed: float = -1.0
@@ -281,6 +289,7 @@ func _advance_step(delta: float) -> void:
 		Phase.WAITING:
 			_phase_timer += delta
 			_maybe_foreign_traffic()
+			_maybe_misroute_signal()
 			if _phase_timer >= _current_wait_seconds():
 				_begin_call_cycle()
 		Phase.CALLING:
@@ -319,6 +328,46 @@ func _maybe_foreign_traffic() -> void:
 	if schedule == null or schedule.total_duration_seconds > remaining - 3.0:
 		return
 	foreign_traffic_played = _play_on_wire(foreign_traffic_text) > 0.0
+
+## The previous slot's misrouted order gets its answer on the wire in THIS
+## waiting stretch — armed only by the recorded world fact, so the fact has a
+## consumer the same night (ROADMAP 2.4, review §11 A2). A stale arm never
+## survives into a later slot.
+func _arm_misroute_signal(index: int) -> void:
+	_misroute_signal_text = ""
+	if office == null or index <= 0:
+		return
+	var list := office.get_scenario_list()
+	if index - 1 >= list.size():
+		return
+	var previous: TelegraphScenarioData = list[index - 1]
+	if previous == null or previous.misroute_wire_signal.is_empty() \
+			or previous.incorrect_world_fact.is_empty():
+		return
+	var world := _world_state()
+	if world == null:
+		return
+	if bool(world.get_fact(StringName(previous.incorrect_world_fact), false)):
+		_misroute_signal_text = previous.misroute_wire_signal
+
+## Speaks the armed misroute answer once: no earlier than the sixth second of
+## the wait, never over another take, never inside a hush, and only while the
+## night is still waiting — a critical copy is reception, and reception owns
+## the wire by construction (plus the 2.1 guard).
+func _maybe_misroute_signal() -> void:
+	if _misroute_signal_text.is_empty() or _phase_timer < misroute_signal_after_seconds:
+		return
+	if not _wire_idle() or _hush_active():
+		return
+	var text := _misroute_signal_text
+	_misroute_signal_text = ""
+	_play_on_wire(text)
+
+func _hush_active() -> bool:
+	if office == null:
+		return false
+	var unease := office.get_node_or_null("UneaseDirector") as UneaseDirector
+	return unease != null and unease.is_hushed
 
 ## The one deliberate act the player makes before the night takes over.
 func open_line() -> bool:
@@ -407,6 +456,7 @@ func _advance_to_slot(index: int) -> void:
 	_last_nag_elapsed = -1.0
 	_last_warning_elapsed = -1.0
 	_pending_warning = &""
+	_arm_misroute_signal(index)
 	if office != null:
 		office.load_scenario_by_index(_slot_index)
 	_set_phase(Phase.WAITING)
