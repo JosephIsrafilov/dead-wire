@@ -12,8 +12,8 @@
 **Platform:** PC  
 **Target Duration:** 3–4 hours  
 **Structure:** 6 nights + daytime investigation  
-**Setting:** American West, April 1894  
-**Disaster Night:** October 14, 1889  
+**Setting:** American West, April 1890  
+**Disaster Night:** October 14, 1885  
 
 ---
 
@@ -183,7 +183,7 @@ The unusual must remain unusual.
 
 ## 3.6 Procedural Realism
 
-Telegraph work, railroad procedure, documents, equipment, Morse timing, routing, office behavior, and communication should feel believable for 1894.
+Telegraph work, railroad procedure, documents, equipment, Morse timing, routing, office behavior, and communication should feel believable for 1890.
 
 Historical realism exists to support immersion and tension.
 
@@ -228,7 +228,7 @@ Possible activities:
 - speak with survivors or company-linked characters;
 - recover evidence;
 - trace contradictions;
-- build knowledge about the 1889 disaster.
+- build knowledge about the 1885 disaster.
 
 The daytime sections broaden context and provide investigative anchors.
 
@@ -1031,7 +1031,7 @@ escalation 1→6) — not its jumpscare economy, animatronic threat, or fail-sta
 
 # 33. PROJECT COURSE IN ONE PARAGRAPH
 
-DEAD WIRE is a 3–4 hour first-person psychological horror game set in 1894 about telegraph operator Elias Crane investigating a railroad-town catastrophe while working night shifts in an isolated telegraph office. The player receives objective American Morse signals, but Elias's perception and written transcription gradually diverge from reality. The player must divide attention between telegraph work, documents, routing information, the door, the window, and environmental sounds, while learning enough Morse to verify Elias independently. Mistakes usually become persistent story consequences rather than game-over states. Daytime investigation provides physical evidence and objective anchors, while nighttime telegraph work creates procedural psychological horror. The entire production currently focuses on proving this loop in the M1 Office Prototype before expanding the world or story.
+DEAD WIRE is a 3–4 hour first-person psychological horror game set in 1890 about telegraph operator Elias Crane investigating a railroad-town catastrophe while working night shifts in an isolated telegraph office. The player receives objective American Morse signals, but Elias's perception and written transcription gradually diverge from reality. The player must divide attention between telegraph work, documents, routing information, the door, the window, and environmental sounds, while learning enough Morse to verify Elias independently. Mistakes usually become persistent story consequences rather than game-over states. Daytime investigation provides physical evidence and objective anchors, while nighttime telegraph work creates procedural psychological horror. The entire production currently focuses on proving this loop in the M1 Office Prototype before expanding the world or story.
 
 ---
 
