@@ -155,7 +155,13 @@ func _run() -> void:
 		await create_timer(0.8).timeout
 		await _aim(office.window_observation)
 		await _shot("07_window")
-		await create_timer(15.0).timeout
+		# Wait for the consequence to actually finish, with a ceiling. A fixed
+		# sleep here was a magic number that happened to be shorter than the
+		# cloud branch's real duration, so the exit checks ran while the night
+		# was still in its consequence and reported five failures that were
+		# really one too-eager wait.
+		var finished := await _until_consequence_complete(CONSEQUENCE_WAIT_SECONDS)
+		check(finished, "The final consequence reaches its own end within %.0f s" % CONSEQUENCE_WAIT_SECONDS)
 	else:
 		office.session_controller.advance_consequence(1.0)
 		await process_frame
@@ -199,6 +205,26 @@ func _run() -> void:
 	await process_frame
 	print("PLAYTHROUGH: %d failures; %d screenshots" % [failures, screenshots])
 	quit(1 if failures else 0)
+
+## Generous ceiling for one consequence beat. The cloud branch's own authored
+## timing is delay + hold + fade, all of it data; this only has to be larger
+## than the largest authored night, and it is checked rather than slept through.
+const CONSEQUENCE_WAIT_SECONDS: float = 40.0
+
+## Polls the session for the observable end of the consequence: the session has
+## left CONSEQUENCE and the director is closing or done. Returns false on
+## timeout so the caller can FAIL honestly instead of continuing past a night
+## that never finished.
+func _until_consequence_complete(limit_seconds: float) -> bool:
+	var elapsed := 0.0
+	while elapsed < limit_seconds:
+		var state := office.session_controller.get_state()
+		if state != TelegraphSessionController.State.CONSEQUENCE \
+				and office.shift_director.get_phase() in [ShiftDirector.Phase.CLOSING, ShiftDirector.Phase.SHIFT_OVER]:
+			return true
+		await create_timer(0.1).timeout
+		elapsed += 0.1
+	return false
 
 func _until_call() -> void:
 	var deadline := Time.get_ticks_msec() + 60000

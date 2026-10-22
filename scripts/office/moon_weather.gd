@@ -63,8 +63,31 @@ func begin_dawn() -> void:
 ## An authored cloud shadow (the moon_cloud consequence): the same dim a
 ## natural cloud brings, held for the given seconds. Light only — no figure,
 ## no objects, nothing in the room to explain (GDD §10).
+##
+## The shadow does not simply vanish when the hold runs out. It lifts: the dim
+## falls to zero over `dim_fade_seconds`, the same time it took to arrive, so a
+## consequence that happens to be the last thing before dawn does not snap the
+## moonlight back to full in one frame.
 func force_cloud(hold_seconds: float) -> void:
 	_cloud_left = maxf(_cloud_left, maxf(hold_seconds, 0.0))
+	_consequence_cloud = true
+	_consequence_done = false
+
+## True while an authored cloud consequence is still visibly running: the hold
+## has not run out, or its shadow has not finished lifting.
+##
+## The office reads this to decide whether a light-only consequence has
+## completed. It must not be "is the moon dimmed right now" — an unrelated
+## natural cloud passing at the same moment would then hold the consequence
+## open, and a consequence that never completes strands the whole night.
+func is_consequence_running() -> bool:
+	return _consequence_cloud and not _consequence_done
+
+## The authored consequence has finished lifting. Called once by advance().
+signal consequence_finished()
+
+var _consequence_cloud: bool = false
+var _consequence_done: bool = false
 
 ## Separated from _process so tests can drive the sky deterministically.
 func advance(delta: float) -> void:
@@ -79,6 +102,12 @@ func advance(delta: float) -> void:
 			_until_cloud = _rng.randf_range(cloud_interval_min, cloud_interval_max)
 	var target := dim_depth if is_dimmed_now() and not _dawn_running else 0.0
 	dim = move_toward(dim, target, delta * dim_depth / maxf(dim_fade_seconds, 0.01))
+	if _consequence_cloud and not _consequence_done and _cloud_left <= 0.0 and dim <= 0.001:
+		# The authored shadow is gone AND the light is back. That is the one
+		# moment the consequence can honestly be called finished.
+		_consequence_done = true
+		_consequence_cloud = false
+		consequence_finished.emit()
 	if _dawn_running:
 		dawn = minf(dawn + delta / maxf(dawn_seconds, 0.01), 1.0)
 	if moon_light != null:

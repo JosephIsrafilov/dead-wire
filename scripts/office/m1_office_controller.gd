@@ -146,6 +146,8 @@ func _bind_signals() -> void:
 		window_observation = get_node_or_null("WindowObservationEvent") as AttentionObservationTarget
 	if moon_weather == null:
 		moon_weather = get_node_or_null("MoonWeather") as MoonWeather
+	if moon_weather != null and not moon_weather.consequence_finished.is_connected(_on_moon_consequence_finished):
+		moon_weather.consequence_finished.connect(_on_moon_consequence_finished)
 	if window_observation != null:
 		if not window_observation.visibility_started.is_connected(_on_consequence_visibility_started):
 			window_observation.visibility_started.connect(_on_consequence_visibility_started)
@@ -460,6 +462,17 @@ func _on_consequence_started(event_id: String, hold_seconds: float) -> void:
 		# A cloud crosses the moon: the light goes down and comes back, and
 		# there is nothing standing in the window and nothing to explain.
 		moon_weather.force_cloud(maxf(hold_seconds, 0.0))
+		# The cloud IS the visible consequence, and it has its own ending: the
+		# shadow lifts and the office says so. Without this the session waited
+		# on the window figure's visibility fallback — a timer that has nothing
+		# to do with a cloud — and the night could outlast the shift.
+		if session_controller != null:
+			session_controller.notify_consequence_visible()
+
+## The cloud shadow has finished lifting: the light-only consequence is over.
+func _on_moon_consequence_finished() -> void:
+	if session_controller != null:
+		session_controller.notify_consequence_expired()
 
 func _on_consequence_visibility_started() -> void:
 	if session_controller != null:
