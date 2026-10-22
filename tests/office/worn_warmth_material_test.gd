@@ -25,11 +25,13 @@ func _run() -> void:
 			return
 		if not check(material.albedo_texture.get_size() == Vector2(128, 128),
 				"%s uses the 128px grid" % names[i]): return
-		if not check(material.texture_filter == BaseMaterial3D.TEXTURE_FILTER_NEAREST,
-				"%s uses nearest filtering" % names[i]): return
+		if not check(material.texture_filter == (BaseMaterial3D.TEXTURE_FILTER_NEAREST_WITH_MIPMAPS
+				if i < 2 else BaseMaterial3D.TEXTURE_FILTER_NEAREST),
+				"%s uses nearest filtering with minification for room surfaces" % names[i]): return
 		if not check(not material.normal_enabled, "%s has no new normal map" % names[i]): return
 		var image := material.albedo_texture.get_image()
 		image.convert(Image.FORMAT_RGB8)
+		image.clear_mipmaps()
 		var quantized := true
 		for byte in image.get_data():
 			var level := int(round(float(byte) * 31.0 / 255.0))
