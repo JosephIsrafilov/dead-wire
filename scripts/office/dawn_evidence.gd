@@ -2,14 +2,35 @@ class_name DawnEvidence
 extends Node3D
 
 ## A physical morning document left behind after the last telegram.
-## WorldState selects the copy actually filed during this watch; knowledge
-## records whether Elias inspected it. Neither confirms the message's meaning.
+## Elias's paper reads ONLY KnowledgeState (review §11 B11): what he filed,
+## what he remembers, what he watched — never the objective world. The world
+## may know more than he does; this sheet may not.
 
 signal evidence_revealed(variant_id: StringName)
 signal evidence_inspected(text: String)
 
 @export var prompt_message: String = "Read the Night Handover"
-@export var world_state: WorldStateStore = null
+@export var knowledge_state: KnowledgeStateStore = null
+
+## Hook knowledge keys this paper reads. A single fact-key registry arrives
+## with ROADMAP 4.4; until then they live here as named constants, guarded by
+## the data-source test.
+const KNOW_AMENDMENT_ENTERED: StringName = &"amendment_entered_core_hook"
+const KNOW_SEALED_HEARD: StringName = &"committed_water_core_hook"
+const KNOW_FILED_AS_WRITTEN: StringName = &"committed_watcher_core_hook"
+const KNOW_LAPSED: StringName = &"core_hook_commit_lapsed"
+const KNOW_FILED_WORD: StringName = &"filed_word_core_hook"
+const KNOW_SAW_WINDOW: StringName = &"saw_window_event"
+
+## Elias's own margin note, added only when his record says he watched the
+## window during the unscheduled call. The note records the looking, never a
+## confirmation — horror stays below the proof threshold (review §11 A4).
+const WINDOW_MARGIN_NOTE: String = """
+
+
+NOTE IN THE MARGIN (LATER HAND):
+Watched the window on the unscheduled call.
+What the glass held is not written here."""
 
 const VARIANT_WATER: StringName = &"water"
 const VARIANT_WATCHER: StringName = &"watcher"
@@ -75,29 +96,29 @@ func reset_for_new_watch() -> void:
 	_update_interaction()
 
 func _read_variant() -> StringName:
-	var world := _get_world_state()
-	if world != null:
-		if world.get_fact(&"core_hook_amended_wrong", false) == true:
-			return VARIANT_AMENDED
-		if world.get_fact(&"core_hook_filed_water", false) == true:
+	var knowledge := _get_knowledge_state()
+	if knowledge != null:
+		# Sealing the heard copy outranks the plain amendment record: both
+		# facts are learned on a true-word correction.
+		if knowledge.knows(KNOW_SEALED_HEARD):
 			return VARIANT_WATER
-		if world.get_fact(&"core_hook_filed_watcher", false) == true:
+		if knowledge.knows(KNOW_AMENDMENT_ENTERED):
+			return VARIANT_AMENDED
+		if knowledge.knows(KNOW_FILED_AS_WRITTEN):
 			return VARIANT_WATCHER
-		if world.get_fact(&"core_hook_commit_lapsed", false) == true:
+		if knowledge.knows(KNOW_LAPSED):
 			return VARIANT_LAPSED
 	return VARIANT_LAPSED
 
 func _build_document(variant_id: StringName) -> String:
+	var knowledge := _get_knowledge_state()
 	var copy := "No copy filed. The unscheduled call remains open."
 	if variant_id == VARIANT_WATER or variant_id == VARIANT_AMENDED:
-		var world := _get_world_state()
-		if world != null:
-			var fallback := "WATER" if variant_id == VARIANT_WATER else ""
-			var word := str(world.get_fact(&"core_hook_filed_word", fallback))
-			copy = "%s\n\nCorrection entered by E. Crane. The original\nworking transcript is retained beneath this copy." % word
+		var word := knowledge.recall_value(KNOW_FILED_WORD, "") if knowledge != null else ""
+		copy = "%s\n\nCorrection entered by E. Crane. The original\nworking transcript is retained beneath this copy." % word
 	elif variant_id == VARIANT_WATCHER:
 		copy = "WATCHER\n\nFiled as written by E. Crane. No correction\nentered. Retain the working transcript."
-	return """BLACK CREEK STATION
+	var text := """BLACK CREEK STATION
 HANDOVER — END OF NIGHT WATCH, APRIL 1894
 ────────────────────────────────
 
@@ -112,6 +133,9 @@ Leave both sheets for the morning operator.
 An entry is not a confirmation.
 
 PREPARED: E. CRANE / NIGHT DESK""" % copy
+	if knowledge != null and knowledge.knows(KNOW_SAW_WINDOW):
+		text += WINDOW_MARGIN_NOTE
+	return text
 
 func _update_labels() -> void:
 	var result := get_node_or_null("ResultLabel") as Label3D
@@ -121,9 +145,8 @@ func _update_labels() -> void:
 		return
 	match _variant_id:
 		VARIANT_WATER, VARIANT_AMENDED:
-			var world := _get_world_state()
-			var fallback := "WATER" if _variant_id == VARIANT_WATER else ""
-			result.text = str(world.get_fact(&"core_hook_filed_word", fallback)) if world != null else ""
+			var knowledge := _get_knowledge_state()
+			result.text = knowledge.recall_value(KNOW_FILED_WORD, "") if knowledge != null else ""
 			stamp.text = "AMENDED"
 			subtitle.text = "NIGHT COPY / RETAIN"
 		VARIANT_WATCHER:
@@ -145,14 +168,14 @@ func _on_interacted() -> void:
 		_inspected = true
 		evidence_inspected.emit(_document_text)
 
-func _get_world_state() -> WorldStateStore:
-	if world_state != null:
-		return world_state
+func _get_knowledge_state() -> KnowledgeStateStore:
+	if knowledge_state != null:
+		return knowledge_state
 	if is_inside_tree() and get_tree() != null and get_tree().root != null:
-		return get_tree().root.get_node_or_null("WorldState") as WorldStateStore
+		return get_tree().root.get_node_or_null("KnowledgeState") as KnowledgeStateStore
 	var current: Node = get_parent()
 	while current != null:
-		var store := current.get_node_or_null("WorldState") as WorldStateStore
+		var store := current.get_node_or_null("KnowledgeState") as KnowledgeStateStore
 		if store != null:
 			return store
 		current = current.get_parent()

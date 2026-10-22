@@ -510,6 +510,19 @@ func _accept_commit(selected: TelegraphCommitOption, word: String, amended: bool
 	if knowledge != null:
 		var fact := scenario.amendment_knowledge_fact if amended else selected.knowledge_fact
 		knowledge.learn(StringName(fact))
+		if amended and word == scenario.transmission_data.elias_perception:
+			# What this records is a BELIEF, and the name has to say so or the
+			# next reader will take it for a grade. Elias typed the word he
+			# HEARD, so he now believes he copied the message correctly, and
+			# his morning handover is built on that belief.
+			#
+			# The comparison is against elias_perception and never against
+			# true_message, which is the whole point: on a night where he heard
+			# the wrong thing this seal still fires, so knowing the fact cannot
+			# tell him — or the player — which night it was. The objective
+			# answer lives in WorldState alone, written above from the authored
+			# outcome and never from this branch. See knowledge_seal_test.gd.
+			knowledge.learn(selected.knowledge_fact)
 		if not scenario.filed_word_knowledge_key.is_empty():
 			knowledge.remember_value(StringName(scenario.filed_word_knowledge_key), word)
 	_record_completion_fact()

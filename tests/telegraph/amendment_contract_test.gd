@@ -52,7 +52,14 @@ func _run() -> void:
 	if not check(session.submit_amendment("WATER"), "Correct explicit amendment is accepted"): return
 	if not check(world.get_fact(&"core_hook_filed_water", false) and records.size() == 1, "Reentrant callbacks cannot double-file or erase accepted outcome"): return
 	if not check(records[0] == [scenario.scenario_id, &"amend_copy", "WATER"], "Resolution carries captured old-slot and exact word"): return
-	if not check(knowledge.recall_value(&"filed_word_core_hook") == "WATER" and not knowledge.knows(&"committed_water_core_hook"), "Correct amendment still does not reveal grading in knowledge"): return
+	# The seal is the operator's BELIEF that he copied the word he heard, not a
+	# grade. It is written only because the typed word matches what Elias
+	# perceived, and never reads true_message, so a night where he heard the
+	# wrong thing still seals what he heard — that case is pinned in
+	# knowledge_seal_test.gd. What must never happen here is knowledge learning
+	# the WORLD's answer behind the operator's back.
+	if not check(knowledge.recall_value(&"filed_word_core_hook") == "WATER" and knowledge.knows(&"committed_water_core_hook"), "Sealing the heard word is knowledge, and it is the heard word that is sealed"): return
+	if not check(knowledge.knows(&"amendment_entered_core_hook"), "The correction itself stays on the record beside the seal"): return
 	session.reset_session()
 	session.load_scenario(scenario)
 	session._state = TelegraphSessionController.State.VERIFYING
