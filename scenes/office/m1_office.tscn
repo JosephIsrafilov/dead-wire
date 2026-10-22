@@ -704,8 +704,20 @@ script = ExtResource("28_ambience")
 [node name="DoorAttentionSource" parent="." instance=ExtResource("20_dooratt")]
 position = Vector3(-1.6, 0.2, 2.85)
 
+; The figure stands in the YARD, not against the glass.
+;
+; At z = -2.85 it was 0.49 m behind the pane, which is close enough that a
+; 1.8 m body filled the whole aperture and read as a person pressed to the
+; window. The plan asks the figure to be readable RELATIVE to the fence and the
+; mineworks, so it now stands at z = -5.2: past the fence line at -3.05, in
+; front of the mine at -9. From the chair it is a shape in the middle distance
+; with the yard's own fence in front of it, which is what makes it belong to
+; the world outside instead of to the pane.
+;
+; It is still well inside the observation contract's 10 m reach, and the
+; silhouette is still cut out against the sky rather than lit.
 [node name="WindowObservationEvent" parent="." instance=ExtResource("21_winobs")]
-position = Vector3(-1.5, 1.18, -2.85)
+position = Vector3(-1.5, 0.95, -5.2)
 
 [node name="Player" parent="." instance=ExtResource("22_player")]
 position = Vector3(0, 0, 1.05)

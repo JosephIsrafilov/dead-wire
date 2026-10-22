@@ -258,7 +258,21 @@ func _init() -> void:
 	# for the consequence hold, independent of which copy was filed.
 	office.session_controller.advance_consequence(1.0)
 	if not assert_condition(office.window_observation.is_active and office.window_observation.get_visual_indicator().visible, "Window figure starts after commit recovery delay"): return
-	office.player.rotation.y = deg_to_rad(0.0) # Face North
+	# Stand where the opening is actually in front of the operator, and look
+	# through it. The window is in the north-west wall and its glass spans
+	# x -2.24..-0.76; from the middle of the room the sight line to a figure
+	# standing in the yard crosses the wall 8 cm east of the frame, which is
+	# exactly what the room's own geometry says should happen. The figure used
+	# to hang 0.49 m behind the pane, so a due-north glance from anywhere
+	# "worked" — the assertion was really testing that the figure was close,
+	# not that the window could be seen through. It is now in the yard, where
+	# the plan puts it, so the operator has to be at the window to see it, as
+	# he would be in the room.
+	office.player.global_position = Vector3(-1.4, 0.0, -0.2)
+	var to_window := office.window_observation.global_position - office.player.camera.global_position
+	office.player.rotation.y = atan2(-to_window.x, -to_window.z)
+	office.player.head.rotation.x = 0.0
+	await physics_frame
 	await process_frame
 	if not assert_condition(office.window_observation.is_observed, "Camera looking through window opening observes post-commit figure"): return
 	if not assert_condition(knowledge.knows("saw_window_event"), "KnowledgeState records saw_window_event after post-commit figure"): return

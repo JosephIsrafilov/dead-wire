@@ -130,30 +130,64 @@ func check_camera(camera: Camera3D, ui_blocked: bool = false) -> bool:
 		return false
 
 	var cam_pos := camera.global_position if camera.is_inside_tree() else camera.position
-	# Raycast line-of-sight to the figure's origin: walls between the player
-	# and the window keep the event pending without granting knowledge.
+	# Raycast line-of-sight to the figure's SILHOUETTE, not to its origin: walls
+	# between the player and the window keep the event pending without granting
+	# knowledge.
+	#
+	# The origin is the bottom of the figure — the hem of the coat, at ankle
+	# height. A sight line aimed there leaves the window aperture low and to one
+	# side, so once the figure stands back in the yard the ray clips the frame
+	# while its head and shoulders are plainly visible through the glass, and
+	# the event would never be observed. The thing the player sees is the whole
+	# shape, so the whole shape is what the ray is aimed at.
 	var space_state := get_world_3d().direct_space_state if is_inside_tree() and get_world_3d() != null else null
-	if space_state != null:
-		var target_pos := global_position if is_inside_tree() else position
-		var query := PhysicsRayQueryParameters3D.create(cam_pos, target_pos)
-		query.collision_mask = 1 # layer 1: solid walls / environment
-
-		# Exclude all collision objects in camera's parent chain (e.g. player capsule)
-		var exclude_rids: Array[RID] = []
-		var p: Object = camera
-		while p is Node:
-			if p is CollisionObject3D:
-				exclude_rids.append((p as CollisionObject3D).get_rid())
-			p = (p as Node).get_parent()
-		query.exclude = exclude_rids
-
-		var result := space_state.intersect_ray(query)
-		if not result.is_empty():
-			var hit_collider: Object = result.get("collider", null)
-			if hit_collider != null and hit_collider != self:
-				return false
+	if space_state != null and not _silhouette_is_visible_through(space_state, camera, cam_pos):
+		return false
 
 	return _mark_observed()
+
+## Can the camera actually SEE the shape, or is a wall in the way?
+##
+## Three rays, not one: the silhouette's centre and its two upper corners —
+## head and shoulder height. A single centre ray is a fragile test. The figure
+## stands in the yard, so a line from the chair to its middle passes very close
+## to the window frame; the old single ray to the figure's ORIGIN (its hem, at
+## ankle height) went under the sill entirely, and the event could never be
+## observed at all.
+##
+## What the player sees through a window is a head and a pair of shoulders in
+## the aperture. If any of those is unobstructed, he has seen the figure, and
+## that is what this asks. Walls still block: every ray is a real raycast
+## against the world collision layer.
+func _silhouette_is_visible_through(space_state: PhysicsDirectSpaceState3D, camera: Camera3D, cam_pos: Vector3) -> bool:
+	var bounds := _watched_aabb()
+	var probes: Array[Vector3] = [bounds.get_center()]
+	# Head and shoulders: the upper corners, pulled in a little so a probe is
+	# never exactly on the AABB face.
+	var inset := bounds.size * 0.15
+	probes.append(Vector3(bounds.position.x + inset.x, bounds.end.y - inset.y, bounds.get_center().z))
+	probes.append(Vector3(bounds.end.x - inset.x, bounds.end.y - inset.y, bounds.get_center().z))
+
+	# Exclude all collision objects in the camera's parent chain (the player's
+	# own capsule, most of all).
+	var exclude_rids: Array[RID] = []
+	var p: Object = camera
+	while p is Node:
+		if p is CollisionObject3D:
+			exclude_rids.append((p as CollisionObject3D).get_rid())
+		p = (p as Node).get_parent()
+
+	for target_pos in probes:
+		var query := PhysicsRayQueryParameters3D.create(cam_pos, target_pos)
+		query.collision_mask = 1 # layer 1: solid walls / environment
+		query.exclude = exclude_rids
+		var result := space_state.intersect_ray(query)
+		if result.is_empty():
+			return true
+		var hit_collider: Object = result.get("collider", null)
+		if hit_collider == null or hit_collider == self:
+			return true
+	return false
 
 func _process(delta: float) -> void:
 	# Pending visibility is not time on screen. Do not consume the hold while the
