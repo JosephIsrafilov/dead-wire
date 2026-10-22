@@ -11,7 +11,7 @@ signal ledger_closed()
 ## Scene wiring alternative when the office is a sibling.
 @export var office_path: NodePath = ^""
 
-const LEDGER_TEXT: String = """BLACK CREEK STATION — DISPATCH LEDGER (APRIL 1894)
+const LEDGER_TEXT: String = """BLACK CREEK STATION — DISPATCH LEDGER (APRIL 1890)
 ──────────────────────────────────────────────────
 SPECIAL ORDERS & ROUTING RULES:
 
@@ -24,7 +24,7 @@ SPECIAL ORDERS & ROUTING RULES:
      HOLD unverified night freight until division clearance arrives.
    - An EAST request reports where freight wishes to go; it is not permission.
    - No division clearance is booked for Freight 71 tonight.
-   - Water supply & mine junction cars remain restricted under 1889 quarantine."""
+   - Water supply & mine junction cars remain restricted under 1885 quarantine."""
 
 var interactable: Interactable = null
 var label_3d: Label3D = null
@@ -165,7 +165,7 @@ func _label_for(scenario: TelegraphScenarioData, is_unscheduled: bool) -> String
 
 ## The header date matches every other document of the night: the setting
 ## fixes the month and year, and no document anywhere names a day.
-const NIGHT_ENTRIES_DATE: String = "APRIL 1894"
+const NIGHT_ENTRIES_DATE: String = "APRIL 1890"
 
 static func _pad_entry(label: String, status: String, _with_status: bool = true) -> String:
 	var width := 34

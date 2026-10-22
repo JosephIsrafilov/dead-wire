@@ -9,7 +9,7 @@ signal card_closed()
 ## the wire actually plays. Nothing here is typed by hand, so the card and
 ## the wire can never disagree again.
 ##
-## Pattern rendering (American Morse, 1894):
+## Pattern rendering (American Morse, 1890):
 ##   press 1 unit  -> ·
 ##   press 3 units -> —
 ##   press 6 units -> ——— (long)   [the letter L]
@@ -20,14 +20,14 @@ signal card_closed()
 @export var prompt_message: String = "Inspect Morse Reference Card"
 
 ## The card's printed face: compact table for the desk.
-const CARD_HEADER: String = "AMERICAN MORSE CODE 1894"
+const CARD_HEADER: String = "AMERICAN MORSE CODE 1890"
 const CARD_PIXEL_SIZE: float = 0.0016
 const CARD_FONT_SIZE: int = 13
 const CARD_WIDTH: float = 0.30
 const CARD_DEPTH: float = 0.34
 
 ## The viewer's printed face: the wide mono table.
-const VIEWER_HEADER: String = "AMERICAN MORSE CODE (1894)"
+const VIEWER_HEADER: String = "AMERICAN MORSE CODE (1890)"
 
 const ALPHABET_PATH: String = "res://data/morse/m1_american_morse_alphabet.tres"
 ## Reading order as the viewer has always shown it: two columns, nine rows.

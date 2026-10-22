@@ -24,7 +24,7 @@ signal sheet_inspected(text: String)
 ])
 
 const HEADER: String = """BLACK CREEK STATION
-NIGHT SHIFT, APRIL 1894 — 11 P.M. TO 6 A.M.
+NIGHT SHIFT, APRIL 1890 — 11 P.M. TO 6 A.M.
 OPERATOR: E. CRANE
 ────────────────────────────────────────────
 

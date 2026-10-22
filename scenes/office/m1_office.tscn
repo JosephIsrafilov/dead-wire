@@ -368,7 +368,7 @@ material = ExtResource("3_wall")
 use_collision = true
 
 ; The division map on the north wall where the old window was: the line
-; through Black Creek, the mine spur, the reservoir. Revised October 1889.
+; through Black Creek, the mine spur, the reservoir. Revised October 1885.
 [node name="DivisionMap" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 1.1, 1.85, -2.294)
 mesh = SubResource("DivisionMapMesh")

@@ -695,7 +695,7 @@ func _update_deadline_warning_footer() -> void:
 func _on_card_inspected(text: String) -> void:
 	if document_viewer != null:
 		document_viewer.open_document(
-			"morse_reference", "AMERICAN MORSE CODE (1894)", text,
+			"morse_reference", "AMERICAN MORSE CODE (1890)", text,
 			"[E / Esc] Put Down Reference Card"
 		)
 

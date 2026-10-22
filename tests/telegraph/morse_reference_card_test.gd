@@ -48,7 +48,7 @@ func _run() -> void:
 	# The card and the viewer are two renderings of ONE source: neither
 	# carries a private copy of any pattern.
 	if not assert_condition(card.get_card_text() == card_text, "get_card_text matches the printed label"): return
-	if not assert_condition(card.get_reference_text().contains("AMERICAN MORSE CODE (1894)"), "Viewer header keeps its form"): return
+	if not assert_condition(card.get_reference_text().contains("AMERICAN MORSE CODE (1890)"), "Viewer header keeps its form"): return
 
 	card.queue_free()
 	await process_frame

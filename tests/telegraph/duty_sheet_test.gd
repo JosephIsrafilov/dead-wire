@@ -105,7 +105,7 @@ func _run() -> void:
 	var ledger := office.get_node_or_null("DispatchLedger") as DispatchLedger
 	if not assert_condition(ledger != null, "Production office exposes its dispatch ledger"): return
 	var entries := ledger._night_entries_text()
-	if not assert_condition(entries.contains("NIGHT ENTRIES — APRIL 1894"), "The entries header agrees with the night's date"): return
+	if not assert_condition(entries.contains("NIGHT ENTRIES — APRIL 1890"), "The entries header agrees with the night's date"): return
 	if not assert_condition(not ledger.get_ledger_text().contains("23 APRIL"), "No day of month is invented anywhere in the setting"): return
 	# The production night above committed WATER: the sealed-copy vocabulary is
 	# shared with the duty sheet.

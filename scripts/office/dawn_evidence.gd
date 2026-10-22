@@ -119,7 +119,7 @@ func _build_document(variant_id: StringName) -> String:
 	elif variant_id == VARIANT_WATCHER:
 		copy = "WATCHER\n\nFiled as written by E. Crane. No correction\nentered. Retain the working transcript."
 	var text := """BLACK CREEK STATION
-HANDOVER — END OF NIGHT WATCH, APRIL 1894
+HANDOVER — END OF NIGHT WATCH, APRIL 1890
 ────────────────────────────────
 
 UNSCHEDULED NIGHT TRAFFIC
