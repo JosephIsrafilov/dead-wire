@@ -133,7 +133,10 @@ func _run() -> void:
 	if not assert_condition(director.get_phase() == ShiftDirector.Phase.ANSWERING, "Answering the call opens a short beat before the message"): return
 	if not assert_condition(session.get_state() != TelegraphSessionController.State.RECEIVING, "The sender has not started inside the beat"): return
 	if not assert_condition(not key.is_enabled, "The key is inert inside the beat"): return
-	director.advance(director.answer_beat_seconds + 0.05)
+	# The beat is the office's own acknowledgement, transmitted on the same wire,
+	# plus the sender's breath after it. Both are timed by the director, so the
+	# wait is read from it rather than assumed to be the beat alone.
+	director.advance(director.get_answer_total_seconds() + 0.05)
 	if not assert_condition(director.get_phase() == ShiftDirector.Phase.RECEIVING, "Answering moves the shift into RECEIVING"): return
 	if not assert_condition(session.get_state() == TelegraphSessionController.State.RECEIVING, "Session is receiving the real message"): return
 	if not assert_condition(not key.is_enabled, "Key is inert while copy is coming in"): return
@@ -170,7 +173,7 @@ func _run() -> void:
 	director.advance(director.wait_seconds_before_call[1] + 0.1)
 	if not assert_condition(director.foreign_traffic_played, "Foreign traffic crossed the dead wire in the second silence"): return
 	key.press()
-	director.advance(director.answer_beat_seconds + 0.05)
+	director.advance(director.get_answer_total_seconds() + 0.05)
 	session.scheduler.advance_time(60.0)
 	_drain_paper(session.transcript_paper)
 	if not assert_condition(session.get_state() == TelegraphSessionController.State.VERIFYING, "Second message waits for transcript verification"): return
@@ -186,7 +189,7 @@ func _run() -> void:
 	# 14. The final message is the core-hook commit, then closes the night.
 	director.advance(director.wait_seconds_before_call[2] + 0.1)
 	key.press()
-	director.advance(director.answer_beat_seconds + 0.05)
+	director.advance(director.get_answer_total_seconds() + 0.05)
 	session.scheduler.advance_time(30.0)
 	if not assert_condition(session.get_state() == TelegraphSessionController.State.COPYING, "Final message leaves the copy open at t0"): return
 	if not assert_condition(key.prompt_message == ShiftDirector.PROMPT_FINISHING_COPY, "The key reports the final copy being finished"): return
@@ -279,7 +282,7 @@ func _run() -> void:
 	var h_call: float = fresh_office.shift_director.get_station_hours()
 	if not assert_condition(h_call >= h_wait, "The call beginning never rewinds the hands"): return
 	fresh_office.session_controller.telegraph_key.press()
-	fresh_office.shift_director.advance(2.0)
+	fresh_office.shift_director.advance(fresh_office.shift_director.get_answer_total_seconds() + 0.1)
 	var h_receive: float = fresh_office.shift_director.get_station_hours()
 	if not assert_condition(h_receive >= h_call, "Answering the call never rewinds the hands"): return
 	fresh_office.session_controller.scheduler.auto_process = false
@@ -300,7 +303,7 @@ func _run() -> void:
 	for slot in 2:
 		fresh_office.shift_director.advance(fresh_office.shift_director.get_current_wait_seconds() + 0.1)
 		fresh_office.session_controller.telegraph_key.press()
-		fresh_office.shift_director.advance(2.0)
+		fresh_office.shift_director.advance(fresh_office.shift_director.get_answer_total_seconds() + 0.1)
 		fresh_office.session_controller.scheduler.advance_time(30.0)
 		_drain_paper(fresh_office.session_controller.transcript_paper)
 		fresh_office.session_controller.mark_transcript_verified()
@@ -344,7 +347,7 @@ func _run() -> void:
 	merge_director.advance(merge_director.wait_seconds_before_call[0] + 0.1)
 	if not assert_condition(merge_director.get_phase() == ShiftDirector.Phase.CALLING, "Merge case reaches the call"): return
 	merge_session.telegraph_key.press()
-	merge_director.advance(merge_director.answer_beat_seconds + 0.05)
+	merge_director.advance(merge_director.get_answer_total_seconds() + 0.05)
 	if not assert_condition(merge_session.get_state() == TelegraphSessionController.State.RECEIVING, "Merge case answers the call"): return
 	merge_session.scheduler.advance_time(30.0)
 	if not assert_condition(merge_session.get_state() == TelegraphSessionController.State.COPYING, "Merge case leaves the copy open at t0"): return

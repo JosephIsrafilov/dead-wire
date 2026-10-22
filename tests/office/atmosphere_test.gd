@@ -101,7 +101,7 @@ func _run() -> void:
 	var register := office.get_node("TelegraphSessionController/TapeRegister") as TapeRegisterController
 	register.spring_tension = 0.42
 	session.telegraph_key.press()
-	office.shift_director.advance(office.shift_director.answer_beat_seconds + 0.05)
+	office.shift_director.advance(office.shift_director.get_answer_total_seconds() + 0.05)
 	if not assert_condition(session.get_state() == TelegraphSessionController.State.RECEIVING, "Message is coming in"): return
 	if not assert_condition(paper.is_copy_in_progress(), "The pad is being worked on during the message (feed or ink)"): return
 	if not assert_condition(paper.get_visible_character_count() == 0, "The pad starts blank"): return

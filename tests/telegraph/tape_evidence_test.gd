@@ -303,30 +303,50 @@ func _test_current_call_answer_path() -> bool:
 	scheduler.advance_time(0.05)
 	director._answer_call()
 	var segments := tape.get_segment_snapshots()
-	if not _a(director.get_phase() == ShiftDirector.Phase.ANSWERING and not scheduler.is_playing()
+	# The office ANSWERS: the call's MARK is truncated and its take closed, and
+	# the answer itself opens a take of its own. Answering used to be silence;
+	# on a real wire the receiving station signs back, and the register shows it.
+	if not _a(director.get_phase() == ShiftDirector.Phase.ANSWERING and scheduler.is_playing()
 		and segments[0].interrupted and segments[0].events.size() == 1
 		and is_equal_approx(segments[0].events[0].duration_seconds, 0.05),
 		"Answering the actual call truncates its MARK and closes the interrupted take"): return false
+	if not _a(segments.size() == 2 and segments[1].number == 2 and not segments[1].complete,
+		"The operator's acknowledgement is its own wire take"): return false
+	var answer_schedule := scheduler.get_active_schedule()
+	if not _a(answer_schedule != null and answer_schedule.total_duration_seconds > 0.0,
+		"The acknowledgement is a compiled schedule on the shared scheduler"): return false
+	scheduler.advance_time(answer_schedule.total_duration_seconds)
+	director.advance(answer_schedule.total_duration_seconds)
+	# The sender's breath after the answer is real time on the wire, but it is
+	# not measured ink: the tape must not invent silence that never passed.
 	var before_beat := tape.get_tape_display_text()
+	var ink_before_beat := tape.get_record().size()
 	director.advance(director.answer_beat_seconds * 0.5)
 	scheduler.advance_time(director.answer_beat_seconds * 0.5)
-	if not _a(tape.get_tape_display_text() == before_beat and tape.get_record().size() == 1,
+	if not _a(tape.get_tape_display_text() == before_beat and tape.get_record().size() == ink_before_beat,
 		"The real answer beat is not fabricated as measured tape silence"): return false
 	director.advance(director.answer_beat_seconds)
 	segments = tape.get_segment_snapshots()
-	if not _a(director.get_phase() == ShiftDirector.Phase.RECEIVING and segments.size() == 2
-		and segments[1].number == 2 and not segments[1].complete and not segments[1].interrupted
-		and segments[1].events.size() == 1 and is_zero_approx(segments[1].events[0].duration_units),
-		"Telegram starts a distinct second wire take with zero future ink"): return false
+	if not _a(director.get_phase() == ShiftDirector.Phase.RECEIVING and segments.size() == 3
+		and segments[2].number == 3 and not segments[2].complete and not segments[2].interrupted
+		and segments[2].events.size() == 1 and is_zero_approx(segments[2].events[0].duration_units),
+		"Telegram starts a distinct third wire take with zero future ink"): return false
 	var active := scheduler.get_active_schedule()
+	# The telegram take is already open with its first (zero-length) event, so
+	# the ink it adds on completion is everything after that first event.
+	var ink_before_telegram := tape.get_record().size()
+	var answer_ink: int = segments[1].events.size()
 	scheduler.advance_time(active.total_duration_seconds + 1.0)
 	segments = tape.get_segment_snapshots()
-	if not _a(segments.size() == 2 and segments[0].interrupted and segments[1].complete
-		and tape.get_record().size() == 1 + active.events.size(),
-		"Cancelled call plus completed telegram has only delivered events and two boundaries"): return false
+	var expected_ink: int = 1 + answer_ink + active.events.size()
+	if not _a(segments.size() == 3 and segments[0].interrupted and segments[2].complete
+		and tape.get_record().size() == expected_ink
+		and ink_before_telegram == 1 + answer_ink + 1,
+		"Cancelled call, answer and completed telegram have only delivered events and three boundaries (ink %d, expected %d)"
+			% [tape.get_record().size(), expected_ink]): return false
 	var source_match := true
 	for i in range(active.events.size()):
-		var ink: TapeInkEvent = segments[1].events[i]
+		var ink: TapeInkEvent = segments[2].events[i]
 		var source: MorseScheduledEvent = active.events[i]
 		source_match = source_match and ink.kind == source.kind and ink.is_complete and not ink.interrupted \
 			and is_equal_approx(ink.duration_units, float(source.duration_units)) \
@@ -337,13 +357,21 @@ func _test_current_call_answer_path() -> bool:
 		and display.contains("%s\n" % (TapeRegisterController.TAKE_HEADER_FORMAT % [2, TapeRegisterController.STATUS_COMPLETE]))
 		and not display.contains("baseline_train_17") and not display.contains("CR CR")
 		and not display.contains("TRAIN"), "Call/telegram presentation has chronology but no message names or decoding"): return false
+	var takes_before_service := segments.size()
 	director._play_on_wire(director.call_sign)
 	scheduler.advance_time(0.05)
 	director._play_on_wire(director.call_sign)
 	segments = tape.get_segment_snapshots()
-	if not _a(segments.size() == 4 and segments[2].number == 3 and segments[2].interrupted
-		and is_equal_approx(segments[2].events[0].duration_seconds, 0.05)
-		and segments[3].number == 4 and is_zero_approx(segments[3].events[0].duration_seconds),
+	# Take numbering is absolute across the night, so the pair is addressed by
+	# where it starts rather than by a hardcoded index: the call, the office's
+	# answer and the telegram already own the first three.
+	var replaced := takes_before_service
+	var replacement := takes_before_service + 1
+	if not _a(segments.size() == replacement + 1
+		and segments[replaced].number == replaced + 1 and segments[replaced].interrupted
+		and is_equal_approx(segments[replaced].events[0].duration_seconds, 0.05)
+		and segments[replacement].number == replacement + 1
+		and is_zero_approx(segments[replacement].events[0].duration_seconds),
 		"Current service/nag replacement cancels one take before starting the next without future ink"): return false
 	scheduler.cancel()
 	tape.disconnect_scheduler()

@@ -205,7 +205,7 @@ func _test_office_viewer_keeps_timing_columns() -> bool:
 	if not _a(director.get_phase() == ShiftDirector.Phase.CALLING,
 		"Office fixture: the first call arrives"): return false
 	office.session_controller.telegraph_key.press()
-	director.advance(director.answer_beat_seconds + 0.05)
+	director.advance(director.get_answer_total_seconds() + 0.05)
 	var scheduler := office.session_controller.scheduler
 	var total := scheduler.get_total_duration_seconds()
 	if not _a(total > 0.0, "Office fixture: the first telegram is on the wire"): return false

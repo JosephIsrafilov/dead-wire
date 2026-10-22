@@ -25,7 +25,7 @@ func _run() -> void:
 		# First order is copied but never inspected. It must lapse, not hang.
 		director.advance(director.wait_seconds_before_call[0] + 1.0)
 		session.telegraph_key.press()
-		director.advance(director.answer_beat_seconds + 0.05)
+		director.advance(director.get_answer_total_seconds() + 0.05)
 		session.scheduler.advance_time(20.0)
 		_drain_paper(paper)
 		check(session.get_state() == TelegraphSessionController.State.VERIFYING, "Unread first order waits for inspection")
@@ -36,7 +36,7 @@ func _run() -> void:
 		check(root.get_node("KnowledgeState").knows(&"lapsed_baseline_train_17"), "Unread order records lapse rather than fabricated filing")
 		director.advance(director.wait_seconds_before_call[1] + 1.0)
 		session.telegraph_key.press()
-		director.advance(director.answer_beat_seconds + 0.05)
+		director.advance(director.get_answer_total_seconds() + 0.05)
 		session.scheduler.advance_time(20.0)
 		_drain_paper(paper)
 		session.mark_transcript_verified()
@@ -52,7 +52,7 @@ func _run() -> void:
 			check(director.calls_sent_total >= calls_before + 5, "The critical sender keeps calling on tightening intervals")
 			check(not office.dawn_evidence.is_revealed(), "An unanswered critical call invents no copied document")
 			session.telegraph_key.press()
-			director.advance(director.answer_beat_seconds + 0.05)
+			director.advance(director.get_answer_total_seconds() + 0.05)
 			session.scheduler.advance_time(4.0)
 			_drain_paper(paper)
 			session._process(session.get_commit_deadline_seconds() + 0.1)
@@ -62,7 +62,7 @@ func _run() -> void:
 			check(office.dawn_evidence.is_revealed(), "The waited-out critical night still produces a handover")
 		else:
 			session.telegraph_key.press()
-			director.advance(director.answer_beat_seconds + 0.05)
+			director.advance(director.get_answer_total_seconds() + 0.05)
 			session.scheduler.advance_time(4.0)
 			_drain_paper(paper)
 			if outcome == "lapsed":

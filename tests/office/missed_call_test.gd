@@ -97,7 +97,9 @@ func _run() -> void:
 
 	# Answering still works after the escalation.
 	session.telegraph_key.press()
-	director.advance(director.answer_beat_seconds + 0.05)
+	# The office answers on the wire first; the message follows the answer and
+	# the sender's breath, both of which the director times.
+	director.advance(director.get_answer_total_seconds() + 0.05)
 	if not _a(session.get_state() == TelegraphSessionController.State.RECEIVING,
 		"The escalated call is answered like any other"): return
 

@@ -65,7 +65,7 @@ func _run() -> void:
 	director.advance(director.wait_seconds_before_call[1] + 1.0)
 	if not _a(director.get_phase() == ShiftDirector.Phase.CALLING, "Slot 1 calls"): return
 	session.telegraph_key.press()
-	director.advance(director.answer_beat_seconds + 0.05)
+	director.advance(director.get_answer_total_seconds() + 0.05)
 	if not _a(_receive_and_route(session, scheduler, "CLEAR EAST"),
 		"The wrong CLEAR EAST route resolves slot 1"): return
 	if not _a(director.get_slot_index() == 2 and director.get_phase() == ShiftDirector.Phase.WAITING,
@@ -142,7 +142,7 @@ func _work_slot(
 		session.telegraph_key.press()
 		director.advance(director.wait_seconds_before_call[0] + 1.0)
 		session.telegraph_key.press()
-		director.advance(director.answer_beat_seconds + 0.05)
+		director.advance(director.get_answer_total_seconds() + 0.05)
 	return _receive_and_route(session, scheduler, route)
 
 func _receive_and_route(

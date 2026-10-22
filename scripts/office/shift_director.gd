@@ -61,8 +61,30 @@ signal shift_closed()
 @export var foreign_traffic_after_seconds: float = 4.0
 var foreign_traffic_played: bool = false
 
-## Black Creek's office call. Restricted to the 18 characters M1 supports.
+## The station's call. Restricted to the 18 characters M1 supports.
+##
+## WHAT THIS IS, AND WHAT IT IS NOT
+## --------------------------------
+## "CR" is not a decorative noise; it is the divisional call sign of the station
+## being rung, and Churchill (Theory and Practice of the Electric Telegraph, 1875,
+## pp. 69–70) describes the real shape of the exchange: a station hears its own
+## call sign, answers, the caller repeats and signs its own call, and the message
+## begins only once the receiving operator has answered. The M1 wire carries only
+## eighteen characters, so the call is this office's own sign and the repeat is
+## the caller insisting; nothing here invents a procedure the wire cannot spell.
+##
+## The office answers with a signal of its own (see answer_sign) rather than with
+## silence. The player's key press is what sends it — the answering is his act,
+## not an animation. There is no telephone bell in this fiction: the line is a
+## wire and the sounder is the only thing that speaks on it.
 @export var call_sign: String = "CR CR"
+## The receiving operator's acknowledgement: what this office sends back when it
+## takes the call. Restricted to the M1 alphabet and validated by test.
+##
+## "GO" rather than the landline "OK": K is not one of the eighteen characters
+## this wire carries, and a service signal that cannot be encoded is silence. It
+## is also what the exchange means — the office is here, send it.
+@export var answer_sign: String = "GO"
 @export var call_repeat_gap_seconds: float = 3.5
 @export var max_calls_per_message: int = 3
 ## The sender's short surrender, inked on the tape when traffic is missed
@@ -308,7 +330,7 @@ func _advance_step(delta: float) -> void:
 					_miss_current_traffic()
 		Phase.ANSWERING:
 			_phase_timer += delta
-			if _phase_timer >= answer_beat_seconds:
+			if _phase_timer >= _answer_seconds + answer_beat_seconds:
 				_begin_receiving()
 		Phase.AWAITING_ROUTE:
 			_phase_timer += delta
@@ -542,18 +564,42 @@ func _on_key_pressed() -> void:
 		_:
 			pass
 
+## The operator takes the call. Answering is a transmission of its own: the
+## office sends its acknowledgement sign, and only then does the sender begin.
+## The acknowledgement rides the same encoder and scheduler as everything else,
+## so it is physically American Morse on the same sounder and inks the same
+## register — the tape shows that this office answered, not just that it heard.
 func _answer_call() -> void:
 	if session == null:
 		return
 
 	session.scheduler.cancel()
 	call_answered.emit(_slot_index, _calls_sent)
+	_answer_seconds = _play_on_wire(answer_sign)
 	if answer_beat_seconds <= 0.0:
 		_begin_receiving()
 		return
 	_set_phase(Phase.ANSWERING)
+	_phase_timer = 0.0
+
+## The acknowledgement's own length, in seconds. The ANSWERING phase lasts for
+## this long plus the authored beat: the sender does not begin talking over the
+## office's answer, and the beat is a pause after it, not a pause that eats it.
+var _answer_seconds: float = 0.0
+
+## How long the office's answer and the sender's breath together take. This is
+## the whole ANSWERING phase, so callers can wait for the message instead of
+## guessing at a fraction of it.
+func get_answer_total_seconds() -> float:
+	return _answer_seconds + answer_beat_seconds
 
 func _begin_receiving() -> void:
+	# The acknowledgement is a transmission like any other and still owns the
+	# wire when the beat ends early. It has been heard by then, so the line is
+	# released rather than the message refused — refusing here would turn a
+	# properly answered call into a missed one.
+	if session.scheduler != null and session.scheduler.is_playing():
+		session.scheduler.cancel()
 	if session.start_transmission():
 		_set_phase(Phase.RECEIVING)
 	else:
