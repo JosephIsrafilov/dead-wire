@@ -1,6 +1,6 @@
 # DEAD WIRE — HANDOVER (read this first)
 
-Обновлён 2026-10-23 (M1_FINISH_PLAN, фаза 0): одна страница текущего состояния. Полная история —
+Обновлён 2026-10-23 (M1_FINISH_PLAN, фаза 1): одна страница текущего состояния. Полная история —
 `docs/plans/HANDOVER_HISTORY.md` (прежний HANDOVER без правок) и git log.
 Документы на русском, код и комментарии к коду на английском.
 
@@ -8,7 +8,7 @@
 
 - Движок: Godot 4.7.1 stable (baseline), `C:/Users/YUSIF/Desktop/Godot_v4.7.1-stable_win64.exe/Godot_v4.7.1-stable_win64_console.exe`.
   Один движок для тестов/захватов/беты — 4.7.1 (ROADMAP 0.8). Flake `shift_director_test` (exit 139 в teardown) принят: повторный прогон, логи в `test_logs/`. Новые evidence-артефакты в git не кладутся, история не переписывается (0.9).
-- Базовая линия: **116 suites / 3442 assertions / 0 FAIL**, gdlint чистый, boot exit 0. Числа не должны падать.
+- Базовая линия: **117 suites / 3498 assertions / 0 FAIL**, gdlint чистый, boot exit 0. Числа не должны падать.
 - Известный фон (не регресс): на shutdown — ObjectDB leaks / resources in use (boot ≈10/2); в оконных
   прогонах — 7 texture RID. **`shift_director_test` примерно в 1/3 полных прогонов падает на teardown
   движка (exit 139) ПОСЛЕ всех 132 PASS** — godot#117991, открыт, не «чинится повтором»:
@@ -22,6 +22,12 @@
   части A2 остаются незакоммиченными. Сверка 242 исходных файлов — SHA-256, без потерь.
   Кадры READABLE 1080p/1440p и три точки замера — `.dream-loop/phase0/`; статус —
   `docs/plans/next/M1_FINISH_PLAN.md`. Следующая фаза требует OK владельца.
+- M1_FINISH_PLAN, фаза 1: READABLE/CLASSIC — весь кадр 960×540, целочисленный fit,
+  CLEAN — native. На 1080p — 2× без полей, на 1440p — 2× с полями 320/180 px.
+  Пол 229 texels/m; потолок и панель 192; nearest+mipmaps на материалах комнаты.
+  Physics interpolation включена; pose кресла остаётся покадровым, поворот стоя — по physics tick.
+  Финальный прогон 117/3498 exit 0 без SCRIPT ERROR/повторов; production route 58 PASS exit 0;
+  lint/boot exit 0. Кадры и видео — `.dream-loop/phase1/`; база всё ещё смешанное дерево.
 - Фаза 1 (читаемость хука) закрыта. Живой трекер задач, журнал цикла и вопросы владельцу —
   `docs/plans/ROADMAP.md`. Кодекс разработки — `docs/reviews/2026-10-16_SENIOR_REVIEW.md` §11.
   Push делает только владелец; ветка `main` впереди `origin/main` на коммиты цикла.

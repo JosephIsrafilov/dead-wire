@@ -33,6 +33,7 @@ var _cycle_completed: bool = false
 var _exit_body_present: bool = false
 
 var _presentation_mode: int = 1
+var _presentation_window_state: Dictionary = {}
 
 func _ready() -> void:
 	_presentation_mode = GameSettings.load_settings().presentation_mode
@@ -112,6 +113,26 @@ func _apply_psx_scale() -> void:
 	var window := get_window()
 	var height := window.size.y if window != null and window.size.y > 0 else 720
 	var profile := ReadabilityPolicy.profile(height, _presentation_mode)
+	# Let the window scale the entire render target, including UI and dither.
+	# The previous 3D-only scale left the grade and text at monitor resolution.
+	if window != null:
+		if _presentation_window_state.is_empty():
+			for property in ["content_scale_size", "content_scale_mode", "content_scale_aspect",
+					"content_scale_stretch"]:
+				_presentation_window_state[property] = window.get(property)
+		var low_resolution: bool = profile.grade_enabled
+		var size: Vector2i = profile.content_size if low_resolution else Vector2i(1280, 720)
+		var mode := Window.CONTENT_SCALE_MODE_VIEWPORT if low_resolution else Window.CONTENT_SCALE_MODE_CANVAS_ITEMS
+		var aspect := Window.CONTENT_SCALE_ASPECT_KEEP if low_resolution else Window.CONTENT_SCALE_ASPECT_EXPAND
+		var stretch := Window.CONTENT_SCALE_STRETCH_INTEGER if low_resolution else Window.CONTENT_SCALE_STRETCH_FRACTIONAL
+		if window.content_scale_size != size:
+			window.content_scale_size = size
+		if window.content_scale_mode != mode:
+			window.content_scale_mode = mode
+		if window.content_scale_aspect != aspect:
+			window.content_scale_aspect = aspect
+		if window.content_scale_stretch != stretch:
+			window.content_scale_stretch = stretch
 	vp.scaling_3d_scale = profile.scale
 	var grade := get_node_or_null("PSXDither/Grade") as CanvasItem
 	if grade != null:
@@ -124,6 +145,14 @@ func _apply_psx_scale() -> void:
 			material.set_shader_parameter("pixel_size", psx_cell)
 			material.set_shader_parameter("levels", profile.levels)
 			material.set_shader_parameter("vignette", profile.vignette)
+
+func _exit_tree() -> void:
+	var window := get_window()
+	if window != null:
+		if window.size_changed.is_connected(_apply_psx_scale):
+			window.size_changed.disconnect(_apply_psx_scale)
+		for property in _presentation_window_state:
+			window.set(property, _presentation_window_state[property])
 
 func _bind_signals() -> void:
 	amendment_editor = get_node_or_null("AmendmentEditor") as AmendmentEditor
