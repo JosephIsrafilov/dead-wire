@@ -158,3 +158,35 @@ func notify_player_left() -> void:
 	if not is_open:
 		return
 	player_left_office.emit()
+
+## Where this door is, in the room.
+##
+## OfficeDoor is a plain Node: it holds no transform of its own, so anything
+## asking it for `global_position` gets a runtime error, not a coordinate.
+##
+## The anchor is the DOORWAY — the middle of the opening on the south wall —
+## not the hinge and not the leaf. Air comes through the opening, and the
+## opening does not move when the leaf swings on its hinge.
+func get_world_anchor() -> Vector3:
+	var door := get_parent() as Node3D
+	if door != null:
+		return door.global_position
+	_resolve_nodes()
+	if leaf != null:
+		return leaf.global_position
+	return Vector3.ZERO
+
+## How much of a draft actually reaches `from`, 0..1.
+##
+## Air from a door is not a force that acts across a whole building. It thins
+## with distance and it is gone past `DRAFT_REACH_METRES`, so a coat on the far
+## side of the room cannot be stirred by a hinge that is nowhere near it. The
+## falloff is linear and squared once: gentle close in, nothing at the limit.
+const DRAFT_REACH_METRES: float = 4.5
+
+func draft_attenuation(from: Vector3) -> float:
+	var distance := get_world_anchor().distance_to(from)
+	if distance >= DRAFT_REACH_METRES:
+		return 0.0
+	var remaining := 1.0 - distance / DRAFT_REACH_METRES
+	return remaining * remaining
