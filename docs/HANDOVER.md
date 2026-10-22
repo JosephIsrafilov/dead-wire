@@ -1,6 +1,6 @@
 # DEAD WIRE — HANDOVER (read this first)
 
-Обновлён 2026-10-16 (ROADMAP 0.7): одна страница текущего состояния. Полная история —
+Обновлён 2026-10-23 (M1_FINISH_PLAN, фаза 0): одна страница текущего состояния. Полная история —
 `docs/plans/HANDOVER_HISTORY.md` (прежний HANDOVER без правок) и git log.
 Документы на русском, код и комментарии к коду на английском.
 
@@ -8,11 +8,20 @@
 
 - Движок: Godot 4.7.1 stable (baseline), `C:/Users/YUSIF/Desktop/Godot_v4.7.1-stable_win64.exe/Godot_v4.7.1-stable_win64_console.exe`.
   Один движок для тестов/захватов/беты — 4.7.1 (ROADMAP 0.8). Flake `shift_director_test` (exit 139 в teardown) принят: повторный прогон, логи в `test_logs/`. Новые evidence-артефакты в git не кладутся, история не переписывается (0.9).
-- Базовая линия: **99 suites / 3022 assertions / 0 FAIL**, gdlint чистый, boot exit 0. Числа не должны падать.
+- Базовая линия: **116 suites / 3442 assertions / 0 FAIL**, gdlint чистый, boot exit 0. Числа не должны падать.
 - Известный фон (не регресс): на shutdown — ObjectDB leaks / resources in use (boot ≈10/2); в оконных
   прогонах — 7 texture RID. **`shift_director_test` примерно в 1/3 полных прогонов падает на teardown
   движка (exit 139) ПОСЛЕ всех 132 PASS** — godot#117991, открыт, не «чинится повтором»:
   процедура и анализ в `docs/research/roadmap_loop_2026-10-16/shift_director_flake_analysis.md`.
+- Триаж 2026-10-23: финальный полный прогон — exit 0, 116/3442, без SCRIPT ERROR и без
+  повторов внутри этого прохода. Предыдущие прогоны дали exit 139 после всех PASS у
+  `misroute_wire_test` (18) и `wind_guidance_test` (9); это не исправлено, логи сохранены в
+  `.dream-loop/phase0/` и `test_logs/phase0_teardown/`. На shutdown также встречается
+  PagedAllocator (`Pages in use exist at exit`) вместе с утечками ресурсов. База относится
+  к текущему смешанному рабочему дереву, не к чистому HEAD: мебель/физика владельца и зависимые
+  части A2 остаются незакоммиченными. Сверка 242 исходных файлов — SHA-256, без потерь.
+  Кадры READABLE 1080p/1440p и три точки замера — `.dream-loop/phase0/`; статус —
+  `docs/plans/next/M1_FINISH_PLAN.md`. Следующая фаза требует OK владельца.
 - Фаза 1 (читаемость хука) закрыта. Живой трекер задач, журнал цикла и вопросы владельцу —
   `docs/plans/ROADMAP.md`. Кодекс разработки — `docs/reviews/2026-10-16_SENIOR_REVIEW.md` §11.
   Push делает только владелец; ветка `main` впереди `origin/main` на коммиты цикла.
