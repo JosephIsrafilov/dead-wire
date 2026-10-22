@@ -425,6 +425,14 @@ func _notify_office() -> void:
 		office.shift_director.refresh_key_state()
 
 func _process(delta: float) -> void:
+	var player := _player_controller()
+	if player != null:
+		# The chair and free look are frame-driven; walking is physics-driven.
+		var frame_driven := is_seated or _is_animating or _body_phase != BodyPhase.IDLE
+		var mode := Node.PHYSICS_INTERPOLATION_MODE_OFF if frame_driven else Node.PHYSICS_INTERPOLATION_MODE_INHERIT
+		if player.physics_interpolation_mode != mode:
+			player.physics_interpolation_mode = mode
+			player.reset_physics_interpolation()
 	_advance_body(delta)
 	_apply_prompt()
 	_maybe_reenable_chair()

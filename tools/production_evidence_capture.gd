@@ -87,7 +87,9 @@ func _run() -> void:
 	check(director.get_phase() == ShiftDirector.Phase.CALLING, "The wire called on its own clock")
 	check(await _interact_with(key, "the telegraph key"), "The call was answered through ray + E")
 	# The sender's etiquette beat, then the message.
-	await _wait_until(func() -> bool: return session.get_state() == TelegraphSessionController.State.RECEIVING, 240)
+	var answer_deadline := Time.get_ticks_msec() + ceili((director.get_answer_total_seconds() + 2.0) * 1000.0)
+	while session.get_state() != TelegraphSessionController.State.RECEIVING and Time.get_ticks_msec() < answer_deadline:
+		await process_frame
 	check(session.get_state() == TelegraphSessionController.State.RECEIVING, "Key press answered the call")
 	await _shot("p1_seated_receiving")
 	check(office.operator_seat.is_seated and office.operator_seat.is_settled(), "p1 was captured seated and settled")
@@ -349,6 +351,10 @@ func _aim_at(world_point: Vector3) -> void:
 		_send_mouse(
 			clampf(-yaw_err / player.mouse_sensitivity, -60.0, 60.0),
 			clampf(-pitch_err / player.mouse_sensitivity, -60.0, 60.0))
+		# Standing look is consumed by the physics tick; do not queue another
+		# feedback correction before the previous one has reached the body.
+		if player.is_physics_interpolated_and_enabled():
+			await physics_frame
 		await process_frame
 
 ## Aim, wait for the interaction ray to actually hold the target, then E.

@@ -69,6 +69,8 @@ func _init() -> void:
 	watched_target.position = Vector3(0.0, 1.5, -3.0)
 	root.add_child(watched_target)
 	var camera := Camera3D.new()
+	# This fixture turns the camera instantly rather than on physics ticks.
+	camera.physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF
 	camera.position = Vector3(0.0, 1.5, 0.0)
 	root.add_child(camera)
 	await process_frame
@@ -95,6 +97,7 @@ func _init() -> void:
 	ui_target.position = Vector3(1.1, 1.5, -2.85)
 	root.add_child(ui_target)
 	var ui_camera := Camera3D.new()
+	ui_camera.physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF
 	ui_camera.position = Vector3(0.0, 1.65, 0.0)
 	root.add_child(ui_camera)
 	await process_frame

@@ -86,6 +86,7 @@ theme/custom="res://assets/fonts/deadwire_theme.tres"
 
 [physics]
 
+common/physics_interpolation=true
 3d/physics_engine="Jolt Physics"
 
 [rendering]

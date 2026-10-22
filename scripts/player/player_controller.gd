@@ -82,6 +82,7 @@ var _footstep_index: int = 0
 ## Yaw clamp used while seated, in radians. Negative range means unclamped.
 var _yaw_limit_centre: float = 0.0
 var _yaw_limit_half_range: float = -1.0
+var _pending_look := Vector2.ZERO
 
 func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -100,6 +101,7 @@ func set_movement_locked(locked: bool) -> void:
 	is_movement_locked = locked
 	is_look_locked = locked
 	if is_movement_locked:
+		_pending_look = Vector2.ZERO
 		velocity.x = 0.0
 		velocity.z = 0.0
 
@@ -149,11 +151,17 @@ func _input(event: InputEvent) -> void:
 		return
 
 	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
-		rotate_y(-event.relative.x * mouse_sensitivity)
-		_apply_yaw_limit()
-		if head != null:
-			head.rotate_x(-event.relative.y * mouse_sensitivity)
-			head.rotation.x = clamp(head.rotation.x, deg_to_rad(-85.0), deg_to_rad(85.0))
+		if is_physics_interpolated_and_enabled():
+			_pending_look += event.relative
+		else:
+			_apply_mouse_look(event.relative)
+
+func _apply_mouse_look(relative: Vector2) -> void:
+	rotate_y(-relative.x * mouse_sensitivity)
+	_apply_yaw_limit()
+	if head != null:
+		head.rotate_x(-relative.y * mouse_sensitivity)
+		head.rotation.x = clamp(head.rotation.x, deg_to_rad(-85.0), deg_to_rad(85.0))
 
 func _apply_yaw_limit() -> void:
 	if _yaw_limit_half_range < 0.0:
@@ -163,6 +171,9 @@ func _apply_yaw_limit() -> void:
 	rotation.y = _yaw_limit_centre + offset
 
 func _physics_process(delta: float) -> void:
+	if not is_look_locked and _pending_look != Vector2.ZERO:
+		_apply_mouse_look(_pending_look)
+	_pending_look = Vector2.ZERO
 	if global_position.y < fall_recovery_height:
 		_recover_from_fall()
 		return
@@ -214,6 +225,7 @@ func _play_footstep() -> void:
 func _recover_from_fall() -> void:
 	velocity = Vector3.ZERO
 	global_transform = _spawn_transform
+	reset_physics_interpolation()
 
 func _update_head(delta: float, moved_distance: float = -1.0) -> void:
 	if head == null:
