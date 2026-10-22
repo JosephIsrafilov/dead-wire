@@ -169,6 +169,7 @@ Downloaded-but-unwired packs are never packaged as runtime references.
 | A04_painted_wooden_chair_01 | painted_wooden_chair_01 | CC0 | scenes/props/m1/ph_chair.tscn -> m1_office Chair/PhChairVisual (OperatorSeat anchors, Chai | runtime-instanced |
 | A05_book_encyclopedia_set_01 | book_encyclopedia_set_01 | CC0 | derived export assets/m1_adapted/ph_books/m1_ledger_volumes.tscn -> scripts/props/ph_ledger_volumes.gd -> m1_office PhLedgerVolumes | runtime-instanced (derived export) |
 | A07_vintage_oil_lamp | vintage_oil_lamp | CC0 | NOT instanced: DeskSetup/OilLamp is the authored CSG proxy oil_lamp_lowpoly.tscn (~160 tris, see section 2) | reference-only |
+| — (authored) | psx_floor_worn_128.png | original, first-party | materials/style_tests/textures/psx/psx_floor_worn_128.png -> floor_wood_planks.tres -> m1_office Floor; BOX 128px derivative of the retained authored 256px source; lossless mipmaps, ~229 texels/m | runtime-instanced (authored) |
 | A08_paper001 | view?id=Paper001 | CC0 | downloaded, not yet wired into paper materials (paper_log.tres kept) | downloaded |
 | S01_impact_sounds | impact-sounds | CC0 | lever_stop.ogg (RoutingBoard.LeverSfx at the stop), ink_stamp_cc0.ogg (foley Stamp), chair | runtime-instanced |
 | S03_paper_sounds | various-paper-sound-effects | CC0 | paper_sound_-_2.mp3 -> audio/sfx/foley/paper_sheet.mp3 (foley Paper on viewer open/close) | runtime-instanced |

@@ -1,6 +1,6 @@
 [gd_resource type="StandardMaterial3D" load_steps=2 format=3]
 
-[ext_resource type="Texture2D" path="res://materials/style_tests/textures/psx/psx_floor_boards_128.png" id="1_tex"]
+[ext_resource type="Texture2D" path="res://materials/style_tests/textures/psx/psx_floor_worn_128.png" id="1_tex"]
 
 [resource]
 shading_mode = 1
@@ -8,6 +8,6 @@ albedo_color = Color(0.62, 0.48, 0.34, 1)
 albedo_texture = ExtResource("1_tex")
 roughness = 0.85
 metallic_specular = 0.1
-uv1_scale = Vector3(2.5, 3.0, 1.0)
+uv1_scale = Vector3(10.785714, 8.642857, 1.0)
 texture_filter = 2
 
