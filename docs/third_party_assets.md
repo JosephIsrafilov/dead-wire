@@ -127,7 +127,7 @@ at runtime.
 - **Attribution Required:** No
 - **Download Date:** 2026-08-14
 - **Source SHA256:** `94833feda44e025a9139f7b5723ea84e4f0258d3b54939a79e1013c133085e29`
-- **Runtime-Instanced:** No (Replaced by `res://materials/style_tests/textures/psx/psx_dark_wood_64.png`)
+- **Runtime-Instanced:** No. Removed from `timber_trim.tres` and `desk_wood.tres` on 2026-10-23 (M1_FINISH_PLAN 1.4). Both use the first-party `assets/textures/worn_warmth/wood_128_v1.png`, nearest with mipmaps, world triplanar at 192 texels/m. The source photograph remains reference-only.
 - **Reference File & SHA256:**
   - `res://materials/style_tests/textures/weathered_brown_planks_diff.png`: `D4E0FC5EE65045896B99860530C54CD76B65B18BB9DF974BB51525259962939B`
 
