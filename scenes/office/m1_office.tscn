@@ -6,6 +6,9 @@
 [ext_resource type="Material" path="res://materials/style_tests/m1_ceiling_plaster.tres" id="4_ceiling"]
 [ext_resource type="Material" path="res://materials/style_tests/timber_trim.tres" id="5_trim"]
 [ext_resource type="Material" path="res://materials/style_tests/m1_night_exterior.tres" id="6_night"]
+[ext_resource type="Material" path="res://materials/style_tests/m1_night_sky.tres" id="6_sky"]
+[ext_resource type="Material" path="res://materials/style_tests/m1_night_ridge.tres" id="6_ridge"]
+[ext_resource type="Material" path="res://materials/style_tests/m1_night_mineworks.tres" id="6_mineworks"]
 [ext_resource type="Material" path="res://materials/style_tests/m1_wainscot_wood.tres" id="7_wainscot"]
 [ext_resource type="PackedScene" path="res://scenes/style_tests/props/window_north.tscn" id="8_window"]
 [ext_resource type="PackedScene" path="res://scenes/style_tests/props/door_south.tscn" id="9_door"]
@@ -103,6 +106,29 @@ size = Vector3(0.18, 0.34, 0.18)
 [sub_resource type="StandardMaterial3D" id="ExteriorSilhouette"]
 shading_mode = 0
 albedo_color = Color(0.018, 0.022, 0.032, 1)
+
+; Weathered fence timber, barely above the silhouette: at night the yard's
+; woodwork reads as a slightly lighter edge than the ground behind it, not as
+; a lit object. The mine is shut and nothing out here has a lamp.
+; Unshaded, like every other exterior surface. Nothing in the room lights the
+; yard — the only light out there is the moon, and that is the window spot —
+; so a lit material renders black. The value here IS the look: night timber
+; just catching the sky, not a lamp-lit fence.
+[sub_resource type="StandardMaterial3D" id="ExteriorTimber"]
+shading_mode = 0
+albedo_color = Color(0.20, 0.185, 0.165, 1)
+
+; The far layers are flat quads facing the window. Sizes are chosen from the
+; actual sight cone: the aperture is 1.6 m wide at z = -2.36, so at 9 m a quad
+; has to be several metres across to fill it.
+[sub_resource type="QuadMesh" id="SkyQuadMesh"]
+size = Vector2(90.0, 46.0)
+
+[sub_resource type="QuadMesh" id="RidgeQuadMesh"]
+size = Vector2(64.0, 15.0)
+
+[sub_resource type="QuadMesh" id="MineworksQuadMesh"]
+size = Vector2(19.0, 8.4)
 
 [sub_resource type="Environment" id="env_office"]
 background_mode = 1
@@ -300,14 +326,115 @@ use_collision = true
 [node name="NorthWindow" parent="." instance=ExtResource("8_window")]
 position = Vector3(-1.5, 1.55, -2.36)
 
-[node name="NorthNightBackdrop" type="CSGBox3D" parent="."]
-position = Vector3(-1.5, 1.55, -3.2)
-size = Vector3(2.4, 1.8, 0.03)
-material = ExtResource("6_night")
+; ── The view out of the north window ────────────────────────────────────────
+;
+; The old backdrop was ONE painted shield 0.84 m behind the glass, with the moon
+; and the pole baked into it. Everything the player saw out of that window was
+; therefore at one depth, and it moved as one piece: a postcard. The plan's C2
+; asks for real near, middle and far distance, so the view is built the way a
+; view is built — in layers, each at its own distance, with the near things real
+; geometry.
+;
+;   near    fence, ground, the yard's own post and wires   0.4 .. 1.6 m out
+;   middle  the closed mine, drawn as a silhouette          9 m out
+;   far     the slope                                       26 m out
+;   sky     a gradient, no moon in it                       40 m out
+;
+; Nothing here is walkable and nothing is lit from inside: the mine has been
+; shut since 1885 and the only light out there is the moon. Moving the head a
+; hand's width shifts the fence against the mine against the slope, which is
+; the whole point of the pass.
+;
+; The figure still stands at z ≈ -2.85 between the glass and the yard, on the
+; clear column at x = -1.5 that every layer below deliberately leaves open.
 
-; Exterior depth: a real pole and wires between the glass and the painted
-; backdrop give the window parallax. Kept off the figure's column (x = -1.5)
-; and above its hat line so the observation zone stays a clean pane.
+; --- far: the sky ---------------------------------------------------------
+; Unshaded and unlit. Its own pale disc is NOT here; the moon in this room is a
+; real light, and a painted one behind it is how the window grew a second moon.
+[node name="ExteriorSky" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 9.84, -40.0)
+mesh = SubResource("SkyQuadMesh")
+material_override = ExtResource("6_sky")
+cast_shadow = 0
+
+; --- far: the slope -------------------------------------------------------
+; Two hill lines, the nearer darker. 26 m out, so it barely moves against the
+; sky — which is exactly how far country behaves.
+[node name="ExteriorRidge" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 4.26, -26.0)
+mesh = SubResource("RidgeQuadMesh")
+material_override = ExtResource("6_ridge")
+cast_shadow = 0
+
+; --- middle: the closed mine ---------------------------------------------
+; The shed, the headframe over the shaft, the spoil bank and the fence line,
+; as one silhouette at 9 m. The plan's C1 asks the view to be readable as the
+; edge of a shut mine; this is the shape that does it.
+[node name="ExteriorMineworks" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.35, 3.07, -9.0)
+mesh = SubResource("MineworksQuadMesh")
+material_override = ExtResource("6_mineworks")
+cast_shadow = 0
+
+; --- near: the yard -------------------------------------------------------
+; Real geometry from here in, because this is the range where the head moves
+; and the eye expects to see past things.
+; The yard's ground. It starts BEHIND the wall's outer face (z = -2.42), not
+; in front of it: the first version reached to z = -2.0 and put a dark slab
+; through the north wall into the room.
+[node name="ExteriorGround" type="CSGBox3D" parent="."]
+position = Vector3(-1.5, -0.02, -4.0)
+size = Vector3(9.0, 0.08, 3.2)
+material = SubResource("ExteriorSilhouette")
+
+; The fence along the yard's near edge: a rail and posts, the boundary between
+; the station's ground and the mine's. Posts every 0.9 m, and one rail missing
+; in the middle — the same cheap, partial repair the office itself shows.
+[node name="ExteriorFence" type="Node3D" parent="."]
+
+; The fence stands ON the yard's ground, which is at y = 0.02 here, and its
+; top rail sits at 1.42 — above the interior sill line, so it is actually in
+; the window from the seated view. A fence whose rail is under the sill is a
+; fence the player never sees.
+[node name="FencePost1" type="CSGBox3D" parent="ExteriorFence"]
+position = Vector3(-3.4, 0.72, -3.05)
+size = Vector3(0.075, 1.4, 0.075)
+material = SubResource("ExteriorTimber")
+
+[node name="FencePost2" type="CSGBox3D" parent="ExteriorFence"]
+position = Vector3(-2.5, 0.70, -3.05)
+size = Vector3(0.075, 1.36, 0.075)
+material = SubResource("ExteriorTimber")
+
+[node name="FencePost3" type="CSGBox3D" parent="ExteriorFence"]
+position = Vector3(-0.62, 0.71, -3.05)
+size = Vector3(0.075, 1.38, 0.075)
+material = SubResource("ExteriorTimber")
+
+[node name="FencePost4" type="CSGBox3D" parent="ExteriorFence"]
+position = Vector3(0.3, 0.69, -3.05)
+size = Vector3(0.075, 1.34, 0.075)
+material = SubResource("ExteriorTimber")
+
+; Upper rail runs the full length; the lower rail stops short, which is the
+; missing board. Both are set proud of the posts so they catch the sky.
+[node name="FenceRailHigh" type="CSGBox3D" parent="ExteriorFence"]
+position = Vector3(-1.55, 1.30, -3.02)
+size = Vector3(3.9, 0.06, 0.05)
+material = SubResource("ExteriorTimber")
+
+[node name="FenceRailLowNear" type="CSGBox3D" parent="ExteriorFence"]
+position = Vector3(-2.95, 0.76, -3.02)
+size = Vector3(1.05, 0.055, 0.045)
+material = SubResource("ExteriorTimber")
+
+[node name="FenceRailLowFar" type="CSGBox3D" parent="ExteriorFence"]
+position = Vector3(-0.2, 0.75, -3.02)
+size = Vector3(1.1, 0.055, 0.045)
+material = SubResource("ExteriorTimber")
+
+; The station's own pole, just outside the glass. Kept off the figure's column
+; (x = -1.5) and above its hat line so the observation zone stays a clean pane.
 [node name="ExteriorPole" type="CSGCylinder3D" parent="."]
 position = Vector3(-0.86, 1.3, -2.78)
 radius = 0.055
@@ -330,11 +457,6 @@ material = SubResource("ExteriorSilhouette")
 position = Vector3(-1.7, 2.06, -2.9)
 rotation = Vector3(0, 0.2, -0.07)
 size = Vector3(2.4, 0.006, 0.006)
-material = SubResource("ExteriorSilhouette")
-
-[node name="ExteriorGround" type="CSGBox3D" parent="."]
-position = Vector3(-1.5, 0.3, -2.85)
-size = Vector3(2.8, 0.1, 0.8)
 material = SubResource("ExteriorSilhouette")
 
 [node name="LandingFloor" type="CSGBox3D" parent="."]

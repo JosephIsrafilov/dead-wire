@@ -2,13 +2,24 @@
 
 [ext_resource type="Script" path="res://scripts/events/attention_observation_target.gd" id="1_obs"]
 
+; The figure is a SILHOUETTE, not a lit person.
+;
+; Shaded materials here were a mistake with a visible cause: the window bounce
+; light sits 5 cm from this node, so a rough dark material was being lit from
+; the front and the figure came up as a pale grey model of a man — every
+; primitive readable. What stands outside a lit window at night is a shape with
+; no interior detail, and that is also the honest presentation of an event the
+; game refuses to explain: the player sees a presence, not a character model.
+;
+; Unshaded, and darker than the sky it is cut out of. The values are the two
+; tones of a coat and a hat, and nothing else.
 [sub_resource type="StandardMaterial3D" id="FigureCloth"]
-albedo_color = Color(0.045, 0.06, 0.09, 1)
-roughness = 1.0
+shading_mode = 0
+albedo_color = Color(0.028, 0.033, 0.042, 1)
 
 [sub_resource type="StandardMaterial3D" id="FigureHat"]
-albedo_color = Color(0.03, 0.042, 0.065, 1)
-roughness = 1.0
+shading_mode = 0
+albedo_color = Color(0.019, 0.023, 0.030, 1)
 
 [sub_resource type="CylinderMesh" id="CoatMesh"]
 material = SubResource("FigureCloth")

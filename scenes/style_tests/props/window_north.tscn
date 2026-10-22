@@ -27,8 +27,8 @@ size = Vector3(1.68, 0.1, 0.24)
 ; Night backdrop sits behind the glass; the figure stands between them.
 
 [node name="NightGlass" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.12)
-size = Vector3(1.4, 1.28, 0.02)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.038)
+size = Vector3(1.6, 1.22, 0.02)
 material = ExtResource("2_glass")
 
 [node name="OuterTop" type="CSGBox3D" parent="."]
