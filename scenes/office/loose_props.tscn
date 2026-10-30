@@ -1,0 +1,72 @@
+[gd_scene load_steps=9 format=3]
+
+; Loose depot items on the office floor: things knocked off a table years ago
+; and never picked up. They are the room's only rigid bodies.
+;
+; Placed in open floor between the desk and the routing board, on the lane the
+; operator actually walks when he crosses the room to set a route. Deliberately
+; NOT on the filing table: that table carries the commit plates, and an extra
+; body in front of them would steal the interaction ray.
+;
+; Masses are 1894 objects, not game units — see scripts/physics/push_impulse.gd
+; for why one walk nudges both but only the lighter one skitters.
+
+[ext_resource type="Script" path="res://scripts/physics/loose_prop.gd" id="1_loose"]
+[ext_resource type="Material" path="res://materials/style_tests/metal_oxidized.tres" id="2_iron"]
+[ext_resource type="Material" path="res://materials/style_tests/routing_slate.tres" id="3_dark"]
+
+[sub_resource type="CylinderMesh" id="CupMesh"]
+top_radius = 0.044
+bottom_radius = 0.038
+height = 0.09
+radial_segments = 10
+rings = 1
+
+[sub_resource type="CylinderShape3D" id="CupShape"]
+radius = 0.044
+height = 0.09
+
+[sub_resource type="BoxMesh" id="BottleMesh"]
+size = Vector3(0.052, 0.11, 0.052)
+
+[sub_resource type="BoxShape3D" id="BottleShape"]
+size = Vector3(0.052, 0.11, 0.052)
+
+[node name="LooseProps" type="Node3D"]
+
+; An enamel cup, on its side where it rolled. 120 g.
+;
+; Authored LYING DOWN, not tilted. A cylinder left at a 10-degree lean is not a
+; resting pose: Jolt tips it flat on the first physics step and the prop visibly
+; jumps the moment the room loads. Rotated 90 degrees about Z so its axis is
+; horizontal, with its centre one radius (44 mm) above the floor, it starts at
+; equilibrium and stays exactly where it was placed until something touches it.
+[node name="TinCup" type="RigidBody3D" parent="."]
+transform = Transform3D(0, 1, 0, -1, 0, 0, 0, 0, 1, 1.15, 0.044, 0.85)
+script = ExtResource("1_loose")
+prop_mass = 0.12
+prop_bounce = 0.12
+prop_friction = 0.55
+
+[node name="Mesh" type="MeshInstance3D" parent="TinCup"]
+mesh = SubResource("CupMesh")
+material_override = ExtResource("2_iron")
+
+[node name="Shape" type="CollisionShape3D" parent="TinCup"]
+shape = SubResource("CupShape")
+
+; A squat ink bottle, upright and dry. 200 g — still under the mass where the
+; shove is capped, so it slides a little rather than resisting.
+[node name="InkBottle" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.45, 0.055, 0.55)
+script = ExtResource("1_loose")
+prop_mass = 0.2
+prop_bounce = 0.05
+prop_friction = 0.7
+
+[node name="Mesh" type="MeshInstance3D" parent="InkBottle"]
+mesh = SubResource("BottleMesh")
+material_override = ExtResource("3_dark")
+
+[node name="Shape" type="CollisionShape3D" parent="InkBottle"]
+shape = SubResource("BottleShape")

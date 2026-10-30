@@ -1,14 +1,10 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="Material" path="res://materials/style_tests/timber_trim.tres" id="1_trim"]
 [ext_resource type="Material" path="res://materials/style_tests/window_exterior_glass.tres" id="2_glass"]
 [ext_resource type="Material" path="res://materials/style_tests/m1_night_exterior.tres" id="3_night"]
 [ext_resource type="Material" path="res://materials/style_tests/desk_wood.tres" id="4_wood"]
-
-[sub_resource type="StandardMaterial3D" id="BlindCloth"]
-albedo_color = Color(0.34, 0.30, 0.23, 1)
-roughness = 1.0
-cull_mode = 2
+[ext_resource type="ArrayMesh" path="res://assets/models/office_props_v1/window_static.res" id="9_window"]
 
 [sub_resource type="BoxShape3D" id="FrameLeft"]
 size = Vector3(0.12, 1.28, 0.24)
@@ -26,59 +22,82 @@ size = Vector3(1.68, 0.1, 0.24)
 
 ; Night backdrop sits behind the glass; the figure stands between them.
 
+; The authored window: jamb lining through the 12 cm wall, architrave with a
+; bead, a two-rail sash proud of the glass, a projecting sill with a nose, and
+; an exterior drip head and ledge. The middle of the aperture is deliberately
+; empty — the figure stands behind this glass, and the observation contract
+; needs a clear column of sight.
+[node name="AuthoredWindow" type="MeshInstance3D" parent="."]
+mesh = ExtResource("9_window")
+
+; Night glass: the pane the LoS probe passes through, and what the painted
+; backdrop is seen through. Never opaque, never a collider. It sits in the sash
+; plane, inside the wall.
+;
+; It is sized to the WALL OPENING (1.60 x 1.22), not to the sash: at 1.40 wide
+; it left 10 cm of open aperture on each side, and at night that read as a
+; bright slit of sky beside the frame — the player could see straight past the
+; glass to the backdrop. Glass has to fill the hole it is in.
 [node name="NightGlass" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.038)
+cast_shadow = 0
 size = Vector3(1.6, 1.22, 0.02)
 material = ExtResource("2_glass")
 
+; CSG frame, sash, sill and blind, hidden: the authored mesh carries them now.
+; Their transforms still describe the old aperture, and the blind (a strip at
+; the head, drawn a hand's width) is retired with the frame rather than left
+; hanging in front of the new sash.
 [node name="OuterTop" type="CSGBox3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.64, 0.05)
 size = Vector3(1.68, 0.1, 0.18)
 material = ExtResource("1_trim")
 
 [node name="OuterBottom" type="CSGBox3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.64, 0.05)
 size = Vector3(1.68, 0.1, 0.18)
 material = ExtResource("1_trim")
 
 [node name="OuterLeft" type="CSGBox3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.78, 0, 0.05)
 size = Vector3(0.12, 1.28, 0.18)
 material = ExtResource("1_trim")
 
 [node name="OuterRight" type="CSGBox3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.78, 0, 0.05)
 size = Vector3(0.12, 1.28, 0.18)
 material = ExtResource("1_trim")
 
-; One tall free pane: no muntins, no meeting rail in the figure zone. Only a
-; slim bottom rail (below the shoulders) and top rail (above the hat) remain
-; as part of the outer frame language.
-
-; Inner sash: a slim second frame just proud of the glass gives the pane depth.
 [node name="SashTop" type="CSGBox3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.62, 0.135)
 size = Vector3(1.4, 0.04, 0.03)
 material = ExtResource("4_wood")
 
 [node name="SashBottom" type="CSGBox3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.62, 0.135)
 size = Vector3(1.4, 0.05, 0.03)
 material = ExtResource("4_wood")
 
 [node name="SashLeft" type="CSGBox3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.68, 0, 0.135)
 size = Vector3(0.04, 1.28, 0.03)
 material = ExtResource("4_wood")
 
 [node name="SashRight" type="CSGBox3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.68, 0, 0.135)
 size = Vector3(0.04, 1.28, 0.03)
 material = ExtResource("4_wood")
 
-; Roller blind, drawn a hand's width: its hem stays above the figure's hat line
-; so the observation pane is never covered.
 [node name="BlindRoller" type="CSGCylinder3D" parent="."]
+visible = false
 transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0.6, 0.17)
 radius = 0.022
 height = 1.46
@@ -86,16 +105,18 @@ sides = 8
 material = ExtResource("4_wood")
 
 [node name="BlindCloth" type="CSGBox3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.535, 0.168)
 size = Vector3(1.36, 0.13, 0.004)
-material = SubResource("BlindCloth")
 
 [node name="BlindHem" type="CSGBox3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.47, 0.168)
 size = Vector3(1.37, 0.012, 0.014)
 material = ExtResource("4_wood")
 
 [node name="BlindPull" type="CSGCylinder3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.45, 0.43, 0.17)
 radius = 0.012
 height = 0.02
@@ -103,11 +124,13 @@ sides = 8
 material = ExtResource("4_wood")
 
 [node name="InteriorSill" type="CSGBox3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.57, 0.22)
 size = Vector3(1.84, 0.08, 0.36)
 material = ExtResource("4_wood")
 
 [node name="SillApron" type="CSGBox3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.65, 0.12)
 size = Vector3(1.72, 0.08, 0.06)
 material = ExtResource("1_trim")

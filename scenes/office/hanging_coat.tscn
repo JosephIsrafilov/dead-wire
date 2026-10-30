@@ -1,0 +1,20 @@
+[gd_scene load_steps=2 format=3]
+
+; The operator's coat, hanging on the hall rack by the south door.
+;
+; This node IS the coat: there is no mesh in the props atlas for it any more.
+; scripts/office/hanging_coat.gd builds a Verlet cloth grid, drapes it from the
+; collar and rebuilds the render mesh every step, so the coat can sway when
+; Elias walks past, settle afterwards, and never look like the sculpture of a
+; coat that a baked loft could only ever be.
+;
+; The transform is identity on purpose: the coat's position is expressed in room
+; coordinates by coat_x / coat_z and by PROFILE's absolute heights, the same
+; world-space convention OfficeStorytellingProps uses.
+
+[ext_resource type="Script" path="res://scripts/office/hanging_coat.gd" id="1_coat"]
+
+[node name="HangingCoat" type="MeshInstance3D"]
+script = ExtResource("1_coat")
+coat_x = -0.35
+coat_z = 2.198

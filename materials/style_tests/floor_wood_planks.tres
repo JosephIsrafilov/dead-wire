@@ -2,12 +2,19 @@
 
 [ext_resource type="Texture2D" path="res://materials/style_tests/textures/psx/psx_floor_worn_128.png" id="1_tex"]
 
+; Worn boarding, not clean boarding: uneven board tones, dark seams, iron nails
+; with rust runs, a knot and a split board (tools/build_worn_floor.py).
+;
+; The 128px derivative keeps the 0.56 m tile (229 texels/m).
+; The uv scale is the whole point. One tile covers 0.56 m and holds four
+; boards, so a board is 0.14 m wide — a real floorboard. The previous texture
+; ran at 2.5 x 3.0, which made every board 0.6 m wide and the floor read as a
+; print of four planks repeated.
 [resource]
 shading_mode = 1
-albedo_color = Color(0.62, 0.48, 0.34, 1)
+albedo_color = Color(0.72, 0.6, 0.46, 1)
 albedo_texture = ExtResource("1_tex")
-roughness = 0.85
-metallic_specular = 0.1
+roughness = 0.92
+metallic_specular = 0.08
 uv1_scale = Vector3(10.785714, 8.642857, 1.0)
 texture_filter = 2
-

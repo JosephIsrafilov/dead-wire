@@ -1,14 +1,18 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="Material" path="res://materials/style_tests/desk_wood.tres" id="1_wood"]
 [ext_resource type="Material" path="res://materials/style_tests/timber_trim.tres" id="2_trim"]
 [ext_resource type="Material" path="res://materials/style_tests/metal_brass_aged.tres" id="3_brass"]
 [ext_resource type="Material" path="res://materials/style_tests/paper_log.tres" id="4_paper"]
+[ext_resource type="ArrayMesh" path="res://assets/models/office_furniture_v1/cabinet_static.res" id="9_authored"]
 
 [sub_resource type="BoxShape3D" id="CabinetSolid"]
 size = Vector3(0.92, 1.7, 0.42)
 
 [node name="StorageCabinet" type="Node3D"]
+
+[node name="AuthoredCabinet" type="MeshInstance3D" parent="."]
+mesh = ExtResource("9_authored")
 
 [node name="CabinetBody" type="CSGBox3D" parent="."]
 visible = false
@@ -77,11 +81,13 @@ size = Vector3(0.4, 0.84, 0.04)
 material = ExtResource("1_wood")
 
 [node name="LeftKnob" type="CSGSphere3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.04, 0.54, 0.26)
 radius = 0.02
 material = ExtResource("3_brass")
 
 [node name="RightKnob" type="CSGSphere3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.04, 0.54, 0.26)
 radius = 0.02
 material = ExtResource("3_brass")

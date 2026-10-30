@@ -78,3 +78,27 @@ write_samples('pen_scratch_3', filtered(.058, lambda t: math.sin(math.pi * t / .
 write('paper_turn_2', .44, lambda t, n: n * .17 * math.sin(math.pi * t / .44) ** 2 * (.35 + .65 * math.sin(2 * math.pi * 22 * t) ** 2))
 write('paper_turn_3', .48, lambda t, n: n * .16 * math.sin(math.pi * t / .48) ** 2 * (.28 + .72 * math.sin(2 * math.pi * 16 * t) ** 2))
 
+# --- fourth pass: the room's rigid bodies and the coat ---------------------
+# An enamel cup tipping onto bare boards. Enamel is thin steel with a glass
+# fired onto it, so it rings high and dies fast over a wooden knock. Two hits:
+# the rim as it lands, and the body settling a moment later.
+write('cup_clink', .30, lambda t, n:
+      impact(t, n, .006, 1650, 95, .13)
+      + impact(t, n, .006, 2480, 130, .05)
+      + impact(t, n, .050, 210, 30, .16)
+      + impact(t, n, .104, 190, 34, .05))
+# A squat glass ink bottle: duller and heavier than the cup, no ring, and it
+# rocks twice because a bottle that lands upright keeps going.
+write('bottle_knock', .34, lambda t, n:
+      impact(t, n, .004, 420, 70, .12)
+      + impact(t, n, .004, 880, 110, .04)
+      + impact(t, n, .070, 165, 26, .18)
+      + impact(t, n, .158, 150, 30, .06))
+# Wool moving. Not a swish and not a whoosh: heavy hung cloth has no sustained
+# tone at all, only a low band of noise that rises and falls with the fold, so
+# this is band-passed noise whose envelope is modulated by a slow beat.
+write_samples('cloth_rustle', filtered(
+      .55,
+      lambda t: (math.sin(math.pi * t / .55) ** 1.7) * (.35 + .65 * math.sin(2 * math.pi * 3.1 * t) ** 2),
+      180, 1900, .55, 3101))
+

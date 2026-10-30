@@ -1,10 +1,8 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=7 format=3]
 
-[ext_resource type="Material" path="res://materials/style_tests/metal_brass_aged.tres" id="1_brass"]
 [ext_resource type="Material" path="res://materials/style_tests/lamp_flame_glow.tres" id="2_flame"]
-[ext_resource type="Material" path="res://materials/style_tests/lamp_glass.tres" id="3_glass"]
-
-[ext_resource type="ArrayMesh" path="res://assets/models/office/chimney.obj" id="4_chimney"]
+[ext_resource type="ArrayMesh" path="res://assets/models/office_props_v1/oil_lamp_static.res" id="5_lamp_mesh"]
+[ext_resource type="ArrayMesh" path="res://assets/models/office_props_v1/lamp_glass_static.res" id="6_glass_mesh"]
 
 [sub_resource type="SphereMesh" id="FlameMesh"]
 material = ExtResource("2_flame")
@@ -13,34 +11,23 @@ height = 0.056
 radial_segments = 12
 rings = 6
 
+; Authored PSX oil lamp: a stepped brass fount on a turned foot, with a faceted
+; glass chimney and a wick wheel on the operator's side.
+;
+; The wick sits at 0.185 m — the fount tops out under it and the chimney begins
+; above it — so the flame is the one thing that crosses from brass into glass.
+; Everything the desk contract measures (the Flame position, its distance to
+; DeskLampLight, the WickInteractable box) is unchanged from the CSG proxy this
+; replaced.
 [node name="OilLampLowPoly" type="Node3D"]
 
-[node name="BasePedestal" type="CSGCylinder3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, 0)
-radius = 0.08
-height = 0.04
-sides = 10
-material = ExtResource("1_brass")
-
-[node name="FountBowl" type="CSGSphere3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.7, 0, 0, 0, 1, 0, 0.08, 0)
-radius = 0.075
-radial_segments = 10
-rings = 6
-material = ExtResource("1_brass")
-
-[node name="BurnerCollar" type="CSGCylinder3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.145, 0)
-radius = 0.035
-height = 0.03
-sides = 8
-material = ExtResource("1_brass")
+[node name="AuthoredLamp" type="MeshInstance3D" parent="."]
+mesh = ExtResource("5_lamp_mesh")
 
 [node name="Flame" type="MeshInstance3D" parent="."]
 position = Vector3(0, 0.185, 0)
 mesh = SubResource("FlameMesh")
 
 [node name="GlassChimney" type="MeshInstance3D" parent="."]
-mesh = ExtResource("4_chimney")
-material_override = ExtResource("3_glass")
+mesh = ExtResource("6_glass_mesh")
 cast_shadow = 0

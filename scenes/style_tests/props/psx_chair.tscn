@@ -1,13 +1,21 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Material" path="res://materials/style_tests/timber_trim.tres" id="1_dark_wood"]
 [ext_resource type="Material" path="res://materials/style_tests/desk_wood.tres" id="2_light_wood"]
 [ext_resource type="Material" path="res://materials/style_tests/routing_slate.tres" id="3_cushion"]
+[ext_resource type="ArrayMesh" path="res://assets/models/office_props_v1/chair_static.res" id="9_authored"]
 
 [sub_resource type="BoxShape3D" id="ChairSolid"]
 size = Vector3(0.44, 0.88, 0.42)
 
 [node name="PSXChair" type="Node3D"]
+
+; The authored depot chair: turned octagonal legs on foot beads, planked seat,
+; crest rail and five spindles. The CSG blockout below stays in the scene but
+; hidden, because tests and the sit contract read Seat / SeatPad / leg nodes by
+; name and measure their boxes.
+[node name="AuthoredChair" type="MeshInstance3D" parent="."]
+mesh = ExtResource("9_authored")
 
 [node name="Seat" type="CSGBox3D" parent="."]
 visible = false

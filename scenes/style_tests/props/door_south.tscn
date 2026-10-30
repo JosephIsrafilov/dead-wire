@@ -1,41 +1,56 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Material" path="res://materials/style_tests/timber_trim.tres" id="1_trim"]
 [ext_resource type="Material" path="res://materials/style_tests/desk_wood.tres" id="2_wood"]
 [ext_resource type="Material" path="res://materials/style_tests/metal_brass_aged.tres" id="3_brass"]
 [ext_resource type="Material" path="res://materials/style_tests/metal_oxidized.tres" id="4_iron"]
+[ext_resource type="ArrayMesh" path="res://assets/models/office_props_v1/door_casing_static.res" id="9_casing"]
+[ext_resource type="ArrayMesh" path="res://assets/models/office_props_v1/door_leaf_static.res" id="10_leaf"]
+[ext_resource type="ArrayMesh" path="res://assets/models/office_props_v1/door_knob_static.res" id="11_knob"]
 
 [sub_resource type="BoxShape3D" id="DoorwayBlock"]
 size = Vector3(1.02, 2.15, 0.16)
 
 [node name="DoorSouth" type="Node3D"]
 
+; Authored casing: jamb lining through the wall, architrave with a bead, iron
+; hinge straps and strike plate. The opening stays 1.07 m wide and 2.175 m high,
+; which is what the south wall segments and the door contract measure against.
+[node name="AuthoredCasing" type="MeshInstance3D" parent="."]
+mesh = ExtResource("9_casing")
+
 [node name="FrameTop" type="CSGBox3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.08, 0)
 size = Vector3(1.08, 0.09, 0.12)
 material = ExtResource("1_trim")
 
 [node name="FrameLeft" type="CSGBox3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.49, 0, 0)
 size = Vector3(0.09, 2.15, 0.12)
 material = ExtResource("1_trim")
 
 [node name="FrameRight" type="CSGBox3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.49, 0, 0)
 size = Vector3(0.09, 2.15, 0.12)
 material = ExtResource("1_trim")
 
 [node name="Threshold" type="CSGBox3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.04, -0.02)
 size = Vector3(0.98, 0.02, 0.14)
 material = ExtResource("1_trim")
 
 [node name="HingeTop" type="CSGBox3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.44, 0.72, -0.03)
 size = Vector3(0.025, 0.12, 0.015)
 material = ExtResource("4_iron")
 
 [node name="HingeBottom" type="CSGBox3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.44, -0.72, -0.03)
 size = Vector3(0.025, 0.12, 0.015)
 material = ExtResource("4_iron")
@@ -43,42 +58,60 @@ material = ExtResource("4_iron")
 [node name="Leaf" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.45, 0, 0)
 
+; The leaf's own mesh, hinged on this node's origin: it swings with the node and
+; the knob rides it, so office_door.gd can still rattle both.
+[node name="AuthoredLeaf" type="MeshInstance3D" parent="Leaf"]
+mesh = ExtResource("10_leaf")
+
 [node name="DoorLeaf" type="CSGBox3D" parent="Leaf"]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.45, 0, 0)
 size = Vector3(0.9, 2.1, 0.05)
 material = ExtResource("2_wood")
 
 [node name="Panel1" type="CSGBox3D" parent="Leaf"]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.26, 0.48, -0.005)
 size = Vector3(0.28, 0.75, 0.055)
 material = ExtResource("1_trim")
 
 [node name="Panel2" type="CSGBox3D" parent="Leaf"]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.64, 0.48, -0.005)
 size = Vector3(0.28, 0.75, 0.055)
 material = ExtResource("1_trim")
 
 [node name="Panel3" type="CSGBox3D" parent="Leaf"]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.26, -0.48, -0.005)
 size = Vector3(0.28, 0.75, 0.055)
 material = ExtResource("1_trim")
 
 [node name="Panel4" type="CSGBox3D" parent="Leaf"]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.64, -0.48, -0.005)
 size = Vector3(0.28, 0.75, 0.055)
 material = ExtResource("1_trim")
 
 [node name="EscutcheonPlate" type="CSGBox3D" parent="Leaf"]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, -0.05, -0.032)
 size = Vector3(0.065, 0.18, 0.008)
 material = ExtResource("3_brass")
 
+; The knob node stays the thing office_door.gd rotates; only its visual moved
+; into an authored mesh, centred on the node so the rattle turns it in place.
 [node name="Doorknob" type="CSGSphere3D" parent="Leaf"]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, -0.02, -0.06)
 radius = 0.032
 material = ExtResource("3_brass")
 
+[node name="AuthoredKnob" type="MeshInstance3D" parent="Leaf/Doorknob"]
+mesh = ExtResource("11_knob")
+
 [node name="Keyhole" type="CSGBox3D" parent="Leaf"]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, -0.09, -0.038)
 size = Vector3(0.012, 0.025, 0.006)
 material = ExtResource("4_iron")

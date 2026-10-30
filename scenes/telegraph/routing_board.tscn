@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://b1route001"]
+[gd_scene load_steps=10 format=3 uid="uid://b1route001"]
 
 [ext_resource type="Script" path="res://scripts/telegraph/ui/routing_board.gd" id="1_route"]
 [ext_resource type="Script" path="res://scripts/interaction/interactable.gd" id="2_interact"]
@@ -7,6 +7,7 @@
 [ext_resource type="Material" path="res://materials/style_tests/metal_brass_aged.tres" id="5_brass"]
 [ext_resource type="Material" path="res://materials/style_tests/paper_log.tres" id="6_paper"]
 [ext_resource type="Material" path="res://materials/style_tests/metal_oxidized.tres" id="7_iron"]
+[ext_resource type="ArrayMesh" path="res://assets/models/office_props_v1/board_static.res" id="8_board_mesh"]
 
 [sub_resource type="StandardMaterial3D" id="StencilPaint"]
 albedo_color = Color(0.6, 0.55, 0.43, 1)
@@ -24,27 +25,41 @@ size = Vector3(0.88, 0.23, 0.35)
 [node name="RoutingBoard" type="Node3D"]
 script = ExtResource("1_route")
 
+; The authored board: slate, frame, corner blocks, painted track diagram, lever
+; base, stops, indicator dial and wall screws. The lever, grip, needle and every
+; Label3D below stay live scene nodes — routing_board.gd drives them, and the
+; tests read them by name — so only the static furniture became a mesh.
+[node name="AuthoredBoard" type="MeshInstance3D" parent="."]
+mesh = ExtResource("8_board_mesh")
+
+; CSG blockout, hidden: BoardSolid and both interaction boxes were measured
+; against these footprints, so the boxes stay the same size as before.
 [node name="BoardSurface" type="CSGBox3D" parent="."]
+visible = false
 position = Vector3(0, 0.72, 0)
 size = Vector3(0.72, 1.12, 0.075)
 material = ExtResource("3_slate")
 
 [node name="FrameTop" type="CSGBox3D" parent="."]
+visible = false
 position = Vector3(0, 1.34, 0)
 size = Vector3(0.86, 0.12, 0.14)
 material = ExtResource("4_wood")
 
 [node name="FrameBottom" type="CSGBox3D" parent="."]
+visible = false
 position = Vector3(0, 0.1, 0)
 size = Vector3(0.86, 0.12, 0.14)
 material = ExtResource("4_wood")
 
 [node name="FrameLeft" type="CSGBox3D" parent="."]
+visible = false
 position = Vector3(-0.42, 0.72, 0)
 size = Vector3(0.12, 1.32, 0.14)
 material = ExtResource("4_wood")
 
 [node name="FrameRight" type="CSGBox3D" parent="."]
+visible = false
 position = Vector3(0.42, 0.72, 0)
 size = Vector3(0.12, 1.32, 0.14)
 material = ExtResource("4_wood")
@@ -57,21 +72,25 @@ size = Vector3(0.52, 0.22, 0.010)
 material = ExtResource("6_paper")
 
 [node name="HeaderFrameTop" type="CSGBox3D" parent="."]
+visible = false
 position = Vector3(0, 1.245, -0.050)
 size = Vector3(0.58, 0.025, 0.014)
 material = ExtResource("4_wood")
 
 [node name="HeaderFrameBottom" type="CSGBox3D" parent="."]
+visible = false
 position = Vector3(0, 0.995, -0.050)
 size = Vector3(0.58, 0.025, 0.014)
 material = ExtResource("4_wood")
 
 [node name="HeaderFrameLeft" type="CSGBox3D" parent="."]
+visible = false
 position = Vector3(-0.285, 1.12, -0.050)
 size = Vector3(0.025, 0.27, 0.014)
 material = ExtResource("4_wood")
 
 [node name="HeaderFrameRight" type="CSGBox3D" parent="."]
+visible = false
 position = Vector3(0.285, 1.12, -0.050)
 size = Vector3(0.025, 0.27, 0.014)
 material = ExtResource("4_wood")
@@ -79,22 +98,26 @@ material = ExtResource("4_wood")
 ; ---- Track diagram: flat inked lines, no raised rails ----
 
 [node name="InkMainLine" type="CSGBox3D" parent="."]
+visible = false
 position = Vector3(-0.02, 0.86, -0.042)
 size = Vector3(0.5, 0.014, 0.004)
 material = SubResource("StencilPaint")
 
 [node name="InkSidingLine" type="CSGBox3D" parent="."]
+visible = false
 position = Vector3(-0.02, 0.62, -0.042)
 size = Vector3(0.5, 0.014, 0.004)
 material = SubResource("StencilPaint")
 
 [node name="InkSwitchLink" type="CSGBox3D" parent="."]
+visible = false
 position = Vector3(0.12, 0.74, -0.042)
 rotation = Vector3(0, 0, 0.523599)
 size = Vector3(0.012, 0.29, 0.004)
 material = SubResource("StencilPaint")
 
 [node name="InkStationDot" type="CSGCylinder3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -0.24, 0.74, -0.042)
 radius = 0.02
 height = 0.004
@@ -102,6 +125,7 @@ sides = 8
 material = SubResource("StencilPaint")
 
 [node name="InkSidingDot" type="CSGCylinder3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.18, 0.62, -0.042)
 radius = 0.02
 height = 0.004
@@ -111,6 +135,7 @@ material = SubResource("StencilPaint")
 ; ---- Route lever assembly: pivot carries lever + grip; stops bound travel ----
 
 [node name="LeverBase" type="CSGCylinder3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.0, 0.33, -0.075)
 radius = 0.045
 height = 0.06
@@ -135,6 +160,7 @@ sides = 8
 material = ExtResource("4_wood")
 
 [node name="LeverStopClear" type="CSGCylinder3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -0.145, 0.545, -0.07)
 radius = 0.012
 height = 0.03
@@ -142,6 +168,7 @@ sides = 8
 material = ExtResource("7_iron")
 
 [node name="LeverStopHold" type="CSGCylinder3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.145, 0.545, -0.07)
 radius = 0.012
 height = 0.03
@@ -151,6 +178,7 @@ material = ExtResource("7_iron")
 ; ---- Mechanical position indicator: brass dial + iron needle ----
 
 [node name="IndicatorDial" type="CSGCylinder3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.0, 0.215, -0.045)
 radius = 0.05
 height = 0.014
@@ -168,6 +196,7 @@ material = ExtResource("7_iron")
 ; ---- Mounting: two wall screws in plain iron ----
 
 [node name="FastenerTop" type="CSGCylinder3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 1.24, -0.075)
 radius = 0.02
 height = 0.03
@@ -175,6 +204,7 @@ sides = 8
 material = ExtResource("7_iron")
 
 [node name="FastenerBottom" type="CSGCylinder3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.18, -0.075)
 radius = 0.02
 height = 0.03
@@ -198,6 +228,25 @@ modulate = Color(0.08, 0.06, 0.04, 1)
 outline_size = 0
 text = "TRAIN ORDERS"
 font_size = 13
+
+; The one line that makes the lever legible. The board is a physical order
+; instrument: throwing it is what actually sends a train, and it does not
+; check the copy against the paper. Players read the old header as a menu of
+; routes that must match the telegram; this says the opposite in the object's
+; own voice, without a tutorial box.
+;
+; It sits in the bare slate band under the header card (card bottom strip ends
+; at y 0.982, the MAIN label starts at 0.90), never over the diagram, and it is
+; short enough to clear the slate's 0.72 m width at this pixel size.
+[node name="InstructionLabel3D" type="Label3D" parent="."]
+position = Vector3(0, 0.958, -0.048)
+rotation = Vector3(0, 3.141593, 0)
+pixel_size = 0.0024
+modulate = Color(0.68, 0.62, 0.48, 1)
+outline_size = 0
+text = "THROW = SEND. IT DOES NOT READ THE COPY."
+font_size = 12
+font_size = 11
 
 [node name="LineLabel3D" type="Label3D" parent="."]
 position = Vector3(-0.24, 0.9, -0.048)
