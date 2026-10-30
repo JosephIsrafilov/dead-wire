@@ -1,15 +1,25 @@
 # AGENTS.md — DEAD WIRE
 
 First-person psychological horror, Godot 4.7 / GDScript. You are a telegraph
-operator in 1894; the core hook: you hear one thing, your hand writes another.
+operator in April 1890; the core hook: you hear one thing, your hand writes another.
 
-**Start here:** `docs/HANDOVER.md` (state, traps, conventions), then
-`docs/plans/next/00_INDEX.md` (implementation plans WS1–WS7).
+**Start here, every agent, every model:** `docs/AGENT_RULES.md` (how to work here:
+player-visible results first, stop at owner checkpoints with before/after frames,
+art direction, what not to waste time on). Then `docs/HANDOVER.md` (state, traps,
+conventions) and the active plan in `docs/plans/next/`.
+
+Non-negotiable in short:
+- Before any task, answer: what will the player see, hear or decide differently?
+  If nothing, it isn't the next task (bugs and invariants excepted).
+- Visual work: before/after frames from the same cameras, looked at by you. Stop
+  after each phase and show the owner; don't chain phases unattended.
+- Never revert or stage the owner's uncommitted work; explicit paths only.
+- Talk to the owner in Russian; code and comments in English.
 
 ## Commands
 
 ```bash
-# Full regression (98 suites / 2994 assertions at 2026-10-16; MUST be green, counts never drop)
+# Full regression (MUST be green; suite/assertion counts never drop — current baseline in docs/HANDOVER.md §1)
 bash tools/run_all_tests.sh
 # Windows: GODOT_BIN="/c/Users/YUSIF/Desktop/Godot_v4.7.1-stable_win64.exe/Godot_v4.7.1-stable_win64_console.exe" bash tools/run_all_tests.sh
 
