@@ -137,6 +137,8 @@ var _station_clock_running: bool = false
 @export var closing_sign: String = "GN"
 @export var closing_sign_trouble: String = "OS 17"
 @export var closing_delay_seconds: float = 4.0
+## Length of the closing wire just sent; CLOSING waits for it to finish.
+var _closing_wire_seconds: float = 0.0
 
 ## How close a warning and a nag may land before they count as one reminder.
 @export var warning_nag_merge_seconds: float = 1.0
@@ -260,6 +262,10 @@ func get_slot_index() -> int:
 func get_phase_timer() -> float:
 	return _phase_timer
 
+## How long CLOSING lasts: the closing wire, then the pause.
+func get_closing_seconds() -> float:
+	return _closing_wire_seconds + closing_delay_seconds
+
 func is_shift_over() -> bool:
 	return _phase == Phase.SHIFT_OVER
 
@@ -343,7 +349,7 @@ func _advance_step(delta: float) -> void:
 				_default_route()
 		Phase.CLOSING:
 			_phase_timer += delta
-			if _phase_timer >= closing_delay_seconds:
+			if _phase_timer >= _closing_wire_seconds + closing_delay_seconds:
 				_set_phase(Phase.SHIFT_OVER)
 		_:
 			pass
@@ -756,7 +762,9 @@ func _begin_closing() -> void:
 	_station_target_hours = maxf(_station_target_hours, STATION_CLOSING_HOURS)
 	_station_ceiling_hours = STATION_CLOSING_HOURS
 	_set_phase(Phase.CLOSING)
-	_play_on_wire(_closing_wire_text())
+	# The closing phase lasts while the wire says "<reply> GN", then the pause:
+	# the dawn and the door never start over the sender's last word (4.13).
+	_closing_wire_seconds = _play_on_wire(_closing_wire_text())
 
 ## The sender's parting word rides out with the closing sign as ONE schedule:
 ## "<reply> <sign>" (ROADMAP 2.3). The reply comes from the resolved slot's

@@ -9,6 +9,8 @@
 [ext_resource type="Material" path="res://materials/style_tests/m1_night_sky.tres" id="6_sky"]
 [ext_resource type="PackedScene" path="res://scenes/office/mine_yard.tscn" id="6_yard"]
 [ext_resource type="Script" path="res://scripts/office/window_glass_mirror.gd" id="63_glass_mirror"]
+[ext_resource type="Script" path="res://scripts/office/silence_three.gd" id="64_silence_three"]
+[ext_resource type="Script" path="res://scripts/office/silence_two.gd" id="65_silence_two"]
 [ext_resource type="Material" path="res://materials/style_tests/m1_wainscot_wood.tres" id="7_wainscot"]
 [ext_resource type="PackedScene" path="res://scenes/style_tests/props/window_north.tscn" id="8_window"]
 [ext_resource type="PackedScene" path="res://scenes/style_tests/props/door_south.tscn" id="9_door"]
@@ -926,6 +928,15 @@ script = ExtResource("44_moon")
 ; mirrors the room and the less of the yard comes through.
 [node name="WindowGlassMirror" type="Node" parent="."]
 script = ExtResource("63_glass_mirror")
+
+; Silence 3 asks (plan 4.2, 4.9): the wick chars, the pane clears, and someone
+; stands in the yard before the third call. Timings are on this node.
+[node name="SilenceThree" type="Node" parent="."]
+script = ExtResource("64_silence_three")
+
+; Silence 2 teaches the window (plan 4.1): a cloud over the moon, a sash creak.
+[node name="SilenceTwo" type="Node" parent="."]
+script = ExtResource("65_silence_two")
 
 [node name="DawnRitual" type="Node" parent="."]
 script = ExtResource("45_dawn")

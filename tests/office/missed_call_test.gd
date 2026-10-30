@@ -104,7 +104,10 @@ func _run() -> void:
 		"The escalated call is answered like any other"): return
 
 	office.queue_free()
-	await process_frame
+	# The presentation frame is freed a frame after the office; quitting first
+	# crashed teardown now and then (godot#117991, 0xC0000005).
+	for _frame in 5:
+		await process_frame
 	print("--- All Missed Call Tests PASSED (%d assertions) ---" % _assertions)
 	quit(0)
 

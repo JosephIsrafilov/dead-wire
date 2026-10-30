@@ -117,6 +117,20 @@ func _run() -> void:
 		"An unencodable {word} falls back to the authored plain reply"): return
 	_play_out(scheduler)
 
+	# --- 4a. The day waits for the sender's last word (plan 4.13) ---
+	if not _a(_resolve_hook(session, scheduler, paper, scen3, ""), "The hook resolves once more"): return
+	var closing := scheduler.get_active_schedule()
+	var closing_seconds := closing.total_duration_seconds if closing != null else 0.0
+	if not _a(closing_seconds > director.closing_delay_seconds,
+		"The reply outlasts the closing pause (%.1fs)" % closing_seconds): return
+	director.advance(director.closing_delay_seconds + 0.2)
+	if not _a(director.get_phase() == ShiftDirector.Phase.CLOSING,
+		"Dawn and the door wait while the wire is still saying good night"): return
+	director.advance(closing_seconds)
+	if not _a(director.get_phase() == ShiftDirector.Phase.SHIFT_OVER,
+		"The watch ends once the last word is through"): return
+	_play_out(scheduler)
+
 	# --- 4. Fairness: a closing wire never cuts a live critical copy ---
 	if not _a(session.load_scenario(scen3), "The hook reloads for the fairness case"): return
 	if not _a(session.start_transmission(), "The critical copy takes the wire"): return

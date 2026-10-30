@@ -162,11 +162,16 @@ func _run() -> void:
 		# really one too-eager wait.
 		var finished := await _until_consequence_complete(CONSEQUENCE_WAIT_SECONDS)
 		check(finished, "The final consequence reaches its own end within %.0f s" % CONSEQUENCE_WAIT_SECONDS)
+		# The closing lasts while the wire says good night (plan 4.13).
+		var closing_left := 30.0
+		while not office.shift_director.is_shift_over() and closing_left > 0.0:
+			await create_timer(0.25).timeout
+			closing_left -= 0.25
 	else:
 		office.session_controller.advance_consequence(1.0)
 		await process_frame
 		office.session_controller.advance_consequence(15.0)
-		office.shift_director.advance(5.0)
+		office.shift_director.advance(office.shift_director.get_closing_seconds() + 1.0)
 	check(office.shift_director.is_shift_over(), "Final consequence reaches shift end")
 	check(not office.office_door.is_locked(), "Dawn unlocks exit")
 	await _interact_at(Vector3(0.45, 0, 1.2), office.dawn_evidence.get_interactable())

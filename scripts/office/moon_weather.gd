@@ -82,6 +82,12 @@ func force_cloud(hold_seconds: float) -> void:
 	_consequence_cloud = true
 	_consequence_done = false
 
+## An ordinary cloud, sent now rather than by the weather's own clock (silence
+## 2, plan 4.1). The same dim and the same cloud in the sky as any natural one;
+## not a consequence, so nothing waits on it.
+func pass_cloud(hold_seconds: float) -> void:
+	_cloud_left = maxf(_cloud_left, maxf(hold_seconds, 0.0))
+
 ## True while an authored cloud consequence is still visibly running: the hold
 ## has not run out, or its shadow has not finished lifting.
 ##

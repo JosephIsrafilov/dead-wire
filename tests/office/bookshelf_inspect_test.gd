@@ -65,9 +65,12 @@ func _run() -> void:
 	for secret in ["WATER", "WATCHER", "TRAIN 17", "FREIGHT 71", "CORRECTION FILED"]:
 		if not _a(not text.contains(secret),
 				"The shelf never mentions '%s' — it is standing orders, not tonight" % secret): return
-	for expected in ["GENERAL ORDER 44", "TARIFF", "QUARANTINE"]:
+	for expected in ["GENERAL ORDER", "TARIFF", "QUARANTINE"]:
 		if not _a(text.contains(expected),
 				"The shelf carries the division paperwork ('%s' present)" % expected): return
+	# Plan 4.12: "44" is the ledger's freight rule and nothing else in the office;
+	# a second "order 44" sent new operators to the wrong paper.
+	if not _a(not text.contains("44"), "The shelf's general order is not numbered 44"): return
 
 	office.queue_free()
 	await process_frame

@@ -219,7 +219,7 @@ func _run() -> void:
 	session.notify_consequence_visible()
 	session.advance_consequence(office.scenario_3.consequence_hold_seconds)
 	if not assert_condition(director.get_phase() == ShiftDirector.Phase.CLOSING, "Last message closes the line"): return
-	director.advance(director.closing_delay_seconds + 0.1)
+	director.advance(director.get_closing_seconds() + 0.1)
 	if not assert_condition(director.get_phase() == ShiftDirector.Phase.SHIFT_OVER, "Shift reaches SHIFT_OVER"): return
 	if not assert_condition(director.is_shift_over(), "is_shift_over() agrees"): return
 	if not assert_condition(not key.is_enabled, "Key is dead once the line closes"): return
@@ -314,7 +314,7 @@ func _run() -> void:
 			fresh_office.session_controller.advance_consequence(1.5)
 			fresh_office.session_controller.notify_consequence_visible()
 			fresh_office.session_controller.advance_consequence(30.0)
-	fresh_office.shift_director.advance(fresh_office.shift_director.closing_delay_seconds + 0.1)
+	fresh_office.shift_director.advance(fresh_office.shift_director.get_closing_seconds() + 0.1)
 	if not assert_condition(fresh_office.shift_director.is_shift_over(), "Fresh watch reaches SHIFT_OVER"): return
 	# The hands had not crossed 06:00 at the moment the shift ended.
 	if not assert_condition(fresh_clock.get_station_hours() <= 29.3 + 0.001, "The hands never crossed 06:00 before the shift ended, got %.2f" % fresh_clock.get_station_hours()): return

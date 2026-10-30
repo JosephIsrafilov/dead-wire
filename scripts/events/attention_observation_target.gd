@@ -22,6 +22,9 @@ const FALLBACK_WATCH_RADIUS: float = 0.6
 
 var is_active: bool = false
 var is_observed: bool = false
+## Set while the pane in front of the figure is a mirror of the lit room
+## (WindowGlassMirror): looking at it then is not seeing the yard (plan 3.7).
+var view_obscured: bool = false
 var _remaining_duration: float = 0.0
 var _pending_duration: float = 0.0
 
@@ -52,7 +55,9 @@ func reset_state() -> void:
 	if vi != null:
 		vi.visible = false
 
-func trigger_event(duration: float = 5.0) -> void:
+## `world_fact` names what WorldState records for this appearance; empty means
+## the target's own fact (the filing consequence).
+func trigger_event(duration: float = 5.0, world_fact: StringName = &"") -> void:
 	is_active = true
 	is_observed = false
 	# The event can be queued while the player is looking at the window. Its
@@ -66,8 +71,9 @@ func trigger_event(duration: float = 5.0) -> void:
 	_resolve_pending_visibility()
 
 	var world := _get_world_state()
-	if world != null and not world_fact_id.is_empty():
-		world.set_fact(world_fact_id, true)
+	var fact := world_fact if not world_fact.is_empty() else world_fact_id
+	if world != null and not fact.is_empty():
+		world.set_fact(fact, true)
 
 	event_started.emit()
 
@@ -124,7 +130,7 @@ func check_camera(camera: Camera3D, ui_blocked: bool = false) -> bool:
 	var indicator := get_visual_indicator()
 	if indicator != null and not indicator.visible:
 		return false
-	if ui_blocked:
+	if ui_blocked or view_obscured:
 		return false
 	if not _silhouette_in_frustum(camera):
 		return false

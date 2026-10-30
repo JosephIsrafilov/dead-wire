@@ -16,6 +16,9 @@ extends Node
 @export var office: Node = null
 ## How close the camera has to be to the glass for a lean to count.
 @export var lean_reach: float = 1.1
+## Below this the pane is a mirror: looking at it does not see the yard, and
+## the figure standing there is not known (plan 3.7, honest observation).
+@export var mirror_hides_below: float = 0.35
 
 var yard_visibility_now: float = 1.0
 
@@ -23,6 +26,7 @@ var _glass: CSGShape3D = null
 var _material: StandardMaterial3D = null
 var _lamp: LampLife = null
 var _player: PlayerController = null
+var _figure: AttentionObservationTarget = null
 
 ## 0..1: how much of the yard comes through the pane. Falls with the wick
 ## (a lamp turned down below ~0.3 leaves the glass clear) and rises with a lean
@@ -52,6 +56,7 @@ func _ready() -> void:
 	_glass = office.get_node_or_null("NorthWindow/NightGlass") as CSGShape3D
 	_lamp = office.get_node_or_null("LampLife") as LampLife
 	_player = office.get_node_or_null("Player") as PlayerController
+	_figure = office.get_node_or_null("WindowObservationEvent") as AttentionObservationTarget
 	if _glass != null and _glass.material is StandardMaterial3D:
 		# A private copy: the shared glass resource is not rewritten per frame.
 		_material = (_glass.material as StandardMaterial3D).duplicate() as StandardMaterial3D
@@ -70,6 +75,8 @@ func _process(_delta: float) -> void:
 		return
 	var wick := _lamp.wick if _lamp != null else 1.0
 	yard_visibility_now = yard_visibility(wick, _lean_at_glass())
+	if _figure != null:
+		_figure.view_obscured = yard_visibility_now < mirror_hides_below
 	if absf(yard_visibility_now - _applied_visibility) < VISIBILITY_STEP:
 		return
 	_applied_visibility = yard_visibility_now

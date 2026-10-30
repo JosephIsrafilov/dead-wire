@@ -125,7 +125,10 @@ func _run() -> void:
 	if not _a(not quiet_scheduler.is_playing(),
 		"A correct route sends no question on the wire"): return
 	quiet_office.queue_free()
-	await process_frame
+	# The presentation frame is freed a frame after the office; quitting first
+	# crashed teardown now and then (godot#117991, 0xC0000005).
+	for _frame in 5:
+		await process_frame
 
 	print("--- All Misroute Wire Tests PASSED (%d assertions) ---" % _assertions)
 	quit(0)

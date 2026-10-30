@@ -123,6 +123,18 @@ func turn_up_wick() -> void:
 		_wick_interactable.enabled = false
 	wick_turned_up.emit()
 
+## The wick chars in a long quiet at full flame (plan 4.9, silence 3): it sinks
+## to `to` over `seconds` and asks to be trimmed. Only the lamp's own burning
+## does this; trimming brings the flame back.
+func gutter(to: float, seconds: float) -> void:
+	if _dawn or wick <= to + 0.001:
+		return
+	_wick_target = to
+	_wick_rate = (wick - to) / maxf(seconds, 0.01)
+	if _wick_interactable != null:
+		_wick_interactable.prompt_text = PROMPT_TRIM
+		_wick_interactable.enabled = true
+
 func set_wick_immediate(value: float) -> void:
 	wick = clampf(value, 0.05, 1.0)
 	_wick_target = wick

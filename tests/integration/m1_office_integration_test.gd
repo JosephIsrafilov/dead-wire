@@ -272,7 +272,16 @@ func _init() -> void:
 	var to_window := office.window_observation.global_position - office.player.camera.global_position
 	office.player.rotation.y = atan2(-to_window.x, -to_window.z)
 	office.player.head.rotation.x = 0.0
+	# Lamp against window (plan 3.7): with the wick full the pane mirrors the
+	# room, and the same look sees nothing; turned down, the yard is there.
+	var lamp_life := office.get_node("LampLife") as LampLife
+	lamp_life.set_wick_immediate(1.0)
 	await physics_frame
+	await process_frame
+	await process_frame
+	if not assert_condition(not office.window_observation.is_observed, "A mirror pane at full wick does not show the figure"): return
+	lamp_life.set_wick_immediate(0.3)
+	await process_frame
 	await process_frame
 	if not assert_condition(office.window_observation.is_observed, "Camera looking through window opening observes post-commit figure"): return
 	if not assert_condition(knowledge.knows("saw_window_event"), "KnowledgeState records saw_window_event after post-commit figure"): return

@@ -87,7 +87,7 @@ func _run() -> void:
 			check(office.dawn_evidence.is_revealed(), "Resolved copy creates handover")
 			var text := office.dawn_evidence.get_document_text()
 			check(not text.contains("agrees with") and not text.contains("MATCH"), "Handover does not certify an interpretation")
-		director.advance(5.0)
+		director.advance(director.get_closing_seconds() + 1.0)
 		check(director.is_shift_over() and not office.office_door.is_locked(), "%s path reaches unlocked exit" % outcome)
 		# Check pen topology remains rigid while its tip reaches the written ink.
 		office.shift_director.enabled = false
