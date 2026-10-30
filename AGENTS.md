@@ -31,7 +31,7 @@ godot --headless --audio-driver Dummy --path . --quit-after 120 res://scenes/off
 
 # Production route (windowed ONLY — real mouse capture; headless refuses with exit 2; 63 PASS)
 godot --path . --script tools/production_evidence_capture.gd
-# Whole night incl. hook + dawn (windowed; currently broken: synthetic E presses do not land). Other capture tools: docs/HANDOVER.md §4
+# Whole night incl. hook + dawn (windowed; 87 PASS). Other capture tools: docs/HANDOVER.md §4
 godot --path . --script tools/first_night_playthrough.gd -- --capture
 
 # After adding any class_name or asset: refresh the class cache

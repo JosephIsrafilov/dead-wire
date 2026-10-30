@@ -34,6 +34,11 @@ func _run() -> void:
 	root.add_child(menu)
 	current_scene = menu
 	await process_frame
+	# First launch: take the brightness screen the way a player does.
+	var calibration := menu.get_node_or_null("BrightnessCalibration") as BrightnessCalibration
+	if calibration != null:
+		calibration.confirm()
+		await process_frame
 	menu.begin_button.pressed.emit()
 	await process_frame
 	await process_frame
@@ -81,9 +86,16 @@ func _run() -> void:
 			await _interact_at(Vector3(-0.75, 0, -0.1), office.get_node("Chair/Interactable"))
 			await create_timer(1.6).timeout
 		await _aim_and_interact(office.session_controller.telegraph_key.get_interactable())
-		# The sender's etiquette beat before the message (the director is driven
-		# by this tool, so its clock is advanced the same way).
-		office.shift_director.advance(office.shift_director.answer_beat_seconds + 0.05)
+		# The answer rides the wire, then the sender's etiquette beat. Capture
+		# runs the director in real time, so wait for it; otherwise drive it.
+		if capture:
+			var answer_wait := 0.0
+			while office.session_controller.get_state() != TelegraphSessionController.State.RECEIVING \
+					and answer_wait < office.shift_director.get_answer_total_seconds() + 3.0:
+				await create_timer(0.1).timeout
+				answer_wait += 0.1
+		else:
+			office.shift_director.advance(office.shift_director.get_answer_total_seconds() + 0.05)
 		await process_frame
 		check(office.session_controller.get_state() == TelegraphSessionController.State.RECEIVING, "E answers traffic %d" % slot)
 		if slot == 0:
@@ -278,11 +290,17 @@ func _aim(target: Node3D) -> void:
 	var shape := target.get_node_or_null("CollisionShape3D") as CollisionShape3D
 	if shape != null:
 		point = shape.global_position
-	var direction := point - office.player.camera.global_position
-	office.player.rotation.y = atan2(-direction.x, -direction.z)
-	office.player.head.rotation.x = atan2(direction.y, Vector2(direction.x, direction.z).length())
-	await physics_frame
-	await process_frame
+	# The camera follows the body on its own frame (and the first frames after
+	# entering the office are slow), so re-aim until it actually looks there.
+	for attempt in 30:
+		var direction := point - office.player.camera.global_position
+		office.player.rotation.y = atan2(-direction.x, -direction.z)
+		office.player.head.rotation.x = atan2(direction.y, Vector2(direction.x, direction.z).length())
+		await physics_frame
+		await process_frame
+		var forward := -office.player.camera.global_basis.z
+		if forward.dot((point - office.player.camera.global_position).normalized()) > 0.995:
+			return
 
 func _aim_and_interact(target: Node3D) -> void:
 	await _aim(target)

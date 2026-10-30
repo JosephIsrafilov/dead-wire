@@ -273,6 +273,17 @@ shadow_enabled = true
 omni_range = 2.4
 omni_attenuation = 1.6
 
+; The filing desk's sconce: a low wick over the plates, lighting them from
+; above (the stove's ember only grazes the desk top). Short range, shadowed:
+; the door beside it stays dark.
+[node name="FilingDeskSconceLight" type="OmniLight3D" parent="."]
+position = Vector3(0.45, 1.46, 2.12)
+light_color = Color(0.76, 0.62, 0.42, 1)
+light_energy = 0.5
+shadow_enabled = true
+omni_range = 1.5
+omni_attenuation = 1.6
+
 ; The floor itself stays this CSG box: its top face is what the player and the
 ; physics stand on. The worn boards laid over it are a look, not a surface.
 [node name="Floor" type="CSGBox3D" parent="."]

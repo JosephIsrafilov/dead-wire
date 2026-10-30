@@ -57,7 +57,7 @@ Suites: `tests/{audio,debug,events,integration,office,player,state,telegraph,ui}
 | Инструмент | Доказывает | Ожидание | Вывод |
 |---|---|---|---|
 | `"$GODOT" --path . --script tools/production_evidence_capture.gd` | полный production-маршрут (с подшивкой копии 1) | **63 PASS** | `.dream-loop/production_evidence/` |
-| `"$GODOT" --path . --script tools/first_night_playthrough.gd -- --capture` | вся ночь: хук + рассвет | **сломан** (30.10: синтетические нажатия E не доходят, 37 FAIL уже на 9a48128) | `.dream-loop/playthrough_water/` |
+| `"$GODOT" --path . --script tools/first_night_playthrough.gd -- --capture` | вся ночь с первого запуска: калибровка, подшивка 1–2, хук, рассвет | **87 PASS** | `.dream-loop/playthrough_water/` |
 | `tools/room_overview_capture.gd` | комната o1–o9 стоя, c1–c4 сидя | — | `.dream-loop/overview/` |
 | `tools/writing_evidence_capture.gd` | рука и перо на листе | — | `.dream-loop/writing_evidence/` |
 | `tools/hand_turntable_capture.gd` | кисть/манжет/рукав, 8 углов | — | `.dream-loop/hand_turntable/` |

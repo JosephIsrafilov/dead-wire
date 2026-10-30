@@ -313,9 +313,10 @@ func _update_presentation() -> void:
 	# floating on an 1894 counter. When there is nothing to report, it reports
 	# nothing — which is what a real desk does.
 	_set_text(result, _result_text if _committed and not _result_text.is_empty() else "")
+	# Once filed, the stamp and the result line say it; the prompt line goes
+	# quiet instead of repeating "COPY FILED" a second time on the same desk.
 	var prompt := get_node_or_null("PromptLabel")
-	var resolved_prompt := "NO COPY FILED" if _selected_action_id == LAPSED_ACTION_ID else "COPY FILED"
-	_set_text(prompt, prompt_message if is_enabled() else (resolved_prompt if _committed else ""))
+	_set_text(prompt, prompt_message if is_enabled() else "")
 
 func _selected_index() -> int:
 	if _selected_action_id == StringName():

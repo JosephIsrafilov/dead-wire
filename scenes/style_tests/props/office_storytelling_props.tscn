@@ -360,3 +360,20 @@ height = 0.12
 sides = 8
 material = ExtResource("4_brass")
 
+; The filing desk has the same small brass sconce the routing board has: every
+; copy of the night is filed here now (plan 4.4), so the station keeps a light.
+[node name="FilingDeskSconceBack" type="CSGBox3D" parent="."]
+cast_shadow = 0
+position = Vector3(0.45, 1.62, 2.283)
+size = Vector3(0.2, 0.16, 0.035)
+material = ExtResource("2_trim")
+
+[node name="FilingDeskSconce" type="CSGCylinder3D" parent="."]
+cast_shadow = 0
+position = Vector3(0.45, 1.52, 2.21)
+rotation = Vector3(1.570796, 0, 0)
+radius = 0.055
+height = 0.12
+sides = 8
+material = ExtResource("4_brass")
+
