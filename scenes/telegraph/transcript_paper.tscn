@@ -15,6 +15,7 @@
 [ext_resource type="ArrayMesh" path="res://assets/models/operator/upper_arm_v1.res" id="13_upper"]
 [ext_resource type="Script" path="res://scripts/telegraph/ui/wet_ink.gd" id="14_wet"]
 [ext_resource type="Shader" path="res://materials/shaders/arm_into_dark.gdshader" id="15_dark"]
+[ext_resource type="Script" path="res://scripts/telegraph/ui/paper_amendment.gd" id="16_amend"]
 
 ; The arm falls into the dark toward the frame edge (5.5).
 [sub_resource type="ShaderMaterial" id="ArmIntoDark"]
@@ -135,6 +136,9 @@ width = 120.0
 
 [node name="WetInk" type="Node3D" parent="Sheet"]
 script = ExtResource("14_wet")
+
+[node name="PaperAmendment" type="Node3D" parent="Sheet"]
+script = ExtResource("16_amend")
 
 [node name="Interactable" type="Area3D" parent="."]
 collision_layer = 2

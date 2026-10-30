@@ -363,6 +363,9 @@ func begin_writing(
 ) -> void:
 	_cancel_writer_animation()
 	_archive_visible_sheet()
+	var amendment := get_amendment()
+	if amendment != null:
+		amendment.clear()
 	_transcript_text = text
 	_is_revealed = true
 	_visible_characters = 0
@@ -646,6 +649,10 @@ func _request_next_glyph(rig: WriterRig) -> bool:
 ## this — lets ink appear. A stale contact (the sheet moved on, the operator
 ## stood up) writes nothing.
 func _on_glyph_contact(glyph_index: int) -> void:
+	var amendment := get_amendment()
+	if amendment != null and amendment.active:
+		amendment.ink(glyph_index)
+		return
 	if paper_state != PaperState.COPYING:
 		return
 	if glyph_index != _written_glyphs:
@@ -804,7 +811,14 @@ static func layout_before_glyph(text: String, glyph_index: int) -> String:
 			glyph += 1
 	return formatted
 
+## The correction written on this sheet by hand (plan 6.3), if the scene has one.
+func get_amendment() -> PaperAmendment:
+	return get_node_or_null("Sheet/PaperAmendment") as PaperAmendment
+
 func get_glyph_contact(glyph_index: int) -> Vector3:
+	var amendment := get_amendment()
+	if amendment != null and amendment.active:
+		return amendment.get_glyph_contact(glyph_index)
 	var prefix := layout_before_glyph(_transcript_text, glyph_index)
 	var lbl := get_label_3d()
 	if lbl == null:

@@ -129,6 +129,10 @@ func _input(event: InputEvent) -> void:
 	var editor := office.get_node_or_null("AmendmentEditor") as AmendmentEditor if office != null else null
 	if editor != null and (editor.is_open() or editor.owns_transition_frame()):
 		return
+	# The pen on the paper takes Escape: it takes the correction back (6.3).
+	var desk := get_tree().get_first_node_in_group(DeskAmendment.GROUP) as DeskAmendment
+	if desk != null and desk.writing:
+		return
 	# A document in hand takes the key first: Escape should put the paper down
 	# before it stops the shift. Input is left unhandled so the viewer consumes it.
 	if not is_paused and document_viewer != null and document_viewer.is_open():

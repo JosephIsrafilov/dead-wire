@@ -32,6 +32,14 @@ func owns_transition_frame() -> bool:
 func open_editor(scenario_id: String) -> void:
 	if _is_open:
 		return
+	# Plan 6.3: a correction already written on the copy by hand is what gets
+	# filed; no box opens for it.
+	var desk: DeskAmendment = null
+	if is_inside_tree():
+		desk = get_tree().get_first_node_in_group(DeskAmendment.GROUP) as DeskAmendment
+	if desk != null and not desk.get_pending(scenario_id).is_empty():
+		correction_submitted.emit(desk.get_pending(scenario_id))
+		return
 	if _scenario_id != scenario_id:
 		_draft = ""
 	_scenario_id = scenario_id
