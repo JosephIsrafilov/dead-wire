@@ -35,6 +35,13 @@ func _run() -> void:
 		calibration.call("confirm")
 		await process_frame
 	await _shot("title")
+	# Plan 6.7: both title backdrops under the same menu, for the owner.
+	var mood := menu.get_node_or_null("TitleMood") as TitleMood
+	if mood != null:
+		await _shot("title_window")
+		mood._image.texture = TitleMood.BACKDROPS["desk"]
+		await _shot("title_desk")
+		mood._image.texture = TitleMood.BACKDROPS["window"]
 	if menu.has_method("open_options"):
 		menu.call("open_options")
 	else:

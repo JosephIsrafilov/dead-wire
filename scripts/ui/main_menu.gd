@@ -36,6 +36,7 @@ func _ready() -> void:
 	settings.apply(null)
 	_push_settings_to_controls()
 	_connect_controls()
+	_build_mood()
 	# The build tag is a development marker, not period furniture: players of
 	# a release build never see it.
 	if build_footer != null:
@@ -125,6 +126,47 @@ func _connect_controls() -> void:
 	if contextual_thoughts_check != null and not contextual_thoughts_check.toggled.is_connected(
 			_on_contextual_thoughts_toggled):
 		contextual_thoughts_check.toggled.connect(_on_contextual_thoughts_toggled)
+
+## Plan 6.7: the office at night behind the menu, the menu in the dark half
+## of the frame, its three lines ruled like a telegraph blank, and a key's
+## click when one is chosen.
+func _build_mood() -> void:
+	if get_node_or_null("TitleMood") != null:
+		return
+	var mood := TitleMood.new()
+	mood.name = "TitleMood"
+	add_child(mood)
+	move_child(mood, mini(1, get_child_count() - 1))
+	var column := get_node_or_null("CenterContainer") as Control
+	if column != null:
+		column.anchor_left = 0.5
+		column.offset_left = 0.0
+	for button in [begin_button, options_button, quit_button]:
+		if button == null:
+			continue
+		_rule_like_a_blank(button)
+		button.pressed.connect(mood.click)
+
+func get_mood() -> TitleMood:
+	return get_node_or_null("TitleMood") as TitleMood
+
+func _rule_like_a_blank(button: Button) -> void:
+	var line := StyleBoxFlat.new()
+	line.bg_color = Color(0, 0, 0, 0)
+	line.border_width_bottom = 1
+	line.border_color = Color(0.62, 0.56, 0.44, 0.7)
+	line.content_margin_top = 6.0
+	line.content_margin_bottom = 6.0
+	var lit := line.duplicate() as StyleBoxFlat
+	lit.bg_color = Color(0.86, 0.79, 0.63, 0.06)
+	lit.border_color = Color(0.86, 0.79, 0.63, 1.0)
+	button.add_theme_stylebox_override("normal", line)
+	button.add_theme_stylebox_override("hover", lit)
+	button.add_theme_stylebox_override("focus", lit)
+	button.add_theme_stylebox_override("pressed", lit)
+	button.add_theme_color_override("font_color", Color(0.86, 0.79, 0.63, 1.0))
+	button.add_theme_color_override("font_hover_color", Color(0.95, 0.9, 0.78, 1.0))
+	button.add_theme_color_override("font_focus_color", Color(0.95, 0.9, 0.78, 1.0))
 
 func toggle_options() -> void:
 	if options_panel == null:
