@@ -36,6 +36,9 @@ func _run() -> void:
 	if not check(resolutions.size() == 1 and attempts == [false, false], "Routing listeners cannot reenter acceptance or replace its scenario"): return
 	if not check(world.get_fact(&"train_17_routed_clear", false) and not world.get_fact(&"train_17_held_in_error", false), "Only the originally chosen objective route is written"): return
 	if not check(world.get_fact(&"original_completed", false) and not world.get_fact(&"next_completed", false), "Completion facts belong only to captured original slot"): return
+	# Plan 4.4: the routed copy is filed before the slot completes.
+	if not check(session.get_state() == TelegraphSessionController.State.AWAITING_COMMIT and session.submit_commit(&"file_as_copied"), "The original routed copy is filed"): return
+	session.advance_consequence(5.0)
 	if not check(completions == [original] and session.get_current_scenario() == original, "Completion payload stays attributed to original despite reset attempt"): return
 	session.routing_resolved.disconnect(on_resolved)
 	session.load_scenario(original)
@@ -54,6 +57,8 @@ func _run() -> void:
 	var progression := func(_scenario): session.load_scenario(next)
 	session.session_completed.connect(progression)
 	if not check(session.submit_routing_decision("CLEAR EAST"), "Another ordinary route resolves"): return
+	session.submit_commit(&"file_as_copied")
+	session.advance_consequence(5.0)
 	if not check(session.get_current_scenario() == next and session.get_state() == TelegraphSessionController.State.READY, "Legitimate completion can synchronously load next slot after resolution guard clears"): return
 	session.queue_free()
 	await process_frame

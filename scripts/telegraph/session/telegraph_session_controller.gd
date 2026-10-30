@@ -186,7 +186,7 @@ func advance_post_signal(delta: float) -> void:
 	# Commit deadline. One warning per scenario: if the grace warning already
 	# spoke, this stays silent and the deadline itself still runs.
 	var deadline := get_commit_deadline_seconds()
-	if _has_commit_options() and not _commit_resolved and deadline > 0.0:
+	if _commit_clock_running() and not _commit_resolved and deadline > 0.0:
 		if not _deadline_warning_fired and commit_warning_seconds > 0.0 \
 				and _post_signal_elapsed >= deadline - commit_warning_seconds:
 			_deadline_warning_fired = true
@@ -206,7 +206,7 @@ func get_deadline_warning_text() -> String:
 		return ""
 	if _state == State.COPYING and _grace_active:
 		return "Finish the copy — the sender is waiting"
-	if not _commit_resolved and _has_commit_options() \
+	if not _commit_resolved and _commit_clock_running() \
 			and get_commit_deadline_seconds() > 0.0 and _post_signal_elapsed < get_commit_deadline_seconds() \
 			and _state in [State.COPYING, State.VERIFYING, State.AWAITING_COMMIT]:
 		return "The sender is about to release the line"
@@ -538,7 +538,7 @@ func _accept_commit(selected: TelegraphCommitOption, word: String, amended: bool
 func lapse_commit() -> bool:
 	if _decision_in_progress or _state not in [State.COPYING, State.VERIFYING, State.AWAITING_COMMIT] \
 			or _current_scenario == null or _commit_resolved \
-			or not _has_commit_options():
+			or not _commit_clock_running():
 		return false
 	var scenario := _current_scenario
 	_decision_in_progress = true
@@ -565,7 +565,7 @@ func _is_commit_deadline_expired() -> bool:
 		and _post_signal_elapsed >= 0.0 \
 		and _post_signal_elapsed >= deadline \
 		and _state in [State.COPYING, State.VERIFYING, State.AWAITING_COMMIT] \
-		and _has_commit_options() and not _commit_resolved
+		and _commit_clock_running() and not _commit_resolved
 
 func _begin_consequence() -> void:
 	_consequence_elapsed = 0.0
@@ -611,16 +611,18 @@ func advance_consequence(delta: float) -> void:
 		_consequence_visible_elapsed += delta
 	var delay := _current_scenario.consequence_delay_seconds if _current_scenario != null else 0.0
 	var hold := _current_scenario.consequence_hold_seconds if _current_scenario != null else 0.0
+	# A slot with nothing to see (a routed copy filed) has no window to wait on.
+	var needs_sight := _consequence_requires_visibility and not _consequence_event_for_outcome().is_empty()
 	if not _consequence_started and _consequence_elapsed >= delay:
 		_consequence_started = true
 		_consequence_visibility_timeout = delay + hold + maxf(consequence_visibility_timeout_seconds, 0.0)
 		consequence_started.emit(_consequence_event_for_outcome(), hold)
-	if _consequence_started and _consequence_requires_visibility and not _consequence_visible \
+	if _consequence_started and needs_sight and not _consequence_visible \
 		and _consequence_elapsed >= _consequence_visibility_timeout:
 		_complete_consequence()
-	elif _consequence_started and ((_consequence_requires_visibility and _consequence_visible \
+	elif _consequence_started and ((needs_sight and _consequence_visible \
 		and _consequence_visible_elapsed >= hold) \
-		or (not _consequence_requires_visibility \
+		or (not needs_sight \
 			and _consequence_elapsed >= delay + hold)):
 		_complete_consequence()
 
@@ -690,6 +692,16 @@ func _resolve_routing(action: String, is_lapse: bool) -> bool:
 
 	_record_completion_fact(scenario)
 	routing_resolved.emit(action, outcome)
+	# Plan 4.4: an order that went out leaves a copy to file, by the same
+	# ritual as every other copy. The filing keeps its own clock from here,
+	# not the route's leftovers. No order sent, nothing to file.
+	if not is_lapse and _has_commit_options() and _current_scenario == scenario:
+		_decision_in_progress = false
+		_post_signal_elapsed = 0.0
+		_deadline_warning_fired = false
+		_set_state(State.AWAITING_COMMIT)
+		commit_requested.emit(scenario.commit_options)
+		return true
 	_finish_session(scenario)
 	return true
 
@@ -758,6 +770,12 @@ func _record_completion_fact(scenario: TelegraphScenarioData = null) -> void:
 
 func _has_commit_options() -> bool:
 	return _current_scenario != null and not _current_scenario.commit_options.is_empty()
+
+## A routed copy is filed only after its order went out: until then the route
+## deadline owns the clock and the filing deadline does not run.
+func _commit_clock_running() -> bool:
+	return _has_commit_options() \
+		and (not _current_scenario.requires_routing or _state == State.AWAITING_COMMIT)
 
 ## Builds the whisper layer's schedule: one end fraction per heard letter, in
 ## the encoder's own gap rules, plus the glyph stream those fractions name.

@@ -20,6 +20,12 @@ ROWS = math.ceil(len(GLYPHS) / COLS)
 ATLAS_W, ATLAS_H = CELL_W * COLS, CELL_H * ROWS
 INK = (255, 255, 255, 255)
 HAND_LEAN = 0.11
+# Hand "B" (owner's choice, plan 5.1): a finer nib that presses harder on the
+# downstrokes, and each letter sits a little off the line with its own tilt.
+# Applied at raster time; the SVG sources stay the clean authored strokes.
+STROKE_WIDTH = 2.4
+PRESSURE = 1.3
+JITTER = 1.2
 
 # Coordinates are intentionally quick, open pen strokes.  A fixed per-glyph
 # skew and a few asymmetric joins make this a hand, not a perfect geometric UI
@@ -132,6 +138,20 @@ def draw_disc(buf, x, y, r=1.6):
             if (xx-x)**2+(yy-y)**2 <= rr:
                 put_pixel(buf,xx,yy)
 
+def letter_wobble(ch, salt, amount):
+    # Deterministic per-letter drift in [-amount, amount].
+    return (math.sin((ord(ch) + salt) * 12.9898) * 43758.5453 % 1.0 * 2.0 - 1.0) * amount
+
+def hand_strokes(ch, strokes):
+    dy = letter_wobble(ch, 0.0, JITTER)
+    tilt = letter_wobble(ch, 0.5, JITTER * 0.02)
+    return [[(x + tilt * (54.0 - y), y + dy) for x, y in stroke] for stroke in strokes]
+
+def pressed_width(x0, y0, x1, y1):
+    length = math.hypot(x1 - x0, y1 - y0)
+    down = (y1 - y0) / length if length > 0 else 0.0
+    return STROKE_WIDTH * (1.0 + PRESSURE * 0.35 * down)
+
 def draw_line(buf, x0,y0,x1,y1,width=2.7):
     steps=max(1,int(max(abs(x1-x0),abs(y1-y0))*2))
     for n in range(steps+1):
@@ -155,7 +175,7 @@ def main():
     chars = []
     for i, ch in enumerate(GLYPHS):
         source = OUT / ("glyph_space.svg" if ch == " " else f"glyph_u{ord(ch):04X}.svg")
-        strokes = read_svg_strokes(source)
+        strokes = hand_strokes(ch, read_svg_strokes(source))
         min_x, min_y, max_x, max_y = stroke_bounds(strokes)
         width = max(1, int(math.ceil(max_x - min_x + 4))) if strokes else 1
         height = max(1, int(math.ceil(max_y - min_y + 4))) if strokes else 1
@@ -165,7 +185,7 @@ def main():
         for stroke in strokes:
             shifted = [(x - min_x + atlas_x + 2, y - min_y + atlas_y + 2) for x, y in stroke]
             for a, b in zip(shifted, shifted[1:]):
-                draw_line(buf, a[0], a[1], b[0], b[1])
+                draw_line(buf, a[0], a[1], b[0], b[1], pressed_width(a[0], a[1], b[0], b[1]))
         chars.append((ch, atlas_x, atlas_y, width, height, int(math.floor(min_x - 2)) if strokes else 0, int(math.floor(min_y - 2)) if strokes else 0, advance))
     (OUT / "elias_working_atlas.png").write_bytes(png_bytes(buf))
     lines = [f'info face="Elias Working" size=48 bold=0 italic=0 charset="{GLYPHS}" unicode=1 smooth=0 aa=1 padding=0,0,0,0 spacing=1,1', f"common lineHeight={LINE_HEIGHT} base=54 scaleW={ATLAS_W} scaleH={ATLAS_H} pages=1 packed=0", 'page id=0 file="elias_working_atlas.png"', f"chars count={len(chars)}"]

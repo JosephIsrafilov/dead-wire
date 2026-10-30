@@ -27,6 +27,16 @@ const MURMUR_ALPHA := 0.55
 const MURMUR_COLOR := Color(0.82, 0.78, 0.7, MURMUR_ALPHA)
 ## A newly heard letter surfaces instead of popping in.
 @export var letter_fade_seconds: float = 0.35
+## The murmur sits just under the copy board (owner's choice, plan 5.6): the
+## eye reading the ink finds the voice right below it. It only ever rises from
+## its authored place toward the sheet, never lower, so the thought line and
+## the prompt keep their places.
+@export var follow_sheet: bool = true
+@export var sheet_gap: float = 14.0
+## The board's near edge in the paper's own space.
+const SHEET_NEAR_EDGE := Vector3(0.0, 0.0, 0.17)
+const AUTHORED_TOP := -228.0
+const LINE_HEIGHT := 52.0
 
 enum VoiceState {
 	SILENT,
@@ -53,8 +63,8 @@ func _ready() -> void:
 	_label.bbcode_enabled = true
 	_label.scroll_active = false
 	_label.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
-	_label.offset_top = -228.0
-	_label.offset_bottom = -176.0
+	_label.offset_top = AUTHORED_TOP
+	_label.offset_bottom = AUTHORED_TOP + LINE_HEIGHT
 	_label.offset_left = 24.0
 	_label.offset_right = -24.0
 	_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -113,6 +123,7 @@ func _on_transmission_finished(_scenario: TelegraphScenarioData) -> void:
 		_hold_elapsed = 0.0
 
 func _process(delta: float) -> void:
+	_place_near_sheet()
 	if _revealed > 0 and _fresh_elapsed < letter_fade_seconds:
 		_fresh_elapsed += delta
 		if _state != VoiceState.SILENT:
@@ -159,6 +170,31 @@ func _dismiss() -> void:
 			_dismiss_from_alpha = _label.modulate.a if _label != null else 1.0
 			_state = VoiceState.DISMISSING
 			_fade_elapsed = 0.0
+
+## Projects the board's near edge through the camera that sees the paper and
+## lifts the murmur to just below it, clamped to the authored place.
+func _place_near_sheet() -> void:
+	if not follow_sheet or _label == null or session == null or not _label.visible:
+		return
+	var paper: TranscriptPaper = session.transcript_paper
+	if paper == null or not paper.is_inside_tree():
+		return
+	var view := paper.get_viewport()
+	var camera := view.get_camera_3d() if view != null else null
+	var edge := paper.to_global(SHEET_NEAR_EDGE)
+	if camera == null or camera.is_position_behind(edge):
+		return
+	var view_height := view.get_visible_rect().size.y
+	var canvas_height := _label.get_viewport_rect().size.y
+	if view_height <= 0.0 or canvas_height <= 0.0:
+		return
+	var below := camera.unproject_position(edge).y / view_height * canvas_height + sheet_gap
+	var top := clampf(below - canvas_height, -canvas_height * 0.6, AUTHORED_TOP)
+	_label.offset_top = top
+	_label.offset_bottom = top + LINE_HEIGHT
+
+func get_murmur_top() -> float:
+	return _label.offset_top if _label != null else AUTHORED_TOP
 
 func get_display_text() -> String:
 	return _label.get_parsed_text() if _label != null else ""

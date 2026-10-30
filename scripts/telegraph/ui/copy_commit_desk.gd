@@ -1,7 +1,8 @@
 class_name CopyCommitDesk
 extends Node3D
 
-## The filing surface for the night's one decision.
+## The filing surface: every copy of the night is filed here by the same
+## ritual (plan 4.4), the routed ones after their order went out.
 ##
 ## Contract (B1): this desk never decides the outcome. Input expresses an
 ## INTENT (`option_committed`) or requests a blank amendment; the session is the authority that accepts or

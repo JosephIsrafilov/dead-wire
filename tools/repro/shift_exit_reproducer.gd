@@ -164,6 +164,8 @@ func _run() -> void:
 	session.submit_routing_decision("CLEAR EAST")
 	if not assert_condition(world.has_fact(&"train_17_routed_clear"), "Correct route records the objective outcome"): return
 	if not assert_condition(knowledge.knows(&"filed_baseline_train_17"), "Elias knows he filed the message"): return
+	session.submit_commit(&"file_as_copied")
+	session.advance_consequence(5.0)
 	if not assert_condition(director.get_slot_index() == 1, "Shift advances to the second message"): return
 
 	# 13. Letting the deadline run out is a decision the world acts on.
@@ -284,6 +286,8 @@ func _run() -> void:
 	_drain_paper(fresh_office.session_controller.transcript_paper)
 	fresh_office.session_controller.mark_transcript_verified()
 	fresh_office.session_controller.submit_routing_decision("CLEAR EAST")
+	fresh_office.session_controller.submit_commit(&"file_as_copied")
+	fresh_office.session_controller.advance_consequence(5.0)
 	fresh_clock.advance(0.016)
 	# Slot 0 resolved: the authored target is 02:00 and the display chases it
 	# at a bounded speed instead of snapping onto it.
@@ -303,6 +307,8 @@ func _run() -> void:
 		fresh_office.session_controller.mark_transcript_verified()
 		if slot == 0:
 			fresh_office.session_controller.submit_routing_decision("HOLD")
+			fresh_office.session_controller.submit_commit(&"file_as_copied")
+			fresh_office.session_controller.advance_consequence(5.0)
 		else:
 			fresh_office.session_controller.submit_amendment("WATER")
 			fresh_office.session_controller.advance_consequence(1.5)

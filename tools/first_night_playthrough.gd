@@ -124,7 +124,22 @@ func _run() -> void:
 			check(office.routing_board.is_open, "Routing board opens from reachable floor")
 			await _shot("05_routing_%d" % slot)
 			await _press("route_clear_east" if slot == 0 else "route_hold")
-			check(office.shift_director.get_slot_index() == slot + 1, "Route advances night exactly once")
+			# Plan 4.4: every copy is filed by the same ritual, routed ones too.
+			check(office.shift_director.get_slot_index() == slot \
+				and office.copy_commit_desk.is_enabled(), "The routed copy waits on the filing desk")
+			await _interact_at(Vector3(0.45, 0, 0.95), office.copy_commit_desk.get_node("Option2Interactable"))
+			# The night moves on at once and resets the desk; the world keeps the record.
+			var filed_fact := &"train_17_copy_filed" if slot == 0 else &"freight_copy_filed"
+			check(bool(root.get_node("WorldState").get_fact(filed_fact, false)), "The routed copy is filed as copied")
+			await create_timer(0.6).timeout
+			if capture:
+				await _shot("05_filed_%d" % slot)
+			# The stamp stays a breath on the desk, then the night moves on.
+			var filed_wait := 0.0
+			while office.shift_director.get_slot_index() == slot and filed_wait < 5.0:
+				await create_timer(0.1).timeout
+				filed_wait += 0.1
+			check(office.shift_director.get_slot_index() == slot + 1, "Filing advances night exactly once")
 		else:
 			await _press("commit_option_2")
 			check(not office.copy_commit_desk.has_committed(), "Unseen filing desk rejects remote shortcut")

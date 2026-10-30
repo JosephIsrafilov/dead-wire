@@ -29,9 +29,9 @@ godot --headless --audio-driver Dummy --path . --script tests/telegraph/<suite>_
 # Production boot smoke (0 errors required)
 godot --headless --audio-driver Dummy --path . --quit-after 120 res://scenes/office/m1_office.tscn
 
-# Production route (windowed ONLY — real mouse capture; headless refuses with exit 2; 58 PASS)
+# Production route (windowed ONLY — real mouse capture; headless refuses with exit 2; 63 PASS)
 godot --path . --script tools/production_evidence_capture.gd
-# Whole night incl. hook + dawn (windowed; 78 PASS). Other capture tools: docs/HANDOVER.md §4
+# Whole night incl. hook + dawn (windowed; currently broken: synthetic E presses do not land). Other capture tools: docs/HANDOVER.md §4
 godot --path . --script tools/first_night_playthrough.gd -- --capture
 
 # After adding any class_name or asset: refresh the class cache

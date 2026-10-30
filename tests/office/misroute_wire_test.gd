@@ -134,7 +134,7 @@ func _run() -> void:
 	quit(0)
 
 ## Opens the line (slot 0) or answers the call (later slots), receives the
-## telegram, drains the sheet, verifies it and files the given route.
+## telegram, drains the sheet, verifies it, sends the given route and files the copy.
 func _work_slot(
 		session: TelegraphSessionController,
 		director: ShiftDirector,
@@ -162,7 +162,13 @@ func _receive_and_route(
 		return false
 	if not session.mark_transcript_verified():
 		return false
-	return session.submit_routing_decision(route)
+	if not session.submit_routing_decision(route):
+		return false
+	# Plan 4.4: the routed copy is filed as copied before the slot ends.
+	if not session.submit_commit(&"file_as_copied"):
+		return false
+	session.advance_consequence(5.0)
+	return true
 
 func _compile(
 		director: ShiftDirector,

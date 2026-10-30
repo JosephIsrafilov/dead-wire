@@ -41,6 +41,9 @@ func _run() -> void:
 		_drain_paper(paper)
 		session.mark_transcript_verified()
 		session.submit_routing_decision("HOLD")
+		# Plan 4.4: the routed copy is filed before the night moves on.
+		office.copy_commit_desk.commit_option(&"file_as_copied")
+		session.advance_consequence(5.0)
 		director.advance(director.wait_seconds_before_call[2] + 1.0)
 		if outcome == "missed":
 			# ROADMAP 2.5: the critical call cannot be missed — the sender keeps

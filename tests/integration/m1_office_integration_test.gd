@@ -143,7 +143,11 @@ func _init() -> void:
 	if not assert_condition(not board.is_open, "Routing Board closed after selection"): return
 	if not assert_condition(not office.player.is_look_locked and office.player.is_movement_locked, "Seated operator keeps walk lock but regains look on board close"): return
 	if not assert_condition(player_interaction != null and not player_interaction.is_ui_blocked, "Closing Routing Board restores world interactions"): return
-	if not assert_condition(office.session_controller.get_state() == TelegraphSessionController.State.COMPLETE, "Routing decision 1 completes Scenario 1"): return
+	# Plan 4.4: the routed copy is filed on the same desk as every copy.
+	if not assert_condition(office.session_controller.get_state() == TelegraphSessionController.State.AWAITING_COMMIT and office.copy_commit_desk.is_enabled(), "Routing decision 1 opens the filing desk"): return
+	if not assert_condition(office.copy_commit_desk.commit_option(&"file_as_copied"), "Scenario 1 copy is filed as copied at the desk"): return
+	office.session_controller.advance_consequence(5.0)
+	if not assert_condition(office.session_controller.get_state() == TelegraphSessionController.State.COMPLETE, "Routing and filing complete Scenario 1"): return
 	# The ledger records what the operator actually sent tonight (Q6c). This
 	# suite stands the director down, so the copied_ fact never lands; the
 	# ledger honestly files the order without claiming the copy status.
@@ -201,7 +205,9 @@ func _init() -> void:
 	ev_hold.echo = false
 	board._input(ev_hold)
 
-	if not assert_condition(office.session_controller.get_state() == TelegraphSessionController.State.COMPLETE, "Routing decision 2 completes Scenario 2"): return
+	if not assert_condition(office.copy_commit_desk.commit_option(&"file_as_copied"), "Scenario 2 copy is filed as copied at the desk"): return
+	office.session_controller.advance_consequence(5.0)
+	if not assert_condition(office.session_controller.get_state() == TelegraphSessionController.State.COMPLETE, "Routing and filing complete Scenario 2"): return
 	if not assert_condition(world.get_fact("freight_held_correctly") == true, "WorldState recorded freight_held_correctly = true"): return
 
 	# 5. SCENARIO 3: CORE HOOK & GENUINE WINDOW ATTENTION

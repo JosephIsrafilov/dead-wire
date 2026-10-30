@@ -172,6 +172,16 @@ func _run() -> void:
 	check(_knowledge().knows(&"filed_baseline_train_17"), "Elias knows the message was filed")
 	await _shot("p5_route_result")
 
+	# 9b. Plan 4.4: the routed copy is filed on the same desk as every copy.
+	for waypoint in [Vector3(0.7, 0, 0.35), Vector3(0.45, 0, 0.95)]:
+		var to_desk := await _walk_to(waypoint, 0.3)
+		check(to_desk.reached and to_desk.teleports == 0, "Walked to the filing desk without teleporting")
+	check(await _interact_with(office.copy_commit_desk.get_node("Option2Interactable"), "the filing desk"),
+		"The routed copy was filed through ray + E")
+	# The night moves on at once and resets the desk; the world keeps the record.
+	check(bool(root.get_node("WorldState").get_fact(&"train_17_copy_filed", false)), "The routed copy is filed as copied")
+	await _shot("p5b_copy_filed")
+
 	# 10. The natural route ends at the door, still on real legs.
 	var door_root := office.get_node("SouthDoor") as Node3D
 	for waypoint in [Vector3(0.7, 0, 0.35), Vector3(-0.7, 0, 1.1)]:

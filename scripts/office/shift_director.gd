@@ -171,6 +171,8 @@ var _compiler := MorseScheduleCompiler.new()
 ## A deadline warning waiting for the wire to free up. Never extends anything;
 ## dropped the moment the situation it described is gone.
 var _pending_warning: StringName = &""
+## Seconds left of a mid-night wire answer before the next slot loads; -1 idle.
+var _reply_hold: float = -1.0
 ## The previous slot's misroute answer, armed only by its recorded world fact
 ## and spoken once during this slot's waiting stretch (ROADMAP 2.4).
 var _misroute_signal_text: String = ""
@@ -314,6 +316,12 @@ func advance(delta: float) -> void:
 
 func _advance_step(delta: float) -> void:
 	_advance_station_clock(delta)
+	if _reply_hold >= 0.0:
+		_reply_hold -= delta
+		if _reply_hold <= 0.0:
+			_reply_hold = -1.0
+			_advance_to_slot(_slot_index + 1)
+		return
 	# A deferred warning waits for the wire to free up; the deadline itself is
 	# never extended by the wait. Stale reminders are dropped, not played.
 	if _pending_warning != &"":
@@ -344,9 +352,12 @@ func _advance_step(delta: float) -> void:
 				_begin_receiving()
 		Phase.AWAITING_ROUTE:
 			_phase_timer += delta
-			_maybe_nag()
-			if _route_elapsed() >= route_deadline_seconds:
-				_default_route()
+			# Once the order is out the copy is being filed: no more asking for
+			# a route the operator already gave (plan 4.4).
+			if not _route_given():
+				_maybe_nag()
+				if _route_elapsed() >= route_deadline_seconds:
+					_default_route()
 		Phase.CLOSING:
 			_phase_timer += delta
 			if _phase_timer >= _closing_wire_seconds + closing_delay_seconds:
@@ -491,6 +502,7 @@ func _advance_to_slot(index: int) -> void:
 		return
 
 	_slot_index = index
+	_reply_hold = -1.0
 	_apply_station_stage(index)
 	_calls_sent = 0
 	_nags_sent = 0
@@ -667,7 +679,21 @@ func _on_copy_finished(scenario_id: String) -> void:
 func _on_session_completed(_scenario: TelegraphScenarioData) -> void:
 	if not enabled:
 		return
+	# A copy filed with a correction mid-night is answered on the wire before
+	# the next traffic; the last slot's answer rides out with the closing sign.
+	if _slot_index + 1 < _scenario_count():
+		var reply := _wire_reply_text()
+		var seconds := _play_on_wire(reply) if not reply.is_empty() else 0.0
+		if seconds > 0.0:
+			_reply_hold = seconds + answer_beat_seconds
+			return
 	_advance_to_slot(_slot_index + 1)
+
+func _route_given() -> bool:
+	return session != null and session.get_state() in [
+		TelegraphSessionController.State.AWAITING_COMMIT,
+		TelegraphSessionController.State.CONSEQUENCE,
+	]
 
 func _on_routing_resolved(_action: String, outcome: TelegraphSessionController.RoutingOutcome) -> void:
 	# A lapse is counted exactly once, here, whether it came from the route

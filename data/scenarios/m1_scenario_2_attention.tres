@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" path="res://scripts/telegraph/session/telegraph_scenario_data.gd" id="1_scen"]
 [ext_resource type="Script" path="res://scripts/telegraph/transmission_data.gd" id="2_trans"]
+[ext_resource type="Script" path="res://scripts/telegraph/session/telegraph_commit_option.gd" id="3_commit"]
 
 [sub_resource type="Resource" id="Resource_trans2"]
 script = ExtResource("2_trans")
@@ -9,6 +10,23 @@ transmission_id = &"trans_m1_02_hold_freight"
 true_message = "FREIGHT 71 EAST"
 elias_perception = "FREIGHT 71 EAST"
 written_transcript = "FREIGHT 71 EAST"
+
+[sub_resource type="Resource" id="Resource_amend2"]
+script = ExtResource("3_commit")
+action_id = &"amend_copy"
+display_label = "AMEND COPY"
+requires_correction = true
+world_fact = "freight_copy_amended"
+knowledge_fact = "amendment_entered_attention_hold_freight"
+result_text = "CORRECTION FILED"
+
+[sub_resource type="Resource" id="Resource_file2"]
+script = ExtResource("3_commit")
+action_id = &"file_as_copied"
+display_label = "FILE AS COPIED"
+world_fact = "freight_copy_filed"
+knowledge_fact = "filed_copy_attention_hold_freight"
+result_text = "COPY FILED"
 
 [resource]
 script = ExtResource("1_scen")
@@ -27,3 +45,16 @@ completion_fact = ""
 requires_transcript_verification = true
 critical_copy = true
 transcript_reveal_cues = PackedFloat32Array(0.061404, 0.140351, 0.175439, 0.22807, 0.333333, 0.421053, 0.473684, 0.622807, 0.745614, 0.807018, 0.877193, 0.947368, 1.0)
+commit_options = [SubResource("Resource_amend2"), SubResource("Resource_file2")]
+commit_deadline_seconds = 30.0
+commit_lapsed_world_fact = "freight_copy_unfiled"
+commit_lapsed_knowledge_fact = "unfiled_attention_hold_freight"
+consequence_hold_seconds = 2.5
+wire_reply_by_outcome = {
+"amended_other": "SAID WHAT",
+"amended_true": "SAID WHAT"
+}
+amendment_wrong_world_fact = "freight_copy_amended"
+amendment_knowledge_fact = "amendment_entered_attention_hold_freight"
+filed_word_world_fact = "freight_filed_word"
+filed_word_knowledge_key = "filed_word_attention_hold_freight"

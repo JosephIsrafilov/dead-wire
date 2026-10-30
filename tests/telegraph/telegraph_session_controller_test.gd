@@ -74,7 +74,11 @@ func _init() -> void:
 	# Submit correct decision
 	var route_ok := controller.submit_routing_decision("CLEAR EAST")
 	if not assert_condition(route_ok, "Routing decision submitted"): return
-	if not assert_condition(controller.get_state() == TelegraphSessionController.State.COMPLETE, "State is COMPLETE after routing"): return
+	# Plan 4.4: the routed copy is filed by the same ritual as every copy.
+	if not assert_condition(controller.get_state() == TelegraphSessionController.State.AWAITING_COMMIT, "After routing the copy waits to be filed"): return
+	if not assert_condition(controller.submit_commit(&"file_as_copied"), "The routed copy is filed as copied"): return
+	controller.advance_consequence(5.0)
+	if not assert_condition(controller.get_state() == TelegraphSessionController.State.COMPLETE, "State is COMPLETE once the routed copy is filed"): return
 	if not assert_condition(world.has_fact("train_17_routed_clear") and world.get_fact("train_17_routed_clear") == true, "WorldState recorded correct fact"): return
 	if not assert_condition(not world.has_fact("train_17_held_in_error"), "Incorrect fact is NOT set"): return
 	if not assert_condition(world.has_fact("train_17_no_order_sent") == false, "Lapse fact is NOT set on a correct route"): return
@@ -91,7 +95,9 @@ func _init() -> void:
 	_drain_paper(paper)
 	controller.mark_transcript_verified()
 	controller.submit_routing_decision("HOLD")
-	if not assert_condition(controller.get_state() == TelegraphSessionController.State.COMPLETE, "State is COMPLETE after incorrect routing"): return
+	if not assert_condition(controller.get_state() == TelegraphSessionController.State.AWAITING_COMMIT, "A wrong order out still leaves a copy to file"): return
+	_file_routed(controller)
+	if not assert_condition(controller.get_state() == TelegraphSessionController.State.COMPLETE, "State is COMPLETE after incorrect routing and filing"): return
 	if not assert_condition(world.has_fact("train_17_held_in_error") and world.get_fact("train_17_held_in_error") == true, "WorldState recorded incorrect consequence"): return
 	if not assert_condition(not world.has_fact("train_17_routed_clear"), "Correct fact is NOT set on mistake"): return
 	if not assert_condition(not world.has_fact("train_17_no_order_sent"), "A wrong order is not a lapse"): return
@@ -120,6 +126,7 @@ func _init() -> void:
 	if not assert_condition(controller.get_state() == TelegraphSessionController.State.AWAITING_ROUTE, "Scenario 2 reaches AWAITING_ROUTE after inspection"): return
 	controller.submit_routing_decision("HOLD")
 	if not assert_condition(world.has_fact("freight_held_correctly") and world.get_fact("freight_held_correctly") == true, "Scenario 2 correct routing recorded"): return
+	_file_routed(controller)
 
 	# 3b. W08: a service signal ending on the same scheduler is not t0.
 	controller.load_scenario(scen2)
@@ -255,6 +262,7 @@ func _init() -> void:
 	if not assert_condition(controller.get_state() == TelegraphSessionController.State.VERIFYING, "Returned copy completes into VERIFYING"): return
 	if not assert_condition(controller.mark_transcript_verified(), "Verification unlocks routing after the round trip"): return
 	controller.submit_routing_decision("CLEAR EAST")
+	_file_routed(controller)
 	if not assert_condition(controller.get_state() == TelegraphSessionController.State.COMPLETE, "Round-trip session completes"): return
 
 	# 9. W04/W05: grace closes an unfinished sheet; returning after grace
@@ -352,6 +360,11 @@ func _init() -> void:
 
 	print("--- All Telegraph Session Controller Tests PASSED ---")
 	quit(0)
+
+## Plan 4.4: a routed copy is filed as copied before the slot completes.
+func _file_routed(controller: TelegraphSessionController) -> void:
+	controller.submit_commit(&"file_as_copied")
+	controller.advance_consequence(5.0)
 
 func _drain_paper(p: TranscriptPaper) -> void:
 	var guard := 0

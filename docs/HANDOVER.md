@@ -8,7 +8,7 @@
 
 - Движок: Godot 4.7.1 stable (baseline), `C:/Users/YUSIF/Desktop/Godot_v4.7.1-stable_win64.exe/Godot_v4.7.1-stable_win64_console.exe`.
   Один движок для тестов/захватов/беты — 4.7.1 (ROADMAP 0.8). Flake `shift_director_test` (exit 139 в teardown) принят: повторный прогон, логи в `test_logs/`. Новые evidence-артефакты в git не кладутся, история не переписывается (0.9).
-- Базовая линия: **117 suites / 3498 assertions / 0 FAIL**, gdlint чистый, boot exit 0. Числа не должны падать.
+- Базовая линия: **133 suites / 3708 assertions / 0 FAIL**, gdlint чистый, boot exit 0. Числа не должны падать.
 - Известный фон (не регресс): на shutdown — ObjectDB leaks / resources in use (boot ≈10/2); в оконных
   прогонах — 7 texture RID. **`shift_director_test` примерно в 1/3 полных прогонов падает на teardown
   движка (exit 139) ПОСЛЕ всех 132 PASS** — godot#117991, открыт, не «чинится повтором»:
@@ -56,8 +56,8 @@ Suites: `tests/{audio,debug,events,integration,office,player,state,telegraph,ui}
 
 | Инструмент | Доказывает | Ожидание | Вывод |
 |---|---|---|---|
-| `"$GODOT" --path . --script tools/production_evidence_capture.gd` | полный production-маршрут | **58 PASS** | `.dream-loop/production_evidence/` |
-| `"$GODOT" --path . --script tools/first_night_playthrough.gd -- --capture` | вся ночь: хук + рассвет | **78 PASS** | `.dream-loop/playthrough_water/` |
+| `"$GODOT" --path . --script tools/production_evidence_capture.gd` | полный production-маршрут (с подшивкой копии 1) | **63 PASS** | `.dream-loop/production_evidence/` |
+| `"$GODOT" --path . --script tools/first_night_playthrough.gd -- --capture` | вся ночь: хук + рассвет | **сломан** (30.10: синтетические нажатия E не доходят, 37 FAIL уже на 9a48128) | `.dream-loop/playthrough_water/` |
 | `tools/room_overview_capture.gd` | комната o1–o9 стоя, c1–c4 сидя | — | `.dream-loop/overview/` |
 | `tools/writing_evidence_capture.gd` | рука и перо на листе | — | `.dream-loop/writing_evidence/` |
 | `tools/hand_turntable_capture.gd` | кисть/манжет/рукав, 8 углов | — | `.dream-loop/hand_turntable/` |
