@@ -13,6 +13,7 @@ var _vsync: CheckBox
 var _fps: OptionButton
 var _invert: CheckBox
 var _defaults: Button
+var _captions: CheckBox
 ## Each slider's printed value, so a setting is a number and not a guess.
 var _readouts: Dictionary = {}
 
@@ -50,6 +51,9 @@ func _ready() -> void:
 	_invert = CheckBox.new()
 	_invert.text = "Invert Y"
 	toggle_row.add_child(_invert)
+	_captions = CheckBox.new()
+	_captions.text = "Captions"
+	toggle_row.add_child(_captions)
 	_defaults = Button.new()
 	_defaults.text = "Default"
 	toggle_row.add_child(_defaults)
@@ -62,6 +66,7 @@ func _ready() -> void:
 	_vsync.toggled.connect(_on_vsync)
 	_fps.item_selected.connect(_on_fps)
 	_invert.toggled.connect(_on_invert)
+	_captions.toggled.connect(_on_captions)
 	_defaults.pressed.connect(_on_defaults)
 	visibility_changed.connect(refresh)
 
@@ -113,6 +118,7 @@ func refresh() -> void:
 		_vsync.set_pressed_no_signal(settings.vsync)
 		_fps.select(_fps.get_item_index(settings.max_fps))
 		_invert.set_pressed_no_signal(settings.invert_y)
+		_captions.set_pressed_no_signal(settings.sound_captions)
 
 func _on_mode(index: int) -> void:
 	var settings := GameSettings.load_settings()
@@ -153,6 +159,11 @@ func _on_fps(index: int) -> void:
 func _on_invert(pressed: bool) -> void:
 	var settings := GameSettings.load_settings()
 	settings.invert_y = pressed
+	_commit(settings)
+
+func _on_captions(pressed: bool) -> void:
+	var settings := GameSettings.load_settings()
+	settings.sound_captions = pressed
 	_commit(settings)
 
 ## Back to how the night is meant to look; the first-launch brightness stays

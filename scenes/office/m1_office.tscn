@@ -75,6 +75,7 @@
 [ext_resource type="PackedScene" path="res://scenes/office/hanging_coat.tscn" id="60_hanging_coat"]
 [ext_resource type="PackedScene" path="res://scenes/office/loose_props.tscn" id="61_loose_props"]
 [ext_resource type="Script" path="res://scripts/ui/murmur_caption.gd" id="murmur"]
+[ext_resource type="Script" path="res://scripts/ui/sound_captions.gd" id="sound_captions"]
 
 [sub_resource type="BoxShape3D" id="SeatInteract"]
 size = Vector3(0.52, 0.76, 0.52)
@@ -1046,6 +1047,11 @@ script = ExtResource("42_foley")
 [node name="NightGuidance" type="CanvasLayer" parent="."]
 layer = 4
 script = ExtResource("guidance")
+
+; Captions for the sounds that are not the wire (plan 6.9), off by default.
+[node name="SoundCaptions" type="CanvasLayer" parent="."]
+layer = 4
+script = ExtResource("sound_captions")
 
 [node name="MurmurCaption" type="CanvasLayer" parent="." node_paths=PackedStringArray("session")]
 layer = 4

@@ -34,6 +34,8 @@ var vsync: bool = true
 ## 0 = no limit.
 var max_fps: int = 0
 var invert_y: bool = false
+## Captions for non-wire sounds (plan 6.9), off unless the player wants them.
+var sound_captions: bool = false
 const FPS_LIMITS: Array[int] = [0, 30, 60, 120, 144]
 ## The image/reading/display options a "Default" press restores.
 const DEFAULTS := {
@@ -73,6 +75,7 @@ static func load_settings(path: String = "") -> GameSettings:
 	settings.vsync = bool(config.get_value(SECTION, "vsync", settings.vsync))
 	settings.max_fps = int(config.get_value(SECTION, "max_fps", settings.max_fps))
 	settings.invert_y = bool(config.get_value(SECTION, "invert_y", settings.invert_y))
+	settings.sound_captions = bool(config.get_value(SECTION, "sound_captions", settings.sound_captions))
 	settings.sanitize()
 	return settings
 
@@ -109,6 +112,7 @@ func save(path: String = "") -> Error:
 	config.set_value(SECTION, "vsync", vsync)
 	config.set_value(SECTION, "max_fps", max_fps)
 	config.set_value(SECTION, "invert_y", invert_y)
+	config.set_value(SECTION, "sound_captions", sound_captions)
 	return config.save(path if not path.is_empty() else config_path())
 
 ## Pushes the current values at the things they control.
@@ -124,6 +128,9 @@ func apply(player: PlayerController) -> void:
 		player.base_fov = vertical_fov
 		var office := player.get_parent()
 		_apply_brightness(office)
+		var captions := office.get_node_or_null("SoundCaptions") if office != null else null
+		if captions is SoundCaptions:
+			(captions as SoundCaptions).enabled = sound_captions
 		var guidance := office.get_node_or_null("NightGuidance") if office != null else null
 		if guidance != null:
 			for property in guidance.get_property_list():
