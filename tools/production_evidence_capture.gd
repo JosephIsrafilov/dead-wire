@@ -157,11 +157,13 @@ func _run() -> void:
 	check(to_board.reached and to_board.teleports == 0, "Walked the open floor toward the east wall")
 	var at_board := await _walk_to(Vector3(2.05, 0, -0.85), 0.3)
 	check(at_board.reached and at_board.teleports == 0, "Reached the routing board on movement input")
-	check(await _interact_with(office.routing_board.get_interactable(), "the routing board"), "The board opened through ray + E")
-	check(office.routing_board.is_open, "Routing board opened from a real standing position")
+	# Plan 6.5: no modal — the hand goes to the lever's CLEAR EAST notch.
+	check(await _aim_until(office.routing_board.get_node("ClearStopInteractable") as Interactable,
+		"the CLEAR EAST notch"), "The lever's CLEAR EAST notch came under the crosshair")
+	check(not office.routing_board.is_open, "The signal opens no modal from a real standing position")
 	await _shot("p4_board_standing")
 
-	# 9. Route through the InputMap action, not a method call.
+	# 9. Route through the InputMap action at the lever, not a method call.
 	_press_action("route_clear_east")
 	await _wait_until(func() -> bool:
 		var knowledge := _knowledge()
@@ -370,6 +372,19 @@ func _aim_at(world_point: Vector3) -> void:
 ## Aim, wait for the interaction ray to actually hold the target, then E.
 ## The aim point is the interactable's collision shape centre — the shape, not
 ## the node origin, is what the ray must find.
+## Aim until the ray holds the target, without pressing anything.
+func _aim_until(target: Interactable, label: String) -> bool:
+	if target == null:
+		return _fail("no interactable for %s" % label)
+	await _aim_at(_aim_point(target))
+	var guard := 0
+	while (interaction.current_target != target or not target.is_actionable) and guard < 180:
+		await process_frame
+		guard += 1
+	if interaction.current_target != target or not target.is_actionable:
+		return _fail("%s never came under the crosshair" % label)
+	return true
+
 func _interact_with(target: Interactable, label: String) -> bool:
 	if target == null:
 		return _fail("no interactable for %s" % label)

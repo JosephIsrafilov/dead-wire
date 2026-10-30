@@ -39,7 +39,7 @@ func _test_rejected_intent() -> bool:
 		[not board.has_submitted_this_session, "Rejected intent leaves the slot unsubmitted"],
 		[board._last_route_action.is_empty(), "Rejected intent creates no accepted memory"],
 		[is_equal_approx(pivot.rotation.z, rest), "Rejected intent never moves the lever"],
-		[board.is_open and board.get_interactable().is_actionable, "Rejected intent leaves the pending board actionable"],
+		[board.is_open and _still_pending(board), "Rejected intent leaves the pending board actionable"],
 	]
 	board.free()
 	return _assert_checks(checks)
@@ -72,7 +72,7 @@ func _test_accepted_intent() -> bool:
 		[state_at_feedback == [true], "Accepted state is committed before feedback is published"],
 		[is_equal_approx(pivot.rotation.z, deg_to_rad(board.lever_throw_degrees)), "Acknowledgement moves the lever"],
 		[not board.is_open, "Accepted request closes the board"],
-		[not board.get_interactable().is_actionable and board.get_interactable().prompt_text == "Route recorded: CLEAR EAST", "Accepted board presents read-only route status"],
+		[not board.get_interactable().is_actionable and board.get_interactable().prompt_text == "Signal at CLEAR EAST", "Accepted board presents read-only route status"],
 		[not board.select_action("HOLD") and intents.size() == 1, "Terminal slot rejects another request"],
 	]
 	board.free()
@@ -133,7 +133,7 @@ func _test_reset_during_accepted_feedback() -> bool:
 		[nested_results == [false], "Slot reset cannot reenter the still-dispatching request"],
 		[board._last_route_action == "CLEAR EAST", "Next slot preserves the old accepted route memory"],
 		[not board.has_submitted_this_session, "Old acknowledgement never submits the new slot"],
-		[board.is_open and board.get_interactable().is_actionable, "Old request cannot close the new slot's board"],
+		[board.is_open and _still_pending(board), "Old request cannot close the new slot's board"],
 	]
 	if not _assert_checks(checks):
 		board.free()
@@ -164,7 +164,7 @@ func _test_reset_before_acknowledgement() -> bool:
 		[not board.has_submitted_this_session, "Acknowledgement after reset cannot mark the next slot submitted"],
 		[board._last_route_action == "CLEAR EAST", "Acknowledgement after reset preserves the old accepted payload"],
 		[is_equal_approx(pivot.rotation.z, deg_to_rad(board.lever_throw_degrees)), "Old accepted payload still drives its physical lever"],
-		[board.is_open and board.get_interactable().is_actionable, "Old acknowledgement leaves the new pending board open"],
+		[board.is_open and _still_pending(board), "Old acknowledgement leaves the new pending board open"],
 	]
 	board.free()
 	return _assert_checks(checks)
@@ -185,7 +185,7 @@ func _test_watch_reset_during_intent() -> bool:
 		[not result and feedback.is_empty(), "New watch invalidates an old pending acknowledgement"],
 		[not board.has_submitted_this_session and board._last_route_action.is_empty(), "New watch retains no old pending route state"],
 		[is_zero_approx(pivot.rotation.z), "New watch retains its rest position after stale acknowledgement"],
-		[board.is_open and board.get_interactable().is_actionable, "Stale watch request leaves the new watch actionable"],
+		[board.is_open and _still_pending(board), "Stale watch request leaves the new watch actionable"],
 	]
 	board.free()
 	return _assert_checks(checks)
@@ -261,6 +261,12 @@ func _make_board() -> RoutingBoard:
 	board.add_child(interactable)
 	board.get_interactable()
 	return board
+
+## Plan 6.5: the backboard never promises an E, so "still actionable" means
+## the order is still awaited and not yet given.
+func _still_pending(board: RoutingBoard) -> bool:
+	return board.is_awaiting_route and not board.has_submitted_this_session \
+		and not board.get_interactable().is_actionable
 
 func _prepare(board: RoutingBoard) -> void:
 	board.set_awaiting_route(true)

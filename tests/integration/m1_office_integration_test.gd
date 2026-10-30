@@ -120,13 +120,14 @@ func _init() -> void:
 	if not assert_condition(viewer.is_open(), "2nd interaction with TranscriptPaper opens DocumentViewer immediately"): return
 	viewer.close_document()
 
-	# Player opens Routing Board and sends Key 1 via InputEventKey
+	# Plan 6.5: the order is given with the hand on the lever, not in a modal.
+	var locks_before := [office.player.is_movement_locked, office.player.is_look_locked]
 	board_act.interact()
-	if not assert_condition(board.is_open, "Routing Board is open via interact()"): return
+	if not assert_condition(not board.is_open, "An E on the signal's backboard opens no modal"): return
 	if not assert_condition(board.is_awaiting_route, "Routing Board is_awaiting_route is true"): return
 	var player_interaction := office.player.get_node_or_null("InteractionController") as InteractionController
-	if not assert_condition(office.player.is_movement_locked and office.player.is_look_locked, "Routing Board locks player movement and look while open"): return
-	if not assert_condition(player_interaction != null and player_interaction.is_ui_blocked, "Routing Board blocks world interactions while open"): return
+	if not assert_condition([office.player.is_movement_locked, office.player.is_look_locked] == locks_before, "The signal locks neither movement nor look"): return
+	if not assert_condition(player_interaction != null and not player_interaction.is_ui_blocked, "The room stays live at the signal"): return
 
 	var ev_clear_east := InputEventKey.new()
 	ev_clear_east.physical_keycode = KEY_1
@@ -137,10 +138,11 @@ func _init() -> void:
 	ev_clear_east_echo.pressed = true
 	ev_clear_east_echo.echo = true
 	board._input(ev_clear_east_echo)
-	if not assert_condition(board.is_open and not board.has_submitted_this_session, "Routing Board ignores echoed route input"): return
-	board._input(ev_clear_east)
+	if not assert_condition(not board.has_submitted_this_session, "Routing Board ignores echoed route input"): return
+	var clear_notch := board.get_node("ClearStopInteractable") as Interactable
+	clear_notch.interact()
 
-	if not assert_condition(not board.is_open, "Routing Board closed after selection"): return
+	if not assert_condition(not board.is_open and board.has_submitted_this_session, "The CLEAR EAST notch sends the order"): return
 	if not assert_condition(not office.player.is_look_locked and office.player.is_movement_locked, "Seated operator keeps walk lock but regains look on board close"): return
 	if not assert_condition(player_interaction != null and not player_interaction.is_ui_blocked, "Closing Routing Board restores world interactions"): return
 	# Plan 4.4: the routed copy is filed on the same desk as every copy.
@@ -197,13 +199,8 @@ func _init() -> void:
 	if not assert_condition(office.session_controller.get_state() == TelegraphSessionController.State.AWAITING_ROUTE, "Scenario 2 transcript inspection unlocks routing"): return
 	viewer.close_document()
 
-	# Open board and route HOLD via InputEventKey 2
-	board_act.interact()
-	var ev_hold := InputEventKey.new()
-	ev_hold.physical_keycode = KEY_2
-	ev_hold.pressed = true
-	ev_hold.echo = false
-	board._input(ev_hold)
+	# Route HOLD at the lever's HOLD notch (plan 6.5).
+	(board.get_node("HoldStopInteractable") as Interactable).interact()
 
 	if not assert_condition(office.copy_commit_desk.commit_option(&"file_as_copied"), "Scenario 2 copy is filed as copied at the desk"): return
 	office.session_controller.advance_consequence(5.0)

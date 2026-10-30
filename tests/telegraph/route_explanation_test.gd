@@ -1,11 +1,9 @@
 extends SceneTree
-## The route prompt overlay carries a single hint — how to put the board down.
-## The orders themselves live on the buttons and on the physical board face;
-## the hint must never restate or grade them, and must leave the button band
-## untouched (rects are guarded by tests/ui/routing_board_overlay_test.gd).
+## Plan 6.5: the signal explains itself in the room — its header, the names on
+## its two notches and the framed rules beside it. None of it grades the
+## pending choice or names tonight's trains: the rules say how the signal is
+## worked, never which way tonight's order should go.
 ## godot --headless --audio-driver Dummy --path . --script tests/telegraph/route_explanation_test.gd
-
-const EXPECTED_TEXT := "[Esc] Put down board; the line clock keeps running"
 
 func _init() -> void:
 	call_deferred("_run")
@@ -17,17 +15,20 @@ func _run() -> void:
 	var board := scene.instantiate() as RoutingBoard
 	root.add_child(board)
 
-	var panel := board.get_node_or_null("RoutePromptUI/Panel") as Control
-	var label := board.get_node_or_null("RoutePromptUI/Panel/Label") as Label
-	if not assert_condition(panel != null and label != null, "Route prompt panel and label exist"): return
-	var text := label.text
+	if not assert_condition(board.get_node_or_null("RoutePromptUI") == null, "No overlay explains the signal from outside the room"): return
+	var header := board.get_node_or_null("HeaderLabel3D") as Label3D
+	if not assert_condition(header != null and header.text == "TRAIN-ORDER SIGNAL", "The signal names itself on its own card"): return
+	var clear_plate := board.get_node_or_null("ClearEastLabel3D") as Label3D
+	var hold_plate := board.get_node_or_null("HoldLabel3D") as Label3D
+	if not assert_condition(clear_plate.text == "CLEAR EAST" and hold_plate.text == "HOLD", "Each notch carries the order it gives"): return
+	var clear_stop := board.get_node_or_null("ClearStopInteractable") as Interactable
+	if not assert_condition(clear_stop != null and clear_stop.prompt_text.ends_with("CLEAR EAST"), "Aiming at a notch names the order it would give"): return
 
-	if not assert_condition(not panel.visible, "Route prompt stays hidden until a decision is pending"): return
-	if not assert_condition(text == EXPECTED_TEXT, "Route prompt text matches the approved explanation exactly"): return
-	if not assert_condition(text.find("CORRECT") == -1 and text.find("WRONG") == -1, "Route explanation does not grade the pending choice"): return
-	if not assert_condition(label.get_theme_font_size("font_size") == 18, "Route prompt uses the 18px font"): return
-	if not assert_condition(panel.offset_left == 350.0 and panel.offset_top == 558.0 and panel.offset_right == 930.0 and panel.offset_bottom == 678.0, "Route prompt panel uses the planned bounds (350, 558, 930, 678)"): return
-	if not assert_condition(label.offset_left == 14.0 and label.offset_top == 8.0 and label.offset_right == 566.0 and label.offset_bottom == 44.0, "Route prompt label is a single-line band above the mouse buttons (14, 8, 566, 44)"): return
+	var rules := board.rules_text
+	if not assert_condition(rules.contains("STOP") and rules.contains("dismissed"), "The rules are strict and say how the signal stands"): return
+	if not assert_condition(rules.find("CORRECT") == -1 and rules.find("WRONG") == -1, "The rules do not grade the pending choice"): return
+	for tonight in ["TRAIN 17", "FREIGHT", "71", "WATER", "WATCHER"]:
+		if not assert_condition(not rules.contains(tonight), "The rules never name tonight's traffic ('%s')" % tonight): return
 
 	board.free()
 	print("--- All Route Explanation Tests PASSED ---")

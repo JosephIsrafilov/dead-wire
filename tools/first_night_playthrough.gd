@@ -132,10 +132,13 @@ func _run() -> void:
 		check(not office.document_viewer.is_open(), "E puts the transcript down")
 		if slot < 2:
 			await _stand()
-			await _interact_at(Vector3(1.4, 0, -0.75), office.routing_board.get_interactable())
-			check(office.routing_board.is_open, "Routing board opens from reachable floor")
+			# Plan 6.5: the order is given with the hand on the lever's notch.
+			var notch := "ClearStopInteractable" if slot == 0 else "HoldStopInteractable"
+			await _interact_at(Vector3(1.6, 0, -0.85), office.routing_board.get_node(notch))
+			check(office.routing_board.has_submitted_this_session and not office.routing_board.is_open,
+				"The lever is thrown from reachable floor, no modal")
+			await create_timer(0.5).timeout
 			await _shot("05_routing_%d" % slot)
-			await _press("route_clear_east" if slot == 0 else "route_hold")
 			# Plan 4.4: every copy is filed by the same ritual, routed ones too.
 			check(office.shift_director.get_slot_index() == slot \
 				and office.copy_commit_desk.is_enabled(), "The routed copy waits on the filing desk")

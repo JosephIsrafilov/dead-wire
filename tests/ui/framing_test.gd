@@ -114,9 +114,12 @@ func _run() -> void:
 	if not assert_condition(opened_count[0] == 0, "Idle board emits no board_opened"): return
 	if not assert_condition(not player.is_movement_locked, "Idle board leaves movement free"): return
 	# Positive control: the same counter does increment on a real opening.
+	# Plan 6.5: with an order pending the backboard still opens nothing; the
+	# order is given at the lever's notches, and movement stays free.
 	board.set_awaiting_route(true)
 	board._on_interacted()
-	if not assert_condition(opened_count[0] == 1, "Awaiting board interaction emits exactly one board_opened"): return
+	if not assert_condition(opened_count[0] == 0 and not board.is_open and not player.is_movement_locked,
+		"An E on the backboard with an order pending opens no modal and locks nothing"): return
 	board.close_board()
 
 	# 5d. A half-written transcript is not a readable document.

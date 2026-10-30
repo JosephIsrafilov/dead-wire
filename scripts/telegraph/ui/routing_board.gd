@@ -7,7 +7,7 @@ signal route_accepted(action: String)
 signal board_opened()
 signal board_closed()
 
-@export var prompt_message: String = "Train-Order Board"
+@export var prompt_message: String = "Train-Order Signal"
 @export var is_awaiting_route: bool = false
 
 ## The switch lever physically throws when a route is set. Angles in degrees from
@@ -17,9 +17,14 @@ signal board_closed()
 @export var lever_impact_stream: AudioStream = preload("res://assets/audio/sfx/kenney_impact/lever_stop.ogg")
 ## The lever stop is furniture working, not the wire: it rides the Foley bus.
 @export var lever_impact_bus: StringName = &"Foley"
+## The repeater blade, as the semaphore outside: level is STOP, dropped is
+## CLEAR. Rest is STOP — the signal stands at stop until an order clears it.
+@export var repeater_clear_degrees: float = -55.0
+## The framed rules beside the signal (plan 6.5): strict, in the company's voice.
+@export var rules_title: String = "RULES FOR THE TRAIN-ORDER SIGNAL"
+@export_multiline var rules_text: String = ""
 
 var interactable: Interactable = null
-var route_prompt: Control = null
 var is_open: bool = false
 var has_submitted_this_session: bool = false
 ## The last route that actually went out this watch. A new slot may reset the
@@ -53,23 +58,39 @@ func _capture_lever_rest() -> void:
 func _ready() -> void:
 	_capture_lever_rest()
 	interactable = get_node_or_null("Interactable") as Interactable
-	route_prompt = get_node_or_null("RoutePromptUI/Panel") as Control
 
 	if interactable != null:
 		interactable.prompt_text = prompt_message
 		if not interactable.interacted.is_connected(_on_interacted):
 			interactable.interacted.connect(_on_interacted)
 
-	_add_route_buttons()
 	_add_direct_stop_targets()
+	_bind_rules()
 	_update_presentation()
+
+## The rules frame reads through the office's document viewer, like any paper.
+func _bind_rules() -> void:
+	var text := get_node_or_null("SignalRules/Text") as Label3D
+	if text != null:
+		text.text = rules_title + "\n\n" + rules_text
+	var rules := get_node_or_null("SignalRules/Interactable") as Interactable
+	if rules != null and not rules.interacted.is_connected(read_rules):
+		rules.interacted.connect(read_rules)
+
+func read_rules() -> bool:
+	var office := get_parent() as M1OfficeController
+	if office == null or office.document_viewer == null or rules_text.is_empty():
+		return false
+	office.document_viewer.open_document("signal_rules", rules_title, rules_text, "[E / Esc] Put Down")
+	return true
 
 func _add_direct_stop_targets() -> void:
 	if get_node_or_null("ClearStopInteractable") != null:
 		return
+	# The two notches of the quadrant: aim at the side the lever should go.
 	var configs := [
-		["ClearStopInteractable", "CLEAR EAST", "Throw Lever: CLEAR EAST", Vector3(-0.19, 0.43, -0.09)],
-		["HoldStopInteractable", "HOLD", "Throw Lever: HOLD", Vector3(0.19, 0.43, -0.09)],
+		["ClearStopInteractable", "CLEAR EAST", "Throw Lever: CLEAR EAST", Vector3(-0.34, 0.3, -0.2)],
+		["HoldStopInteractable", "HOLD", "Throw Lever: HOLD", Vector3(0.34, 0.3, -0.2)],
 	]
 	for cfg in configs:
 		var area := Interactable.new()
@@ -81,9 +102,9 @@ func _add_direct_stop_targets() -> void:
 		var shape := CollisionShape3D.new()
 		shape.name = "CollisionShape3D"
 		var box := BoxShape3D.new()
-		# Tall enough to own the whole lever band between the split modal
-		# boxes, so a real aim at the lever never falls through to the slate.
-		box.size = Vector3(0.18, 0.34, 0.12)
+		# Owns the half of the quadrant on its side, from the notch up past
+		# the grip's swing, so a real aim at the lever lands on a choice.
+		box.size = Vector3(0.3, 0.5, 0.2)
 		shape.shape = box
 		area.add_child(shape)
 		area.position = cfg[3]
@@ -100,21 +121,6 @@ func throw_direct_route(action: String) -> bool:
 		return false
 	return _request_route(action)
 
-func _add_route_buttons() -> void:
-	if route_prompt == null:
-		return
-	for index in 2:
-		var button := Button.new()
-		button.name = "ClearEastButton" if index == 0 else "HoldButton"
-		button.text = "[1] CLEAR EAST" if index == 0 else "[2] HOLD"
-		button.position = Vector2(65 + index * 225, 74)
-		button.size = Vector2(210, 44)
-		button.pressed.connect(_on_route_button.bind("CLEAR EAST" if index == 0 else "HOLD"))
-		route_prompt.add_child(button)
-
-func _on_route_button(action: String) -> void:
-	select_action(action)
-
 func get_interactable() -> Interactable:
 	if interactable == null:
 		interactable = get_node_or_null("Interactable") as Interactable
@@ -129,10 +135,6 @@ func set_awaiting_route(awaiting: bool) -> void:
 
 func _update_presentation() -> void:
 	_add_direct_stop_targets()
-	if route_prompt == null:
-		route_prompt = get_node_or_null("RoutePromptUI/Panel") as Control
-	if route_prompt != null:
-		route_prompt.visible = is_open and is_awaiting_route and not has_submitted_this_session
 	var can_direct := is_awaiting_route and not has_submitted_this_session and not is_open
 	for stop_name in ["ClearStopInteractable", "HoldStopInteractable"]:
 		var stop_act := get_node_or_null(stop_name) as Interactable
@@ -145,26 +147,18 @@ func _update_presentation() -> void:
 			stop_act.collision_layer = 2 if can_direct else 0
 	if interactable == null:
 		return
-	if is_awaiting_route and not has_submitted_this_session:
-		# A decision is pending: the board is an action again.
-		interactable.prompt_text = prompt_message
-		interactable.is_actionable = true
-	elif not _last_route_action.is_empty():
-		# The night's last route stays on the board after the slot moves on —
-		# "Last route", not a fresh promise of an interaction.
-		interactable.prompt_text = "Route recorded: %s" % _last_route_action
-		interactable.is_actionable = false
-	elif not is_awaiting_route:
-		# No decision is pending. E must not promise an interaction that does
-		# nothing, so an idle board reads as plain line status.
-		interactable.prompt_text = "Routing Board — Line Status"
-		interactable.is_actionable = false
+	# The backboard and repeater only show; the order is given at the lever
+	# (plan 6.5), so E here never promises an interaction.
+	interactable.is_actionable = false
+	if not _last_route_action.is_empty() and not (is_awaiting_route and not has_submitted_this_session):
+		# The night's last order stays on the repeater after the slot moves on.
+		interactable.prompt_text = "Signal at %s" % _last_route_action
 	else:
 		interactable.prompt_text = prompt_message
-		interactable.is_actionable = true
 
 func _input(event: InputEvent) -> void:
 	if not is_open:
+		_handle_stand_keys(event)
 		return
 
 	var escape_key: bool = event is InputEventKey and event.pressed \
@@ -198,6 +192,32 @@ func _input(event: InputEvent) -> void:
 			if vp != null:
 				vp.set_input_as_handled()
 
+## At the stand, the route keys throw the lever directly, the way the commit
+## desk takes its keys: only while the operator is looking at this signal.
+func _handle_stand_keys(event: InputEvent) -> bool:
+	if event.is_echo() or not event.is_pressed() or not is_awaiting_route or has_submitted_this_session:
+		return false
+	var action := ""
+	if event.is_action_pressed("route_clear_east"):
+		action = "CLEAR EAST"
+	elif event.is_action_pressed("route_hold"):
+		action = "HOLD"
+	if action.is_empty():
+		return false
+	var office := get_parent() as M1OfficeController
+	if office == null or office.player == null:
+		return false
+	var controller := office.player.get_node_or_null("InteractionController") as InteractionController
+	if controller == null or controller.is_ui_blocked or controller.current_target == null \
+			or not is_ancestor_of(controller.current_target):
+		return false
+	if throw_direct_route(action):
+		get_viewport().set_input_as_handled()
+		return true
+	return false
+
+## Kept for the keyboard-only path and the tests that drive it; nothing in the
+## room opens it any more (plan 6.5: the order is given at the lever).
 func open_board() -> void:
 	if is_open:
 		return
@@ -296,10 +316,11 @@ func _throw_lever(action: String) -> void:
 	if _lever_tween != null and is_instance_valid(_lever_tween):
 		_lever_tween.kill()
 
+	var blade := deg_to_rad(repeater_clear_degrees) if action == "CLEAR EAST" else 0.0
 	if not is_inside_tree():
 		pivot.rotation.z = target
 		if needle != null:
-			needle.rotation.z = direction * deg_to_rad(50.0)
+			needle.rotation.z = blade
 		return
 
 	_lever_tween = create_tween()
@@ -307,8 +328,9 @@ func _throw_lever(action: String) -> void:
 	_lever_tween.tween_property(pivot, "rotation:z", target, lever_throw_duration) \
 		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	if needle != null:
-		# The needle leans the same way as the lever: toward the route taken.
-		_lever_tween.tween_property(needle, "rotation:z", direction * deg_to_rad(50.0), lever_throw_duration) \
+		# The repeater answers the lever as the arm outside does: it drops for
+		# CLEAR and stands level for HOLD.
+		_lever_tween.tween_property(needle, "rotation:z", blade, lever_throw_duration) \
 			.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	# Impact lands when the lever meets the stop, not when the hand starts it.
 	var sfx := get_node_or_null("LeverSfx") as AudioStreamPlayer3D
@@ -346,16 +368,8 @@ func reset_for_new_watch() -> void:
 		needle.rotation.z = 0.0
 	_update_presentation()
 
+## The backboard is status only: an E aimed at it opens nothing. The order is
+## the lever's (plan 6.5); a stale modal from an older build is put down.
 func _on_interacted() -> void:
-	# A completed route is a terminal state for this board instance. Keep the
-	# physical board inspectable as status, but never reopen a modal with no
-	# choices and trap player controls behind it.
-	if has_submitted_this_session:
-		return
-	if not is_awaiting_route:
-		# Same contract as open_board(): no pending decision, no modal.
-		return
 	if is_open:
 		close_board()
-	else:
-		open_board()

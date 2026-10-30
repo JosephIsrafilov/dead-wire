@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://b1route001"]
+[gd_scene load_steps=14 format=3 uid="uid://b1route001"]
 
 [ext_resource type="Script" path="res://scripts/telegraph/ui/routing_board.gd" id="1_route"]
 [ext_resource type="Script" path="res://scripts/interaction/interactable.gd" id="2_interact"]
@@ -19,18 +19,118 @@ size = Vector3(0.78, 1.4, 0.16)
 [sub_resource type="BoxShape3D" id="BoardInteract"]
 size = Vector3(0.88, 0.81, 0.35)
 
-[sub_resource type="BoxShape3D" id="BoardInteractLow"]
-size = Vector3(0.88, 0.23, 0.35)
+; The semaphore repeater's blade: red with a white band, like the arm outside.
+[sub_resource type="StandardMaterial3D" id="SignalRed"]
+albedo_color = Color(0.48, 0.07, 0.05, 1)
+roughness = 0.7
+
+[sub_resource type="StandardMaterial3D" id="SignalWhite"]
+albedo_color = Color(0.78, 0.74, 0.64, 1)
+roughness = 0.8
+
+; Black enamel behind the blade, like the instrument's dial in a signal box.
+[sub_resource type="StandardMaterial3D" id="RepeaterEnamel"]
+albedo_color = Color(0.035, 0.032, 0.03, 1)
+roughness = 0.3
+
+[sub_resource type="BoxShape3D" id="RulesInteract"]
+size = Vector3(0.34, 0.44, 0.12)
+
+[sub_resource type="BoxShape3D" id="StandSolid"]
+size = Vector3(0.3, 0.6, 0.24)
 
 [node name="RoutingBoard" type="Node3D"]
 script = ExtResource("1_route")
+rules_text = "BLACK CREEK & WESTERN RAILWAY — OPERATING DEPARTMENT
+
+221. The signal stands at STOP. It is cleared for a train only upon an order received, copied in full and read back.
+
+222. An order not understood is not acted upon. Hold the train and ask the sender. No operator clears a signal on what he believes the order meant.
+
+223. The lever is worked by the operator on duty and by no other person. It is never left between its notches.
+
+224. Every copy is filed at the table as it was received, before the next is taken. A correction is entered as such and signed.
+
+225. An operator who leaves the signal clear without an order, or holds a train without cause, will be dismissed.
+
+By order of the Superintendent."
 
 ; The authored board: slate, frame, corner blocks, painted track diagram, lever
 ; base, stops, indicator dial and wall screws. The lever, grip, needle and every
 ; Label3D below stay live scene nodes — routing_board.gd drives them, and the
 ; tests read them by name — so only the static furniture became a mesh.
 [node name="AuthoredBoard" type="MeshInstance3D" parent="."]
+visible = false
 mesh = ExtResource("8_board_mesh")
+
+; ---- Plan 6.5: a train-order signal as an 1890 office had it ----
+; No painted track diagram: a floor lever on an iron quadrant works the
+; semaphore outside, and a small repeater on a plain wooden backboard shows
+; what the arm outside is showing. This rig's origin is 0.62 m above the
+; floor; the floor is at y = -0.62 here.
+[node name="Backboard" type="CSGBox3D" parent="."]
+position = Vector3(0, 0.82, 0.02)
+size = Vector3(0.46, 0.92, 0.03)
+material = ExtResource("4_wood")
+
+[node name="LeverFoot" type="CSGBox3D" parent="."]
+position = Vector3(0, -0.6, -0.16)
+size = Vector3(0.3, 0.04, 0.22)
+material = ExtResource("7_iron")
+
+[node name="LeverPedestal" type="CSGBox3D" parent="."]
+position = Vector3(0, -0.51, -0.16)
+size = Vector3(0.08, 0.15, 0.09)
+material = ExtResource("7_iron")
+
+; The quadrant: an iron arc band (r 0.70–0.74 around the pivot, ±46°) the
+; lever rides between its two notches. One extruded shape, no hidden ring.
+[node name="Quadrant" type="CSGPolygon3D" parent="."]
+position = Vector3(0, -0.46, -0.14)
+polygon = PackedVector2Array(-0.532, 0.514, -0.42, 0.609, -0.297, 0.678, -0.168, 0.721, -0.034, 0.739, 0.103, 0.733, 0.234, 0.702, 0.36, 0.647, 0.474, 0.568, 0.532, 0.514, 0.504, 0.486, 0.448, 0.537, 0.34, 0.611, 0.221, 0.663, 0.097, 0.693, -0.032, 0.699, -0.159, 0.682, -0.281, 0.641, -0.397, 0.576, -0.504, 0.486)
+depth = 0.04
+material = ExtResource("7_iron")
+
+[node name="NotchClear" type="CSGBox3D" parent="."]
+position = Vector3(-0.403, 0.137, -0.16)
+rotation = Vector3(0, 0, 0.593412)
+size = Vector3(0.035, 0.06, 0.05)
+material = ExtResource("7_iron")
+
+[node name="NotchHold" type="CSGBox3D" parent="."]
+position = Vector3(0.403, 0.137, -0.16)
+rotation = Vector3(0, 0, -0.593412)
+size = Vector3(0.035, 0.06, 0.05)
+material = ExtResource("7_iron")
+
+; Enamel plates at the notches: white ground, black letters.
+[node name="PlateClear" type="CSGBox3D" parent="."]
+position = Vector3(-0.43, 0.25, -0.135)
+size = Vector3(0.22, 0.065, 0.006)
+material = SubResource("SignalWhite")
+
+[node name="PlateHold" type="CSGBox3D" parent="."]
+position = Vector3(0.43, 0.25, -0.135)
+size = Vector3(0.15, 0.065, 0.006)
+material = SubResource("SignalWhite")
+
+; The repeater: a brass case on the backboard with a small blade that stands
+; level for STOP and drops for CLEAR, as the arm outside does.
+[node name="RepeaterCase" type="CSGCylinder3D" parent="."]
+position = Vector3(0, 0.97, -0.01)
+rotation = Vector3(1.570796, 0, 0)
+radius = 0.085
+height = 0.03
+sides = 16
+material = ExtResource("5_brass")
+
+[node name="RepeaterFace" type="CSGCylinder3D" parent="."]
+position = Vector3(0, 0.97, -0.027)
+rotation = Vector3(1.570796, 0, 0)
+radius = 0.072
+height = 0.004
+sides = 16
+material = SubResource("RepeaterEnamel")
 
 ; CSG blockout, hidden: BoardSolid and both interaction boxes were measured
 ; against these footprints, so the boxes stay the same size as before.
@@ -67,8 +167,8 @@ material = ExtResource("4_wood")
 ; ---- Header card: printed waybill card behind four thin wood strips ----
 
 [node name="HeaderCard" type="CSGBox3D" parent="."]
-position = Vector3(0, 1.12, -0.048)
-size = Vector3(0.52, 0.22, 0.010)
+position = Vector3(0, 0.78, -0.008)
+size = Vector3(0.36, 0.12, 0.006)
 material = ExtResource("6_paper")
 
 [node name="HeaderFrameTop" type="CSGBox3D" parent="."]
@@ -143,21 +243,32 @@ sides = 8
 material = ExtResource("5_brass")
 
 [node name="LeverPivot" type="Node3D" parent="."]
-position = Vector3(0.0, 0.33, -0.09)
+position = Vector3(0.0, -0.46, -0.16)
 
 [node name="RouteLever" type="CSGCylinder3D" parent="LeverPivot"]
-position = Vector3(0.0, 0.11, 0)
-radius = 0.013
-height = 0.22
+position = Vector3(0.0, 0.49, 0)
+radius = 0.017
+height = 0.98
 sides = 8
 material = ExtResource("7_iron")
 
 [node name="LeverGrip" type="CSGCylinder3D" parent="LeverPivot"]
-position = Vector3(0.0, 0.25, 0)
-radius = 0.022
-height = 0.07
+position = Vector3(0.0, 1.03, 0)
+radius = 0.024
+height = 0.12
 sides = 8
-material = ExtResource("4_wood")
+material = ExtResource("5_brass")
+
+; The latch: a rod beside the lever that drops a dog into the notch.
+[node name="LatchRod" type="CSGBox3D" parent="LeverPivot"]
+position = Vector3(0.032, 0.55, 0)
+size = Vector3(0.007, 0.8, 0.007)
+material = ExtResource("7_iron")
+
+[node name="LatchHandle" type="CSGBox3D" parent="LeverPivot"]
+position = Vector3(0.03, 0.95, 0)
+size = Vector3(0.03, 0.05, 0.012)
+material = ExtResource("5_brass")
 
 [node name="LeverStopClear" type="CSGCylinder3D" parent="."]
 visible = false
@@ -186,12 +297,17 @@ sides = 12
 material = ExtResource("5_brass")
 
 [node name="IndicatorPivot" type="Node3D" parent="."]
-position = Vector3(0.0, 0.215, -0.055)
+position = Vector3(-0.035, 0.97, -0.034)
 
 [node name="IndicatorNeedle" type="CSGBox3D" parent="IndicatorPivot"]
-position = Vector3(0, 0.028, 0)
-size = Vector3(0.007, 0.042, 0.006)
-material = ExtResource("7_iron")
+position = Vector3(0.055, 0, 0)
+size = Vector3(0.1, 0.022, 0.005)
+material = SubResource("SignalRed")
+
+[node name="IndicatorBand" type="CSGBox3D" parent="IndicatorPivot"]
+position = Vector3(0.085, 0, -0.001)
+size = Vector3(0.012, 0.022, 0.005)
+material = SubResource("SignalWhite")
 
 ; ---- Mounting: two wall screws in plain iron ----
 
@@ -212,21 +328,21 @@ sides = 8
 material = ExtResource("7_iron")
 
 [node name="HeaderLabel3D" type="Label3D" parent="."]
-position = Vector3(0, 1.165, -0.055)
+position = Vector3(0, 0.8, -0.0125)
 rotation = Vector3(0, 3.141593, 0)
-pixel_size = 0.0032
+pixel_size = 0.0022
 modulate = Color(0.08, 0.06, 0.04, 1)
 outline_size = 0
-text = "EAST DIVISION"
+text = "TRAIN-ORDER SIGNAL"
 font_size = 13
 
 [node name="HeaderLabel3DSub" type="Label3D" parent="."]
-position = Vector3(0, 1.075, -0.055)
+position = Vector3(0, 0.755, -0.0125)
 rotation = Vector3(0, 3.141593, 0)
-pixel_size = 0.0032
+pixel_size = 0.0018
 modulate = Color(0.08, 0.06, 0.04, 1)
 outline_size = 0
-text = "TRAIN ORDERS"
+text = "EASTWARD — BLACK CREEK"
 font_size = 13
 
 ; The one line that makes the lever legible. The board is a physical order
@@ -239,6 +355,7 @@ font_size = 13
 ; at y 0.982, the MAIN label starts at 0.90), never over the diagram, and it is
 ; short enough to clear the slate's 0.72 m width at this pixel size.
 [node name="InstructionLabel3D" type="Label3D" parent="."]
+visible = false
 position = Vector3(0, 0.958, -0.048)
 rotation = Vector3(0, 3.141593, 0)
 pixel_size = 0.0024
@@ -249,6 +366,7 @@ font_size = 12
 font_size = 11
 
 [node name="LineLabel3D" type="Label3D" parent="."]
+visible = false
 position = Vector3(-0.24, 0.9, -0.048)
 rotation = Vector3(0, 3.141593, 0)
 pixel_size = 0.0035
@@ -258,6 +376,7 @@ text = "MAIN"
 font_size = 13
 
 [node name="SidingLabel3D" type="Label3D" parent="."]
+visible = false
 position = Vector3(-0.24, 0.56, -0.048)
 rotation = Vector3(0, 3.141593, 0)
 pixel_size = 0.0035
@@ -267,21 +386,21 @@ text = "SIDING"
 font_size = 13
 
 [node name="ClearEastLabel3D" type="Label3D" parent="."]
-position = Vector3(-0.19, 0.275, -0.048)
+position = Vector3(-0.43, 0.25, -0.139)
 rotation = Vector3(0, 3.141593, 0)
-pixel_size = 0.0028
-modulate = Color(0.76, 0.70, 0.56, 1)
+pixel_size = 0.0022
+modulate = Color(0.1, 0.07, 0.04, 1)
 outline_size = 0
-text = "◄ CLEAR EAST"
+text = "CLEAR EAST"
 font_size = 13
 
 [node name="HoldLabel3D" type="Label3D" parent="."]
-position = Vector3(0.22, 0.275, -0.048)
+position = Vector3(0.43, 0.25, -0.139)
 rotation = Vector3(0, 3.141593, 0)
-pixel_size = 0.0028
-modulate = Color(0.76, 0.70, 0.56, 1)
+pixel_size = 0.0022
+modulate = Color(0.1, 0.07, 0.04, 1)
 outline_size = 0
-text = "HOLD ►"
+text = "HOLD"
 font_size = 13
 
 [node name="BoardSolid" type="StaticBody3D" parent="."]
@@ -292,50 +411,58 @@ collision_mask = 1
 position = Vector3(0, 0.72, 0)
 shape = SubResource("BoardSolid")
 
-; The board's modal/status surface is split around the lever band: the direct
-; lever stops own the lever height, the readable face above (and the frame
-; below) keep the modal. Same depth and side reach as the original single box.
+; The floor stand is solid too: nobody walks through the lever's foot.
+[node name="StandShape" type="CollisionShape3D" parent="BoardSolid"]
+position = Vector3(0, -0.32, -0.16)
+shape = SubResource("StandSolid")
+
+; The backboard and repeater are a status surface only: the order is given at
+; the lever, whose two notches own their own targets (routing_board.gd).
 [node name="Interactable" type="Area3D" parent="."]
 collision_layer = 2
 collision_mask = 0
 script = ExtResource("2_interact")
-prompt_text = "Train-Order Board"
+prompt_text = "Train-Order Signal"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Interactable"]
 position = Vector3(0, 1.065, -0.11)
 shape = SubResource("BoardInteract")
 
-[node name="CollisionShape3DLow" type="CollisionShape3D" parent="Interactable"]
-position = Vector3(0, 0.085, -0.11)
-shape = SubResource("BoardInteractLow")
-
 [node name="LeverSfx" type="AudioStreamPlayer3D" parent="."]
-position = Vector3(0, 0.7, -0.1)
+position = Vector3(0, 0.3, -0.16)
 unit_size = 6.0
 max_db = -4.0
 
-[node name="RoutePromptUI" type="CanvasLayer" parent="."]
-layer = 8
+; ---- The rules beside the signal: framed, strict, read through E ----
+[node name="SignalRules" type="Node3D" parent="."]
+position = Vector3(0.62, 0.62, 0.0)
 
-[node name="Panel" type="ColorRect" parent="RoutePromptUI"]
-visible = false
-offset_left = 350.0
-offset_top = 558.0
-offset_right = 930.0
-offset_bottom = 678.0
-color = Color(0.035, 0.03, 0.022, 0.0)
+[node name="Frame" type="CSGBox3D" parent="SignalRules"]
+size = Vector3(0.32, 0.42, 0.02)
+material = ExtResource("4_wood")
 
-[node name="Label" type="Label" parent="RoutePromptUI/Panel"]
-layout_mode = 0
-offset_left = 14.0
-offset_top = 8.0
-offset_right = 566.0
-offset_bottom = 44.0
-theme_override_colors/font_color = Color(0.86, 0.79, 0.63, 1)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.85)
-theme_override_constants/shadow_offset_x = 1
-theme_override_constants/shadow_offset_y = 1
-theme_override_font_sizes/font_size = 18
-text = "[Esc] Put down board; the line clock keeps running"
-horizontal_alignment = 1
-vertical_alignment = 1
+[node name="Sheet" type="CSGBox3D" parent="SignalRules"]
+position = Vector3(0, 0, -0.011)
+size = Vector3(0.27, 0.37, 0.003)
+material = ExtResource("6_paper")
+
+[node name="Text" type="Label3D" parent="SignalRules"]
+position = Vector3(0, 0, -0.0135)
+rotation = Vector3(0, 3.141593, 0)
+pixel_size = 0.00085
+modulate = Color(0.1, 0.07, 0.04, 1)
+outline_size = 0
+font_size = 16
+width = 300.0
+autowrap_mode = 2
+horizontal_alignment = 0
+
+[node name="Interactable" type="Area3D" parent="SignalRules"]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("2_interact")
+prompt_text = "Read the Rules"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SignalRules/Interactable"]
+position = Vector3(0, 0, -0.05)
+shape = SubResource("RulesInteract")

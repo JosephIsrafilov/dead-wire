@@ -11,7 +11,7 @@ func _init() -> void:
 
 	var act: Interactable = board_node.get_interactable()
 	if not assert_condition(act != null, "board has Interactable component"): return
-	if not assert_condition(act.prompt_text == "Train-Order Board", "prompt text matches"): return
+	if not assert_condition(act.prompt_text == "Train-Order Signal", "prompt text matches"): return
 
 	# 1. Open / Close (only while a route decision is pending)
 	if not assert_condition(not board_node.is_open, "Initially closed"): return
@@ -27,7 +27,12 @@ func _init() -> void:
 
 	# 1b. An idle board presents line status, not a fake [E] action.
 	board_node.set_awaiting_route(false)
-	if not assert_condition(not act.is_actionable and act.prompt_text == "Routing Board — Line Status", "Idle board prompt is truthful line status without an action"): return
+	if not assert_condition(not act.is_actionable and act.prompt_text == "Train-Order Signal", "Idle board prompt is truthful line status without an action"): return
+	# Plan 6.5: even with an order pending, the backboard promises no E; the
+	# lever's notches take the order.
+	board_node.set_awaiting_route(true)
+	if not assert_condition(not act.is_actionable, "A pending order is given at the lever, not at the backboard"): return
+	board_node.set_awaiting_route(false)
 
 	# 2. Input actions when board is CLOSED (Must do nothing)
 	var selected_actions: Array[String] = []
@@ -71,7 +76,7 @@ func _init() -> void:
 	if not assert_condition(not board_node.is_open, "Board automatically closes after selection"): return
 	if not assert_condition(board_node.has_submitted_this_session, "has_submitted_this_session is true after submission"): return
 	board_node.get_interactable().interact()
-	if not assert_condition(not board_node.is_open and not board_node.get_interactable().is_actionable and board_node.get_interactable().prompt_text == "Route recorded: CLEAR EAST", "Repeated board interaction is safe read-only status"): return
+	if not assert_condition(not board_node.is_open and not board_node.get_interactable().is_actionable and board_node.get_interactable().prompt_text == "Signal at CLEAR EAST", "Repeated board interaction is safe read-only status"): return
 
 	# 5. Duplicate input rejection in same session
 	board_node.open_board()

@@ -171,7 +171,14 @@ func _interaction_rays_hit_expected() -> bool:
 func _ray_hits_area(from: Vector3, expected: Area3D) -> bool:
 	if expected == null:
 		return false
-	var query := PhysicsRayQueryParameters3D.create(from, expected.global_position)
+	# Aim at the target's own face (its first collision shape), not the node's
+	# origin: an origin can sit off the face, as the train-order signal's does.
+	var aim := expected.global_position
+	for child in expected.get_children():
+		if child is CollisionShape3D:
+			aim = (child as CollisionShape3D).global_position
+			break
+	var query := PhysicsRayQueryParameters3D.create(from, aim)
 	query.collision_mask = 2
 	query.collide_with_areas = true
 	query.collide_with_bodies = false

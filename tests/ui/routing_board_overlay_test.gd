@@ -1,22 +1,11 @@
 extends SceneTree
-## The routing board's modal overlay says one thing only: how to put the
-## board down. The orders themselves are the buttons; the hint must never be
-## covered by them. And the physical plates on the board face must keep their
-## full text clear of the frame — a clipped "CLEAR EAS" misnames an order.
+## Plan 6.5: the train-order signal is worked in the room. No 2D overlay is
+## drawn over it, an E aimed at the backboard opens nothing, the order is
+## given at the lever's notches, the notch plates keep their names whole, the
+## repeater shows what the arm outside shows, and the rules hang beside it.
 ##   godot --headless --audio-driver Dummy --path . --script tests/ui/routing_board_overlay_test.gd
 
 var _assertions: int = 0
-
-const HINT_TEXT := "[Esc] Put down board; the line clock keeps running"
-## Inner faces of the left/right frame posts (frame at x=±0.42, width 0.12).
-const FRAME_INNER_X := 0.36
-## The plate tail must stay this far inside the frame: the label sits 2.2 cm
-## behind the frame's front face, so a small clearance is eaten by parallax
-## from any angled view (the 2026-10-09 capture shows it: "CLEAR EAS").
-const FRAME_MARGIN := 0.03
-## Indicator dial: centre (0, 0.215), radius 0.05, in FRONT of the plates.
-const DIAL_EDGE_X := 0.05
-const DIAL_MARGIN := 0.005
 
 func _init() -> void:
 	call_deferred("_run")
@@ -30,63 +19,62 @@ func _run() -> void:
 	root.add_child(board)
 	await process_frame
 
-	# --- 1. The open board shows one hint line and the two order buttons ---
+	# --- 1. Nothing is drawn over the room ---------------------------------
+	if not _a(board.find_children("*", "CanvasLayer", true, false).is_empty(),
+		"The signal draws no 2D overlay of its own"): return
 	board.set_awaiting_route(true)
-	board.open_board()
-	await process_frame
-	var panel := board.get_node_or_null("RoutePromptUI/Panel") as Control
-	if not _a(panel != null and panel.visible, "The opened board shows its prompt panel"): return
-	var hint := board.get_node_or_null("RoutePromptUI/Panel/Label") as Label
-	if not _a(hint != null, "The hint label exists"): return
-	var clear_button := board.get_node_or_null("RoutePromptUI/Panel/ClearEastButton") as Button
-	var hold_button := board.get_node_or_null("RoutePromptUI/Panel/HoldButton") as Button
-	if not _a(clear_button != null and hold_button != null, "Both order buttons exist on the panel"): return
-	if not _a(clear_button.text == "[1] CLEAR EAST" and hold_button.text == "[2] HOLD",
-		"The buttons alone carry the order names and their keys"): return
-	if not _a(hint.text == HINT_TEXT,
-		"The hint is the single Esc line, got '%s'" % hint.text): return
-	if not _a(not hint.text.contains("\n"), "The hint is one line, not a stacked cheat sheet"): return
+	var face := board.get_interactable()
+	if not _a(face != null and not face.is_actionable, "The backboard is status, not an action"): return
+	face.interact()
+	if not _a(not board.is_open, "An E on the backboard opens nothing"): return
 
-	# --- 2. Nothing intersects: the buttons never cover the hint ---
-	var hint_rect := hint.get_global_rect()
-	var clear_rect := clear_button.get_global_rect()
-	var hold_rect := hold_button.get_global_rect()
-	if not _a(not hint_rect.intersects(clear_rect),
-		"The hint band sits clear of the CLEAR EAST button"): return
-	if not _a(not hint_rect.intersects(hold_rect),
-		"The hint band sits clear of the HOLD button"): return
-	var font := hint.get_theme_font("font")
-	if font == null:
-		font = ThemeDB.fallback_font
-	var line_height := font.get_height(hint.get_theme_font_size("font_size"))
-	if not _a(line_height <= hint_rect.size.y,
-		"The hint text fits inside its own rect (no overflow under the buttons)"): return
+	# --- 2. The order is given at a notch --------------------------------------
+	var clear_stop := board.get_node_or_null("ClearStopInteractable") as Interactable
+	var hold_stop := board.get_node_or_null("HoldStopInteractable") as Interactable
+	if not _a(clear_stop != null and hold_stop != null and clear_stop.enabled and hold_stop.enabled,
+		"Both notches take an order while one is awaited"): return
+	if not _a(clear_stop.position.x < 0.0 and hold_stop.position.x > 0.0,
+		"CLEAR EAST and HOLD sit on opposite sides of the quadrant"): return
 
-	# --- 3. The physical plates keep their full text inside the board face ---
-	_check_plate(board, "ClearEastLabel3D", -1.0)
-	_check_plate(board, "HoldLabel3D", 1.0)
+	# --- 3. The notch plates keep their names whole -----------------------------
+	_check_plate(board, "ClearEastLabel3D", "PlateClear")
+	_check_plate(board, "HoldLabel3D", "PlateHold")
 
-	board.close_board()
+	# --- 4. The repeater answers the lever like the arm outside ---------------
+	var blade := board.get_node_or_null("IndicatorPivot") as Node3D
+	if not _a(blade != null and is_zero_approx(blade.rotation.z), "At rest the repeater stands at STOP"): return
+	var detached := scene.instantiate() as RoutingBoard
+	detached._throw_lever("CLEAR EAST")
+	var clear_blade: float = (detached.get_node("IndicatorPivot") as Node3D).rotation.z
+	detached._throw_lever("HOLD")
+	var hold_blade: float = (detached.get_node("IndicatorPivot") as Node3D).rotation.z
+	if not _a(clear_blade < -0.5 and is_zero_approx(hold_blade),
+		"CLEAR drops the blade, HOLD stands it level (%.2f / %.2f rad)" % [clear_blade, hold_blade]): return
+	detached.free()
+
+	# --- 5. The rules hang beside it, strict and readable ---------------------
+	if not _a(board.rules_text.contains("221.") and board.rules_text.contains("STOP"),
+		"The signal rules are authored beside the lever"): return
+	var rules_label := board.get_node_or_null("SignalRules/Text") as Label3D
+	if not _a(rules_label != null and rules_label.text.begins_with(board.rules_title),
+		"The framed sheet carries the rules"): return
+	var rules_act := board.get_node_or_null("SignalRules/Interactable") as Interactable
+	if not _a(rules_act != null and rules_act.is_actionable, "The rules can be taken up and read"): return
+
 	board.queue_free()
 	await process_frame
 	print("--- All Routing Board Overlay Tests PASSED (%d assertions) ---" % _assertions)
 	quit(0)
 
-## Measures a plate the way the engine renders it (real font metrics × the
-## label's pixel_size) and guards both occluders: the frame post in front of
-## the outer edge and the indicator dial in front of the inner edge.
-func _check_plate(board: RoutingBoard, node_name: String, side: float) -> void:
-	var plate := board.get_node_or_null(node_name) as Label3D
-	if not _a(plate != null, "%s exists on the board" % node_name): return
-	var font: Font = plate.font if plate.font != null else ThemeDB.fallback_font
-	var world_width := font.get_string_size(
-		plate.text, HORIZONTAL_ALIGNMENT_LEFT, -1, plate.font_size).x * plate.pixel_size
-	var outer_x := plate.position.x + side * world_width / 2.0
-	var inner_x := plate.position.x - side * world_width / 2.0
-	if not _a(side * outer_x <= FRAME_INNER_X - FRAME_MARGIN,
-		"%s keeps its outer end %.0f cm inside the frame, got x=%.4f" % [node_name, FRAME_MARGIN * 100.0, outer_x]): return
-	if not _a(abs(inner_x) >= DIAL_EDGE_X + DIAL_MARGIN,
-		"%s stays clear of the indicator dial, inner end x=%.4f" % [node_name, inner_x]): return
+## A notch plate's text, measured with real font metrics, fits its enamel.
+func _check_plate(board: RoutingBoard, label_name: String, plate_name: String) -> void:
+	var label := board.get_node_or_null(label_name) as Label3D
+	var plate := board.get_node_or_null(plate_name) as CSGBox3D
+	if not _a(label != null and plate != null, "%s sits on %s" % [label_name, plate_name]): return
+	var font: Font = label.font if label.font != null else ThemeDB.fallback_font
+	var width := font.get_string_size(label.text, HORIZONTAL_ALIGNMENT_LEFT, -1, label.font_size).x * label.pixel_size
+	_a(width <= plate.size.x - 0.01 and absf(label.position.x - plate.position.x) < 0.005,
+		"%s keeps its whole name on the plate (%.3f m of %.3f m)" % [label_name, width, plate.size.x])
 
 func _a(condition: bool, description: String) -> bool:
 	if condition:
