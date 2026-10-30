@@ -362,6 +362,14 @@ func _run() -> void:
 	_advance_night(merge_session, merge_director, 6.0)
 	if not assert_condition(merge_director.get_slot_index() == 1, "Grace expiry moves the shift to the next slot"): return
 	merge_office.queue_free()
+	for stale in _live_offices:
+		if is_instance_valid(stale):
+			stale.queue_free()
+	_live_offices.clear()
+	# Let the offices actually leave the tree before the engine shuts down:
+	# quitting with them half-freed crashed teardown (exit 0xC0000005).
+	for _frame in 3:
+		await process_frame
 
 	print("--- All Shift Director Tests PASSED (%d assertions) ---" % _assertions_passed)
 	quit(0)

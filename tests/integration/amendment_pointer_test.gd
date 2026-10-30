@@ -23,6 +23,11 @@ func _run() -> void:
 	editor.correction.text_changed.emit("WAITER")
 	var button := editor.submit_button
 	var point := button.get_global_rect().get_center()
+	# The button lives in the 960x540 office frame; a real pointer arrives in
+	# window coordinates and the frame's container maps it back in.
+	var frame_container := button.get_viewport().get_parent() as SubViewportContainer
+	if frame_container != null:
+		point = frame_container.get_global_transform() * point
 	var motion := InputEventMouseMotion.new()
 	motion.position = point
 	motion.global_position = point
