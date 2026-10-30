@@ -1,0 +1,38 @@
+[gd_scene load_steps=4 format=3]
+
+; Snow in the switch lamp (plan 3.12, an experiment, OFF by default): a few
+; slow flakes caught in the red light over the points. April in the hills.
+; Enabled only by tools/yard_variants_capture.gd for the owner to judge.
+
+[sub_resource type="ParticleProcessMaterial" id="Fall"]
+emission_shape = 3
+emission_box_extents = Vector3(4.0, 0.5, 4.0)
+direction = Vector3(0.2, -1, 0)
+spread = 15.0
+initial_velocity_min = 0.3
+initial_velocity_max = 0.6
+gravity = Vector3(0.05, -0.15, 0)
+turbulence_enabled = true
+turbulence_noise_strength = 0.6
+turbulence_noise_scale = 4.0
+
+[sub_resource type="StandardMaterial3D" id="Flake"]
+shading_mode = 0
+albedo_color = Color(0.78, 0.8, 0.86, 1)
+billboard_mode = 3
+
+[sub_resource type="QuadMesh" id="FlakeMesh"]
+material = SubResource("Flake")
+size = Vector2(0.05, 0.05)
+
+[node name="YardSnow" type="GPUParticles3D"]
+visible = false
+emitting = false
+position = Vector3(-2.6, 5.0, -13.0)
+amount = 120
+lifetime = 14.0
+preprocess = 14.0
+visibility_aabb = AABB(-6, -6, -6, 12, 8, 12)
+process_material = SubResource("Fall")
+draw_pass_1 = SubResource("FlakeMesh")
+cast_shadow = 0

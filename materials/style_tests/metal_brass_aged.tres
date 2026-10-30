@@ -2,11 +2,13 @@
 
 [ext_resource type="Texture2D" path="res://materials/style_tests/textures/psx/psx_brass_32.png" id="1_tex"]
 
+; Aged brass (plan 2.9): metal enough to catch the flickering flame as a live
+; glint on the key, the sounder and the register, worn enough not to mirror.
 [resource]
 shading_mode = 1
-albedo_color = Color(0.52, 0.41, 0.23, 1)
+albedo_color = Color(0.56, 0.43, 0.22, 1)
 albedo_texture = ExtResource("1_tex")
-metallic = 0.55
-roughness = 0.5
-metallic_specular = 0.5
+metallic = 0.78
+roughness = 0.34
+metallic_specular = 0.6
 texture_filter = 2

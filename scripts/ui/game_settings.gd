@@ -24,6 +24,10 @@ var contextual_thoughts_enabled: bool = true
 var presentation_mode: int = 1
 var vertical_fov: float = 65.0
 var text_scale: float = 1.2
+## Room exposure multiplier (plan 2.16). A dark room on a dark monitor is a
+## black screen; the player sets this once at first launch.
+var brightness: float = 1.0
+var brightness_calibrated: bool = false
 
 static func config_path() -> String:
 	var override := OS.get_environment(PATH_OVERRIDE_ENV)
@@ -47,6 +51,8 @@ static func load_settings(path: String = "") -> GameSettings:
 	settings.presentation_mode = int(config.get_value(SECTION, "presentation_mode", settings.presentation_mode))
 	settings.vertical_fov = float(config.get_value(SECTION, "vertical_fov", settings.vertical_fov))
 	settings.text_scale = float(config.get_value(SECTION, "text_scale", settings.text_scale))
+	settings.brightness = float(config.get_value(SECTION, "brightness", settings.brightness))
+	settings.brightness_calibrated = bool(config.get_value(SECTION, "brightness_calibrated", false))
 	settings.sanitize()
 	return settings
 
@@ -60,6 +66,7 @@ func sanitize() -> void:
 	presentation_mode = clampi(presentation_mode, 0, 2)
 	vertical_fov = clampf(vertical_fov if is_finite(vertical_fov) else 65.0, 55.0, 85.0)
 	text_scale = clampf(text_scale if is_finite(text_scale) else 1.2, 1.0, 1.5)
+	brightness = clampf(brightness if is_finite(brightness) else 1.0, 0.6, 1.8)
 
 func save(path: String = "") -> Error:
 	sanitize()
@@ -74,6 +81,8 @@ func save(path: String = "") -> Error:
 	config.set_value(SECTION, "presentation_mode", presentation_mode)
 	config.set_value(SECTION, "vertical_fov", vertical_fov)
 	config.set_value(SECTION, "text_scale", text_scale)
+	config.set_value(SECTION, "brightness", brightness)
+	config.set_value(SECTION, "brightness_calibrated", brightness_calibrated)
 	return config.save(path if not path.is_empty() else config_path())
 
 ## Pushes the current values at the things they control.
@@ -85,7 +94,9 @@ func apply(player: PlayerController) -> void:
 		var camera := player.get_node_or_null("Head/Camera3D") as Camera3D
 		if camera != null:
 			camera.fov = vertical_fov
+		player.base_fov = vertical_fov
 		var office := player.get_parent()
+		_apply_brightness(office)
 		var guidance := office.get_node_or_null("NightGuidance") if office != null else null
 		if guidance != null:
 			for property in guidance.get_property_list():
@@ -97,6 +108,17 @@ func apply(player: PlayerController) -> void:
 	_set_bus_db("Ambience", ambience_volume_db)
 	_set_bus_db("Telegraph", telegraph_volume_db)
 	_set_bus_db("Foley", foley_volume_db)
+
+## Scales the room's authored exposure (kept as metadata so repeated applies
+## never compound). The interface is not touched.
+func _apply_brightness(office: Node) -> void:
+	var env_node := office.get_node_or_null("WorldEnvironment") as WorldEnvironment if office != null else null
+	if env_node == null or env_node.environment == null:
+		return
+	var environment := env_node.environment
+	if not environment.has_meta(&"authored_exposure"):
+		environment.set_meta(&"authored_exposure", environment.tonemap_exposure)
+	environment.tonemap_exposure = float(environment.get_meta(&"authored_exposure")) * brightness
 
 static func _set_bus_db(bus_name: String, value: float) -> void:
 	var index := AudioServer.get_bus_index(bus_name)

@@ -13,6 +13,9 @@
 [ext_resource type="Script" path="res://scripts/office/silence_two.gd" id="65_silence_two"]
 [ext_resource type="Script" path="res://scripts/office/dead_line_clicks.gd" id="66_dead_line"]
 [ext_resource type="Script" path="res://scripts/office/dawn_train.gd" id="67_dawn_train"]
+[ext_resource type="PackedScene" path="res://scenes/office/dust_motes.tscn" id="68_dust"]
+[ext_resource type="Script" path="res://scripts/office/wire_sway.gd" id="69_wire_sway"]
+[ext_resource type="PackedScene" path="res://scenes/office/yard_snow.tscn" id="70_snow"]
 [ext_resource type="Material" path="res://materials/style_tests/m1_wainscot_wood.tres" id="7_wainscot"]
 [ext_resource type="PackedScene" path="res://scenes/style_tests/props/window_north.tscn" id="8_window"]
 [ext_resource type="PackedScene" path="res://scenes/style_tests/props/door_south.tscn" id="9_door"]
@@ -132,6 +135,16 @@ albedo_color = Color(0.075, 0.072, 0.07, 1)
 [sub_resource type="QuadMesh" id="SkyQuadMesh"]
 size = Vector2(900.0, 460.0)
 
+; The grade (plan 2.12): per-channel curves that lift blue in the shadows and
+; trim it in the highlights - cold dark, warm light - with a touch of contrast.
+[sub_resource type="Gradient" id="GradeGradient"]
+offsets = PackedFloat32Array(0, 0.5, 1)
+colors = PackedColorArray(0, 0.012, 0.035, 1, 0.5, 0.49, 0.47, 1, 1, 0.97, 0.9, 1)
+
+[sub_resource type="GradientTexture1D" id="GradeCurve"]
+gradient = SubResource("GradeGradient")
+width = 256
+
 [sub_resource type="Environment" id="env_office"]
 background_mode = 1
 background_color = Color(0.02, 0.025, 0.035, 1)
@@ -149,6 +162,17 @@ fog_density = 0.012
 fog_height = 1.15
 fog_height_density = 0.08
 fog_sky_affect = 0.35
+; A thin volume in the air (plan 2.4): the lamp's cone and the moon's shaft
+; read as light in dust, not a smoke machine.
+volumetric_fog_enabled = true
+volumetric_fog_density = 0.006
+volumetric_fog_albedo = Color(0.62, 0.64, 0.68, 1)
+volumetric_fog_length = 9.0
+volumetric_fog_anisotropy = 0.35
+adjustment_enabled = true
+adjustment_contrast = 1.04
+adjustment_saturation = 0.92
+adjustment_color_correction = SubResource("GradeCurve")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_psx_dither"]
 shader = ExtResource("psx_grade")
@@ -371,6 +395,15 @@ cast_shadow = 0
 ; The morning trains (plan 4.6): what the board did, seen and heard at dawn.
 [node name="DawnTrain" type="Node3D" parent="."]
 script = ExtResource("67_dawn_train")
+
+[node name="DustMotes" parent="." instance=ExtResource("68_dust")]
+
+; The line outside sways a little in the wind (plan 3.9).
+[node name="WireSway" type="Node" parent="."]
+script = ExtResource("69_wire_sway")
+
+; Snow over the points: an experiment, OFF by default (plan 3.12).
+[node name="YardSnow" parent="." instance=ExtResource("70_snow")]
 
 ; --- near: the yard -------------------------------------------------------
 ; The yard's ground runs to the ridges. It starts BEHIND the wall's outer face

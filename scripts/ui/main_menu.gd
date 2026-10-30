@@ -46,6 +46,14 @@ func _ready() -> void:
 		options_panel.visible = false
 	if begin_button != null:
 		begin_button.grab_focus()
+	# First launch: set the room's brightness once before the first watch.
+	if BrightnessCalibration.needed():
+		var calibration := BrightnessCalibration.new()
+		calibration.name = "BrightnessCalibration"
+		add_child(calibration)
+		calibration.tree_exited.connect(func() -> void:
+			if is_instance_valid(begin_button) and begin_button.is_inside_tree():
+				begin_button.grab_focus())
 
 func _find_nodes() -> void:
 	var box := "CenterContainer/VBoxContainer/"

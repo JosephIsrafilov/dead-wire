@@ -54,6 +54,39 @@ func _run() -> void:
 	loaded = settings_script.call("load_settings", path)
 	if not require(is_equal_approx(loaded.vertical_fov, 85.0) and is_equal_approx(loaded.text_scale, 1.0) and loaded.presentation_mode == 0, "Invalid preferences clamp to explicit bounds"): return
 
+	# Brightness (plan 2.16): a room exposure the player sets once, bounded,
+	# remembered; and whether the first-run calibration has been done.
+	var fresh: Variant = GameSettings.new()
+	if not require(is_equal_approx(fresh.brightness, 1.0) and not fresh.brightness_calibrated,
+			"New install: neutral brightness, not yet calibrated"): return
+	fresh.brightness = 1.3
+	fresh.brightness_calibrated = true
+	fresh.save(path)
+	var bright: Variant = settings_script.call("load_settings", path)
+	if not require(is_equal_approx(bright.brightness, 1.3) and bright.brightness_calibrated,
+			"Brightness and its calibration survive reload"): return
+	fresh.brightness = 9.0
+	fresh.save(path)
+	if not require(settings_script.call("load_settings", path).brightness <= 1.8,
+			"Brightness clamps to its bound"): return
+	# It moves the room's exposure, not the interface.
+	var office_stub := Node3D.new()
+	var player_stub := PlayerController.new()
+	var env_node := WorldEnvironment.new()
+	env_node.name = "WorldEnvironment"
+	env_node.environment = Environment.new()
+	env_node.environment.tonemap_exposure = 1.5
+	office_stub.add_child(env_node)
+	office_stub.add_child(player_stub)
+	var lit: Variant = GameSettings.new()
+	lit.brightness = 1.2
+	lit.apply(player_stub)
+	if not require(is_equal_approx(env_node.environment.tonemap_exposure, 1.8), "Brightness scales the room's exposure"): return
+	lit.brightness = 0.8
+	lit.apply(player_stub)
+	if not require(is_equal_approx(env_node.environment.tonemap_exposure, 1.2), "From the authored exposure, not compounding"): return
+	office_stub.free()
+
 	# A run with the override saves and loads through the scratch file, so test
 	# suites never overwrite the player's own settings.
 	var previous_override := OS.get_environment(GameSettings.PATH_OVERRIDE_ENV)

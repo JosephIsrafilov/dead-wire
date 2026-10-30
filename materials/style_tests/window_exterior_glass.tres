@@ -1,24 +1,39 @@
-[gd_resource type="StandardMaterial3D" format=3]
+[gd_resource type="StandardMaterial3D" load_steps=3 format=3]
 
 ; Night glass — the pane itself, not the view behind it.
 ;
 ; Three things have to be true of old single-pane glass:
 ;
-;  1. It is not a mirror. roughness 0.06 with metallic_specular 0.9 returned a
-;     sharp image of the desk lamp, which read on screen as a second moon. The
-;     specular is broad and weak now, so the lamp leaves a soft glow at the
-;     edge rather than a hard disc in the middle.
-;  2. It is not a picture. The material used to sample the SAME night texture
-;     as the backdrop, so the view was drawn twice — once on the glass and once
-;     behind it. The glass carries no albedo image at all now: what is behind
-;     it is the layered exterior, seen through it.
-;  3. It is dirty, but dirt is a tint, not a wash. An earlier attempt drove the
-;     albedo from a bright radial gradient and lifted the whole view into grey
-;     milk. A low-alpha cool tint does the same job and keeps the night dark.
+;  1. It is not a mirror by default. roughness 0.06 with metallic_specular 0.9
+;     returned a sharp image of the desk lamp, which read on screen as a second
+;     moon. WindowGlassMirror makes it a dark mirror only when the lamp is up.
+;  2. It is not a picture. The glass carries no image of the view: what is
+;     behind it is the yard, seen through it.
+;  3. It is a used pane (plan 3.11): a breath of condensation along the bottom
+;     where the warm room meets the cold night, thinning to clear glass above.
+;     A low, world-mapped vertical fade, so it never hides the yard.
+
+[sub_resource type="Gradient" id="Condensation"]
+offsets = PackedFloat32Array(0, 0.35, 1)
+colors = PackedColorArray(0.95, 0.97, 1, 1, 0.82, 0.86, 0.92, 0.72, 0.75, 0.8, 0.86, 0.6)
+
+[sub_resource type="GradientTexture2D" id="CondensationTexture"]
+gradient = SubResource("Condensation")
+width = 4
+height = 64
+fill_from = Vector2(0, 1)
+fill_to = Vector2(0, 0)
+
 [resource]
 shading_mode = 1
 transparency = 1
 albedo_color = Color(0.34, 0.44, 0.58, 0.16)
+albedo_texture = SubResource("CondensationTexture")
 roughness = 0.72
 metallic_specular = 0.07
-texture_filter = 0
+texture_filter = 1
+texture_repeat = false
+uv1_triplanar = true
+uv1_world_triplanar = true
+uv1_scale = Vector3(1, 0.82, 1)
+uv1_offset = Vector3(0, -0.77, 0)

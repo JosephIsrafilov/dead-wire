@@ -153,8 +153,19 @@ func _run() -> void:
 			"Leaning in, live lettering reaches its projected size (%.1f px full height at 720p; %.1f sitting back)"
 			% [full_px, seated_px]): return
 	var desk_clear := cam.global_position.y > desk_y + 0.2
+	var leaning_fov := cam.fov
 	Input.action_release("lean")
 	if not assert_condition(desk_clear, "The lean stops above the desk, not in it"): return
+	# Plan 3.8: peering narrows the view a little, and it comes back after.
+	if not assert_condition(leaning_fov <= office.player.base_fov - office.player.lean_fov_narrowing + 0.01,
+			"Leaning in narrows the view (%.1f)" % leaning_fov): return
+	var settle_guard := 0
+	while office.player.get_lean_weight() > 0.0 and settle_guard < 600:
+		await process_frame
+		settle_guard += 1
+	await process_frame
+	if not assert_condition(is_equal_approx(cam.fov, office.player.base_fov),
+			"Sitting back restores the chosen view (%.1f)" % cam.fov): return
 
 	office.queue_free()
 	await process_frame

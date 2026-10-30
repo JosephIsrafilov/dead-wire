@@ -7,6 +7,7 @@ extends VBoxContainer
 var _mode: OptionButton
 var _fov: HSlider
 var _text: HSlider
+var _brightness: HSlider
 var _status: Label
 
 func _ready() -> void:
@@ -37,6 +38,14 @@ func _ready() -> void:
 	_text.max_value = 1.5
 	_text.step = 0.1
 	add_child(_text)
+	var brightness_label := Label.new()
+	brightness_label.text = "Brightness — the room, not the page"
+	add_child(brightness_label)
+	_brightness = HSlider.new()
+	_brightness.min_value = 0.6
+	_brightness.max_value = 1.8
+	_brightness.step = 0.05
+	add_child(_brightness)
 	_status = Label.new()
 	_status.text = "Reading and controls stay sharp in every profile."
 	_status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -45,6 +54,7 @@ func _ready() -> void:
 	_mode.item_selected.connect(_on_mode)
 	_fov.value_changed.connect(_on_fov)
 	_text.value_changed.connect(_on_text)
+	_brightness.value_changed.connect(_on_brightness)
 	visibility_changed.connect(refresh)
 
 func refresh() -> void:
@@ -55,6 +65,8 @@ func refresh() -> void:
 	_mode.select(_mode.get_item_index(ReadabilityPolicy.Mode.CLEAN if clean else ReadabilityPolicy.Mode.READABLE))
 	_fov.set_value_no_signal(settings.vertical_fov)
 	_text.set_value_no_signal(settings.text_scale)
+	if _brightness != null:
+		_brightness.set_value_no_signal(settings.brightness)
 
 func _on_mode(index: int) -> void:
 	var settings := GameSettings.load_settings()
@@ -69,6 +81,12 @@ func _on_fov(value: float) -> void:
 func _on_text(value: float) -> void:
 	var settings := GameSettings.load_settings()
 	settings.text_scale = value
+	_commit(settings)
+
+func _on_brightness(value: float) -> void:
+	var settings := GameSettings.load_settings()
+	settings.brightness = value
+	settings.brightness_calibrated = true
 	_commit(settings)
 
 func _commit(settings: GameSettings) -> void:

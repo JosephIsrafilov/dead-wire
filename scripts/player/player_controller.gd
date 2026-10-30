@@ -72,6 +72,11 @@ signal footstep_played(step_index: int)
 @export var lean_seconds: float = 0.3
 ## The camera stops this far short of whatever the lean would push it into.
 @export var lean_clearance: float = 0.12
+## Leaning in narrows the view a little, the way peering does (plan 3.8).
+@export var lean_fov_narrowing: float = 8.0
+## The player's chosen field of view; the lean narrows from it, never compounds.
+var base_fov: float = 65.0
+var _fov_leaning: bool = false
 
 var is_movement_locked: bool = false
 var is_look_locked: bool = false
@@ -109,6 +114,7 @@ func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	if camera != null:
 		camera.current = true
+		base_fov = camera.fov
 		_camera_rest_transform = camera.transform
 		camera.top_level = true
 		camera.physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF
@@ -217,6 +223,14 @@ func _update_camera_pose() -> void:
 	origin += head.global_basis * _camera_rest_transform.origin
 	origin += _lean_offset(origin)
 	camera.global_transform = Transform3D(head.global_basis * _camera_rest_transform.basis, origin)
+	# The lean owns the FOV only while it is in use; otherwise whoever set it last
+	# (settings, a capture tool) keeps it.
+	if _lean_weight > 0.0:
+		camera.fov = base_fov - lean_fov_narrowing * smoothstep(0.0, 1.0, _lean_weight)
+		_fov_leaning = true
+	elif _fov_leaning:
+		camera.fov = base_fov
+		_fov_leaning = false
 
 func _lean_offset(origin: Vector3) -> Vector3:
 	if _lean_weight <= 0.0:

@@ -39,6 +39,9 @@ var _lantern_spill: OmniLight3D = null
 ## muffled.
 const PITCH_VARIATIONS: Array[float] = [0.84, 0.88, 0.82]
 const THROUGH_DOOR_CUTOFF_HZ: float = 1400.0
+## An ear to the wood lets more of the step through.
+const LISTENING_CUTOFF_HZ: float = 3600.0
+var _listener: PlayerController = null
 const FOLEY_SAFETY_MARGIN: float = 0.08
 
 func _ready() -> void:
@@ -142,10 +145,27 @@ func _play_step() -> void:
 func _process(delta: float) -> void:
 	_bind_fairness()
 	_advance_lantern(delta)
+	_listen_at_door()
 	if is_active and steps_played < total_steps:
 		_step_timer -= delta
 		if _step_timer <= 0.0 and _can_start_next_step():
 			_play_step()
+
+## An ear to the door (plan 3.8): leaning in close, the steps beyond it come
+## through less muffled. The same lean that reads the copy and peers at the yard.
+func _listen_at_door() -> void:
+	if _player == null:
+		return
+	if _listener == null:
+		_listener = get_parent().get_node_or_null("Player") as PlayerController if get_parent() != null else null
+		if _listener == null:
+			return
+	var closeness := 0.0
+	if _listener.camera != null:
+		var distance := _listener.camera.global_position.distance_to(global_position)
+		closeness = 1.0 - smoothstep(0.9, 1.7, distance)
+	var listening := _listener.get_lean_weight() * closeness
+	_player.attenuation_filter_cutoff_hz = lerpf(THROUGH_DOOR_CUTOFF_HZ, LISTENING_CUTOFF_HZ, listening)
 
 ## True when a sample of [param seconds] (plus safety margin) finishes before
 ## the next MARK. Only a GAP with enough room left admits optional foley.
