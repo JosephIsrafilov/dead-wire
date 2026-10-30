@@ -1,25 +1,9 @@
-[gd_resource type="StandardMaterial3D" load_steps=2 format=3]
+[gd_resource type="ShaderMaterial" load_steps=2 format=3]
 
-[ext_resource type="Texture2D" path="res://materials/style_tests/textures/psx/psx_window_sky_128.png" id="1_tex"]
+[ext_resource type="Shader" path="res://materials/shaders/night_sky.gdshader" id="1_sky"]
 
-; The far sky out of the north window.
-;
-; No moon is baked into this tile. The moon in the room is a real light and a
-; real disc in the scene, and a second painted moon behind the glass is exactly
-; how the window grew a duplicate one. What this layer carries is only the
-; gradient: cold overhead, faintly lifted at the horizon where the town's own
-; light and the far snow sit.
-;
-; Unshaded, because nothing in the room lights the sky.
-;
-; The tile is stretched over a 90 m quad, so it is mapped once and interpolated
-; rather than tiled: 128 texels across 90 m is 70 cm per texel, and nearest
-; sampling turns that into visible blocks. A gradient wants bilinear filtering
-; and no repeat; the PSX nearest look belongs to surfaces with real detail on
-; them, not to open sky.
+; The far sky out of the north window: gradient, the moon the room's
+; moonlight comes from, and clouds. MoonWeather drives cloud_cover and dawn,
+; so a cloud over the disc and the dim on the floor are one event.
 [resource]
-shading_mode = 0
-albedo_color = Color(1, 1, 1, 1)
-albedo_texture = ExtResource("1_tex")
-texture_filter = 2
-uv1_scale = Vector3(1, 1, 1)
+shader = ExtResource("1_sky")

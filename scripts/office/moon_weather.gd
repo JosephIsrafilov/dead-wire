@@ -27,9 +27,14 @@ extends Node
 @export var dawn_seconds: float = 22.0
 @export var dawn_color: Color = Color(0.86, 0.74, 0.62)
 @export var dawn_energy_scale: float = 1.9
+## The sky seen through the pane. A cloud MoonWeather sends across the moon is
+## drawn over the disc; the figure is not (it stands in the yard, not the sky).
+@export var sky_material: ShaderMaterial = null
 
 var dim: float = 0.0
 var dawn: float = 0.0
+## 0..1: how much of a cloud bank is over the moon in the sky, eased like dim.
+var cloud_cover: float = 0.0
 
 var _rest_energy: float = 0.0
 var _night_color: Color = Color.WHITE
@@ -45,6 +50,10 @@ func _ready() -> void:
 		moon_light = office.get_node_or_null("WindowBounceLight") as SpotLight3D
 	if window_event == null and office != null:
 		window_event = office.get_node_or_null("WindowObservationEvent") as AttentionObservationTarget
+	if sky_material == null and office != null:
+		var sky := office.get_node_or_null("ExteriorSky") as GeometryInstance3D
+		if sky != null:
+			sky_material = sky.material_override as ShaderMaterial
 	if moon_light != null:
 		_rest_energy = moon_light.light_energy
 		_night_color = moon_light.light_color
@@ -108,8 +117,13 @@ func advance(delta: float) -> void:
 		_consequence_done = true
 		_consequence_cloud = false
 		consequence_finished.emit()
+	var cover_target := 1.0 if _cloud_left > 0.0 else 0.0
+	cloud_cover = move_toward(cloud_cover, cover_target, delta / maxf(dim_fade_seconds, 0.01))
 	if _dawn_running:
 		dawn = minf(dawn + delta / maxf(dawn_seconds, 0.01), 1.0)
+	if sky_material != null:
+		sky_material.set_shader_parameter("cloud_cover", cloud_cover)
+		sky_material.set_shader_parameter("dawn", dawn)
 	if moon_light != null:
 		var d := smoothstep(0.0, 1.0, dawn)
 		moon_light.light_energy = _rest_energy * lerpf(1.0, dawn_energy_scale, d) * (1.0 - dim)
