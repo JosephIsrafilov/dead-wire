@@ -11,6 +11,17 @@ var enabled: bool = true:
 			_clear()
 var current_text: String = ""
 var _context: StringName = &""
+## A thought the room produced rather than the procedure: what just happened.
+## It waits for a quiet moment (no wire, no document, no board) so it can never
+## talk over Morse or a page the operator is reading.
+var _pending_thought: String = ""
+var _pending_seconds: float = 6.0
+## A reaction goes stale. It describes something that just happened, so it is
+## only worth saying while it is still the last thing that happened.
+var _pending_age: float = 0.0
+const REACTION_STALE_SECONDS: float = 8.0
+## A creak is explained once per watch. It is a house settling, not a cue.
+var _creaks_explained: bool = false
 var _blocked: bool = false
 var _context_elapsed: float = 0.0
 var _remaining: float = 0.0
@@ -62,7 +73,18 @@ func advance_guidance(delta: float) -> void:
 	_remaining = maxf(0.0, _remaining - delta)
 	if _remaining <= 0.0:
 		_clear()
-	if not enabled or data == null or not current_text.is_empty():
+	if not enabled:
+		return
+	# A reaction to what just happened outranks a procedural reminder: the
+	# player is asking "what was that", and the procedure can wait a beat.
+	if not _pending_thought.is_empty():
+		_pending_age += delta
+		if _pending_age > REACTION_STALE_SECONDS:
+			_drop_reaction()
+		elif current_text.is_empty():
+			_show_reaction()
+			return
+	if data == null or not current_text.is_empty():
 		return
 	var entry := data.entry_for(_context)
 	if entry.is_empty() or (_shown.has(_context) and entry.get("once", true)):
@@ -72,6 +94,26 @@ func advance_guidance(delta: float) -> void:
 	_show(entry)
 	_since_auto = 0.0
 	_shown[_context] = true
+
+## Something happened in the room. Queue the one-line answer to it; the thought
+## is spoken at the next moment the operator is free to think about it.
+func react(kind: StringName, delay: float = 0.0) -> void:
+	if data == null or not enabled:
+		return
+	var entry := data.reaction_for(kind)
+	if entry.is_empty():
+		return
+	_pending_thought = entry.get("text", "")
+	_pending_seconds = maxf(0.0, delay if delay > 0.0 else float(entry.get("duration", 6.0)))
+	_pending_age = 0.0
+
+func _show_reaction() -> void:
+	if _pending_thought.is_empty():
+		return
+	var text := _pending_thought
+	_pending_thought = ""
+	_show({"text": text, "duration": _pending_seconds})
+	_since_auto = 0.0
 
 func repeat_current() -> void:
 	if _blocked or data == null:
@@ -93,6 +135,12 @@ func _clear() -> void:
 	_remaining = 0.0
 	if _label != null:
 		_label.visible = false
+
+## A blocked surface discards a queued reaction: the room is not talking over a
+## document, the wire or a modal, and a thought the player never saw must not
+## arrive late describing something that is already over.
+func _drop_reaction() -> void:
+	_pending_thought = ""
 
 func _process(delta: float) -> void:
 	if office != null:
@@ -147,6 +195,50 @@ func _bind_visible_events() -> void:
 		session.scheduler.playback_started.connect(_on_wire_started)
 	if office.document_viewer != null:
 		office.document_viewer.document_opened.connect(_on_document_opened)
+	if office.shift_director != null:
+		office.shift_director.call_started.connect(_on_call_started)
+		office.shift_director.call_answered.connect(_on_call_answered)
+		office.shift_director.traffic_missed.connect(_on_traffic_missed)
+		office.shift_director.foreign_traffic_heard.connect(_on_foreign_traffic)
+	var unease := office.get_node_or_null("UneaseDirector") as UneaseDirector
+	if unease != null:
+		unease.creaked.connect(_on_creaked)
+	session.transmission_finished.connect(_on_transmission_finished)
+	session.copy_finished.connect(_on_copy_finished)
+	session.routing_resolved.connect(_on_routing_resolved)
+
+func _on_call_started(_slot: int, number: int) -> void:
+	# Only the first call of a cycle needs explaining. The repeats are the
+	# player's own chance to answer, not new information.
+	if number == 1:
+		react(&"call")
+
+func _on_call_answered(_slot: int, _number: int) -> void:
+	react(&"answered")
+
+func _on_traffic_missed(_slot: int, _scenario: TelegraphScenarioData) -> void:
+	react(&"missed")
+
+func _on_transmission_finished(_scenario: TelegraphScenarioData) -> void:
+	react(&"signal_end")
+
+func _on_copy_finished(_scenario_id: String) -> void:
+	react(&"copy_done")
+
+func _on_routing_resolved(_action: String, outcome: TelegraphSessionController.RoutingOutcome) -> void:
+	react(&"routed" if outcome != TelegraphSessionController.RoutingOutcome.LAPSED else &"route_lapsed")
+
+func _on_foreign_traffic(_text: String) -> void:
+	react(&"foreign")
+
+func _on_creaked(_position: Vector3) -> void:
+	# The building settles whether or not the operator is at the desk. Saying
+	# so once turns an unexplained noise into a house; saying it every time
+	# would turn it into a caption.
+	if _creaks_explained:
+		return
+	_creaks_explained = true
+	react(&"creak")
 
 func _on_work_state_changed(_new: int, _old: int) -> void:
 	_refresh_visible_context()

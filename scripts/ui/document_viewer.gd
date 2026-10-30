@@ -161,7 +161,7 @@ func _fit_body_width() -> void:
 		body_label.custom_minimum_size.x = BODY_MIN_WIDTH
 		panel_container.custom_minimum_size.x = CARD_MIN_WIDTH
 		return
-	var area := get_viewport().get_visible_rect().size
+	var area := _view_area()
 	var font := body_label.get_theme_font("normal_font")
 	var font_size := body_label.get_theme_font_size("normal_font_size")
 	var widest := 0.0
@@ -189,7 +189,7 @@ func _copy_footer(text: String) -> void:
 		_copy_reading_footer.add_theme_color_override("font_color", Color(0.86, 0.79, 0.63, 1.0))
 		_copy_reading_footer.add_theme_font_size_override("font_size", 16)
 		add_child(_copy_reading_footer)
-	var area := get_viewport().get_visible_rect().size
+	var area := _view_area()
 	var backing := get_node("CopyReadingFooterBacking") as ColorRect
 	backing.position = Vector2(0, area.y - 52)
 	backing.size = Vector2(area.x, 40)
@@ -218,7 +218,7 @@ func _present_copy(doc_id: String, body: String) -> void:
 	var mark := body.find("\n\n— COPY INCOMPLETE —")
 	_copy_incomplete = mark >= 0
 	copy.texture = COPY_FACE
-	var area := get_viewport().get_visible_rect().size
+	var area := _view_area()
 	var ratio := 0.23 / 0.3
 	var base_height := maxf(1.0, minf(area.y - 88.0, 640.0))
 	var height := minf(base_height * text_scale, maxf(1.0, (area.x - 64.0) / ratio))
@@ -232,12 +232,21 @@ func _present_copy(doc_id: String, body: String) -> void:
 	ink.add_theme_font_override("font", HAND_FONT)
 	ink.add_theme_font_size_override("font_size", maxi(16, int(round(width * HAND_FONT_SIZE * HAND_PIXEL_SIZE / 0.23))))
 	var written := body.substr(0, mark) if mark >= 0 else body
-	var result := ""
-	for i in written.length():
-		if i > 0 and i % TranscriptPaper.GLYPH_COLUMNS == 0:
-			result += "\n"
-		result += written[i]
-	ink.text = result
+	ink.text = TranscriptPaper.layout_text(written)
+	# During an incomplete word, preserve the pad's precomputed positions.
+	var paper := get_parent().get_node_or_null("TranscriptPaper") as TranscriptPaper
+	if paper != null:
+		# A copy shown mid-word still wraps by the whole message the hand is
+		# writing, so the word keeps the row it will end on.
+		var full := paper.get_transcript_text()
+		if doc_id == HAND_DOC_ID and not written.is_empty() and full.begins_with(written):
+			ink.text = TranscriptPaper.layout_text(full, written.length())
+		if doc_id == HAND_DOC_ID and written == paper.get_display_text():
+			ink.text = paper.get_label_3d().text
+		elif doc_id == "previous_transcript":
+			var previous := paper.get_node_or_null("PreviousSheet/PreviousSheetText") as Label3D
+			if previous != null:
+				ink.text = previous.text
 	var status := copy.get_node("Status") as Label
 	status.text = "COPY INCOMPLETE" if mark >= 0 else ""
 	(copy.get_node("Footer") as Label).visible = false
@@ -286,8 +295,17 @@ func _pan_copy_to(target: float) -> void:
 	_copy_pan_y = clampf(target, _copy_pan_minimum(copy), 32.0)
 	copy.position.y = _copy_pan_y
 
+## The frame the viewer draws in. While the office is being moved into its
+## presentation frame the viewer is briefly outside any viewport; it then lays
+## out for the 960x540 frame it is about to land in.
+func _view_area() -> Vector2:
+	var viewport := get_viewport()
+	if viewport == null:
+		return Vector2(ReadabilityPolicy.INTERNAL_SIZE)
+	return viewport.get_visible_rect().size
+
 func _copy_pan_minimum(copy: Control) -> float:
-	var area := get_viewport().get_visible_rect().size
+	var area := _view_area()
 	return minf(32.0, area.y - 64.0 - copy.size.y)
 
 ## Resize re-presents the open sheet and fixed footer for the new viewport and

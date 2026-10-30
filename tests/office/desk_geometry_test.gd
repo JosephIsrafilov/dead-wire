@@ -128,21 +128,49 @@ func _run() -> void:
 
 	# --- Q1 budget survives the lift: projected letter height ---------------
 	office.operator_seat.sit()
+	# The camera follows the physics-interpolated head (1.8): let the seated
+	# pose settle through physics ticks before measuring from it.
+	for _tick in 30:
+		await physics_frame
 	await process_frame
 	await process_frame
 	var lbl := paper2.get_label_3d()
-	var font := lbl.font if lbl.font != null else ThemeDB.fallback_font
 	var cam := office.player.camera
-	var a := cam.unproject_position(lbl.to_global(Vector3.ZERO))
-	var b := cam.unproject_position(lbl.to_global(Vector3(0, -font.get_height(lbl.font_size) * lbl.pixel_size, 0)))
-	var full_px := a.distance_to(b)
-	if not assert_condition(full_px >= 20.0, "Live lettering keeps its projected size (%.1f px full height at 720p)" % full_px): return
+	# The budget is defined at the shipped default FOV, whatever a local
+	# settings file says.
+	cam.fov = GameSettings.new().vertical_fov
+	# Sitting back, the live line is a glance (the murmur carries it); leaning
+	# in is how Elias reads his own hand. The budget is met leaning in.
+	var seated_px := _letter_px(cam, lbl)
+	Input.action_press("lean")
+	var lean_guard := 0
+	while office.player.get_lean_weight() < 1.0 and lean_guard < 600:
+		await process_frame
+		lean_guard += 1
+	await process_frame
+	var full_px := _letter_px(cam, lbl)
+	if not assert_condition(full_px >= 20.0,
+			"Leaning in, live lettering reaches its projected size (%.1f px full height at 720p; %.1f sitting back)"
+			% [full_px, seated_px]): return
+	var desk_clear := cam.global_position.y > desk_y + 0.2
+	Input.action_release("lean")
+	if not assert_condition(desk_clear, "The lean stops above the desk, not in it"): return
 
 	office.queue_free()
 	await process_frame
 	await process_frame
 	print("--- All Desk Geometry Tests PASSED (%d assertions) ---" % _assertions_passed)
 	quit(0)
+
+## Projected full line height of the label, in 720-line reference pixels.
+## unproject_position works in the camera's own viewport, whose height follows
+## the window and the presentation mode (a headless window is tiny and was once
+## square, which inflated the old figure).
+func _letter_px(cam: Camera3D, lbl: Label3D) -> float:
+	var font := lbl.font if lbl.font != null else ThemeDB.fallback_font
+	var a := cam.unproject_position(lbl.to_global(Vector3.ZERO))
+	var b := cam.unproject_position(lbl.to_global(Vector3(0, -font.get_height(lbl.font_size) * lbl.pixel_size, 0)))
+	return a.distance_to(b) * 720.0 / cam.get_viewport().get_visible_rect().size.y
 
 ## World-space corners of a sheet in the XY-plane sense: the four combinations
 ## of the local rectangle (x across, z down the sheet).

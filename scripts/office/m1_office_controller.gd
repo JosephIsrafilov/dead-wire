@@ -34,11 +34,14 @@ var _exit_body_present: bool = false
 
 var _presentation_mode: int = 1
 var _presentation_window_state: Dictionary = {}
+var _presentation_container: SubViewportContainer = null
+var _presentation_reparenting := false
 
 func _ready() -> void:
 	_presentation_mode = GameSettings.load_settings().presentation_mode
 	if enable_psx_rendering:
 		apply_psx_settings()
+		_create_presentation_viewport.call_deferred()
 	_apply_embedded_body_font()
 
 	_scenario_list = [scenario_1, scenario_2, scenario_3]
@@ -113,26 +116,8 @@ func _apply_psx_scale() -> void:
 	var window := get_window()
 	var height := window.size.y if window != null and window.size.y > 0 else 720
 	var profile := ReadabilityPolicy.profile(height, _presentation_mode)
-	# Let the window scale the entire render target, including UI and dither.
-	# The previous 3D-only scale left the grade and text at monitor resolution.
-	if window != null:
-		if _presentation_window_state.is_empty():
-			for property in ["content_scale_size", "content_scale_mode", "content_scale_aspect",
-					"content_scale_stretch"]:
-				_presentation_window_state[property] = window.get(property)
-		var low_resolution: bool = profile.grade_enabled
-		var size: Vector2i = profile.content_size if low_resolution else Vector2i(1280, 720)
-		var mode := Window.CONTENT_SCALE_MODE_VIEWPORT if low_resolution else Window.CONTENT_SCALE_MODE_CANVAS_ITEMS
-		var aspect := Window.CONTENT_SCALE_ASPECT_KEEP if low_resolution else Window.CONTENT_SCALE_ASPECT_EXPAND
-		var stretch := Window.CONTENT_SCALE_STRETCH_INTEGER if low_resolution else Window.CONTENT_SCALE_STRETCH_FRACTIONAL
-		if window.content_scale_size != size:
-			window.content_scale_size = size
-		if window.content_scale_mode != mode:
-			window.content_scale_mode = mode
-		if window.content_scale_aspect != aspect:
-			window.content_scale_aspect = aspect
-		if window.content_scale_stretch != stretch:
-			window.content_scale_stretch = stretch
+	if _presentation_container != null:
+		_presentation_container.configure(window.size, profile)
 	vp.scaling_3d_scale = profile.scale
 	var grade := get_node_or_null("PSXDither/Grade") as CanvasItem
 	if grade != null:
@@ -146,11 +131,48 @@ func _apply_psx_scale() -> void:
 			material.set_shader_parameter("levels", profile.levels)
 			material.set_shader_parameter("vignette", profile.vignette)
 
+func _create_presentation_viewport() -> void:
+	if not is_inside_tree():  # deferred: the office may be freed already
+		return
+	var window := get_window()
+	for property in ["content_scale_size", "content_scale_mode", "content_scale_aspect", "content_scale_stretch"]:
+		_presentation_window_state[property] = window.get(property)
+	window.content_scale_mode = Window.CONTENT_SCALE_MODE_DISABLED
+	var container := SubViewportContainer.new()
+	container.set_script(load("res://scripts/presentation/office_presentation.gd"))
+	container.name = "OfficePresentation"
+	container.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	container.mouse_filter = Control.MOUSE_FILTER_PASS
+	var output_material := ShaderMaterial.new()
+	output_material.shader = load("res://materials/shaders/sharp_bilinear.gdshader")
+	container.material = output_material
+	var source := SubViewport.new()
+	source.name = "OfficeFrame"
+	source.own_world_3d = true
+	source.handle_input_locally = true
+	source.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	container.attach_source(source)
+	window.add_child(container)
+	_presentation_container = container
+	var was_current_scene := get_tree().current_scene == self
+	_presentation_reparenting = true
+	reparent(source)
+	_presentation_reparenting = false
+	if was_current_scene:  # a root child must hold it, so a scene change frees the container too
+		get_tree().current_scene = container
+	if player_camera != null:
+		player_camera.make_current()
+	apply_psx_settings()
+
 func _exit_tree() -> void:
+	if _presentation_reparenting:
+		return
 	var window := get_window()
 	if window != null:
 		if window.size_changed.is_connected(_apply_psx_scale):
 			window.size_changed.disconnect(_apply_psx_scale)
+		if _presentation_container != null:
+			_presentation_container.queue_free()
 		for property in _presentation_window_state:
 			window.set(property, _presentation_window_state[property])
 
@@ -197,6 +219,10 @@ func _bind_signals() -> void:
 	if dawn_evidence == null:
 		dawn_evidence = get_node_or_null("DawnEvidence") as DawnEvidence
 
+	if office_door != null:
+		if not office_door.door_opened.is_connected(_on_door_opened_draft):
+			office_door.door_opened.connect(_on_door_opened_draft)
+
 	var exit_trigger := get_node_or_null("OfficeExitTrigger") as Area3D
 	if exit_trigger != null:
 		if not exit_trigger.body_entered.is_connected(_on_exit_body_entered):
@@ -237,6 +263,13 @@ func _bind_signals() -> void:
 	var duty_sheet := get_node_or_null("DutySheet") as DutySheet
 	if duty_sheet != null and not duty_sheet.sheet_inspected.is_connected(_on_duty_sheet_inspected):
 		duty_sheet.sheet_inspected.connect(_on_duty_sheet_inspected)
+
+	# The shelf of division volumes by the east wall. It is a document surface
+	# like the ledger and the duty sheet: it hands over authored print and never
+	# reads what happened tonight.
+	var bookshelf := get_node_or_null("Bookcase/BookshelfInspect") as BookshelfInspect
+	if bookshelf != null and not bookshelf.inspected.is_connected(_on_bookshelf_inspected):
+		bookshelf.inspected.connect(_on_bookshelf_inspected)
 
 	if dawn_evidence != null and not dawn_evidence.evidence_inspected.is_connected(_on_dawn_evidence_inspected):
 		dawn_evidence.evidence_inspected.connect(_on_dawn_evidence_inspected)
@@ -326,6 +359,7 @@ func load_scenario_by_index(idx: int) -> bool:
 			# A fresh watch wipes the physical record: lever, needle, last
 			# route. Slot changes (idx > 0) never touch it (plan R01).
 			routing_board.reset_for_new_watch()
+		_reset_loose_props()
 	if session_controller != null:
 		if routing_board != null:
 			routing_board.reset_for_new_transmission()
@@ -339,6 +373,49 @@ func load_scenario_by_index(idx: int) -> bool:
 		_update_key_feedback()
 		return ok
 	return false
+
+## How hard the opened door moves the air, in the same m/s the cloth reads from
+## a walking body. A door is not a gale: it is a hand on a handle and a leaf
+## swinging, and the coat across the room should lean, not fly.
+const DRAFT_STRENGTH: float = 0.9
+
+## The south door opening moves the air in the room, and the coat on the hall
+## rack is the only thing light enough to show it. This is the one physical
+## consequence the door has beyond its own hinge: it is a real event with a real
+## cause, never the coat moving by itself (GDD §10).
+func _on_door_opened_draft() -> void:
+	var coat := get_node_or_null("HangingCoat") as HangingCoat
+	if coat == null or office_door == null:
+		return
+	# Both positions come from the things that actually have one. OfficeDoor is
+	# a plain Node and has no transform (asking it for global_position aborted
+	# this handler before the cloth was ever touched); the coat's own transform
+	# is identity because its particles carry absolute room coordinates, so
+	# global_position is the world origin, not the hook.
+	var door_position: Vector3 = office_door.get_world_anchor()
+	var coat_position: Vector3 = coat.get_hang_position()
+	# Air moves from the door toward the far wall: the coat is knocked away from
+	# the opening, not toward it.
+	var direction: Vector3 = coat_position - door_position
+	direction.y = 0.0
+	if direction.length_squared() < 0.0001:
+		return
+	var strength := DRAFT_STRENGTH * office_door.draft_attenuation(coat_position)
+	if strength <= 0.0:
+		return
+	coat.draft(coat_position, direction, strength)
+
+## A fresh watch puts the room's loose objects back where they were authored. A
+## cup knocked under the filing table on the previous night must not be missing
+## from the next one: the office is the same office, repaired between shifts.
+func _reset_loose_props() -> void:
+	var loose := get_node_or_null("LooseProps") as Node3D
+	if loose == null:
+		return
+	for child in loose.get_children():
+		var prop := child as LooseProp
+		if prop != null:
+			prop.reset_to_rest()
 
 func advance_to_next_scenario() -> bool:
 	if _cycle_completed:
@@ -779,6 +856,13 @@ func _try_end_shift() -> void:
 func _on_duty_sheet_inspected(text: String) -> void:
 	if document_viewer != null:
 		document_viewer.open_document("duty_sheet", "OPERATOR'S DUTY SHEET", text, "[E / Esc] Put Down Duty Sheet")
+
+func _on_bookshelf_inspected(text: String) -> void:
+	if document_viewer != null:
+		document_viewer.open_document(
+			"bookshelf", "BLACK CREEK — DIVISION VOLUMES", text,
+			"[E / Esc] Put Down the Volumes"
+		)
 
 func _on_dawn_evidence_inspected(text: String) -> void:
 	var interaction: InteractionController = player.get_node_or_null("InteractionController") \

@@ -37,6 +37,21 @@ func _run() -> void:
 	if not require(player.get_global_transform_interpolated().origin.distance_to(spawn.origin) < 0.001,
 			"Recovery clears the old render pose instead of flying through the floor"): return
 	if not require(player.velocity == Vector3.ZERO, "Recovery cannot carry the fall velocity into the next tick"): return
+	player.rotation = Vector3.ZERO
+	player.head.rotation = Vector3.ZERO
+	for i in 3:
+		await physics_frame
+		await process_frame
+		player.camera.get_camera_transform()
+	player._apply_mouse_look(Vector2(20.0, -10.0))
+	var rendered := player.camera.get_camera_transform()
+	if not require(rendered.basis.is_equal_approx(player.head.global_basis),
+			"Rendered mouse yaw and pitch respond before another physics tick"): return
+	if not require(is_equal_approx(player.rotation.y, -0.06), "Movement facing follows the immediate yaw"): return
+	if not require(is_equal_approx(player.head.rotation.x, 0.03), "Immediate pitch preserves sensitivity"): return
+	var facing := player.rotation.y
+	player._physics_process(0.0)
+	if not require(is_equal_approx(player.rotation.y, facing), "Physics does not apply the mouse motion twice"): return
 	player.queue_free()
 	await process_frame
 	var office := load("res://scenes/office/m1_office.tscn").instantiate() as M1OfficeController

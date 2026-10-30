@@ -295,7 +295,7 @@ func _update_presentation() -> void:
 		var label := get_node_or_null(String(OPTION_LABEL_NAMES[index]))
 		var stamp := get_node_or_null(String(OPTION_STAMP_NAMES[index]))
 		var has_option := index < _options.size()
-		_set_text(label, _string_property(_options[index], "display_label") if has_option else "UNAVAILABLE")
+		_set_text(label, _string_property(_options[index], "display_label") if has_option else "")
 		if label != null:
 			label.visible = options_visible and has_option
 		if stamp != null:
@@ -306,10 +306,15 @@ func _update_presentation() -> void:
 			_set_text(stamp, "FILED" if index == selected_index else "VOID")
 			_set_modulate(stamp, Color(0.72, 0.18, 0.12, 1.0) if index == selected_index else Color(0.42, 0.4, 0.35, 0.65))
 	var result := get_node_or_null("ResultLabel")
-	_set_text(result, _result_text if _committed and not _result_text.is_empty() else "NO FILE")
+	# An empty field says "nothing was filed" better than the word NO FILE did.
+	# The desk used to narrate its own state at the operator ("AWAITING
+	# TRANSCRIPT", "NO FILE", "UNAVAILABLE"), which read as a debug readout
+	# floating on an 1894 counter. When there is nothing to report, it reports
+	# nothing — which is what a real desk does.
+	_set_text(result, _result_text if _committed and not _result_text.is_empty() else "")
 	var prompt := get_node_or_null("PromptLabel")
 	var resolved_prompt := "NO COPY FILED" if _selected_action_id == LAPSED_ACTION_ID else "COPY FILED"
-	_set_text(prompt, prompt_message if is_enabled() else (resolved_prompt if _committed else "AWAITING TRANSCRIPT"))
+	_set_text(prompt, prompt_message if is_enabled() else (resolved_prompt if _committed else ""))
 
 func _selected_index() -> int:
 	if _selected_action_id == StringName():

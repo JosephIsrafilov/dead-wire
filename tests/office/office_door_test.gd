@@ -126,7 +126,7 @@ func _run() -> void:
 	if not assert_condition(threshold != null and gap_glow != null, "Door threshold and gap glow exist"): return
 	if not assert_condition(threshold.size.y >= 0.015 and threshold.size.y <= 0.025 and gap_glow.global_position.y > threshold.global_position.y + threshold.size.y * 0.5 + 0.002, "Door threshold sits cleanly on the floor and DoorGapGlow clears it without z-fighting"): return
 
-	var service_table := office.get_node_or_null("PhFilingTable") as Node3D
+	var service_table := office.get_node_or_null("FilingTable") as Node3D
 	var commit_desk := office.get_node_or_null("CopyCommitDesk") as Node3D
 	var dawn_board := office.get_node_or_null("DawnEvidence") as Node3D
 	if not assert_condition(service_table != null and commit_desk != null and dawn_board != null, "South-side furniture and handover board exist"): return
@@ -134,6 +134,12 @@ func _run() -> void:
 	if not assert_condition(commit_top != null and not commit_top.visible, "Toy CSG CopyCommitDesk frame is hidden in favor of real table geometry"): return
 	if not assert_condition(service_table.global_position.distance_to(Vector3(commit_desk.global_position.x, 0.0, commit_desk.global_position.z)) < 0.08, "Real wooden table carries CopyCommitDesk as one integrated filing station"): return
 	if not assert_condition(service_table.global_position.x > -0.2 and commit_desk.global_position.x >= 0.35 and commit_desk.global_position.x <= 0.65, "Integrated filing station is clear of the doorway and separated from the hot stove"): return
+	# The table's top has to meet the commit desk's own collision top, or the
+	# option plates hang in the air above it.
+	var table_box: AABB = (service_table as VisualInstance3D).global_transform * (service_table as VisualInstance3D).get_aabb()
+	var commit_solid := commit_desk.get_node_or_null("Solid/Top") as CollisionShape3D
+	var commit_top_y: float = commit_solid.global_position.y + (commit_solid.shape as BoxShape3D).size.y * 0.5 if commit_solid != null else -1.0
+	if not assert_condition(commit_top_y > 0.0 and absf(table_box.end.y - commit_top_y) < 0.02, "The filing table top meets the commit desk bearing surface (%.3f vs %.3f)" % [table_box.end.y, commit_top_y]): return
 	if not assert_condition(absf(dawn_board.global_position.x - commit_desk.global_position.x) < 0.15, "Night Handover board hangs directly above the filing station"): return
 
 	print("--- All Office Door Tests PASSED (%d assertions) ---" % _assertions_passed)

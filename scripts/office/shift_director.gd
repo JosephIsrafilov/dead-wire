@@ -37,6 +37,10 @@ signal traffic_missed(slot_index: int, scenario: TelegraphScenarioData)
 signal route_deadline_started(slot_index: int, seconds: float)
 signal route_defaulted(slot_index: int, scenario: TelegraphScenarioData)
 signal shift_closed()
+## A message crossed the wire that was never addressed to this office. The
+## player hears Morse that is not his telegram and has no way to know that, so
+## the night says it once, in the operator's own voice.
+signal foreign_traffic_heard(text: String)
 
 @export var enabled: bool = true
 @export var office: M1OfficeController = null
@@ -357,6 +361,8 @@ func _maybe_foreign_traffic() -> void:
 	if schedule == null or schedule.total_duration_seconds > remaining - 3.0:
 		return
 	foreign_traffic_played = _play_on_wire(foreign_traffic_text) > 0.0
+	if foreign_traffic_played:
+		foreign_traffic_heard.emit(foreign_traffic_text)
 
 ## The previous slot's misrouted order gets its answer on the wire in THIS
 ## waiting stretch — armed only by the recorded world fact, so the fact has a

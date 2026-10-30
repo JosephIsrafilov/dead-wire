@@ -17,7 +17,11 @@ func _run() -> void:
 	guidance.data = load("res://data/night_guidance/m1_guidance.tres")
 	guidance.set_context(&"entry", false)
 	guidance.advance_guidance(3.0)
-	if not check(guidance.current_text == "Lamp first. Then the chair and the key.", "Entry thought appears after delay"): return
+	if not check(guidance.current_text.begins_with("Lamp first. Then the chair and the key."), "Entry thought appears after delay"): return
+	# AGENT_RULES §5: a thought names the next action; it never lists the room
+	# or reassures the player about it.
+	if not check(guidance.current_text.split(". ").size() <= 2 and not guidance.current_text.contains("unexplained"),
+			"The entry thought names the next action and does not explain the room"): return
 	guidance.set_context(&"open_line", false)
 	if not check(guidance.current_text.is_empty(), "Completed context immediately clears its thought"): return
 	guidance.advance_guidance(3.0)

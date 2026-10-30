@@ -28,8 +28,14 @@ func _init() -> void:
 	if not assert_condition(menu.begin_watch(), "Begin the Watch changes scene successfully"): return
 	await process_frame
 	await process_frame
-	var office := current_scene as M1OfficeController
+	var presentation := current_scene as SubViewportContainer
+	var office: M1OfficeController = null
+	if presentation != null:
+		office = presentation.get_child(0).get_child(0) as M1OfficeController
+	else:
+		office = current_scene as M1OfficeController
 	if not assert_condition(office != null, "Main menu lands in the production office scene"): return
+	if not assert_condition(current_scene == presentation or current_scene == office, "The scene root owns the office, so changing scene frees it"): return
 	if not assert_condition(office.session_controller != null and office.shift_director != null, "Office startup wires session and shift director"): return
 	if not assert_condition(office.shift_director.get_phase() == ShiftDirector.Phase.PRE_SHIFT, "Office starts before the line is opened"): return
 	if not assert_condition(world.snapshot().is_empty() and knowledge.snapshot().is_empty(), "Starting a watch clears prior world and knowledge facts"): return

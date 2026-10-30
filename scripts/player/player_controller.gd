@@ -54,6 +54,25 @@ signal footstep_played(step_index: int)
 ## catches any hole that appears later instead of dropping the player forever.
 @export var fall_recovery_height: float = -2.0
 
+## Walking into a loose prop moves it. A CharacterBody3D in Godot 4 does not
+## push rigid bodies on its own: move_and_slide reports the contact and stops,
+## so without this the office is a room of statues that Elias walks through.
+## The arithmetic lives in PushImpulse; the switch lives here.
+@export var push_enabled: bool = true
+@export var push_transfer: float = PushImpulse.TRANSFER
+@export var push_max_impulse: float = PushImpulse.MAX_IMPULSE
+@export var push_contact_seconds: float = PushImpulse.CONTACT_SECONDS
+
+## Leaning in: hold the lean action and the head goes forward and a little down
+## toward whatever Elias is looking at — the live copy, the window glass, the
+## crack of the door. Translation only, eased, and stopped short of any surface.
+@export var lean_enabled: bool = true
+@export var lean_distance: float = 0.26
+@export var lean_drop: float = 0.09
+@export var lean_seconds: float = 0.3
+## The camera stops this far short of whatever the lean would push it into.
+@export var lean_clearance: float = 0.12
+
 var is_movement_locked: bool = false
 var is_look_locked: bool = false
 var is_seated: bool = false
@@ -82,12 +101,19 @@ var _footstep_index: int = 0
 ## Yaw clamp used while seated, in radians. Negative range means unclamped.
 var _yaw_limit_centre: float = 0.0
 var _yaw_limit_half_range: float = -1.0
-var _pending_look := Vector2.ZERO
+var _camera_rest_transform := Transform3D.IDENTITY
+## 0..1, eased toward the lean action; read by the camera pose every frame.
+var _lean_weight: float = 0.0
 
 func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	if camera != null:
 		camera.current = true
+		_camera_rest_transform = camera.transform
+		camera.top_level = true
+		camera.physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF
+		# Follow the interpolated position after the frame-driven chair pose.
+		process_priority = 10
 	if head != null:
 		head_rest_position = head.position
 	_spawn_transform = global_transform if is_inside_tree() else transform
@@ -101,7 +127,6 @@ func set_movement_locked(locked: bool) -> void:
 	is_movement_locked = locked
 	is_look_locked = locked
 	if is_movement_locked:
-		_pending_look = Vector2.ZERO
 		velocity.x = 0.0
 		velocity.z = 0.0
 
@@ -151,10 +176,7 @@ func _input(event: InputEvent) -> void:
 		return
 
 	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
-		if is_physics_interpolated_and_enabled():
-			_pending_look += event.relative
-		else:
-			_apply_mouse_look(event.relative)
+		_apply_mouse_look(event.relative)
 
 func _apply_mouse_look(relative: Vector2) -> void:
 	rotate_y(-relative.x * mouse_sensitivity)
@@ -162,6 +184,59 @@ func _apply_mouse_look(relative: Vector2) -> void:
 	if head != null:
 		head.rotate_x(-relative.y * mouse_sensitivity)
 		head.rotation.x = clamp(head.rotation.x, deg_to_rad(-85.0), deg_to_rad(85.0))
+	_update_camera_pose()
+
+## Turns the body and head toward a world point. The camera is driven from the
+## head every frame, so aiming the camera node directly would not stick.
+func aim_at(point: Vector3) -> void:
+	if head == null:
+		return
+	var to_point := point - head.global_position
+	if to_point.length_squared() < 0.000001:
+		return
+	rotation.y = atan2(-to_point.x, -to_point.z)
+	_apply_yaw_limit()
+	var flat := Vector2(to_point.x, to_point.z).length()
+	head.rotation.x = clampf(atan2(to_point.y, flat), deg_to_rad(-85.0), deg_to_rad(85.0))
+	_update_camera_pose()
+
+func _process(delta: float) -> void:
+	var wants_lean := lean_enabled and not is_look_locked \
+		and InputMap.has_action("lean") and Input.is_action_pressed("lean")
+	_lean_weight = move_toward(_lean_weight, 1.0 if wants_lean else 0.0, delta / maxf(lean_seconds, 0.01))
+	_update_camera_pose()
+
+func get_lean_weight() -> float:
+	return _lean_weight
+
+func _update_camera_pose() -> void:
+	if camera == null or head == null:
+		return
+	# Position follows the rendered body; mouse orientation has no tick delay.
+	var origin := head.get_global_transform_interpolated().origin
+	origin += head.global_basis * _camera_rest_transform.origin
+	origin += _lean_offset(origin)
+	camera.global_transform = Transform3D(head.global_basis * _camera_rest_transform.basis, origin)
+
+func _lean_offset(origin: Vector3) -> Vector3:
+	if _lean_weight <= 0.0:
+		return Vector3.ZERO
+	var forward := -head.global_basis.z
+	forward.y = 0.0
+	if forward.length_squared() < 0.000001:
+		return Vector3.ZERO
+	var reach := forward.normalized() * lean_distance + Vector3.DOWN * lean_drop
+	var eased := smoothstep(0.0, 1.0, _lean_weight)
+	var length := reach.length()
+	if is_inside_tree() and length > 0.0:
+		# Never into the wall, the glass or the desk: stop short of the first hit.
+		var query := PhysicsRayQueryParameters3D.create(origin, origin + reach / length * (length + lean_clearance))
+		query.exclude = [get_rid()]
+		var hit := get_world_3d().direct_space_state.intersect_ray(query)
+		if not hit.is_empty():
+			var room := maxf(0.0, origin.distance_to(hit.position) - lean_clearance)
+			reach *= minf(1.0, room / length)
+	return reach * eased
 
 func _apply_yaw_limit() -> void:
 	if _yaw_limit_half_range < 0.0:
@@ -171,9 +246,6 @@ func _apply_yaw_limit() -> void:
 	rotation.y = _yaw_limit_centre + offset
 
 func _physics_process(delta: float) -> void:
-	if not is_look_locked and _pending_look != Vector2.ZERO:
-		_apply_mouse_look(_pending_look)
-	_pending_look = Vector2.ZERO
 	if global_position.y < fall_recovery_height:
 		_recover_from_fall()
 		return
@@ -195,11 +267,45 @@ func _physics_process(delta: float) -> void:
 
 	var position_before_move := global_position
 	move_and_slide()
+	_push_loose_bodies(delta)
 	var delta_x := global_position.x - position_before_move.x
 	var delta_z := global_position.z - position_before_move.z
 	var moved_distance := Vector2(delta_x, delta_z).length()
 	_advance_footsteps(moved_distance)
 	_update_head(delta, moved_distance)
+
+## Shove anything loose the capsule is leaning on. move_and_slide leaves the
+## player stopped against a rigid body and hands us the contact, so this is the
+## one place that turns "the body is walking" into "the object moves".
+##
+## The per-frame impulse is scaled by delta (see PushImpulse) so a contact that
+## lasts nine frames delivers one shove, not nine.
+func _push_loose_bodies(delta: float) -> void:
+	if not push_enabled or delta <= 0.0:
+		return
+	var planar := Vector3(velocity.x, 0.0, velocity.z)
+	var speed := planar.length()
+	if speed < PushImpulse.MIN_SPEED:
+		return
+	var direction := planar / speed
+	for index in get_slide_collision_count():
+		var collision := get_slide_collision(index)
+		if collision == null:
+			continue
+		var body := collision.get_collider() as RigidBody3D
+		if body == null or body.freeze:
+			continue
+		var impulse := PushImpulse.frame_impulse(
+			body.mass, speed, delta, push_transfer, push_max_impulse, push_contact_seconds)
+		if impulse <= 0.0:
+			continue
+		if body.has_method("wake"):
+			body.call("wake")
+		# Push along the walk and slightly downward: the contact point is
+		# usually above the object's centre of mass, so a purely horizontal
+		# shove would make a mug slide instead of tipping.
+		var shove := (direction + Vector3.DOWN * 0.15).normalized()
+		body.apply_impulse(shove * impulse, collision.get_position() - body.global_position)
 
 ## Separated from physics so the cadence can be tested without relying on an
 ## input device or a particular frame rate.

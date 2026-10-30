@@ -308,10 +308,13 @@ func _run() -> void:
 	# Contact mapping: glyph N must land on the N-th non-whitespace character,
 	# never on the tab or the newline. The expected contact is derived from
 	# the same layout formula with the correct character index.
-	var glyph_chars := [0, 1, 3, 4, 6, 7, 9, 10]
+	# The hand keeps the author's newline and turns the tab into one space, so
+	# the glyphs sit at (row, ink written before it on that row):
+	var glyph_rows := [0, 0, 0, 0, 1, 1, 1, 1]
+	var glyph_preceding := ["", "A", "AB ", "AB C", "", "E", "EF ", "EF G"]
 	for glyph in 8:
-		var expected := _expected_ws_contact(ws_paper, glyph_chars[glyph])
-		if not assert_condition(ws_paper.get_glyph_contact(glyph).is_equal_approx(expected), "Glyph %d contacts character %d, not a whitespace slot" % [glyph, glyph_chars[glyph]]): return
+		var expected := _expected_ws_contact(ws_paper, glyph_rows[glyph], glyph_preceding[glyph])
+		if not assert_condition(ws_paper.get_glyph_contact(glyph).is_equal_approx(expected), "Glyph %d contacts row %d after '%s', not a whitespace slot" % [glyph, glyph_rows[glyph], glyph_preceding[glyph]]): return
 	var ws_rig := ws_paper.get_writer_rig()
 	var ws_contacts: Array[int] = []
 	ws_rig.glyph_contact.connect(func(index: int): ws_contacts.append(index))
@@ -444,12 +447,9 @@ func assert_condition(condition: bool, description: String) -> bool:
 ## The contact the layout contract prescribes for a given CHARACTER index:
 ## same formula as the paper's, driven with the correct non-whitespace
 ## mapping so a divergence in the paper's own scan shows up as a mismatch.
-func _expected_ws_contact(paper: TranscriptPaper, character: int) -> Vector3:
+func _expected_ws_contact(paper: TranscriptPaper, row: int, preceding: String) -> Vector3:
 	var lbl := paper.get_label_3d()
 	var font := lbl.font if lbl.font != null else ThemeDB.fallback_font
-	var columns := paper.GLYPH_COLUMNS
-	var line_start := (character / columns) * columns
-	var preceding := paper.get_transcript_text().substr(line_start, character % columns)
 	var x := font.get_string_size(preceding, HORIZONTAL_ALIGNMENT_LEFT, -1, lbl.font_size).x
-	var y := font.get_height(lbl.font_size) * float(character / columns) + font.get_ascent(lbl.font_size)
+	var y := font.get_height(lbl.font_size) * float(row) + font.get_ascent(lbl.font_size)
 	return lbl.position + lbl.basis * Vector3(x * lbl.pixel_size, -y * lbl.pixel_size, 0.0005)

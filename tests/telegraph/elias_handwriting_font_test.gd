@@ -24,7 +24,7 @@ func _run() -> void:
 	if not _a(scene_text.count(FONT_PATH) == 1, "Live and archive labels share one font resource"): return
 	var forms_text := FileAccess.get_file_as_string("res://tools/build_paper_forms.gd")
 	if not _a(forms_text.contains("const HAND := preload(\"%s\")" % FONT_PATH), "Forms builder uses the matching handwriting metrics"): return
-	if not _a(TranscriptPaper.GLYPH_COLUMNS == 10, "Ten-column transcript layout is preserved"): return
+	if not _a(TranscriptPaper.GLYPH_COLUMNS == 9, "Nine-column layout keeps whole words inside the sheet width"): return
 	var scene := load("res://scenes/telegraph/transcript_paper.tscn") as PackedScene
 	if not _a(scene != null, "Transcript scene loads with the generated font"): return
 	var paper := scene.instantiate() as TranscriptPaper

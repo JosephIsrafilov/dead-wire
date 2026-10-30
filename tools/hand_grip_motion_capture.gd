@@ -31,7 +31,7 @@ func _run() -> void:
 	await process_frame
 	office.player.set_physics_process(false)
 	office.player.set_process_input(false)
-	office.player.camera.look_at(office.session_controller.transcript_paper.global_position)
+	office.player.aim_at(office.session_controller.transcript_paper.global_position)
 	office.load_scenario_by_index(0)
 	active = true
 

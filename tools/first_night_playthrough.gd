@@ -37,7 +37,7 @@ func _run() -> void:
 	menu.begin_button.pressed.emit()
 	await process_frame
 	await process_frame
-	office = current_scene as M1OfficeController
+	office = _office_of(current_scene)
 	check(office != null, "Title button enters production office")
 	if office == null:
 		quit(1)
@@ -194,7 +194,7 @@ func _run() -> void:
 	office.shift_end_card.again_button.pressed.emit()
 	await process_frame
 	await process_frame
-	office = current_scene as M1OfficeController
+	office = _office_of(current_scene)
 	check(office != null and office.shift_director.get_phase() == ShiftDirector.Phase.PRE_SHIFT, "Restart button creates a fresh watch")
 	check(root.get_node("WorldState").snapshot().is_empty() and root.get_node("KnowledgeState").snapshot().is_empty(), "Restart clears both independent state stores")
 	check(not office.window_observation.is_active and not office.copy_commit_desk.has_committed(), "Restart clears figure and filing presentation")
@@ -205,6 +205,12 @@ func _run() -> void:
 	await process_frame
 	print("PLAYTHROUGH: %d failures; %d screenshots" % [failures, screenshots])
 	quit(1 if failures else 0)
+
+## The office lives inside the presentation container's frame once it is up.
+func _office_of(scene: Node) -> M1OfficeController:
+	if scene is SubViewportContainer:
+		return scene.get_child(0).get_child(0) as M1OfficeController
+	return scene as M1OfficeController
 
 ## Generous ceiling for one consequence beat. The cloud branch's own authored
 ## timing is delay + hold + fade, all of it data; this only has to be larger

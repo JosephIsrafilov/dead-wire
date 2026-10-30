@@ -748,38 +748,67 @@ func _update_display() -> void:
 
 ## Short rows preserve readable live ink at the seated PSX resolution.
 ## Both the contact solve and lifted view use these same fixed columns.
-const GLYPH_COLUMNS: int = 10
+const GLYPH_COLUMNS: int = 9
 
-## Fixed columns keep existing ink still as each new glyph is written. The
-## same layout defines pen contact, so nib and ink cannot drift apart.
-func _layout_prefix(prefix: String) -> String:
+## Look ahead in the full transcript, never in the growing visible prefix.
+## A partial word keeps its eventual row from the first contact onward.
+static func layout_text(text: String, visible_length: int = -1) -> String:
 	var result := ""
 	var column := 0
-	for index in prefix.length():
+	var end := text.length() if visible_length < 0 else mini(visible_length, text.length())
+	for index in end:
+		var character := text[index]
+		if character in ["\n", "\r"]:
+			if character == "\n":
+				result += "\n"
+				column = 0
+			continue
+		if character in [" ", "\t"]:
+			var next := index + 1
+			while next < text.length() and text[next] not in [" ", "\t", "\n", "\r"]:
+				next += 1
+			var word_length := next - index - 1
+			if column > 0 and column + 1 + word_length > GLYPH_COLUMNS:
+				result += "\n"
+				column = 0
+			elif column > 0:
+				result += " "
+				column += 1
+			continue
+		# An overlong unbroken token still has a bounded fallback.
 		if column == GLYPH_COLUMNS:
 			result += "\n"
 			column = 0
-		result += prefix[index]
+		result += character
 		column += 1
 	return result
 
-func get_glyph_contact(glyph_index: int) -> Vector3:
-	var character := 0
+func _layout_prefix(prefix: String) -> String:
+	# Only the pad's own message can be looked ahead in; any other text lays
+	# itself out whole.
+	if _transcript_text.begins_with(prefix):
+		return layout_text(_transcript_text, prefix.length())
+	return layout_text(prefix)
+
+static func layout_before_glyph(text: String, glyph_index: int) -> String:
+	var formatted := layout_text(text)
 	var glyph := 0
-	for index in _transcript_text.length():
-		if not _is_layout_whitespace(_transcript_text.substr(index, 1)):
+	for index in formatted.length():
+		if formatted[index] not in [" ", "\t", "\n", "\r"]:
 			if glyph == glyph_index:
-				character = index
-				break
+				return formatted.substr(0, index)
 			glyph += 1
+	return formatted
+
+func get_glyph_contact(glyph_index: int) -> Vector3:
+	var prefix := layout_before_glyph(_transcript_text, glyph_index)
 	var lbl := get_label_3d()
 	if lbl == null:
 		return Vector3.ZERO
 	var font := lbl.font if lbl.font != null else ThemeDB.fallback_font
-	var line_start := (character / GLYPH_COLUMNS) * GLYPH_COLUMNS
-	var preceding := _transcript_text.substr(line_start, character % GLYPH_COLUMNS)
+	var preceding := prefix.substr(prefix.rfind("\n") + 1)
 	var x := font.get_string_size(preceding, HORIZONTAL_ALIGNMENT_LEFT, -1, lbl.font_size).x
-	var y := font.get_height(lbl.font_size) * float(character / GLYPH_COLUMNS) + font.get_ascent(lbl.font_size)
+	var y := font.get_height(lbl.font_size) * float(prefix.count("\n")) + font.get_ascent(lbl.font_size)
 	return lbl.position + lbl.basis * Vector3(x * lbl.pixel_size, -y * lbl.pixel_size, 0.0005)
 
 func _on_interacted() -> void:

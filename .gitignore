@@ -42,6 +42,15 @@ docs/research/mechanics_2026-10-10/mechanics_demo.mp4
 scratch/**/*.bak
 /*.log
 
+# Local caches, agent scratch space and tool output
+.cache/
+.dsh-scratch/
+/output/
+/pelican-*.html
+# Blender autosave backups and the local editor MCP bridge
+*.blend1
+/addons/mcp_bridge/
+
 # Failed-suite logs saved by tools/run_all_tests.sh (ROADMAP 0.10)
 test_logs/
 

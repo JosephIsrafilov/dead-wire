@@ -34,7 +34,7 @@ func _run() -> void:
 	office.operator_seat.sit()
 	office.load_scenario_by_index(0)
 	check(office.session_controller.start_transmission(), "Start baseline in the seated office")
-	office.player.camera.look_at(office.window_observation.global_position)
+	office.player.aim_at(office.window_observation.global_position)
 	office.session_controller.scheduler.advance_time(30.0)
 	for i in 200: paper.advance_paper(0.25)
 	check(paper.is_ready_to_inspect(), "Looking away does not stop the copy")
@@ -43,7 +43,10 @@ func _run() -> void:
 	paper.get_interactable().interact()
 	check(viewer.is_open(), "Look-away copy can be opened")
 	var ray := office.player.get_node("Head/Camera3D/InteractionRay") as RayCast3D
-	office.player.camera.look_at(paper.global_position)
+	# The chair takes the body over on the next frames; aim once he is seated.
+	await process_frame
+	await process_frame
+	office.player.aim_at(paper.global_position)
 	await physics_frame
 	ray.force_raycast_update()
 	check(ray.get_collider() == paper.get_interactable(), "Real seated ray reaches active paper, not the invisible archived area")

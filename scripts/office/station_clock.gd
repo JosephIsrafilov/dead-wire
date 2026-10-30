@@ -38,7 +38,11 @@ signal station_time_changed(hours: float)
 @export var runs_before_shift: bool = false
 
 ## One full swing of the pendulum; the escapement ticks each half period.
-@export var pendulum_swing: float = 0.016
+## 0.016 rad is a 1.8 cm throw on a 0.18 m rod — physically right, and invisible
+## from across a dark room. 0.055 rad is still a small, believable swing but it
+## reads at the distance the player actually stands at, which is the point of
+## putting a clock on the wall.
+@export var pendulum_swing: float = 0.055
 @export var pendulum_period_seconds: float = 2.0
 
 var _fallback_hours: float = -1.0

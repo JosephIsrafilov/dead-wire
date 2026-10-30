@@ -1,4 +1,4 @@
-[gd_scene load_steps=48 format=3 uid="uid://m1office001"]
+[gd_scene load_steps=51 format=3 uid="uid://m1office001"]
 
 [ext_resource type="Script" path="res://scripts/office/m1_office_controller.gd" id="1_controller"]
 [ext_resource type="Material" path="res://materials/style_tests/floor_wood_planks.tres" id="2_floor"]
@@ -35,6 +35,8 @@
 [ext_resource type="Script" path="res://scripts/office/shift_director.gd" id="29_shift"]
 [ext_resource type="Script" path="res://scripts/telegraph/ui/duty_sheet.gd" id="30_duty"]
 [ext_resource type="Script" path="res://scripts/interaction/interactable.gd" id="31_interact"]
+[ext_resource type="Script" path="res://scripts/office/bookshelf_inspect.gd" id="62_bookshelf"]
+
 [ext_resource type="Script" path="res://scripts/office/station_clock.gd" id="32_clock"]
 [ext_resource type="Script" path="res://scripts/player/operator_seat.gd" id="33_seat"]
 [ext_resource type="Script" path="res://scripts/office/office_door.gd" id="34_door"]
@@ -44,7 +46,8 @@
 [ext_resource type="PackedScene" path="res://scenes/props/m1/ph_chair.tscn" id="50_phchair"]
 [ext_resource type="PackedScene" path="res://scenes/props/m1/ph_cabinet.tscn" id="51_phcabinet"]
 [ext_resource type="PackedScene" path="res://scenes/props/m1/ph_ledger_volumes.tscn" id="52_phbooks"]
-[ext_resource type="PackedScene" path="res://scenes/props/m1/ph_table.tscn" id="53_phtable"]
+[ext_resource type="ArrayMesh" path="res://assets/models/office_props_v1/table_static.res" id="53_table"]
+[ext_resource type="ArrayMesh" path="res://assets/models/office_props_v1/floor_wear_static.res" id="54_floorwear"]
 [ext_resource type="Script" path="res://scripts/office/unease_director.gd" id="36_unease"]
 [ext_resource type="Script" path="res://scripts/office/lamp_life.gd" id="37_lamplife"]
 [ext_resource type="PackedScene" path="res://scenes/ui/pause_menu.tscn" id="38_pause"]
@@ -62,6 +65,8 @@
 
 [ext_resource type="Script" path="res://scripts/office/night_guidance_controller.gd" id="guidance"]
 
+[ext_resource type="PackedScene" path="res://scenes/office/hanging_coat.tscn" id="60_hanging_coat"]
+[ext_resource type="PackedScene" path="res://scenes/office/loose_props.tscn" id="61_loose_props"]
 [ext_resource type="Script" path="res://scripts/ui/murmur_caption.gd" id="murmur"]
 
 [sub_resource type="BoxShape3D" id="SeatInteract"]
@@ -134,12 +139,12 @@ size = Vector2(19.0, 8.4)
 background_mode = 1
 background_color = Color(0.02, 0.025, 0.035, 1)
 ambient_light_source = 2
-ambient_light_color = Color(0.36, 0.4, 0.48, 1)
+ambient_light_color = Color(0.3, 0.36, 0.5, 1)
 ambient_light_sky_contribution = 0.0
-ambient_light_energy = 0.22
-tonemap_mode = 2
-tonemap_exposure = 1.12
-tonemap_white = 2.2
+ambient_light_energy = 0.11
+tonemap_mode = 4
+tonemap_exposure = 1.5
+tonemap_white = 4.0
 fog_enabled = true
 fog_light_color = Color(0.16, 0.19, 0.24, 1)
 fog_light_energy = 0.55
@@ -150,6 +155,9 @@ fog_sky_affect = 0.35
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_psx_dither"]
 shader = ExtResource("psx_grade")
+
+[sub_resource type="BoxShape3D" id="BookshelfShape"]
+size = Vector3(0.62, 1.7, 0.42)
 
 [node name="M1Office" type="Node3D" node_paths=PackedStringArray("session_controller", "routing_board", "copy_commit_desk", "door_attention", "window_observation", "document_viewer", "player", "dawn_evidence")]
 script = ExtResource("1_controller")
@@ -209,13 +217,13 @@ omni_attenuation = 1.9
 position = Vector3(-1.5, 2.0, -2.9)
 rotation = Vector3(-0.45, 3.141593, 0)
 light_color = Color(0.32, 0.5, 0.86, 1)
-light_energy = 1.4
+light_energy = 2.4
 light_specular = 0.25
 light_cull_mask = 4294967293
 light_indirect_energy = 0.7
 shadow_enabled = true
-spot_range = 4.4
-spot_attenuation = 1.2
+spot_range = 7.0
+spot_attenuation = 0.9
 spot_angle = 40.0
 
 ; Lamp light thrown back off the lit copy sheet: warms the writing hand from
@@ -232,22 +240,31 @@ omni_attenuation = 1.6
 position = Vector3(2.1, 0.82, 1.45)
 light_color = Color(0.9, 0.32, 0.08, 1)
 light_energy = 1.7
+shadow_enabled = true
 omni_range = 2.9
 omni_attenuation = 1.6
 
 [node name="RoutingBoardSconceLight" type="OmniLight3D" parent="."]
-position = Vector3(2.45, 1.8, -0.85)
+position = Vector3(2.46, 1.34, -0.75)
 light_color = Color(0.76, 0.62, 0.42, 1)
-light_energy = 1.45
-shadow_enabled = false
-omni_range = 3.0
-omni_attenuation = 1.5
+light_energy = 0.8
+shadow_enabled = true
+omni_range = 2.4
+omni_attenuation = 1.6
 
+; The floor itself stays this CSG box: its top face is what the player and the
+; physics stand on. The worn boards laid over it are a look, not a surface.
 [node name="Floor" type="CSGBox3D" parent="."]
 position = Vector3(0, -0.05, 0)
 size = Vector3(6.04, 0.1, 4.84)
 material = ExtResource("2_floor")
 use_collision = true
+
+[node name="FloorWear" type="MeshInstance3D" parent="."]
+; Lifted, shrunken and split boards on the door-to-desk traffic line, with
+; nails standing proud. Creak anchors sit on the same boards (UneaseDirector)
+; so the sound comes from where the wear is.
+mesh = ExtResource("54_floorwear")
 
 [node name="Ceiling" type="CSGBox3D" parent="."]
 position = Vector3(0, 2.9, 0)
@@ -515,31 +532,22 @@ position = Vector3(1.56, 1.85, -2.285)
 size = Vector3(0.02, 0.6, 0.02)
 material = ExtResource("5_trim")
 
-; A bracket lamp by the door, turned low for the night: the records cabinet
-; and the door are a place in the dark, not a black slab.
-[node name="DoorLampBracket" type="CSGBox3D" parent="."]
-position = Vector3(-2.35, 1.45, 2.235)
-size = Vector3(0.14, 0.014, 0.13)
-material = ExtResource("5_trim")
+; The cabinet lamp by the regulator clock (moved here from the door at the
+; owner's request, 2026-10-21) is turned down to a night wick: a warm point
+; that keeps the south side a place in the dark, casting real shadows instead
+; of leaking through the cabinet. The sill lamp is gone (plan 2.1): a lamp on
+; the sill lit the glass from inside and killed the yard behind it. The north
+; side is the moon's now (WindowBounceLight).
+[node name="CabinetLamp" parent="." instance=ExtResource("47_lamp")]
+transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, -2.62, 1.402, 1.16)
 
-[node name="DoorLamp" parent="." instance=ExtResource("47_lamp")]
-transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, -2.35, 1.457, 2.22)
-
-[node name="DoorLampLight" type="OmniLight3D" parent="."]
-position = Vector3(-2.35, 1.62, 2.18)
-light_color = Color(1, 0.78, 0.55, 1)
-light_energy = 0.85
-shadow_enabled = false
-omni_range = 3.4
-omni_attenuation = 1.45
-
-[node name="FilingTableLight" type="OmniLight3D" parent="."]
-position = Vector3(0.45, 1.72, 1.82)
-light_color = Color(0.96, 0.76, 0.52, 1)
-light_energy = 0.52
-shadow_enabled = false
-omni_range = 2.4
-omni_attenuation = 1.5
+[node name="CabinetLampLight" type="OmniLight3D" parent="."]
+position = Vector3(-2.62, 1.57, 1.10)
+light_color = Color(1, 0.76, 0.52, 1)
+light_energy = 0.38
+shadow_enabled = true
+omni_range = 2.6
+omni_attenuation = 1.6
 
 ; The line comes down the west wall behind the pigeonholes to the lead-in
 ; block on the desk: the instruments are visibly on the wire.
@@ -688,9 +696,20 @@ position = Vector3(1.05, 1.4, -2.27)
 size = Vector3(1.76, 0.07, 0.09)
 material = ExtResource("5_trim")
 
+; The south chair rail used to run straight through the night register board:
+; one 3.92 m bar at z 2.225..2.315, while the board hangs at z 2.262..2.290 and
+; spans y 1.19..1.91. The rail was therefore IN FRONT of the board, cutting it
+; in half on screen. It is now two runs that stop either side of the board,
+; which is what a joiner would actually do around a wall fixture.
+; Board frame spans x 1.21..2.03, so the rail stops 15 mm clear of each side.
 [node name="ChairRailSouth" type="CSGBox3D" parent="."]
-position = Vector3(0.88, 1.4, 2.27)
-size = Vector3(3.92, 0.07, 0.09)
+position = Vector3(0.058, 1.4, 2.27)
+size = Vector3(2.276, 0.07, 0.09)
+material = ExtResource("5_trim")
+
+[node name="ChairRailSouthEast" type="CSGBox3D" parent="."]
+position = Vector3(2.442, 1.4, 2.27)
+size = Vector3(0.824, 0.07, 0.09)
 material = ExtResource("5_trim")
 
 [node name="BaseboardNorth" type="CSGBox3D" parent="."]
@@ -740,6 +759,10 @@ transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -2.32,
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -1.55, 0, -0.6)
 
 [node name="PhChairVisual" parent="Chair" instance=ExtResource("50_phchair")]
+visible = false
+; Retired 2026-10-20: the authored PSX chair now carries the Chair node, and the
+; Poly Haven overlay was rendering a second, smoother chair through it. The node
+; stays so the third-party register and any external reference keep resolving.
 
 [node name="OperatorSeat" type="Node" parent="Chair" node_paths=PackedStringArray("office")]
 script = ExtResource("33_seat")
@@ -795,14 +818,24 @@ office_path = NodePath("..")
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 2.74, 0.62, -0.85)
 
 [node name="StorageCabinet" parent="." instance=ExtResource("12_cabinet")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -2.58, 0, 1.15)
+; Moved 23 cm along the wall on 2026-10-21: its top-back corner covered the
+; bottom-left of the regulator clock by 22 mm, which read on screen as the clock
+; being tucked behind the cabinet. The clock is on the wall at z = 0.62; the
+; cabinet now clears it instead of overlapping it.
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -2.58, 0, 1.38)
 
-[node name="PhCabinetVisual" parent="." instance=ExtResource("51_phcabinet")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -2.58, 0, 1.15)
+; PhCabinetVisual (Poly Haven painted cabinet) retired 2026-10-20: the
+; authored Blender cabinet now carries StorageCabinet, so the third-party
+; overlay would double-render over it.
 
-[node name="PhFilingTable" parent="." instance=ExtResource("53_phtable")]
+[node name="FilingTable" type="MeshInstance3D" parent="."]
 ; Service table by the south wall, east of the door: carries the CopyCommitDesk
 ; plates and stamp as one solid filing station, clear of both door and stove.
+; Authored PSX table (tools/build_office_props_blender.py) — the Poly Haven
+; wooden_table_02 that used to sit here was the last third-party furniture in
+; the room. Top is at 0.80 m, which is where CopyCommitDesk's own collision
+; already ended; the old table was 3 cm short and the option plates floated.
+mesh = ExtResource("53_table")
 transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 0.45, 0, 1.85)
 
 [node name="PhLedgerVolumes" parent="." instance=ExtResource("52_phbooks")]
@@ -814,6 +847,22 @@ transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 2.1, 0
 [node name="Bookcase" parent="." instance=ExtResource("14_bookcase")]
 transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 2.62, 0, 0.45)
 
+
+; The shelf of division volumes. Its collision box stands in front of the
+; bookcase's own solid so the ray reaches it before the furniture.
+
+[node name="BookshelfInspect" type="Node3D" parent="Bookcase"]
+script = ExtResource("62_bookshelf")
+
+[node name="Interactable" type="Area3D" parent="Bookcase/BookshelfInspect"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, 0.24)
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("31_interact")
+prompt_text = "Inspect Bookshelf"
+
+[node name="Shape" type="CollisionShape3D" parent="Bookcase/BookshelfInspect/Interactable"]
+shape = SubResource("BookshelfShape")
 
 [node name="OfficeStorytellingProps" parent="." instance=ExtResource("27_story")]
 
@@ -840,6 +889,13 @@ position = Vector3(-1.6, 0.2, 2.85)
 ; silhouette is still cut out against the sky rather than lit.
 [node name="WindowObservationEvent" parent="." instance=ExtResource("21_winobs")]
 position = Vector3(-1.5, 0.95, -5.2)
+
+[node name="HangingCoat" parent="." instance=ExtResource("60_hanging_coat")]
+
+; The room's only rigid bodies: an enamel cup and an ink bottle left on the
+; floor. Placed here rather than on a table so they cannot intercept the
+; interaction ray of the commit plates.
+[node name="LooseProps" parent="." instance=ExtResource("61_loose_props")]
 
 [node name="Player" parent="." instance=ExtResource("22_player")]
 position = Vector3(0, 0, 1.05)
@@ -909,6 +965,12 @@ script = ExtResource("36_unease")
 
 [node name="CreakAnchorFloorNW" type="Marker3D" parent="UneaseDirector"]
 position = Vector3(-1.8, 0.05, -1.4)
+
+[node name="CreakAnchorWornBoard" type="Marker3D" parent="UneaseDirector"]
+position = Vector3(-0.88, 0.05, 0.92)
+
+[node name="CreakAnchorSplitBoard" type="Marker3D" parent="UneaseDirector"]
+position = Vector3(0.10, 0.05, -0.28)
 
 [node name="CreakAnchorBeam" type="Marker3D" parent="UneaseDirector"]
 position = Vector3(0.4, 2.3, -0.6)

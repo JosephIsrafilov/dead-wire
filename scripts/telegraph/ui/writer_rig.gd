@@ -461,14 +461,7 @@ func _glyph_follows_space(text: String, glyph_index: int) -> bool:
 	return false
 
 func _layout_row_of_glyph(text: String, glyph_index: int) -> int:
-	var glyph := 0
-	for index in text.length():
-		if _is_layout_whitespace(text.substr(index, 1)):
-			continue
-		if glyph == glyph_index:
-			return index / TranscriptPaper.GLYPH_COLUMNS
-		glyph += 1
-	return 0
+	return TranscriptPaper.layout_before_glyph(text, glyph_index).count("\n")
 
 func _get_nib_position() -> Vector3:
 	var nib := get_node_or_null("%s/Pen/Nib" % _get_hand_path()) as Node3D

@@ -79,7 +79,7 @@ func _run() -> void:
 					office.copy_commit_desk.commit_option(StringName(outcome))
 				check(not office.copy_commit_desk.commit_option(&"file_water"), "Terminal copy rejects duplicate filing")
 			# Watch the window throughout the trigger. No popping into view.
-			office.player.camera.look_at(office.window_observation.global_position)
+			office.player.aim_at(office.window_observation.global_position)
 			session.advance_consequence(1.0)
 			check(not office.window_observation.get_visual_indicator().visible, "Watched window defers appearance")
 			session.advance_consequence(20.0)
