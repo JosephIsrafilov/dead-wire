@@ -245,6 +245,39 @@ func _run() -> void:
 	if not assert_condition(landed.size() == 2 and landed[0] < 0.001 and landed[1] < 0.01, "After a drift the nib still lands within a millimetre, hand at rest"): return
 	idle_paper.queue_free()
 
+	# --- W7: the pen goes to the inkwell after the copy, never during it ----
+	var plain_paper := _paper_at(Transform3D.IDENTITY)
+	await process_frame
+	var plain_rig := plain_paper.get_writer_rig()
+	plain_paper.begin_writing("A")
+	plain_paper.advance_paper(plain_paper.feed_seconds + plain_rig.enter_duration + 0.01)
+	plain_rig.finish_with_dip()
+	if not assert_condition(not plain_rig.is_dipping() and plain_rig.get_presentation_state() in [WriterRig.PresentationState.FINISH, WriterRig.PresentationState.WITHDRAWN],
+		"Without an inkwell the arm simply withdraws"): return
+	plain_paper.queue_free()
+
+	var ink_paper := _paper_at(Transform3D.IDENTITY)
+	var mouth := Marker3D.new()
+	mouth.add_to_group(WriterRig.INKWELL_GROUP)
+	root.add_child(mouth)
+	mouth.global_position = ink_paper.to_global(Vector3(0.0, 0.04, 0.22))
+	await process_frame
+	var ink_rig := ink_paper.get_writer_rig()
+	var ink_nib := ink_rig.get_node("Sleeve/Wrist/Hand/Pen/Nib") as Node3D
+	ink_paper.begin_writing("A")
+	ink_paper.advance_paper(ink_paper.feed_seconds + ink_rig.enter_duration + 0.01)
+	ink_rig.finish_with_dip()
+	if not assert_condition(ink_rig.is_dipping(), "With an inkwell in reach the pen goes to dip"): return
+	if not assert_condition(not ink_rig.request_glyph_motion(0, "A"), "No glyph is accepted while the pen is in the ink"): return
+	await create_timer(ink_rig.dip_reach_seconds + ink_rig.dip_seconds * 0.9).timeout
+	var dip_error := ink_nib.to_global(Vector3(0, -0.011, 0)).distance_to(mouth.global_position)
+	if not assert_condition(dip_error < 0.03, "The nib goes into the inkwell's mouth (%.3f m)" % dip_error): return
+	await create_timer(ink_rig.dip_seconds + ink_rig.withdraw_duration + 0.3).timeout
+	if not assert_condition(not ink_rig.is_dipping() and ink_rig.get_presentation_state() == WriterRig.PresentationState.WITHDRAWN,
+		"After the dip the arm withdraws as before"): return
+	ink_paper.queue_free()
+	mouth.queue_free()
+
 	for p in [origin_paper, moved_paper, cycle_paper, cancel_paper, mid_paper, line_paper]:
 		if is_instance_valid(p):
 			p.queue_free()

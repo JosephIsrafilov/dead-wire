@@ -822,6 +822,11 @@ material = SubResource("BlotterLeather")
 position = Vector3(-2.23, 0.764, -0.72)
 rotation = Vector3(0, 1.5707963, 0)
 
+; The mouth of the desk's inkwell (baked into the desk mesh, right of the copy
+; board). The writing hand dips the pen here once a copy is complete (5.8).
+[node name="InkwellMouth" type="Marker3D" parent="." groups=["inkwell_mouth"]]
+position = Vector3(-2.12, 0.805, -0.92)
+
 [node name="CopyCommitDesk" parent="." instance=ExtResource("40_commit")]
 position = Vector3(0.45, 0.72, 1.85)
 rotation = Vector3(0, 3.141593, 0)

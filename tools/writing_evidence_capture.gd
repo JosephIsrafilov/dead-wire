@@ -55,6 +55,12 @@ func _run() -> void:
 	await _shot("w2_second_row")
 	# The finished sheet, hand withdrawn or at rest.
 	await _wait_for(func() -> bool: return paper.is_ready_to_inspect(), 8000)
+	# The pen goes to the inkwell after the last glyph (5.8): catch it there.
+	await _wait_for(func() -> bool: return rig.is_dipping(), 120)
+	await create_timer(rig.dip_reach_seconds + rig.dip_seconds * 0.8).timeout
+	await _shot("w3b_pen_in_ink")
+	await _wait_for(func() -> bool: return not rig.is_dipping(), 600)
+	await create_timer(0.4).timeout
 	await _shot("w3_finished_sheet")
 	# The copy lifted toward the eye, as the player reads it (margins, ink).
 	paper._on_interacted()

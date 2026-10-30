@@ -1,4 +1,4 @@
-[gd_scene load_steps=18format=3 uid="uid://b1paper001"]
+[gd_scene load_steps=22 format=3 uid="uid://b1paper001"]
 
 [ext_resource type="Script" path="res://scripts/telegraph/ui/transcript_paper.gd" id="1_paper"]
 [ext_resource type="Script" path="res://scripts/interaction/interactable.gd" id="2_interact"]
@@ -14,6 +14,24 @@
 [ext_resource type="ArrayMesh" path="res://assets/models/operator/cuff_v3.res" id="9_cuff"]
 [ext_resource type="ArrayMesh" path="res://assets/models/operator/upper_arm_v1.res" id="13_upper"]
 [ext_resource type="Script" path="res://scripts/telegraph/ui/wet_ink.gd" id="14_wet"]
+[ext_resource type="Shader" path="res://materials/shaders/arm_into_dark.gdshader" id="15_dark"]
+
+; The arm falls into the dark toward the frame edge (5.5).
+[sub_resource type="ShaderMaterial" id="ArmIntoDark"]
+shader = ExtResource("15_dark")
+
+; Night one has already left ink on the fingers that hold the pen (5.5).
+[sub_resource type="Gradient" id="InkSmudgeGradient"]
+offsets = PackedFloat32Array(0, 0.55, 1)
+colors = PackedColorArray(0.03, 0.03, 0.06, 0.85, 0.03, 0.03, 0.06, 0.45, 0.03, 0.03, 0.06, 0)
+
+[sub_resource type="GradientTexture2D" id="InkSmudge"]
+gradient = SubResource("InkSmudgeGradient")
+width = 32
+height = 32
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
 
 [sub_resource type="BoxMesh" id="BoxMesh_paper"]
 material = ExtResource("3_mat")
@@ -177,6 +195,7 @@ rotation = Vector3(0.18, 0.0, 0.10)
 
 [node name="SleeveMesh" type="MeshInstance3D" parent="WriterRig/Sleeve"]
 layers = 2
+material_overlay = SubResource("ArmIntoDark")
 mesh = ExtResource("8_sleeve")
 
 [node name="Wrist" type="Node3D" parent="WriterRig/Sleeve"]
@@ -209,11 +228,19 @@ position = Vector3(0, 0.03, 0)
 mesh = SubResource("CylinderMesh_nib")
 position = Vector3(0, -0.058, 0)
 
+; Projects only onto the arm's own layer, so the sheet under it stays clean.
+[node name="InkOnFingers" type="Decal" parent="WriterRig/Sleeve/Wrist/Hand/Pen"]
+position = Vector3(0, -0.03, 0)
+size = Vector3(0.028, 0.03, 0.028)
+texture_albedo = SubResource("InkSmudge")
+cull_mask = 2
+
 
 [node name="ElbowAnchor" type="Marker3D" parent="WriterRig/Sleeve"]
 
 [node name="UpperArm" type="MeshInstance3D" parent="WriterRig"]
 layers = 2
+material_overlay = SubResource("ArmIntoDark")
 mesh = ExtResource("13_upper")
 position = Vector3(0.07, 0.17, 0.57)
 

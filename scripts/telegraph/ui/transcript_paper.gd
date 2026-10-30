@@ -672,7 +672,7 @@ func _commit_ink() -> void:
 		paper_state = PaperState.READY_TO_INSPECT
 		var finished_rig := get_writer_rig()
 		if finished_rig != null:
-			finished_rig.finish_writing()
+			finished_rig.finish_with_dip()
 		_update_display()
 		copy_finished.emit(_paper_scenario_id)
 

@@ -59,6 +59,11 @@ signal glyph_contact(glyph_index: int)
 ## Pen tilt amplitude (radians) and hover lift (metres) at full drift.
 @export var idle_drift_tilt: float = 0.03
 @export var idle_drift_lift: float = 0.005
+## Plan 5.8: once the copy is complete the pen goes to the inkwell for a dip
+## before the arm withdraws. Only then: a glyph never waits for the ink.
+@export var dip_reach_seconds: float = 0.45
+@export var dip_seconds: float = 0.16
+const INKWELL_GROUP := &"inkwell_mouth"
 
 var presentation_state: PresentationState = PresentationState.HIDDEN
 var _active_tween: Tween = null
@@ -112,6 +117,7 @@ var _last_contact_row: int = -1
 var _idle_time: float = 0.0
 var _idle_clock: float = 0.0
 var _motion_drift_start: float = 0.0
+var _dipping: bool = false
 
 func _ready() -> void:
 	var upper := get_node_or_null("UpperArm") as MeshInstance3D
@@ -433,6 +439,46 @@ func finish_writing() -> void:
 			_apply_visibility(false)
 	)
 
+## The copy is complete: dip the pen if an inkwell is in reach, then withdraw.
+## Without an inkwell (a bare sheet, a test fixture) this is finish_writing.
+func finish_with_dip() -> void:
+	var mouth: Node3D = null
+	if is_inside_tree():
+		mouth = get_tree().get_first_node_in_group(INKWELL_GROUP) as Node3D
+	var sleeve := _get_assembly()
+	var nib := get_node_or_null("%s/Pen/Nib" % _get_hand_path()) as Node3D
+	if mouth == null or sleeve == null or nib == null or not is_active():
+		finish_writing()
+		return
+	_cancel_tween()
+	_motion_pending = false
+	_apply_idle_pose(0.0)
+	presentation_state = PresentationState.FINISH
+	var tip := to_local(nib.to_global(Vector3(0, -0.011, 0)))
+	var above := sleeve.position + to_local(mouth.global_position + Vector3.UP * 0.035) - tip
+	var dipped := sleeve.position + to_local(mouth.global_position + Vector3.DOWN * 0.01) - tip
+	_active_tween = create_tween()
+	_active_tween.tween_property(sleeve, "position", above, dip_reach_seconds) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	_active_tween.tween_property(sleeve, "position", dipped, dip_seconds) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	_active_tween.tween_property(sleeve, "position", above, dip_seconds) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	_active_tween.finished.connect(_after_dip)
+	_dipping = true
+
+func is_dipping() -> bool:
+	return _dipping
+
+func _after_dip() -> void:
+	_active_tween = null
+	if not _dipping or presentation_state != PresentationState.FINISH:
+		return
+	_dipping = false
+	# finish_writing() withdraws from wherever the hand is now.
+	presentation_state = PresentationState.WRITING
+	finish_writing()
+
 ## B3: the full authored pose — assembly AND joints, position AND basis —
 ## returns. Nothing of the last sheet survives into the next one.
 func reset() -> void:
@@ -524,6 +570,7 @@ func _cancel_tween() -> void:
 	if _active_tween != null and is_instance_valid(_active_tween):
 		_active_tween.kill()
 	_active_tween = null
+	_dipping = false
 
 ## Analytical two-link arm: both meshes keep unit scale, the elbow is the
 ## sphere intersection for two fixed lengths, on one stable bend side.
