@@ -321,8 +321,8 @@ fallback. Period letterpress and Elias handwriting remain unchanged. No modern s
 
 ## First-night font roles (2026-10-11)
 
-- Noto Sans variable font: Google Fonts ofl/notosans/NotoSans[wdth,wght].ttf, bundled as assets/fonts/noto/NotoSans.ttf; SIL OFL 1.1 in adjacent OFL.txt. Source: https://github.com/google/fonts/tree/main/ofl/notosans . UI/control readability, not historical print.
-- Old Standard TT Regular/Bold: Google Fonts ofl/oldstandardtt/OldStandard-Regular.ttf and OldStandard-Bold.ttf, bundled under assets/fonts/oldstandard/; adjacent SIL OFL 1.1. Source: https://github.com/google/fonts/tree/main/ofl/oldstandardtt . Period-inspired styling, not a certified 1894 railway face.
+- Noto Sans variable font: Google Fonts ofl/notosans/NotoSans[wdth,wght].ttf, bundled as assets/fonts/noto/NotoSans.ttf; SIL OFL 1.1 in adjacent OFL.txt. Source: https://github.com/google/fonts/tree/main/ofl/notosans . No longer used by the game UI (2026-10-30); kept for tools.
+- Old Standard TT Regular/Bold: Google Fonts ofl/oldstandardtt/OldStandard-Regular.ttf and OldStandard-Bold.ttf, bundled under assets/fonts/oldstandard/; adjacent SIL OFL 1.1. Source: https://github.com/google/fonts/tree/main/ofl/oldstandardtt . Period-inspired styling, not a certified 1890 railway face. Since 2026-10-30 the UI theme, prompts and Elias's thoughts print in it; the whisper caption uses IM Fell.
 - Courier Prime retained for American Morse timing and whitespace. No implicit system fallback intended.
 
 ### Beta sound provenance closure — 2026-10-11

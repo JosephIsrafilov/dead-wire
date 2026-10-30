@@ -77,13 +77,10 @@ func _update_prompt_ui() -> void:
 		prompt_label.visible = false
 		return
 
-	if current_target and current_target.can_interact() and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
-		if current_target.is_actionable:
-			prompt_label.text = "[E] %s" % current_target.get_prompt()
-		else:
-			prompt_label.text = current_target.get_prompt()
-		# Status lines whisper; only an action the operator can take speaks up.
-		prompt_label.modulate.a = 1.0 if current_target.is_actionable else STATUS_ALPHA
+	var line := prompt_line(current_target)
+	if not line.is_empty() and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+		prompt_label.text = line
+		prompt_label.modulate.a = 1.0
 		prompt_label.visible = true
 	elif not persistent_hint.is_empty() and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		prompt_label.text = persistent_hint
@@ -91,6 +88,14 @@ func _update_prompt_ui() -> void:
 		prompt_label.visible = true
 	else:
 		prompt_label.visible = false
+
+## The text printed for a target. The room shows state, overlays don't (GDD
+## §35): a target E cannot act on prints nothing, and the quiet reticle says the
+## rest. Its status text still lives on the Interactable for tests and tools.
+static func prompt_line(target: Interactable) -> String:
+	if target == null or not target.can_interact() or not target.is_actionable:
+		return ""
+	return "[E] %s" % target.get_prompt()
 
 ## Sets or clears the fallback prompt shown when nothing is targeted.
 func set_persistent_hint(text: String) -> void:

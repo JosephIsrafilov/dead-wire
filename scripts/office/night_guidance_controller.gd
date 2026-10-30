@@ -45,8 +45,11 @@ func _ready() -> void:
 	_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_label.add_theme_font_override("font", preload("res://assets/fonts/noto/NotoSans-Regular.ttf"))
+	# A thought is printed like the room's own paper: a period book face in
+	# lamp-warm ink, not a modern caption.
+	_label.add_theme_font_override("font", preload("res://assets/fonts/oldstandard/OldStandardTT-Regular.ttf"))
 	_label.add_theme_font_size_override("font_size", 22)
+	_label.add_theme_color_override("font_color", Color(0.9, 0.84, 0.7, 1.0))
 	_label.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.95))
 	_label.add_theme_constant_override("shadow_offset_x", 1)
 	_label.add_theme_constant_override("shadow_offset_y", 2)

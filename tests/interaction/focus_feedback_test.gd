@@ -22,6 +22,7 @@ func _run() -> void:
 	if not _test_reticle_follows_target_change(): return
 	if not _test_prompt_update_refreshes_reticle_without_label(): return
 	if not _test_blocked_prompt_update_hides_reticle_without_label(): return
+	if not _test_status_target_prints_nothing(): return
 	_release_owned()
 	print("--- All Focus Feedback Tests PASSED ---")
 	quit(0)
@@ -136,6 +137,17 @@ func _test_blocked_prompt_update_hides_reticle_without_label() -> bool:
 	ctl.is_ui_blocked = true
 	ctl._update_prompt_ui()
 	var ok := assert_condition(not reticle.visible, "Blocked prompt update hides the reticle even when the prompt label is missing")
+	return ok
+
+## GDD §35 / AGENT_RULES §4: the room shows state, overlays don't. A target E
+## cannot act on ("No Copy Yet", "Still Copying", "Line Busy") prints nothing;
+## the quiet reticle is the whole answer. An action prints its word.
+func _test_status_target_prints_nothing() -> bool:
+	var ok := assert_condition(InteractionController.prompt_line(_target(false)).is_empty(),
+			"A status-only target prints no overlay text")
+	var action := InteractionController.prompt_line(_target(true))
+	ok = assert_condition(action.contains("Train-Order Board"), "An actionable target still names its action") and ok
+	ok = assert_condition(InteractionController.prompt_line(null).is_empty(), "No target prints nothing") and ok
 	return ok
 
 func assert_condition(ok: bool, desc: String) -> bool:

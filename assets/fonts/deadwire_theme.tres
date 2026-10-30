@@ -1,8 +1,9 @@
 [gd_resource type="Theme" load_steps=2 format=3]
 
-[ext_resource type="FontFile" path="res://assets/fonts/noto/NotoSans-Regular.ttf" id="1_print"]
+[ext_resource type="FontFile" path="res://assets/fonts/oldstandard/OldStandardTT-Regular.ttf" id="1_print"]
 
-; UI uses bundled Noto Sans; documents and handwriting select their own faces.
+; UI prints in Old Standard TT (OFL, bundled): a book face of the 1890s, never
+; a modern sans (GDD §35). Documents and handwriting select their own faces.
 ; Elias's own hand (the transcript) sets its font explicitly.
 [resource]
 default_font = ExtResource("1_print")
