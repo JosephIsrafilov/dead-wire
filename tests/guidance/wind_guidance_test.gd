@@ -57,8 +57,10 @@ func _run() -> void:
 		"A wound register hands the thought back to comparing the strip"): return
 
 	office.queue_free()
-	await process_frame
-	await process_frame
+	# The office's presentation frame is freed one frame after the office
+	# itself; quitting earlier crashed teardown now and then (0xC0000005).
+	for _frame in 5:
+		await process_frame
 	print("--- All Wind Guidance Tests PASSED (%d assertions) ---" % _assertions)
 	quit(0)
 

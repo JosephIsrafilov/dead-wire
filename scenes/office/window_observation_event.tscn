@@ -21,11 +21,13 @@ albedo_color = Color(0.028, 0.033, 0.042, 1)
 shading_mode = 0
 albedo_color = Color(0.019, 0.023, 0.030, 1)
 
+; A long coat to below the knee: the figure stands ON the yard (plan 3.6), legs
+; and boots down to the ground, not a torso hanging in the air.
 [sub_resource type="CylinderMesh" id="CoatMesh"]
 material = SubResource("FigureCloth")
 top_radius = 0.17
-bottom_radius = 0.28
-height = 0.76
+bottom_radius = 0.27
+height = 1.0
 radial_segments = 6
 rings = 1
 
@@ -62,8 +64,34 @@ rotation = Vector3(0, 0.21, 0)
 
 [node name="Coat" type="MeshInstance3D" parent="VisualIndicator"]
 cast_shadow = 0
-position = Vector3(0, 0, 0)
+position = Vector3(0, -0.12, 0)
 mesh = SubResource("CoatMesh")
+
+; The node stands 0.95 m above the yard's ground: legs from the hem to the
+; boots, which sit on the ground. Set a little apart, one slightly forward.
+[node name="LegLeft" type="CSGBox3D" parent="VisualIndicator"]
+cast_shadow = 0
+position = Vector3(-0.08, -0.77, 0.02)
+size = Vector3(0.1, 0.32, 0.11)
+material = SubResource("FigureCloth")
+
+[node name="LegRight" type="CSGBox3D" parent="VisualIndicator"]
+cast_shadow = 0
+position = Vector3(0.085, -0.77, -0.03)
+size = Vector3(0.1, 0.32, 0.11)
+material = SubResource("FigureCloth")
+
+[node name="BootLeft" type="CSGBox3D" parent="VisualIndicator"]
+cast_shadow = 0
+position = Vector3(-0.08, -0.905, 0.05)
+size = Vector3(0.12, 0.07, 0.24)
+material = SubResource("FigureHat")
+
+[node name="BootRight" type="CSGBox3D" parent="VisualIndicator"]
+cast_shadow = 0
+position = Vector3(0.085, -0.905, 0.0)
+size = Vector3(0.12, 0.07, 0.24)
+material = SubResource("FigureHat")
 
 [node name="Head" type="MeshInstance3D" parent="VisualIndicator"]
 cast_shadow = 0
