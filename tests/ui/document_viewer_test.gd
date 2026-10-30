@@ -1,6 +1,9 @@
 extends SceneTree
 
 func _init() -> void:
+	call_deferred("_run")
+
+func _run() -> void:
 	print("--- Starting Document Viewer Test Suite (Phase D) ---")
 
 	var viewer_scene: PackedScene = ResourceLoader.load("res://scenes/ui/document_viewer.tscn")
@@ -8,6 +11,7 @@ func _init() -> void:
 	var viewer: DocumentViewer = viewer_scene.instantiate() as DocumentViewer
 	if not assert_condition(viewer != null and viewer is DocumentViewer, "instantiates as DocumentViewer"): return
 	root.add_child(viewer)
+	await process_frame
 
 	# 1. Initial closed state
 	if not assert_condition(not viewer.is_open(), "Initially not open"): return
@@ -38,8 +42,15 @@ func _init() -> void:
 	# 4. Close document
 	viewer.close_document()
 	if not assert_condition(not viewer.is_open(), "is_open() is false after close_document()"): return
-	if not assert_condition(not viewer.visible, "visible is false after close_document()"): return
-	if not assert_condition(closed_docs.size() == 1 and closed_docs[0] == "doc_test_1", "document_closed signal emitted"): return
+	# Plan 6.4: the record of closing is immediate, the paper goes back down.
+	if not assert_condition(viewer.is_putting_down() and viewer.visible, "The closed sheet is put down, not popped out"): return
+	viewer._finish_put_down()
+	if not assert_condition(not viewer.visible and not viewer.is_putting_down(), "visible is false once the sheet is down"): return
+	viewer.open_document("doc_test_2", "AGAIN", "Body.", "")
+	if not assert_condition(viewer.visible and viewer.is_open() and not viewer.is_putting_down(), "Taking it up again cancels the put-down"): return
+	viewer.close_document()
+	viewer._finish_put_down()
+	if not assert_condition(closed_docs.size() == 2 and closed_docs[0] == "doc_test_1", "document_closed signal emitted, once per close"): return
 
 	# Clean up
 	viewer.queue_free()

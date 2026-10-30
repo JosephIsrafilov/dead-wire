@@ -5,7 +5,17 @@ signal document_opened(doc_id: String)
 signal document_closed(doc_id: String)
 
 @export var default_footer: String = "[E / Esc] Put Down Document"
+## Plan 6.4: a document is lifted from the desk toward the eye, and put down
+## the same way: it rises into view and sinks out of it, never pops.
+## Bounded (tests/interaction/bounded_responsiveness_test.gd): a lift is quick.
 @export var open_duration: float = 0.16
+@export var put_down_duration: float = 0.22
+## How far below its reading place the sheet starts and ends (pixels), and
+## the small tilt of a hand-held page.
+@export var lift_rise: float = 150.0
+@export var lift_tilt_degrees: float = 2.5
+var _motion_tween: Tween = null
+var _putting_down: bool = false
 
 var _current_doc_id: String = ""
 var _is_open: bool = false
@@ -351,23 +361,32 @@ func _animate_in() -> void:
 	var copy := get_node_or_null("TranscriptSheet") as Control
 	if copy != null and copy.visible:
 		centre = copy
+	_stop_motion()
+	_rest_sheets()
 	if not is_inside_tree():
 		if centre != null:
 			centre.modulate.a = 1.0
 		return
 
 	var tween := create_tween()
+	_motion_tween = tween
 	tween.set_parallel(true)
 	if backdrop != null:
 		backdrop.color.a = 0.0
 		tween.tween_property(backdrop, "color:a", 0.6, open_duration).set_trans(Tween.TRANS_SINE)
 	if centre != null:
 		centre.modulate.a = 0.0
-		centre.scale = Vector2(0.985, 0.985)
+		centre.scale = Vector2(0.94, 0.94)
 		centre.pivot_offset = centre.size * 0.5
-		tween.tween_property(centre, "modulate:a", 1.0, open_duration).set_trans(Tween.TRANS_SINE)
-		# Paper is lifted, not sprung: no overshoot.
+		centre.rotation = deg_to_rad(-lift_tilt_degrees)
+		tween.tween_property(centre, "modulate:a", 1.0, open_duration * 0.7).set_trans(Tween.TRANS_SINE)
+		# Paper is lifted, not sprung: up from the desk, no overshoot.
 		tween.tween_property(centre, "scale", Vector2.ONE, open_duration).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+		tween.tween_property(centre, "rotation", 0.0, open_duration).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+		if centre is CenterContainer:
+			# The transcript pans by its own position; only the card rises.
+			centre.position.y = lift_rise
+			tween.tween_property(centre, "position:y", 0.0, open_duration).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 
 func close_document() -> void:
 	if not _is_open:
@@ -376,8 +395,67 @@ func close_document() -> void:
 	_is_open = false
 	_current_doc_id = ""
 	_live_footer = ""
-	visible = false
+	# The record of closing is immediate (controls come back at once); only
+	# the paper takes its moment to go back down to the desk.
+	_put_down()
 	document_closed.emit(closed_id)
+
+## True while a closed sheet is still going back down to the desk.
+func is_putting_down() -> bool:
+	return _putting_down
+
+## The sheet sinks back toward the desk and fades; then the layer hides.
+func _put_down() -> void:
+	_stop_motion()
+	var centre := get_node_or_null("CenterContainer") as Control
+	var copy := get_node_or_null("TranscriptSheet") as Control
+	if copy != null and copy.visible:
+		centre = copy
+	if not is_inside_tree() or put_down_duration <= 0.0 or centre == null:
+		_finish_put_down()
+		return
+	_putting_down = true
+	var backdrop := get_node_or_null("Backdrop") as ColorRect
+	var tween := create_tween()
+	_motion_tween = tween
+	tween.set_parallel(true)
+	if backdrop != null:
+		tween.tween_property(backdrop, "color:a", 0.0, put_down_duration).set_trans(Tween.TRANS_SINE)
+	centre.pivot_offset = centre.size * 0.5
+	var seconds := put_down_duration
+	tween.tween_property(centre, "modulate:a", 0.0, seconds).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+	tween.tween_property(centre, "scale", Vector2(0.94, 0.94), seconds).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+	tween.tween_property(centre, "rotation", deg_to_rad(lift_tilt_degrees), seconds).set_trans(Tween.TRANS_SINE)
+	if centre is CenterContainer:
+		tween.tween_property(centre, "position:y", lift_rise, seconds).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+	tween.chain().tween_callback(_finish_put_down)
+
+func _finish_put_down() -> void:
+	_putting_down = false
+	if _is_open:
+		return
+	visible = false
+	_rest_sheets()
+
+func _stop_motion() -> void:
+	if _motion_tween != null and _motion_tween.is_valid():
+		_motion_tween.kill()
+	_motion_tween = null
+	_putting_down = false
+
+## Both sheets back at their reading pose (the transcript keeps its pan).
+func _rest_sheets() -> void:
+	var centre := get_node_or_null("CenterContainer") as Control
+	if centre != null:
+		centre.position.y = 0.0
+		centre.rotation = 0.0
+		centre.scale = Vector2.ONE
+		centre.modulate.a = 1.0
+	var copy := get_node_or_null("TranscriptSheet") as Control
+	if copy != null:
+		copy.rotation = 0.0
+		copy.scale = Vector2.ONE
+		copy.modulate.a = 1.0
 
 func _unhandled_input(event: InputEvent) -> void:
 	if not _is_open:

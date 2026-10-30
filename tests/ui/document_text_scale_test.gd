@@ -71,6 +71,8 @@ func _run() -> void:
 	check(copy.position.y==before_letter and not root.is_input_handled(),
 		"Letter keys (WASD) are not captured as sheet panning")
 	viewer.close_document()
+	# Plan 6.4: the sheet goes back down first, then the layer is gone.
+	await create_timer(viewer.put_down_duration + 0.1).timeout
 	check(not viewer.visible,"Closing hides the magnified sheet and fixed footer together")
 	viewer.open_document("dispatch_ledger","LONG LEDGER",
 		"\n".join(PackedStringArray(Array(range(120)).map(func(value): return "LEDGER ROW %d  ·  —" % value))))
