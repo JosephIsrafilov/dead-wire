@@ -9,6 +9,9 @@ extends RefCounted
 ## an exported constant is not good enough.
 
 const CONFIG_PATH: String = "user://settings.cfg"
+## The test runner points this at a scratch file so suites start from defaults
+## and never overwrite the player's own settings.
+const PATH_OVERRIDE_ENV: String = "DEAD_WIRE_SETTINGS_PATH"
 const SECTION: String = "options"
 
 var mouse_sensitivity: float = 0.003
@@ -22,10 +25,14 @@ var presentation_mode: int = 1
 var vertical_fov: float = 65.0
 var text_scale: float = 1.2
 
-static func load_settings(path: String = CONFIG_PATH) -> GameSettings:
+static func config_path() -> String:
+	var override := OS.get_environment(PATH_OVERRIDE_ENV)
+	return override if not override.is_empty() else CONFIG_PATH
+
+static func load_settings(path: String = "") -> GameSettings:
 	var settings := GameSettings.new()
 	var config := ConfigFile.new()
-	if config.load(path) != OK:
+	if config.load(path if not path.is_empty() else config_path()) != OK:
 		return settings
 
 	settings.mouse_sensitivity = float(config.get_value(SECTION, "mouse_sensitivity", settings.mouse_sensitivity))
@@ -54,7 +61,7 @@ func sanitize() -> void:
 	vertical_fov = clampf(vertical_fov if is_finite(vertical_fov) else 65.0, 55.0, 85.0)
 	text_scale = clampf(text_scale if is_finite(text_scale) else 1.2, 1.0, 1.5)
 
-func save(path: String = CONFIG_PATH) -> Error:
+func save(path: String = "") -> Error:
 	sanitize()
 	var config := ConfigFile.new()
 	config.set_value(SECTION, "mouse_sensitivity", mouse_sensitivity)
@@ -67,7 +74,7 @@ func save(path: String = CONFIG_PATH) -> Error:
 	config.set_value(SECTION, "presentation_mode", presentation_mode)
 	config.set_value(SECTION, "vertical_fov", vertical_fov)
 	config.set_value(SECTION, "text_scale", text_scale)
-	return config.save(path)
+	return config.save(path if not path.is_empty() else config_path())
 
 ## Pushes the current values at the things they control.
 func apply(player: PlayerController) -> void:

@@ -76,9 +76,23 @@ SUITE_TIMEOUT="${SUITE_TIMEOUT:-180}"
 log_dir="$PROJECT_DIR/test_logs"
 mkdir -p "$log_dir"
 
+# Suites read and write settings through GameSettings; give each one a fresh
+# scratch file so it starts from defaults and the player's own file stays untouched.
+settings_dir="$(mktemp -d)"
+trap 'rm -rf "$settings_dir"' EXIT
+settings_file="$settings_dir/settings.cfg"
+if [[ "$GODOT_BIN" =~ \.exe$ ]] && command -v cygpath >/dev/null 2>&1; then
+	export DEAD_WIRE_SETTINGS_PATH="$(cygpath -m "$settings_file")"
+elif [[ "$GODOT_BIN" =~ \.exe$ ]] && command -v wslpath >/dev/null 2>&1; then
+	export DEAD_WIRE_SETTINGS_PATH="$(wslpath -m "$settings_file")"
+else
+	export DEAD_WIRE_SETTINGS_PATH="$settings_file"
+fi
+
 for suite in $(find "$PROJECT_DIR/tests" -name "*_test.gd" | sort); do
 	relative="${suite#"$PROJECT_DIR"/}"
 	log_name="$(echo "$relative" | tr '/' '_').log"
+	rm -f "$settings_file"
 	# Match the Windows runner: tests validate the audio graph/telemetry, not a
 	# host device, so use a deterministic headless backend.
 	# Portable watchdog (macOS has no coreutils `timeout`, HANDOVER trap 19):

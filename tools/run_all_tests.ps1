@@ -29,10 +29,17 @@ $failedSuites = 0
 $totalAssertions = 0
 $failedNames = @()
 
+# Suites read and write settings through GameSettings; give each one a fresh
+# scratch file so it starts from defaults and the player's own file stays untouched.
+$settingsDir = Join-Path ([System.IO.Path]::GetTempPath()) ("dead-wire-test-settings-" + [guid]::NewGuid())
+New-Item -ItemType Directory -Force $settingsDir | Out-Null
+$env:DEAD_WIRE_SETTINGS_PATH = Join-Path $settingsDir "settings.cfg"
+
 $suites = Get-ChildItem (Join-Path $projectDir "tests") -Recurse -Filter "*_test.gd" |
     Sort-Object FullName
 foreach ($suite in $suites) {
     $relative = $suite.FullName.Substring($projectDir.Path.Length + 1).Replace("\", "/")
+    Remove-Item -LiteralPath $env:DEAD_WIRE_SETTINGS_PATH -Force -ErrorAction SilentlyContinue
     $oldErrorActionPreference = $ErrorActionPreference
     $ErrorActionPreference = "Continue"
     try {
@@ -62,6 +69,7 @@ foreach ($suite in $suites) {
     }
 }
 
+Remove-Item -LiteralPath $settingsDir -Recurse -Force -ErrorAction SilentlyContinue
 "-------------------------------------------------------------------------"
 "suites passed: $passedSuites   failed: $failedSuites   assertions: $totalAssertions"
 if ($failedSuites -ne 0) {

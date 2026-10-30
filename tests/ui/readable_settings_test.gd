@@ -54,6 +54,23 @@ func _run() -> void:
 	loaded = settings_script.call("load_settings", path)
 	if not require(is_equal_approx(loaded.vertical_fov, 85.0) and is_equal_approx(loaded.text_scale, 1.0) and loaded.presentation_mode == 0, "Invalid preferences clamp to explicit bounds"): return
 
+	# A run with the override saves and loads through the scratch file, so test
+	# suites never overwrite the player's own settings.
+	var previous_override := OS.get_environment(GameSettings.PATH_OVERRIDE_ENV)
+	var scratch := ProjectSettings.globalize_path("user://readable_settings_override_test.cfg")
+	OS.set_environment(GameSettings.PATH_OVERRIDE_ENV, scratch)
+	var redirected := GameSettings.new()
+	redirected.vertical_fov = 77.0
+	redirected.save()
+	var redirected_ok := FileAccess.file_exists(scratch) \
+			and is_equal_approx(GameSettings.load_settings().vertical_fov, 77.0)
+	if previous_override.is_empty():
+		OS.unset_environment(GameSettings.PATH_OVERRIDE_ENV)
+	else:
+		OS.set_environment(GameSettings.PATH_OVERRIDE_ENV, previous_override)
+	DirAccess.remove_absolute(scratch)
+	if not require(redirected_ok, "The settings path override redirects save and load"): return
+
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
 	print("Readable settings assertions: ", passed)
 	quit(0)
