@@ -4,22 +4,12 @@
 
 [resource]
 script = ExtResource("1")
-entries = Array[Dictionary]([{"id": &"entry", "text": "Lamp first. Then the chair and the key.", "delay": 2.0, "duration": 9.0, "once": true},
-{"id": &"open_line", "text": "Open the line. I’ll copy while I’m seated.", "delay": 2.0, "duration": 6.0, "once": true},
-{"id": &"answer", "text": "The office is calling. Back to the chair and the key.", "delay": 2.0, "duration": 6.0, "once": true},
-{"id": &"read_copy", "text": "The copy is ready. I should read it.", "delay": 2.0, "duration": 6.0, "once": true},
-{"id": &"route", "text": "The order is on the sheet. The lever does not agree with the paper — it sends what I decide to send.", "delay": 2.0, "duration": 8.0, "once": true},
-{"id": &"compare", "text": "I can compare the strip with the Morse card before the next call.", "delay": 2.0, "duration": 6.0, "once": true},
-{"id": &"wind", "text": "The register is slowing. I should wind it before the next call.", "delay": 1.0, "duration": 6.0, "once": true},
-{"id": &"filing", "text": "The filing table can seal this copy or record my amendment.", "delay": 2.0, "duration": 6.0, "once": true},
-{"id": &"dawn", "text": "The line is closed. Read the handover, then leave through the south door.", "delay": 2.0, "duration": 6.0, "once": true}])
-reactions = Array[Dictionary]([{"id": &"call", "text": "The sounder. Someone wants Black Creek — that is the office call, not a telegram. Get back to the key.", "duration": 7.0},
-{"id": &"answered", "text": "The line is mine. Whatever comes next goes down on the sheet, not in my head.", "duration": 6.0},
-{"id": &"missed", "text": "It stopped calling. The wire was here and I was not at it — the register will show that I never answered.", "duration": 7.0},
-{"id": &"signal_end", "text": "The wire is quiet. The rest of it is on the sheet — I copy it from the tape, not from memory.", "duration": 7.0},
-{"id": &"copy_done", "text": "The sheet is full. Read it back before anything else happens.", "duration": 6.0},
-{"id": &"routed", "text": "The lever is over and the order is out. Whatever the paper said, that is what the division will act on.", "duration": 7.0},
-{"id": &"route_lapsed", "text": "No order went out. The board is still where it was, and the sender got nothing from me.", "duration": 7.0},
-{"id": &"foreign", "text": "That is not for this office. Another division's traffic, riding a line that is supposed to be dead — the register is inking it anyway.", "duration": 8.0},
-{"id": &"creak", "text": "The building settling. Timber does that when it cools — it has done it all night.", "duration": 5.0}])
+entries = Array[Dictionary]([{"id": &"entry", "text": "Lamp first. Tonight's orders hang by the door.", "delay": 2.0, "duration": 9.0, "once": true},
+{"id": &"answer", "text": "The office is calling. Back to the key.", "delay": 1.0, "duration": 6.0, "once": true},
+{"id": &"read_copy", "text": "The copy is done. I should read it back.", "delay": 2.0, "duration": 6.0, "once": true},
+{"id": &"route", "text": "The order goes out from the wall board.", "delay": 2.0, "duration": 6.0, "once": true},
+{"id": &"wind", "text": "The register is slowing. I should wind it.", "delay": 1.0, "duration": 6.0, "once": true},
+{"id": &"filing", "text": "Then the copy goes to the table by the stove.", "delay": 2.0, "duration": 6.0, "once": true},
+{"id": &"dawn", "text": "The line is closed. The handover, then the door.", "delay": 2.0, "duration": 6.0, "once": true}])
+reactions = Array[Dictionary]([])
 automatic_interval = 12.0

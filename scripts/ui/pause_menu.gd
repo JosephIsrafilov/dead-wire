@@ -31,6 +31,11 @@ var resume_button: Button = null
 var title_button: Button = null
 var quit_button: Button = null
 
+const LEAVE_CONFIRM_TEXT := "Leave? The night is lost — press again"
+const LEAVE_CONFIRM_MSEC := 4000
+var _leave_armed_at: int = -1
+var _leave_caption: String = ""
+
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	visible = false
@@ -112,8 +117,8 @@ func _connect_controls() -> void:
 		contextual_thoughts_check.toggled.connect(_on_contextual_thoughts_toggled)
 	if resume_button != null and not resume_button.pressed.is_connected(resume):
 		resume_button.pressed.connect(resume)
-	if title_button != null and not title_button.pressed.is_connected(return_to_title):
-		title_button.pressed.connect(return_to_title)
+	if title_button != null and not title_button.pressed.is_connected(_on_leave_pressed):
+		title_button.pressed.connect(_on_leave_pressed)
 	if quit_button != null and not quit_button.pressed.is_connected(_on_quit):
 		quit_button.pressed.connect(_on_quit)
 
@@ -172,6 +177,7 @@ func resume() -> bool:
 		return false
 	is_paused = false
 	visible = false
+	_disarm_leave()
 	if is_inside_tree():
 		get_tree().paused = false
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -229,6 +235,31 @@ func _on_contextual_thoughts_toggled(pressed: bool) -> void:
 func _save() -> void:
 	settings = GameSettings.load_settings()
 	settings.save()
+
+## Leaving the post loses the night (plan 6.8), so the button asks once: the
+## first press says what it costs, a second press within a few seconds leaves.
+func _on_leave_pressed() -> void:
+	if is_leave_armed():
+		_leave_armed_at = -1
+		return_to_title()
+		return
+	_leave_armed_at = Time.get_ticks_msec()
+	if title_button != null:
+		if _leave_caption.is_empty():
+			_leave_caption = title_button.text
+		title_button.text = LEAVE_CONFIRM_TEXT
+
+func is_leave_armed() -> bool:
+	return _leave_armed_at >= 0 and Time.get_ticks_msec() - _leave_armed_at <= LEAVE_CONFIRM_MSEC
+
+func _disarm_leave() -> void:
+	_leave_armed_at = -1
+	if title_button != null and not _leave_caption.is_empty():
+		title_button.text = _leave_caption
+
+func _process(_delta: float) -> void:
+	if _leave_armed_at >= 0 and not is_leave_armed():
+		_disarm_leave()
 
 ## Abandoning a watch clears it. There is no resuming a half-finished night.
 func return_to_title() -> bool:

@@ -19,6 +19,8 @@ signal footstep_played(step_index: int)
 
 @export var move_speed: float = 1.35
 @export var mouse_sensitivity: float = 0.003
+## Player option (plan 6.8): pushing the mouse forward looks down.
+@export var invert_y: bool = false
 
 ## Tight rather than floaty. Playtesters describe soft first-person acceleration
 ## as "an ice level", and this room is full of small interaction targets.
@@ -188,7 +190,7 @@ func _apply_mouse_look(relative: Vector2) -> void:
 	rotate_y(-relative.x * mouse_sensitivity)
 	_apply_yaw_limit()
 	if head != null:
-		head.rotate_x(-relative.y * mouse_sensitivity)
+		head.rotate_x((relative.y if invert_y else -relative.y) * mouse_sensitivity)
 		head.rotation.x = clamp(head.rotation.x, deg_to_rad(-85.0), deg_to_rad(85.0))
 	_update_camera_pose()
 

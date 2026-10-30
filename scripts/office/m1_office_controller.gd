@@ -51,6 +51,7 @@ func _ready() -> void:
 
 ## The room is heard faintly behind the intro's black card and comes up with
 ## the picture; at the end of the watch it leaves with the picture.
+const KEY_HINTS := "[W A S D] Move   [E] Inspect   [F1] Thought   [Esc] Pause"
 const ROOM_UNDER_CARD_DB: float = -18.0
 const ROOM_GONE_DB: float = -40.0
 const ROOM_FADE_IN_SECONDS: float = 1.2
@@ -984,7 +985,7 @@ func _refresh_guidance() -> void:
 	if not warning.is_empty():
 		hint = warning
 	if shift_director.get_phase() == ShiftDirector.Phase.PRE_SHIFT:
-		hint = "Work the key to open the line" if operator_seat.is_seated else "[W A S D] Move   [E] Inspect   [Esc] Pause"
+		hint = "Work the key to open the line" if operator_seat.is_seated else KEY_HINTS
 		var lamp_life := get_node_or_null("LampLife") as LampLife
 		if operator_seat.is_seated and lamp_life != null and lamp_life.wick < 1.0:
 			hint = "Turn up the lamp, then work the key to open the line"

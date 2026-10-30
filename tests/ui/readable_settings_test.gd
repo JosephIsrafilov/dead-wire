@@ -104,6 +104,43 @@ func _run() -> void:
 	DirAccess.remove_absolute(scratch)
 	if not require(redirected_ok, "The settings path override redirects save and load"): return
 
+	# Plan 6.8: display and control options persist and clamp like the rest.
+	var display_path := "user://readable_settings_display_test.cfg"
+	var display: Variant = GameSettings.new()
+	if not require(not display.fullscreen and display.vsync and display.max_fps == 0 and not display.invert_y,
+		"New install: windowed, VSync on, no frame limit, mouse Y not inverted"): return
+	display.fullscreen = true
+	display.vsync = false
+	display.max_fps = 60
+	display.invert_y = true
+	display.save(display_path)
+	var display_loaded: Variant = GameSettings.load_settings(display_path)
+	if not require(display_loaded.fullscreen and not display_loaded.vsync and display_loaded.max_fps == 60 and display_loaded.invert_y,
+		"Display and control options survive a save and load"): return
+	display_loaded.max_fps = 75
+	display_loaded.sanitize()
+	if not require(display_loaded.max_fps == 0, "An unknown frame limit falls back to no limit"): return
+	display_loaded.brightness = 1.6
+	display_loaded.brightness_calibrated = true
+	display_loaded.vertical_fov = 80.0
+	display_loaded.restore_defaults()
+	if not require(is_equal_approx(display_loaded.brightness, 1.0) and is_equal_approx(display_loaded.vertical_fov, 65.0)
+		and not display_loaded.fullscreen and display_loaded.brightness_calibrated,
+		"Default restores the look, and the first-launch calibration stays done"): return
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(display_path))
+
+	# Inverted Y: the same upward mouse motion turns the head the other way.
+	var look_player := (load("res://scenes/player/player.tscn") as PackedScene).instantiate() as PlayerController
+	root.add_child(look_player)
+	look_player.head.rotation.x = 0.0
+	look_player._apply_mouse_look(Vector2(0.0, -20.0))
+	var normal_pitch: float = look_player.head.rotation.x
+	look_player.head.rotation.x = 0.0
+	look_player.invert_y = true
+	look_player._apply_mouse_look(Vector2(0.0, -20.0))
+	if not require(normal_pitch > 0.0 and look_player.head.rotation.x < 0.0, "Invert mouse Y flips the look"): return
+	look_player.queue_free()
+
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
 	print("Readable settings assertions: ", passed)
 	quit(0)

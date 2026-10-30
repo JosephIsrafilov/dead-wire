@@ -182,7 +182,8 @@ func _refresh_visible_context() -> void:
 	set_context(context, blocked)
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_F1:
+	# A real input action (plan 6.8), so it can be rebound like any other key.
+	if event.is_action_pressed("repeat_thought") and not event.is_echo():
 		if office != null:
 			_refresh_visible_context()
 		if not _blocked:

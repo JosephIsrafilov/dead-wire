@@ -25,11 +25,26 @@ func _run() -> void:
 	var data := load("res://data/night_guidance/m1_guidance.tres") as NightGuidanceData
 	if not _a(data != null, "Guidance data loads"): return
 
-	# Every event the controller can react to is authored content, not a
-	# hardcoded string, so the night can be rewritten without touching code.
+	# Plan 6.6: Elias does not explain what happened. The strange (foreign
+	# traffic, a creak, a missed call) and the outcome of his own orders pass
+	# in silence; the dawn handover's margin carries what he noticed. Reactions
+	# stay authored content, so a later night can speak again without code.
 	for kind in [&"call", &"answered", &"missed", &"signal_end", &"copy_done", &"routed", &"route_lapsed",
 			&"foreign", &"creak"]:
-		if not _a(not data.reaction_for(kind).is_empty(), "Reaction '%s' is authored in data" % kind): return
+		if not _a(data.reaction_for(kind).is_empty(), "Event '%s' passes without an explanation" % kind): return
+	# The procedural thoughts that remain never quote, name or grade the answer.
+	for entry in data.entries:
+		var line: String = entry.get("text", "")
+		for secret in ["WATER", "WATCHER", "true_message", "correct", "incorrect", "you failed", "wrong"]:
+			if not _a(not line.to_lower().contains(secret.to_lower()),
+					"Thought '%s' never leaks '%s'" % [entry.get("id", &""), secret]): return
+	# The mechanism itself is exercised on a local night that does react.
+	data = data.duplicate(true) as NightGuidanceData
+	data.reactions = [
+		{"id": &"call", "text": "The office call.", "duration": 7.0},
+		{"id": &"signal_end", "text": "The wire is quiet.", "duration": 7.0},
+		{"id": &"routed", "text": "The order is out.", "duration": 7.0},
+	]
 
 	# The unknown event is silent: no reaction is invented for a sound the
 	# design did not decide to explain.

@@ -50,6 +50,18 @@ func _run() -> void:
 	pause_menu.is_paused = true
 	pause_menu.resume()
 	check(chosen_survives(), "Resume preserves all three new choices")
+	# Plan 6.8: leaving loses the night, so one press only asks.
+	var leave_button := Button.new()
+	leave_button.text = "Leave the Post"
+	pause_menu.title_button = leave_button
+	pause_menu._on_leave_pressed()
+	check(pause_menu.is_leave_armed() and leave_button.text != "Leave the Post",
+		"The first press on Leave the Post asks before the night is lost")
+	pause_menu._disarm_leave()
+	check(not pause_menu.is_leave_armed() and leave_button.text == "Leave the Post",
+		"Letting the question lapse puts the button back as it was")
+	leave_button.free()
+	pause_menu.title_button = null
 	pause_menu.return_to_title()
 	check(chosen_survives(), "Leave Post preserves all three new choices")
 	pause_menu._on_quit()

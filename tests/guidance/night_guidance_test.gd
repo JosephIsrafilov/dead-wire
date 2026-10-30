@@ -17,18 +17,20 @@ func _run() -> void:
 	guidance.data = load("res://data/night_guidance/m1_guidance.tres")
 	guidance.set_context(&"entry", false)
 	guidance.advance_guidance(3.0)
-	if not check(guidance.current_text.begins_with("Lamp first. Then the chair and the key."), "Entry thought appears after delay"): return
+	if not check(guidance.current_text.begins_with("Lamp first."), "Entry thought appears after delay"): return
+	# Plan 6.10: before the first watch the one pointer is to the orders by the door.
+	if not check(guidance.current_text.contains("by the door"), "The first thought points at the night's orders"): return
 	# AGENT_RULES §5: a thought names the next action; it never lists the room
 	# or reassures the player about it.
 	if not check(guidance.current_text.split(". ").size() <= 2 and not guidance.current_text.contains("unexplained"),
 			"The entry thought names the next action and does not explain the room"): return
-	guidance.set_context(&"open_line", false)
+	guidance.set_context(&"answer", false)
 	if not check(guidance.current_text.is_empty(), "Completed context immediately clears its thought"): return
 	guidance.advance_guidance(3.0)
 	if not check(guidance.current_text.is_empty(), "Automatic thoughts respect cooldown"): return
 	guidance.repeat_current()
-	if not check(guidance.current_text.contains("Open the line"), "F1 repeats current procedure despite cooldown"): return
-	guidance.set_context(&"open_line", true)
+	if not check(guidance.current_text.contains("Back to the key"), "F1 repeats current procedure despite cooldown"): return
+	guidance.set_context(&"answer", true)
 	if not check(guidance.current_text.is_empty(), "Protected wire or modal clears thought"): return
 	guidance.repeat_current()
 	if not check(guidance.current_text.is_empty(), "F1 cannot enter blocked presentation"): return
@@ -41,7 +43,7 @@ func _run() -> void:
 	guidance.set_context(&"route", false)
 	guidance.set_context(&"filing", false)
 	guidance.repeat_current()
-	if not check(guidance.current_text.contains("amendment") and not guidance.current_text.contains("wall board"), "Rapid progress never queues stale instructions"): return
+	if not check(guidance.current_text.contains("table by the stove") and not guidance.current_text.contains("wall board"), "Rapid progress never queues stale instructions"): return
 	guidance.set_context(&"filing", false)
 	guidance.advance_guidance(0.1)
 	if not check(not guidance.current_text.is_empty(), "Repeated context does not restart or erase manual thought"): return
@@ -61,5 +63,14 @@ func _run() -> void:
 	guidance.set_context(&"", false)
 	guidance.repeat_current()
 	if not check(guidance.current_text.is_empty(), "Unknown or completed steps do not retain a stale reminder"): return
+	# Plan 6.6: a night speaks few lines, each naming the next action, one
+	# short sentence or two; the optional winding reminder is the only extra.
+	var night_lines := 0
+	for entry in guidance.data.entries:
+		var text: String = entry.get("text", "")
+		if entry.get("id", &"") != &"wind":
+			night_lines += 1
+		if not check(text.split(". ").size() <= 2 and text.length() <= 60, "Thought '%s' is one or two short sentences" % entry.get("id", &"")): return
+	if not check(night_lines <= 6, "A night speaks at most six procedural lines (%d)" % night_lines): return
 	guidance.free()
 	quit(0)

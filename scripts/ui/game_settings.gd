@@ -28,6 +28,22 @@ var text_scale: float = 1.2
 ## black screen; the player sets this once at first launch.
 var brightness: float = 1.0
 var brightness_calibrated: bool = false
+## Display and control options (plan 6.8).
+var fullscreen: bool = false
+var vsync: bool = true
+## 0 = no limit.
+var max_fps: int = 0
+var invert_y: bool = false
+const FPS_LIMITS: Array[int] = [0, 30, 60, 120, 144]
+## The image/reading/display options a "Default" press restores.
+const DEFAULTS := {
+	"presentation_mode": 1, "vertical_fov": 65.0, "text_scale": 1.2, "brightness": 1.0,
+	"fullscreen": false, "vsync": true, "max_fps": 0, "invert_y": false,
+}
+
+func restore_defaults() -> void:
+	for key in DEFAULTS:
+		set(key, DEFAULTS[key])
 
 static func config_path() -> String:
 	var override := OS.get_environment(PATH_OVERRIDE_ENV)
@@ -53,6 +69,10 @@ static func load_settings(path: String = "") -> GameSettings:
 	settings.text_scale = float(config.get_value(SECTION, "text_scale", settings.text_scale))
 	settings.brightness = float(config.get_value(SECTION, "brightness", settings.brightness))
 	settings.brightness_calibrated = bool(config.get_value(SECTION, "brightness_calibrated", false))
+	settings.fullscreen = bool(config.get_value(SECTION, "fullscreen", settings.fullscreen))
+	settings.vsync = bool(config.get_value(SECTION, "vsync", settings.vsync))
+	settings.max_fps = int(config.get_value(SECTION, "max_fps", settings.max_fps))
+	settings.invert_y = bool(config.get_value(SECTION, "invert_y", settings.invert_y))
 	settings.sanitize()
 	return settings
 
@@ -67,6 +87,8 @@ func sanitize() -> void:
 	vertical_fov = clampf(vertical_fov if is_finite(vertical_fov) else 65.0, 55.0, 85.0)
 	text_scale = clampf(text_scale if is_finite(text_scale) else 1.2, 1.0, 1.5)
 	brightness = clampf(brightness if is_finite(brightness) else 1.0, 0.6, 1.8)
+	if max_fps not in FPS_LIMITS:
+		max_fps = 0
 
 func save(path: String = "") -> Error:
 	sanitize()
@@ -83,6 +105,10 @@ func save(path: String = "") -> Error:
 	config.set_value(SECTION, "text_scale", text_scale)
 	config.set_value(SECTION, "brightness", brightness)
 	config.set_value(SECTION, "brightness_calibrated", brightness_calibrated)
+	config.set_value(SECTION, "fullscreen", fullscreen)
+	config.set_value(SECTION, "vsync", vsync)
+	config.set_value(SECTION, "max_fps", max_fps)
+	config.set_value(SECTION, "invert_y", invert_y)
 	return config.save(path if not path.is_empty() else config_path())
 
 ## Pushes the current values at the things they control.
@@ -90,6 +116,7 @@ func apply(player: PlayerController) -> void:
 	sanitize()
 	if player != null:
 		player.mouse_sensitivity = mouse_sensitivity
+		player.invert_y = invert_y
 		player.head_bob_enabled = head_bob_enabled
 		var camera := player.get_node_or_null("Head/Camera3D") as Camera3D
 		if camera != null:
@@ -108,6 +135,23 @@ func apply(player: PlayerController) -> void:
 	_set_bus_db("Ambience", ambience_volume_db)
 	_set_bus_db("Telegraph", telegraph_volume_db)
 	_set_bus_db("Foley", foley_volume_db)
+	apply_display()
+
+## Window mode, VSync and the frame limit. Only what differs is touched, so a
+## repeated apply never flickers the window; a headless run has no window.
+func apply_display() -> void:
+	Engine.max_fps = max_fps
+	if DisplayServer.get_name() == "headless":
+		return
+	var mode := DisplayServer.window_get_mode()
+	var is_full := mode == DisplayServer.WINDOW_MODE_FULLSCREEN or mode == DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN
+	if fullscreen and not is_full:
+		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
+	elif not fullscreen and is_full:
+		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
+	var wanted := DisplayServer.VSYNC_ENABLED if vsync else DisplayServer.VSYNC_DISABLED
+	if DisplayServer.window_get_vsync_mode() != wanted:
+		DisplayServer.window_set_vsync_mode(wanted)
 
 ## Scales the room's authored exposure (kept as metadata so repeated applies
 ## never compound). The interface is not touched.
