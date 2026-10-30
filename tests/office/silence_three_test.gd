@@ -63,7 +63,7 @@ func _run() -> void:
 	silence.update(2, silence.figure_after_seconds + 0.1, 50.0)
 	if not _check(figure.is_active, "Later in silence 3 a figure stands in the yard"): return
 	if not _check(world.get_fact(silence.world_fact_id) == true, "WorldState records that it stood there"): return
-	if not _check(not knowledge.knows(&"saw_window_event"), "Nothing is known before it is seen"): return
+	if not _check(not knowledge.knows(silence.knowledge_fact_id), "Nothing is known before it is seen"): return
 	if not _check(world.get_fact(&"window_event_occurred") != true,
 			"The silence figure does not pose as the filing consequence"): return
 
@@ -73,7 +73,7 @@ func _run() -> void:
 	if not _check(not figure.is_active, "Silence 3 puts it there only once"): return
 
 	# A mirror pane hides the yard: looking at it is not seeing.
-	figure.trigger_event(5.0)
+	figure.trigger_event(5.0, silence.world_fact_id, silence.knowledge_fact_id)
 	var camera := Camera3D.new()
 	holder.add_child(camera)
 	camera.look_at_from_position(Vector3(0, 1.5, 3.0), figure.global_position + Vector3.UP * 0.4)
@@ -81,7 +81,9 @@ func _run() -> void:
 	if not _check(not figure.check_camera(camera), "Looking at a mirror pane does not see the figure"): return
 	figure.view_obscured = false
 	if not _check(figure.check_camera(camera), "Through a clear pane the same look sees it"): return
-	if not _check(knowledge.knows(&"saw_window_event"), "Seeing it is what Elias knows"): return
+	if not _check(knowledge.knows(silence.knowledge_fact_id), "Seeing it is what Elias knows"): return
+	if not _check(not knowledge.knows(&"saw_window_event"),
+			"Seeing the silence figure is not remembered as the filing's window event"): return
 
 	holder.queue_free()
 	for _frame in 3:

@@ -25,6 +25,8 @@ var is_observed: bool = false
 ## Set while the pane in front of the figure is a mirror of the lit room
 ## (WindowGlassMirror): looking at it then is not seeing the yard (plan 3.7).
 var view_obscured: bool = false
+## What KnowledgeState learns if the current appearance is seen.
+var _knowledge_fact_now: StringName = &""
 var _remaining_duration: float = 0.0
 var _pending_duration: float = 0.0
 
@@ -55,11 +57,14 @@ func reset_state() -> void:
 	if vi != null:
 		vi.visible = false
 
-## `world_fact` names what WorldState records for this appearance; empty means
-## the target's own fact (the filing consequence).
-func trigger_event(duration: float = 5.0, world_fact: StringName = &"") -> void:
+## `world_fact` / `knowledge_fact` name what WorldState records for this
+## appearance and what KnowledgeState learns if it is seen; empty means the
+## target's own facts (the filing consequence).
+func trigger_event(duration: float = 5.0, world_fact: StringName = &"",
+		knowledge_fact: StringName = &"") -> void:
 	is_active = true
 	is_observed = false
+	_knowledge_fact_now = knowledge_fact if not knowledge_fact.is_empty() else knowledge_fact_id
 	# The event can be queued while the player is looking at the window. Its
 	# lifetime must begin when the figure is actually visible, otherwise a
 	# watched trigger can expire entirely off-screen.
@@ -113,8 +118,9 @@ func evaluate_observation(camera_global_pos: Vector3, camera_forward: Vector3, i
 func _mark_observed() -> bool:
 	is_observed = true
 	var knowledge := _get_knowledge_state()
-	if knowledge != null and not knowledge_fact_id.is_empty():
-		knowledge.learn(knowledge_fact_id)
+	var fact := _knowledge_fact_now if not _knowledge_fact_now.is_empty() else knowledge_fact_id
+	if knowledge != null and not fact.is_empty():
+		knowledge.learn(fact)
 	event_observed.emit()
 	return true
 

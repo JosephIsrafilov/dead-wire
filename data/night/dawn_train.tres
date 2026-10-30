@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="DawnTrainData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/office/dawn_train_data.gd" id="1_data"]
+
+; The morning after the board (plan 4.6). No verdict anywhere: the train does
+; what the order made it do, and the wire has already asked about it.
+[resource]
+script = ExtResource("1_data")
+passenger_by_fact = {
+"train_17_routed_clear": "pass",
+"train_17_held_in_error": "stand",
+"train_17_no_order_sent": "distant",
+"telegram_missed_baseline_train_17": "distant"
+}
+passenger_default = "distant"
+freight_by_fact = {
+"freight_cleared_in_error": "gone",
+"freight_held_correctly": "stand",
+"freight_no_order_sent": "stand",
+"telegram_missed_attention_hold_freight": "stand"
+}
+freight_default = "stand"

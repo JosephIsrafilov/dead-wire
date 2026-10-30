@@ -43,6 +43,25 @@ func _init() -> void:
 	door_node._process(1.0)
 	if not assert_condition(door_node.steps_played == 3, "No 4th step occurs after completion"): return
 
+	# Plan 4.11: whoever walks past carries a light. A warm patch crosses the
+	# gap under the door with the steps, from one side to the other, and is gone.
+	var lantern := door_scene.instantiate() as DoorAttentionSource
+	root.add_child(lantern)
+	if not assert_condition(is_zero_approx(lantern.get_lantern_glow()), "No light under the door before anyone walks"): return
+	lantern.trigger_footsteps()
+	var start_offset := lantern.get_lantern_offset()
+	var brightest := [0.0]
+	for _step in 12:
+		lantern._process(0.2)
+		brightest[0] = maxf(brightest[0], lantern.get_lantern_glow())
+	var end_offset := lantern.get_lantern_offset()
+	if not assert_condition(brightest[0] > 0.8, "The light under the door rises with the steps"): return
+	if not assert_condition(absf(end_offset - start_offset) > 0.5, "It crosses the gap from one side to the other"): return
+	for _step in 10:
+		lantern._process(0.2)
+	if not assert_condition(is_zero_approx(lantern.get_lantern_glow()), "It is gone once the steps have passed"): return
+	lantern.queue_free()
+
 	# Clean up
 	door_node.queue_free()
 

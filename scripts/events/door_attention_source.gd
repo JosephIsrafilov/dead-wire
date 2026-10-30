@@ -19,6 +19,22 @@ var is_active: bool = false
 var steps_played: int = 0
 var _step_timer: float = 0.0
 
+## Whoever walks past carries a light (plan 4.11): a warm patch crosses the gap
+## under the door with the steps and is gone. Explainable - the watchman's
+## lantern, or not - and a second place to look. Offsets are along the gap,
+## relative to this node, which stands on the landing behind the door.
+@export var lantern_gap_half_width: float = 0.42
+@export var lantern_gap_local: Vector3 = Vector3(0.0, -0.176, -0.587)
+@export var lantern_color: Color = Color(1.0, 0.72, 0.38)
+@export var lantern_spill_energy: float = 0.55
+
+var _lantern_time: float = -1.0
+var _lantern_glow: float = 0.0
+var _lantern_offset: float = 0.0
+var _lantern_strip: MeshInstance3D = null
+var _lantern_strip_material: StandardMaterial3D = null
+var _lantern_spill: OmniLight3D = null
+
 ## Someone heavier than the operator, heard through a closed door: lower,
 ## muffled.
 const PITCH_VARIATIONS: Array[float] = [0.84, 0.88, 0.82]
@@ -27,6 +43,60 @@ const FOLEY_SAFETY_MARGIN: float = 0.08
 
 func _ready() -> void:
 	_setup_audio_player()
+	_setup_lantern()
+
+func _setup_lantern() -> void:
+	if _lantern_strip != null:
+		return
+	_lantern_strip = MeshInstance3D.new()
+	var strip := BoxMesh.new()
+	strip.size = Vector3(0.2, 0.005, 0.006)
+	_lantern_strip_material = StandardMaterial3D.new()
+	_lantern_strip_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	strip.material = _lantern_strip_material
+	_lantern_strip.mesh = strip
+	_lantern_strip.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	_lantern_strip.visible = false
+	add_child(_lantern_strip)
+	# The spill lies on the boards just inside the door: small and low, so it
+	# reaches the floor and nothing else.
+	_lantern_spill = OmniLight3D.new()
+	_lantern_spill.light_color = lantern_color
+	_lantern_spill.light_energy = 0.0
+	_lantern_spill.omni_range = 0.7
+	_lantern_spill.omni_attenuation = 1.8
+	_lantern_spill.shadow_enabled = false
+	_lantern_spill.visible = false
+	add_child(_lantern_spill)
+
+func get_lantern_glow() -> float:
+	return _lantern_glow
+
+func get_lantern_offset() -> float:
+	return _lantern_offset
+
+func _advance_lantern(delta: float) -> void:
+	if _lantern_time < 0.0:
+		return
+	_lantern_time += delta
+	var duration := step_interval * float(total_steps) + 0.9
+	var progress := clampf(_lantern_time / duration, 0.0, 1.0)
+	_lantern_offset = lerpf(-lantern_gap_half_width, lantern_gap_half_width, progress)
+	_lantern_glow = pow(sin(PI * progress), 0.7) if progress < 1.0 else 0.0
+	if progress >= 1.0:
+		_lantern_time = -1.0
+	_apply_lantern()
+
+func _apply_lantern() -> void:
+	var lit := _lantern_glow > 0.001
+	if _lantern_strip != null:
+		_lantern_strip.visible = lit
+		_lantern_strip.position = lantern_gap_local + Vector3(_lantern_offset, 0.0, 0.0)
+		_lantern_strip_material.albedo_color = Color(0.42, 0.34, 0.24).lerp(lantern_color * 1.6, _lantern_glow)
+	if _lantern_spill != null:
+		_lantern_spill.visible = lit
+		_lantern_spill.position = lantern_gap_local + Vector3(_lantern_offset, 0.05, -0.18)
+		_lantern_spill.light_energy = lantern_spill_energy * _lantern_glow
 
 func _setup_audio_player() -> void:
 	if _player == null:
@@ -47,6 +117,8 @@ func trigger_footsteps() -> void:
 	is_active = true
 	steps_played = 0
 	_step_timer = 0.0
+	_lantern_time = 0.0
+	_advance_lantern(0.0)
 	footsteps_started.emit()
 	_bind_fairness()
 	if not _can_start_next_step():
@@ -69,6 +141,7 @@ func _play_step() -> void:
 
 func _process(delta: float) -> void:
 	_bind_fairness()
+	_advance_lantern(delta)
 	if is_active and steps_played < total_steps:
 		_step_timer -= delta
 		if _step_timer <= 0.0 and _can_start_next_step():

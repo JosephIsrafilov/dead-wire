@@ -79,6 +79,17 @@ func _run() -> void:
 		"Watching the window leaves a note in the margin"): return
 	if not _a(not dawn.get_document_text().contains("figure"),
 		"The margin note records the looking, never a confirmation"): return
+	# Plan 4.7: the note matches what could have been seen. Watching the yard in
+	# the last silence is its own line, before the call, and still no verdict.
+	if not _a(not dawn.get_document_text().contains(DawnEvidence.YARD_MARGIN_LINE),
+		"Without the silence record there is no line about the yard"): return
+	dawn.reset_for_new_watch()
+	knowledge.learn(SilenceThree.KNOWLEDGE_SAW_YARD)
+	dawn.reveal()
+	if not _a(dawn.get_document_text().contains(DawnEvidence.YARD_MARGIN_LINE),
+		"Watching the yard before the last call leaves its own line"): return
+	if not _a(not dawn.get_document_text().contains("figure") and not dawn.get_document_text().contains("someone"),
+		"That line too records the looking, never what was there"): return
 	dawn.queue_free()
 
 	# --- 5. Sealing the heard word is knowledge, and only that word seals ---

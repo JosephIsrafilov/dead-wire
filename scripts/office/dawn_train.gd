@@ -1,0 +1,235 @@
+class_name DawnTrain
+extends Node3D
+
+## The morning after the board (plan 4.6), seen and heard from the window.
+##
+## No. 17, the morning passenger, comes along the main line beyond the yard:
+## it runs past if it was cleared, comes to a stand at the points and blows off
+## steam if it was held, and if no order went out it is only a whistle far off
+## that never comes nearer. No. 71, the night freight, stands dark on the mine
+## branch if it was held, or is simply gone if it was cleared into the shut
+## mine's junction. What happens is read from WorldState (DawnTrainData); there
+## is no verdict anywhere - the wire has already asked its question.
+##
+## It all happens after the watch is closed, so no train sound ever lies over
+## Morse. Simple geometry under the night fog, like the rest of the yard.
+
+const BEHAVIOUR_PASS: String = "pass"
+const BEHAVIOUR_STAND: String = "stand"
+const BEHAVIOUR_DISTANT: String = "distant"
+const BEHAVIOUR_GONE: String = "gone"
+
+@export var data: DawnTrainData = preload("res://data/night/dawn_train.tres")
+## The main line runs across the view, this far out.
+@export var line_z: float = -18.0
+@export var start_x: float = -70.0
+@export var end_x: float = 80.0
+## Where a held No. 17 comes to a stand: by the points.
+@export var stand_x: float = -3.0
+@export var run_speed: float = 9.0
+@export var brake_rate: float = 0.35
+@export var first_whistle_seconds: float = 3.0
+@export var departure_seconds: float = 6.0
+@export var whistle_stream: AudioStream = preload("res://audio/sfx/train/train_whistle.wav")
+@export var rumble_stream: AudioStream = preload("res://audio/sfx/train/train_rumble.wav")
+@export var steam_stream: AudioStream = preload("res://audio/sfx/train/train_steam.wav")
+
+var _passenger_behaviour: String = ""
+var _freight_behaviour: String = ""
+var _time: float = -1.0
+var _passenger_x: float = 0.0
+var _passenger_seen: bool = false
+var _near_whistled: bool = false
+var _steamed: bool = false
+
+var _passenger: Node3D = null
+var _freight: Node3D = null
+var _whistle: AudioStreamPlayer3D = null
+var _rumble: AudioStreamPlayer3D = null
+var _steam: AudioStreamPlayer3D = null
+var _silhouette: StandardMaterial3D = null
+
+func _ready() -> void:
+	_build()
+	var office := get_parent()
+	var director := office.get_node_or_null("ShiftDirector") as ShiftDirector if office != null else null
+	if director != null and not director.shift_closed.is_connected(_on_shift_closed):
+		director.shift_closed.connect(_on_shift_closed)
+
+func _on_shift_closed() -> void:
+	var world := get_tree().root.get_node_or_null("WorldState") as WorldStateStore if is_inside_tree() else null
+	if data == null:
+		return
+	begin(data.passenger_behaviour(world), data.freight_behaviour(world))
+
+func _process(delta: float) -> void:
+	advance(delta)
+
+## Starts the morning: what No. 17 does, and whether No. 71 stands.
+func begin(passenger_behaviour: String, freight_behaviour: String) -> void:
+	if _passenger == null:
+		_build()
+	_passenger_behaviour = passenger_behaviour
+	_freight_behaviour = freight_behaviour
+	_time = 0.0
+	_passenger_x = start_x
+	_passenger_seen = false
+	_near_whistled = false
+	_steamed = false
+	_freight.visible = freight_behaviour == BEHAVIOUR_STAND
+	_place_passenger()
+
+func get_passenger_x() -> float:
+	return _passenger_x
+
+func was_passenger_visible() -> bool:
+	return _passenger_seen
+
+func advance(delta: float) -> void:
+	if _time < 0.0:
+		return
+	var before := _time
+	_time += delta
+	if before < first_whistle_seconds and _time >= first_whistle_seconds:
+		# The first whistle is always far off to the west, before anything moves.
+		_play(_whistle, whistle_stream, Vector3(start_x - 60.0, 4.0, line_z - 30.0), -6.0)
+	if _passenger_behaviour == BEHAVIOUR_DISTANT:
+		if before < first_whistle_seconds + 9.0 and _time >= first_whistle_seconds + 9.0:
+			_play(_whistle, whistle_stream, Vector3(start_x - 70.0, 4.0, line_z - 40.0), -9.0)
+		return
+	if _time < departure_seconds:
+		return
+	var moving := _time - departure_seconds
+	if _passenger_behaviour == BEHAVIOUR_PASS:
+		_passenger_x = start_x + run_speed * moving
+	else:
+		_passenger_x = stand_x + (start_x - stand_x) * exp(-brake_rate * moving)
+	_passenger_seen = true
+	_place_passenger()
+	if _rumble != null and not _rumble.playing and _passenger_x < end_x and _rumble.is_inside_tree():
+		_rumble.stream = _looping(rumble_stream)
+		_rumble.play()
+	if _rumble != null:
+		var easing := 1.0
+		if _passenger_behaviour == BEHAVIOUR_STAND:
+			easing = clampf(absf(_passenger_x - stand_x) / 12.0, 0.0, 1.0)
+		_rumble.volume_db = linear_to_db(maxf(easing, 0.001)) - 4.0
+		if _passenger_x >= end_x:
+			_rumble.stop()
+	if not _near_whistled and _passenger_x > -30.0:
+		_near_whistled = true
+		var at := _passenger.global_position if _passenger.is_inside_tree() else Vector3.ZERO
+		_play(_whistle, whistle_stream, at + Vector3(2.0, 3.0, 0.0), 0.0)
+	if _passenger_behaviour == BEHAVIOUR_STAND and not _steamed and absf(_passenger_x - stand_x) < 1.0:
+		_steamed = true
+		_play(_steam, steam_stream, _passenger.global_position if _passenger.is_inside_tree() else Vector3.ZERO, -3.0)
+
+func _place_passenger() -> void:
+	if _passenger == null:
+		return
+	_passenger.visible = _passenger_behaviour != BEHAVIOUR_DISTANT and _time >= departure_seconds \
+			and _passenger_x < end_x
+	_passenger.position = Vector3(_passenger_x, 0.0, line_z)
+	if _rumble != null:
+		_rumble.position = Vector3(_passenger_x, 1.5, line_z)
+
+func _play(player: AudioStreamPlayer3D, stream: AudioStream, at: Vector3, volume_db: float) -> void:
+	if player == null or stream == null or not player.is_inside_tree():
+		return
+	player.stream = stream
+	player.volume_db = volume_db
+	player.global_position = at
+	player.play()
+
+func _looping(stream: AudioStream) -> AudioStream:
+	var wav := stream as AudioStreamWAV
+	if wav == null:
+		return stream
+	var copy := wav.duplicate() as AudioStreamWAV
+	copy.loop_mode = AudioStreamWAV.LOOP_FORWARD
+	copy.loop_begin = 0
+	copy.loop_end = int(wav.get_length() * wav.mix_rate)
+	return copy
+
+# --- geometry ---------------------------------------------------------------
+
+func _build() -> void:
+	if _passenger != null:
+		return
+	_silhouette = _unshaded(Color(0.02, 0.024, 0.032), false)
+	var lamp := _unshaded(Color(1.0, 0.9, 0.65), true)
+	var windows := _unshaded(Color(1.0, 0.72, 0.4), true)
+	var tail := _unshaded(Color(1.0, 0.2, 0.1), true)
+
+	_passenger = Node3D.new()
+	_passenger.name = "PassengerNo17"
+	add_child(_passenger)
+	# Locomotive, front toward +x: frame, boiler, stack, cab, tender, lamp.
+	_box(_passenger, Vector3(7.5, 0.5, 2.4), Vector3(-0.8, 0.9, 0.0), _silhouette)
+	var boiler := _mesh(_passenger, _cylinder(0.75, 5.0), Vector3(0.4, 1.9, 0.0), _silhouette)
+	boiler.rotation = Vector3(0.0, 0.0, PI * 0.5)
+	_mesh(_passenger, _cylinder(0.32, 1.3), Vector3(2.0, 3.0, 0.0), _silhouette)
+	_box(_passenger, Vector3(2.2, 2.6, 2.6), Vector3(-3.2, 2.1, 0.0), _silhouette)
+	_box(_passenger, Vector3(4.0, 2.0, 2.6), Vector3(-6.6, 1.6, 0.0), _silhouette)
+	_box(_passenger, Vector3(0.25, 0.4, 0.4), Vector3(3.0, 2.6, 0.0), lamp)
+	# Three coaches with lit windows down both sides.
+	for car in 3:
+		var centre := -16.0 - 14.0 * car
+		_box(_passenger, Vector3(13.0, 2.8, 2.8), Vector3(centre, 2.0, 0.0), _silhouette)
+		for pane in 6:
+			_box(_passenger, Vector3(0.9, 0.55, 2.96), Vector3(centre - 4.5 + pane * 1.8, 2.4, 0.0), windows)
+	_passenger.visible = false
+
+	# No. 71: three dark box cars on the mine branch, a red lamp toward the yard.
+	_freight = Node3D.new()
+	_freight.name = "FreightNo71"
+	add_child(_freight)
+	for car in 3:
+		var z := -27.0 - 11.0 * car
+		var x := -2.0 + 0.15 * (z + 6.0)
+		var boxcar := _box(_freight, Vector3(2.8, 3.0, 10.0), Vector3(x, 1.9, z), _silhouette)
+		boxcar.rotation.y = 0.148
+	_box(_freight, Vector3(0.22, 0.22, 0.06), Vector3(-2.75, 3.6, -21.9), tail)
+	_freight.visible = false
+
+	_whistle = _player(&"Ambience", 60.0)
+	_rumble = _player(&"Ambience", 70.0)
+	_steam = _player(&"Ambience", 40.0)
+
+func _player(bus: StringName, max_distance: float) -> AudioStreamPlayer3D:
+	var player := AudioStreamPlayer3D.new()
+	player.bus = bus if AudioServer.get_bus_index(bus) >= 0 else &"Master"
+	player.max_distance = max_distance
+	player.unit_size = 12.0
+	add_child(player)
+	return player
+
+func _unshaded(color: Color, no_fog: bool) -> StandardMaterial3D:
+	var material := StandardMaterial3D.new()
+	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	material.albedo_color = color
+	material.disable_fog = no_fog
+	return material
+
+func _cylinder(radius: float, height: float) -> CylinderMesh:
+	var cylinder := CylinderMesh.new()
+	cylinder.top_radius = radius
+	cylinder.bottom_radius = radius
+	cylinder.height = height
+	cylinder.radial_segments = 8
+	cylinder.rings = 1
+	return cylinder
+
+func _box(parent: Node3D, size: Vector3, at: Vector3, material: Material) -> MeshInstance3D:
+	var box := BoxMesh.new()
+	box.size = size
+	return _mesh(parent, box, at, material)
+
+func _mesh(parent: Node3D, mesh: Mesh, at: Vector3, material: Material) -> MeshInstance3D:
+	var instance := MeshInstance3D.new()
+	instance.mesh = mesh
+	instance.material_override = material
+	instance.position = at
+	instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	parent.add_child(instance)
+	return instance

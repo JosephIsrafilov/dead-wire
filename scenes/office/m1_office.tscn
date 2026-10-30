@@ -11,6 +11,8 @@
 [ext_resource type="Script" path="res://scripts/office/window_glass_mirror.gd" id="63_glass_mirror"]
 [ext_resource type="Script" path="res://scripts/office/silence_three.gd" id="64_silence_three"]
 [ext_resource type="Script" path="res://scripts/office/silence_two.gd" id="65_silence_two"]
+[ext_resource type="Script" path="res://scripts/office/dead_line_clicks.gd" id="66_dead_line"]
+[ext_resource type="Script" path="res://scripts/office/dawn_train.gd" id="67_dawn_train"]
 [ext_resource type="Material" path="res://materials/style_tests/m1_wainscot_wood.tres" id="7_wainscot"]
 [ext_resource type="PackedScene" path="res://scenes/style_tests/props/window_north.tscn" id="8_window"]
 [ext_resource type="PackedScene" path="res://scenes/style_tests/props/door_south.tscn" id="9_door"]
@@ -365,6 +367,10 @@ material_override = ExtResource("6_sky")
 cast_shadow = 0
 
 [node name="MineYard" parent="." instance=ExtResource("6_yard")]
+
+; The morning trains (plan 4.6): what the board did, seen and heard at dawn.
+[node name="DawnTrain" type="Node3D" parent="."]
+script = ExtResource("67_dawn_train")
 
 ; --- near: the yard -------------------------------------------------------
 ; The yard's ground runs to the ridges. It starts BEHIND the wall's outer face
@@ -937,6 +943,11 @@ script = ExtResource("64_silence_three")
 ; Silence 2 teaches the window (plan 4.1): a cloud over the moon, a sash creak.
 [node name="SilenceTwo" type="Node" parent="."]
 script = ExtResource("65_silence_two")
+
+; The dead line clicks once in silences 1 and 2 (plan 4.10): a real stray mark
+; the register inks.
+[node name="DeadLineClicks" type="Node" parent="."]
+script = ExtResource("66_dead_line")
 
 [node name="DawnRitual" type="Node" parent="."]
 script = ExtResource("45_dawn")

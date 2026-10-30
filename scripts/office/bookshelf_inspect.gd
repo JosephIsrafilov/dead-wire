@@ -25,7 +25,7 @@ signal inspected(text: String)
 ## afterwards. Nothing on this shelf is dated after the night it is read on.
 const SHELF_TEXT: String = """BLACK CREEK STATION — DIVISION VOLUMES
 ────────────────────────────────────────
-GENERAL ORDER 31 (bound, 1884):
+GENERAL ORDER 12 (bound, 1884):
     Every operator will acknowledge receipt of each order. An order
     acknowledged is an order executed.
 

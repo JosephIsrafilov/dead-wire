@@ -258,7 +258,7 @@ rotation = Vector3(0, 3.141593, 0.052)
 pixel_size = 0.00135
 modulate = Color(0.05, 0.04, 0.03, 1)
 text = "EAST DIVISION
-No. 17  6:40
+No. 17  6:05
 No. 22  7:15
 No. 31  HOLD"
 font_size = 11
@@ -270,7 +270,7 @@ position = Vector3(1.830, 1.710, 2.254)
 rotation = Vector3(0, 3.141593, -0.044)
 pixel_size = 0.00130
 modulate = Color(0.05, 0.04, 0.03, 1)
-text = "GENERAL ORDER 31
+text = "GENERAL ORDER 12
 All operators will
 acknowledge receipt
 of each order."

@@ -48,6 +48,18 @@ transform = Transform3D(0.989, 0, -0.148, 0, 1, 0, 0.148, 0, 0.989, -4.29, 0.03,
 size = Vector3(0.07, 0.06, 40.4)
 material = SubResource("RailSteel")
 
+; The main line across the view, 18 m out: the morning passenger runs here
+; (DawnTrain), and the branch crosses it to the shaft.
+[node name="RailMainSouth" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.03, -17.28)
+size = Vector3(400.0, 0.06, 0.07)
+material = SubResource("RailSteel")
+
+[node name="RailMainNorth" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.03, -18.72)
+size = Vector3(400.0, 0.06, 0.07)
+material = SubResource("RailSteel")
+
 ; --- the switch stand: the one light in the yard ----------------------------
 ; A switch lamp still shows red over the points to a shut mine. It is the only
 ; colour out there, and the eye goes to it — and to whatever stands near it.

@@ -25,12 +25,18 @@ const KNOW_SAW_WINDOW: StringName = &"saw_window_event"
 ## Elias's own margin note, added only when his record says he watched the
 ## window during the unscheduled call. The note records the looking, never a
 ## confirmation — horror stays below the proof threshold (review §11 A4).
-const WINDOW_MARGIN_NOTE: String = """
+const MARGIN_HEADER: String = """
 
 
-NOTE IN THE MARGIN (LATER HAND):
+NOTE IN THE MARGIN (LATER HAND):"""
+const WINDOW_MARGIN_LINE: String = """
 Watched the window on the unscheduled call.
 What the glass held is not written here."""
+## Plan 4.7: watching the yard in the last silence (SilenceThree) is its own
+## line, before the call - again the looking, never what was there.
+const YARD_MARGIN_LINE: String = """
+Looked out at the yard before the last call.
+The yard is not this office's to enter."""
 
 const VARIANT_WATER: StringName = &"water"
 const VARIANT_WATCHER: StringName = &"watcher"
@@ -133,8 +139,14 @@ Leave both sheets for the morning operator.
 An entry is not a confirmation.
 
 PREPARED: E. CRANE / NIGHT DESK""" % copy
-	if knowledge != null and knowledge.knows(KNOW_SAW_WINDOW):
-		text += WINDOW_MARGIN_NOTE
+	var saw_yard := knowledge != null and knowledge.knows(SilenceThree.KNOWLEDGE_SAW_YARD)
+	var saw_window := knowledge != null and knowledge.knows(KNOW_SAW_WINDOW)
+	if saw_yard or saw_window:
+		text += MARGIN_HEADER
+		if saw_yard:
+			text += YARD_MARGIN_LINE
+		if saw_window:
+			text += WINDOW_MARGIN_LINE
 	return text
 
 func _update_labels() -> void:

@@ -743,6 +743,13 @@ func _warning_still_relevant() -> bool:
 	]
 	return session.get_state() in live_states
 
+## A stray mark on the dead line (plan 4.10): only on an idle wire and never in
+## a hush. Returns its duration, or 0.0 when refused.
+func send_stray_on_wire(text: String) -> float:
+	if not _wire_idle() or _hush_active():
+		return 0.0
+	return _play_on_wire(text)
+
 func _wire_idle() -> bool:
 	return session == null or session.scheduler == null or not session.scheduler.is_playing()
 

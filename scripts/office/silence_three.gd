@@ -26,6 +26,10 @@ extends Node
 @export var figure_linger_seconds: float = 10.0
 ## WorldState: it stood there. Separate from the filing consequence's fact.
 @export var world_fact_id: StringName = &"silence_three_figure_stood"
+## KnowledgeState: Elias looked out and the yard was clear to him. The handover
+## margin writes its own line for this (plan 4.7).
+const KNOWLEDGE_SAW_YARD: StringName = &"saw_yard_before_last_call"
+@export var knowledge_fact_id: StringName = KNOWLEDGE_SAW_YARD
 
 var lamp: LampLife = null
 var figure: AttentionObservationTarget = null
@@ -62,4 +66,4 @@ func update(slot: int, seconds_into_silence: float, silence_seconds: float) -> v
 		_figure_placed = true
 		if figure != null:
 			var hold := maxf(silence_seconds - seconds_into_silence, 0.0) + figure_linger_seconds
-			figure.trigger_event(hold, world_fact_id)
+			figure.trigger_event(hold, world_fact_id, knowledge_fact_id)
