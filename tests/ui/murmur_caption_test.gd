@@ -106,6 +106,10 @@ func _run() -> void:
 	if not _a(caption.get_display_text().is_empty(), "A fresh scenario starts the whisper blank"): return
 	scheduler.advance_time(2.35)
 	if not _a(caption.get_display_text() == "w · a · t", "The whisper builds letter by letter, lowercase and spaced"): return
+	var surfacing := caption.get_newest_letter_alpha()
+	caption._process(caption.letter_fade_seconds)
+	if not _a(surfacing < 1.0 and caption.get_newest_letter_alpha() == 1.0 and caption.get_display_text() == "w · a · t",
+		"A newly heard letter surfaces instead of popping in (%.2f -> 1.0)" % surfacing): return
 	scheduler.advance_time(3.6 - scheduler.get_elapsed_seconds() + 1.0)
 	_drain_paper(paper)
 	if not _a(paper.get_display_text() == "WATCHER", "The sheet holds the written word WATCHER"): return

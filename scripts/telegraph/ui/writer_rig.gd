@@ -50,6 +50,15 @@ signal glyph_contact(glyph_index: int)
 ## Recomputed from the actual pose each glyph, so nothing accumulates; beyond
 ## this bound a residual stays VISIBLE as a solver defect.
 @export var max_final_correction: float = 0.05
+## A living hand between letters: after this long without a stroke the pen
+## starts to hover and the hand to drift. Pose-only — the drift fades out
+## during the next glyph motion, so every contact still lands on rest.
+@export var idle_drift_enabled: bool = true
+@export var idle_drift_delay: float = 0.6
+@export var idle_drift_ramp: float = 1.4
+## Pen tilt amplitude (radians) and hover lift (metres) at full drift.
+@export var idle_drift_tilt: float = 0.03
+@export var idle_drift_lift: float = 0.005
 
 var presentation_state: PresentationState = PresentationState.HIDDEN
 var _active_tween: Tween = null
@@ -98,6 +107,11 @@ var _motion_wrist_target: Vector3 = Vector3.ZERO
 ## The layout row of the last accepted glyph: a real row change is a change
 ## in the paper's fixed-column layout, not a rig-space Y wobble.
 var _last_contact_row: int = -1
+## Idle drift: seconds since the last contact, a free-running phase clock, and
+## the weight the drift had when the current motion began (it fades from there).
+var _idle_time: float = 0.0
+var _idle_clock: float = 0.0
+var _motion_drift_start: float = 0.0
 
 func _ready() -> void:
 	var upper := get_node_or_null("UpperArm") as MeshInstance3D
@@ -171,6 +185,7 @@ func begin_writing(_text: String = "") -> void:
 	_last_contact_row = -1
 	_motion_pending = false
 	_has_resume_position = false
+	_idle_time = 0.0
 	var assembly := _get_assembly()
 	if assembly != null:
 		assembly.position = _assembly_rest_position + Vector3(0.0, 0.0, 0.11)
@@ -186,6 +201,7 @@ func resume_writing() -> void:
 	# Sleeve.position and fights the re-entry.
 	_cancel_tween()
 	_motion_pending = false
+	_idle_time = 0.0
 	var hand := get_node_or_null(_get_hand_path()) as Node3D
 	var wrist := get_node_or_null("Sleeve/Wrist") as Node3D
 	var sleeve := _get_assembly()
@@ -304,16 +320,23 @@ func request_glyph_motion(glyph_index: int, text: String) -> bool:
 	# The hand/pen is one authored rigid pose. Translation places the real nib
 	# on the glyph; the cloth arm is solved separately with fixed bone lengths.
 	# Solve from REST every time, never accumulate a last-letter correction.
+	var hand := get_node_or_null(_get_hand_path()) as Node3D
 	var sleeve_original := sleeve.transform
 	var wrist_original := wrist.transform
+	var hand_original := hand.transform if hand != null else Transform3D.IDENTITY
 	sleeve.transform = _sleeve_rest_transform
 	wrist.transform = _wrist_rest_transform
+	if hand != null:
+		hand.transform = _hand_rest_transform
 	var rest_tip := to_local(nib.to_global(Vector3(0, -0.011, 0)))
 	var sleeve_target := _sleeve_rest_transform
 	sleeve_target.origin += contact_rig - rest_tip
 	var wrist_target := _wrist_rest_position
 	sleeve.transform = sleeve_original
 	wrist.transform = wrist_original
+	if hand != null:
+		hand.transform = hand_original
+	_motion_drift_start = _idle_drift_weight()
 
 	# --- record and start the motion (Q2) ---
 	_motion_sleeve_start = sleeve.transform
@@ -354,7 +377,11 @@ func _advance_motion(delta: float) -> float:
 			# hops, it does not scrape across the paper.
 			lerped += Vector3(0.0, sin(PI * t) * pause_lift, 0.0)
 		wrist.position = lerped
+	# Any hover from the pause settles back onto the paper with the stroke.
+	_apply_idle_pose(_motion_drift_start * (1.0 - eased))
 	if t >= 1.0:
+		_idle_time = 0.0
+		_motion_drift_start = 0.0
 		# Arrived: the exact target pose, then the contact event the paper
 		# has been waiting for. Ink appears now, not on the cue.
 		if sleeve != null:
@@ -527,6 +554,42 @@ func _segment_transform(start: Vector3, end: Vector3) -> Transform3D:
 	var x := Vector3.UP.cross(z).normalized()
 	return Transform3D(Basis(x, z.cross(x), z), start)
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
+	_advance_idle(delta)
 	# Withdrawal is tween-driven, so its elbow follows on rendered frames too.
 	_update_upper_arm()
+
+## The hand waits between letters the way a hand does: after a short pause
+## the pen lifts a few millimetres and the hand drifts and tilts slowly.
+func _advance_idle(delta: float) -> void:
+	_idle_clock += delta
+	if _motion_pending or not is_ready_to_write():
+		return
+	_idle_time += delta
+	_apply_idle_pose(_idle_drift_weight())
+
+func get_idle_drift_weight() -> float:
+	return _idle_drift_weight()
+
+func _idle_drift_weight() -> float:
+	if not idle_drift_enabled or not is_ready_to_write():
+		return 0.0
+	var t := clampf((_idle_time - idle_drift_delay) / maxf(idle_drift_ramp, 0.0001), 0.0, 1.0)
+	return t * t * (3.0 - 2.0 * t)
+
+## Pose-only offset of the hand joint around its authored rest. Weight 0 is
+## the exact rest transform, so contacts are untouched.
+func _apply_idle_pose(weight: float) -> void:
+	var hand := get_node_or_null(_get_hand_path()) as Node3D
+	if hand == null or not _assembly_rest_captured:
+		return
+	if weight <= 0.0:
+		hand.transform = _hand_rest_transform
+		return
+	var c := _idle_clock
+	var pitch := idle_drift_tilt * (0.7 * sin(c * 0.83) + 0.3 * sin(c * 2.1 + 1.3))
+	var roll := idle_drift_tilt * 0.6 * sin(c * 0.51 + 0.4)
+	var lift := idle_drift_lift * (0.8 + 0.2 * sin(c * 1.27))
+	var drift := Transform3D(Basis.from_euler(Vector3(pitch, 0.0, roll) * weight), Vector3(0.0, lift * weight, 0.0))
+	hand.transform = Transform3D(_hand_rest_transform.basis * drift.basis,
+		_hand_rest_transform.origin + drift.origin)

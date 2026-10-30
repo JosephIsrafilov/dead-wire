@@ -56,6 +56,11 @@ func _run() -> void:
 	# The finished sheet, hand withdrawn or at rest.
 	await _wait_for(func() -> bool: return paper.is_ready_to_inspect(), 8000)
 	await _shot("w3_finished_sheet")
+	# The copy lifted toward the eye, as the player reads it (margins, ink).
+	paper._on_interacted()
+	for i in 40:
+		await process_frame
+	await _shot("w4_lifted_copy")
 
 	print("WRITING EVIDENCE: %d screenshots" % shots)
 	office.queue_free()

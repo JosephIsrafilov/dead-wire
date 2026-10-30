@@ -214,6 +214,37 @@ func _run() -> void:
 	if not assert_condition(absf(row_wrist.position.y - lift_mid_y) < 0.0001, "The wrist lifts over the finished line mid row-change"): return
 	row_paper.queue_free()
 
+	# --- W6: a living hand that still lands exactly ------------------------
+	# Between letters the hand drifts and the pen hovers; the next stroke
+	# fades the drift out, so the contact lands on rest at the glyph.
+	var idle_paper := _paper_at(Transform3D.IDENTITY)
+	await process_frame
+	var idle_rig := idle_paper.get_writer_rig()
+	idle_rig.set_process(false)
+	var idle_hand := idle_rig.get_node("Sleeve/Wrist/Hand") as Node3D
+	var idle_nib := idle_rig.get_node("Sleeve/Wrist/Hand/Pen/Nib") as Node3D
+	var idle_rest: Transform3D = idle_rig._hand_rest_transform
+	idle_paper.begin_writing("AB")
+	idle_paper.advance_paper(idle_paper.feed_seconds + idle_rig.enter_duration + 0.01)
+	idle_rig.request_glyph_motion(0, "AB")
+	idle_rig.advance_presentation(1.0)
+	if not assert_condition(idle_rig.get_idle_drift_weight() == 0.0, "Right after a contact the hand has no drift"): return
+	for step in 30:
+		idle_rig._advance_idle(0.1)
+	var drift_move := idle_hand.transform.origin.distance_to(idle_rest.origin)
+	var drift_tilt := _basis_angle(idle_hand.transform.basis, idle_rest.basis)
+	if not assert_condition(idle_rig.get_idle_drift_weight() > 0.95 and (drift_move > 0.002 or drift_tilt > 0.3), "A pause lets the hand drift (%.4f m, %.2f deg)" % [drift_move, drift_tilt]): return
+	var landed: Array = []
+	idle_rig.glyph_contact.connect(func(_i: int):
+		landed.append(idle_nib.to_global(Vector3(0, -0.011, 0)).distance_to(idle_paper.to_global(idle_paper.get_glyph_contact(1))))
+		landed.append(_basis_angle(idle_hand.transform.basis, idle_rest.basis)))
+	idle_rig.request_glyph_motion(1, "AB")
+	idle_rig.advance_presentation(idle_rig._motion_duration * 0.5)
+	if not assert_condition(idle_rig.is_motion_pending() and _basis_angle(idle_hand.transform.basis, idle_rest.basis) < drift_tilt + 0.01, "The drift fades during the stroke"): return
+	idle_rig.advance_presentation(1.0)
+	if not assert_condition(landed.size() == 2 and landed[0] < 0.001 and landed[1] < 0.01, "After a drift the nib still lands within a millimetre, hand at rest"): return
+	idle_paper.queue_free()
+
 	for p in [origin_paper, moved_paper, cycle_paper, cancel_paper, mid_paper, line_paper]:
 		if is_instance_valid(p):
 			p.queue_free()

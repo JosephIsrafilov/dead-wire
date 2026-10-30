@@ -657,6 +657,10 @@ func _on_glyph_contact(glyph_index: int) -> void:
 func _commit_ink() -> void:
 	if _written_glyphs >= _available_glyphs or _written_glyphs >= _total_glyphs():
 		return
+	var wet := get_node_or_null("Sheet/WetInk") as WetInk
+	var lbl := get_label_3d()
+	if wet != null and lbl != null:
+		wet.mark(_written_glyphs, get_glyph_contact(_written_glyphs), lbl.basis)
 	_written_glyphs += 1
 	if _written_glyphs >= _total_glyphs():
 		_visible_characters = -1

@@ -24,6 +24,9 @@ const GLYPH_SEPARATOR := " · "
 const WORD_SEPARATOR := "     "
 ## Quieter than a spoken thought: the murmur stays below full attention.
 const MURMUR_ALPHA := 0.55
+const MURMUR_COLOR := Color(0.82, 0.78, 0.7, MURMUR_ALPHA)
+## A newly heard letter surfaces instead of popping in.
+@export var letter_fade_seconds: float = 0.35
 
 enum VoiceState {
 	SILENT,
@@ -36,7 +39,9 @@ enum VoiceState {
 var _state: VoiceState = VoiceState.SILENT
 var _perception_text: String = ""
 var _revealed: int = 0
-var _label: Label = null
+var _label: RichTextLabel = null
+## Seconds since the newest letter was heard; drives its fade-in.
+var _fresh_elapsed: float = 0.0
 var _hold_elapsed: float = 0.0
 var _fade_elapsed: float = 0.0
 ## Alpha the current dismissal started from, so a dismiss mid-fade never pops.
@@ -44,7 +49,9 @@ var _dismiss_from_alpha: float = 1.0
 
 func _ready() -> void:
 	# Pausing the night pauses the whisper with it (default pausable mode).
-	_label = Label.new()
+	_label = RichTextLabel.new()
+	_label.bbcode_enabled = true
+	_label.scroll_active = false
 	_label.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
 	_label.offset_top = -228.0
 	_label.offset_bottom = -176.0
@@ -54,9 +61,9 @@ func _ready() -> void:
 	_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	# The whisper is softer than a thought: an old letterpress face, warm grey.
-	_label.add_theme_font_override("font", preload("res://assets/fonts/imfell/IMFeENrm28P.ttf"))
-	_label.add_theme_font_size_override("font_size", 20)
-	_label.add_theme_color_override("font_color", Color(0.82, 0.78, 0.7, MURMUR_ALPHA))
+	_label.add_theme_font_override("normal_font", preload("res://assets/fonts/imfell/IMFeENrm28P.ttf"))
+	_label.add_theme_font_size_override("normal_font_size", 20)
+	_label.add_theme_color_override("default_color", MURMUR_COLOR)
 	_label.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.95))
 	_label.add_theme_constant_override("shadow_offset_x", 1)
 	_label.add_theme_constant_override("shadow_offset_y", 2)
@@ -96,7 +103,8 @@ func _on_perception_glyph(_scenario_id: String, index: int, _glyph: String) -> v
 	if index == 0:
 		_revealed = 0
 	_revealed = maxi(_revealed, index + 1)
-	_apply_text(_render())
+	_fresh_elapsed = 0.0
+	_apply_text(_render(_fresh_alpha()))
 
 ## The wire falls silent; the finished whisper lingers, then fades.
 func _on_transmission_finished(_scenario: TelegraphScenarioData) -> void:
@@ -105,6 +113,13 @@ func _on_transmission_finished(_scenario: TelegraphScenarioData) -> void:
 		_hold_elapsed = 0.0
 
 func _process(delta: float) -> void:
+	if _revealed > 0 and _fresh_elapsed < letter_fade_seconds:
+		_fresh_elapsed += delta
+		if _state != VoiceState.SILENT:
+			var alpha := _label.modulate.a if _label != null else 1.0
+			_apply_text(_render(_fresh_alpha()))
+			if _label != null:
+				_label.modulate.a = alpha
 	match _state:
 		VoiceState.HOLDING:
 			_hold_elapsed += delta
@@ -146,7 +161,14 @@ func _dismiss() -> void:
 			_fade_elapsed = 0.0
 
 func get_display_text() -> String:
-	return _label.text if _label != null else ""
+	return _label.get_parsed_text() if _label != null else ""
+
+## How far the newest letter has surfaced, 0..1.
+func get_newest_letter_alpha() -> float:
+	return _fresh_alpha()
+
+func _fresh_alpha() -> float:
+	return clampf(_fresh_elapsed / maxf(letter_fade_seconds, 0.001), 0.0, 1.0)
 
 func is_holding() -> bool:
 	return _state == VoiceState.HOLDING
@@ -161,8 +183,9 @@ func is_visible_on_screen() -> bool:
 	return _label != null and _label.is_visible_in_tree()
 
 ## The whispered prefix: `count` heard glyphs of the perception text, lower
-## case, letter-spaced, with a double interval at word boundaries.
-func _render() -> String:
+## case, letter-spaced, with a double interval at word boundaries. The newest
+## letter carries `fresh` of the murmur's alpha while it surfaces.
+func _render(fresh: float = 1.0) -> String:
 	var out := ""
 	var glyph_index := 0
 	var word_gap_pending := false
@@ -175,7 +198,12 @@ func _render() -> String:
 			break
 		if glyph_index > 0:
 			out += WORD_SEPARATOR if word_gap_pending else GLYPH_SEPARATOR
-		out += character.to_lower()
+		var letter := character.to_lower().replace("[", "[lb]")
+		if glyph_index == _revealed - 1 and fresh < 1.0:
+			var tint := MURMUR_COLOR
+			tint.a *= fresh
+			letter = "[color=#%s]%s[/color]" % [tint.to_html(true), letter]
+		out += letter
 		word_gap_pending = false
 		glyph_index += 1
 	return out

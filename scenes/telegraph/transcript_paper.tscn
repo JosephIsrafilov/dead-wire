@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://b1paper001"]
+[gd_scene load_steps=18format=3 uid="uid://b1paper001"]
 
 [ext_resource type="Script" path="res://scripts/telegraph/ui/transcript_paper.gd" id="1_paper"]
 [ext_resource type="Script" path="res://scripts/interaction/interactable.gd" id="2_interact"]
@@ -13,6 +13,7 @@
 [ext_resource type="ArrayMesh" path="res://assets/models/operator/forearm_v3.res" id="8_sleeve"]
 [ext_resource type="ArrayMesh" path="res://assets/models/operator/cuff_v3.res" id="9_cuff"]
 [ext_resource type="ArrayMesh" path="res://assets/models/operator/upper_arm_v1.res" id="13_upper"]
+[ext_resource type="Script" path="res://scripts/telegraph/ui/wet_ink.gd" id="14_wet"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_paper"]
 material = ExtResource("3_mat")
@@ -113,6 +114,9 @@ font_size = 18
 outline_size = 0
 autowrap_mode = 0
 width = 120.0
+
+[node name="WetInk" type="Node3D" parent="Sheet"]
+script = ExtResource("14_wet")
 
 [node name="Interactable" type="Area3D" parent="."]
 collision_layer = 2
