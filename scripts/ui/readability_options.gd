@@ -14,10 +14,12 @@ func _ready() -> void:
 	var title := Label.new()
 	title.text = "IMAGE / READING"
 	add_child(title)
+	# CLASSIC and READABLE draw on the same 540-line grid since plan 1.1, so the
+	# player is offered the picture as drawn or the accessibility option. A saved
+	# CLASSIC still loads and simply shows as 540.
 	_mode = OptionButton.new()
-	_mode.add_item("CLASSIC — stronger pixelation", 0)
-	_mode.add_item("READABLE — clearer retro image", 1)
-	_mode.add_item("CLEAN — full resolution", 2)
+	_mode.add_item("540 — the night as drawn", ReadabilityPolicy.Mode.READABLE)
+	_mode.add_item("CLEAN — full resolution", ReadabilityPolicy.Mode.CLEAN)
 	add_child(_mode)
 	var fov_label := Label.new()
 	fov_label.text = "Vertical field of view (55–85 degrees)"
@@ -49,13 +51,14 @@ func refresh() -> void:
 	if _mode == null or _fov == null or _text == null:
 		return
 	var settings := GameSettings.load_settings()
-	_mode.select(settings.presentation_mode)
+	var clean := settings.presentation_mode == ReadabilityPolicy.Mode.CLEAN
+	_mode.select(_mode.get_item_index(ReadabilityPolicy.Mode.CLEAN if clean else ReadabilityPolicy.Mode.READABLE))
 	_fov.set_value_no_signal(settings.vertical_fov)
 	_text.set_value_no_signal(settings.text_scale)
 
 func _on_mode(index: int) -> void:
 	var settings := GameSettings.load_settings()
-	settings.presentation_mode = index
+	settings.presentation_mode = _mode.get_item_id(index)
 	_commit(settings)
 
 func _on_fov(value: float) -> void:

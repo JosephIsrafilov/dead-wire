@@ -21,7 +21,7 @@ func _run() -> void:
 
 	var wiring := {
 		"res://scenes/ui/main_menu.tscn": "CenterContainer/VBoxContainer/OptionsPanel/OptionsBox/ReadabilityOptions",
-		"res://scenes/ui/pause_menu.tscn": "CenterContainer/PanelContainer/MarginContainer/VBoxContainer/ReadabilityOptions",
+		"res://scenes/ui/pause_menu.tscn": PauseMenu.READABILITY_PATH,
 	}
 	for scene_path in wiring:
 		var scene := (load(scene_path) as PackedScene).instantiate() as Node
@@ -46,12 +46,15 @@ func _run() -> void:
 			"Widget exposes mode, FOV and text controls"): return
 
 	widget.refresh()
-	if not require(widget._mode.selected == 2, "Widget shows the saved presentation mode"): return
+	if not require(widget._mode.item_count == 2, "Two image modes are offered: 540 and CLEAN"): return
+	if not require(widget._mode.get_selected_id() == ReadabilityPolicy.Mode.CLEAN,
+			"Widget shows the saved presentation mode"): return
 	if not require(is_equal_approx(widget._fov.value, 70.0), "Widget shows the saved vertical FOV"): return
 	if not require(is_equal_approx(widget._text.value, 1.4), "Widget shows the saved reading size"): return
 
 	widget._on_mode(0)
-	if not require(GameSettings.load_settings().presentation_mode == 0, "Mode change saves immediately"): return
+	if not require(GameSettings.load_settings().presentation_mode == ReadabilityPolicy.Mode.READABLE,
+			"Mode change saves immediately"): return
 
 	widget._on_fov(60.0)
 	if not require(is_equal_approx(GameSettings.load_settings().vertical_fov, 60.0), "FOV change saves immediately"): return

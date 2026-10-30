@@ -10,6 +10,8 @@ signal paused()
 signal resumed()
 
 const TITLE_SCENE: String = "res://scenes/ui/main_menu.tscn"
+const READABILITY_PATH: String = \
+	"CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Columns/ControlColumn/ReadabilityOptions"
 
 @export var player: PlayerController = null
 @export var document_viewer: DocumentViewer = null
@@ -42,26 +44,28 @@ func _ready() -> void:
 
 func _find_nodes() -> void:
 	var box := "CenterContainer/PanelContainer/MarginContainer/VBoxContainer/"
+	var sound := box + "Columns/SoundColumn/"
+	var controls := box + "Columns/ControlColumn/"
 	if sensitivity_slider == null:
-		sensitivity_slider = get_node_or_null(box + "SensitivityRow/SensitivitySlider") as HSlider
+		sensitivity_slider = get_node_or_null(controls + "SensitivityRow/SensitivitySlider") as HSlider
 	if head_bob_check == null:
-		head_bob_check = get_node_or_null(box + "HeadBobCheck") as CheckButton
+		head_bob_check = get_node_or_null(controls + "HeadBobCheck") as CheckButton
 	if master_slider == null:
-		master_slider = get_node_or_null(box + "MasterRow/MasterSlider") as HSlider
+		master_slider = get_node_or_null(sound + "MasterRow/MasterSlider") as HSlider
 	if ambience_slider == null:
-		ambience_slider = get_node_or_null(box + "AmbienceRow/AmbienceSlider") as HSlider
+		ambience_slider = get_node_or_null(sound + "AmbienceRow/AmbienceSlider") as HSlider
 	if telegraph_slider == null:
-		telegraph_slider = get_node_or_null(box + "TelegraphRow/TelegraphSlider") as HSlider
+		telegraph_slider = get_node_or_null(sound + "TelegraphRow/TelegraphSlider") as HSlider
 	if foley_slider == null:
-		foley_slider = get_node_or_null(box + "FoleyRow/FoleySlider") as HSlider
+		foley_slider = get_node_or_null(sound + "FoleyRow/FoleySlider") as HSlider
 	if contextual_thoughts_check == null:
-		contextual_thoughts_check = get_node_or_null(box + "ContextualThoughtsCheck") as CheckButton
+		contextual_thoughts_check = get_node_or_null(sound + "ContextualThoughtsCheck") as CheckButton
 	if resume_button == null:
-		resume_button = get_node_or_null(box + "ResumeButton") as Button
+		resume_button = get_node_or_null(box + "ButtonRow/ResumeButton") as Button
 	if title_button == null:
-		title_button = get_node_or_null(box + "TitleButton") as Button
+		title_button = get_node_or_null(box + "ButtonRow/TitleButton") as Button
 	if quit_button == null:
-		quit_button = get_node_or_null(box + "QuitButton") as Button
+		quit_button = get_node_or_null(box + "ButtonRow/QuitButton") as Button
 
 func _resolve_targets() -> void:
 	var office := get_parent()
@@ -152,7 +156,7 @@ func pause() -> bool:
 		player.velocity.x = 0.0
 		player.velocity.z = 0.0
 	visible = true
-	var readability := get_node_or_null("CenterContainer/PanelContainer/MarginContainer/VBoxContainer/ReadabilityOptions")
+	var readability := get_node_or_null(READABILITY_PATH)
 	if readability != null and readability.has_method("refresh"):
 		readability.refresh()
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
