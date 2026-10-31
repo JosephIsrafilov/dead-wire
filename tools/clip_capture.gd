@@ -47,6 +47,9 @@ func _run() -> void:
 		_time += dt
 		_place(_time)
 		if door != null and _time >= 22.0 and _time - dt < 22.0 and door.has_method("open"):
+			# The door is locked for the whole watch: without this the clip never
+			# actually opened it, and never showed the draft it was meant to.
+			door.call("unlock")
 			door.call("open")
 		await process_frame
 	quit(0)
