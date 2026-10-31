@@ -246,6 +246,9 @@ func _maybe_hush_before_core_hook() -> void:
 		return
 	core_hook_hush_done = true
 	hush()
+	# Plan 7.5: before the last call even the clock drops out of hearing. The
+	# movement runs on; only its tick is gone until the room comes back.
+	ambience.clock_muted = true
 
 ## The core-hook letter is the one moment the design exists for: from the
 ## first differing glyph to the end of the copy, no new decorative creaks or
@@ -285,6 +288,7 @@ func release_hush() -> void:
 	is_hushed = false
 	if ambience == null:
 		return
+	ambience.clock_muted = false
 	if _hush_tween != null:
 		_hush_tween.kill()
 	if not is_inside_tree():

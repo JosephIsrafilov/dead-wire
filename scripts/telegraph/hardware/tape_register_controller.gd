@@ -222,6 +222,11 @@ func _process(delta: float) -> void:
 		if _wind_interactable != null:
 			_wind_interactable.enabled = needs_winding()
 
+## The clockwork is turning (the line is live and the movement released). Read
+## by the register's own whir (7.11); it says nothing about the record.
+func is_clockwork_running() -> bool:
+	return _connected_scheduler != null and line_live and _clockwork_running
+
 ## The clockwork has run down far enough that the side key is due. Mirrors the
 ## wind interactable's enable condition, for callers that should not reach into
 ## the node tree for it.

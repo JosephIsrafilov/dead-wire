@@ -111,7 +111,9 @@ func _setup_audio_player() -> void:
 		_player.max_distance = 12.0
 		_player.attenuation_filter_cutoff_hz = THROUGH_DOOR_CUTOFF_HZ
 		_player.attenuation_filter_db = -18.0
-		_player.bus = &"Foley" if AudioServer.get_bus_index(&"Foley") >= 0 else &"Master"
+		# The steps are the designed attention event of a critical copy: they ride
+		# the Events bus, which the fairness gate (7.7) does not duck.
+		_player.bus = &"Events" if AudioServer.get_bus_index(&"Events") >= 0 else &"Master"
 		add_child(_player)
 
 func trigger_footsteps() -> void:

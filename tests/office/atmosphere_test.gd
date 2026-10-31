@@ -269,6 +269,15 @@ func _run() -> void:
 	ambience.advance_clock(0.99)
 	clock._swing_pendulum(0.0)
 	if not assert_condition(signf(at_tick) != signf(pivot.rotation.x), "The swing reverses each half period, in phase with the tick"): return
+	# Plan 7.9: the strike is at the swing's end, not as the bob passes centre.
+	if not assert_condition(absf(at_tick) > clock.pendulum_swing * 0.9, "Each tick lands at a swing extreme"): return
+	var tick_stream: AudioStream = null
+	ambience.reset_telemetry()
+	ambience.advance_clock(1.0)
+	tick_stream = ambience.clock_player.stream
+	ambience.advance_clock(1.0)
+	if not assert_condition(tick_stream != ambience.clock_player.stream and ambience.clock_player.stream == ambience.clock_tock_stream,
+		"Tick and tock are two different strikes"): return
 
 	# --- silence before the wire ---------------------------------------------
 	var bus := AudioServer.get_bus_index(String(unease.creak_bus))

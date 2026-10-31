@@ -174,7 +174,73 @@ def render_clock_tick() -> np.ndarray:
 	return normalise(transient + brass + case, -14.0)
 
 
+def render_clock_tock() -> np.ndarray:
+	"""The other end of the swing (plan 7.9): a darker, softer strike than the tick."""
+	rng = np.random.default_rng(8)
+	length = int(0.15 * SAMPLE_RATE)
+	time = np.arange(length) / SAMPLE_RATE
+
+	transient = rng.standard_normal(length) * np.exp(-time * 360.0)
+	brass = np.sin(2.0 * np.pi * 1840.0 * time) * np.exp(-time * 130.0) * 0.45
+	case = np.sin(2.0 * np.pi * 355.0 * time) * np.exp(-time * 55.0) * 0.42
+	return normalise(transient + brass + case, -15.0)
+
+
+def render_wire_sing(loop_seconds: float = 37.0) -> np.ndarray:
+	"""Wind in the telegraph wire outside (plan 7.8): an aeolian tone, never a note.
+
+	A low fundamental that wanders a few hertz with the gusts, two thin
+	partials that come and go, and a breath of air under it. The loop is long
+	and its modulators share no period with it, so it does not repeat by ear.
+	"""
+	rng = np.random.default_rng(1891)
+	total = int((loop_seconds + 2.0) * SAMPLE_RATE)
+	time = np.arange(total) / SAMPLE_RATE
+	gust = (
+		0.55 * np.sin(2.0 * np.pi * 0.053 * time + 1.1)
+		+ 0.30 * np.sin(2.0 * np.pi * 0.091 * time + 0.3)
+		+ 0.15 * np.sin(2.0 * np.pi * 0.023 * time + 4.2)
+	)
+	gust = np.clip(0.25 + 0.75 * (gust * 0.5 + 0.5), 0.0, 1.0)
+	wander = 6.0 * np.sin(2.0 * np.pi * 0.037 * time) + 2.5 * np.sin(2.0 * np.pi * 0.11 * time + 2.0)
+	frequency = 138.0 + wander + 9.0 * gust
+	phase = 2.0 * np.pi * np.cumsum(frequency) / SAMPLE_RATE
+	partial_2 = 0.35 * (0.5 + 0.5 * np.sin(2.0 * np.pi * 0.071 * time + 0.9))
+	partial_3 = 0.18 * (0.5 + 0.5 * np.sin(2.0 * np.pi * 0.047 * time + 3.3))
+	tone = np.sin(phase) + partial_2 * np.sin(2.0 * phase) + partial_3 * np.sin(3.0 * phase + 0.7)
+	air = bandpass(rng.standard_normal(total), 200.0, 1400.0) * 0.25
+	mixed = (tone * gust + air * (0.4 + 0.6 * gust))
+	return normalise(seamless(mixed, loop_seconds, 1.5), -22.0)
+
+
+def render_register_whir(loop_seconds: float = 6.0) -> np.ndarray:
+	"""The register's clockwork running (plan 7.11): a gear buzz on an escapement
+	flutter. The game lowers its pitch and speed as the spring runs down."""
+	rng = np.random.default_rng(1893)
+	total = int((loop_seconds + 0.5) * SAMPLE_RATE)
+	time = np.arange(total) / SAMPLE_RATE
+	flutter = 0.6 + 0.4 * (np.sin(2.0 * np.pi * 18.0 * time) > 0.6)
+	gears = np.sign(np.sin(2.0 * np.pi * 212.0 * time)) * 0.25 + np.sin(2.0 * np.pi * 424.0 * time) * 0.2
+	gears = bandpass(gears, 150.0, 2400.0)
+	grit = bandpass(rng.standard_normal(total), 1500.0, 5000.0) * 0.12
+	return normalise(seamless((gears + grit) * flutter, loop_seconds, 0.4), -24.0)
+
+
+ONLY = {
+	"clock_tock": lambda: write_wav(AUDIO_ROOT / "foley" / "clock_tock.wav", render_clock_tock()),
+	"wire_sing": lambda: write_wav(AUDIO_ROOT / "ambience" / "wire_sing.wav", render_wire_sing()),
+	"register_whir": lambda: write_wav(AUDIO_ROOT / "foley" / "register_whir.wav", render_register_whir()),
+}
+
+
 def main() -> None:
+	# `--only name [name ...]` writes just those layers: the generator must
+	# never regenerate the whole bed for one new asset (AGENT_RULES §10).
+	import sys
+	if "--only" in sys.argv:
+		for name in sys.argv[sys.argv.index("--only") + 1:]:
+			ONLY[name]()
+		return
 	left, right = render_room_tone()
 	write_wav(AUDIO_ROOT / "ambience" / "room_tone.wav", left, right)
 

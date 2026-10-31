@@ -77,6 +77,8 @@
 [ext_resource type="Script" path="res://scripts/ui/murmur_caption.gd" id="murmur"]
 [ext_resource type="Script" path="res://scripts/ui/sound_captions.gd" id="sound_captions"]
 [ext_resource type="Script" path="res://scripts/office/desk_amendment.gd" id="desk_amendment"]
+[ext_resource type="Script" path="res://scripts/audio/fairness_gate.gd" id="fairness_gate"]
+[ext_resource type="Script" path="res://scripts/audio/register_whir.gd" id="register_whir"]
 
 [sub_resource type="BoxShape3D" id="SeatInteract"]
 size = Vector3(0.52, 0.76, 0.52)
@@ -1048,6 +1050,14 @@ script = ExtResource("42_foley")
 [node name="NightGuidance" type="CanvasLayer" parent="."]
 layer = 4
 script = ExtResource("guidance")
+
+; Critical Morse stays readable: the room steps back while it plays (7.7).
+[node name="FairnessGate" type="Node" parent="."]
+script = ExtResource("fairness_gate")
+
+; The register's clockwork is heard, and heard slowing (7.11).
+[node name="RegisterWhir" type="Node" parent="."]
+script = ExtResource("register_whir")
 
 ; A correction is the hand's work at the desk (plan 6.3).
 [node name="DeskAmendment" type="Node" parent="."]

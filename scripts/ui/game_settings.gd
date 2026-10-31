@@ -142,6 +142,8 @@ func apply(player: PlayerController) -> void:
 	_set_bus_db("Ambience", ambience_volume_db)
 	_set_bus_db("Telegraph", telegraph_volume_db)
 	_set_bus_db("Foley", foley_volume_db)
+	# Attention events (the steps beyond the door) follow the Foley setting.
+	_set_bus_db("Events", foley_volume_db)
 	apply_display()
 
 ## Window mode, VSync and the frame limit. Only what differs is touched, so a

@@ -20,6 +20,15 @@ the synthesised beds themselves are unchanged.
 | `audio/sfx/ambience/wind_window.wav` | `render_window_wind()` | 20.0 s mono loop |
 | `audio/sfx/ambience/stove_fire.wav` | `render_stove_fire()` | 18.0 s mono loop |
 | `audio/sfx/foley/clock_tick.wav` | `render_clock_tick()` | 0.13 s mono one-shot |
+| `audio/sfx/foley/clock_tock.wav` | `render_clock_tock()` (`--only clock_tock`) | 0.15 s mono one-shot |
+| `audio/sfx/ambience/wire_sing.wav` | `render_wire_sing()` (`--only wire_sing`) | 37.0 s mono loop |
+| `audio/sfx/foley/register_whir.wav` | `render_register_whir()` (`--only register_whir`) | 6.0 s mono loop |
+
+**Music (third-party, temporary):** `audio/music/temp/long_note_one.mp3` — "Long Note
+One", Kevin MacLeod (incompetech.com), CC BY 4.0. Attribution in
+`audio/music/temp/ATTRIBUTION.txt`, on the intro card, and in
+`docs/beta/THIRD_PARTY_NOTICES.md`. Intro-only; must ship with its attribution
+or be replaced (plan 7.12).
 
 **Open item:** `sounder_down.wav`, `sounder_up.wav`, and `footstep_wood.wav`
 predate this register and their origin is not documented anywhere in the

@@ -102,8 +102,10 @@ func _swing_pendulum(delta: float) -> void:
 		_own_mechanical_elapsed += delta
 	var elapsed := _mechanical_elapsed()
 	var phase := TAU * fmod(elapsed / pendulum_period_seconds, 1.0)
-	# The dial faces +X: the bob swings in the YZ plane about the X axis.
-	_pendulum.rotation.x = sin(phase) * pendulum_swing
+	# The dial faces +X: the bob swings in the YZ plane about the X axis. The
+	# escapement strikes at whole seconds; cosine puts each strike at a swing
+	# extreme — tick at one end, tock at the other (plan 7.9).
+	_pendulum.rotation.x = cos(phase) * pendulum_swing
 
 func _mechanical_elapsed() -> float:
 	if ambience != null:

@@ -17,6 +17,17 @@ signal clock_ticked(tick_count: int)
 @export var wind_stream: AudioStream = preload("res://audio/sfx/ambience/wind_window.wav")
 @export var stove_stream: AudioStream = preload("res://audio/sfx/ambience/stove_fire.wav")
 @export var clock_tick_stream: AudioStream = preload("res://audio/sfx/foley/clock_tick.wav")
+## Plan 7.9: the escapement strikes differently at the two ends of the swing.
+@export var clock_tock_stream: AudioStream = preload("res://audio/sfx/foley/clock_tock.wav")
+## Plan 7.8: wind in the telegraph wire outside, heard through the glass.
+@export var wire_stream: AudioStream = preload("res://audio/sfx/ambience/wire_sing.wav")
+@export var wire_volume_db: float = -14.0
+@export var wire_position: Vector3 = Vector3(-1.5, 2.7, -3.4)
+## Through the closed pane only the low hum reaches the room; with the door
+## open the wire is brighter and nearer.
+@export var wire_glass_cutoff_hz: float = 1400.0
+@export var wire_open_cutoff_hz: float = 6000.0
+@export var wire_open_boost_db: float = 6.0
 
 @export var ambience_bus: StringName = &"Ambience"
 
@@ -42,6 +53,12 @@ var room_tone_player: AudioStreamPlayer = null
 var wind_player: AudioStreamPlayer3D = null
 var stove_player: AudioStreamPlayer3D = null
 var clock_player: AudioStreamPlayer3D = null
+var wire_player: AudioStreamPlayer3D = null
+## Plan 7.5: in the hush before the last call the tick drops out of hearing.
+## The movement keeps going — the pendulum and the hands do not stop.
+var clock_muted: bool = false
+var _hush_db: float = 0.0
+var _outside_open: bool = false
 
 var ticks_played: int = 0
 
@@ -50,6 +67,9 @@ var _clock_elapsed: float = 0.0
 ## Scene-local attenuation leaves the player's bus volume untouched, including
 ## when settings change mid-hush or the scene is abandoned.
 func set_hush_db(value: float) -> void:
+	_hush_db = value
+	if wire_player != null:
+		wire_player.volume_db = wire_volume_db + value + (wire_open_boost_db if _outside_open else 0.0)
 	if room_tone_player != null:
 		room_tone_player.volume_db = room_tone_volume_db + value
 	if wind_player != null:
@@ -81,6 +101,21 @@ func build_players() -> void:
 	if clock_player == null:
 		clock_player = _build_positional(
 			"ClockPlayer", clock_tick_stream, clock_volume_db, clock_position, clock_max_distance)
+	if wire_player == null and wire_stream != null:
+		wire_player = _build_positional(
+			"WirePlayer", as_looping(wire_stream), wire_volume_db, wire_position, wind_max_distance)
+		wire_player.attenuation_filter_cutoff_hz = wire_glass_cutoff_hz
+		wire_player.attenuation_filter_db = -12.0
+
+## The door is open to the night: the wire is heard without the glass.
+func open_to_outside(open: bool = true) -> void:
+	_outside_open = open
+	if wire_player != null:
+		wire_player.attenuation_filter_cutoff_hz = wire_open_cutoff_hz if open else wire_glass_cutoff_hz
+	set_hush_db(_hush_db)
+
+func is_open_to_outside() -> bool:
+	return _outside_open
 
 ## The beds' loop is pinned in their tracked .import files (edit/loop_mode=1), so the
 ## importer already delivers looping streams. This guard stays: if a bed is ever
@@ -115,9 +150,13 @@ func start() -> void:
 	_play_loop(room_tone_player)
 	_play_loop(wind_player)
 	_play_loop(stove_player)
+	_play_loop(wire_player)
+	var door := get_node_or_null("../SouthDoor/DoorController")
+	if door != null and door.has_signal(&"door_opened") and not door.door_opened.is_connected(open_to_outside):
+		door.door_opened.connect(open_to_outside.bind(true))
 
 func stop() -> void:
-	for player in [room_tone_player, wind_player, stove_player, clock_player]:
+	for player in [room_tone_player, wind_player, stove_player, clock_player, wire_player]:
 		if player != null and player.playing:
 			player.stop()
 
@@ -142,8 +181,12 @@ func advance_clock(delta: float) -> void:
 
 func _emit_tick() -> void:
 	ticks_played += 1
-	if clock_player != null and clock_player.stream != null and is_inside_tree():
-		clock_player.play()
+	if clock_player != null and is_inside_tree() and not clock_muted:
+		# Tick at one end of the swing, tock at the other.
+		var tock := ticks_played % 2 == 0 and clock_tock_stream != null
+		clock_player.stream = clock_tock_stream if tock else clock_tick_stream
+		if clock_player.stream != null:
+			clock_player.play()
 	clock_ticked.emit(ticks_played)
 
 ## The room's one mechanical clock, in seconds since the scene started ticking.
