@@ -107,6 +107,11 @@ func _run() -> void:
 	# Plan 6.8: display and control options persist and clamp like the rest.
 	var display_path := "user://readable_settings_display_test.cfg"
 	var display: Variant = GameSettings.new()
+	# Plan 9.1: a released build opens fullscreen; the editor binary that runs
+	# suites and capture tools keeps a window, so frames keep their size.
+	var released_full: bool = display.call("default_fullscreen") if display.has_method("default_fullscreen") else not OS.has_feature("template")
+	if not require(released_full == OS.has_feature("template") and display.fullscreen == released_full,
+		"New install: fullscreen in a released build, a window under the editor binary"): return
 	if not require(not display.fullscreen and display.vsync and display.max_fps == 0 and not display.invert_y,
 		"New install: windowed, VSync on, no frame limit, mouse Y not inverted"): return
 	display.fullscreen = true

@@ -12,6 +12,9 @@ extends Control
 signal watch_started()
 
 const OFFICE_SCENE: String = "res://scenes/office/m1_office.tscn"
+## Plan 9.1: the window carries the game's name. The project's internal name
+## stays "dead-wire" because the saved settings' folder is derived from it.
+const WINDOW_TITLE: String = "DEAD WIRE"
 
 @export var office_scene_path: String = OFFICE_SCENE
 
@@ -32,6 +35,7 @@ var build_footer: Label = null
 
 func _ready() -> void:
 	_find_nodes()
+	get_window().title = WINDOW_TITLE
 	settings = GameSettings.load_settings()
 	settings.apply(null)
 	_push_settings_to_controls()

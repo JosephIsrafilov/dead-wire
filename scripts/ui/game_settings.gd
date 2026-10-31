@@ -29,7 +29,7 @@ var text_scale: float = 1.2
 var brightness: float = 1.0
 var brightness_calibrated: bool = false
 ## Display and control options (plan 6.8).
-var fullscreen: bool = false
+var fullscreen: bool = default_fullscreen()
 var vsync: bool = true
 ## 0 = no limit.
 var max_fps: int = 0
@@ -37,15 +37,22 @@ var invert_y: bool = false
 ## Captions for non-wire sounds (plan 6.9), off unless the player wants them.
 var sound_captions: bool = false
 const FPS_LIMITS: Array[int] = [0, 30, 60, 120, 144]
-## The image/reading/display options a "Default" press restores.
+## The image/reading/display options a "Default" press restores (window mode
+## comes from `default_fullscreen()`).
 const DEFAULTS := {
 	"presentation_mode": 1, "vertical_fov": 65.0, "text_scale": 1.2, "brightness": 1.0,
-	"fullscreen": false, "vsync": true, "max_fps": 0, "invert_y": false,
+	"vsync": true, "max_fps": 0, "invert_y": false,
 }
+
+## Plan 9.1: a released build opens fullscreen. The editor binary (suites,
+## capture tools, F5) keeps a window, so evidence frames keep their size.
+static func default_fullscreen() -> bool:
+	return OS.has_feature("template")
 
 func restore_defaults() -> void:
 	for key in DEFAULTS:
 		set(key, DEFAULTS[key])
+	fullscreen = default_fullscreen()
 
 static func config_path() -> String:
 	var override := OS.get_environment(PATH_OVERRIDE_ENV)
