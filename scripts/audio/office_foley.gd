@@ -111,11 +111,19 @@ func _bind() -> void:
 			_play_varied_stream(pen, pen_stream, pen_variants))
 	if key != null:
 		var click := _source("KeyClick", key_stream, key.global_position, -16.0)
-		key.key_touched.connect(func(): _play_varied(click))
+		key.key_touched.connect(func():
+			_play_varied(click)
+			office.player.contact_nudge(1.0))
 	var stamp := _source("Stamp", stamp_stream, office.copy_commit_desk.global_position, -13.0)
 	# The stamp sound is the physical contact of the press, never the intent
 	# a deadline may still reject (B1), and never the acceptance itself.
-	office.copy_commit_desk.stamp_contact.connect(func(_id): stamp.play())
+	office.copy_commit_desk.stamp_contact.connect(func(_id):
+		stamp.play()
+		office.player.contact_nudge(1.35))
+	# The lever meeting its stop is felt only by the hand on it.
+	office.routing_board.lever_stopped.connect(func():
+		if office.player.global_position.distance_to(office.routing_board.global_position) < 1.6:
+			office.player.contact_nudge(1.0))
 	# The hand takes the lever: the throw starts here, the stop lands on the board.
 	var lever := _source("LeverThrow", lever_stream, office.routing_board.global_position + Vector3(0, 0.7, 0), -20.0)
 	office.routing_board.route_accepted.connect(func(_a): _play_varied(lever))

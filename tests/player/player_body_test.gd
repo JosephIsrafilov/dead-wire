@@ -76,6 +76,36 @@ func _run() -> void:
 		urgent_peak = maxf(urgent_peak, absf(player.head.position.y - player.head_rest_position.y))
 	if not assert_condition(urgent_peak < COMFORT_BOB_CEILING, "Urgent breathing stays inside comfort bounds"): return
 	player.set_urgency(0.0)
+
+	# 5b. Plan 8.2: a contact has weight — the key, the stamp, the lever's stop
+	#     give the head a nudge of a few millimetres, gone in a fraction of a
+	#     second, and none at all with head motion switched off.
+	player.breathing_enabled = false
+	player.head_bob_enabled = true
+	# The room's foley binds itself to the instruments a frame after load.
+	for _frame in 3:
+		await process_frame
+	for _step in 30:
+		player._update_head(1.0 / 60.0)
+	office.session_controller.telegraph_key.key_touched.emit()
+	var nudge_peak := 0.0
+	for _step in 6:
+		player._update_head(1.0 / 60.0)
+		nudge_peak = maxf(nudge_peak, (player.head.position - player.head_rest_position).length())
+	if not assert_condition(nudge_peak > 0.0008 and nudge_peak <= 0.003, "The key's contact nudges the head, at most 3 mm (%.1f mm)" % (nudge_peak * 1000.0)): return
+	for _step in 30:
+		player._update_head(1.0 / 60.0)
+	if not assert_condition((player.head.position - player.head_rest_position).length() < 0.0002, "The nudge is gone within half a second"): return
+	office.copy_commit_desk.stamp_contact.emit(&"file_as_copied")
+	player._update_head(1.0 / 60.0)
+	if not assert_condition((player.head.position - player.head_rest_position).length() > 0.0005, "The stamp landing is felt too"): return
+	for _step in 30:
+		player._update_head(1.0 / 60.0)
+	player.head_bob_enabled = false
+	office.session_controller.telegraph_key.key_touched.emit()
+	player._update_head(1.0 / 60.0)
+	if not assert_condition((player.head.position - player.head_rest_position).length() < 0.0001, "With head motion off, contacts move nothing"): return
+	player.breathing_enabled = true
 	player.head_bob_enabled = true
 
 	# 6. Yaw clamping, used while seated.

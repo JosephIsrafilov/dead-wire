@@ -59,6 +59,12 @@ var _last_footstep_variant: int = -1
 
 @export var settle_distance: float = 0.022
 @export var settle_duration: float = 0.22
+## Plan 8.2: a contact has weight. The key, the stamp, the lever meeting its
+## stop give the head a nudge of a few millimetres, gone in a fraction of a
+## second. Translation only, and off together with head motion.
+@export var contact_nudge_distance: float = 0.0022
+@export var contact_nudge_seconds: float = 0.16
+const CONTACT_NUDGE_CEILING: float = 0.003
 
 ## Insurance only. The real fix for the south door is its collision shape; this
 ## catches any hole that appears later instead of dropping the player forever.
@@ -107,6 +113,7 @@ var _bob_phase: float = 0.0
 var _bob_weight: float = 0.0
 var _breath_phase: float = 0.0
 var _settle_offset: float = 0.0
+var _contact_nudge: float = 0.0
 var _was_moving: bool = false
 var _spawn_transform: Transform3D = Transform3D.IDENTITY
 var _urgency: float = 0.0
@@ -384,6 +391,7 @@ func _update_head(delta: float, moved_distance: float = -1.0) -> void:
 		_was_moving = is_moving
 
 	_settle_offset = move_toward(_settle_offset, 0.0, (settle_distance / maxf(settle_duration, 0.01)) * delta)
+	_contact_nudge = move_toward(_contact_nudge, 0.0, (contact_nudge_distance / maxf(contact_nudge_seconds, 0.01)) * delta)
 
 	var bob := 0.0
 	var sway := 0.0
@@ -404,7 +412,13 @@ func _update_head(delta: float, moved_distance: float = -1.0) -> void:
 		_breath_phase += delta * rate * TAU
 		breath = sin(_breath_phase) * breathing_amplitude
 
-	head.position = head_rest_position + Vector3(sway, bob + breath + _settle_offset, 0.0)
+	head.position = head_rest_position + Vector3(sway, bob + breath + _settle_offset - _contact_nudge, 0.0)
+
+## The hand meets something hard: the head takes a few millimetres of it.
+func contact_nudge(strength: float = 1.0) -> void:
+	if not head_bob_enabled:
+		return
+	_contact_nudge = minf(contact_nudge_distance * maxf(strength, 0.0), CONTACT_NUDGE_CEILING)
 
 ## Used by the seat, which owns the head position while the operator is sitting.
 func set_head_rest_position(value: Vector3) -> void:

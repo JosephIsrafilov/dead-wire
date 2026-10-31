@@ -4,6 +4,8 @@ extends Node3D
 signal routing_action_selected(action: String)
 ## Physical feedback acknowledges an accepted order, never the input that requested it.
 signal route_accepted(action: String)
+## The lever has met its stop (plan 8.2: the contact the hand feels).
+signal lever_stopped()
 signal board_opened()
 signal board_closed()
 
@@ -338,6 +340,7 @@ func _throw_lever(action: String) -> void:
 		sfx.stream = lever_impact_stream
 		sfx.bus = lever_impact_bus
 		_lever_tween.chain().tween_callback(sfx.play)
+	_lever_tween.chain().tween_callback(lever_stopped.emit)
 
 ## A new slot resets the ability to submit — nothing else. The lever, the
 ## needle and the recorded route are the night's memory, not this slot's.
