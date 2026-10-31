@@ -1,13 +1,25 @@
-"""Coat shape/material study. Run in Blender through MCP; production is untouched."""
+"""Coat shape/material study. Run in Blender through MCP, or headless:
+
+    blender --background --factory-startup --python author_coat.py
+
+Writes coat_A.glb / coat_B.glb and dead_wire_coat.blend next to this file;
+the game uses coat_B.glb copied to assets/models/office_props_v1/coat_tailored.glb.
+"""
 import bpy, bmesh, math, json
 from pathlib import Path
 from mathutils import Vector
 import numpy as np
 ROOT = Path(__file__).resolve().parent
 NAME = 'DW_Coat_Study_Tailored'
-# Work in a separate scene, never delete the user's original scene.
-scene = bpy.data.scenes.new(NAME)
-bpy.context.window.scene = scene
+if bpy.app.background:
+    # Headless runs start from factory settings: the default scene is ours.
+    scene = bpy.context.scene
+    for o in list(scene.objects): bpy.data.objects.remove(o, do_unlink=True)
+    scene.name = NAME
+else:
+    # Work in a separate scene, never delete the user's original scene.
+    scene = bpy.data.scenes.new(NAME)
+    bpy.context.window.scene = scene
 verts, faces, uvfaces = [], [], []
 def vertex(p):
     verts.append(tuple(p)); return len(verts)-1
@@ -62,10 +74,15 @@ for a,b,side in holes:
               (.175,1.401,-.062,.034,.020)]
     for k,(cx,cy,cz,rx,rz) in enumerate(sections):
         curr=[]
+        # A coat on a hook has no arm in it: at the armhole the sleeve ring
+        # stands upright like the armhole itself, and only turns into a hanging
+        # tube by the elbow. A level ring there pulled the armhole's top out to
+        # the sleeve's outer edge and made a hard, raised shoulder point.
+        hang=min(1.0,k/2)
         for ang in angles:
             wrinkle=1+.06*math.sin(ang*3+k*.6)
-            curr.append(vertex((side*(cx+math.cos(ang)*rx*wrinkle),
-                cy +(.012 if side<0 else .025)+math.cos(ang)*rx*.18,
+            curr.append(vertex((side*(cx+math.cos(ang)*rx*wrinkle*hang),
+                cy +(.012 if side<0 else .025)+math.cos(ang)*rx*(.18*hang+.85*(1-hang)),
                 cz+math.sin(ang)*rz*wrinkle)))
         for j in range(len(prev)):
             jj=(j+1)%len(prev)
@@ -170,10 +187,10 @@ scene.render.engine='BLENDER_EEVEE'; scene.render.resolution_x=900; scene.render
 scene.render.image_settings.file_format='PNG'; scene.render.filepath=str(ROOT/'blender_study.png')
 scene.view_settings.view_transform='Standard'
 bpy.ops.object.select_all(action='DESELECT'); obj.select_set(True); bpy.context.view_layer.objects.active=obj
-for area in bpy.context.screen.areas:
+for area in (bpy.context.screen.areas if bpy.context.screen else []):
     if area.type=='VIEW_3D':
         area.spaces.active.region_3d.view_distance=1.4; area.spaces.active.region_3d.view_location=(0,0,1.60)
         area.spaces.active.region_3d.view_rotation=camera.rotation_euler.to_quaternion()
         area.spaces.active.shading.type='MATERIAL'
-bpy.ops.wm.save_as_mainfile(filepath=str(ROOT/'dead_wire_coat_study.blend'))
+bpy.ops.wm.save_as_mainfile(filepath=str(ROOT/'dead_wire_coat.blend'))
 print('SAVED',ROOT,'shell triangles',sum(len(p.vertices)-2 for p in obj.data.polygons))
