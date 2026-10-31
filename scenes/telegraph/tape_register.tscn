@@ -10,6 +10,7 @@
 [ext_resource type="ArrayMesh" path="res://assets/models/instruments_v1/register_spool.res" id="7_authored_spool"]
 [ext_resource type="ArrayMesh" path="res://assets/models/instruments_v1/register_stylus.res" id="8_authored_stylus"]
 [ext_resource type="Script" path="res://scripts/telegraph/hardware/tape_strip_view.gd" id="9_strip_view"]
+[ext_resource type="ArrayMesh" path="res://assets/models/instruments_v1/register_winding_key.res" id="10_winding_key"]
 
 [sub_resource type="StandardMaterial3D" id="Ink"]
 albedo_color = Color(0.05, 0.05, 0.07, 1)
@@ -172,6 +173,14 @@ visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.092, 0.04, -0.01)
 size = Vector3(0.003, 0.022, 0.012)
 material = ExtResource("5_brass")
+
+; The side key turns on its arbor when the register is wound (plan 8.3); split
+; out of register_static.res by tools/split_register_key.gd.
+[node name="WindingKeyPivot" type="Node3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.04, -0.01)
+
+[node name="AuthoredWindingKey" type="MeshInstance3D" parent="Body/WindingKeyPivot"]
+mesh = ExtResource("10_winding_key")
 
 [node name="PaperStrip" type="MeshInstance3D" parent="Body"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0005, 0.1)

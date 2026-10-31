@@ -60,6 +60,19 @@ var _stylus: Node3D = null
 var _stylus_rest_y: float = 0.0
 var _stylus_target_y: float = 0.0
 var _spool: Node3D = null
+## Plan 8.3: winding is one full turn of the side key in four quarter turns,
+## each ending on a click of the ratchet (the winding sound's teeth land on
+## these), the hand carrying it a hair past before the pawl takes it back.
+const WIND_CLICK_SECONDS: Array[float] = [0.04, 0.24, 0.44, 0.64]
+const KEY_TURN_SECONDS: float = 0.09
+const KEY_OVERTURN: float = 0.1
+const KEY_CATCH_SECONDS: float = 0.04
+## The spool takes up the new tension over the winding rather than at once.
+const SPOOL_TAKE_UP_SECONDS: float = 0.8
+var _winding_key: Node3D = null
+var _wind_elapsed: float = -1.0
+var _key_angle: float = 0.0
+var _spool_drive: float = 1.0
 
 var interactable: Interactable = null
 
@@ -82,6 +95,8 @@ func _ready() -> void:
 		_stylus_rest_y = _stylus.position.y
 		_stylus_target_y = _stylus_rest_y
 	_spool = get_node_or_null("Body/Spool") as Node3D
+	_winding_key = get_node_or_null("Body/WindingKeyPivot") as Node3D
+	_spool_drive = spring_tension
 	_wind_interactable = get_node_or_null("WindInteractable") as Interactable
 	if _wind_interactable != null:
 		_wind_interactable.prompt_text = PROMPT_WIND
@@ -215,10 +230,11 @@ func _on_timing_event_finished(event: MorseScheduledEvent) -> void:
 func _process(delta: float) -> void:
 	if _stylus != null:
 		_stylus.position.y = move_toward(_stylus.position.y, _stylus_target_y, stylus_speed * delta)
+	_advance_winding(delta)
 	if _connected_scheduler != null and line_live and _clockwork_running:
 		spring_tension = maxf(spring_tension - delta / maxf(spring_run_down_seconds, 0.01), spring_floor)
 		if _spool != null:
-			_spool.rotate_object_local(Vector3.UP, spool_turn_rate * spring_tension * delta)
+			_spool.rotate_object_local(Vector3.UP, spool_turn_rate * _spool_drive * delta)
 		if _wind_interactable != null:
 			_wind_interactable.enabled = needs_winding()
 
@@ -241,7 +257,57 @@ func wind() -> void:
 		_advance_feed_cursor(segment, segment.events.size())
 	if _wind_interactable != null:
 		_wind_interactable.enabled = false
+	_wind_elapsed = 0.0
 	register_wound.emit()
+
+## The key's turn and the spool's take-up; motion only, the spring itself was
+## wound at once above.
+func _advance_winding(delta: float) -> void:
+	_spool_drive = move_toward(_spool_drive, spring_tension, maxf(delta, 0.0) / SPOOL_TAKE_UP_SECONDS)
+	if _wind_elapsed < 0.0:
+		return
+	_wind_elapsed += maxf(delta, 0.0)
+	var last_click: float = WIND_CLICK_SECONDS[WIND_CLICK_SECONDS.size() - 1]
+	if _wind_elapsed >= last_click + KEY_CATCH_SECONDS:
+		_wind_elapsed = -1.0
+		_set_key_angle(TAU)
+		return
+	_set_key_angle(_key_angle_at(_wind_elapsed))
+
+func _key_angle_at(seconds: float) -> float:
+	var quarter := TAU / 4.0
+	for step in WIND_CLICK_SECONDS.size():
+		var click: float = WIND_CLICK_SECONDS[step]
+		var start := maxf(click - KEY_TURN_SECONDS, 0.0 if step == 0 else WIND_CLICK_SECONDS[step - 1] + KEY_CATCH_SECONDS)
+		var settled := quarter * step
+		if seconds < start:
+			return settled
+		if seconds < click:
+			var turn := ease((seconds - start) / maxf(click - start, 0.001), 0.6)
+			return settled + (quarter + KEY_OVERTURN) * turn
+		if seconds < click + KEY_CATCH_SECONDS:
+			var caught := (seconds - click) / KEY_CATCH_SECONDS
+			return settled + quarter + KEY_OVERTURN * (1.0 - caught)
+	return TAU
+
+func _set_key_angle(angle: float) -> void:
+	_key_angle = angle
+	if _winding_key != null:
+		# Clockwise to the operator, who faces this side of the case.
+		_winding_key.rotation.x = -fmod(angle, TAU)
+
+## How far the side key has turned in the current winding, in radians.
+func get_key_angle() -> float:
+	return _key_angle
+
+## Holds the side key at a fraction of one turn (evidence frames only).
+func set_key_turn(fraction: float) -> void:
+	_set_key_angle(fraction * TAU)
+
+## The tension the spool is actually running on: it takes up a winding over
+## the turn of the key.
+func get_spool_drive() -> float:
+	return _spool_drive
 
 ## Monotonic feed cursor for one take: never shrinks, never exceeds the record.
 func _advance_feed_cursor(segment: Dictionary, available: int) -> void:

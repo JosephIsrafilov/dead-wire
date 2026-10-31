@@ -63,6 +63,43 @@ func _run() -> void:
 	if not check((lever.transform * key.lever_pivot).distance_to(lever_rest * key.lever_pivot) < 0.00001, "The key turns on its trunnion"): return
 	key.set_press_amount(0.0)
 	if not check(lever.transform.is_equal_approx(lever_rest), "Released, the lever is exactly at rest"): return
+	# Plan 8.3: the winding key is a part of its own and turns on its arbor.
+	var case_mesh: Mesh = tape.get_node("Body/AuthoredStatic").mesh
+	var baked := 0
+	for surface in case_mesh.get_surface_count():
+		if case_mesh.surface_get_name(surface) != "dw_brass":
+			continue
+		var faces := MeshDataTool.new()
+		faces.create_from_surface(case_mesh, surface)
+		for face in faces.get_face_count():
+			var centre := Vector3.ZERO
+			for corner in 3:
+				centre += faces.get_vertex(faces.get_face_vertex(face, corner)) / 3.0
+			if centre.x > 0.084 and absf(centre.y - 0.04) < 0.013 and absf(centre.z + 0.01) < 0.008:
+				baked += 1
+	if not check(baked == 0, "The winding key is no longer baked into the case (%d faces)" % baked): return
+	var winding_key := tape.get_node_or_null("Body/WindingKeyPivot") as Node3D
+	if not check(winding_key != null and winding_key.get_node_or_null("AuthoredWindingKey") is MeshInstance3D,
+		"The winding key sits on its own arbor"): return
+	tape.set_process(false)
+	tape.spring_tension = 0.5
+	tape._spool_drive = 0.5
+	tape.wind()
+	var angles: Array[float] = []
+	var drives: Array[float] = []
+	for _step in 100:
+		tape._advance_winding(0.01)
+		angles.append(tape.get_key_angle())
+		drives.append(tape.get_spool_drive())
+	if not check(absf(angles[-1] - TAU) < 0.001, "One winding is one full turn of the key"): return
+	# Between the ratchet's clicks the key rests on a quarter turn.
+	var rests := 0
+	for click in tape.WIND_CLICK_SECONDS:
+		var resting: float = angles[int((click + 0.1) / 0.01)]
+		if absf(resting - (rests + 1) * TAU / 4.0) < 0.001:
+			rests += 1
+	if not check(rests == 4, "It turns in four quarter turns, resting on the ratchet between them (%d)" % rests): return
+	if not check(drives[9] < 0.75 and absf(drives[-1] - 1.0) < 0.001, "The spool gathers speed over the winding, not in one jump"): return
 	if not check(tape.get_node("Body/Spool").position.is_equal_approx(Vector3(0, 0.105, -0.025)), "Register keeps original spool pivot"): return
 	if not check(tape.get_node("Body/StylusPivot").position.is_equal_approx(Vector3(0, 0.081, 0.03)), "Register keeps original stylus pivot"): return
 	if not check(tape.get_node("Body/TapeTop").visible and tape.get_node("Body/PaperStrip").visible, "Objective tape paper surfaces remain present"): return
