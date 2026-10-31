@@ -37,6 +37,9 @@ func _init() -> void:
 	if not assert_condition(office != null, "Main menu lands in the production office scene"): return
 	if not assert_condition(current_scene == presentation or current_scene == office, "The scene root owns the office, so changing scene frees it"): return
 	if not assert_condition(office.session_controller != null and office.shift_director != null, "Office startup wires session and shift director"): return
+	# Every positional sound (sounder, clock, pen, steps) is heard only through a
+	# viewport that listens in 3D; the presentation frame has its own world.
+	if not assert_condition(office.get_viewport().is_audio_listener_3d(), "The office's frame listens in 3D, so the sounder is heard"): return
 	if not assert_condition(office.shift_director.get_phase() == ShiftDirector.Phase.PRE_SHIFT, "Office starts before the line is opened"): return
 	if not assert_condition(world.snapshot().is_empty() and knowledge.snapshot().is_empty(), "Starting a watch clears prior world and knowledge facts"): return
 

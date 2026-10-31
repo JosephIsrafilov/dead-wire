@@ -14,6 +14,9 @@ func attach_source(frame: SubViewport) -> void:
 	# window used to give it.
 	frame.positional_shadow_atlas_size = ProjectSettings.get_setting(
 		"rendering/lights_and_shadows/positional_shadow/atlas_size", 4096)
+	# Nor does it listen: with its own world, every positional sound in the
+	# office (sounder, clock, pen, steps) is heard only through this frame.
+	frame.audio_listener_enable_3d = true
 	add_child(frame)
 	source = frame
 
