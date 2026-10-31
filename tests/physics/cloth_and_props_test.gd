@@ -79,6 +79,22 @@ func _loose_props() -> bool:
 	var scene: PackedScene = load("res://scenes/office/loose_props.tscn")
 	if not _a(scene != null, "The loose-props scene loads"): return false
 	var props := scene.instantiate()
+	# Plan 8.10: the props stand on the desk, not the floor. Each gets a slab
+	# under its authored base before it ever enters the tree, so no physics step
+	# runs without its support.
+	var slabs: Array[Node] = []
+	for prop in props.get_children():
+		if not prop is Node3D:
+			continue
+		var slab := StaticBody3D.new()
+		var slab_shape := CollisionShape3D.new()
+		var slab_box := BoxShape3D.new()
+		slab_box.size = Vector3(0.3, 0.1, 0.3)
+		slab_shape.shape = slab_box
+		slab.add_child(slab_shape)
+		slab.position = (prop as Node3D).position + Vector3.DOWN * 0.05
+		root.add_child(slab)
+		slabs.append(slab)
 	root.add_child(props)
 	await process_frame
 	var cup := props.get_node_or_null("TinCup") as LooseProp
@@ -106,16 +122,83 @@ func _loose_props() -> bool:
 	cup.reset_to_rest()
 	if not _a(cup.is_at_rest() and cup.linear_velocity.length() < 0.001,
 			"reset_to_rest puts the prop back where the room authored it"): return false
+	if not _prop_shapes(cup, bottle): return false
 	if not await _player_pushes_prop(cup): return false
 	props.queue_free()
 	floor_body.queue_free()
+	for slab in slabs:
+		slab.queue_free()
 	await process_frame
 	return true
+
+## Plan 8.10: they are a cup and a bottle, not a cylinder and a brick.
+func _prop_shapes(cup: LooseProp, bottle: LooseProp) -> bool:
+	for prop: LooseProp in [cup, bottle]:
+		var mesh_node := prop.get_node("Mesh") as MeshInstance3D
+		var mesh := mesh_node.mesh
+		var vertices := 0
+		for surface in mesh.get_surface_count():
+			vertices += (mesh.surface_get_arrays(surface)[Mesh.ARRAY_VERTEX] as PackedVector3Array).size()
+		if not _a(mesh is ArrayMesh and mesh.resource_path.begins_with("res://assets/models/") and vertices >= 150,
+			"%s is an authored model, not a primitive (%d vertices)" % [prop.name, vertices]): return false
+		var dressed := mesh_node.material_override == null
+		for surface in mesh.get_surface_count():
+			dressed = dressed and mesh_node.get_active_material(surface) != null
+		if not _a(dressed, "%s wears its own materials on every surface" % prop.name): return false
+		var box := mesh.get_aabb()
+		if not _a(absf(box.position.y) <= 0.001, "%s stands on its base at its own origin" % prop.name): return false
+		var shapes := prop.find_children("*", "CollisionShape3D", false, false)
+		var hull := AABB()
+		for index in shapes.size():
+			var shape := shapes[index] as CollisionShape3D
+			var shape_box := _shape_aabb(shape)
+			hull = shape_box if index == 0 else hull.merge(shape_box)
+		var fits := shapes.size() >= 1 and shapes.size() <= 2
+		for axis in 3:
+			fits = fits and absf(hull.position[axis] - box.position[axis]) <= 0.006 \
+				and absf(hull.end[axis] - box.end[axis]) <= 0.006
+		if not _a(fits, "%s is held by one or two simple shapes that fit it (%s vs %s)" % [prop.name, str(hull), str(box)]): return false
+		# Its own layer: never steals the interaction ray or the window's line of sight.
+		if not _a(prop.collision_layer & 3 == 0 and prop.collision_mask & 1 != 0,
+			"%s keeps out of the interaction ray and the sight lines, and still lands on the room" % prop.name): return false
+	var cup_box := (cup.get_node("Mesh") as MeshInstance3D).mesh.get_aabb()
+	if not _a(cup_box.size.x - cup_box.size.z > 0.015, "The cup has a handle standing out from it"): return false
+	var bottle_mesh := (bottle.get_node("Mesh") as MeshInstance3D).mesh
+	var bottle_box := bottle_mesh.get_aabb()
+	var widest := 0.0
+	var neck := 0.0
+	for surface in bottle_mesh.get_surface_count():
+		for vertex in bottle_mesh.surface_get_arrays(surface)[Mesh.ARRAY_VERTEX]:
+			var radius := Vector2(vertex.x, vertex.z).length()
+			widest = maxf(widest, radius)
+			if vertex.y > bottle_box.end.y - bottle_box.size.y * 0.2:
+				neck = maxf(neck, radius)
+	if not _a(neck < widest * 0.5, "The bottle narrows to a neck (%.3f of %.3f m)" % [neck, widest]): return false
+	return true
+
+func _shape_aabb(node: CollisionShape3D) -> AABB:
+	var size := Vector3.ZERO
+	if node.shape is CylinderShape3D:
+		var cylinder := node.shape as CylinderShape3D
+		size = Vector3(cylinder.radius * 2.0, cylinder.height, cylinder.radius * 2.0)
+	elif node.shape is BoxShape3D:
+		size = (node.shape as BoxShape3D).size
+	elif node.shape is CapsuleShape3D:
+		var capsule := node.shape as CapsuleShape3D
+		size = Vector3(capsule.radius * 2.0, capsule.height, capsule.radius * 2.0)
+	return node.transform * AABB(-size * 0.5, size)
 
 ## The end-to-end claim: a walking capsule moves a prop. The formula test above
 ## proves the arithmetic; this proves the wiring — that move_and_slide reports
 ## the contact and the player turns it into an impulse.
 func _player_pushes_prop(cup: LooseProp) -> bool:
+	# The cup lives on the desk now; the capsule can only meet it on the floor,
+	# so it is set down on the open floor for this walk and put back after.
+	cup.global_position = Vector3(0.0, 0.0, 3.0)
+	cup.linear_velocity = Vector3.ZERO
+	cup.angular_velocity = Vector3.ZERO
+	cup.sleeping = false
+	await physics_frame
 	var start := cup.global_position
 	var player_scene: PackedScene = load("res://scenes/player/player.tscn")
 	if not _a(player_scene != null, "The player scene loads"): return false
@@ -135,6 +218,7 @@ func _player_pushes_prop(cup: LooseProp) -> bool:
 	var moved := cup.global_position.distance_to(start)
 	if not _a(moved > 0.01,
 			"Walking into a prop moves it (%.4f m after 40 frames)" % moved): return false
+	cup.reset_to_rest()
 	body.queue_free()
 	await process_frame
 	return true

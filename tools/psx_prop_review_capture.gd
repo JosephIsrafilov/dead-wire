@@ -33,6 +33,9 @@ const VIEWS := {
 	"loose_props": [Vector3(0.55, 1.20, 1.55), Vector3(1.30, 0.05, 0.70)],
 	"hat": [Vector3(-0.35, 2.05, 1.75), Vector3(-0.35, 2.04, 2.25)],
 	"coat_shoulders": [Vector3(-0.35, 1.85, 1.55), Vector3(-0.35, 1.85, 2.25)],
+	# Plan 8.10: where the cup and the ink bottle are set down on the desk.
+	"cup_desk": [Vector3(-1.45, 1.20, 0.15), Vector3(-2.06, 0.80, -0.19)],
+	"bottle_desk": [Vector3(-1.55, 1.22, -0.70), Vector3(-2.22, 0.80, -1.27)],
 }
 
 func _initialize() -> void:

@@ -924,9 +924,9 @@ position = Vector3(-1.5, 0.95, -5.2)
 
 [node name="HangingCoat" parent="." instance=ExtResource("60_hanging_coat")]
 
-; The room's only rigid bodies: an enamel cup and an ink bottle left on the
-; floor. Placed here rather than on a table so they cannot intercept the
-; interaction ray of the commit plates.
+; The room's only rigid bodies: the operator's tin cup and ink bottle, set down
+; on the desk off the instruments (plan 8.10). Their own physics layer keeps
+; them out of the interaction ray and the window's line of sight.
 [node name="LooseProps" parent="." instance=ExtResource("61_loose_props")]
 
 [node name="Player" parent="." instance=ExtResource("22_player")]

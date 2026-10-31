@@ -9,7 +9,7 @@
 [ext_resource type="ArrayMesh" path="res://assets/models/office_furniture_v1/desk_static.res" id="9_authored"]
 
 [sub_resource type="BoxShape3D" id="DeskSolid"]
-size = Vector3(1.5, 0.76, 0.75)
+size = Vector3(1.5, 0.75, 0.75)
 
 [node name="DeskSetup" type="Node3D"]
 
@@ -197,5 +197,5 @@ collision_layer = 1
 collision_mask = 1
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="DeskSolid"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.38, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.375, 0)
 shape = SubResource("DeskSolid")

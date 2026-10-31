@@ -14,8 +14,15 @@ extends RigidBody3D
 ##    night restarts; anything knocked under the filing table would otherwise be
 ##    gone for the rest of the watch with no way to restore it for a fresh one.
 ##
+## 3. **It never stands between the eye and the room.** It lives on its own
+##    physics layer: the interaction ray and the window's line of sight do not
+##    see it, while it still lands on the room and the operator's body meets it.
+##
 ## Nothing here reads or writes game state. A prop that is moved is a prop that
 ## is moved: it cannot reach the session, the tape or the shift.
+
+## Physics layer 3 (bit value 4). The player's body includes it in its mask.
+const LAYER_LOOSE_PROPS: int = 4
 
 signal settled
 ## Something hit this prop hard enough to be heard. `strength` is the speed lost
@@ -43,6 +50,8 @@ var _rest_taken: bool = false
 var _previous_speed: float = 0.0
 
 func _ready() -> void:
+	collision_layer = LAYER_LOOSE_PROPS
+	collision_mask = 1 | LAYER_LOOSE_PROPS
 	mass = maxf(prop_mass, 0.001)
 	physics_material_override = PhysicsMaterial.new()
 	physics_material_override.bounce = clampf(prop_bounce, 0.0, 1.0)
