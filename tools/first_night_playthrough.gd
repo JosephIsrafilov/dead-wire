@@ -9,6 +9,9 @@ var branch := "water"
 var screenshots := 0
 var audio_recording: AudioEffectRecord
 var output_folder := "res://.dream-loop/playthrough"
+## Listening marks for the recording (plan 7.6): seconds from its start.
+var audio_marks: PackedStringArray = []
+var audio_started_msec := 0
 
 func _initialize() -> void:
 	capture = "--capture" in OS.get_cmdline_user_args()
@@ -27,9 +30,11 @@ func _run() -> void:
 		quit(1)
 		return
 	if capture:
+		await _ensure_stereo_output()
 		audio_recording = AudioEffectRecord.new()
 		AudioServer.add_bus_effect(0, audio_recording)
 		audio_recording.set_recording_active(true)
+		audio_started_msec = Time.get_ticks_msec()
 	var menu = load("res://scenes/ui/main_menu.tscn").instantiate()
 	root.add_child(menu)
 	current_scene = menu
@@ -79,6 +84,7 @@ func _run() -> void:
 	for slot in 3:
 		if capture:
 			await _until_call()
+			_mark("wire calls, slot %d" % slot)
 		else:
 			office.shift_director.advance(office.shift_director.wait_seconds_before_call[slot] + 0.1)
 		check(office.shift_director.get_phase() == ShiftDirector.Phase.CALLING, "Wire calls for slot %d" % slot)
@@ -86,6 +92,7 @@ func _run() -> void:
 			await _interact_at(Vector3(-0.75, 0, -0.1), office.get_node("Chair/Interactable"))
 			await create_timer(1.6).timeout
 		await _aim_and_interact(office.session_controller.telegraph_key.get_interactable())
+		_mark("key answers, slot %d" % slot)
 		# The answer rides the wire, then the sender's etiquette beat. Capture
 		# runs the director in real time, so wait for it; otherwise drive it.
 		if capture:
@@ -98,6 +105,8 @@ func _run() -> void:
 			office.shift_director.advance(office.shift_director.get_answer_total_seconds() + 0.05)
 		await process_frame
 		check(office.session_controller.get_state() == TelegraphSessionController.State.RECEIVING, "E answers traffic %d" % slot)
+		var critical := office.session_controller.get_current_scenario().critical_copy
+		_mark("telegram begins, slot %d%s" % [slot, " (critical: the room should step back)" if critical else ""])
 		if slot == 0:
 			await _press("ui_cancel")
 			var before := office.session_controller.scheduler.get_elapsed_seconds()
@@ -236,6 +245,11 @@ func _run() -> void:
 	if capture:
 		audio_recording.set_recording_active(false)
 		check(audio_recording.get_recording().save_to_wav(output_folder.path_join("watch_audio.wav")) == OK, "Recorded actual master audio")
+		var marks := FileAccess.open(output_folder.path_join("watch_audio_marks.txt"), FileAccess.WRITE)
+		check(marks != null, "Wrote listening marks")
+		if marks != null:
+			marks.store_string("\n".join(audio_marks) + "\n")
+			marks.close()
 	current_scene.queue_free()
 	await process_frame
 	print("PLAYTHROUGH: %d failures; %d screenshots" % [failures, screenshots])
@@ -295,14 +309,16 @@ func _aim(target: Node3D) -> void:
 		point = shape.global_position
 	# The camera follows the body on its own frame (and the first frames after
 	# entering the office are slow), so re-aim until it actually looks there.
-	for attempt in 30:
+	# Within a degree: a looser cone let the ray land on the chair's own solid
+	# beside its seat trigger whenever frame timing shifted.
+	for attempt in 60:
 		var direction := point - office.player.camera.global_position
 		office.player.rotation.y = atan2(-direction.x, -direction.z)
 		office.player.head.rotation.x = atan2(direction.y, Vector2(direction.x, direction.z).length())
 		await physics_frame
 		await process_frame
 		var forward := -office.player.camera.global_basis.z
-		if forward.dot((point - office.player.camera.global_position).normalized()) > 0.995:
+		if forward.dot((point - office.player.camera.global_position).normalized()) > 0.9999:
 			return
 
 func _aim_and_interact(target: Node3D) -> void:
@@ -340,9 +356,30 @@ func _press(action: StringName) -> void:
 	Input.parse_input_event(event)
 	await process_frame
 
+## AudioEffectRecord keeps only the last channel pair of a surround Master,
+## so on a 5.1/7.1 output (a gaming headset) it records the silent rear pair.
+## Record through the first stereo device instead and say which one.
+func _ensure_stereo_output() -> void:
+	if AudioServer.get_speaker_mode() == AudioServer.SPEAKER_MODE_STEREO:
+		return
+	for device in AudioServer.get_output_device_list():
+		AudioServer.output_device = device
+		await create_timer(0.3).timeout
+		if AudioServer.get_speaker_mode() == AudioServer.SPEAKER_MODE_STEREO:
+			print("AUDIO: surround output; recording through stereo device '%s'" % device)
+			return
+	check(false, "A stereo output exists for the audio recording")
+
+func _mark(label: String) -> void:
+	if not capture:
+		return
+	var seconds := (Time.get_ticks_msec() - audio_started_msec) / 1000.0
+	audio_marks.append("%02d:%05.2f  %s" % [int(seconds) / 60, fmod(seconds, 60.0), label])
+
 func _shot(label: String) -> void:
 	if not capture:
 		return
+	_mark(label)
 	await create_timer(0.2).timeout
 	await RenderingServer.frame_post_draw
 	DirAccess.make_dir_recursive_absolute(output_folder)
