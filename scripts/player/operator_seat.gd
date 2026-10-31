@@ -48,6 +48,16 @@ enum BodyPhase {
 @export var settle_overshoot: float = 0.035
 ## Distance the body clears the chair when standing, in metres.
 @export var stand_clearance: float = 0.85
+## Plan 8.4: rising pushes the chair back from the desk, a little askew, and it
+## stays where it was left; sitting draws it in again with the body. It moves
+## on the same glide clock as the body, so it never outruns the operator.
+@export var chair_push_back: float = 0.2
+@export var chair_push_yaw_degrees: float = 5.0
+## The chair's solid box and the operator's capsule, on the floor plane: the
+## solid re-arms only when no turn of the chair could put them in each other.
+const CHAIR_HALF_DIAGONAL: float = 0.304
+const BODY_RADIUS: float = 0.35
+const REARM_MARGIN: float = 0.02
 
 const PROMPT_SIT: String = "Sit at the Operator's Desk"
 const PROMPT_STAND: String = "Stand Up"
@@ -80,6 +90,11 @@ var _user_look: bool = false
 ## One tween per head channel: a new transition replaces the old, never races it.
 var _head_tween: Tween = null
 var _pitch_tween: Tween = null
+## The chair's own place at the desk (office-local), and its glide.
+var _chair_home: Transform3D = Transform3D.IDENTITY
+var _chair_home_captured: bool = false
+var _chair_from: Transform3D = Transform3D.IDENTITY
+var _chair_to: Transform3D = Transform3D.IDENTITY
 
 ## Sitting down is a transition, not a toggle. Work at the desk — answering the
 ## wire, resuming the copy — requires the body to have actually arrived.
@@ -108,6 +123,21 @@ func _resolve_nodes() -> void:
 			_chair_body = _chair_collision.get_parent() as PhysicsBody3D
 	if office == null:
 		office = chair.get_parent() as M1OfficeController
+	if not _chair_home_captured and chair is Node3D:
+		_chair_home_captured = true
+		_chair_home = (chair as Node3D).transform
+
+## Where the chair comes to rest when the operator rises: back from the desk,
+## along the way he faces when seated, a few degrees askew.
+func _pushed_chair() -> Transform3D:
+	var back := Basis(Vector3.UP, deg_to_rad(seat_facing_degrees)) * Vector3.BACK
+	var askew := deg_to_rad(randf_range(-chair_push_yaw_degrees, chair_push_yaw_degrees))
+	return Transform3D(Basis(Vector3.UP, askew) * _chair_home.basis, _chair_home.origin + back * chair_push_back)
+
+func _glide_chair(weight: float) -> void:
+	var chair := get_parent() as Node3D
+	if chair != null:
+		chair.transform = _chair_from.interpolate_with(_chair_to, weight)
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
@@ -170,8 +200,14 @@ func sit() -> bool:
 	# player actually stood.
 	player.set_walk_locked(true)
 	player.set_seated(true)
-	_sit_target = Transform3D(Basis(Vector3.UP, deg_to_rad(seat_facing_degrees)), chair.global_position)
+	# The seat is at the desk, wherever the chair was left: it comes in with him.
+	_chair_from = chair.transform
+	_chair_to = _chair_home
+	var room := chair.get_parent() as Node3D
+	var home := room.global_transform * _chair_home.origin if room != null else _chair_home.origin
+	_sit_target = Transform3D(Basis(Vector3.UP, deg_to_rad(seat_facing_degrees)), home)
 	if not is_inside_tree() or approach_duration <= 0.0:
+		_glide_chair(1.0)
 		player.global_transform = _sit_target
 		_finish_sit()
 		return true
@@ -217,7 +253,11 @@ func stand() -> bool:
 	player.set_seated(false)
 
 	var target := _stand_target()
+	var chair := get_parent() as Node3D
+	_chair_from = chair.transform if chair != null else _chair_home
+	_chair_to = _pushed_chair()
 	if not is_inside_tree() or stand_duration <= 0.0:
+		_glide_chair(1.0)
 		player.global_transform = target
 		_finish_stand()
 		_apply_prompt()
@@ -255,6 +295,7 @@ func _advance_body(delta: float) -> void:
 	_body_elapsed += maxf(delta, 0.0)
 	var t := clampf(_body_elapsed / maxf(_body_duration, 0.0001), 0.0, 1.0)
 	var eased := 1.0 - pow(1.0 - t, 2.0)
+	_glide_chair(eased)
 	if _body_phase == BodyPhase.SIT_APPROACH:
 		var candidate := _sit_start.interpolate_with(_sit_target, eased)
 		if _transform_clear(candidate):
@@ -304,7 +345,9 @@ func _maybe_reenable_chair() -> void:
 	var player := _player_controller()
 	if chair == null or player == null:
 		return
-	if player.global_position.distance_to(chair.global_position) < 0.8:
+	var apart := Vector2(player.global_position.x - chair.global_position.x,
+		player.global_position.z - chair.global_position.z).length()
+	if apart < CHAIR_HALF_DIAGONAL + BODY_RADIUS + REARM_MARGIN:
 		return
 	_chair_reenable_pending = false
 	_chair_collision.set_deferred("disabled", false)

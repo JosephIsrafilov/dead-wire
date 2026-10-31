@@ -140,6 +140,7 @@ func _run() -> void:
 
 	var standing_eye := player.head_rest_position.y
 	var chair := seat.get_parent() as Node3D
+	var chair_home := chair.position
 	seat.approach_duration = 0.0
 	if not assert_condition(seat.sit(), "Operator sits"): return
 	if not assert_condition(seat.is_seated and player.is_seated, "Both seat and player agree he is seated"): return
@@ -228,6 +229,13 @@ func _run() -> void:
 	if not assert_condition(seat._transform_clear(player.global_transform), "The standing point is clear of furniture"): return
 	await process_frame
 	if not assert_condition(not seat._chair_collision.disabled, "The chair is solid again once the body is out"): return
+	# Plan 8.4: rising pushes the chair back from the desk (the desk is to the
+	# west), and it stays where it was left.
+	var pushed := chair.position
+	if not assert_condition(pushed.x - chair_home.x >= 0.15, "Standing pushes the chair back from the desk (%.2f m)" % (pushed.x - chair_home.x)): return
+	for _frame in 30:
+		await process_frame
+	if not assert_condition(chair.position.is_equal_approx(pushed), "The chair stays where it was left"): return
 
 	# 14. (H4) Approaching from different sides: the glide ends at the seat
 	# without sweeping the capsule through the desk.
@@ -247,6 +255,7 @@ func _run() -> void:
 			side_frames += 1
 		if not assert_condition(seat.is_settled(), "Approach settles from every side"): return
 		if not assert_condition(player.global_position.distance_to(chair.global_position) < 0.06, "The body arrives at the chair"): return
+		if not assert_condition(chair.position.distance_to(chair_home) < 0.005, "Sitting draws the chair back in to the desk"): return
 		if not assert_condition(side_max_step < 0.2, "No teleport frame during the approach (max %.3f m)" % side_max_step): return
 		if not assert_condition(seat.stand(), "Stand again for the next side"): return
 		var re_stand := 0
