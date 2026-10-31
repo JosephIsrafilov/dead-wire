@@ -43,14 +43,23 @@ func _run() -> void:
 	office.load_scenario_by_index(2)
 	if not _a(session.start_transmission() and gate.is_critical_live(), "A critical copy is on the wire"): return
 	gate.advance(1.0)
+	# What the player hears is what the buses do, not the gate's own number:
+	# the office is reparented into its presentation frame after it loads.
+	var shallow: Array[String] = []
+	for bus_name in FairnessGate.DUCKED_BUSES:
+		if _bus_attenuation_db(bus_name) > gate.duck_db + 0.5:
+			shallow.append("%s %.1f dB" % [bus_name, _bus_attenuation_db(bus_name)])
+	if not _a(shallow.is_empty(), "The room's buses themselves step back under critical copy %s" % str(shallow)): return
 	var audible: Array[String] = []
 	for node in office.find_children("*", "", true, false):
 		if not (node is AudioStreamPlayer or node is AudioStreamPlayer3D):
 			continue
 		var bus: StringName = node.get("bus")
-		if bus not in FairnessGate.DUCKED_BUSES:
+		if not bool(node.get("playing")) or bus == &"Telegraph" or bus == &"Events":
 			continue
-		if float(node.get("volume_db")) + gate.get_duck_db() > AUDIBLE_DB:
+		# Anything sounding on a bus the gate does not hold is a leak.
+		var heard_db := float(node.get("volume_db")) + _bus_attenuation_db(bus)
+		if bus not in FairnessGate.DUCKED_BUSES or heard_db > AUDIBLE_DB:
 			audible.append("%s on %s" % [node.name, bus])
 	if not _a(audible.is_empty(), "No non-telegraph player is audible under critical copy %s" % str(audible)): return
 	if not _a(not (&"Telegraph" in FairnessGate.DUCKED_BUSES) and not (&"Events" in FairnessGate.DUCKED_BUSES),
@@ -64,6 +73,8 @@ func _run() -> void:
 	var releasing := gate.get_duck_db()
 	gate.advance(2.0)
 	if not _a(releasing < -1.0 and is_zero_approx(gate.get_duck_db()), "The room returns over the release, not with a jump"): return
+	if not _a(is_zero_approx(_bus_attenuation_db(&"Ambience")) and is_zero_approx(_bus_attenuation_db(&"Foley")),
+		"The buses themselves come back to full"): return
 
 	office.queue_free()
 	for _frame in 5:
@@ -71,6 +82,18 @@ func _run() -> void:
 	if not _a(AudioServer.get_bus_effect_count(foley_bus) == effects_before, "Leaving the office takes the gate off the buses"): return
 	print("--- All Fairness Gate Tests PASSED (%d assertions) ---" % _assertions)
 	quit(0)
+
+## Gain the bus's own enabled amplify effects apply, as the mixer applies it.
+func _bus_attenuation_db(bus_name: StringName) -> float:
+	var bus := AudioServer.get_bus_index(bus_name)
+	var total := 0.0
+	if bus < 0:
+		return total
+	for index in AudioServer.get_bus_effect_count(bus):
+		var effect := AudioServer.get_bus_effect(bus, index)
+		if effect is AudioEffectAmplify and AudioServer.is_bus_effect_enabled(bus, index):
+			total += (effect as AudioEffectAmplify).volume_db
+	return total
 
 func _a(condition: bool, description: String) -> bool:
 	if condition:

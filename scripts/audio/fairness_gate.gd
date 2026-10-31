@@ -26,13 +26,19 @@ var _effects: Array = []
 func _ready() -> void:
 	if office == null:
 		office = get_parent() as M1OfficeController
+
+## Installed on every entry, not once in _ready: the office is reparented into
+## its presentation frame after it loads, and that exit takes the effects off.
+func _enter_tree() -> void:
+	if not _effects.is_empty():
+		return
 	for bus_name in DUCKED_BUSES:
 		var bus := AudioServer.get_bus_index(bus_name)
 		if bus < 0:
 			continue
 		var effect := AudioEffectAmplify.new()
 		effect.resource_name = "FairnessGate"
-		effect.volume_db = 0.0
+		effect.volume_db = _gain_db
 		AudioServer.add_bus_effect(bus, effect)
 		_effects.append(effect)
 
