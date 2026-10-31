@@ -102,3 +102,27 @@ write_samples('cloth_rustle', filtered(
       lambda t: (math.sin(math.pi * t / .55) ** 1.7) * (.35 + .65 * math.sin(2 * math.pi * 3.1 * t) ** 2),
       180, 1900, .55, 3101))
 
+# --- fifth pass (plan 7.4): no knock twice the same ------------------------
+# Appended last so the shared RNG leaves every sound above byte-identical.
+# The cup lands on its base instead of its rim, then on its side and rolls.
+write('cup_clink_2', .32, lambda t, n:
+      impact(t, n, .005, 1520, 105, .10)
+      + impact(t, n, .005, 2310, 140, .04)
+      + impact(t, n, .036, 230, 34, .18)
+      + impact(t, n, .121, 200, 36, .04))
+write('cup_clink_3', .40, lambda t, n:
+      impact(t, n, .007, 1760, 90, .12)
+      + impact(t, n, .060, 1700, 120, .05)
+      + impact(t, n, .062, 205, 30, .13)
+      + impact(t, n, .190, 1640, 140, .03))
+# The bottle lands on its shoulder; then flat with a single dull rock.
+write('bottle_knock_2', .32, lambda t, n:
+      impact(t, n, .004, 470, 80, .10)
+      + impact(t, n, .004, 960, 120, .03)
+      + impact(t, n, .052, 175, 28, .20)
+      + impact(t, n, .135, 160, 32, .05))
+write('bottle_knock_3', .30, lambda t, n:
+      impact(t, n, .004, 390, 75, .13)
+      + impact(t, n, .004, 820, 115, .04)
+      + impact(t, n, .088, 150, 24, .16))
+

@@ -351,7 +351,7 @@ func _run() -> void:
 	var master_fx := AudioServer.get_bus_effect_count(0)
 	var foley_bus := AudioServer.get_bus_index("Foley")
 	if not assert_condition(master_fx >= 1 and AudioServer.get_bus_effect(0, 0) is AudioEffectLimiter, "Master bus carries an AudioEffectLimiter"): return
-	if not assert_condition(foley_bus >= 0 and AudioServer.get_bus_effect_count(foley_bus) >= 1 and AudioServer.get_bus_effect(foley_bus, 0) is AudioEffectReverb, "Foley bus carries subtle room reverb while Telegraph stays dry"): return
+	if not assert_condition(foley_bus >= 0 and AudioServer.get_bus_effect_count(foley_bus) >= 1 and AudioServer.get_bus_effect(foley_bus, 0) is AudioEffectReverb, "Foley bus carries subtle room reverb (the telegraph's near-dry air: room_reading_test)"): return
 	office.document_viewer.apply_wick_dimming(0.6)
 	if not assert_condition(office.document_viewer.panel_container.self_modulate.r < 0.95, "Low lamp wick dims document paper in the viewer"): return
 	office.document_viewer.apply_wick_dimming(1.0)

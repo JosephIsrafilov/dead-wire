@@ -43,11 +43,19 @@ signal footstep_played(step_index: int)
 @export var urgency_breathing_multiplier: float = 2.1
 
 ## Footsteps are distance-based so the sound stays tied to the floor even when
-## acceleration or frame rate changes. One sample is pitched in a short cycle
-## to keep the bed tactile without pretending there is a full foley library.
+## acceleration or frame rate changes. Plan 7.4: five boards' worth of steps,
+## never the same one twice running, each pitched a little in a short cycle.
 @export var footstep_step_distance: float = 0.65
 @export var footstep_min_distance: float = 0.001
 @export var footstep_stream: AudioStream = preload("res://audio/sfx/foley/footstep_wood_beta.wav")
+@export var footstep_variants: Array[AudioStream] = [
+	preload("res://audio/sfx/foley/footstep_wood_1.wav"),
+	preload("res://audio/sfx/foley/footstep_wood_2.wav"),
+	preload("res://audio/sfx/foley/footstep_wood_3.wav"),
+	preload("res://audio/sfx/foley/footstep_wood_4.wav"),
+	preload("res://audio/sfx/foley/footstep_wood_5.wav"),
+]
+var _last_footstep_variant: int = -1
 
 @export var settle_distance: float = 0.022
 @export var settle_duration: float = 0.22
@@ -339,6 +347,12 @@ func _play_footstep() -> void:
 	var index := _footstep_index
 	_footstep_index = (_footstep_index + 1) % 3
 	if footstep_player != null and footstep_player.stream != null and is_inside_tree():
+		if not footstep_variants.is_empty():
+			var pick := randi() % footstep_variants.size()
+			if pick == _last_footstep_variant:
+				pick = (pick + 1) % footstep_variants.size()
+			_last_footstep_variant = pick
+			footstep_player.stream = footstep_variants[pick]
 		footstep_player.pitch_scale = [0.96, 1.03, 0.99][index] + randf_range(-0.02, 0.02)
 		footstep_player.volume_db = footstep_base_db + randf_range(-1.5, 1.0)
 		footstep_player.play()

@@ -79,6 +79,8 @@
 [ext_resource type="Script" path="res://scripts/office/desk_amendment.gd" id="desk_amendment"]
 [ext_resource type="Script" path="res://scripts/audio/fairness_gate.gd" id="fairness_gate"]
 [ext_resource type="Script" path="res://scripts/audio/register_whir.gd" id="register_whir"]
+[ext_resource type="Script" path="res://scripts/audio/creaky_boards.gd" id="creaky_boards"]
+[ext_resource type="Script" path="res://scripts/audio/outside_through_window.gd" id="outside_window"]
 
 [sub_resource type="BoxShape3D" id="SeatInteract"]
 size = Vector3(0.52, 0.76, 0.52)
@@ -1058,6 +1060,14 @@ script = ExtResource("fairness_gate")
 ; The register's clockwork is heard, and heard slowing (7.11).
 [node name="RegisterWhir" type="Node" parent="."]
 script = ExtResource("register_whir")
+
+; Two boards speak under the operator: inside the door, before the window (7.10).
+[node name="CreakyBoards" type="Node3D" parent="."]
+script = ExtResource("creaky_boards")
+
+; The yard, heard rarely through the north window (7.2).
+[node name="OutsideThroughWindow" type="Node3D" parent="."]
+script = ExtResource("outside_window")
 
 ; A correction is the hand's work at the desk (plan 6.3).
 [node name="DeskAmendment" type="Node" parent="."]

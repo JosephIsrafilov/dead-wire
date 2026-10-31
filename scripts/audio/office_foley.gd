@@ -31,6 +31,15 @@ extends Node
 ## ringing on boards, a glass bottle knocking, and wool moving.
 @export var cup_stream: AudioStream = preload("res://audio/sfx/foley/cup_clink.wav")
 @export var bottle_stream: AudioStream = preload("res://audio/sfx/foley/bottle_knock.wav")
+## Plan 7.4: three landings each, so a knocked object never repeats itself.
+@export var cup_variants: Array[AudioStream] = [
+	preload("res://audio/sfx/foley/cup_clink_2.wav"),
+	preload("res://audio/sfx/foley/cup_clink_3.wav"),
+]
+@export var bottle_variants: Array[AudioStream] = [
+	preload("res://audio/sfx/foley/bottle_knock_2.wav"),
+	preload("res://audio/sfx/foley/bottle_knock_3.wav"),
+]
 @export var cloth_stream: AudioStream = preload("res://audio/sfx/foley/cloth_rustle.wav")
 
 const JITTER: float = 0.06
@@ -144,8 +153,10 @@ func _bind_physics_sounds(office: M1OfficeController) -> void:
 			var prop := child as LooseProp
 			if prop == null:
 				continue
-			var stream := bottle_stream if prop.prop_mass > 0.16 else cup_stream
-			var player := _source(prop.name + "Impact", stream, prop.global_position, -17.0)
+			var heavy := prop.prop_mass > 0.16
+			var pool: Array[AudioStream] = [bottle_stream if heavy else cup_stream]
+			pool.append_array(bottle_variants if heavy else cup_variants)
+			var player := _source(prop.name + "Impact", pool[0], prop.global_position, -17.0)
 			# Louder for a harder hit, but never silent and never clipped: the
 			# strength is the speed the collision removed, so 0.35 m/s (the
 			# threshold) is the quietest thing that is allowed to make a sound.
@@ -153,6 +164,7 @@ func _bind_physics_sounds(office: M1OfficeController) -> void:
 				player.global_position = prop.global_position
 				player.volume_db = clampf(-22.0 + strength * 7.0, -22.0, -11.0)
 				player.pitch_scale = 1.0 + randf_range(-0.08, 0.08)
+				player.stream = _next_in(pool, player.stream)
 				player.play())
 	var coat := office.get_node_or_null("HangingCoat") as HangingCoat
 	if coat != null:
@@ -182,6 +194,13 @@ func _play_varied_stream(player: Node, base_stream: AudioStream, streams: Array[
 	if pool[idx] != null:
 		player.stream = pool[idx]
 	_play_varied(player)
+
+## A random member of the pool other than the one that just played.
+func _next_in(pool: Array[AudioStream], previous: AudioStream) -> AudioStream:
+	var pick := randi() % pool.size()
+	if pool[pick] == previous and pool.size() > 1:
+		pick = (pick + 1) % pool.size()
+	return pool[pick]
 
 func _source(label: String, stream: AudioStream, position: Vector3, volume: float) -> AudioStreamPlayer3D:
 	var player := AudioStreamPlayer3D.new()

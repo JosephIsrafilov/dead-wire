@@ -45,6 +45,14 @@ signal clock_ticked(tick_count: int)
 @export var stove_max_distance: float = 7.0
 @export var clock_max_distance: float = 8.0
 
+## Plan 7.3: the wind and the fire wander in level on no fixed period, so the
+## ear never finds the seam of a loop. Each drifts toward a new random level
+## every few seconds, never further than this from its authored volume.
+@export var wind_drift_db: float = 3.5
+@export var stove_drift_db: float = 1.5
+@export var drift_min_seconds: float = 3.0
+@export var drift_max_seconds: float = 11.0
+
 ## A regulator clock runs at one escapement beat per second.
 @export var clock_interval_seconds: float = 1.0
 @export var clock_enabled: bool = true
@@ -59,6 +67,13 @@ var wire_player: AudioStreamPlayer3D = null
 var clock_muted: bool = false
 var _hush_db: float = 0.0
 var _outside_open: bool = false
+var _wind_drift: float = 0.0
+var _wind_drift_target: float = 0.0
+var _stove_drift: float = 0.0
+var _stove_drift_target: float = 0.0
+var _drift_left: float = 0.0
+var _drift_rate: float = 1.0
+var _drift_rng := RandomNumberGenerator.new()
 
 var ticks_played: int = 0
 
@@ -68,20 +83,46 @@ var _clock_elapsed: float = 0.0
 ## when settings change mid-hush or the scene is abandoned.
 func set_hush_db(value: float) -> void:
 	_hush_db = value
+	_apply_levels()
+
+func get_hush_db() -> float:
+	return _hush_db
+
+func _apply_levels() -> void:
 	if wire_player != null:
-		wire_player.volume_db = wire_volume_db + value + (wire_open_boost_db if _outside_open else 0.0)
+		wire_player.volume_db = wire_volume_db + _hush_db + (wire_open_boost_db if _outside_open else 0.0)
 	if room_tone_player != null:
-		room_tone_player.volume_db = room_tone_volume_db + value
+		room_tone_player.volume_db = room_tone_volume_db + _hush_db
 	if wind_player != null:
-		wind_player.volume_db = wind_volume_db + value
+		wind_player.volume_db = wind_volume_db + _hush_db + _wind_drift
 	if stove_player != null:
-		stove_player.volume_db = stove_volume_db + value
+		stove_player.volume_db = stove_volume_db + _hush_db + _stove_drift
 	if clock_player != null:
-		clock_player.volume_db = clock_volume_db + value
+		clock_player.volume_db = clock_volume_db + _hush_db
 
 func _ready() -> void:
+	_drift_rng.randomize()
 	build_players()
 	start()
+
+## The beds' current wander from their authored level, in dB.
+func get_wind_drift_db() -> float:
+	return _wind_drift
+
+func get_stove_drift_db() -> float:
+	return _stove_drift
+
+func advance_drift(delta: float) -> void:
+	_drift_left -= delta
+	if _drift_left <= 0.0:
+		_drift_left = _drift_rng.randf_range(drift_min_seconds, drift_max_seconds)
+		_wind_drift_target = _drift_rng.randf_range(-wind_drift_db, wind_drift_db)
+		_stove_drift_target = _drift_rng.randf_range(-stove_drift_db, stove_drift_db)
+		# Cover the distance over the whole interval: a slow lean, never a step.
+		_drift_rate = absf(_wind_drift_target - _wind_drift) / _drift_left
+	_wind_drift = move_toward(_wind_drift, _wind_drift_target, _drift_rate * delta)
+	_stove_drift = move_toward(_stove_drift, _stove_drift_target, stove_drift_db / drift_min_seconds * delta)
+	_apply_levels()
 
 func build_players() -> void:
 	if room_tone_player == null:
@@ -112,7 +153,7 @@ func open_to_outside(open: bool = true) -> void:
 	_outside_open = open
 	if wire_player != null:
 		wire_player.attenuation_filter_cutoff_hz = wire_open_cutoff_hz if open else wire_glass_cutoff_hz
-	set_hush_db(_hush_db)
+	_apply_levels()
 
 func is_open_to_outside() -> bool:
 	return _outside_open
@@ -168,6 +209,7 @@ func _play_loop(player: Node) -> void:
 
 func _process(delta: float) -> void:
 	advance_clock(delta)
+	advance_drift(delta)
 
 ## Separated from _process so tests can drive the escapement without a real frame.
 func advance_clock(delta: float) -> void:

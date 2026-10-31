@@ -17,12 +17,16 @@ the synthesised beds themselves are unchanged.
 | File | Source | Length |
 |---|---|---|
 | `audio/sfx/ambience/room_tone.wav` | `render_room_tone()` | 24.0 s stereo loop |
-| `audio/sfx/ambience/wind_window.wav` | `render_window_wind()` | 20.0 s mono loop |
-| `audio/sfx/ambience/stove_fire.wav` | `render_stove_fire()` | 18.0 s mono loop |
+| `audio/sfx/ambience/wind_window.wav` | `render_window_wind()` (`--only wind_window`) | 53.0 s mono loop |
+| `audio/sfx/ambience/stove_fire.wav` | `render_stove_fire()` (`--only stove_fire`) | 41.0 s mono loop |
 | `audio/sfx/foley/clock_tick.wav` | `render_clock_tick()` | 0.13 s mono one-shot |
 | `audio/sfx/foley/clock_tock.wav` | `render_clock_tock()` (`--only clock_tock`) | 0.15 s mono one-shot |
 | `audio/sfx/ambience/wire_sing.wav` | `render_wire_sing()` (`--only wire_sing`) | 37.0 s mono loop |
 | `audio/sfx/foley/register_whir.wav` | `render_register_whir()` (`--only register_whir`) | 6.0 s mono loop |
+| `audio/sfx/foley/board_door.wav`, `board_window.wav` | `render_board()` (`--only boards`) | 0.62 s / 0.36 s mono one-shots |
+| `audio/sfx/ambience/outside_headframe.wav`, `outside_switch.wav`, `outside_couplings.wav` | `render_headframe_groan()`, `render_switch_points()`, `render_couplings()` (`--only outside`) | 3.2 / 1.5 / 3.4 s mono one-shots |
+| `audio/sfx/foley/footstep_wood_1..5.wav` | `tools/generate_beta_footstep.py --variants` | 0.16–0.21 s mono one-shots |
+| `audio/sfx/foley/cup_clink_2/3.wav`, `bottle_knock_2/3.wav` | `tools/generate_action_foley.py` (fifth pass, appended) | 0.30–0.40 s mono one-shots |
 
 **Music (third-party, temporary):** `audio/music/temp/long_note_one.mp3` — "Long Note
 One", Kevin MacLeod (incompetech.com), CC BY 4.0. Attribution in

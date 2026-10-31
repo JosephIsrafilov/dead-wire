@@ -93,7 +93,7 @@ def render_room_tone(loop_seconds: float = 24.0) -> tuple[np.ndarray, np.ndarray
 	return normalise(left, -26.0), normalise(right, -26.0)
 
 
-def render_window_wind(loop_seconds: float = 20.0) -> np.ndarray:
+def render_window_wind(loop_seconds: float = 53.0) -> np.ndarray:
 	"""Cold air working at a sash window. Gusts, never a constant hiss."""
 	rng = np.random.default_rng(1889)
 	total = int((loop_seconds + 1.0) * SAMPLE_RATE)
@@ -115,7 +115,7 @@ def render_window_wind(loop_seconds: float = 20.0) -> np.ndarray:
 	return normalise(seamless(mixed, loop_seconds), -20.0)
 
 
-def render_stove_fire(loop_seconds: float = 18.0) -> np.ndarray:
+def render_stove_fire(loop_seconds: float = 41.0) -> np.ndarray:
 	"""Coal settling in a closed firebox: muffled roar plus sparse pops."""
 	rng = np.random.default_rng(1017)
 	total = int((loop_seconds + 1.0) * SAMPLE_RATE)
@@ -226,10 +226,99 @@ def render_register_whir(loop_seconds: float = 6.0) -> np.ndarray:
 	return normalise(seamless((gears + grit) * flutter, loop_seconds, 0.4), -24.0)
 
 
+def render_board(base_hz: float, seconds: float, slips: int, seed: int) -> np.ndarray:
+	"""One particular board under the operator's weight (plan 7.10).
+
+	Unlike the settling creaks, a board always says the same thing: the same
+	pitch, the same number of stick-slip catches, so the room can be read by ear.
+	"""
+	rng = np.random.default_rng(seed)
+	length = int(seconds * SAMPLE_RATE)
+	time = np.arange(length) / SAMPLE_RATE
+	span = time[-1]
+	# The board catches and lets go `slips` times as the weight comes on.
+	catches = 0.5 + 0.5 * np.cos(2.0 * np.pi * slips * time / span) ** 6
+	sweep = base_hz * (1.0 + 0.25 * (time / span)) * (1.0 + 0.05 * catches)
+	phase = 2.0 * np.pi * np.cumsum(sweep) / SAMPLE_RATE
+	voice = np.sin(phase) + 0.55 * np.sin(2.0 * phase + 0.3) + 0.25 * np.sin(3.0 * phase)
+	grain = bandpass(rng.standard_normal(length), 500.0, 3000.0) * 0.35
+	envelope = np.sin(np.pi * np.clip(time / span, 0.0, 1.0)) ** 1.3 * (0.55 + 0.45 * catches)
+	return normalise((voice + grain) * envelope, -16.0)
+
+
+def render_headframe_groan() -> np.ndarray:
+	"""The mine headframe working in the wind, far off (plan 7.2): timber and
+	iron under load, a long low groan with no note in it."""
+	rng = np.random.default_rng(1901)
+	seconds = 3.2
+	total = int(seconds * SAMPLE_RATE)
+	time = np.arange(total) / SAMPLE_RATE
+	frequency = 58.0 + 14.0 * np.sin(np.pi * time / seconds) + 3.0 * np.sin(2.0 * np.pi * 7.0 * time)
+	phase = 2.0 * np.pi * np.cumsum(frequency) / SAMPLE_RATE
+	groan = np.sin(phase) + 0.6 * np.sin(2.0 * phase) + 0.3 * np.sin(3.3 * phase)
+	iron = bandpass(rng.standard_normal(total), 300.0, 1100.0) * 0.4
+	envelope = np.sin(np.pi * time / seconds) ** 2.2
+	return normalise(one_pole_lowpass((groan + iron) * envelope, 900.0), -16.0)
+
+
+def render_switch_points() -> np.ndarray:
+	"""Switch points thrown in the yard (plan 7.2): iron dragged over the chair
+	plates, then the blade seating against the stock rail."""
+	rng = np.random.default_rng(1902)
+	seconds = 1.5
+	total = int(seconds * SAMPLE_RATE)
+	time = np.arange(total) / SAMPLE_RATE
+	drag_span = 0.95
+	drag_env = np.where(time < drag_span, np.sin(np.pi * np.clip(time / drag_span, 0.0, 1.0)) ** 1.5, 0.0)
+	squeal_hz = 1650.0 + 140.0 * np.sin(2.0 * np.pi * 5.5 * time)
+	squeal = np.sin(2.0 * np.pi * np.cumsum(squeal_hz) / SAMPLE_RATE) * 0.3
+	scrape = bandpass(rng.standard_normal(total), 900.0, 4200.0) * 0.8
+	drag = (scrape + squeal) * drag_env
+	hit_time = np.clip(time - 1.0, 0.0, None)
+	clunk = np.where(time >= 1.0, np.exp(-hit_time * 18.0), 0.0) * (
+		np.sin(2.0 * np.pi * 140.0 * hit_time) + 0.4 * np.sin(2.0 * np.pi * 520.0 * hit_time))
+	return normalise(drag + clunk * 1.4, -17.0)
+
+
+def render_couplings() -> np.ndarray:
+	"""A string of freight cars taking up slack somewhere down the line
+	(plan 7.2): iron knuckles closing one after another, each further off."""
+	rng = np.random.default_rng(1903)
+	seconds = 3.4
+	total = int(seconds * SAMPLE_RATE)
+	time = np.arange(total) / SAMPLE_RATE
+	mixed = np.zeros(total)
+	at = 0.05
+	for car in range(5):
+		hit = np.clip(time - at, 0.0, None)
+		gate = (time >= at).astype(float)
+		partials = rng.uniform(280.0, 640.0)
+		knock = (np.sin(2.0 * np.pi * partials * hit) + 0.5 * np.sin(2.0 * np.pi * partials * 2.63 * hit)) \
+			* np.exp(-hit * 9.0) + rng.standard_normal(total) * np.exp(-hit * 60.0) * 0.4
+		mixed += knock * gate * (0.85 ** car)
+		at += rng.uniform(0.38, 0.62)
+	return normalise(one_pole_lowpass(mixed, 1400.0), -18.0)
+
+
 ONLY = {
 	"clock_tock": lambda: write_wav(AUDIO_ROOT / "foley" / "clock_tock.wav", render_clock_tock()),
 	"wire_sing": lambda: write_wav(AUDIO_ROOT / "ambience" / "wire_sing.wav", render_wire_sing()),
 	"register_whir": lambda: write_wav(AUDIO_ROOT / "foley" / "register_whir.wav", render_register_whir()),
+	# Plan 7.3: beds long enough that a 10-minute watch does not hear the seam.
+	"wind_window": lambda: write_wav(AUDIO_ROOT / "ambience" / "wind_window.wav", render_window_wind()),
+	"stove_fire": lambda: write_wav(AUDIO_ROOT / "ambience" / "stove_fire.wav", render_stove_fire()),
+	# Plan 7.10: the board inside the door is low and slow, the one under the
+	# window short and dry.
+	"boards": lambda: (
+		write_wav(AUDIO_ROOT / "foley" / "board_door.wav", render_board(88.0, 0.62, 3, 431)),
+		write_wav(AUDIO_ROOT / "foley" / "board_window.wav", render_board(205.0, 0.36, 2, 432)),
+	),
+	# Plan 7.2: the yard, heard through the glass.
+	"outside": lambda: (
+		write_wav(AUDIO_ROOT / "ambience" / "outside_headframe.wav", render_headframe_groan()),
+		write_wav(AUDIO_ROOT / "ambience" / "outside_switch.wav", render_switch_points()),
+		write_wav(AUDIO_ROOT / "ambience" / "outside_couplings.wav", render_couplings()),
+	),
 }
 
 

@@ -53,6 +53,13 @@ func _run() -> void:
 		quit(1)
 		return
 	office.get_node("IntroCard").skip_immediately()
+	if capture:
+		var yard := office.get_node_or_null("OutsideThroughWindow")
+		if yard != null:
+			yard.yard_sounded.connect(func(stream: AudioStream): _mark("the yard: " + stream.resource_path.get_file()))
+		var boards := office.get_node_or_null("CreakyBoards")
+		if boards != null:
+			boards.board_creaked.connect(func(index: int): _mark("board creaks: " + ["door", "window"][index]))
 	if not capture:
 		office.shift_director.set_process(false)
 		office.session_controller.scheduler.auto_process = false
