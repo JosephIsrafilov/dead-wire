@@ -5,7 +5,7 @@ extends CanvasLayer
 ##
 ## Until this existed the game opened with a player standing in an unexplained
 ## room in the dark with no idea who he was, when it was, or what the job was.
-## None of the premise the whole design rests on — 1894, a railroad telegraph
+## None of the premise the whole design rests on — April 1890, a railroad telegraph
 ## office, an operator whose competence is the thing that will betray him — was
 ## anywhere on screen.
 ##
@@ -30,10 +30,19 @@ var _is_running: bool = false
 var _is_finished: bool = false
 var _elapsed: float = 0.0
 
+## Plan 9.4: standing another watch goes straight back to the room. The end
+## card arms this; the next card to load uses it once and clears it, so only
+## that one card is spared and a new game from the title still reads the order.
+static var spare_next_card: bool = false
+
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_find_nodes()
 	_resolve_player()
+	if spare_next_card:
+		spare_next_card = false
+		skip_immediately()
+		return
 	begin()
 
 func _find_nodes() -> void:

@@ -300,7 +300,27 @@ def render_couplings() -> np.ndarray:
 	return normalise(one_pole_lowpass(mixed, 1400.0), -18.0)
 
 
+def render_intro_drone(seconds: float = 9.0) -> np.ndarray:
+	"""The opening card's own drone (plan 7.12, replacing the temporary
+	third-party cue): a low A with its fifth beating slowly against it, and the
+	same wire hum the yard has, as if heard before the room is. No melody, no
+	pulse, one breath in and out under the order card."""
+	rng = np.random.default_rng(1890)
+	total = int(seconds * SAMPLE_RATE)
+	time = np.arange(total) / SAMPLE_RATE
+	low = np.sin(2.0 * np.pi * 55.0 * time) + 0.55 * np.sin(2.0 * np.pi * 82.6 * time + 0.4)
+	low += 0.25 * np.sin(2.0 * np.pi * 110.3 * time + 1.3)
+	beat = 0.8 + 0.2 * np.sin(2.0 * np.pi * 0.31 * time)
+	wander = 3.0 * np.sin(2.0 * np.pi * 0.07 * time)
+	wire = np.sin(2.0 * np.pi * np.cumsum(138.0 + wander) / SAMPLE_RATE) * 0.22
+	air = bandpass(rng.standard_normal(total), 120.0, 900.0) * 0.12
+	envelope = np.clip(time / 1.6, 0.0, 1.0) ** 2 * np.clip((seconds - time) / 2.8, 0.0, 1.0) ** 1.5
+	mixed = one_pole_lowpass((low * beat + wire + air) * envelope, 1800.0)
+	return normalise(mixed, -14.0)
+
+
 ONLY = {
+	"intro_drone": lambda: write_wav(PROJECT_ROOT / "audio" / "music" / "intro_drone.wav", render_intro_drone()),
 	"clock_tock": lambda: write_wav(AUDIO_ROOT / "foley" / "clock_tock.wav", render_clock_tock()),
 	"wire_sing": lambda: write_wav(AUDIO_ROOT / "ambience" / "wire_sing.wav", render_wire_sing()),
 	"register_whir": lambda: write_wav(AUDIO_ROOT / "foley" / "register_whir.wav", render_register_whir()),

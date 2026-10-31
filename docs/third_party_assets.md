@@ -28,11 +28,14 @@ the synthesised beds themselves are unchanged.
 | `audio/sfx/foley/footstep_wood_1..5.wav` | `tools/generate_beta_footstep.py --variants` | 0.16–0.21 s mono one-shots |
 | `audio/sfx/foley/cup_clink_2/3.wav`, `bottle_knock_2/3.wav` | `tools/generate_action_foley.py` (fifth pass, appended) | 0.30–0.40 s mono one-shots |
 
-**Music (third-party, temporary):** `audio/music/temp/long_note_one.mp3` — "Long Note
-One", Kevin MacLeod (incompetech.com), CC BY 4.0. Attribution in
-`audio/music/temp/ATTRIBUTION.txt`, on the intro card, and in
-`docs/beta/THIRD_PARTY_NOTICES.md`. Intro-only; must ship with its attribution
-or be replaced (plan 7.12).
+| `audio/music/intro_drone.wav` | `render_intro_drone()` (`--only intro_drone`) | 9.0 s mono one-shot |
+
+**Music:** the intro card plays the project's own drone (`audio/music/intro_drone.wav`,
+plan 7.12, owner decision 30.10). The former temporary cue
+`audio/music/temp/long_note_one.mp3` — "Long Note One", Kevin MacLeod
+(incompetech.com), CC BY 4.0 — is no longer referenced by any scene or script and
+must not ship (plan 10.5); its `ATTRIBUTION.txt` stays beside it in the source
+repository only.
 
 **Open item:** `sounder_down.wav`, `sounder_up.wav`, and `footstep_wood.wav`
 predate this register and their origin is not documented anywhere in the

@@ -30,9 +30,18 @@ func _initialize() -> void:
 	_run.call_deferred()
 
 func _run() -> void:
-	await _bake("res://materials/style_tests/textures/psx/form_night_copy.png", FORM_PX, _paper_image(FORM_PX, 11, Color(0.82, 0.76, 0.62)), _night_copy)
-	await _bake("res://materials/style_tests/textures/psx/card_morse_stock.png", Vector2i(256, 256), _paper_image(Vector2i(256, 256), 23, Color(0.76, 0.66, 0.48)), _card_stock)
-	await _bake("res://materials/style_tests/textures/psx/map_division.png", Vector2i(384, 240), _paper_image(Vector2i(384, 240), 31, Color(0.74, 0.68, 0.54)), _division_map)
+	# `-- --only=form|card|map` bakes one sheet: a generator must never rewrite
+	# every texture for one change (AGENT_RULES §10).
+	var only := ""
+	for arg in OS.get_cmdline_user_args():
+		if arg.begins_with("--only="):
+			only = arg.trim_prefix("--only=")
+	if only in ["", "form"]:
+		await _bake("res://materials/style_tests/textures/psx/form_night_copy.png", FORM_PX, _paper_image(FORM_PX, 11, Color(0.82, 0.76, 0.62)), _night_copy)
+	if only in ["", "card"]:
+		await _bake("res://materials/style_tests/textures/psx/card_morse_stock.png", Vector2i(256, 256), _paper_image(Vector2i(256, 256), 23, Color(0.76, 0.66, 0.48)), _card_stock)
+	if only in ["", "map"]:
+		await _bake("res://materials/style_tests/textures/psx/map_division.png", Vector2i(384, 240), _paper_image(Vector2i(384, 240), 31, Color(0.74, 0.68, 0.54)), _division_map)
 	quit(0)
 
 func _bake(path: String, size: Vector2i, base: Image, layout: Callable) -> void:
@@ -197,7 +206,7 @@ func _division_map(vp: Node, px: Vector2) -> void:
 	vp.add_child(res)
 	_label(vp, "RESERVOIR", Vector2(160, 88), 8, HORIZONTAL_ALIGNMENT_CENTER, 90, faint)
 	_line(vp, Vector2(152, 74), 30, 1.0, faint)
-	_label(vp, "Scale: one inch to four miles.   Revised Oct. 1889.", Vector2(0, px.y - 26), 8, HORIZONTAL_ALIGNMENT_CENTER, px.x, faint)
+	_label(vp, "Scale: one inch to four miles.   Revised Oct. 1885.", Vector2(0, px.y - 26), 8, HORIZONTAL_ALIGNMENT_CENTER, px.x, faint)
 
 ## Buff card: a double printer's rule and corner dots; the table itself is ink.
 func _card_stock(vp: Node, px: Vector2) -> void:

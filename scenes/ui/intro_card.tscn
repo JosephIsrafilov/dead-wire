@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://scripts/ui/intro_card.gd" id="1_intro"]
 
-[ext_resource type="AudioStream" path="res://audio/music/temp/long_note_one.mp3" id="2_music"]
+[ext_resource type="AudioStream" path="res://audio/music/intro_drone.wav" id="2_music"]
 
 [node name="IntroCard" type="CanvasLayer"]
 layer = 25
@@ -45,10 +45,10 @@ layout_mode = 2
 theme_override_colors/default_color = Color(0.66, 0.61, 0.51, 1)
 theme_override_font_sizes/normal_font_size = 15
 bbcode_enabled = false
-text = "WESTERN UNION — ORDER 41
+text = "BLACK CREEK & WESTERN RY. — TELEGRAPH DEPT. — ORDER 41
 
 E. CRANE TO RELIEVE NIGHT OPERATOR AT BLACK CREEK.
-LINE HAS RUN QUIET SINCE THE MINE CLOSED IN 89.
+LINE HAS RUN QUIET SINCE THE MINE CLOSED IN 85.
 KEEP THE WIRE. COPY WHAT COMES."
 fit_content = true
 
@@ -64,10 +64,3 @@ stream = ExtResource("2_music")
 volume_db = -20.0
 bus = &"Ambience"
 
-[node name="MusicCredit" type="Label" parent="CenterContainer/VBoxContainer"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.45, 0.42, 0.37, 1)
-theme_override_font_sizes/font_size = 11
-text = "Temporary music: Long Note One — Kevin MacLeod (incompetech.com)
-CC BY 4.0 — creativecommons.org/licenses/by/4.0/"
-horizontal_alignment = 1
