@@ -1,46 +1,12 @@
 class_name HangingCoat
 extends MeshInstance3D
 
-## The operator's coat, hanging from the hook by the door — as CLOTH.
-##
-## Why this is simulated rather than modelled
-## -----------------------------------------
-## The coat used to be authored geometry in the props atlas: a lofted shell
-## baked into wall_props_static.glb. It could be the right shape and nothing
-## else. It could not sway when Elias walked past it, could not settle after a
-## door draft, and could not hang one millimetre differently from the pose it
-## was modelled in — and those three things are the whole reason cloth reads as
-## cloth. A sculpture of a coat on a hook is exactly what it was.
-##
-## The model
-## ---------
-## A Verlet particle grid: `rings` rows down the coat by `segments` columns
-## around it. The collar row is PINNED to the hook; everything below is free.
-## Each frame the free particles integrate position += (position - previous) *
-## damping + gravity * dt^2, then a few relaxation passes push every constraint
-## back toward its authored rest length. That is the standard position-based
-## cloth model, and it is stable at 60 Hz with these numbers.
-##
-## Constraints, in order of how much they define the silhouette:
-##   * VERTICAL (structural): ring r to ring r+1, same column. These carry the
-##     coat's weight and stop it stretching; without them gravity unrolls the
-##     garment into a rag.
-##   * RING (structural): column i to column i+1, same ring. These hold the
-##     circumference, which is what stops a hanging tube collapsing inward.
-##   * SHEAR (diagonal): r,i to r+1,i+1 both ways. Without these the grid folds
-##     along its own axes only and looks like a lantern.
-##   * BEND (skip two rings): softer, keeps the coat from creasing exactly at a
-##     constraint row.
-##
-## The rest shape is a profile table (see PROFILE) taken from the geometry this
-## replaces, so the coat keeps the shoulders, waist and flare it was authored
-## with — the simulation is only allowed to hang it, not redesign it.
-##
-## What it touches
-## ---------------
-## Nothing in the session. It reads the player's position and speed to react to
-## him walking past, and writes only its own mesh. It cannot reach the tape, the
-## register, the shift or the door.
+## The operator's tailored wool coat follows a small Verlet cloth cage.
+## Rendering uses the owner-selected Blender garment, including stitched sleeves;
+## the cage alone handles weight, passing bodies, drafts and returning to sleep.
+
+const CoatMeshBinding = preload("res://scripts/office/coat_mesh_binding.gd")
+const AUTHORED_COAT = preload("res://assets/models/office_props_v1/coat_tailored.glb")
 
 ## Rows down the coat and columns around it. 8 x 12 is 96 particles and ~336
 ## constraints: about 1000 constraint solves a frame over 4 iterations, which is
@@ -63,7 +29,7 @@ signal rustled(strength: float)
 ## hook reads as slow, upright cloth, not as a flag, and a heavier field keeps
 ## the folds shallow and vertical instead of billowing.
 @export var gravity: float = 11.5
-## Velocity retained per step. 0.97 is a damped garment; 1.0 would swing forever.
+## Velocity retained per 120 Hz step; 0.97 leaves about 3% after one second.
 @export var damping: float = 0.97
 ## Relaxation passes per step. More is stiffer and costs linearly. Six rather
 ## than four: a strong shove with four left the cloth visibly stretched between
@@ -93,24 +59,18 @@ signal rustled(strength: float)
 ## place, which is a second source of the shudder the operator could see.
 @export var wall_limit_z: float = 2.298
 
-## Weak pull back toward the authored drape, applied once per step.
-##
-## A cloth with only length constraints has no memory: after a brush it settles
-## into a NEW equilibrium, and the measured result was a hem left permanently
-## 4.5 cm higher on one side than the other — the garment slowly drifting into a
-## lopsided shape it never returns from. This is the restoring force that makes
-## it hang the same way every night.
-##
-## Kept low on purpose: at 0.02 the time constant is about a second, so a swing
-## still reads clearly, and afterwards the coat resumes its authored silhouette
-## rather than hovering against gravity.
-@export var shape_memory: float = 0.045
+## Restoring acceleration per metre from the authored drape, in s^-2.
+## TAU squared gives a one-second undamped spring period. Using the settled
+## pose as its target would apply gravity twice and make each wake sag farther.
+@export var shape_memory: float = TAU * TAU
 
 ## The coat may only stop simulating once it is both still AND back within this
 ## many metres of the drape it was hung in. Freezing on velocity alone locked it
 ## into whatever deformed pose a brush left behind, because a frozen coat skips
 ## the shape memory that would have drawn it home.
 const FREEZE_SHAPE_TOLERANCE: float = 0.004
+## Sleeping needs low speed as well as proximity, not just a swing turning point.
+const FREEZE_STEP_TOLERANCE: float = 0.00002
 
 ## Radius, in metres, within which a passing body disturbs the cloth.
 ##
@@ -152,35 +112,15 @@ var _pass_cooldown: float = 0.0
 ## 0.41 m hem) so the simulation hangs the garment the room already had.
 const PROFILE: Array = [
 	# y, half_width, half_depth
-	[1.985, 0.078, 0.052],   # collar, pinned to the hook
+	[1.985, 0.078, 0.052],   # collar, supported at the rear loop
 	[1.952, 0.170, 0.070],   # shoulder line
 	[1.865, 0.183, 0.082],   # chest
-	[1.700, 0.180, 0.079],   # waist
-	[1.550, 0.187, 0.084],
-	[1.400, 0.196, 0.088],   # skirt
-	[1.335, 0.200, 0.090],
-	[1.295, 0.203, 0.091],   # hem
+	[1.700, 0.154, 0.066],   # waist
+	[1.530, 0.172, 0.076],
+	[1.355, 0.190, 0.084],   # skirt
+	[1.260, 0.200, 0.090],
+	[1.195, 0.203, 0.091],   # hem
 ]
-
-## The wool tile of the props atlas, in GODOT's UV space.
-##
-## The generator in tools/build_office_props_blender.py addresses the atlas in
-## BLENDER space, where V runs bottom-up; Godot's textures run top-down, so a
-## tile index copied straight out of the generator samples the mirrored row.
-## Measured with tools/atlas_probe.gd: the generator's (2,3) cell reads
-## rgb 104 80 40 using its own V and rgb 64 56 48 with V flipped, and 64 56 48
-## is exactly the wool colour the atlas palette declares. The coat was sampling
-## a neighbouring tile and rendering olive-brown until this was flipped.
-const WOOL_U0 := 130.0 / 256.0
-const WOOL_U1 := 190.0 / 256.0
-const WOOL_V0 := 2.0 / 256.0
-const WOOL_V1 := 62.0 / 256.0
-
-## A point inside the wool tile, wrapping `u_frac` / `v_frac`.
-static func wool_uv(u_frac: float, v_frac: float) -> Vector2:
-	return Vector2(
-		lerpf(WOOL_U0, WOOL_U1, fposmod(u_frac, 1.0)),
-		lerpf(WOOL_V0, WOOL_V1, fposmod(v_frac, 1.0)))
 
 ## Rounded-rectangle section: a coat has corners, not the constant curvature of
 ## a lathe. Mirrors cloth_outline() in tools/build_office_props_blender.py.
@@ -199,16 +139,9 @@ var _rest: PackedVector3Array = PackedVector3Array()
 var _constraints: Array[PackedFloat32Array] = []
 var _constraint_indices: Array[Vector2i] = []
 var _mesh: ArrayMesh = null
-var _material: StandardMaterial3D = null
-## Sleeves hang from the shoulder ring and follow it. They are separate tapered
-## tubes rather than part of the cloth grid: a sleeve is a tube of its own with
-## a different axis, and stitching one into the body grid would need a topology
-## the simulation does not have. Following the shoulder particles means they
-## still swing with the coat instead of being pinned to the wall.
-var _sleeve_left: MeshInstance3D = null
-var _sleeve_right: MeshInstance3D = null
+var _binding: RefCounted
 
-## Extra outward push applied this step at each particle (e.g. from a passer-by).
+## Pending velocity change in m/s at each particle (e.g. from a passer-by).
 var _impulse: PackedVector3Array = PackedVector3Array()
 ## Particle positions the current mesh was built from, so a settled coat can skip
 ## the rebuild entirely.
@@ -222,100 +155,15 @@ var _home: PackedVector3Array = PackedVector3Array()
 func _ready() -> void:
 	_build_particles()
 	_build_constraints()
-	_build_material()
+	# Bind the selected drape to a settled cage, not to its falling startup pose.
+	for tick in 600:
+		step(SIM_STEP)
+		if _frozen:
+			break
+	_binding = CoatMeshBinding.new(AUTHORED_COAT, _pos, Vector3(coat_x, 0.0, coat_z))
 	_mesh = ArrayMesh.new()
 	mesh = _mesh
-	_build_sleeves()
-	# The coat must not cast the room's shadows from a pose it is not in yet.
 	_rebuild_mesh()
-
-## Two tapered tubes hanging off the shoulder ring, with a cuff band. Built once
-## in local space (origin at the shoulder, hanging down -Y) so the per-frame work
-## is just a transform.
-func _build_sleeves() -> void:
-	_sleeve_left = _make_sleeve("SleeveLeft")
-	_sleeve_right = _make_sleeve("SleeveRight")
-
-func _make_sleeve(node_name: String) -> MeshInstance3D:
-	var sleeve := MeshInstance3D.new()
-	sleeve.name = node_name
-	sleeve.mesh = _build_sleeve_mesh()
-	sleeve.material_override = _material
-	add_child(sleeve)
-	return sleeve
-
-func _build_sleeve_mesh() -> ArrayMesh:
-	var built := ArrayMesh.new()
-	var vertices := PackedVector3Array()
-	var normals := PackedVector3Array()
-	var uvs := PackedVector2Array()
-	const SIDES := 8
-	const SECTIONS := 4
-	# (y downstream, radius) from the shoulder to the cuff.
-	var section_table := [[0.0, 0.062], [-0.16, 0.058], [-0.34, 0.054], [-0.50, 0.049]]
-	for s in SECTIONS - 1:
-		var top: Array = section_table[s]
-		var bottom: Array = section_table[s + 1]
-		for i in SIDES:
-			var a0 := TAU * float(i) / float(SIDES)
-			var a1 := TAU * float(i + 1) / float(SIDES)
-			var p00 := Vector3(cos(a0) * top[1], top[0], sin(a0) * top[1])
-			var p01 := Vector3(cos(a1) * top[1], top[0], sin(a1) * top[1])
-			var p10 := Vector3(cos(a0) * bottom[1], bottom[0], sin(a0) * bottom[1])
-			var p11 := Vector3(cos(a1) * bottom[1], bottom[0], sin(a1) * bottom[1])
-			var normal := ((p10 - p00).cross(p01 - p00)).normalized()
-			if normal.length_squared() < 0.0001:
-				normal = Vector3.UP
-			# UVs run once around the tube and twice along it. Sampling a single
-			# texel for the whole sleeve — which the first version did — gave it
-			# whatever colour that one texel happened to be, and the sleeves
-			# came out bright orange against a dark coat.
-			var su0 := float(i) / float(SIDES)
-			var su1 := float(i + 1) / float(SIDES)
-			var sv0 := float(s) / float(SECTIONS - 1) * 2.0
-			var sv1 := float(s + 1) / float(SECTIONS - 1) * 2.0
-			for tri in [[p00, p10, p01, Vector2(su0, sv0), Vector2(su0, sv1), Vector2(su1, sv0)],
-					[p01, p10, p11, Vector2(su1, sv0), Vector2(su0, sv1), Vector2(su1, sv1)]]:
-				vertices.append(tri[0])
-				vertices.append(tri[1])
-				vertices.append(tri[2])
-				normals.append(normal)
-				normals.append(normal)
-				normals.append(normal)
-				uvs.append(wool_uv(tri[3].x, tri[3].y))
-				uvs.append(wool_uv(tri[4].x, tri[4].y))
-				uvs.append(wool_uv(tri[5].x, tri[5].y))
-	var arrays := []
-	arrays.resize(Mesh.ARRAY_MAX)
-	arrays[Mesh.ARRAY_VERTEX] = vertices
-	arrays[Mesh.ARRAY_NORMAL] = normals
-	arrays[Mesh.ARRAY_TEX_UV] = uvs
-	if not vertices.is_empty():
-		built.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
-	return built
-
-## Hang the sleeves off the widest points of the shoulder ring each step, so
-## they follow the cloth instead of the wall.
-func _update_sleeves() -> void:
-	if _sleeve_left == null or _sleeve_right == null or rings < 2:
-		return
-	var shoulder_ring := 1
-	var left_index := -1
-	var right_index := -1
-	var min_x := INF
-	var max_x := -INF
-	for c in segments:
-		var index := _particle_index(shoulder_ring, c)
-		if _pos[index].x < min_x:
-			min_x = _pos[index].x
-			left_index = index
-		if _pos[index].x > max_x:
-			max_x = _pos[index].x
-			right_index = index
-	if left_index < 0 or right_index < 0:
-		return
-	_sleeve_left.global_position = _pos[left_index] + Vector3(0.0, -0.012, 0.012)
-	_sleeve_right.global_position = _pos[right_index] + Vector3(0.0, -0.012, 0.012)
 
 func _resolve_player() -> void:
 	if player != null:
@@ -349,6 +197,25 @@ func _build_particles() -> void:
 				centre_y,
 				coat_z + section.y * half_depth)
 			var index := _particle_index(r, c)
+			if r == 0:
+				if _is_pinned(index):
+					# A narrow loop at the back, rather than an invisible coat hanger.
+					point.x = coat_x + section.x * 0.025
+					point.y = 2.022
+					point.z = coat_z + section.y * 0.016
+				else:
+					point.y -= 0.045 * maxf(0.0, -section.y)
+			elif r == 1:
+				point.y -= 0.060 * absf(section.x)
+			elif r >= 3 and c == segments * 2 / 3:
+				# One off-centre fold opens toward the hem.
+				point.z -= 0.024 * t
+			# The fronts meet at the waist, then part again below the fastening.
+			var front_column := int(float(segments) * 0.75) - 1
+			if c == front_column or c == front_column + 1:
+				var opening := 0.004 + 0.054 * pow(maxf(0.0, 1.0 - t * 2.5), 2.0)
+				opening += 0.032 * pow(maxf(0.0, (t - 0.5) * 2.0), 2.0)
+				point.x = coat_x + (-opening if c == front_column else opening)
 			_pos[index] = point
 			_prev[index] = point
 			_rest[index] = point
@@ -395,28 +262,6 @@ func _link(a: int, b: int, stiffness: float) -> void:
 		return
 	_constraint_indices.append(Vector2i(a, b))
 	_constraints.append(PackedFloat32Array([rest, stiffness]))
-
-func _build_material() -> void:
-	_material = StandardMaterial3D.new()
-	_material.shading_mode = BaseMaterial3D.SHADING_MODE_PER_VERTEX
-	_material.specular_mode = BaseMaterial3D.SPECULAR_DISABLED
-	var atlas := load("res://assets/textures/office_props_v1/props_atlas_256.png") as Texture2D
-	if atlas != null:
-		_material.albedo_texture = atlas
-		_material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
-	# Slightly darker than the atlas wool: the coat sits in the ember light's
-	# reach and at full value it came up as bright as the boards behind it.
-	#
-	# Above 1.0 on purpose. The atlas wool tile is 64/255 because it was mixed
-	# for the desk-lamp group, where the lamp is 6 cm from what it lights. The
-	# coat hangs on the south wall, ~0.9 m from a 0.52-energy filing light, and
-	# at the tile's own value it rendered as an unlit black mass with no fold
-	# readable at all. Boosting only this material lifts the cloth to a mid-dark
-	# grey it can actually show form at, without touching the hat or any other
-	# prop that shares the tile.
-	_material.albedo_color = Color(1.85, 1.80, 1.70)
-	_material.cull_mode = BaseMaterial3D.CULL_DISABLED
-	material_override = _material
 
 ## The solver's fixed timestep, in seconds.
 ##
@@ -469,30 +314,29 @@ func step(delta: float) -> void:
 	var dt := SIM_STEP
 	var gravity_step := Vector3.DOWN * gravity * dt * dt
 	for _substep in steps:
+		_apply_shape_memory()
 		for index in _pos.size():
 			if _is_pinned(index):
 				continue
+			_prev[index] -= _impulse[index] * dt
 			var velocity := (_pos[index] - _prev[index]) * damping
 			_prev[index] = _pos[index]
-			_pos[index] += velocity + gravity_step + _impulse[index]
+			_pos[index] += velocity + gravity_step
 			_impulse[index] = Vector3.ZERO
 		for _pass in iterations:
 			_solve_constraints()
 		_apply_wall()
-		_apply_shape_memory()
-	# A coat that has settled is the normal state for most of the watch. There is
-	# no point rebuilding 504 vertices and a surface every frame to redraw the
-	# pose that is already on screen, so the mesh is only re-emitted when the
-	# cloth actually moved. `changed` is tracked in the constraint solver's wake.
+	# The authored mesh is rebuilt only while the cage moves; most of the
+	# watch the coat sleeps and reuses its existing surfaces.
 	if _moved_since_build():
 		_rebuild_mesh()
 	# A settled coat also has to be back near the shape it was hung in before the
 	# solver may stop: freezing on velocity alone locked it into whatever
 	# deformed pose a brush had left it in, because the freeze skips the shape
 	# memory that would have drawn it home.
-	if _home.is_empty() and is_settled():
+	if _home.is_empty() and is_settled(FREEZE_STEP_TOLERANCE):
 		_home = _pos.duplicate()
-	_frozen = is_settled() and _shape_error() < FREEZE_SHAPE_TOLERANCE
+	_frozen = is_settled(FREEZE_STEP_TOLERANCE) and _shape_error() < FREEZE_SHAPE_TOLERANCE
 
 ## True while any particle still carries an external push this step.
 func _has_pending_impulse() -> bool:
@@ -511,9 +355,10 @@ func _moved_since_build() -> bool:
 			return true
 	return false
 
-## The collar row is held by the hook and never moves.
+## Only the four points nearest the back of the collar attach to the loop.
 func _is_pinned(index: int) -> bool:
-	return index < segments
+	var back_column := float(segments) * 0.25 - 0.5
+	return index < segments and absf(float(index) - back_column) < 2.0
 
 func _solve_constraints() -> void:
 	for i in _constraint_indices.size():
@@ -540,18 +385,15 @@ func _solve_constraints() -> void:
 			_pos[a] += correction
 			_pos[b] -= correction
 
-## The wall and the rack board are behind the coat; it may not drift into them.
-## Draw the garment back toward the shape it was hung in. Without this the cloth
-## has no equilibrium of its own and every interaction leaves it a little more
-## deformed than the last one.
+## Accelerate toward the authored shape, never teleport toward the settled pose.
 func _apply_shape_memory() -> void:
 	if shape_memory <= 0.0:
 		return
-	var reference := _home_pose()
+	var spring_step := shape_memory * SIM_STEP * SIM_STEP
 	for index in _pos.size():
 		if _is_pinned(index):
 			continue
-		_pos[index] = _pos[index].lerp(reference[index], shape_memory)
+		_prev[index] -= (_rest[index] - _pos[index]) * spring_step
 
 func _apply_wall() -> void:
 	for index in _pos.size():
@@ -665,60 +507,13 @@ func _nearest_particle_distance(origin: Vector3) -> float:
 		best = minf(best, origin.distance_squared_to(_pos[index]))
 	return sqrt(best)
 
-## Rebuild the render mesh from the particles. Flat-shaded quads, one per grid
-## cell, each with its own normal: the room's whole style is faceted surfaces,
-## and a smooth-shaded cloth would be the only smooth object in the office.
+## The solver and the render topology remain independent. All shared points
+## use the same binding, including the armholes, collar and lining seams.
 func _rebuild_mesh() -> void:
 	if _mesh == null:
 		return
-	var vertices := PackedVector3Array()
-	var normals := PackedVector3Array()
-	var uvs := PackedVector2Array()
-	# The wool tile is repeated around the coat and down it. One tile stretched
-	# over the whole garment magnifies the atlas's 8-step quantised noise into
-	# large flat colour blocks; two around and three down puts the texel back to
-	# a few millimetres and reads as cloth.
-	const REPS_U := 2.0
-	const REPS_V := 3.0
-	for r in rings - 1:
-		for c in segments:
-			var i00 := _particle_index(r, c)
-			var i01 := _particle_index(r, c + 1)
-			var i10 := _particle_index(r + 1, c)
-			var i11 := _particle_index(r + 1, c + 1)
-			var p00 := _pos[i00]
-			var p01 := _pos[i01]
-			var p10 := _pos[i10]
-			var p11 := _pos[i11]
-			var normal := (p10 - p00).cross(p01 - p00)
-			if normal.length_squared() < 0.0000001:
-				normal = Vector3.FORWARD
-			normal = normal.normalized()
-			var cu0 := float(c) / float(segments) * REPS_U
-			var cu1 := float(c + 1) / float(segments) * REPS_U
-			var rv0 := float(r) / float(maxi(rings - 1, 1)) * REPS_V
-			var rv1 := float(r + 1) / float(maxi(rings - 1, 1)) * REPS_V
-			for tri in [[p00, p10, p01, Vector2(cu0, rv0), Vector2(cu0, rv1), Vector2(cu1, rv0)],
-					[p01, p10, p11, Vector2(cu1, rv0), Vector2(cu0, rv1), Vector2(cu1, rv1)]]:
-				vertices.append(tri[0])
-				vertices.append(tri[1])
-				vertices.append(tri[2])
-				normals.append(normal)
-				normals.append(normal)
-				normals.append(normal)
-				uvs.append(wool_uv(tri[3].x, tri[3].y))
-				uvs.append(wool_uv(tri[4].x, tri[4].y))
-				uvs.append(wool_uv(tri[5].x, tri[5].y))
-	var arrays := []
-	arrays.resize(Mesh.ARRAY_MAX)
-	arrays[Mesh.ARRAY_VERTEX] = vertices
-	arrays[Mesh.ARRAY_NORMAL] = normals
-	arrays[Mesh.ARRAY_TEX_UV] = uvs
-	_mesh.clear_surfaces()
-	if not vertices.is_empty():
-		_mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
+	_binding.rebuild(_mesh, _pos)
 	_built_positions = _pos.duplicate()
-	_update_sleeves()
 
 ## True once the coat has stopped moving, within `tolerance` metres per step.
 func is_settled(tolerance: float = 0.0005) -> bool:

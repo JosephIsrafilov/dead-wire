@@ -345,3 +345,14 @@ The earlier open sounder item is superseded: tools/generate_sounder.py regenerat
 Unknown legacy footstep_wood.wav is retained for rollback but no longer referenced by runtime scripts/scenes. Runtime uses project-authored audio/sfx/foley/footstep_wood_beta.wav from tools/generate_beta_footstep.py (independent seeded RNG). Temporary synthesis, not final recorded Foley.
 
 Register winding: audio/sfx/foley/register_wind.wav appended to tools/generate_action_foley.py without changing prior RNG order. Wick uses wick_turn.wav; feed uses sheet_slide.wav; pickup uses paper_turn.wav.
+
+
+## Tailored hanging coat — owner-selected B (2026-11-01)
+
+Project-authored low-poly geometry and procedural wool texture, created in Blender through MCP.
+No downloaded meshes, paid generation or third-party textures were used.
+Runtime asset: `assets/models/office_props_v1/coat_tailored.glb` and its extracted
+`coat_tailored_Wool_B_peat.png`. The original Blender file and authoring script are in
+`docs/art/state_2026-11-01/coat/sources/` (excluded from Godot import with `.gdignore`).
+The garment has 2004 triangles, including lining, cuff rims, pockets and horn buttons.
+Owner selected the warm-grey B material; motion acceptance is separate.

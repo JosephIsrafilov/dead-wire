@@ -2,11 +2,8 @@
 
 ; The operator's coat, hanging on the hall rack by the south door.
 ;
-; This node IS the coat: there is no mesh in the props atlas for it any more.
-; scripts/office/hanging_coat.gd builds a Verlet cloth grid, drapes it from the
-; collar and rebuilds the render mesh every step, so the coat can sway when
-; Elias walks past, settle afterwards, and never look like the sculpture of a
-; coat that a baked loft could only ever be.
+; The Blender garment (including joined sleeves) follows a settled Verlet cage.
+; The simulation reacts to the player and door without changing the authored cut.
 ;
 ; The transform is identity on purpose: the coat's position is expressed in room
 ; coordinates by coat_x / coat_z and by PROFILE's absolute heights, the same

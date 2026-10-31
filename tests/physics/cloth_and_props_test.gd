@@ -234,6 +234,24 @@ func _hanging_coat() -> bool:
 	if not _a(coat.get_particle_count() == coat.rings * coat.segments,
 			"The coat simulates a full particle grid (%d)" % coat.get_particle_count()): return false
 
+	if not _a(_lighting_matches_faces(coat.mesh),
+			"The garment's lighting normals follow its rendered faces"): return false
+	if not _a(_lighting_matches_faces(coat.mesh, -1) and _lighting_matches_faces(coat.mesh, 1),
+			"Both sleeve regions have lighting normals matching their faces"): return false
+
+	if not _sleeve_attachment_stays_put(coat): return false
+
+	var pinned := {}
+	for index in coat.get_particle_count():
+		if coat._is_pinned(index):
+			pinned[index] = coat.get_particle_position(index / coat.segments, index % coat.segments)
+	if not _a(pinned.size() >= 1 and pinned.size() <= 4,
+			"A small hanging loop, not the whole collar, supports the coat (%d pins)" % pinned.size()): return false
+	var collar_only := true
+	for index: int in pinned:
+		collar_only = collar_only and index < coat.segments
+	if not _a(collar_only, "Only the collar attaches to the hook; the body hangs freely"): return false
+
 	# Settle it. The authored silhouette must survive the simulation: this is
 	# the assertion that catches the collapse the first version had, where the
 	# hem ring flattened from 0.397 m to 0.207 m while keeping its perimeter.
@@ -250,12 +268,10 @@ func _hanging_coat() -> bool:
 	if not _a(absf(chest.x - 0.366) < 0.06,
 			"The chest keeps the shoulder width (%.3f m)" % chest.x): return false
 
-	# The collar is pinned to the hook: the coat hangs from it, it does not fall.
-	var collar_before := coat.get_particle_position(0, 0)
+	# Every attachment stays at its original position while the free collar settles.
 	for _i in 120:
 		coat.step(1.0 / 60.0)
-	if not _a(coat.get_particle_position(0, 0).distance_to(collar_before) < 0.0001,
-			"The collar row stays on the hook and never falls"): return false
+	if not _a(_pins_unchanged(coat, pinned), "The hanging loop stays on the hook under gravity"): return false
 
 	# Someone walks past: the cloth must actually move.
 	var hem_before := coat.get_particle_position(coat.rings - 1, 0)
@@ -319,8 +335,78 @@ func _hanging_coat() -> bool:
 	if not _a(hang.distance_to(Vector3(-0.35, 1.7, 2.2)) < 0.25,
 			"get_hang_position reports where the coat actually hangs (%s)" % str(hang.snapped(Vector3.ONE * 0.01))): return false
 
+	if not _a(_pins_unchanged(coat, pinned),
+			"Walking past and a door draft cannot dislodge any attachment"): return false
 	coat.queue_free()
 	await process_frame
+	return true
+
+## A wider neighbouring particle must never cause an attachment to jump.
+## The joined garment now blends fixed cage weights instead of following one point.
+func _sleeve_attachment_stays_put(coat: HangingCoat) -> bool:
+	var saved := coat._pos.duplicate()
+	for side: float in [-1.0, 1.0]:
+		coat._pos = coat._rest.duplicate()
+		var column := 0
+		for c in coat.segments:
+			if coat._rest[coat.segments + c].x * side > coat._rest[coat.segments + column].x * side:
+				column = c
+		var anchor := coat.segments + column
+		var neighbor := coat.segments + coat.segments - 1 - column
+		coat._rebuild_mesh()
+		var before := _rendered_points(coat.mesh)
+		var old: Vector3 = coat._pos[neighbor]
+		coat._pos[neighbor].x = coat._pos[anchor].x + side * 0.001
+		coat._rebuild_mesh()
+		var after := _rendered_points(coat.mesh)
+		var jump := _largest_displacement(before, after)
+		if not _a(jump <= old.distance_to(coat._pos[neighbor]) + 0.00001,
+				"Sleeve %s cannot jump farther than its widening neighbour (%.4f m)" % [side, jump]): return false
+		var motion := Vector3(0.0, 0.002, -0.003)
+		coat._pos[anchor] += motion
+		coat._rebuild_mesh()
+		var followed := _largest_displacement(after, _rendered_points(coat.mesh))
+		if not _a(followed > 0.0001 and followed <= motion.length() + 0.00001,
+				"Sleeve %s follows its shoulder through continuous, bounded deformation" % side): return false
+	coat._pos = saved
+	coat._rebuild_mesh()
+	return true
+
+func _rendered_points(mesh: Mesh) -> PackedVector3Array:
+	var result := PackedVector3Array()
+	for surface in mesh.get_surface_count():
+		result.append_array(mesh.surface_get_arrays(surface)[Mesh.ARRAY_VERTEX])
+	return result
+
+func _largest_displacement(a: PackedVector3Array, b: PackedVector3Array) -> float:
+	var largest := 0.0
+	for i in a.size(): largest = maxf(largest, a[i].distance_to(b[i]))
+	return largest
+
+func _lighting_matches_faces(mesh: Mesh, side: int = 0) -> bool:
+	var center := mesh.get_aabb().get_center().x
+	var samples := 0
+	for surface in mesh.get_surface_count():
+		var arrays := mesh.surface_get_arrays(surface)
+		var vertices: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
+		var normals: PackedVector3Array = arrays[Mesh.ARRAY_NORMAL]
+		var indices: PackedInt32Array = arrays[Mesh.ARRAY_INDEX]
+		for triangle in range(0, indices.size(), 3):
+			var a := indices[triangle]
+			var b := indices[triangle + 1]
+			var c := indices[triangle + 2]
+			if side != 0 and (vertices[a].x - center) * side < 0.17: continue
+			var face_normal := (vertices[c] - vertices[a]).cross(vertices[b] - vertices[a]).normalized()
+			if face_normal.length_squared() < 0.5: continue
+			if normals[a].dot(face_normal) < 0.7: return false
+			samples += 1
+	return samples > 10
+
+func _pins_unchanged(coat: HangingCoat, pinned: Dictionary) -> bool:
+	for index: int in pinned:
+		var current := coat.get_particle_position(index / coat.segments, index % coat.segments)
+		if current.distance_to(pinned[index]) > 0.0001:
+			return false
 	return true
 
 func _ring_extent(coat: HangingCoat, ring: int) -> Vector3:

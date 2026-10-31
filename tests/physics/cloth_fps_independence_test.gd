@@ -30,11 +30,67 @@ func _init() -> void:
 
 func _run() -> void:
 	print("--- Starting Cloth FPS Independence Test Suite ---")
+	if not _push_is_velocity(): return
+	if not _shape_memory_is_a_spring(): return
 	if not _same_shove_same_place(): return
 	if not _long_frame_catches_up(): return
 	if not _settles_in_similar_time(): return
 	print("--- All Cloth FPS Independence Tests PASSED (%d assertions) ---" % _assertions)
 	quit(0)
+
+## Isolate integration: a 0.6 m/s draft travels 5 mm in one 120 Hz tick,
+## not 60 cm, and the following tick retains that velocity without another push.
+func _push_is_velocity() -> bool:
+	var coat := _settled_coat()
+	if coat == null: return false
+	coat.gravity = 0.0
+	coat.iterations = 0
+	coat.shape_memory = 0.0
+	coat.damping = 1.0
+	coat._prev = coat._pos.duplicate()
+	var hem := coat.rings - 1
+	var before := coat.get_particle_position(hem, 0)
+	coat.draft(before, Vector3.RIGHT, 0.6)
+	if not _a(coat.get_particle_position(hem, 0) == before,
+			"A draft changes velocity, not the current cloth position"): return false
+	coat.step(HangingCoat.SIM_STEP)
+	var first := coat.get_particle_position(hem, 0)
+	var travel := 0.6 * HangingCoat.SIM_STEP
+	if not _a(absf(first.x - before.x - travel) < 0.00001,
+			"The first tick integrates the draft in metres per second (%.5f m)" % (first.x - before.x)): return false
+	coat.step(HangingCoat.SIM_STEP)
+	var second := coat.get_particle_position(hem, 0)
+	if not _a(absf(second.x - first.x - travel) < 0.00001,
+			"The next tick carries momentum without another shove"): return false
+	coat.free()
+	return true
+
+## With gravity, constraints and drag removed, shape memory must oscillate
+## about the authored drape, not ease monotonically toward a displaced home.
+func _shape_memory_is_a_spring() -> bool:
+	var coat := _settled_coat()
+	if coat == null: return false
+	coat.gravity = 0.0
+	coat.iterations = 0
+	coat.damping = 1.0
+	coat._pos = coat._rest.duplicate()
+	var index := (coat.rings - 1) * coat.segments
+	coat._pos[index].x += 0.02
+	coat._prev = coat._pos.duplicate()
+	coat._home = coat._pos.duplicate()
+	coat._frozen = false
+	for tick in 60:
+		coat.step(HangingCoat.SIM_STEP)
+	var opposite := coat._pos[index].x - coat._rest[index].x
+	if not _a(opposite < -0.015,
+			"Shape memory swings past the authored drape after half a second (%.4f m)" % opposite): return false
+	for tick in 60:
+		coat.step(HangingCoat.SIM_STEP)
+	var returned := coat._pos[index].x - coat._rest[index].x
+	if not _a(absf(returned - 0.02) < 0.003,
+			"An undamped shape-memory cycle lasts about one second (%.4f m)" % returned): return false
+	coat.free()
+	return true
 
 ## The measurement the review made: one shove, four frame rates, one particle.
 func _same_shove_same_place() -> bool:
@@ -83,8 +139,8 @@ func _long_frame_catches_up() -> bool:
 	hitched.free()
 	return true
 
-## And the garment still comes to rest: an independent step must not mean a
-## coat that swings forever or never settles.
+## The solver must actually sleep near its original pose, not merely pass
+## through a turning point with a small instantaneous velocity.
 func _settles_in_similar_time() -> bool:
 	var times := {}
 	for fps in [30, 144]:
@@ -102,12 +158,18 @@ func _settles_in_similar_time() -> bool:
 		# the first few calls legitimately produce no motion at all: the
 		# accumulator is still filling. The loop therefore runs for a minimum
 		# time before it is allowed to believe the coat has settled.
+		var rest := coat._home.duplicate()
 		var minimum := 0.1
 		var elapsed := 0.0
-		while elapsed < minimum or (elapsed < 12.0 and not coat.is_settled()):
+		while elapsed < minimum or (elapsed < 12.0 and not coat._frozen):
 			coat.step(dt)
 			elapsed += dt
 		times[fps] = elapsed
+		var drift := 0.0
+		for index in rest.size():
+			drift = maxf(drift, rest[index].distance_to(coat._pos[index]))
+		if not _a(drift < HangingCoat.FREEZE_SHAPE_TOLERANCE,
+				"At %d Hz every particle returns to the original hanging pose (%.2f mm)" % [fps, drift * 1000]): return false
 		coat.free()
 	if not _a((times[30] as float) > 0.05 and (times[144] as float) > 0.05,
 			"The coat is actually moving after the shove (30 Hz %.2f s, 144 Hz %.2f s)"

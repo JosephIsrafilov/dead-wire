@@ -8,7 +8,7 @@
 
 - Движок: Godot 4.7.1 stable (baseline), `C:/Users/YUSIF/Desktop/Godot_v4.7.1-stable_win64.exe/Godot_v4.7.1-stable_win64_console.exe`.
   Один движок для тестов/захватов/беты — 4.7.1 (ROADMAP 0.8). Flake `shift_director_test` (exit 139 в teardown) принят: повторный прогон, логи в `test_logs/`. Новые evidence-артефакты в git не кладутся, история не переписывается (0.9).
-- Базовая линия: **140 suites / 3949 assertions / 0 FAIL**, gdlint чистый, boot exit 0. Числа не должны падать.
+- Базовая линия: **141 suites / 3979 assertions / 0 FAIL**, gdlint чистый, boot exit 0. Числа не должны падать.
 - Передача работы 31.10.2026 (состояние, ловушки, остаток M1): `docs/plans/next/HANDOFF_2026-10-31.md`.
 - Известный фон (не регресс): на shutdown — ObjectDB leaks / resources in use (boot ≈10/2); в оконных
   прогонах — 7 texture RID. **`shift_director_test` примерно в 1/3 полных прогонов падает на teardown
