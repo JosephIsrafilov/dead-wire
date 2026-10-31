@@ -120,7 +120,9 @@ const STATION_SHIFT_OVER_HOURS: float = 30.0
 ## Ordinary pace: roughly seven station hours across a 300-second watch.
 const STATION_NORMAL_SPEED: float = 7.0 / 300.0
 ## Upper bound on catch-up after a stage target jumps (hours per real second).
-const STATION_CATCHUP_SPEED: float = 0.04
+## Plan 9.2: catch-up only runs while the dial is out of frame, so it can be
+## quick: nobody sees the hands race, they are simply later when you look.
+const STATION_CATCHUP_SPEED: float = 0.1
 
 ## Displayed station time (monotone, bounded speed).
 var _station_display_hours: float = STATION_OPEN_LINE_HOURS
@@ -130,6 +132,9 @@ var _station_target_hours: float = STATION_OPEN_LINE_HOURS
 ## The stage ceiling: the display never crosses 06:00 before closing.
 var _station_ceiling_hours: float = STATION_OPEN_LINE_HOURS
 var _station_clock_running: bool = false
+## Plan 9.2: the clock reports when its dial is in frame; while it is, the
+## hands keep the ordinary pace whatever the night owes them.
+var _station_watched: bool = false
 
 ## Telegrapher's sign-off, sent once the night's traffic is done. A clean watch
 ## gets good night. A watch with a hole in it gets asked where the train is —
@@ -445,6 +450,17 @@ func get_station_hours() -> float:
 func get_station_target_hours() -> float:
 	return _station_target_hours
 
+func set_station_watched(watched: bool) -> void:
+	_station_watched = watched
+
+func is_station_watched() -> bool:
+	return _station_watched
+
+## A room sound that is not the wire (the clock's strike) may sound now: the
+## wire is idle and the room is not holding its breath.
+func is_room_quiet() -> bool:
+	return _wire_idle() and not _hush_active()
+
 func _advance_station_clock(delta: float) -> void:
 	if not _station_clock_running or delta <= 0.0:
 		return
@@ -459,9 +475,10 @@ func _advance_station_clock(delta: float) -> void:
 		return
 	# Rate proportional to the remaining gap, clamped between the ordinary
 	# pace and the catch-up cap: smooth acceleration, bounded speed, and the
-	# display can never overtake or run behind its own target.
+	# display can never overtake or run behind its own target. Catch-up is
+	# for a dial nobody is looking at.
 	var speed := clampf(remaining * 0.25, STATION_NORMAL_SPEED,
-		STATION_CATCHUP_SPEED)
+		STATION_NORMAL_SPEED if _station_watched else STATION_CATCHUP_SPEED)
 	_station_display_hours = minf(
 		_station_display_hours + speed * delta, _station_target_hours)
 

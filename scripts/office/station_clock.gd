@@ -17,6 +17,10 @@ extends Node
 ## and the swing cannot drift apart. The case glass never swings.
 
 signal station_time_changed(hours: float)
+## Plan 9.2: the hour has begun to strike (12-hour dial hour).
+signal clock_struck(hour: int)
+## One stroke of the gong, counted from 1 within the hour.
+signal stroke_sounded(index: int)
 
 @export var minute_hand: Node3D = null
 @export var hour_hand: Node3D = null
@@ -45,7 +49,21 @@ signal station_time_changed(hours: float)
 @export var pendulum_swing: float = 0.055
 @export var pendulum_period_seconds: float = 2.0
 
+## Plan 9.2: the regulator strikes two and three, the hours the night is
+## known by. A stroke never lands on a busy wire or in a hush; it waits.
+@export var strike_stream: AudioStream = preload("res://audio/sfx/foley/clock_strike.wav")
+@export var striking_hours: PackedFloat32Array = PackedFloat32Array([26.0, 27.0])
+@export var stroke_interval_seconds: float = 1.6
+@export var strike_volume_db: float = -6.0
+
 var _fallback_hours: float = -1.0
+var _last_hours: float = -1.0
+## The hour owed to the gong: only the latest, a clock strikes the hour it is.
+var _owed_hour: int = 0
+var _strokes_left: int = 0
+var _stroke_index: int = 0
+var _stroke_timer: float = 0.0
+var _strike_player: AudioStreamPlayer3D = null
 var _fallback_running: bool = false
 var _pendulum: Node3D = null
 ## Private phase used only when no ambience shares the mechanical clock.
@@ -117,8 +135,11 @@ func _mechanical_elapsed() -> float:
 ## tests, which call it directly.
 func advance(delta: float) -> void:
 	_resolve_nodes()
+	_advance_strike(delta)
 	if director != null:
-		# The director owns station time; this display only renders it.
+		# The director owns station time; this display only renders it. It
+		# learns from the dial whether anyone is looking (plan 9.2).
+		director.set_station_watched(is_dial_in_view())
 		apply_station_time(director.get_station_hours())
 		return
 	if not _fallback_running or delta <= 0.0:
@@ -157,8 +178,63 @@ func get_station_time_text() -> String:
 		clock_hour = 12
 	return "%d:%02d %s" % [clock_hour, display_minute, suffix]
 
+## The dial is in the frame of the camera that renders the room.
+func is_dial_in_view() -> bool:
+	if minute_hand == null or not minute_hand.is_inside_tree():
+		return false
+	var camera := minute_hand.get_viewport().get_camera_3d()
+	return camera != null and camera.is_position_in_frustum(minute_hand.global_position)
+
+func _advance_strike(delta: float) -> void:
+	if _strokes_left == 0:
+		if _owed_hour == 0 or not _room_quiet():
+			return
+		_strokes_left = _owed_hour
+		_stroke_index = 0
+		_stroke_timer = 0.0
+		clock_struck.emit(_owed_hour)
+		_owed_hour = 0
+	# A stroke held back mid-hour waits for the wire like the first one.
+	if not _room_quiet():
+		return
+	_stroke_timer -= delta
+	if _stroke_timer > 0.0:
+		return
+	_stroke_timer = stroke_interval_seconds
+	_strokes_left -= 1
+	_stroke_index += 1
+	_sound_stroke()
+	stroke_sounded.emit(_stroke_index)
+
+func _room_quiet() -> bool:
+	if director != null and not director.is_room_quiet():
+		return false
+	return ambience == null or not ambience.clock_muted
+
+func _sound_stroke() -> void:
+	if strike_stream == null or minute_hand == null or not minute_hand.is_inside_tree():
+		return
+	if _strike_player == null:
+		_strike_player = AudioStreamPlayer3D.new()
+		_strike_player.name = "StrikePlayer"
+		_strike_player.stream = strike_stream
+		_strike_player.volume_db = strike_volume_db
+		_strike_player.bus = &"Ambience"
+		_strike_player.max_distance = 12.0
+		_strike_player.unit_size = 3.0
+		# Each stroke rings on under the next.
+		_strike_player.max_polyphony = 3
+		minute_hand.get_parent().add_child(_strike_player)
+		_strike_player.global_position = minute_hand.global_position
+	_strike_player.play()
+
 func apply_station_time(hours: float) -> void:
 	_resolve_nodes()
+	if _last_hours >= 0.0:
+		for strike_at in striking_hours:
+			if _last_hours < strike_at and hours >= strike_at:
+				_owed_hour = posmod(int(strike_at) - 1, 12) + 1
+	_last_hours = hours
 	# The dial faces +X, so the hands sweep in the YZ plane about the X axis.
 	# Negative rotation reads as clockwise from inside the room.
 	if minute_hand != null:

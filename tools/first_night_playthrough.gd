@@ -60,6 +60,9 @@ func _run() -> void:
 		var boards := office.get_node_or_null("CreakyBoards")
 		if boards != null:
 			boards.board_creaked.connect(func(index: int): _mark("board creaks: " + ["door", "window"][index]))
+			var clock := office.get_node_or_null("OfficeStorytellingProps/StationClock") as StationClock
+			if clock != null:
+				clock.clock_struck.connect(func(hour: int): _mark("the clock strikes %d" % hour))
 	if not capture:
 		office.shift_director.set_process(false)
 		office.session_controller.scheduler.auto_process = false

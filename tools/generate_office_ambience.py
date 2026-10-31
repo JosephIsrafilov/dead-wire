@@ -186,6 +186,29 @@ def render_clock_tock() -> np.ndarray:
 	return normalise(transient + brass + case, -15.0)
 
 
+def render_clock_strike() -> np.ndarray:
+	"""One stroke of the regulator's coiled gong (plan 9.2): a leather-faced
+	hammer on a steel coil. A low tone with the coil's inharmonic partials, the
+	upper ones dying first, and a long tail. The game plays one per hour."""
+	rng = np.random.default_rng(1902)
+	seconds = 6.0
+	total = int(seconds * SAMPLE_RATE)
+	time = np.arange(total) / SAMPLE_RATE
+	fundamental = 196.0
+	partials = ((1.0, 1.0, 0.55), (2.41, 0.55, 1.2), (4.07, 0.32, 2.6), (6.18, 0.16, 4.8))
+	coil = np.zeros(total)
+	for ratio, level, decay in partials:
+		# The coil beats slowly against itself: two strands a hair apart.
+		detune = 1.0 + 0.0016 * ratio
+		coil += level * np.exp(-time * decay) * (
+			np.sin(2.0 * np.pi * fundamental * ratio * time)
+			+ 0.6 * np.sin(2.0 * np.pi * fundamental * ratio * detune * time + 0.5))
+	hammer = bandpass(rng.standard_normal(total), 400.0, 2600.0) * np.exp(-time * 220.0) * 0.6
+	case = np.sin(2.0 * np.pi * 118.0 * time) * np.exp(-time * 9.0) * 0.35
+	attack = np.clip(time / 0.004, 0.0, 1.0)
+	return normalise(one_pole_lowpass((coil + case) * attack + hammer, 3200.0), -13.0)
+
+
 def render_wire_sing(loop_seconds: float = 37.0) -> np.ndarray:
 	"""Wind in the telegraph wire outside (plan 7.8): an aeolian tone, never a note.
 
@@ -322,6 +345,7 @@ def render_intro_drone(seconds: float = 9.0) -> np.ndarray:
 ONLY = {
 	"intro_drone": lambda: write_wav(PROJECT_ROOT / "audio" / "music" / "intro_drone.wav", render_intro_drone()),
 	"clock_tock": lambda: write_wav(AUDIO_ROOT / "foley" / "clock_tock.wav", render_clock_tock()),
+	"clock_strike": lambda: write_wav(AUDIO_ROOT / "foley" / "clock_strike.wav", render_clock_strike()),
 	"wire_sing": lambda: write_wav(AUDIO_ROOT / "ambience" / "wire_sing.wav", render_wire_sing()),
 	"register_whir": lambda: write_wav(AUDIO_ROOT / "foley" / "register_whir.wav", render_register_whir()),
 	# Plan 7.3: beds long enough that a 10-minute watch does not hear the seam.
