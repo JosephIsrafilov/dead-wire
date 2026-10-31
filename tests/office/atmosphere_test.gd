@@ -75,18 +75,38 @@ func _run() -> void:
 	if not assert_condition(sounder != null, "Sounder is wired"): return
 	if not assert_condition(sounder.armature != null, "Sounder has an armature bar"): return
 
-	var rest_y := sounder.armature.position.y
+	# Plan 8.1: the armature is a lever on a trunnion at the back of the frame.
+	var rest := sounder.armature.transform
+	var pivot_rest := rest * sounder.armature_pivot
+	var rear := Vector3(0, 0, sounder.armature_pivot.z + 0.005)
 	sounder.play_down()
+	# Sample a millisecond at a time: the strike, its bounce, the settle.
+	var drops: Array[float] = []
+	for _step in 60:
+		sounder._process(0.001)
+		drops.append(sounder.get_armature_strike_drop())
+	var first_contact := -1
+	for index in drops.size():
+		if drops[index] >= sounder.armature_travel - 0.00001:
+			first_contact = index
+			break
+	if not assert_condition(first_contact >= 0 and first_contact < 20, "The front strikes the anvil within 20 ms of the mark (%d ms)" % first_contact): return
+	var bounced := false
+	for index in range(first_contact + 1, drops.size()):
+		if drops[index] < sounder.armature_travel - 0.0001:
+			bounced = true
+	if not assert_condition(bounced, "It comes off the anvil a hair before it settles"): return
 	for _step in 30:
 		sounder._process(1.0 / 60.0)
-	var struck_y := sounder.armature.position.y
-	if not assert_condition(struck_y < rest_y - 0.001, "The armature drops onto the anvil on a mark"): return
-	if not assert_condition(absf(struck_y - (rest_y - sounder.armature_travel)) < 0.0005, "It travels the configured distance"): return
+	if not assert_condition(absf(sounder.get_armature_strike_drop() - sounder.armature_travel) < 0.0002, "It settles on the anvil, the configured travel down"): return
+	if not assert_condition((sounder.armature.transform * sounder.armature_pivot).distance_to(pivot_rest) < 0.00001, "It turns on its trunnion: the pivot does not move"): return
+	var rear_drop := (rest * rear).y - (sounder.armature.transform * rear).y
+	if not assert_condition(rear_drop < sounder.armature_travel * 0.15, "The rear stays where the front drops: it swings, it does not slide"): return
 
 	sounder.play_up()
 	for _step in 30:
 		sounder._process(1.0 / 60.0)
-	if not assert_condition(absf(sounder.armature.position.y - rest_y) < 0.0005, "It lifts again on a gap"): return
+	if not assert_condition(absf(sounder.get_armature_strike_drop()) < 0.0002, "It lifts again on a gap"): return
 
 	# --- Elias's hand writes while the signal is still arriving --------------
 	var seat := office.operator_seat

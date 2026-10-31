@@ -46,10 +46,23 @@ func _run() -> void:
 	sounder.set_process(false)
 	sounder.play_down(7)
 	sounder._process(0.1)
-	if not check(is_equal_approx(sounder.armature.position.y, 0.065 - sounder.armature_travel), "Authored armature follows MARK travel"): return
+	if not check(absf(sounder.get_armature_strike_drop() - sounder.armature_travel) < 0.0001, "Authored armature follows MARK travel at the anvil"): return
 	sounder.play_up(8)
 	sounder._process(0.1)
-	if not check(is_equal_approx(sounder.armature.position.y, 0.065), "Authored armature returns on GAP"): return
+	if not check(absf(sounder.get_armature_strike_drop()) < 0.0001 and is_equal_approx(sounder.armature.position.y, 0.065),
+		"Authored armature returns to its rest on GAP"): return
+	# Plan 8.1: the key lever turns on its trunnion — the knob goes down, the
+	# tail comes up, the axle stays put.
+	var lever := key.get_node("Lever") as Node3D
+	var lever_rest := lever.transform
+	key.set_press_amount(1.0)
+	var knob := Vector3(0, 0, key.knob_z)
+	var tail := Vector3(0, 0, -0.06)
+	if not check(absf((lever_rest * knob).y - (lever.transform * knob).y - key.press_travel) < 0.0003, "The knob goes down its travel"): return
+	if not check((lever.transform * tail).y > (lever_rest * tail).y + 0.003, "The tail of the lever rises as the knob goes down"): return
+	if not check((lever.transform * key.lever_pivot).distance_to(lever_rest * key.lever_pivot) < 0.00001, "The key turns on its trunnion"): return
+	key.set_press_amount(0.0)
+	if not check(lever.transform.is_equal_approx(lever_rest), "Released, the lever is exactly at rest"): return
 	if not check(tape.get_node("Body/Spool").position.is_equal_approx(Vector3(0, 0.105, -0.025)), "Register keeps original spool pivot"): return
 	if not check(tape.get_node("Body/StylusPivot").position.is_equal_approx(Vector3(0, 0.081, 0.03)), "Register keeps original stylus pivot"): return
 	if not check(tape.get_node("Body/TapeTop").visible and tape.get_node("Body/PaperStrip").visible, "Objective tape paper surfaces remain present"): return
