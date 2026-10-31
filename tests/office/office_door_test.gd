@@ -73,6 +73,17 @@ func _run() -> void:
 	var leaf := door_node.get_node_or_null("Leaf") as Node3D
 	if not assert_condition(leaf != null, "Door leaf hangs on a hinge"): return
 	var closed_rotation := leaf.rotation.y
+	var knob_mesh := door.knob.get_node_or_null("AuthoredKnob") as MeshInstance3D if door.knob != null else null
+	if not assert_condition(knob_mesh != null and knob_mesh.is_visible_in_tree(), "The door has a handle you can see"): return
+	# Plan 8.5: the handle turns, the latch lets go, then the leaf swings on
+	# its hinges — one after another, not all at once.
+	var order: Array[String] = []
+	var at_latch: Array[float] = []
+	door.latch_released.connect(func():
+		order.append("latch")
+		at_latch.append(door.knob.rotation.z if door.knob != null else 0.0)
+		at_latch.append(leaf.rotation.y))
+	door.leaf_swinging.connect(func(): order.append("leaf"))
 	door.open()
 	if not assert_condition(door.is_open, "The door opens"): return
 	await process_frame
@@ -82,6 +93,9 @@ func _run() -> void:
 	# The swing is a tween, so it is in progress rather than finished here.
 	await create_timer_wait(0.35)
 	if not assert_condition(not is_equal_approx(leaf.rotation.y, closed_rotation), "The leaf actually swings"): return
+	if not assert_condition(order == ["latch", "leaf"], "The latch lets go first, then the leaf swings (%s)" % str(order)): return
+	if not assert_condition(at_latch.size() == 2 and absf(at_latch[0]) > deg_to_rad(10.0) and is_equal_approx(at_latch[1], closed_rotation),
+		"By the time the latch lets go the handle is turned and the leaf has not moved (%s)" % str(at_latch)): return
 
 	# 7. Stepping through ends the slice with Elias's own record.
 	var trigger := office.get_node_or_null("OfficeExitTrigger") as Area3D

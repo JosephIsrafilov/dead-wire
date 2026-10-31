@@ -119,7 +119,8 @@ func _test_idempotent_bind() -> bool:
 		[initial_connections == 1 and office.document_viewer.document_opened.get_connections().size() == 1, "Repeated binding keeps exactly one viewer connection"],
 		[office.session_controller.transcript_paper.sheet_fed.get_connections().size() == 1, "Repeated binding keeps exactly one sheet-feed connection"],
 		[office.copy_commit_desk.stamp_contact.get_connections().size() == 1, "Repeated binding keeps exactly one stamp-contact connection"],
-		[office.office_door.door_opened.get_connections().size() == 2, "Repeated binding preserves one latch and one hinge connection"],
+		[office.office_door.latch_released.get_connections().size() == 1 and office.office_door.leaf_swinging.get_connections().size() == 1,
+			"Repeated binding preserves one latch and one hinge connection, each on its own moment"],
 		[office.operator_seat.seated.get_connections().size() == 1, "Repeated binding keeps exactly one chair connection"],
 	]
 	root.remove_child(office)

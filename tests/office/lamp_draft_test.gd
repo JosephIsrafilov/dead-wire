@@ -32,6 +32,31 @@ func _run() -> void:
 	var settled := _swing(lamp, light, 2.0)
 	if not _check(settled < calm * 1.2, "It settles back to its ordinary flicker (%.3f)" % settled): return
 
+	# Plan 8.5: the wick wheel turns with the hand that turns the wick, and
+	# only then — a wick charring down on its own leaves the wheel where it was.
+	var wheel := Node3D.new()
+	holder.add_child(wheel)
+	lamp.wick_wheel = wheel
+	lamp.set_wick_immediate(0.3)
+	lamp.turn_up_wick()
+	_swing(lamp, light, lamp.wick_turn_seconds * 0.5)
+	var halfway := absf(wheel.rotation.x)
+	_swing(lamp, light, lamp.wick_turn_seconds * 0.6)
+	var turned := absf(wheel.rotation.x)
+	if not _check(turned > PI * 0.5, "Turning the wick up turns its wheel (%.0f deg)" % rad_to_deg(turned)): return
+	if not _check(halfway > turned * 0.3 and halfway < turned * 0.7, "The wheel turns with the wick, not in one jump"): return
+	var before_char := wheel.rotation.x
+	lamp.gutter(0.6, 1.0)
+	_swing(lamp, light, 1.5)
+	if not _check(is_equal_approx(wheel.rotation.x, before_char), "A wick charring down does not turn the wheel"): return
+	lamp.turn_down_wick()
+	_swing(lamp, light, lamp.wick_turn_seconds + 0.1)
+	if not _check(signf(wheel.rotation.x - before_char) == -signf(before_char), "Turning it down turns the wheel back"): return
+	var lamp_scene: Node3D = load("res://scenes/style_tests/props/oil_lamp_lowpoly.tscn").instantiate()
+	holder.add_child(lamp_scene)
+	if not _check(lamp_scene.get_node_or_null("WickWheelPivot/AuthoredWickWheel") is MeshInstance3D,
+		"The lamp's wick wheel is a part of its own on its spindle"): return
+
 	holder.queue_free()
 	await process_frame
 	print("--- All Lamp Draft Tests PASSED (%d assertions) ---" % _passed)

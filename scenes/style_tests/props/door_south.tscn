@@ -101,11 +101,10 @@ material = ExtResource("3_brass")
 
 ; The knob node stays the thing office_door.gd rotates; only its visual moved
 ; into an authored mesh, centred on the node so the rattle turns it in place.
-[node name="Doorknob" type="CSGSphere3D" parent="Leaf"]
-visible = false
+; A plain pivot (plan 8.5): it used to be the hidden CSG proxy sphere, which
+; hid the authored knob under it too.
+[node name="Doorknob" type="Node3D" parent="Leaf"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, -0.02, -0.06)
-radius = 0.032
-material = ExtResource("3_brass")
 
 [node name="AuthoredKnob" type="MeshInstance3D" parent="Leaf/Doorknob"]
 mesh = ExtResource("11_knob")

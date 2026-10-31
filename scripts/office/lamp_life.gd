@@ -15,6 +15,14 @@ extends Node
 ## NodePath so the scene can wire the wick mesh; resolved in _ready.
 @export var flame_mesh_path: NodePath = ^""
 @export var flame_mesh: Node3D = null
+## Plan 8.5: the wick wheel on the operator's side of the lamp. It turns with
+## the hand that raises or lowers the wick — never on its own while the wick
+## chars down — about three quarters of a turn over the wick's whole travel.
+@export var wick_wheel: Node3D = null
+const WHEEL_RADIANS_PER_WICK: float = 1.5 * PI
+var _wheel_angle: float = 0.0
+var _wheel_target: float = 0.0
+var _wheel_rate: float = 0.0
 
 ## Fraction of rest energy. A guttering oil lamp is subtle; ±8% reads as alive.
 @export var lamp_flicker_depth: float = 0.08
@@ -119,6 +127,7 @@ func offer_turn_down() -> void:
 		_wick_interactable.enabled = wick > dawn_wick + 0.01
 
 func turn_down_wick() -> void:
+	_turn_wheel(dawn_wick - wick)
 	_wick_target = dawn_wick
 	_wick_rate = absf(wick - dawn_wick) / maxf(wick_turn_seconds, 0.01)
 	if _wick_interactable != null:
@@ -128,12 +137,18 @@ func turn_down_wick() -> void:
 func turn_up_wick() -> void:
 	if _wick_target >= 1.0 and wick >= 1.0:
 		return
+	_turn_wheel(1.0 - wick)
 	_wick_target = 1.0
 	_wick_rate = (1.0 - wick) / maxf(wick_turn_seconds, 0.01)
 	_full_seconds = 0.0
 	if _wick_interactable != null:
 		_wick_interactable.enabled = false
 	wick_turned_up.emit()
+
+## The hand turns the wheel by as much as it moves the wick, at the wick's pace.
+func _turn_wheel(wick_amount: float) -> void:
+	_wheel_target += wick_amount * WHEEL_RADIANS_PER_WICK
+	_wheel_rate = absf(_wheel_target - _wheel_angle) / maxf(wick_turn_seconds, 0.01)
 
 ## Air moved past the lamp: 0..1 of a full gust.
 func gust(strength: float = 1.0) -> void:
@@ -176,6 +191,8 @@ func _resolve() -> void:
 		stove_light = office.get_node_or_null("StoveEmberLight") as OmniLight3D
 	if bounce_light == null:
 		bounce_light = office.get_node_or_null("PaperBounceLight") as OmniLight3D
+	if wick_wheel == null:
+		wick_wheel = office.get_node_or_null("DeskSetup/OilLamp/WickWheelPivot") as Node3D
 
 func _process(delta: float) -> void:
 	advance(delta)
@@ -187,6 +204,11 @@ func advance(delta: float) -> void:
 		wick = move_toward(wick, _wick_target, _wick_rate * delta)
 	elif _line_open and not _dawn:
 		_advance_sink(delta)
+	if not is_equal_approx(_wheel_angle, _wheel_target):
+		_wheel_angle = move_toward(_wheel_angle, _wheel_target, _wheel_rate * delta)
+		if wick_wheel != null:
+			# Clockwise to the operator raises the wick.
+			wick_wheel.rotation.x = -_wheel_angle
 
 	var had_draft := _draft > 0.0
 	_draft = move_toward(_draft, 0.0, delta / maxf(draft_seconds, 0.01))

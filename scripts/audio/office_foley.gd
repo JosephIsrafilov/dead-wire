@@ -136,9 +136,10 @@ func _bind() -> void:
 		register.register_wound.connect(func(): _play_varied(winder))
 	var latch := _source("Latch", latch_stream, Vector3(-1.6, 1.0, 2.25), -15.0)
 	office.office_door.door_rattled.connect(latch.play.bind(0.0))
-	office.office_door.door_opened.connect(latch.play.bind(0.0))
+	# Plan 8.5: the latch as the handle lets it go, the hinges as the leaf moves.
+	office.office_door.latch_released.connect(latch.play.bind(0.0))
 	var hinge := _source("Hinge", hinge_stream, Vector3(-2.05, 1.2, 2.3), -17.0)
-	office.office_door.door_opened.connect(hinge.play.bind(0.0))
+	office.office_door.leaf_swinging.connect(hinge.play.bind(0.0))
 	var chair_sound := _source("Chair", chair_stream, chair.global_position, -22.0)
 	office.operator_seat.seated.connect(func():
 		chair_sound.pitch_scale = 1.0

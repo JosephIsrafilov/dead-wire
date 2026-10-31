@@ -13,6 +13,10 @@ extends Node
 signal door_rattled()
 signal door_opened()
 signal player_left_office()
+## Plan 8.5: opening is a sequence — the handle turns, the latch lets go, then
+## the leaf swings on its hinges. Each moment has its own sound.
+signal latch_released()
+signal leaf_swinging()
 
 @export var director: ShiftDirector = null
 
@@ -22,6 +26,10 @@ signal player_left_office()
 @export var rattle_duration: float = 0.34
 @export var rattle_knob_degrees: float = 9.0
 @export var rattle_leaf_metres: float = 0.009
+## Plan 8.5: the handle is turned until the latch lets go, then the leaf moves.
+@export var open_knob_degrees: float = 40.0
+@export var open_knob_seconds: float = 0.12
+@export var latch_to_swing_seconds: float = 0.05
 
 const PROMPT_LOCKED: String = "Locked Until the Watch Is Over"
 const PROMPT_UNLOCKED: String = "Leave the Office"
@@ -30,6 +38,7 @@ const PROMPT_STANDING_OPEN: String = "The Way Out"
 var leaf: Node3D = null
 var knob: Node3D = null
 var blocker: StaticBody3D = null
+var _rattle_tween: Tween = null
 var interactable: Interactable = null
 
 var is_open: bool = false
@@ -114,6 +123,7 @@ func rattle() -> void:
 
 	_is_animating = true
 	var tween := create_tween()
+	_rattle_tween = tween
 	tween.set_parallel(true)
 	if knob != null:
 		var twist := deg_to_rad(rattle_knob_degrees)
@@ -142,14 +152,30 @@ func open() -> void:
 		if shape != null:
 			shape.set_deferred("disabled", true)
 
+	# A rattle still settling must not fight the hand for the handle.
+	if _rattle_tween != null and _rattle_tween.is_valid():
+		_rattle_tween.kill()
 	if leaf != null and is_inside_tree():
 		_is_animating = true
 		var tween := create_tween()
+		if knob != null:
+			tween.tween_property(knob, "rotation:z", -deg_to_rad(open_knob_degrees), open_knob_seconds) \
+				.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		tween.tween_callback(latch_released.emit)
+		tween.tween_interval(latch_to_swing_seconds)
+		tween.tween_callback(leaf_swinging.emit)
 		tween.tween_property(leaf, "rotation:y", -deg_to_rad(open_angle_degrees), open_duration) \
 			.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+		if knob != null:
+			# The hand lets go once the leaf is moving: the handle springs back.
+			tween.parallel().tween_property(knob, "rotation:z", 0.0, 0.3) \
+				.set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
 		tween.tween_callback(func() -> void: _is_animating = false)
-	elif leaf != null:
-		leaf.rotation.y = -deg_to_rad(open_angle_degrees)
+	else:
+		if leaf != null:
+			leaf.rotation.y = -deg_to_rad(open_angle_degrees)
+		latch_released.emit()
+		leaf_swinging.emit()
 
 	door_opened.emit()
 

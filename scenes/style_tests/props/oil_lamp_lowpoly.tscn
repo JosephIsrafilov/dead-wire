@@ -3,6 +3,7 @@
 [ext_resource type="Material" path="res://materials/style_tests/lamp_flame_glow.tres" id="2_flame"]
 [ext_resource type="ArrayMesh" path="res://assets/models/office_props_v1/oil_lamp_static.res" id="5_lamp_mesh"]
 [ext_resource type="ArrayMesh" path="res://assets/models/office_props_v1/lamp_glass_static.res" id="6_glass_mesh"]
+[ext_resource type="ArrayMesh" path="res://assets/models/office_props_v1/oil_lamp_wick_wheel.res" id="7_wheel_mesh"]
 
 [sub_resource type="SphereMesh" id="FlameMesh"]
 material = ExtResource("2_flame")
@@ -23,6 +24,14 @@ rings = 6
 
 [node name="AuthoredLamp" type="MeshInstance3D" parent="."]
 mesh = ExtResource("5_lamp_mesh")
+
+; The wick wheel turns on its spindle with the hand (plan 8.5); split out of
+; oil_lamp_static.res by tools/split_mesh_part.gd -- lamp_wheel.
+[node name="WickWheelPivot" type="Node3D" parent="."]
+position = Vector3(0, 0.099, 0)
+
+[node name="AuthoredWickWheel" type="MeshInstance3D" parent="WickWheelPivot"]
+mesh = ExtResource("7_wheel_mesh")
 
 [node name="Flame" type="MeshInstance3D" parent="."]
 position = Vector3(0, 0.185, 0)
