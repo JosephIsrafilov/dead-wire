@@ -14,6 +14,7 @@ var _fps: OptionButton
 var _invert: CheckBox
 var _defaults: Button
 var _captions: CheckBox
+var _quality: OptionButton
 ## Each slider's printed value, so a setting is a number and not a guess.
 var _readouts: Dictionary = {}
 
@@ -43,6 +44,11 @@ func _ready() -> void:
 	for limit in GameSettings.FPS_LIMITS:
 		_fps.add_item("No frame limit" if limit == 0 else "%d frames" % limit, limit)
 	display_row.add_child(_fps)
+	# Plan 10.3: what the machine spends on the air and the shadows.
+	_quality = OptionButton.new()
+	for index in GameSettings.QUALITY_NAMES.size():
+		_quality.add_item("Quality: " + GameSettings.QUALITY_NAMES[index], index)
+	display_row.add_child(_quality)
 	var toggle_row := HBoxContainer.new()
 	add_child(toggle_row)
 	_vsync = CheckBox.new()
@@ -65,6 +71,7 @@ func _ready() -> void:
 	_window.item_selected.connect(_on_window)
 	_vsync.toggled.connect(_on_vsync)
 	_fps.item_selected.connect(_on_fps)
+	_quality.item_selected.connect(_on_quality)
 	_invert.toggled.connect(_on_invert)
 	_captions.toggled.connect(_on_captions)
 	_defaults.pressed.connect(_on_defaults)
@@ -119,6 +126,7 @@ func refresh() -> void:
 		_fps.select(_fps.get_item_index(settings.max_fps))
 		_invert.set_pressed_no_signal(settings.invert_y)
 		_captions.set_pressed_no_signal(settings.sound_captions)
+		_quality.select(_quality.get_item_index(settings.quality))
 
 func _on_mode(index: int) -> void:
 	var settings := GameSettings.load_settings()
@@ -154,6 +162,11 @@ func _on_vsync(pressed: bool) -> void:
 func _on_fps(index: int) -> void:
 	var settings := GameSettings.load_settings()
 	settings.max_fps = _fps.get_item_id(index)
+	_commit(settings)
+
+func _on_quality(index: int) -> void:
+	var settings := GameSettings.load_settings()
+	settings.quality = _quality.get_item_id(index)
 	_commit(settings)
 
 func _on_invert(pressed: bool) -> void:

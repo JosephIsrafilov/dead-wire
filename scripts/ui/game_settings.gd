@@ -36,12 +36,16 @@ var max_fps: int = 0
 var invert_y: bool = false
 ## Captions for non-wire sounds (plan 6.9), off unless the player wants them.
 var sound_captions: bool = false
+## Plan 10.3: 0 Low, 1 Medium (the night as drawn), 2 High. Low gives up the
+## light in the air and some shadow resolution; the fog itself always stays.
+var quality: int = 1
+const QUALITY_NAMES: Array[String] = ["Low", "Medium", "High"]
 const FPS_LIMITS: Array[int] = [0, 30, 60, 120, 144]
 ## The image/reading/display options a "Default" press restores (window mode
 ## comes from `default_fullscreen()`).
 const DEFAULTS := {
 	"presentation_mode": 1, "vertical_fov": 65.0, "text_scale": 1.2, "brightness": 1.0,
-	"vsync": true, "max_fps": 0, "invert_y": false,
+	"vsync": true, "max_fps": 0, "invert_y": false, "quality": 1,
 }
 
 ## Plan 9.1: a released build opens fullscreen. The editor binary (suites,
@@ -83,6 +87,7 @@ static func load_settings(path: String = "") -> GameSettings:
 	settings.max_fps = int(config.get_value(SECTION, "max_fps", settings.max_fps))
 	settings.invert_y = bool(config.get_value(SECTION, "invert_y", settings.invert_y))
 	settings.sound_captions = bool(config.get_value(SECTION, "sound_captions", settings.sound_captions))
+	settings.quality = int(config.get_value(SECTION, "quality", settings.quality))
 	settings.sanitize()
 	return settings
 
@@ -99,6 +104,8 @@ func sanitize() -> void:
 	brightness = clampf(brightness if is_finite(brightness) else 1.0, 0.6, 1.8)
 	if max_fps not in FPS_LIMITS:
 		max_fps = 0
+	if quality < 0 or quality >= QUALITY_NAMES.size():
+		quality = 1
 
 func save(path: String = "") -> Error:
 	sanitize()
@@ -120,6 +127,7 @@ func save(path: String = "") -> Error:
 	config.set_value(SECTION, "max_fps", max_fps)
 	config.set_value(SECTION, "invert_y", invert_y)
 	config.set_value(SECTION, "sound_captions", sound_captions)
+	config.set_value(SECTION, "quality", quality)
 	return config.save(path if not path.is_empty() else config_path())
 
 ## Pushes the current values at the things they control.
@@ -135,6 +143,7 @@ func apply(player: PlayerController) -> void:
 		player.base_fov = vertical_fov
 		var office := player.get_parent()
 		_apply_brightness(office)
+		_apply_quality_to_office(office, player.get_viewport())
 		var captions := office.get_node_or_null("SoundCaptions") if office != null else null
 		if captions is SoundCaptions:
 			(captions as SoundCaptions).enabled = sound_captions
@@ -152,6 +161,29 @@ func apply(player: PlayerController) -> void:
 	# Attention events (the steps beyond the door) follow the Foley setting.
 	_set_bus_db("Events", foley_volume_db)
 	apply_display()
+	apply_quality()
+
+## Plan 10.3: the renderer-wide part of the preset. Soft shadow edges and the
+## resolution of the light in the air; Medium is the project's own setting.
+func apply_quality() -> void:
+	var soft: Array[int] = [RenderingServer.SHADOW_QUALITY_SOFT_VERY_LOW,
+		RenderingServer.SHADOW_QUALITY_SOFT_LOW, RenderingServer.SHADOW_QUALITY_SOFT_MEDIUM]
+	var air_cells: Array[int] = [64, 64, 96]
+	RenderingServer.positional_soft_shadow_filter_set_quality(soft[quality] as RenderingServer.ShadowQuality)
+	RenderingServer.environment_set_volumetric_fog_volume_size(air_cells[quality], air_cells[quality])
+
+## The shadow atlas the office's frame is built with (the frame reads this
+## when it is attached, before any menu applies the settings).
+func shadow_atlas_size() -> int:
+	return 2048 if quality == 0 else 4096
+
+func _apply_quality_to_office(office: Node, frame: Viewport) -> void:
+	if frame is SubViewport:
+		(frame as SubViewport).positional_shadow_atlas_size = shadow_atlas_size()
+	var env_node := office.get_node_or_null("WorldEnvironment") as WorldEnvironment if office != null else null
+	if env_node != null and env_node.environment != null:
+		# Low gives up the light in the air; the fog itself always stays.
+		env_node.environment.volumetric_fog_enabled = quality > 0
 
 ## Window mode, VSync and the frame limit. Only what differs is touched, so a
 ## repeated apply never flickers the window; a headless run has no window.

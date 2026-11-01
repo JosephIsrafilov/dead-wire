@@ -11,9 +11,8 @@ func attach_source(frame: SubViewport) -> void:
 	frame.process_mode = Node.PROCESS_MODE_PAUSABLE
 	# A SubViewport built in code does not read the project's shadow atlas
 	# setting; without this the lamp casts through a smaller atlas than the
-	# window used to give it.
-	frame.positional_shadow_atlas_size = ProjectSettings.get_setting(
-		"rendering/lights_and_shadows/positional_shadow/atlas_size", 4096)
+	# window used to give it. The quality preset picks the size (plan 10.3).
+	frame.positional_shadow_atlas_size = GameSettings.load_settings().shadow_atlas_size()
 	# Nor does it listen: with its own world, every positional sound in the
 	# office (sounder, clock, pen, steps) is heard only through this frame.
 	frame.audio_listener_enable_3d = true
