@@ -309,6 +309,46 @@ class PckDirectoryTests(unittest.TestCase):
             with self.assertRaises(RuntimeError):
                 package_windows_beta.check_pck_exclusions(pck)
 
+    def test_temporary_music_and_raw_third_party_sources_are_refused(self):
+        # Plan 10.5: the MacLeod cue is unreferenced and must not ship; raw
+        # downloads under assets/third_party are sources, never runtime.
+        beta = "res://.godot/imported/footstep_wood_beta.wav-9bb5baa446e205f786a293ff220a641a.sample"
+        leaks = (
+            "res://audio/music/temp/long_note_one.mp3",
+            "res://audio/music/temp/long_note_one.mp3.import",
+            "res://.godot/imported/long_note_one.mp3-0a1b2c3d4e5f.mp3str",
+            "res://assets/third_party/polyhaven/vintage_oil_lamp/vintage_oil_lamp.bin",
+            # Development leftovers the real export carried (10.5 audit).
+            "res://graphify-out/graph.json",
+            "res://addons/mcp_bridge/plugin.cfg",
+            "res://screenshots/01_operator_desk_wide.png",
+            "res://conductor.json",
+            "res://models/third_party/kenney_chair.glb",
+            "res://output/pelican-final.png.import",
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            pck = Path(directory) / "game.pck"
+            for leak in leaks:
+                with self.subTest(path=leak):
+                    build_pck(pck, {leak: b"x", beta: b"beta"})
+                    with self.assertRaises(RuntimeError):
+                        package_windows_beta.check_pck_exclusions(pck)
+            build_pck(pck, {"res://audio/music/intro_drone.wav": b"own", beta: b"beta"})
+            package_windows_beta.check_pck_exclusions(pck)
+
+    def test_no_licence_is_packaged_for_music_that_does_not_ship(self):
+        beta = "res://.godot/imported/footstep_wood_beta.wav-9bb5baa446e205f786a293ff220a641a.sample"
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = make_source(root, {"res://icon.svg": b"png", beta: b"beta"})
+            temp = root / "audio" / "music" / "temp"
+            temp.mkdir(parents=True)
+            (temp / "ATTRIBUTION.txt").write_text("Kevin MacLeod, CC BY 4.0", encoding="utf-8")
+            output = root / "out" / "beta.zip"
+            with patch.object(package_windows_beta, "git_revision", return_value="abc123"):
+                _, names = package_windows_beta.package(root, source, output)
+            self.assertFalse(any("ATTRIBUTION" in name for name in names))
+
     def test_build_id_changes_when_executable_changes(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

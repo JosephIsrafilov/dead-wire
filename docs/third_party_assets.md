@@ -29,6 +29,9 @@ the synthesised beds themselves are unchanged.
 | `audio/sfx/foley/cup_clink_2/3.wav`, `bottle_knock_2/3.wav` | `tools/generate_action_foley.py` (fifth pass, appended) | 0.30–0.40 s mono one-shots |
 
 | `audio/music/intro_drone.wav` | `render_intro_drone()` (`--only intro_drone`) | 9.0 s mono one-shot |
+| `audio/sfx/foley/clock_strike.wav` | `render_clock_strike()` (`--only clock_strike`, plan 9.2) | 6.0 s mono one-shot |
+| `audio/sfx/train/train_whistle.wav`, `train_rumble.wav`, `train_steam.wav` | `tools/generate_train_audio.py` (plan 4.6) | one-shots |
+| `assets/models/office/chimney.obj` (model, not audio) | `tools/build_lamp_chimney.py` | — |
 
 **Music:** the intro card plays the project's own drone (`audio/music/intro_drone.wav`,
 plan 7.12, owner decision 30.10). The former temporary cue
@@ -36,6 +39,15 @@ plan 7.12, owner decision 30.10). The former temporary cue
 (incompetech.com), CC BY 4.0 — is no longer referenced by any scene or script and
 must not ship (plan 10.5); its `ATTRIBUTION.txt` stays beside it in the source
 repository only.
+
+**Export audit (plan 10.5, 2026-11-01):** both export presets exclude
+`audio/music/temp/`, `footstep_wood.wav`, `assets/third_party/` and the reference-only
+`models/third_party/` (Kenney, Poly Haven lamp — never instanced), plus development
+leftovers (`graphify-out/`, `addons/`, `screenshots/`, `conductor.json`, `output/`).
+`tools/package_windows_beta.py` refuses a pack that contains any of them. A real
+Windows export now holds 701 entries; every remaining third-party file is one listed
+as runtime-instanced in this register (Kenney impact sounds, Poly Haven book set
+derivative, CC0 texture derivatives) or an OFL font.
 
 **Open item:** `sounder_down.wav`, `sounder_up.wav`, and `footstep_wood.wav`
 predate this register and their origin is not documented anywhere in the

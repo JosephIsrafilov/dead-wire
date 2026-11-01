@@ -29,6 +29,14 @@ EXCLUDED_SOURCE_SUFFIXES = {".json", ".svg"}
 # It must never reach a beta package; the beta replacement stays required.
 LEGACY_RUNTIME_PATHS = {"audio/sfx/foley/footstep_wood.wav"}
 LEGACY_IMPORTED_PREFIXES = ("res://.godot/imported/footstep_wood.wav-",)
+# Plan 10.5: the temporary third-party cue is unreferenced and never ships
+# (its import too); raw downloads under assets/third_party and the reference
+# models are sources only; the rest are development leftovers a real export
+# carried (code-graph cache, the agents' MCP bridge, screenshots).
+UNSHIPPABLE_PREFIXES = (
+    "audio/music/temp/", "assets/third_party/", ".godot/imported/long_note_one.",
+    "models/third_party/", "graphify-out/", "addons/", "screenshots/", "conductor.json", "output/",
+)
 REQUIRED_IMPORTED_PREFIXES = ("res://.godot/imported/footstep_wood_beta.wav-",)
 
 SPOILER_DOCUMENTS = {"sound_handoff_spoilers.md"}
@@ -170,6 +178,9 @@ def check_pck_exclusions(pck: Path, entries: list[PckEntry] | None = None) -> No
     bad: list[str] = []
     for path in paths:
         lowered = path.lower()
+        if lowered.startswith(UNSHIPPABLE_PREFIXES):
+            bad.append(path)
+            continue
         if lowered == "icon.svg" or lowered.startswith(".godot/"):
             continue
         if any(lowered.startswith(prefix) for prefix in forbidden_prefixes):
@@ -322,10 +333,8 @@ def package(root: Path, source: Path, output: Path, allowed_extras: tuple[str, .
             name = f"dead-wire-windows-beta/licenses/fonts/{license_file.parent.name}/OFL.txt"
             archive.write(license_file, name)
             names.append(name)
-        attribution = root / "audio" / "music" / "temp" / "ATTRIBUTION.txt"
-        if attribution.is_file():
-            archive.write(attribution, "dead-wire-windows-beta/licenses/audio/ATTRIBUTION.txt")
-            names.append("dead-wire-windows-beta/licenses/audio/ATTRIBUTION.txt")
+        # No licence is shipped for the temporary cue: the cue itself does not
+        # ship (plan 10.5); its ATTRIBUTION.txt stays in the repository.
         provenance = (
             f"Build identifier: {identifier}\n"
             f"Package timestamp (UTC): {datetime.now(timezone.utc).isoformat()}\n"
