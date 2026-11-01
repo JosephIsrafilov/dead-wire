@@ -26,7 +26,7 @@ Sound is functional but provisional. Telegraph signals must remain audible; some
 
 ## Privacy and feedback
 
-The game has no automatic feedback upload. If you choose to send a report, do not include your name, device identifiers, account details, or raw text you entered in the game. Sending a report is optional.
+The game has no automatic feedback upload. A watch begun from the title writes a local playtest log to `%APPDATA%\Godot\app_userdata\dead-wire\playtest\` — timings of what you opened, chose and filed, never the word you typed and never sent anywhere. Turn it off with **Playtest log** in the options. If you choose to send a report, do not include your name, device identifiers, account details, or raw text you entered in the game. Sending a report is optional.
 
 ## Beta limitations
 

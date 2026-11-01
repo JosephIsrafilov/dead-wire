@@ -65,6 +65,7 @@ func _connect_buttons() -> void:
 func stand_another_watch() -> bool:
 	# He has read the order once; the next watch begins in the room.
 	IntroCard.spare_next_card = true
+	PlaytestTelemetry.arm()
 	return _go_to(OFFICE_SCENE)
 
 func return_to_title() -> bool:

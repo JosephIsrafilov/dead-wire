@@ -81,6 +81,7 @@
 [ext_resource type="Script" path="res://scripts/audio/register_whir.gd" id="register_whir"]
 [ext_resource type="Script" path="res://scripts/audio/creaky_boards.gd" id="creaky_boards"]
 [ext_resource type="Script" path="res://scripts/audio/outside_through_window.gd" id="outside_window"]
+[ext_resource type="Script" path="res://scripts/office/playtest_telemetry.gd" id="playtest_telemetry"]
 
 [sub_resource type="BoxShape3D" id="SeatInteract"]
 size = Vector3(0.52, 0.76, 0.52)
@@ -1072,6 +1073,10 @@ script = ExtResource("outside_window")
 ; A correction is the hand's work at the desk (plan 6.3).
 [node name="DeskAmendment" type="Node" parent="."]
 script = ExtResource("desk_amendment")
+
+; The local playtest log (plan 10.6): writes only for a watch begun from the title.
+[node name="PlaytestTelemetry" type="Node" parent="."]
+script = ExtResource("playtest_telemetry")
 
 ; Captions for the sounds that are not the wire (plan 6.9), off by default.
 [node name="SoundCaptions" type="CanvasLayer" parent="."]

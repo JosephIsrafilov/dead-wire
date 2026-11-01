@@ -15,6 +15,7 @@ var _invert: CheckBox
 var _defaults: Button
 var _captions: CheckBox
 var _quality: OptionButton
+var _playtest_log: CheckBox
 ## Each slider's printed value, so a setting is a number and not a guess.
 var _readouts: Dictionary = {}
 
@@ -60,6 +61,10 @@ func _ready() -> void:
 	_captions = CheckBox.new()
 	_captions.text = "Captions"
 	toggle_row.add_child(_captions)
+	# Plan 10.6: the local playtest log, written only on this machine.
+	_playtest_log = CheckBox.new()
+	_playtest_log.text = "Playtest log"
+	toggle_row.add_child(_playtest_log)
 	_defaults = Button.new()
 	_defaults.text = "Default"
 	toggle_row.add_child(_defaults)
@@ -74,6 +79,7 @@ func _ready() -> void:
 	_quality.item_selected.connect(_on_quality)
 	_invert.toggled.connect(_on_invert)
 	_captions.toggled.connect(_on_captions)
+	_playtest_log.toggled.connect(_on_playtest_log)
 	_defaults.pressed.connect(_on_defaults)
 	visibility_changed.connect(refresh)
 
@@ -127,6 +133,7 @@ func refresh() -> void:
 		_invert.set_pressed_no_signal(settings.invert_y)
 		_captions.set_pressed_no_signal(settings.sound_captions)
 		_quality.select(_quality.get_item_index(settings.quality))
+		_playtest_log.set_pressed_no_signal(settings.playtest_telemetry_enabled)
 
 func _on_mode(index: int) -> void:
 	var settings := GameSettings.load_settings()
@@ -162,6 +169,11 @@ func _on_vsync(pressed: bool) -> void:
 func _on_fps(index: int) -> void:
 	var settings := GameSettings.load_settings()
 	settings.max_fps = _fps.get_item_id(index)
+	_commit(settings)
+
+func _on_playtest_log(pressed: bool) -> void:
+	var settings := GameSettings.load_settings()
+	settings.playtest_telemetry_enabled = pressed
 	_commit(settings)
 
 func _on_quality(index: int) -> void:

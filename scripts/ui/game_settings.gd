@@ -39,6 +39,8 @@ var sound_captions: bool = false
 ## Plan 10.3: 0 Low, 1 Medium (the night as drawn), 2 High. Low gives up the
 ## light in the air and some shadow resolution; the fog itself always stays.
 var quality: int = 1
+## Plan 10.6: the local playtest log (no network, never the corrected word).
+var playtest_telemetry_enabled: bool = true
 const QUALITY_NAMES: Array[String] = ["Low", "Medium", "High"]
 const FPS_LIMITS: Array[int] = [0, 30, 60, 120, 144]
 ## The image/reading/display options a "Default" press restores (window mode
@@ -88,6 +90,8 @@ static func load_settings(path: String = "") -> GameSettings:
 	settings.invert_y = bool(config.get_value(SECTION, "invert_y", settings.invert_y))
 	settings.sound_captions = bool(config.get_value(SECTION, "sound_captions", settings.sound_captions))
 	settings.quality = int(config.get_value(SECTION, "quality", settings.quality))
+	settings.playtest_telemetry_enabled = bool(config.get_value(
+		SECTION, "playtest_telemetry_enabled", settings.playtest_telemetry_enabled))
 	settings.sanitize()
 	return settings
 
@@ -128,6 +132,7 @@ func save(path: String = "") -> Error:
 	config.set_value(SECTION, "invert_y", invert_y)
 	config.set_value(SECTION, "sound_captions", sound_captions)
 	config.set_value(SECTION, "quality", quality)
+	config.set_value(SECTION, "playtest_telemetry_enabled", playtest_telemetry_enabled)
 	return config.save(path if not path.is_empty() else config_path())
 
 ## Pushes the current values at the things they control.
