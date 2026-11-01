@@ -68,6 +68,17 @@ func _run() -> void:
 	dawn.reveal()
 	if not _a(dawn.get_variant_id() == DawnEvidence.VARIANT_LAPSED,
 		"A lapsed night is known and hands over an open line"): return
+	# Plan 9.5: the handover carries the sign-on from the ledger, or says
+	# plainly that there was none — no verdict either way.
+	if not _a(dawn.get_document_text().contains("NOT SIGNED ON IN THE LEDGER"),
+		"A watch never signed on hands over saying so"): return
+	dawn.reset_for_new_watch()
+	knowledge.learn(&"signed_on")
+	knowledge.remember_value(&"signed_on_at", "11:45 P.M.")
+	dawn.reveal()
+	if not _a(dawn.get_document_text().contains("SIGNED ON 11:45 P.M.") \
+			and not dawn.get_document_text().contains("NOT SIGNED ON"),
+		"The handover carries the hour Elias signed on"): return
 
 	# --- 4. The margin note lives in knowledge too ---
 	if not _a(not dawn.get_document_text().contains("NOTE IN THE MARGIN"),

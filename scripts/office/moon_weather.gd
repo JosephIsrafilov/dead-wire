@@ -23,10 +23,19 @@ extends Node
 @export var cloud_interval_max: float = 75.0
 @export var cloud_hold_min: float = 3.0
 @export var cloud_hold_max: float = 6.5
-## Dawn: the moon's cold light warms and strengthens over this long.
+## Dawn: the moon's cold light turns to a grey morning and strengthens over
+## this long (plan 9.5: the morning is grey, the warmth stays at the lamp).
 @export var dawn_seconds: float = 22.0
-@export var dawn_color: Color = Color(0.86, 0.74, 0.62)
+@export var dawn_color: Color = Color(0.74, 0.76, 0.8)
 @export var dawn_energy_scale: float = 1.9
+## Plan 9.5: the yard is unlit silhouette standing in the scene fog, so the
+## morning is the fog lifting to grey: the far ridges come up out of it and
+## the headframe stands dark in front. The sky's own fill rises with it.
+@export var environment: Environment = null
+@export var dawn_fog_color: Color = Color(0.46, 0.48, 0.52)
+@export var dawn_fog_energy: float = 1.0
+@export var dawn_ambient_color: Color = Color(0.5, 0.53, 0.58)
+@export var dawn_ambient_energy: float = 0.2
 ## The sky seen through the pane. A cloud MoonWeather sends across the moon is
 ## drawn over the disc; the figure is not (it stands in the yard, not the sky).
 @export var sky_material: ShaderMaterial = null
@@ -42,6 +51,10 @@ var _rng := RandomNumberGenerator.new()
 var _until_cloud: float = 0.0
 var _cloud_left: float = 0.0
 var _dawn_running: bool = false
+var _night_fog_color: Color = Color.BLACK
+var _night_fog_energy: float = 0.0
+var _night_ambient_color: Color = Color.BLACK
+var _night_ambient_energy: float = 0.0
 
 func _ready() -> void:
 	_rng.seed = 18941014
@@ -54,6 +67,18 @@ func _ready() -> void:
 		var sky := office.get_node_or_null("ExteriorSky") as GeometryInstance3D
 		if sky != null:
 			sky_material = sky.material_override as ShaderMaterial
+	if environment == null and office != null:
+		var world := office.get_node_or_null("WorldEnvironment") as WorldEnvironment
+		if world != null and world.environment != null:
+			# The scene's environment is shared by every instance of the
+			# office: this watch's dawn must not open the next watch grey.
+			environment = world.environment.duplicate() as Environment
+			world.environment = environment
+	if environment != null:
+		_night_fog_color = environment.fog_light_color
+		_night_fog_energy = environment.fog_light_energy
+		_night_ambient_color = environment.ambient_light_color
+		_night_ambient_energy = environment.ambient_light_energy
 	if moon_light != null:
 		_rest_energy = moon_light.light_energy
 		_night_color = moon_light.light_color
@@ -134,6 +159,13 @@ func advance(delta: float) -> void:
 		var d := smoothstep(0.0, 1.0, dawn)
 		moon_light.light_energy = _rest_energy * lerpf(1.0, dawn_energy_scale, d) * (1.0 - dim)
 		moon_light.light_color = _night_color.lerp(dawn_color, d)
+	# Only the dawn touches the air: at night the environment stays as authored.
+	if environment != null and dawn > 0.0:
+		var a := smoothstep(0.0, 1.0, dawn)
+		environment.fog_light_color = _night_fog_color.lerp(dawn_fog_color, a)
+		environment.fog_light_energy = lerpf(_night_fog_energy, dawn_fog_energy, a)
+		environment.ambient_light_color = _night_ambient_color.lerp(dawn_ambient_color, a)
+		environment.ambient_light_energy = lerpf(_night_ambient_energy, dawn_ambient_energy, a)
 
 func get_rest_energy() -> float:
 	return _rest_energy

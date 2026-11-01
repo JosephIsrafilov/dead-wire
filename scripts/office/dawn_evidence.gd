@@ -21,6 +21,9 @@ const KNOW_FILED_AS_WRITTEN: StringName = &"committed_watcher_core_hook"
 const KNOW_LAPSED: StringName = &"core_hook_commit_lapsed"
 const KNOW_FILED_WORD: StringName = &"filed_word_core_hook"
 const KNOW_SAW_WINDOW: StringName = &"saw_window_event"
+## Plan 9.5: the sign-on from the dispatch ledger (plan 9.3).
+const KNOW_SIGNED_ON: StringName = &"signed_on"
+const KNOW_SIGNED_ON_AT: StringName = &"signed_on_at"
 
 ## Elias's own margin note, added only when his record says he watched the
 ## window during the unscheduled call. The note records the looking, never a
@@ -138,7 +141,8 @@ No train number supplied.
 Leave both sheets for the morning operator.
 An entry is not a confirmation.
 
-PREPARED: E. CRANE / NIGHT DESK""" % copy
+PREPARED: E. CRANE / NIGHT DESK
+%s""" % [copy, _sign_on_line(knowledge)]
 	var saw_yard := knowledge != null and knowledge.knows(SilenceThree.KNOWLEDGE_SAW_YARD)
 	var saw_window := knowledge != null and knowledge.knows(KNOW_SAW_WINDOW)
 	if saw_yard or saw_window:
@@ -148,6 +152,11 @@ PREPARED: E. CRANE / NIGHT DESK""" % copy
 		if saw_window:
 			text += WINDOW_MARGIN_LINE
 	return text
+
+func _sign_on_line(knowledge: KnowledgeStateStore) -> String:
+	if knowledge == null or not knowledge.knows(KNOW_SIGNED_ON):
+		return "NOT SIGNED ON IN THE LEDGER."
+	return "SIGNED ON %s. OFF DUTY 6:00 A.M." % knowledge.recall_value(KNOW_SIGNED_ON_AT, "")
 
 func _update_labels() -> void:
 	var result := get_node_or_null("ResultLabel") as Label3D
