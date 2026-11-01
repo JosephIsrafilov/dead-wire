@@ -36,6 +36,11 @@ const VIEWS := {
 	# Plan 8.10: where the cup and the ink bottle are set down on the desk.
 	"cup_desk": [Vector3(-1.45, 1.20, 0.15), Vector3(-2.06, 0.80, -0.19)],
 	"bottle_desk": [Vector3(-1.55, 1.22, -0.70), Vector3(-2.22, 0.80, -1.27)],
+	# Plan 9.3: the ledger signed at the head of the watch.
+	"ledger": [Vector3(-1.95, 1.25, -0.10), Vector3(-2.52, 0.76, -0.14)],
+	"ledger_wide": [Vector3(-1.10, 1.45, 0.35), Vector3(-2.40, 0.76, -0.30)],
+	"ledger_signed": [Vector3(-1.95, 1.25, -0.10), Vector3(-2.52, 0.76, -0.14)],
+	"ledger_signed_close": [Vector3(-2.22, 1.08, -0.10), Vector3(-2.50, 0.77, -0.15)],
 }
 
 func _initialize() -> void:
@@ -68,6 +73,11 @@ func _run() -> void:
 	DirAccess.make_dir_recursive_absolute(out_dir)
 	for name in VIEWS:
 		var view: Array = VIEWS[name]
+		if name == "ledger_signed":
+			var ledger := office.get_node_or_null("DispatchLedger")
+			if ledger != null and ledger.has_method("sign_on"):
+				ledger.sign_on()
+				ledger.advance_signature(10.0)
 		cam.global_position = view[0]
 		cam.look_at(view[1], Vector3.UP)
 		for _i in 20:

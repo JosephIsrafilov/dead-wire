@@ -1,54 +1,142 @@
-[gd_scene load_steps=7 format=3 uid="uid://b1ledger001"]
+[gd_scene load_steps=16 format=3 uid="uid://b1ledger001"]
 
 [ext_resource type="Script" path="res://scripts/telegraph/ui/dispatch_ledger.gd" id="1_ledg"]
 [ext_resource type="Script" path="res://scripts/interaction/interactable.gd" id="2_interact"]
 [ext_resource type="Material" path="res://materials/style_tests/timber_trim.tres" id="3_leather"]
 [ext_resource type="Material" path="res://materials/style_tests/metal_brass_aged.tres" id="4_brass"]
+[ext_resource type="Texture2D" path="res://assets/textures/worn_warmth/paper_128_v1.png" id="5_paper_tex"]
+[ext_resource type="FontFile" path="res://assets/fonts/elias_working/elias_working.fnt" id="6_hand"]
 
-[sub_resource type="BoxMesh" id="BoxMesh_ledger"]
+; Plan 9.3: the ledger lies open at tonight's page, ready to be signed.
+[sub_resource type="BoxMesh" id="BoxMesh_cover"]
 material = ExtResource("3_leather")
-size = Vector3(0.24, 0.018, 0.32)
+size = Vector3(0.37, 0.006, 0.27)
+
+; Lit like the forms: the pages are never brighter than the lamp on them.
+[sub_resource type="StandardMaterial3D" id="Mat_page"]
+albedo_color = Color(0.42, 0.37, 0.28, 1)
+albedo_texture = ExtResource("5_paper_tex")
+roughness = 0.95
+metallic_specular = 0.05
+texture_filter = 2
+
+[sub_resource type="BoxMesh" id="BoxMesh_page"]
+material = SubResource("Mat_page")
+size = Vector3(0.172, 0.014, 0.25)
+
+[sub_resource type="StandardMaterial3D" id="Mat_gutter"]
+albedo_color = Color(0.07, 0.055, 0.04, 1)
+roughness = 1.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_gutter"]
+material = SubResource("Mat_gutter")
+size = Vector3(0.006, 0.002, 0.25)
+
+[sub_resource type="StandardMaterial3D" id="Mat_rule"]
+albedo_color = Color(0.2, 0.17, 0.14, 1)
+roughness = 1.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_rule"]
+material = SubResource("Mat_rule")
+size = Vector3(0.15, 0.0004, 0.0012)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_interact"]
-size = Vector3(0.28, 0.06, 0.36)
+size = Vector3(0.37, 0.06, 0.27)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_sign"]
+size = Vector3(0.17, 0.05, 0.11)
 
 [node name="DispatchLedger" type="Node3D"]
 script = ExtResource("1_ledg")
 
 [node name="BookMesh" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.009, 0)
-mesh = SubResource("BoxMesh_ledger")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.003, 0)
+mesh = SubResource("BoxMesh_cover")
+
+[node name="LeftPage" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.088, 0.013, 0)
+mesh = SubResource("BoxMesh_page")
+
+[node name="Print" type="Label3D" parent="LeftPage"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.0075, -0.03)
+pixel_size = 0.0007
+shaded = true
+alpha_cut = 1
+modulate = Color(0.16, 0.13, 0.1, 1)
+text = "BLACK CREEK STATION
+DISPATCH LEDGER — APRIL 1890
+
+SPECIAL ORDERS
+1. TRAIN 17 — CLEAR EAST
+2. NIGHT FREIGHT — RULE 44: HOLD"
+font_size = 10
+outline_size = 0
+
+[node name="RightPage" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.088, 0.013, 0)
+mesh = SubResource("BoxMesh_page")
+
+[node name="Print" type="Label3D" parent="RightPage"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.0075, -0.09)
+pixel_size = 0.0007
+shaded = true
+alpha_cut = 1
+modulate = Color(0.16, 0.13, 0.1, 1)
+text = "NIGHT ENTRIES — APRIL 1890"
+font_size = 10
+outline_size = 0
+
+[node name="OnDuty" type="Label3D" parent="RightPage"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, -0.075, 0.0075, 0.05)
+pixel_size = 0.0007
+shaded = true
+alpha_cut = 1
+modulate = Color(0.16, 0.13, 0.1, 1)
+text = "ON DUTY"
+horizontal_alignment = 0
+font_size = 9
+outline_size = 0
+
+[node name="Rule" type="MeshInstance3D" parent="RightPage"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0072, 0.092)
+mesh = SubResource("BoxMesh_rule")
+
+[node name="Signature" type="Label3D" parent="RightPage"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, -0.072, 0.0076, 0.072)
+font = ExtResource("6_hand")
+pixel_size = 0.0006
+shaded = true
+alpha_cut = 1
+modulate = Color(0.12, 0.1, 0.08, 1)
+text = ""
+horizontal_alignment = 0
+vertical_alignment = 0
+font_size = 18
+outline_size = 0
+
+[node name="Gutter" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0185, 0)
+mesh = SubResource("BoxMesh_gutter")
 
 [node name="CornerTL" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1, 0.018, -0.14)
-size = Vector3(0.035, 0.004, 0.035)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.177, 0.005, -0.127)
+size = Vector3(0.016, 0.004, 0.016)
 material = ExtResource("4_brass")
 
 [node name="CornerTR" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1, 0.018, -0.14)
-size = Vector3(0.035, 0.004, 0.035)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.177, 0.005, -0.127)
+size = Vector3(0.016, 0.004, 0.016)
 material = ExtResource("4_brass")
 
 [node name="CornerBL" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1, 0.018, 0.14)
-size = Vector3(0.035, 0.004, 0.035)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.177, 0.005, 0.127)
+size = Vector3(0.016, 0.004, 0.016)
 material = ExtResource("4_brass")
 
 [node name="CornerBR" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1, 0.018, 0.14)
-size = Vector3(0.035, 0.004, 0.035)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.177, 0.005, 0.127)
+size = Vector3(0.016, 0.004, 0.016)
 material = ExtResource("4_brass")
-
-[node name="Label3D" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.019, 0)
-pixel_size = 0.001
-modulate = Color(0.92, 0.82, 0.52, 1)
-outline_modulate = Color(0.12, 0.08, 0.05, 1)
-text = "DISPATCH LEDGER"
-font_size = 14
-outline_size = 1
-autowrap_mode = 2
-width = 200.0
 
 [node name="Interactable" type="Area3D" parent="."]
 collision_layer = 2
@@ -60,3 +148,12 @@ prompt_text = "Inspect Dispatch Ledger"
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.03, 0)
 shape = SubResource("BoxShape3D_interact")
 
+[node name="SignInteractable" type="Area3D" parent="."]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("2_interact")
+prompt_text = "Sign On"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SignInteractable"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.088, 0.047, 0.085)
+shape = SubResource("BoxShape3D_sign")

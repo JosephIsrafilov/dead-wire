@@ -76,6 +76,16 @@ func _run() -> void:
 	await _interact_at(Vector3(-1.25, 0, -0.1), office.get_node("DispatchLedger/Interactable"))
 	check(office.document_viewer.is_open(), "Ledger is reachable and readable")
 	await _press("ui_cancel")
+	# Plan 9.3: sign on at the foot of tonight's page, through the same ray.
+	var ledger := office.get_node("DispatchLedger") as DispatchLedger
+	ledger.signed_on.connect(func(time_text: String): _mark("signs on at " + time_text))
+	await _interact_at(Vector3(-1.25, 0, -0.1), ledger.get_node("SignInteractable"))
+	check(ledger.is_signed(), "The pen signs on in the ledger through E")
+	if not capture:
+		ledger.advance_signature(10.0)
+	for _i in 150:
+		await process_frame
+	await _shot("02b_signed")
 	await _interact_at(Vector3(-0.75, 0, -0.1), office.get_node("Chair/Interactable"))
 	# The approach glide (0.34 s) precedes the seated state: wait for the
 	# chair to actually take the operator.

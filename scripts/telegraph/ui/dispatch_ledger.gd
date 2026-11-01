@@ -3,6 +3,10 @@ extends Node3D
 
 signal ledger_inspected(text: String)
 signal ledger_closed()
+## Plan 9.3: the operator has signed on (station time as written).
+signal signed_on(time_text: String)
+## The nib meets the page: once per written glyph, never for a space.
+signal signature_stroke(index: int)
 
 @export var prompt_message: String = "Inspect Dispatch Ledger"
 ## The office wires this so entries come from the shift's own record, not a
@@ -26,22 +30,84 @@ SPECIAL ORDERS & ROUTING RULES:
    - No division clearance is booked for Freight 71 tonight.
    - Water supply & mine junction cars remain restricted under 1885 quarantine."""
 
+## Plan 9.3: signing on is the head of the watch, optional, and blocks
+## nothing. The pen writes at a hand's pace, one glyph at a time.
+const PROMPT_SIGN: String = "Sign On"
+const SIGNATURE_NAME: String = "E. CRANE"
+const FALLBACK_TIME: String = "11:00 P.M."
+@export var seconds_per_glyph: float = 0.11
+
 var interactable: Interactable = null
-var label_3d: Label3D = null
+var sign_interactable: Interactable = null
+var signature_label: Label3D = null
+## The whole line the pen is writing (empty until signed).
+var signature_text: String = ""
+var _written: int = 0
+var _strokes: int = 0
+var _glyph_timer: float = 0.0
 
 func _ready() -> void:
 	if office == null and not office_path.is_empty():
 		office = get_node_or_null(office_path) as M1OfficeController
 	interactable = get_node_or_null("Interactable") as Interactable
-	label_3d = get_node_or_null("Label3D") as Label3D
+	sign_interactable = get_node_or_null("SignInteractable") as Interactable
+	signature_label = get_node_or_null("RightPage/Signature") as Label3D
 
 	if interactable != null:
 		interactable.prompt_text = prompt_message
 		if not interactable.interacted.is_connected(_on_interacted):
 			interactable.interacted.connect(_on_interacted)
+	if sign_interactable != null:
+		sign_interactable.prompt_text = PROMPT_SIGN
+		if not sign_interactable.interacted.is_connected(sign_on):
+			sign_interactable.interacted.connect(sign_on)
 
-	if label_3d != null:
-		label_3d.text = "DISPATCH LEDGER\nBLACK CREEK"
+func is_signed() -> bool:
+	return not signature_text.is_empty()
+
+## Elias signs at the station time the clock shows; signed late, it says so.
+func sign_on() -> void:
+	if is_signed():
+		return
+	var time_text := _station_time_text()
+	signature_text = "%s  %s" % [SIGNATURE_NAME, time_text]
+	_written = 0
+	_strokes = 0
+	_glyph_timer = 0.0
+	if sign_interactable != null:
+		sign_interactable.enabled = false
+		# Out of the ray's way: the whole book reads again once signed.
+		sign_interactable.collision_layer = 0
+	var knowledge := _knowledge_state()
+	if knowledge != null:
+		knowledge.learn(&"signed_on")
+		knowledge.remember_value(&"signed_on_at", time_text)
+	signed_on.emit(time_text)
+	advance_signature(0.0)
+
+func _process(delta: float) -> void:
+	advance_signature(delta)
+
+## The pen's own clock, separate from _process so tests can drive it.
+func advance_signature(delta: float) -> void:
+	if _written >= signature_text.length():
+		return
+	_glyph_timer -= delta
+	while _glyph_timer <= 0.0 and _written < signature_text.length():
+		var glyph := signature_text[_written]
+		_written += 1
+		if glyph != " ":
+			_strokes += 1
+			signature_stroke.emit(_strokes)
+			_glyph_timer += seconds_per_glyph
+	if signature_label != null:
+		signature_label.text = signature_text.substr(0, _written)
+
+func _station_time_text() -> String:
+	if office == null:
+		return FALLBACK_TIME
+	var clock := office.get_node_or_null("OfficeStorytellingProps/StationClock") as StationClock
+	return clock.get_station_time_text() if clock != null else FALLBACK_TIME
 
 func get_interactable() -> Interactable:
 	if interactable == null:
@@ -52,7 +118,8 @@ func get_interactable() -> Interactable:
 	return interactable
 
 func get_ledger_text() -> String:
-	return LEDGER_TEXT + "\n\n" + _night_entries_text()
+	var signed := "" if not is_signed() else "\n\n" + _pad_entry("ON DUTY", signature_text)
+	return LEDGER_TEXT + signed + "\n\n" + _night_entries_text()
 
 ## Entries the operator actually made tonight, read from the shift's own
 ## knowledge record. WorldState is deliberately not consulted: the ledger is

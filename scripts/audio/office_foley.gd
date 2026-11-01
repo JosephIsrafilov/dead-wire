@@ -131,6 +131,12 @@ func _bind() -> void:
 		var wick := _source("Wick", wick_stream, lamp.global_position, -20.0)
 		lamp_life.wick_turned_up.connect(wick.play.bind(0.0))
 		lamp_life.wick_turned_down.connect(wick.play.bind(0.0))
+	# Plan 9.3: the nib on the ledger page as Elias signs on.
+	var ledger := office.get_node_or_null("DispatchLedger") as DispatchLedger
+	if ledger != null:
+		var ledger_pen := _source("LedgerPen", pen_stream, ledger.global_position, -26.0)
+		ledger.signature_stroke.connect(func(_i):
+			_play_varied_stream(ledger_pen, pen_stream, pen_variants))
 	if register != null:
 		var winder := _source("RegisterWind", winding_stream, register.global_position, -18.0)
 		register.register_wound.connect(func(): _play_varied(winder))

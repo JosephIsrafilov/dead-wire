@@ -842,7 +842,7 @@ position = Vector3(-2.8605, 1.2, -0.2)
 rotation = Vector3(1.5707963, 1.5707963, 0)
 
 [node name="DispatchLedger" parent="." instance=ExtResource("18_ledger")]
-position = Vector3(-2.52, 0.752, -0.14)
+position = Vector3(-2.52, 0.752, -0.08)
 rotation = Vector3(0, 1.5707963, 0)
 office_path = NodePath("..")
 
