@@ -3,9 +3,9 @@ extends CanvasLayer
 
 ## Closes the slice when the operator walks out at dawn.
 ##
-## The card is Elias's own record of the night, not the game's. It is built from
-## the duty sheet, which reads KnowledgeState and nothing else, so a player who
-## missed traffic walks out holding an incomplete account and is never told what
+## The night's record is Elias's, in the room (plan 9.6): the ledger he closes
+## at dawn and the duty sheet, both read from KnowledgeState only. Walking out
+## shows the dark, the hour and the two ways on; the player is never told what
 ## he actually did to the railroad.
 
 signal fade_completed()
@@ -90,10 +90,17 @@ func play(title: String, record: String, footer: String = "") -> void:
 	_is_running = true
 	_find_nodes()
 
+	# Plan 9.6: an empty title or record is not shown at all — the walk-out is
+	# the dark, the hour and the two ways on.
 	if title_label != null:
 		title_label.text = title
+		title_label.visible = not title.is_empty()
 	if body_label != null:
 		body_label.text = record
+		body_label.visible = not record.is_empty()
+	var rule := get_node_or_null("CenterContainer/VBoxContainer/HSeparator") as Control
+	if rule != null:
+		rule.visible = not (title.is_empty() and record.is_empty())
 	if footer_label != null and not footer.is_empty():
 		footer_label.text = footer
 

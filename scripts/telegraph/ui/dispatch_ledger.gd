@@ -7,6 +7,8 @@ signal ledger_closed()
 signal signed_on(time_text: String)
 ## The nib meets the page: once per written glyph, never for a space.
 signal signature_stroke(index: int)
+## Plan 9.6: OFF DUTY lands on the page once the closing entry is written.
+signal stamped()
 
 @export var prompt_message: String = "Inspect Dispatch Ledger"
 ## The office wires this so entries come from the shift's own record, not a
@@ -37,14 +39,33 @@ const SIGNATURE_NAME: String = "E. CRANE"
 const FALLBACK_TIME: String = "11:00 P.M."
 @export var seconds_per_glyph: float = 0.11
 
+## Plan 9.6: the end of the watch is written here, not laid over the room. At
+## dawn the pen is offered again; the closing entry is Elias's knowledge only.
+const PROMPT_CLOSE: String = "Close the Watch"
+## Watches stood this session: Stand Another Watch counts on, a new game from
+## the title starts again (MainMenu.begin_watch).
+static var watches_stood: int = 0
+
 var interactable: Interactable = null
 var sign_interactable: Interactable = null
 var signature_label: Label3D = null
+var closing_label: Label3D = null
+var off_duty_stamp: Label3D = null
 ## The whole line the pen is writing (empty until signed).
 var signature_text: String = ""
+## The closing entry (empty until the watch is closed).
+var closing_text: String = ""
+var _closing_offered: bool = false
+var _pen_layer: int = 0
+var _pen_label: Label3D = null
+var _pen_text: String = ""
+var _stamp_when_written: bool = false
 var _written: int = 0
 var _strokes: int = 0
 var _glyph_timer: float = 0.0
+
+static func reset_watch_count() -> void:
+	watches_stood = 0
 
 func _ready() -> void:
 	if office == null and not office_path.is_empty():
@@ -52,37 +73,88 @@ func _ready() -> void:
 	interactable = get_node_or_null("Interactable") as Interactable
 	sign_interactable = get_node_or_null("SignInteractable") as Interactable
 	signature_label = get_node_or_null("RightPage/Signature") as Label3D
+	closing_label = get_node_or_null("RightPage/Closing") as Label3D
+	off_duty_stamp = get_node_or_null("RightPage/OffDutyStamp") as Label3D
 
 	if interactable != null:
 		interactable.prompt_text = prompt_message
 		if not interactable.interacted.is_connected(_on_interacted):
 			interactable.interacted.connect(_on_interacted)
 	if sign_interactable != null:
+		_pen_layer = sign_interactable.collision_layer
 		sign_interactable.prompt_text = PROMPT_SIGN
-		if not sign_interactable.interacted.is_connected(sign_on):
-			sign_interactable.interacted.connect(sign_on)
+		if not sign_interactable.interacted.is_connected(_on_pen):
+			sign_interactable.interacted.connect(_on_pen)
 
 func is_signed() -> bool:
 	return not signature_text.is_empty()
 
+func is_closed() -> bool:
+	return not closing_text.is_empty()
+
+func _on_pen() -> void:
+	if _closing_offered:
+		close_watch()
+	else:
+		sign_on()
+
 ## Elias signs at the station time the clock shows; signed late, it says so.
 func sign_on() -> void:
-	if is_signed():
+	if is_signed() or _closing_offered:
 		return
 	var time_text := _station_time_text()
 	signature_text = "%s  %s" % [SIGNATURE_NAME, time_text]
-	_written = 0
-	_strokes = 0
-	_glyph_timer = 0.0
-	if sign_interactable != null:
-		sign_interactable.enabled = false
-		# Out of the ray's way: the whole book reads again once signed.
-		sign_interactable.collision_layer = 0
+	_put_pen_down()
 	var knowledge := _knowledge_state()
 	if knowledge != null:
 		knowledge.learn(&"signed_on")
 		knowledge.remember_value(&"signed_on_at", time_text)
 	signed_on.emit(time_text)
+	_start_pen(signature_label, signature_text, false)
+
+## The watch has been stood (the dawn): the pen is offered to close it, signed
+## on or not.
+func offer_close() -> void:
+	if _closing_offered:
+		return
+	_closing_offered = true
+	watches_stood += 1
+	if sign_interactable != null:
+		sign_interactable.prompt_text = PROMPT_CLOSE
+		sign_interactable.enabled = true
+		sign_interactable.collision_layer = _pen_layer
+
+## The hour by the station clock, the last thing Elias heard on the wire (if
+## he heard anything), which watch this was; then the stamp.
+func close_watch() -> void:
+	if not _closing_offered or is_closed():
+		return
+	var lines := PackedStringArray(["END OF WATCH", _station_time_text()])
+	var knowledge := _knowledge_state()
+	var heard := knowledge.recall_value(&"last_wire_heard") if knowledge != null else ""
+	if not heard.is_empty():
+		lines.append("LAST ON THE WIRE:")
+		lines.append(heard)
+	lines.append("WATCH %d" % maxi(watches_stood, 1))
+	closing_text = "\n".join(lines)
+	_put_pen_down()
+	if knowledge != null:
+		knowledge.learn(&"watch_closed")
+	_start_pen(closing_label, closing_text, true)
+
+## Out of the ray's way: the whole book reads again while the pen is down.
+func _put_pen_down() -> void:
+	if sign_interactable != null:
+		sign_interactable.enabled = false
+		sign_interactable.collision_layer = 0
+
+func _start_pen(label: Label3D, text: String, stamp_after: bool) -> void:
+	_pen_label = label
+	_pen_text = text
+	_stamp_when_written = stamp_after
+	_written = 0
+	_strokes = 0
+	_glyph_timer = 0.0
 	advance_signature(0.0)
 
 func _process(delta: float) -> void:
@@ -90,18 +162,23 @@ func _process(delta: float) -> void:
 
 ## The pen's own clock, separate from _process so tests can drive it.
 func advance_signature(delta: float) -> void:
-	if _written >= signature_text.length():
+	if _written >= _pen_text.length():
 		return
 	_glyph_timer -= delta
-	while _glyph_timer <= 0.0 and _written < signature_text.length():
-		var glyph := signature_text[_written]
+	while _glyph_timer <= 0.0 and _written < _pen_text.length():
+		var glyph := _pen_text[_written]
 		_written += 1
-		if glyph != " ":
+		if glyph != " " and glyph != "\n":
 			_strokes += 1
 			signature_stroke.emit(_strokes)
 			_glyph_timer += seconds_per_glyph
-	if signature_label != null:
-		signature_label.text = signature_text.substr(0, _written)
+	if _pen_label != null:
+		_pen_label.text = _pen_text.substr(0, _written)
+	if _written >= _pen_text.length() and _stamp_when_written:
+		_stamp_when_written = false
+		if off_duty_stamp != null:
+			off_duty_stamp.visible = true
+		stamped.emit()
 
 func _station_time_text() -> String:
 	if office == null:
@@ -119,7 +196,8 @@ func get_interactable() -> Interactable:
 
 func get_ledger_text() -> String:
 	var signed := "" if not is_signed() else "\n\n" + _pad_entry("ON DUTY", signature_text)
-	return LEDGER_TEXT + signed + "\n\n" + _night_entries_text()
+	var closed := "" if not is_closed() else "\n\n" + closing_text + "\nOFF DUTY"
+	return LEDGER_TEXT + signed + "\n\n" + _night_entries_text() + closed
 
 ## Entries the operator actually made tonight, read from the shift's own
 ## knowledge record. WorldState is deliberately not consulted: the ledger is

@@ -237,6 +237,16 @@ func _run() -> void:
 	check(office.dawn_evidence.is_inspected(), "Handover can be inspected")
 	await _shot("08_handover")
 	await _press("interact")
+	# Plan 9.6: the watch is closed in the ledger, by the same ray and E.
+	ledger.stamped.connect(func(): _mark("the watch is stamped OFF DUTY"))
+	await _interact_at(Vector3(-1.25, 0, -0.1), ledger.get_node("SignInteractable"))
+	check(ledger.is_closed(), "The pen closes the watch in the ledger through E")
+	if not capture:
+		ledger.advance_signature(30.0)
+	for _i in 420:
+		await process_frame
+	await _aim(ledger.get_node("RightPage") as Node3D)
+	await _shot("08b_closed")
 	await _interact_at(Vector3(-1.6, 0, 1.35), office.office_door.get_interactable())
 	check(office.office_door.is_open, "Door opens after night")
 	await create_timer(1.3).timeout

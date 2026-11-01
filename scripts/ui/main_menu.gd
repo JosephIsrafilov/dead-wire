@@ -185,6 +185,8 @@ func toggle_options() -> void:
 ## must come through here.
 func begin_watch() -> bool:
 	clear_state()
+	# A new game from the title is Elias's first watch again (plan 9.6).
+	DispatchLedger.reset_watch_count()
 	save_preferences()
 	watch_started.emit()
 

@@ -137,6 +137,9 @@ func _bind() -> void:
 		var ledger_pen := _source("LedgerPen", pen_stream, ledger.global_position, -26.0)
 		ledger.signature_stroke.connect(func(_i):
 			_play_varied_stream(ledger_pen, pen_stream, pen_variants))
+		# Plan 9.6: OFF DUTY, pressed by hand onto the closed watch.
+		var ledger_stamp := _source("LedgerStamp", stamp_stream, ledger.global_position, -15.0)
+		ledger.stamped.connect(func(): _play_varied(ledger_stamp))
 	if register != null:
 		var winder := _source("RegisterWind", winding_stream, register.global_position, -18.0)
 		register.register_wound.connect(func(): _play_varied(winder))

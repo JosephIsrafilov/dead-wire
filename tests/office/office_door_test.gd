@@ -108,9 +108,12 @@ func _run() -> void:
 	if not assert_condition(card.is_running(), "Walking out plays the end card"): return
 	if not assert_condition(card.visible, "End card is shown"): return
 	if not assert_condition(office.player.is_movement_locked, "The operator stops walking once the slice ends"): return
+	# Plan 9.6: the record of the night is the ledger's and the duty sheet's,
+	# in the room; walking out lays no record over it, and none can leak.
 	var body_text := card.body_label.text if card.body_label != null else ""
-	if not assert_condition(body_text.contains("TRAIN 17"), "The record is the operator's duty sheet"): return
-	if not assert_condition(not body_text.contains("WATER") and not body_text.contains("WATCHER"), "The record never leaks message content"): return
+	if not assert_condition(body_text.is_empty() and not card.body_label.visible and not card.title_label.visible,
+		"Walking out lays no record over the room"): return
+	if not assert_condition(not body_text.contains("WATER") and not body_text.contains("WATCHER"), "The walk-out never leaks message content"): return
 
 	# 8. No door-zone z-fighting, overlapping walls, or doorway furniture clutter.
 	var floor_node := office.get_node_or_null("Floor") as CSGBox3D

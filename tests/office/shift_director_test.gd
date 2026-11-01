@@ -229,6 +229,10 @@ func _run() -> void:
 	session.notify_consequence_visible()
 	session.advance_consequence(office.scenario_3.consequence_hold_seconds)
 	if not assert_condition(director.get_phase() == ShiftDirector.Phase.CLOSING, "Last message closes the line"): return
+	# Plan 9.6: the wire's last word is what Elias heard; the ledger closes on it.
+	var heard_last := _knowledge_state().recall_value(&"last_wire_heard")
+	if not assert_condition(heard_last.ends_with("GN") or heard_last.ends_with("OS 17"),
+		"Elias heard the wire's last word, got '%s'" % heard_last): return
 	director.advance(director.get_closing_seconds() + 0.1)
 	if not assert_condition(director.get_phase() == ShiftDirector.Phase.SHIFT_OVER, "Shift reaches SHIFT_OVER"): return
 	if not assert_condition(director.is_shift_over(), "is_shift_over() agrees"): return

@@ -814,7 +814,12 @@ func _begin_closing() -> void:
 	_set_phase(Phase.CLOSING)
 	# The closing phase lasts while the wire says "<reply> GN", then the pause:
 	# the dawn and the door never start over the sender's last word (4.13).
-	_closing_wire_seconds = _play_on_wire(_closing_wire_text())
+	var closing_text := _closing_wire_text()
+	_closing_wire_seconds = _play_on_wire(closing_text)
+	# Plan 9.6: Elias heard the wire's last word; his ledger closes on it.
+	var knowledge := _knowledge_state()
+	if knowledge != null and _closing_wire_seconds > 0.0:
+		knowledge.remember_value(&"last_wire_heard", closing_text)
 
 ## The sender's parting word rides out with the closing sign as ONE schedule:
 ## "<reply> <sign>" (ROADMAP 2.3). The reply comes from the resolved slot's

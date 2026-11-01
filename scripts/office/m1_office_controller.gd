@@ -843,11 +843,8 @@ func _try_end_shift() -> void:
 	office_door.notify_player_left()
 	player.set_movement_locked(true)
 
-	var record := ""
-	var sheet := get_node_or_null("DutySheet") as DutySheet
-	if sheet != null:
-		record = sheet.get_watch_record()
-	shift_end_card.play("END OF WATCH", record)
+	# Plan 9.6: the night's record is in the ledger, in the room; none over it.
+	shift_end_card.play("", "")
 	_fade_room(0.0, ROOM_GONE_DB, shift_end_card.fade_duration)
 	var interaction := player.get_node_or_null("InteractionController") as InteractionController
 	if interaction != null:

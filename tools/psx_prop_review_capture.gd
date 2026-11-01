@@ -41,6 +41,8 @@ const VIEWS := {
 	"ledger_wide": [Vector3(-1.10, 1.45, 0.35), Vector3(-2.40, 0.76, -0.30)],
 	"ledger_signed": [Vector3(-1.95, 1.25, -0.10), Vector3(-2.52, 0.76, -0.14)],
 	"ledger_signed_close": [Vector3(-2.22, 1.08, -0.10), Vector3(-2.50, 0.77, -0.15)],
+	# Plan 9.6: the watch closed and stamped at dawn.
+	"ledger_closed_close": [Vector3(-2.22, 1.08, -0.10), Vector3(-2.50, 0.77, -0.15)],
 }
 
 func _initialize() -> void:
@@ -78,6 +80,15 @@ func _run() -> void:
 			if ledger != null and ledger.has_method("sign_on"):
 				ledger.sign_on()
 				ledger.advance_signature(10.0)
+		if name == "ledger_closed_close":
+			var closing_ledger := office.get_node_or_null("DispatchLedger")
+			if closing_ledger != null and closing_ledger.has_method("close_watch"):
+				var knowledge := root.get_node_or_null("KnowledgeState") as KnowledgeStateStore
+				if knowledge != null:
+					knowledge.remember_value(&"last_wire_heard", "SAID WATER GN")
+				closing_ledger.offer_close()
+				closing_ledger.close_watch()
+				closing_ledger.advance_signature(30.0)
 		cam.global_position = view[0]
 		cam.look_at(view[1], Vector3.UP)
 		for _i in 20:
