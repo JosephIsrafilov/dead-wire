@@ -7,7 +7,7 @@
 [ext_resource type="Material" path="res://materials/style_tests/metal_brass_aged.tres" id="6_brass"]
 
 [ext_resource type="ArrayMesh" path="res://assets/models/operator/hand_authored_v1.res" id="7_hand"]
-[ext_resource type="FontFile" path="res://assets/fonts/elias_working/elias_working.fnt" id="10_hand_font"]
+[ext_resource type="FontFile" path="res://assets/fonts/elias_working/elias_desk.fnt" id="10_hand_font"]
 [ext_resource type="Material" path="res://materials/style_tests/form_night_copy.tres" id="11_form"]
 [ext_resource type="Material" path="res://materials/style_tests/desk_wood.tres" id="12_wood"]
 [ext_resource type="ArrayMesh" path="res://assets/models/operator/forearm_v3.res" id="8_sleeve"]

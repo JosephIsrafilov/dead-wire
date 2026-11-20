@@ -1,8 +1,8 @@
 extends SceneTree
 ## Font contract for Elias's authored working hand: one generated font serves
 ## live and archived paper, while the forms builder uses its metrics.
-const FONT_PATH := "res://assets/fonts/elias_working/elias_working.fnt"
-const ATLAS_PATH := "res://assets/fonts/elias_working/elias_working_atlas.png"
+const FONT_PATH := "res://assets/fonts/elias_working/elias_desk.fnt"
+const ATLAS_PATH := "res://assets/fonts/elias_working/elias_desk_atlas.png"
 const GLYPH_SOURCE_DIR := "res://assets/fonts/elias_working"
 const REQUIRED_GLYPHS := "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 .,!?;:'-/()"
 
@@ -23,7 +23,10 @@ func _run() -> void:
 	var scene_text := FileAccess.get_file_as_string("res://scenes/telegraph/transcript_paper.tscn")
 	if not _a(scene_text.count(FONT_PATH) == 1, "Live and archive labels share one font resource"): return
 	var forms_text := FileAccess.get_file_as_string("res://tools/build_paper_forms.gd")
-	if not _a(forms_text.contains("const HAND := preload(\"%s\")" % FONT_PATH), "Forms builder uses the matching handwriting metrics"): return
+	var base_font := GLYPH_SOURCE_DIR + "/elias_working.fnt"
+	var original := FileAccess.get_file_as_string(base_font)
+	if not _a(metrics.replace("elias_desk_atlas.png", "elias_working_atlas.png") == original, "Desk ink keeps every authored metric"): return
+	if not _a(forms_text.contains("const HAND := preload(\"%s\")" % base_font), "Forms builder uses the matching handwriting metrics"): return
 	if not _a(TranscriptPaper.GLYPH_COLUMNS == 9, "Nine-column layout keeps whole words inside the sheet width"): return
 	var scene := load("res://scenes/telegraph/transcript_paper.tscn") as PackedScene
 	if not _a(scene != null, "Transcript scene loads with the generated font"): return

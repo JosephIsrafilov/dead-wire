@@ -1,0 +1,17 @@
+[remap]
+
+importer="font_data_bmfont"
+type="FontFile"
+uid="uid://cvbgicop6iq14"
+path="res://.godot/imported/elias_desk.fnt-bed71f277aefa021b04ea38b3a54517d.fontdata"
+
+[deps]
+
+source_file="res://assets/fonts/elias_working/elias_desk.fnt"
+dest_files=["res://.godot/imported/elias_desk.fnt-bed71f277aefa021b04ea38b3a54517d.fontdata"]
+
+[params]
+
+fallbacks=[]
+compress=true
+scaling_mode=2

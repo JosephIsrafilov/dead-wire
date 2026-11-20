@@ -188,10 +188,22 @@ def main():
                 draw_line(buf, a[0], a[1], b[0], b[1], pressed_width(a[0], a[1], b[0], b[1]))
         chars.append((ch, atlas_x, atlas_y, width, height, int(math.floor(min_x - 2)) if strokes else 0, int(math.floor(min_y - 2)) if strokes else 0, advance))
     (OUT / "elias_working_atlas.png").write_bytes(png_bytes(buf))
+    # The desk impression adds one ink pixel at each cardinal neighbour.
+    desk = bytearray(buf)
+    for y in range(1, ATLAS_H - 1):
+        for x in range(1, ATLAS_W - 1):
+            if buf[(y * ATLAS_W + x) * 4 + 3]:
+                put_pixel(desk, x - 1, y)
+                put_pixel(desk, x + 1, y)
+                put_pixel(desk, x, y - 1)
+                put_pixel(desk, x, y + 1)
+    (OUT / "elias_desk_atlas.png").write_bytes(png_bytes(desk))
     lines = [f'info face="Elias Working" size=48 bold=0 italic=0 charset="{GLYPHS}" unicode=1 smooth=0 aa=1 padding=0,0,0,0 spacing=1,1', f"common lineHeight={LINE_HEIGHT} base=54 scaleW={ATLAS_W} scaleH={ATLAS_H} pages=1 packed=0", 'page id=0 file="elias_working_atlas.png"', f"chars count={len(chars)}"]
     for ch, x, y, width, height, xoffset, yoffset, advance in chars:
         lines.append(f"char id={ord(ch)} x={x} y={y} width={width} height={height} xoffset={xoffset} yoffset={yoffset} xadvance={advance} page=0 chnl=15")
-    (OUT / "elias_working.fnt").write_text("\n".join(lines) + "\n", encoding="utf-8")
+    metrics = "\n".join(lines) + "\n"
+    (OUT / "elias_working.fnt").write_text(metrics, encoding="utf-8")
+    (OUT / "elias_desk.fnt").write_text(metrics.replace("elias_working_atlas.png", "elias_desk_atlas.png"), encoding="utf-8")
     (OUT / "README.md").write_text("# Elias Working\n\nSVG files are the editable glyph sources. The builder only creates a missing source, then consumes every SVG to produce the white-alpha atlas and measured BMFont metrics.\n", encoding="utf-8")
     print(f"generated {len(chars)} glyphs, {ATLAS_W}x{ATLAS_H} atlas at {OUT}")
 if __name__=='__main__': main()
