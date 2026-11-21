@@ -482,6 +482,12 @@ func _find_commit_option(action_id: StringName) -> TelegraphCommitOption:
 				return option
 	return null
 
+static func _matches_message_word(filed_word: String, message: String) -> bool:
+	if filed_word == message:
+		return true
+	var parts := message.split(" ", false)
+	return not parts.is_empty() and filed_word == parts[parts.size() - 1]
+
 func _accept_commit(selected: TelegraphCommitOption, word: String, amended: bool) -> bool:
 	# Capture attribution before callbacks can request a different slot.
 	var scenario := _current_scenario
@@ -489,15 +495,16 @@ func _accept_commit(selected: TelegraphCommitOption, word: String, amended: bool
 	var action_id := selected.action_id
 	var result := scenario.amendment_result_text if amended else selected.result_text
 	var objective_fact := selected.world_fact
+	var matches_true := _matches_message_word(word, scenario.transmission_data.true_message)
 	if amended:
-		if word == scenario.transmission_data.true_message:
+		if matches_true:
 			_resolved_outcome = TelegraphScenarioData.OUTCOME_AMENDED_TRUE
 		else:
 			_resolved_outcome = TelegraphScenarioData.OUTCOME_AMENDED_OTHER
 	else:
 		_resolved_outcome = TelegraphScenarioData.OUTCOME_FILED_AS_COPIED
 	_filed_word = word
-	if amended and word != scenario.transmission_data.true_message:
+	if amended and not matches_true:
 		objective_fact = scenario.amendment_wrong_world_fact
 	_decision_in_progress = true
 	_commit_resolved = true
@@ -510,7 +517,7 @@ func _accept_commit(selected: TelegraphCommitOption, word: String, amended: bool
 	if knowledge != null:
 		var fact := scenario.amendment_knowledge_fact if amended else selected.knowledge_fact
 		knowledge.learn(StringName(fact))
-		if amended and word == scenario.transmission_data.elias_perception:
+		if amended and _matches_message_word(word, scenario.transmission_data.elias_perception):
 			# What this records is a BELIEF, and the name has to say so or the
 			# next reader will take it for a grade. Elias typed the word he
 			# HEARD, so he now believes he copied the message correctly, and

@@ -55,15 +55,19 @@ signal foreign_traffic_heard(text: String)
 ## empty tape crawling is itself the pressure (horror layer §5).
 @export var wait_seconds_before_call: PackedFloat32Array = PackedFloat32Array([20.0, 38.0, 50.0])
 
-## Foreign traffic: not for this station, never copied by Elias, but the wire
-## carries it and the register inks it. A race bulletin from 1890 on a dead
-## line — for the player who reads the tape with the card. Supported letters
-## only. Played once, in the given slot's silence, only if it fits before the
-## call so it can never be cut or collide with real traffic.
-@export var foreign_traffic_text: String = "SLOW DANCER LEADS DIEGO SECOND"
+## Party line traffic: neighbouring stations talking over the shared wire in
+## the silences between Black Creek's own calls. Played on the sounder and
+## inked honestly onto the tape register, never copied or filed by Elias.
+## Only plays if it fits cleanly before the next call with a 3 s margin.
+@export var foreign_traffic_text: String = "DN TO RS 17 ON TIME AUDITOR DUE SUNDAY"
 @export var foreign_traffic_slot: int = 1
 @export var foreign_traffic_after_seconds: float = 4.0
+@export var party_line_by_slot: Dictionary = {
+	1: "DN TO RS 17 ON TIME AUDITOR DUE SUNDAY",
+	2: "RS TO DN LINE 4 DEAD WHO KEYED MJ",
+}
 var foreign_traffic_played: bool = false
+var _party_line_played_slots: Dictionary = {}
 
 ## The station's call. Restricted to the 18 characters M1 supports.
 ##
@@ -371,20 +375,30 @@ func _advance_step(delta: float) -> void:
 			pass
 
 func _maybe_foreign_traffic() -> void:
-	if foreign_traffic_played or foreign_traffic_text.is_empty() or _slot_index != foreign_traffic_slot:
+	if _party_line_played_slots.has(_slot_index):
 		return
-	if _phase_timer < foreign_traffic_after_seconds or not _wire_idle():
+	var text := ""
+	if party_line_by_slot.has(_slot_index):
+		text = str(party_line_by_slot[_slot_index])
+	elif _slot_index == foreign_traffic_slot and not foreign_traffic_played:
+		text = foreign_traffic_text
+	if text.is_empty():
+		return
+	if _phase_timer < foreign_traffic_after_seconds or not _wire_idle() or _hush_active():
 		return
 	var remaining := _current_wait_seconds() - _phase_timer
-	var sequence := _encoder.encode(foreign_traffic_text, alphabet) if alphabet != null else null
+	var sequence := _encoder.encode(text, alphabet) if alphabet != null else null
 	if sequence == null or playback_profile == null:
 		return
 	var schedule := _compiler.compile(sequence, playback_profile)
 	if schedule == null or schedule.total_duration_seconds > remaining - 3.0:
 		return
-	foreign_traffic_played = _play_on_wire(foreign_traffic_text) > 0.0
-	if foreign_traffic_played:
-		foreign_traffic_heard.emit(foreign_traffic_text)
+	var played := _play_on_wire(text) > 0.0
+	if played:
+		_party_line_played_slots[_slot_index] = true
+		if _slot_index == foreign_traffic_slot:
+			foreign_traffic_played = true
+		foreign_traffic_heard.emit(text)
 
 ## The previous slot's misrouted order gets its answer on the wire in THIS
 ## waiting stretch — armed only by the recorded world fact, so the fact has a

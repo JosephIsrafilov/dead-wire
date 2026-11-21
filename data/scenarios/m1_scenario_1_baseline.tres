@@ -7,9 +7,9 @@
 [sub_resource type="Resource" id="Resource_trans1"]
 script = ExtResource("2_trans")
 transmission_id = &"trans_m1_01_train_17"
-true_message = "TRAIN 17 CLEAR EAST"
-elias_perception = "TRAIN 17 CLEAR EAST"
-written_transcript = "TRAIN 17 CLEAR EAST"
+true_message = "BC TRAIN 17 CLEAR EAST"
+elias_perception = "BC TRAIN 17 CLEAR EAST"
+written_transcript = "BC TRAIN 17 CLEAR EAST"
 
 [sub_resource type="Resource" id="Resource_amend1"]
 script = ExtResource("3_commit")
@@ -43,7 +43,7 @@ attention_event_id = ""
 attention_event_start_time = 0.0
 completion_fact = ""
 requires_transcript_verification = true
-transcript_reveal_cues = PackedFloat32Array(0.022059, 0.088235, 0.147059, 0.191176, 0.25, 0.375, 0.477941, 0.566176, 0.632353, 0.661765, 0.720588, 0.786765, 0.838235, 0.897059, 0.955882, 1.0)
+transcript_reveal_cues = PackedFloat32Array(0.05625, 0.1125, 0.16875, 0.225, 0.275, 0.3125, 0.3625, 0.46875, 0.55625, 0.63125, 0.6875, 0.7125, 0.7625, 0.81875, 0.8625, 0.9125, 0.9625, 1.0)
 commit_options = [SubResource("Resource_amend1"), SubResource("Resource_file1")]
 commit_deadline_seconds = 30.0
 commit_lapsed_world_fact = "train_17_copy_unfiled"

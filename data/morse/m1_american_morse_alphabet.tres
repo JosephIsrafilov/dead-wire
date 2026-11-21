@@ -547,6 +547,304 @@ script = ExtResource("3_char")
 symbol = "7"
 sequence = SubResource("Resource_7_seq")
 
+[sub_resource type="Resource" id="Resource_B_ev_1"]
+script = ExtResource("1_event")
+kind = 0
+duration_units = 3
+
+[sub_resource type="Resource" id="Resource_B_ev_2"]
+script = ExtResource("1_event")
+kind = 1
+duration_units = 1
+
+[sub_resource type="Resource" id="Resource_B_ev_3"]
+script = ExtResource("1_event")
+kind = 0
+duration_units = 1
+
+[sub_resource type="Resource" id="Resource_B_ev_4"]
+script = ExtResource("1_event")
+kind = 1
+duration_units = 1
+
+[sub_resource type="Resource" id="Resource_B_ev_5"]
+script = ExtResource("1_event")
+kind = 0
+duration_units = 1
+
+[sub_resource type="Resource" id="Resource_B_ev_6"]
+script = ExtResource("1_event")
+kind = 1
+duration_units = 1
+
+[sub_resource type="Resource" id="Resource_B_ev_7"]
+script = ExtResource("1_event")
+kind = 0
+duration_units = 1
+
+[sub_resource type="Resource" id="Resource_B_seq"]
+script = ExtResource("2_seq")
+events = Array[ExtResource("1_event")]([SubResource("Resource_B_ev_1"), SubResource("Resource_B_ev_2"), SubResource("Resource_B_ev_3"), SubResource("Resource_B_ev_4"), SubResource("Resource_B_ev_5"), SubResource("Resource_B_ev_6"), SubResource("Resource_B_ev_7")])
+
+[sub_resource type="Resource" id="Resource_B_char"]
+script = ExtResource("3_char")
+symbol = "B"
+sequence = SubResource("Resource_B_seq")
+
+[sub_resource type="Resource" id="Resource_J_ev_1"]
+script = ExtResource("1_event")
+kind = 0
+duration_units = 3
+
+[sub_resource type="Resource" id="Resource_J_ev_2"]
+script = ExtResource("1_event")
+kind = 1
+duration_units = 1
+
+[sub_resource type="Resource" id="Resource_J_ev_3"]
+script = ExtResource("1_event")
+kind = 0
+duration_units = 1
+
+[sub_resource type="Resource" id="Resource_J_ev_4"]
+script = ExtResource("1_event")
+kind = 1
+duration_units = 1
+
+[sub_resource type="Resource" id="Resource_J_ev_5"]
+script = ExtResource("1_event")
+kind = 0
+duration_units = 3
+
+[sub_resource type="Resource" id="Resource_J_ev_6"]
+script = ExtResource("1_event")
+kind = 1
+duration_units = 1
+
+[sub_resource type="Resource" id="Resource_J_ev_7"]
+script = ExtResource("1_event")
+kind = 0
+duration_units = 1
+
+[sub_resource type="Resource" id="Resource_J_seq"]
+script = ExtResource("2_seq")
+events = Array[ExtResource("1_event")]([SubResource("Resource_J_ev_1"), SubResource("Resource_J_ev_2"), SubResource("Resource_J_ev_3"), SubResource("Resource_J_ev_4"), SubResource("Resource_J_ev_5"), SubResource("Resource_J_ev_6"), SubResource("Resource_J_ev_7")])
+
+[sub_resource type="Resource" id="Resource_J_char"]
+script = ExtResource("3_char")
+symbol = "J"
+sequence = SubResource("Resource_J_seq")
+
+[sub_resource type="Resource" id="Resource_K_ev_1"]
+script = ExtResource("1_event")
+kind = 0
+duration_units = 3
+
+[sub_resource type="Resource" id="Resource_K_ev_2"]
+script = ExtResource("1_event")
+kind = 1
+duration_units = 1
+
+[sub_resource type="Resource" id="Resource_K_ev_3"]
+script = ExtResource("1_event")
+kind = 0
+duration_units = 1
+
+[sub_resource type="Resource" id="Resource_K_ev_4"]
+script = ExtResource("1_event")
+kind = 1
+duration_units = 1
+
+[sub_resource type="Resource" id="Resource_K_ev_5"]
+script = ExtResource("1_event")
+kind = 0
+duration_units = 3
+
+[sub_resource type="Resource" id="Resource_K_seq"]
+script = ExtResource("2_seq")
+events = Array[ExtResource("1_event")]([SubResource("Resource_K_ev_1"), SubResource("Resource_K_ev_2"), SubResource("Resource_K_ev_3"), SubResource("Resource_K_ev_4"), SubResource("Resource_K_ev_5")])
+
+[sub_resource type="Resource" id="Resource_K_char"]
+script = ExtResource("3_char")
+symbol = "K"
+sequence = SubResource("Resource_K_seq")
+
+[sub_resource type="Resource" id="Resource_M_ev_1"]
+script = ExtResource("1_event")
+kind = 0
+duration_units = 3
+
+[sub_resource type="Resource" id="Resource_M_ev_2"]
+script = ExtResource("1_event")
+kind = 1
+duration_units = 1
+
+[sub_resource type="Resource" id="Resource_M_ev_3"]
+script = ExtResource("1_event")
+kind = 0
+duration_units = 3
+
+[sub_resource type="Resource" id="Resource_M_seq"]
+script = ExtResource("2_seq")
+events = Array[ExtResource("1_event")]([SubResource("Resource_M_ev_1"), SubResource("Resource_M_ev_2"), SubResource("Resource_M_ev_3")])
+
+[sub_resource type="Resource" id="Resource_M_char"]
+script = ExtResource("3_char")
+symbol = "M"
+sequence = SubResource("Resource_M_seq")
+
+[sub_resource type="Resource" id="Resource_P_ev_1"]
+script = ExtResource("1_event")
+kind = 0
+duration_units = 1
+
+[sub_resource type="Resource" id="Resource_P_ev_2"]
+script = ExtResource("1_event")
+kind = 1
+duration_units = 1
+
+[sub_resource type="Resource" id="Resource_P_ev_3"]
+script = ExtResource("1_event")
+kind = 0
+duration_units = 1
+
+[sub_resource type="Resource" id="Resource_P_ev_4"]
+script = ExtResource("1_event")
+kind = 1
+duration_units = 1
+
+[sub_resource type="Resource" id="Resource_P_ev_5"]
+script = ExtResource("1_event")
+kind = 0
+duration_units = 1
+
+[sub_resource type="Resource" id="Resource_P_ev_6"]
+script = ExtResource("1_event")
+kind = 1
+duration_units = 1
+
+[sub_resource type="Resource" id="Resource_P_ev_7"]
+script = ExtResource("1_event")
+kind = 0
+duration_units = 1
+
+[sub_resource type="Resource" id="Resource_P_ev_8"]
+script = ExtResource("1_event")
+kind = 1
+duration_units = 1
+
+[sub_resource type="Resource" id="Resource_P_ev_9"]
+script = ExtResource("1_event")
+kind = 0
+duration_units = 1
+
+[sub_resource type="Resource" id="Resource_P_seq"]
+script = ExtResource("2_seq")
+events = Array[ExtResource("1_event")]([SubResource("Resource_P_ev_1"), SubResource("Resource_P_ev_2"), SubResource("Resource_P_ev_3"), SubResource("Resource_P_ev_4"), SubResource("Resource_P_ev_5"), SubResource("Resource_P_ev_6"), SubResource("Resource_P_ev_7"), SubResource("Resource_P_ev_8"), SubResource("Resource_P_ev_9")])
+
+[sub_resource type="Resource" id="Resource_P_char"]
+script = ExtResource("3_char")
+symbol = "P"
+sequence = SubResource("Resource_P_seq")
+
+[sub_resource type="Resource" id="Resource_Y_ev_1"]
+script = ExtResource("1_event")
+kind = 0
+duration_units = 1
+
+[sub_resource type="Resource" id="Resource_Y_ev_2"]
+script = ExtResource("1_event")
+kind = 1
+duration_units = 1
+
+[sub_resource type="Resource" id="Resource_Y_ev_3"]
+script = ExtResource("1_event")
+kind = 0
+duration_units = 1
+
+[sub_resource type="Resource" id="Resource_Y_ev_4"]
+script = ExtResource("1_event")
+kind = 1
+duration_units = 2
+
+[sub_resource type="Resource" id="Resource_Y_ev_5"]
+script = ExtResource("1_event")
+kind = 0
+duration_units = 1
+
+[sub_resource type="Resource" id="Resource_Y_ev_6"]
+script = ExtResource("1_event")
+kind = 1
+duration_units = 1
+
+[sub_resource type="Resource" id="Resource_Y_ev_7"]
+script = ExtResource("1_event")
+kind = 0
+duration_units = 1
+
+[sub_resource type="Resource" id="Resource_Y_seq"]
+script = ExtResource("2_seq")
+events = Array[ExtResource("1_event")]([SubResource("Resource_Y_ev_1"), SubResource("Resource_Y_ev_2"), SubResource("Resource_Y_ev_3"), SubResource("Resource_Y_ev_4"), SubResource("Resource_Y_ev_5"), SubResource("Resource_Y_ev_6"), SubResource("Resource_Y_ev_7")])
+
+[sub_resource type="Resource" id="Resource_Y_char"]
+script = ExtResource("3_char")
+symbol = "Y"
+sequence = SubResource("Resource_Y_seq")
+
+[sub_resource type="Resource" id="Resource_4_ev_1"]
+script = ExtResource("1_event")
+kind = 0
+duration_units = 1
+
+[sub_resource type="Resource" id="Resource_4_ev_2"]
+script = ExtResource("1_event")
+kind = 1
+duration_units = 1
+
+[sub_resource type="Resource" id="Resource_4_ev_3"]
+script = ExtResource("1_event")
+kind = 0
+duration_units = 1
+
+[sub_resource type="Resource" id="Resource_4_ev_4"]
+script = ExtResource("1_event")
+kind = 1
+duration_units = 1
+
+[sub_resource type="Resource" id="Resource_4_ev_5"]
+script = ExtResource("1_event")
+kind = 0
+duration_units = 1
+
+[sub_resource type="Resource" id="Resource_4_ev_6"]
+script = ExtResource("1_event")
+kind = 1
+duration_units = 1
+
+[sub_resource type="Resource" id="Resource_4_ev_7"]
+script = ExtResource("1_event")
+kind = 0
+duration_units = 1
+
+[sub_resource type="Resource" id="Resource_4_ev_8"]
+script = ExtResource("1_event")
+kind = 1
+duration_units = 1
+
+[sub_resource type="Resource" id="Resource_4_ev_9"]
+script = ExtResource("1_event")
+kind = 0
+duration_units = 3
+
+[sub_resource type="Resource" id="Resource_4_seq"]
+script = ExtResource("2_seq")
+events = Array[ExtResource("1_event")]([SubResource("Resource_4_ev_1"), SubResource("Resource_4_ev_2"), SubResource("Resource_4_ev_3"), SubResource("Resource_4_ev_4"), SubResource("Resource_4_ev_5"), SubResource("Resource_4_ev_6"), SubResource("Resource_4_ev_7"), SubResource("Resource_4_ev_8"), SubResource("Resource_4_ev_9")])
+
+[sub_resource type="Resource" id="Resource_4_char"]
+script = ExtResource("3_char")
+symbol = "4"
+sequence = SubResource("Resource_4_seq")
+
 [resource]
 script = ExtResource("4_alph")
-entries = Array[ExtResource("3_char")]([SubResource("Resource_A_char"), SubResource("Resource_C_char"), SubResource("Resource_D_char"), SubResource("Resource_E_char"), SubResource("Resource_F_char"), SubResource("Resource_G_char"), SubResource("Resource_H_char"), SubResource("Resource_I_char"), SubResource("Resource_L_char"), SubResource("Resource_N_char"), SubResource("Resource_O_char"), SubResource("Resource_R_char"), SubResource("Resource_S_char"), SubResource("Resource_T_char"), SubResource("Resource_U_char"), SubResource("Resource_W_char"), SubResource("Resource_1_char"), SubResource("Resource_7_char")])
+entries = Array[ExtResource("3_char")]([SubResource("Resource_A_char"), SubResource("Resource_B_char"), SubResource("Resource_C_char"), SubResource("Resource_D_char"), SubResource("Resource_E_char"), SubResource("Resource_F_char"), SubResource("Resource_G_char"), SubResource("Resource_H_char"), SubResource("Resource_I_char"), SubResource("Resource_J_char"), SubResource("Resource_K_char"), SubResource("Resource_L_char"), SubResource("Resource_M_char"), SubResource("Resource_N_char"), SubResource("Resource_O_char"), SubResource("Resource_P_char"), SubResource("Resource_R_char"), SubResource("Resource_S_char"), SubResource("Resource_T_char"), SubResource("Resource_U_char"), SubResource("Resource_W_char"), SubResource("Resource_Y_char"), SubResource("Resource_1_char"), SubResource("Resource_4_char"), SubResource("Resource_7_char")])

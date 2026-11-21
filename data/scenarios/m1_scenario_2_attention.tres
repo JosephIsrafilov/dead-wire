@@ -7,9 +7,9 @@
 [sub_resource type="Resource" id="Resource_trans2"]
 script = ExtResource("2_trans")
 transmission_id = &"trans_m1_02_hold_freight"
-true_message = "FREIGHT 71 EAST"
-elias_perception = "FREIGHT 71 EAST"
-written_transcript = "FREIGHT 71 EAST"
+true_message = "BC FREIGHT 71 EAST"
+elias_perception = "BC FREIGHT 71 EAST"
+written_transcript = "BC FREIGHT 71 EAST"
 
 [sub_resource type="Resource" id="Resource_amend2"]
 script = ExtResource("3_commit")
@@ -44,7 +44,7 @@ attention_event_start_time = 4.0
 completion_fact = ""
 requires_transcript_verification = true
 critical_copy = true
-transcript_reveal_cues = PackedFloat32Array(0.061404, 0.140351, 0.175439, 0.22807, 0.333333, 0.421053, 0.473684, 0.622807, 0.745614, 0.807018, 0.877193, 0.947368, 1.0)
+transcript_reveal_cues = PackedFloat32Array(0.065217, 0.130435, 0.224638, 0.289855, 0.318841, 0.362319, 0.449275, 0.521739, 0.565217, 0.688406, 0.789855, 0.84058, 0.898551, 0.956522, 1.0)
 commit_options = [SubResource("Resource_amend2"), SubResource("Resource_file2")]
 commit_deadline_seconds = 30.0
 commit_lapsed_world_fact = "freight_copy_unfiled"
