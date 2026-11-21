@@ -88,10 +88,10 @@ func _on_session_completed(scen: TelegraphScenarioData) -> void:
 		return
 	if scen.scenario_id == "baseline_train_17" and not _done_17:
 		_armed_17 = true
-		_delay_17 = 2.5
+		_delay_17 = 1.4
 	elif scen.scenario_id == "attention_hold_freight" and not _done_71:
 		_armed_71 = true
-		_delay_71 = 3.0
+		_delay_71 = 1.2
 
 func _on_shift_closed() -> void:
 	_armed_17 = false

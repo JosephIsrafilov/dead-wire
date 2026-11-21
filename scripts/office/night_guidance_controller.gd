@@ -153,6 +153,9 @@ func _process(delta: float) -> void:
 	advance_guidance(delta)
 
 func _refresh_visible_context() -> void:
+	if office.player != null and office.player.seated_station_mode:
+		set_context(&"", true)
+		return
 	var session := office.session_controller
 	var director := office.shift_director
 	if session == null or director == null:

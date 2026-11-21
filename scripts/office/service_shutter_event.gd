@@ -5,25 +5,33 @@ extends Node3D
 ##
 ## Strictly a living railroad worker (never the Listener — GDD §10), arriving in
 ## the quiet stretch before Slot 3 while the wire is idle (GDD §7). Knocks softly,
-## casts a brief warm lantern spill beneath the door, and slides a yellow Form 31
-## yard clearance slip onto the floorboards for Elias to retrieve in BACK_DOOR view.
+## casts a brief warm lantern spill beneath the door, shows an exterior voice
+## banner on its own layer (never colliding with MurmurCaption), and slides a
+## yellow Form 31 yard clearance slip onto the floorboards for Elias to retrieve.
 
 signal clearance_slip_delivered()
 signal clearance_slip_read()
 
 const KNOCK_STREAM := preload("res://audio/sfx/foley/board_door.wav")
 const PAPER_STREAM := preload("res://audio/sfx/foley/paper_sheet.mp3")
+const FONT_VOICE := preload("res://assets/fonts/imfell/IMFeENrm28P.ttf")
+const BANNER_HOLD_SECONDS := 7.0
+const BANNER_FADE_SECONDS := 1.0
 
 var _director: ShiftDirector = null
 var _scheduler: MorseRuntimeScheduler = null
 var _doc_viewer: DocumentViewer = null
-var _murmur: MurmurCaption = null
 
 var _slip_root: Node3D = null
 var _slip_interact: Interactable = null
 var _lantern: OmniLight3D = null
 var _knock_player: AudioStreamPlayer3D = null
 var _paper_player: AudioStreamPlayer = null
+
+var _banner_layer: CanvasLayer = null
+var _banner_panel: PanelContainer = null
+var _banner_label: Label = null
+var _banner_elapsed: float = -1.0
 
 var _armed: bool = false
 var _wait_timer: float = 0.0
@@ -34,6 +42,7 @@ var _lantern_timer: float = -1.0
 
 func _ready() -> void:
 	_build_slip_and_light()
+	_build_banner()
 	_resolve_refs()
 	_connect_signals()
 
@@ -44,7 +53,6 @@ func _resolve_refs() -> void:
 	_director = office.get_node_or_null("ShiftDirector") as ShiftDirector
 	_scheduler = office.get_node_or_null("MorseRuntimeScheduler") as MorseRuntimeScheduler
 	_doc_viewer = office.get_node_or_null("DocumentViewer") as DocumentViewer
-	_murmur = office.get_node_or_null("MurmurCaption") as MurmurCaption
 
 func _connect_signals() -> void:
 	if _director != null and not _director.phase_changed.is_connected(_on_phase_changed):
@@ -78,10 +86,21 @@ func trigger_delivery_now() -> void:
 		_slip_interact.enabled = true
 		_slip_interact.is_actionable = true
 		_slip_interact.collision_layer = 2
-	if _murmur != null:
-		var line := "Brakeman — \"Crane? Clearance slip under the door. Tell whoever's by the fence to carry a lamp.\""
-		_murmur.show_outside_line(line, 6.0)
+	_show_banner()
 	clearance_slip_delivered.emit()
+
+func _show_banner() -> void:
+	if _banner_panel == null:
+		return
+	_banner_elapsed = 0.0
+	_banner_panel.visible = true
+	_banner_panel.modulate.a = 1.0
+
+func _hide_banner() -> void:
+	_banner_elapsed = -1.0
+	if _banner_panel != null:
+		_banner_panel.visible = false
+		_banner_panel.modulate.a = 0.0
 
 func _process(delta: float) -> void:
 	if delta <= 0.0:
@@ -89,7 +108,7 @@ func _process(delta: float) -> void:
 	if _armed and not _delivered:
 		if _director == null or _director.get_phase() == ShiftDirector.Phase.WAITING:
 			_wait_timer += delta
-			if _wait_timer >= 1.8 and _wire_idle():
+			if _wait_timer >= 3.0 and _wire_idle():
 				trigger_delivery_now()
 	if not _knock_queue.is_empty():
 		var next_queue: Array[float] = []
@@ -107,6 +126,14 @@ func _process(delta: float) -> void:
 		_lantern.light_energy = lerpf(0.85, rest, t)
 		if t >= 1.0:
 			_lantern_timer = -1.0
+	if _banner_elapsed >= 0.0 and _banner_panel != null:
+		_banner_elapsed += delta
+		if _banner_elapsed >= BANNER_HOLD_SECONDS:
+			var fade := (_banner_elapsed - BANNER_HOLD_SECONDS) / BANNER_FADE_SECONDS
+			if fade >= 1.0:
+				_hide_banner()
+			else:
+				_banner_panel.modulate.a = 1.0 - fade
 
 func _play_knock() -> void:
 	if not _wire_idle() or DisplayServer.get_name() == "headless":
@@ -118,6 +145,7 @@ func _on_slip_interacted() -> void:
 	if not _delivered or _slip_read:
 		return
 	_slip_read = true
+	_hide_banner()
 	if _slip_root != null:
 		_slip_root.visible = false
 	if _slip_interact != null:
@@ -172,6 +200,50 @@ Mine wire MJ has been grounding in the rain again.
 
 func _wire_idle() -> bool:
 	return _scheduler == null or not _scheduler.is_playing()
+
+func _build_banner() -> void:
+	if _banner_layer != null:
+		return
+	_banner_layer = CanvasLayer.new()
+	_banner_layer.name = "DoorVoiceLayer"
+	_banner_layer.layer = 7
+	add_child(_banner_layer)
+
+	_banner_panel = PanelContainer.new()
+	_banner_panel.name = "DoorVoiceBanner"
+	_banner_panel.set_anchors_and_offsets_preset(Control.PRESET_CENTER_BOTTOM)
+	_banner_panel.offset_left = -410.0
+	_banner_panel.offset_right = 410.0
+	_banner_panel.offset_top = -146.0
+	_banner_panel.offset_bottom = -84.0
+	_banner_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_banner_panel.visible = false
+
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color(0.05, 0.04, 0.03, 0.84)
+	style.border_color = Color(0.76, 0.58, 0.30, 0.72)
+	style.set_border_width_all(1)
+	style.set_corner_radius_all(3)
+	style.content_margin_left = 14.0
+	style.content_margin_right = 14.0
+	style.content_margin_top = 8.0
+	style.content_margin_bottom = 8.0
+	_banner_panel.add_theme_stylebox_override("panel", style)
+	_banner_layer.add_child(_banner_panel)
+
+	_banner_label = Label.new()
+	_banner_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_banner_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_banner_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_banner_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_banner_label.add_theme_font_override("font", FONT_VOICE)
+	_banner_label.add_theme_font_size_override("font_size", 18)
+	_banner_label.add_theme_color_override("font_color", Color(0.95, 0.86, 0.66, 0.96))
+	_banner_label.text = (
+		"AT THE DOOR — Brakeman: \"Crane? Clearance slip under the door. "
+		+ "Tell whoever's by the fence to carry a lamp.\""
+	)
+	_banner_panel.add_child(_banner_label)
 
 func _build_slip_and_light() -> void:
 	if _slip_root != null:

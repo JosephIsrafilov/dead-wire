@@ -4,12 +4,13 @@
 
 [resource]
 script = ExtResource("1")
-entries = Array[Dictionary]([{"id": &"entry", "text": "Lamp first. Tonight's orders hang by the door.", "delay": 2.0, "duration": 9.0, "once": true},
+entries = Array[Dictionary]([{"id": &"entry", "text": "The chair at the desk. Sit down to work the wire.", "delay": 2.0, "duration": 9.0, "once": true},
+{"id": &"open_line", "text": "The telegraph key is just right of the writing pad.", "duration": 9.0, "automatic": false},
 {"id": &"answer", "text": "The office is calling. Back to the key.", "delay": 1.0, "duration": 6.0, "once": true},
 {"id": &"read_copy", "text": "The copy is done. I should read it back.", "delay": 2.0, "duration": 6.0, "once": true},
-{"id": &"route", "text": "The order goes out from the wall board.", "delay": 2.0, "duration": 6.0, "once": true},
-{"id": &"wind", "text": "The register is slowing. I should wind it.", "delay": 1.0, "duration": 6.0, "once": true},
-{"id": &"filing", "text": "Then the copy goes to the table by the stove.", "delay": 2.0, "duration": 6.0, "once": true},
+{"id": &"route", "text": "Look left [A] for the signal lever.", "delay": 2.0, "duration": 6.0, "once": true},
+{"id": &"wind", "text": "The register is slowing. Click its crank to wind it.", "delay": 1.0, "duration": 6.0, "once": true},
+{"id": &"filing", "text": "Look right [D] to stamp and file the copy.", "delay": 2.0, "duration": 6.0, "once": true},
 {"id": &"dawn", "text": "The line is closed. The handover, then the door.", "delay": 2.0, "duration": 6.0, "once": true}])
 reactions = Array[Dictionary]([])
 automatic_interval = 12.0

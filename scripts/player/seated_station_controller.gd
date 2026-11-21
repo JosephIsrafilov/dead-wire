@@ -5,9 +5,9 @@ extends CanvasLayer
 ##
 ## Replaces free WASD room-walking during a watch with 4 curated seated views
 ## around the bay-window desk (Desk + Window, Left Signal Lever, Right Filing
-## Desk & Bookcase, Back Office Door) plus a live mouse cursor that interacts
-## directly with physical instruments, adjusts the oil lamp wick with the wheel,
-## and leans toward the window glass on right-click.
+## Desk & Bookcase, Back Office Door), owns the clean seated HUD (top-left duty
+## strip, bottom-right quiet keybinds, floating cursor tooltip), and dispatches
+## direct pointer interaction with physical instruments.
 
 enum View {
 	DESK,
@@ -65,6 +65,16 @@ var _style_normal: StyleBoxFlat = null
 var _style_attention: StyleBoxFlat = null
 var _hovering_nav: bool = false
 
+var _duty_panel: PanelContainer = null
+var _duty_primary: Label = null
+var _duty_sub: Label = null
+var _controls_label: Label = null
+
+var _tooltip_panel: PanelContainer = null
+var _tooltip_label: Label = null
+var _tooltip_active_style: StyleBoxFlat = null
+var _tooltip_muted_style: StyleBoxFlat = null
+
 func _ready() -> void:
 	layer = 6
 	_rng.randomize()
@@ -74,6 +84,7 @@ func _ready() -> void:
 	_resolve_refs()
 	_build_audio()
 	_build_nav_ui()
+	_build_hud_overlays()
 	_bind_intro.call_deferred()
 
 func _notification(what: int) -> void:
@@ -167,6 +178,7 @@ func _activate_station() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	Input.set_default_cursor_shape(Input.CURSOR_ARROW)
 	_refresh_nav_buttons()
+	_refresh_overlay_hud()
 
 func _build_nav_ui() -> void:
 	_style_normal = StyleBoxFlat.new()
@@ -220,6 +232,94 @@ func _build_nav_ui() -> void:
 
 	_set_nav_visible(false)
 
+func _build_hud_overlays() -> void:
+	_duty_panel = PanelContainer.new()
+	_duty_panel.name = "DutyStrip"
+	_duty_panel.set_anchors_preset(Control.PRESET_TOP_LEFT)
+	_duty_panel.offset_left = 16.0
+	_duty_panel.offset_top = 14.0
+	_duty_panel.offset_right = 540.0
+	_duty_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_duty_panel.visible = false
+	var duty_style := StyleBoxFlat.new()
+	duty_style.bg_color = Color(0.04, 0.03, 0.025, 0.62)
+	duty_style.border_color = Color(0.48, 0.39, 0.27, 0.42)
+	duty_style.set_border_width_all(1)
+	duty_style.set_corner_radius_all(3)
+	duty_style.content_margin_left = 12.0
+	duty_style.content_margin_right = 14.0
+	duty_style.content_margin_top = 7.0
+	duty_style.content_margin_bottom = 7.0
+	_duty_panel.add_theme_stylebox_override("panel", duty_style)
+	add_child(_duty_panel)
+
+	var vbox := VBoxContainer.new()
+	vbox.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	vbox.add_theme_constant_override("separation", 2)
+	_duty_panel.add_child(vbox)
+
+	_duty_primary = Label.new()
+	_duty_primary.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_duty_primary.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_duty_primary.add_theme_font_override("font", FONT_LETTERPRESS)
+	_duty_primary.add_theme_font_size_override("font_size", 16)
+	_duty_primary.add_theme_color_override("font_color", Color(0.92, 0.85, 0.70, 0.94))
+	vbox.add_child(_duty_primary)
+
+	_duty_sub = Label.new()
+	_duty_sub.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_duty_sub.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_duty_sub.visible = false
+	_duty_sub.add_theme_font_override("font", FONT_LETTERPRESS)
+	_duty_sub.add_theme_font_size_override("font_size", 14)
+	_duty_sub.add_theme_color_override("font_color", Color(0.96, 0.76, 0.40, 0.95))
+	vbox.add_child(_duty_sub)
+
+	_controls_label = Label.new()
+	_controls_label.name = "ControlsStrip"
+	_controls_label.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
+	_controls_label.offset_left = -430.0
+	_controls_label.offset_right = -16.0
+	_controls_label.offset_top = -34.0
+	_controls_label.offset_bottom = -12.0
+	_controls_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	_controls_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_controls_label.visible = false
+	_controls_label.add_theme_font_override("font", FONT_LETTERPRESS)
+	_controls_label.add_theme_font_size_override("font_size", 13)
+	_controls_label.add_theme_color_override("font_color", Color(0.84, 0.77, 0.63, 0.56))
+	_controls_label.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 0.85))
+	_controls_label.add_theme_constant_override("shadow_offset_y", 1)
+	_controls_label.text = "[A/W/D/S] Look  ·  [Wheel] Lamp  ·  [RMB] Lean / Close"
+	add_child(_controls_label)
+
+	_tooltip_active_style = StyleBoxFlat.new()
+	_tooltip_active_style.bg_color = Color(0.05, 0.04, 0.03, 0.86)
+	_tooltip_active_style.border_color = Color(0.84, 0.69, 0.42, 0.78)
+	_tooltip_active_style.set_border_width_all(1)
+	_tooltip_active_style.set_corner_radius_all(3)
+	_tooltip_active_style.content_margin_left = 10.0
+	_tooltip_active_style.content_margin_right = 10.0
+	_tooltip_active_style.content_margin_top = 4.0
+	_tooltip_active_style.content_margin_bottom = 4.0
+
+	_tooltip_muted_style = _tooltip_active_style.duplicate() as StyleBoxFlat
+	_tooltip_muted_style.border_color = Color(0.45, 0.39, 0.30, 0.48)
+
+	_tooltip_panel = PanelContainer.new()
+	_tooltip_panel.name = "CursorTooltip"
+	_tooltip_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_tooltip_panel.visible = false
+	_tooltip_panel.add_theme_stylebox_override("panel", _tooltip_active_style)
+	add_child(_tooltip_panel)
+
+	_tooltip_label = Label.new()
+	_tooltip_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_tooltip_label.add_theme_font_override("font", FONT_LETTERPRESS)
+	_tooltip_label.add_theme_font_size_override("font_size", 15)
+	_tooltip_label.add_theme_color_override("font_color", Color(0.95, 0.89, 0.76, 0.98))
+	_tooltip_panel.add_child(_tooltip_label)
+
 func _make_nav_button(label_text: String, handler: Callable) -> Button:
 	var btn := Button.new()
 	btn.text = label_text
@@ -247,12 +347,33 @@ func _set_nav_visible(show_nav: bool) -> void:
 		if btn != null:
 			btn.visible = show_nav
 
-func _is_blocked() -> bool:
-	if not enabled or not _activated:
+func _is_fullscreen_modal_open() -> bool:
+	if not enabled or not _activated or office == null:
 		return true
 	if get_tree() != null and get_tree().paused:
 		return true
-	if office != null and office.is_world_view_blocked():
+	if office.amendment_editor != null \
+			and (office.amendment_editor.is_open() or office.amendment_editor.owns_transition_frame()):
+		return true
+	if office.document_viewer != null and office.document_viewer.is_open():
+		return true
+	if office.routing_board != null and office.routing_board.is_open:
+		return true
+	var intro := office.get_node_or_null("IntroCard") as IntroCard
+	if intro != null and intro.visible:
+		return true
+	if office.shift_end_card != null and office.shift_end_card.is_running():
+		return true
+	var pause_menu := office.get_node_or_null("PauseMenu") as PauseMenu
+	if pause_menu != null and pause_menu.is_paused:
+		return true
+	return false
+
+func _is_blocked() -> bool:
+	if _is_fullscreen_modal_open():
+		return true
+	var pen := office.get_node_or_null("DeskAmendment") as DeskAmendment if office != null else null
+	if pen != null and pen.writing:
 		return true
 	return false
 
@@ -321,7 +442,9 @@ func _attention_flags() -> Dictionary:
 		flags.desk = true
 	if session != null:
 		var st := session.get_state()
-		if st == TelegraphSessionController.State.AWAITING_ROUTE:
+		if st == TelegraphSessionController.State.VERIFYING:
+			flags.desk = true
+		elif st == TelegraphSessionController.State.AWAITING_ROUTE:
 			flags.signal = true
 		elif st == TelegraphSessionController.State.AWAITING_COMMIT:
 			flags.filing = true
@@ -330,9 +453,100 @@ func _attention_flags() -> Dictionary:
 		flags.door = true
 	if office.office_door != null and (office.office_door.is_open or not office.office_door.is_locked()):
 		flags.door = true
-	if office.dawn_evidence != null and office.dawn_evidence.is_revealed() and not office.dawn_evidence.is_inspected():
+	if office.dawn_evidence != null and office.dawn_evidence.is_revealed() \
+			and not office.dawn_evidence.is_inspected():
 		flags.door = true
 	return flags
+
+func _refresh_overlay_hud() -> void:
+	if _duty_panel == null:
+		return
+	var modal := _is_fullscreen_modal_open()
+	_duty_panel.visible = not modal
+	if _controls_label != null:
+		_controls_label.visible = not modal
+	if modal:
+		_hide_tooltip()
+		return
+
+	var texts := _duty_texts()
+	_duty_primary.text = texts.primary
+	var sub: String = texts.sub
+	_duty_sub.text = sub
+	_duty_sub.visible = not sub.is_empty()
+	_update_tooltip_visual()
+
+func _duty_texts() -> Dictionary:
+	var primary := "STAND BY — Watch the wire and the yard"
+	var sub := ""
+	if office == null:
+		return {"primary": primary, "sub": sub}
+
+	var pen := office.get_node_or_null("DeskAmendment") as DeskAmendment
+	if pen != null and pen.writing:
+		primary = "WRITING CORRECTION — Type word, [Enter] Keep on sheet, [Esc] Cancel"
+		return {"primary": primary, "sub": sub}
+
+	var director := office.shift_director
+	var session := office.session_controller
+	if director != null and director.is_shift_over():
+		if office.dawn_evidence != null and office.dawn_evidence.is_revealed() \
+				and not office.dawn_evidence.is_inspected():
+			primary = "DAWN — Look back [S] and read the Night Handover beside the door"
+		elif office.office_door != null and not office.office_door.is_open:
+			primary = "DAWN — Look back [S] and open the south door to leave"
+		else:
+			primary = "DAWN — Click the open doorway [S] to end the watch"
+	elif director != null and director.get_phase() == ShiftDirector.Phase.PRE_SHIFT:
+		if _lamp_life != null and _lamp_life.wick < 0.72:
+			primary = "SHIFT START — Click lamp for light, then click brass key"
+		else:
+			primary = "SHIFT START — Click the brass key to open the line"
+	elif director != null and director.get_phase() == ShiftDirector.Phase.CALLING:
+		primary = "INCOMING CALL — Click the brass key%s to answer" \
+			% ("" if current_view == View.DESK else " [W]")
+	elif director != null and director.get_phase() == ShiftDirector.Phase.ANSWERING:
+		primary = "LINE ANSWERED — Sender coming in..."
+	elif session != null:
+		match session.get_state():
+			TelegraphSessionController.State.RECEIVING:
+				primary = "COPYING INCOMING — Listen to the sounder; wait for pen to finish"
+			TelegraphSessionController.State.COPYING:
+				primary = "FINISHING COPY — Wait for the pen to lift"
+			TelegraphSessionController.State.VERIFYING:
+				primary = "COPY COMPLETE — Click the clipboard sheet%s to read & verify" \
+					% ("" if current_view == View.DESK else " [W]")
+			TelegraphSessionController.State.AWAITING_ROUTE:
+				primary = "ORDER PENDING — Look left [A] and pull CLEAR EAST or HOLD" \
+					if current_view != View.LEFT_SIGNAL else "ORDER PENDING — Click CLEAR EAST or HOLD on the lever"
+			TelegraphSessionController.State.AWAITING_COMMIT:
+				if office.get_pending_correction().is_empty() and _slot_allows_correction(session):
+					primary = "FILE COPY — Pen lower sheet to amend, or look right [D] to stamp ORIGINAL"
+				else:
+					primary = "FILE COPY — Look right [D] and stamp the copy"
+			TelegraphSessionController.State.CONSEQUENCE:
+				primary = "ORDER FILED — Watch the night outside"
+
+	var warning := session.get_deadline_warning_text() if session != null else ""
+	var shutter := office.get_node_or_null("ServiceShutterEvent")
+	var reg := session.get_tape_register() if session != null else null
+	if not warning.is_empty():
+		sub = "• %s" % warning
+	elif shutter != null and shutter.has_method("has_unread_slip") and shutter.has_unread_slip():
+		sub = "• Clearance slip slid under the south door — look back [S] to read"
+	elif reg != null and reg.needs_winding():
+		sub = "• Tape register slowing — click its side crank on the desk to wind"
+
+	return {"primary": primary, "sub": sub}
+
+func _slot_allows_correction(session: TelegraphSessionController) -> bool:
+	var scen := session.get_current_scenario() if session != null else null
+	if scen == null:
+		return false
+	for opt in scen.commit_options:
+		if opt != null and opt.requires_correction:
+			return true
+	return false
 
 func _on_nav_left_pressed() -> void:
 	if _is_blocked():
@@ -377,6 +591,7 @@ func _process(delta: float) -> void:
 	_update_camera(delta, blocked)
 	if not blocked:
 		_update_mouse_raycast()
+	_refresh_overlay_hud()
 	_update_cramp_feedback(delta, blocked)
 
 func _update_cramp_feedback(delta: float, blocked: bool) -> void:
@@ -480,6 +695,58 @@ func _update_mouse_raycast() -> void:
 	var show_hand := found != null and (found.is_actionable or _is_open_door_target(found))
 	Input.set_default_cursor_shape(Input.CURSOR_POINTING_HAND if show_hand else Input.CURSOR_ARROW)
 
+func _update_tooltip_visual() -> void:
+	if _tooltip_panel == null or _tooltip_label == null:
+		return
+	if _is_blocked() or not _pointer_inside or _hovering_nav or _hovered_target == null:
+		_hide_tooltip()
+		return
+	var text := _friendly_cursor_label(_hovered_target)
+	if text.is_empty():
+		_hide_tooltip()
+		return
+	var active := _hovered_target.is_actionable or _is_open_door_target(_hovered_target)
+	_tooltip_label.text = text
+	_tooltip_label.add_theme_color_override(
+		"font_color",
+		Color(0.96, 0.90, 0.76, 0.98) if active else Color(0.76, 0.70, 0.58, 0.85)
+	)
+	_tooltip_panel.add_theme_stylebox_override(
+		"panel",
+		_tooltip_active_style if active else _tooltip_muted_style
+	)
+	_tooltip_panel.visible = true
+	_tooltip_panel.reset_size()
+	var vp := get_viewport()
+	var rect := vp.get_visible_rect() if vp != null else Rect2(0, 0, 1280, 720)
+	var tip_size := _tooltip_panel.get_combined_minimum_size()
+	var pos := _mouse_pos + Vector2(18.0, 20.0)
+	pos.x = clampf(pos.x, 8.0, maxf(rect.size.x - tip_size.x - 8.0, 8.0))
+	pos.y = clampf(pos.y, 8.0, maxf(rect.size.y - tip_size.y - 8.0, 8.0))
+	_tooltip_panel.position = pos
+
+func _hide_tooltip() -> void:
+	if _tooltip_panel != null:
+		_tooltip_panel.visible = false
+
+func _friendly_cursor_label(target: Interactable) -> String:
+	if target == null or not target.can_interact():
+		return ""
+	var raw := target.get_prompt()
+	var n: String = String(target.name)
+	var pname: String = String(target.get_parent().name) if target.get_parent() != null else ""
+	if n == "AmendInteractable":
+		return "Pick Up Pen — Correct Copy"
+	if n == "WickInteractable":
+		return "Oil Lamp — %s" % raw
+	if n == "LeanAtWindow":
+		return "Window Glass — Hold RMB to Lean" if not target.is_actionable else raw
+	if pname == "TelegraphKey" and not target.is_actionable:
+		return "Brass Key — %s (Space / Hold LMB)" % raw
+	if pname == "RoutingBoard" and not target.is_actionable:
+		return "Train-Order Signal (%s)" % raw
+	return raw
+
 func _is_open_door_target(target: Interactable) -> bool:
 	return office != null and office.office_door != null \
 		and target == office.office_door.get_interactable() and office.office_door.is_open
@@ -496,6 +763,7 @@ func _clear_cursor_target() -> void:
 	_hovered_target = null
 	if _interaction != null:
 		_interaction.set_cursor_target(null)
+	_hide_tooltip()
 
 func _input(event: InputEvent) -> void:
 	if not enabled or not _activated:

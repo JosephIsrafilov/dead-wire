@@ -87,6 +87,9 @@ func _update_prompt_ui() -> void:
 	refresh_reticle()
 	if not prompt_label:
 		return
+	if cursor_mode:
+		prompt_label.visible = false
+		return
 
 	if is_ui_blocked:
 		var desk := get_tree().get_first_node_in_group(DeskAmendment.GROUP) as DeskAmendment

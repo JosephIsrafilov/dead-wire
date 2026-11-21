@@ -53,7 +53,7 @@ signal foreign_traffic_heard(text: String)
 ## Quiet stretch before each message: the line as weather. The first is long
 ## enough to learn the room; the silences then GROW toward the core hook, so the
 ## empty tape crawling is itself the pressure (horror layer §5).
-@export var wait_seconds_before_call: PackedFloat32Array = PackedFloat32Array([10.0, 28.0, 30.0])
+@export var wait_seconds_before_call: PackedFloat32Array = PackedFloat32Array([10.0, 34.0, 44.0])
 
 ## Party line traffic: neighbouring stations talking over the shared wire in
 ## the silences between Black Creek's own calls. Played on the sounder and
@@ -62,6 +62,7 @@ signal foreign_traffic_heard(text: String)
 @export var foreign_traffic_text: String = "DN TO RS 17 ON TIME AUDITOR"
 @export var foreign_traffic_slot: int = 1
 @export var foreign_traffic_after_seconds: float = 2.0
+@export var foreign_traffic_after_by_slot: Dictionary = {1: 11.0, 2: 15.0}
 @export var party_line_by_slot: Dictionary = {
 	1: "DN TO RS 17 ON TIME AUDITOR",
 	2: "RS TO DN 4 DEAD WHO KEYED MJ",
@@ -343,6 +344,10 @@ func _advance_step(delta: float) -> void:
 			_pending_warning = &""
 	match _phase:
 		Phase.WAITING:
+			if _slot_index == 2 and office != null and office.document_viewer != null \
+					and office.document_viewer.is_open() \
+					and office.document_viewer.get_current_doc_id() == "yard_clearance_slip":
+				return
 			_phase_timer += delta
 			_maybe_foreign_traffic()
 			_maybe_misroute_signal()
@@ -384,7 +389,8 @@ func _maybe_foreign_traffic() -> void:
 		text = foreign_traffic_text
 	if text.is_empty():
 		return
-	if _phase_timer < foreign_traffic_after_seconds or not _wire_idle() or _hush_active():
+	var after_sec := float(foreign_traffic_after_by_slot.get(_slot_index, foreign_traffic_after_seconds))
+	if _phase_timer < after_sec or not _wire_idle() or _hush_active():
 		return
 	var remaining := _current_wait_seconds() - _phase_timer
 	var sequence := _encoder.encode(text, alphabet) if alphabet != null else null
@@ -933,21 +939,15 @@ func _apply_key_state_for_session(key: TelegraphKey) -> void:
 	if session == null:
 		key.set_prompt_message(PROMPT_RECEIVING)
 		return
-	match session.get_state():
-		TelegraphSessionController.State.RECEIVING:
-			key.set_prompt_message(PROMPT_RECEIVING)
-		TelegraphSessionController.State.COPYING:
-			key.set_prompt_message(PROMPT_FINISHING_COPY)
-		TelegraphSessionController.State.VERIFYING:
-			key.set_prompt_message(PROMPT_READ_COPY)
-		TelegraphSessionController.State.AWAITING_ROUTE:
-			key.set_prompt_message(PROMPT_AWAITING_ROUTE)
-		TelegraphSessionController.State.AWAITING_COMMIT:
-			key.set_prompt_message(PROMPT_FILE_COPY)
-		TelegraphSessionController.State.CONSEQUENCE:
-			key.set_prompt_message(PROMPT_STAND_BY)
-		_:
-			key.set_prompt_message(PROMPT_LINE_QUIET)
+	var prompts := {
+		TelegraphSessionController.State.RECEIVING: PROMPT_RECEIVING,
+		TelegraphSessionController.State.COPYING: PROMPT_FINISHING_COPY,
+		TelegraphSessionController.State.VERIFYING: PROMPT_READ_COPY,
+		TelegraphSessionController.State.AWAITING_ROUTE: PROMPT_AWAITING_ROUTE,
+		TelegraphSessionController.State.AWAITING_COMMIT: PROMPT_FILE_COPY,
+		TelegraphSessionController.State.CONSEQUENCE: PROMPT_STAND_BY,
+	}
+	key.set_prompt_message(str(prompts.get(session.get_state(), PROMPT_LINE_QUIET)))
 
 ## While the wire is calling, Elias is hurrying. The camera carries a little of it.
 func _apply_urgency() -> void:

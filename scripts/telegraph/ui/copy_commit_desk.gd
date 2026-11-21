@@ -298,7 +298,7 @@ func _update_presentation() -> void:
 			if is_corr and is_enabled() and not _can_file_correction():
 				target.enabled = true
 				target.is_actionable = false
-				target.prompt_text = "Write Correction at Desk First"
+				target.prompt_text = "FILE CORRECTION — Correct at Desk First [A]"
 			else:
 				target.enabled = is_enabled() and (index >= _options.size() or not is_corr or _can_file_correction())
 				target.is_actionable = target.enabled
