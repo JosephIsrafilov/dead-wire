@@ -175,10 +175,24 @@ func _activate_station() -> void:
 	if office != null:
 		office._on_operator_sit_completed()
 
+	if office != null and office.window_observation != null \
+			and not office.window_observation.event_observed.is_connected(_on_window_figure_observed):
+		office.window_observation.event_observed.connect(_on_window_figure_observed, CONNECT_ONE_SHOT)
+
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	Input.set_default_cursor_shape(Input.CURSOR_ARROW)
 	_refresh_nav_buttons()
 	_refresh_overlay_hud()
+
+func _on_window_figure_observed() -> void:
+	if office == null:
+		return
+	var sched := office.session_controller.scheduler if office.session_controller != null else null
+	if sched != null and sched.is_playing():
+		return
+	var murmur := office.get_node_or_null("MurmurCaption") as MurmurCaption
+	if murmur != null:
+		murmur.show_outside_line("Someone is standing by the mine fence... without a lantern.", 5.0)
 
 func _build_nav_ui() -> void:
 	_style_normal = StyleBoxFlat.new()
@@ -499,9 +513,10 @@ func _duty_texts() -> Dictionary:
 			primary = "DAWN — Click the open doorway [S] to end the watch"
 	elif director != null and director.get_phase() == ShiftDirector.Phase.PRE_SHIFT:
 		if _lamp_life != null and _lamp_life.wick < 0.72:
-			primary = "SHIFT START — Click lamp for light, then click brass key"
+			primary = "SHIFT START — Click lamp, check books, click brass key"
 		else:
-			primary = "SHIFT START — Click the brass key to open the line"
+			primary = "SHIFT START — Check Timetable & Ledger, then brass key"
+		sub = "• Read at your own pace: Ledger (left), Timetable (right), Shelf [D]"
 	elif director != null and director.get_phase() == ShiftDirector.Phase.CALLING:
 		primary = "INCOMING CALL — Click the brass key%s to answer" \
 			% ("" if current_view == View.DESK else " [W]")
@@ -520,8 +535,13 @@ func _duty_texts() -> Dictionary:
 				primary = "ORDER PENDING — Look left [A] and pull CLEAR EAST or HOLD" \
 					if current_view != View.LEFT_SIGNAL else "ORDER PENDING — Click CLEAR EAST or HOLD on the lever"
 			TelegraphSessionController.State.AWAITING_COMMIT:
-				if office.get_pending_correction().is_empty() and _slot_allows_correction(session):
-					primary = "FILE COPY — Pen lower sheet to amend, or look right [D] to stamp ORIGINAL"
+				var scen := session.get_current_scenario()
+				var is_hook := scen != null and scen.scenario_id == "core_hook_water_watcher"
+				if is_hook and office.get_pending_correction().is_empty():
+					primary = "FILE COPY — Compare Tape Strip vs Sheet before stamping"
+					sub = "• Hand wrote something different from what you heard — click lower sheet"
+				elif office.get_pending_correction().is_empty() and _slot_allows_correction(session):
+					primary = "FILE COPY — Pen lower sheet or stamp ORIGINAL [D]"
 				else:
 					primary = "FILE COPY — Look right [D] and stamp the copy"
 			TelegraphSessionController.State.CONSEQUENCE:

@@ -12,7 +12,12 @@ signal card_inspected(text: String)
 const TIMETABLE_TEXT: String = """BLACK CREEK & WESTERN — NIGHT TIMETABLE
 TRAIN 17   | PASSENGER EAST | 01:15 | FORM 19 (CLEAR)
 FREIGHT 71 | NIGHT FREIGHT  | 02:00 | RULE 44: FORM 31 (HOLD)
-MJ SPUR    | MINE JUNCTION  | ----- | [CLOSED OCT 14, 1885]"""
+MJ SPUR    | MINE JUNCTION  | ----- | [CLOSED OCT 14, 1885]
+
+WIRE CALL SIGNS (EAST DIVISION):
+  BC — Black Creek (This Station)
+  DN — Dunmore (West)    RS — Redstone (East)
+  MJ — Mine Junction, Line 4 [DEAD SINCE OCT 14, 1885]"""
 
 const WALL_CARD_TEXT: String = """BLACK CREEK & WESTERN
 NIGHT TIMETABLE

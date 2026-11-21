@@ -949,7 +949,7 @@ position = Vector3(-1.6, 0.2, 2.85)
 ; It is still well inside the observation contract's 10 m reach, and the
 ; silhouette is still cut out against the sky rather than lit.
 [node name="WindowObservationEvent" parent="." instance=ExtResource("21_winobs")]
-position = Vector3(-1.5, 0.95, -5.2)
+position = Vector3(-0.92, 0.96, -4.15)
 
 [node name="HangingCoat" parent="." instance=ExtResource("60_hanging_coat")]
 

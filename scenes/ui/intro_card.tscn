@@ -47,8 +47,9 @@ theme_override_font_sizes/normal_font_size = 15
 bbcode_enabled = false
 text = "BLACK CREEK & WESTERN RY. — TELEGRAPH DEPT. — ORDER 41
 
-E. CRANE TO RELIEVE NIGHT OPERATOR AT BLACK CREEK.
-LINE HAS RUN QUIET SINCE THE MINE CLOSED IN 85.
+E. CRANE TO RELIEVE NIGHT OPERATOR AT BLACK CREEK (CALL: BC).
+MINE JUNCTION (MJ) HAS BEEN SEALED SINCE THE FLOOD OF OCT. 1885.
+CHECK THE TIMETABLE AND DISPATCH LEDGER BEFORE OPENING THE LINE.
 KEEP THE WIRE. COPY WHAT COMES."
 fit_content = true
 
@@ -56,11 +57,11 @@ fit_content = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.38, 0.35, 0.29, 1)
 theme_override_font_sizes/font_size = 12
-text = "any key"
+text = "any key or click to continue"
 horizontal_alignment = 1
 
 [node name="IntroMusic" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("2_music")
 volume_db = -20.0
-bus = &"Ambience"
+bus = &"Music"
 

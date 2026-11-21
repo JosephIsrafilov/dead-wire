@@ -23,13 +23,13 @@ extends CanvasLayer
 const GLYPH_SEPARATOR := " · "
 const WORD_SEPARATOR := "     "
 const HEARD_PREFIX := "Heard — "
-const WIRE_PREFIX := "Wire — "
-## Quieter than a spoken thought: the murmur stays below full attention.
-const MURMUR_ALPHA := 0.55
-const MURMUR_COLOR := Color(0.82, 0.78, 0.7, MURMUR_ALPHA)
-const WIRE_COLOR := Color(0.68, 0.76, 0.84, 0.62)
-const WIRE_HOLD_SECONDS := 5.0
-const RESPONSE_HOLD_SECONDS := 4.5
+const WIRE_PREFIX := "WIRE (Party Line) — "
+## Clear enough to read effortlessly over desk and paper while staying calm.
+const MURMUR_ALPHA := 0.84
+const MURMUR_COLOR := Color(0.92, 0.87, 0.76, MURMUR_ALPHA)
+const WIRE_COLOR := Color(0.76, 0.84, 0.94, 0.90)
+const WIRE_HOLD_SECONDS := 6.8
+const RESPONSE_HOLD_SECONDS := 5.0
 ## A newly heard letter surfaces instead of popping in.
 @export var letter_fade_seconds: float = 0.35
 ## The murmur sits just under the copy board (owner's choice, plan 5.6): the
@@ -77,10 +77,12 @@ func _ready() -> void:
 	_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	# The whisper is softer than a thought: an old letterpress face, warm grey.
+	# Crisp high-contrast outline + shadow so letters read clearly over paper.
 	_label.add_theme_font_override("normal_font", preload("res://assets/fonts/imfell/IMFeENrm28P.ttf"))
-	_label.add_theme_font_size_override("normal_font_size", 20)
+	_label.add_theme_font_size_override("normal_font_size", 22)
 	_label.add_theme_color_override("default_color", MURMUR_COLOR)
+	_label.add_theme_color_override("font_outline_color", Color(0.02, 0.015, 0.01, 0.92))
+	_label.add_theme_constant_override("outline_size", 2)
 	_label.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.95))
 	_label.add_theme_constant_override("shadow_offset_x", 1)
 	_label.add_theme_constant_override("shadow_offset_y", 2)
@@ -133,7 +135,7 @@ func show_wire_line(text: String, distant: bool = false) -> void:
 	_state = VoiceState.HOLDING
 	if _label != null:
 		_label.add_theme_color_override("default_color", WIRE_COLOR if distant else MURMUR_COLOR)
-	var rendered := text.to_lower() if distant else _render(1.0)
+	var rendered := text.to_upper() if distant else _render(1.0)
 	_apply_text(rendered)
 
 ## Shows an exterior human voice or short inner reaction without the Morse prefix.

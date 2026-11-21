@@ -14,7 +14,7 @@ extends CanvasLayer
 
 signal intro_finished()
 
-@export var hold_seconds: float = 6.0
+@export var hold_seconds: float = 9.0
 @export var fade_duration: float = 2.2
 @export var skip_fade_duration: float = 0.35
 ## Skipping is refused for this long so the first frame is never missed.

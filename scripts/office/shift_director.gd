@@ -344,9 +344,7 @@ func _advance_step(delta: float) -> void:
 			_pending_warning = &""
 	match _phase:
 		Phase.WAITING:
-			if _slot_index == 2 and office != null and office.document_viewer != null \
-					and office.document_viewer.is_open() \
-					and office.document_viewer.get_current_doc_id() == "yard_clearance_slip":
+			if office != null and office.document_viewer != null and office.document_viewer.is_open():
 				return
 			_phase_timer += delta
 			_maybe_foreign_traffic()

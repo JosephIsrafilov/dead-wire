@@ -30,11 +30,16 @@ SPECIAL ORDERS & ROUTING RULES:
      HOLD unverified night freight until division clearance arrives.
    - An EAST request reports where freight wishes to go; it is not permission.
    - No division clearance is booked for Freight 71 tonight.
-   - Water supply & mine junction cars remain restricted under 1885 quarantine."""
+   - Water supply & mine junction cars remain restricted under 1885 quarantine.
+
+WIRE CALL SIGNS (EAST DIVISION):
+   BC — Black Creek (This Station)
+   DN — Dunmore (West)    RS — Redstone (East)
+   MJ — Mine Junction, Line 4 [DEAD SINCE OCT 14, 1885]"""
 
 ## Plan 9.3: signing on is the head of the watch, optional, and blocks
 ## nothing. The pen writes at a hand's pace, one glyph at a time.
-const PROMPT_SIGN: String = "Sign On"
+const PROMPT_SIGN: String = "Sign On (Optional)"
 const SIGNATURE_NAME: String = "E. CRANE"
 const FALLBACK_TIME: String = "11:00 P.M."
 @export var seconds_per_glyph: float = 0.11

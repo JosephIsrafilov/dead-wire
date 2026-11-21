@@ -1,58 +1,68 @@
-[gd_scene load_steps=9 format=3 uid="uid://b1winobs001"]
+[gd_scene load_steps=12 format=3 uid="uid://b1winobs001"]
 
 [ext_resource type="Script" path="res://scripts/events/attention_observation_target.gd" id="1_obs"]
+[ext_resource type="Shader" path="res://materials/shaders/figure_moon_rim.gdshader" id="2_rim"]
 
-; The figure is a SILHOUETTE, not a lit person.
-;
-; Shaded materials here were a mistake with a visible cause: the window bounce
-; light sits 5 cm from this node, so a rough dark material was being lit from
-; the front and the figure came up as a pale grey model of a man — every
-; primitive readable. What stands outside a lit window at night is a shape with
-; no interior detail, and that is also the honest presentation of an event the
-; game refuses to explain: the player sees a presence, not a character model.
-;
-; Unshaded, and darker than the sky it is cut out of. The values are the two
-; tones of a coat and a hat, and nothing else.
-[sub_resource type="StandardMaterial3D" id="FigureCloth"]
-shading_mode = 0
-albedo_color = Color(0.028, 0.033, 0.042, 1)
+[sub_resource type="ShaderMaterial" id="FigureCloth"]
+render_priority = 0
+shader = ExtResource("2_rim")
+shader_parameter/core_color = Color(0.012, 0.015, 0.022, 1)
+shader_parameter/rim_color = Color(0.22, 0.32, 0.48, 1)
+shader_parameter/rim_power = 3.2
+shader_parameter/rim_strength = 0.32
 
-[sub_resource type="StandardMaterial3D" id="FigureHat"]
-shading_mode = 0
-albedo_color = Color(0.019, 0.023, 0.030, 1)
+[sub_resource type="ShaderMaterial" id="FigureHat"]
+render_priority = 0
+shader = ExtResource("2_rim")
+shader_parameter/core_color = Color(0.009, 0.012, 0.018, 1)
+shader_parameter/rim_color = Color(0.26, 0.38, 0.56, 1)
+shader_parameter/rim_power = 2.8
+shader_parameter/rim_strength = 0.40
 
-; A long coat to below the knee: the figure stands ON the yard (plan 3.6), legs
-; and boots down to the ground, not a torso hanging in the air.
 [sub_resource type="CylinderMesh" id="CoatMesh"]
 material = SubResource("FigureCloth")
-top_radius = 0.17
-bottom_radius = 0.27
-height = 1.0
-radial_segments = 6
+top_radius = 0.205
+bottom_radius = 0.285
+height = 1.04
+radial_segments = 12
 rings = 1
 
-[sub_resource type="CylinderMesh" id="HeadMesh"]
+[sub_resource type="SphereMesh" id="HeadMesh"]
 material = SubResource("FigureCloth")
-top_radius = 0.12
-bottom_radius = 0.14
-height = 0.24
-radial_segments = 6
+radius = 0.115
+height = 0.25
+radial_segments = 14
+rings = 8
+
+[sub_resource type="CylinderMesh" id="NeckMesh"]
+material = SubResource("FigureCloth")
+top_radius = 0.056
+bottom_radius = 0.072
+height = 0.10
+radial_segments = 10
 rings = 1
+
+[sub_resource type="CapsuleMesh" id="ShoulderMesh"]
+material = SubResource("FigureCloth")
+radius = 0.105
+height = 0.46
+radial_segments = 10
+rings = 6
 
 [sub_resource type="CylinderMesh" id="HatBrimMesh"]
 material = SubResource("FigureHat")
-top_radius = 0.21
-bottom_radius = 0.21
-height = 0.035
-radial_segments = 6
+top_radius = 0.215
+bottom_radius = 0.22
+height = 0.026
+radial_segments = 14
 rings = 1
 
 [sub_resource type="CylinderMesh" id="HatCrownMesh"]
 material = SubResource("FigureHat")
-top_radius = 0.13
-bottom_radius = 0.16
-height = 0.16
-radial_segments = 6
+top_radius = 0.115
+bottom_radius = 0.135
+height = 0.145
+radial_segments = 14
 rings = 1
 
 [node name="WindowObservationEvent" type="Node3D"]
@@ -60,30 +70,28 @@ script = ExtResource("1_obs")
 
 [node name="VisualIndicator" type="Node3D" parent="."]
 visible = false
-rotation = Vector3(0, 0.21, 0)
+rotation = Vector3(0, -0.18, 0)
 
 [node name="Coat" type="MeshInstance3D" parent="VisualIndicator"]
 cast_shadow = 0
-position = Vector3(0, -0.12, 0)
+position = Vector3(0, -0.16, 0)
 mesh = SubResource("CoatMesh")
 
-; The node stands 0.95 m above the yard's ground: legs from the hem to the
-; boots, which sit on the ground. Set a little apart, one slightly forward.
 [node name="LegLeft" type="CSGBox3D" parent="VisualIndicator"]
 cast_shadow = 0
-position = Vector3(-0.08, -0.77, 0.02)
+position = Vector3(-0.085, -0.77, 0.02)
 size = Vector3(0.1, 0.32, 0.11)
 material = SubResource("FigureCloth")
 
 [node name="LegRight" type="CSGBox3D" parent="VisualIndicator"]
 cast_shadow = 0
-position = Vector3(0.085, -0.77, -0.03)
+position = Vector3(0.085, -0.77, -0.02)
 size = Vector3(0.1, 0.32, 0.11)
 material = SubResource("FigureCloth")
 
 [node name="BootLeft" type="CSGBox3D" parent="VisualIndicator"]
 cast_shadow = 0
-position = Vector3(-0.08, -0.905, 0.05)
+position = Vector3(-0.085, -0.905, 0.05)
 size = Vector3(0.12, 0.07, 0.24)
 material = SubResource("FigureHat")
 
@@ -95,37 +103,43 @@ material = SubResource("FigureHat")
 
 [node name="Head" type="MeshInstance3D" parent="VisualIndicator"]
 cast_shadow = 0
-position = Vector3(-0.035, 0.5, 0.015)
-rotation = Vector3(0, 0, 0.09)
+position = Vector3(0, 0.54, 0.01)
+rotation = Vector3(0.06, 0, 0.05)
 mesh = SubResource("HeadMesh")
 
-[node name="Shoulders" type="CSGBox3D" parent="VisualIndicator"]
+[node name="Neck" type="MeshInstance3D" parent="VisualIndicator"]
 cast_shadow = 0
-position = Vector3(-0.03, 0.3, 0)
-rotation = Vector3(0, 0, 0.06)
-size = Vector3(0.43, 0.13, 0.2)
-material = SubResource("FigureCloth")
+position = Vector3(0, 0.415, 0)
+mesh = SubResource("NeckMesh")
+
+[node name="Shoulders" type="MeshInstance3D" parent="VisualIndicator"]
+cast_shadow = 0
+position = Vector3(0, 0.325, 0)
+rotation = Vector3(0, 0, 1.5707963)
+mesh = SubResource("ShoulderMesh")
 
 [node name="LeftArm" type="CSGBox3D" parent="VisualIndicator"]
 cast_shadow = 0
-transform = Transform3D(0.984808, 0.173648, 0, -0.173648, 0.984808, 0, 0, 0, 1, -0.21, 0.04, 0.02)
-size = Vector3(0.11, 0.5, 0.15)
+position = Vector3(-0.225, 0.04, 0.01)
+rotation = Vector3(0, 0, -0.06)
+size = Vector3(0.10, 0.54, 0.13)
 material = SubResource("FigureCloth")
 
 [node name="RightArm" type="CSGBox3D" parent="VisualIndicator"]
 cast_shadow = 0
-transform = Transform3D(0.906308, -0.422618, 0, 0.422618, 0.906308, 0, 0, 0, 1, 0.2, 0.11, 0.1)
-size = Vector3(0.1, 0.34, 0.14)
+position = Vector3(0.225, 0.05, 0.02)
+rotation = Vector3(0, 0, 0.06)
+size = Vector3(0.10, 0.52, 0.13)
 material = SubResource("FigureCloth")
 
 [node name="HatBrim" type="MeshInstance3D" parent="VisualIndicator"]
 cast_shadow = 0
-position = Vector3(-0.055, 0.66, 0.025)
-rotation = Vector3(0, 0, 0.04)
+position = Vector3(0, 0.645, 0.015)
+rotation = Vector3(0.08, 0, 0.04)
 mesh = SubResource("HatBrimMesh")
 
 [node name="HatCrown" type="MeshInstance3D" parent="VisualIndicator"]
 cast_shadow = 0
-position = Vector3(-0.055, 0.745, 0.025)
-rotation = Vector3(0, 0, 0.04)
+position = Vector3(0, 0.72, 0.015)
+rotation = Vector3(0.08, 0, 0.04)
 mesh = SubResource("HatCrownMesh")
