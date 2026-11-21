@@ -30,6 +30,7 @@ var amendment_editor: AmendmentEditor = null
 var _scenario_index: int = 0
 var _scenario_list: Array[TelegraphScenarioData] = []
 var _cycle_completed: bool = false
+var _telegram_strips := PackedInt32Array()
 var _exit_body_present: bool = false
 
 var _presentation_mode: int = 1
@@ -448,6 +449,8 @@ func _on_key_pressed() -> void:
 ## all the same: the signal runs and cues are authorized, but no ink appears
 ## until the sit transition has physically finished.
 func _on_transmission_started(_scen: TelegraphScenarioData) -> void:
+	if session_controller != null and session_controller.tape_register != null:
+		_telegram_strips.append(session_controller.tape_register.get_strip_count())
 	if session_controller != null and (operator_seat == null or not operator_seat.is_settled()):
 		session_controller.notify_operator_stood()
 
@@ -517,7 +520,16 @@ func _on_amendment_requested() -> void:
 	if session_controller.get_state() != TelegraphSessionController.State.AWAITING_COMMIT:
 		copy_commit_desk.set_amendment_open(false)
 		return
+	if is_shift_directed():
+		session_controller.submit_amendment(get_pending_correction())
+		copy_commit_desk.set_amendment_open(false)
+		return
 	amendment_editor.open_editor(session_controller.get_current_scenario().scenario_id)
+
+func get_pending_correction() -> String:
+	var pen := get_node_or_null("DeskAmendment") as DeskAmendment
+	var scenario := session_controller.get_current_scenario() if session_controller != null else null
+	return pen.get_pending(scenario.scenario_id) if pen != null and scenario != null else ""
 
 func _on_amendment_opened() -> void:
 	_on_document_opened("amendment")
@@ -605,10 +617,16 @@ func _on_session_state_changed(
 		new_state: TelegraphSessionController.State,
 		_prev_state: TelegraphSessionController.State
 ) -> void:
+	var pen := get_node_or_null("DeskAmendment") as DeskAmendment
+	if new_state != TelegraphSessionController.State.AWAITING_COMMIT:
+		if pen != null and pen.writing:
+			pen.cancel()
 	if new_state != TelegraphSessionController.State.AWAITING_COMMIT \
 		and amendment_editor != null and amendment_editor.is_open():
 		amendment_editor.close_editor(false)
 	if new_state == TelegraphSessionController.State.IDLE:
+		if pen != null:
+			pen.reset_for_new_copy()
 		if amendment_editor != null:
 			amendment_editor.close_editor(false)
 		if window_observation != null:
@@ -651,10 +669,22 @@ func _on_transcript_inspected(text: String) -> void:
 		return
 	# Finished sheets — current or an earlier telegram's — read as records; the
 	# session's own listener decides whether reading verifies anything.
-	document_viewer.open_document(
-		"transcript_paper", "NIGHT COPY — E. CRANE", text,
-		"[E / Esc] Put Down Transcript"
-	)
+	var footer := "[E / Esc] Put Down"
+	var scenario := session_controller.get_current_scenario() if session_controller != null else null
+	if (is_shift_directed() and scenario != null and paper != null
+			and paper.get_paper_scenario_id() == scenario.scenario_id):
+		if (session_controller.get_state() == TelegraphSessionController.State.AWAITING_COMMIT
+				and not get_pending_correction().is_empty()):
+			footer += "  ·  File the correction by the stove"
+		elif scenario.requires_routing and session_controller.get_state() in [
+			TelegraphSessionController.State.VERIFYING, TelegraphSessionController.State.AWAITING_ROUTE
+		]:
+			footer += "  ·  Set the route at the east wall"
+		elif not scenario.requires_routing and session_controller.get_state() in [
+			TelegraphSessionController.State.VERIFYING, TelegraphSessionController.State.AWAITING_COMMIT
+		]:
+			footer += "  ·  Check the tape beside the key"
+	document_viewer.open_document("transcript_paper", "NIGHT COPY — E. CRANE", text, footer)
 
 func _get_transcript_paper() -> TranscriptPaper:
 	var paper := get_node_or_null("TranscriptPaper") as TranscriptPaper
@@ -680,9 +710,13 @@ func _on_tape_inspected(text: String) -> void:
 	# no verdict: checking the copy against the strip is the player's work.
 	if document_viewer == null:
 		return
-	document_viewer.open_document(TapeRegisterController.TAPE_DOC_ID,
-		TapeRegisterController.TAPE_TITLE, _wrap_tape_text(text),
-		"[E / Esc] Put Down Tape — ? marks a broken-off signal")
+	var lines := text.split("\n")
+	for index in lines.size():
+		for number in _telegram_strips:
+			if lines[index].begins_with("%s%d ·" % [TapeRegisterController.TAKE_HEADER_PREFIX, number]):
+				lines[index] += " TELEGRAM"
+	document_viewer.open_document(TapeRegisterController.TAPE_DOC_ID, TapeRegisterController.TAPE_TITLE,
+		_wrap_tape_text("\n".join(lines)), "[E / Esc] Put Down · Calls and replies share the tape · ? marks a cut signal")
 
 ## Paper layout inserts line breaks only: every timing column survives.
 ## This helper never treats a GAP as disposable prose whitespace.
@@ -769,6 +803,9 @@ func _update_transcript_prompt() -> void:
 ## Any full-screen surface that hides the world also blocks observation through
 ## it. This is computed centrally so every caller shares one definition.
 func is_world_view_blocked() -> bool:
+	var pen := get_node_or_null("DeskAmendment") as DeskAmendment
+	if pen != null and pen.writing:
+		return true
 	if amendment_editor != null and (amendment_editor.is_open() or amendment_editor.owns_transition_frame()):
 		return true
 	if document_viewer != null and document_viewer.is_open():
@@ -813,6 +850,10 @@ func _on_ledger_inspected(text: String) -> void:
 			"[E / Esc] Put Down Ledger"
 		)
 
+func trigger_seated_exit() -> void:
+	_exit_body_present = true
+	_try_end_shift()
+
 ## Stepping through the open door ends the slice. The record shown is Elias's
 ## own duty sheet, so it reports what he knows, never what actually happened.
 func _on_exit_body_entered(body: Node) -> void:
@@ -853,7 +894,7 @@ func _try_end_shift() -> void:
 
 func _on_duty_sheet_inspected(text: String) -> void:
 	if document_viewer != null:
-		document_viewer.open_document("duty_sheet", "OPERATOR'S DUTY SHEET", text, "[E / Esc] Put Down Duty Sheet")
+		document_viewer.open_document("duty_sheet", "NIGHT ORDERS", text, "[E / Esc] Put Down")
 
 func _on_bookshelf_inspected(text: String) -> void:
 	if document_viewer != null:
@@ -870,7 +911,7 @@ func _on_dawn_evidence_inspected(text: String) -> void:
 	if document_viewer != null:
 		document_viewer.open_document(
 			"dawn_evidence", "BLACK CREEK — NIGHT HANDOVER", text,
-			"[E / Esc] Put Down Dispatch Draft"
+			"[E / Esc] Put Down the Night Handover"
 		)
 
 func _on_document_opened(_doc_id: String) -> void:
@@ -909,15 +950,12 @@ func _update_key_feedback() -> void:
 	var key: TelegraphKey = session_controller.telegraph_key if session_controller != null else null
 	if key == null:
 		return
-
 	if _cycle_completed:
 		key.set_prompt_message("M1 Cycle Complete")
 		key.set_enabled(false)
 		return
-
 	if session_controller == null:
 		return
-
 	match session_controller.get_state():
 		TelegraphSessionController.State.IDLE:
 			key.set_prompt_message("Line Inactive")
@@ -949,7 +987,7 @@ func _update_key_feedback() -> void:
 
 func _process(_delta: float) -> void:
 	_update_transcript_prompt()
-	_refresh_guidance()
+	NightGuidanceController.refresh_interaction_hint(self)
 	_update_deadline_warning_footer()
 	if window_observation != null and window_observation.is_active:
 		var cam := player_camera
@@ -959,39 +997,3 @@ func _process(_delta: float) -> void:
 			cam = get_viewport().get_camera_3d()
 		if cam != null:
 			window_observation.check_camera(cam, is_world_view_blocked())
-
-func _refresh_guidance() -> void:
-	if not is_shift_directed() or player == null or session_controller == null:
-		return
-	var interaction := player.get_node_or_null("InteractionController") as InteractionController
-	if interaction == null:
-		return
-	# How to rise is told until the operator has done it once, then never again.
-	var seated_hint := operator_seat != null and operator_seat.is_seated and not operator_seat.has_stood_once
-	var hint := OperatorSeat.HINT_SEATED if seated_hint else ""
-	match session_controller.get_state():
-		TelegraphSessionController.State.VERIFYING:
-			hint = "Read the finished copy on the desk"
-		TelegraphSessionController.State.AWAITING_ROUTE:
-			hint = "Set the route on the east wall board"
-		TelegraphSessionController.State.AWAITING_COMMIT:
-			hint = "File the copy at the table by the stove"
-	# A deadline warning is true everywhere the player can be, including behind
-	# an open document: the sender does not wait for the reader.
-	var warning := session_controller.get_deadline_warning_text()
-	if not warning.is_empty():
-		hint = warning
-	if shift_director.get_phase() == ShiftDirector.Phase.PRE_SHIFT:
-		hint = "Work the key to open the line" if operator_seat.is_seated else KEY_HINTS
-		var lamp_life := get_node_or_null("LampLife") as LampLife
-		if operator_seat.is_seated and lamp_life != null and lamp_life.wick < 1.0:
-			hint = "Turn up the lamp, then work the key to open the line"
-	elif shift_director.get_phase() == ShiftDirector.Phase.CALLING:
-		hint = "The office is calling — answer at the key"
-	elif shift_director.is_shift_over():
-		var leave_hint := "Read the night handover beside the door" \
-			if dawn_evidence.is_revealed() and not dawn_evidence.is_inspected() \
-			else "The watch is over — leave through the south door"
-		hint = leave_hint
-	if interaction.persistent_hint != hint:
-		interaction.set_persistent_hint(hint)

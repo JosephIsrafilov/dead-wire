@@ -1,0 +1,4 @@
+[gd_resource type="Resource" format=3]
+
+[resource]
+metadata/body = "Use A / W / D / S or the edge arrows to look around the office.\n\nScroll the wheel or click the lamp to dim the glass reflection and see the tracks.\n\nClick the brass key to open the line and answer calls. Hold Space (or hold the key) to send.\n\nLook left for the train-order signal lever. Look right to stamp and file each copy."

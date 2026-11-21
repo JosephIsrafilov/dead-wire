@@ -92,6 +92,8 @@ func advance_guidance(delta: float) -> void:
 	var entry := data.entry_for(_context)
 	if entry.is_empty() or (_shown.has(_context) and entry.get("once", true)):
 		return
+	if not entry.get("automatic", true):
+		return
 	if _context_elapsed < float(entry.get("delay", 2.0)) or _since_auto < data.automatic_interval:
 		return
 	_show(entry)
@@ -252,3 +254,64 @@ func _on_wire_started(_schedule: MorsePlaybackScheduleData) -> void:
 
 func _on_document_opened(_document_id: String) -> void:
 	set_context(_context, true)
+
+static func refresh_interaction_hint(office: M1OfficeController) -> void:
+	if not office.is_shift_directed() or office.player == null or office.session_controller == null:
+		return
+	var pen := office.get_node_or_null("DeskAmendment") as DeskAmendment
+	if pen != null and pen.writing:
+		return
+	var interaction := office.player.get_node_or_null("InteractionController") as InteractionController
+	if interaction == null:
+		return
+	# How to rise is told until the operator has done it once, then never again.
+	var seat := office.operator_seat
+	var seated := seat != null and seat.is_seated
+	var cursor_station := office.player.seated_station_mode
+	var seated_hint := seated and not seat.has_stood_once and not cursor_station
+	var hint := OperatorSeat.HINT_SEATED if seated_hint else ""
+	match office.session_controller.get_state():
+		TelegraphSessionController.State.VERIFYING:
+			hint = "Read the finished copy on the desk"
+		TelegraphSessionController.State.AWAITING_ROUTE:
+			hint = "Look left [A] for the signal lever" if cursor_station else "Set the route on the east wall board"
+		TelegraphSessionController.State.AWAITING_COMMIT:
+			if seated and office.get_pending_correction().is_empty():
+				hint = "Take the pen to correct, or look right [D] to file" if cursor_station \
+					else "Pick up the pen to correct, or file by the stove"
+			else:
+				hint = "Look right [D] to stamp and file" if cursor_station \
+					else "File the copy at the table by the stove"
+	if office.shift_director.get_phase() == ShiftDirector.Phase.PRE_SHIFT:
+		if cursor_station:
+			hint = "Click the brass key to open the line"
+			var wick := office.get_node_or_null("DeskSetup/OilLamp/WickInteractable") as Interactable
+			var lamp := office.get_node_or_null("LampLife") as LampLife
+			if wick != null and lamp != null and lamp.wick < 0.72:
+				hint = "Click the lamp to raise the wick, then click the brass key to open the line"
+		else:
+			hint = "[E] Open the line at the key right of the writing pad" \
+				if seated else "[W A S D] Move   [E] Sit in the chair at the desk"
+			var wick := office.get_node_or_null("DeskSetup/OilLamp/WickInteractable") as Interactable
+			if seated and wick != null and wick.can_interact():
+				hint = "[E] Turn up the lamp on the left, then use the key on the right"
+	elif office.shift_director.get_phase() == ShiftDirector.Phase.CALLING:
+		hint = "The wire is calling. Click the brass key to answer" if cursor_station \
+			else "The wire is calling. [E] Answer at the same key"
+	elif office.shift_director.get_phase() == ShiftDirector.Phase.WAITING \
+			and office.shift_director.get_slot_index() == 0 and seated:
+		hint = "Wait for the first call. Answer at the same key"
+	elif office.shift_director.is_shift_over():
+		var leave_hint := "Look back [S] and read the night handover beside the door" \
+			if cursor_station and office.dawn_evidence.is_revealed() and not office.dawn_evidence.is_inspected() \
+			else ("Look back [S] and click the door to leave" if cursor_station \
+			else ("Read the night handover beside the door" \
+			if office.dawn_evidence.is_revealed() and not office.dawn_evidence.is_inspected() \
+			else "The watch is over — leave through the south door"))
+		hint = leave_hint
+	# The sender's warning takes priority over the usual work prompt.
+	var warning := office.session_controller.get_deadline_warning_text()
+	if not warning.is_empty():
+		hint = warning
+	if interaction.persistent_hint != hint:
+		interaction.set_persistent_hint(hint)

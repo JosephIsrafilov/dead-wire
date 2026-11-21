@@ -19,6 +19,7 @@ const READABILITY_PATH: String = \
 var settings: GameSettings = null
 
 var is_paused: bool = false
+var _paused_for_focus: bool = false
 
 var sensitivity_slider: HSlider = null
 var head_bob_check: CheckButton = null
@@ -26,6 +27,7 @@ var master_slider: HSlider = null
 var ambience_slider: HSlider = null
 var telegraph_slider: HSlider = null
 var foley_slider: HSlider = null
+var music_slider: HSlider = null
 var contextual_thoughts_check: CheckButton = null
 var resume_button: Button = null
 var title_button: Button = null
@@ -47,6 +49,22 @@ func _ready() -> void:
 	_push_settings_to_controls()
 	_connect_controls()
 
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_APPLICATION_FOCUS_OUT and not get_tree().paused:
+		# Hold the wire and the shift clocks without taking over the active UI.
+		_paused_for_focus = true
+		get_tree().paused = true
+	elif what == NOTIFICATION_APPLICATION_FOCUS_IN:
+		_release_focus_pause()
+
+func _exit_tree() -> void:
+	_release_focus_pause()
+
+func _release_focus_pause() -> void:
+	if _paused_for_focus:
+		_paused_for_focus = false
+		get_tree().paused = false
+
 func _find_nodes() -> void:
 	var box := "CenterContainer/PanelContainer/MarginContainer/VBoxContainer/"
 	var sound := box + "Columns/SoundColumn/"
@@ -63,6 +81,8 @@ func _find_nodes() -> void:
 		telegraph_slider = get_node_or_null(sound + "TelegraphRow/TelegraphSlider") as HSlider
 	if foley_slider == null:
 		foley_slider = get_node_or_null(sound + "FoleyRow/FoleySlider") as HSlider
+	if music_slider == null:
+		music_slider = get_node_or_null(sound + "MusicRow/MusicSlider") as HSlider
 	if contextual_thoughts_check == null:
 		contextual_thoughts_check = get_node_or_null(sound + "ContextualThoughtsCheck") as CheckButton
 	if resume_button == null:
@@ -96,10 +116,15 @@ func _push_settings_to_controls() -> void:
 		telegraph_slider.set_value_no_signal(settings.telegraph_volume_db)
 	if foley_slider != null:
 		foley_slider.set_value_no_signal(settings.foley_volume_db)
+	if music_slider != null:
+		music_slider.set_value_no_signal(settings.music_volume_db)
 	if contextual_thoughts_check != null:
 		contextual_thoughts_check.set_pressed_no_signal(settings.contextual_thoughts_enabled)
 
 func _connect_controls() -> void:
+	ReadabilityOptions.attach_readout(sensitivity_slider, "%.1f")
+	for slider in [master_slider, ambience_slider, telegraph_slider, foley_slider, music_slider]:
+		ReadabilityOptions.attach_readout(slider, "%d dB")
 	if sensitivity_slider != null and not sensitivity_slider.value_changed.is_connected(_on_sensitivity_changed):
 		sensitivity_slider.value_changed.connect(_on_sensitivity_changed)
 	if head_bob_check != null and not head_bob_check.toggled.is_connected(_on_head_bob_toggled):
@@ -112,6 +137,8 @@ func _connect_controls() -> void:
 		telegraph_slider.value_changed.connect(_on_telegraph_changed)
 	if foley_slider != null and not foley_slider.value_changed.is_connected(_on_foley_changed):
 		foley_slider.value_changed.connect(_on_foley_changed)
+	if music_slider != null and not music_slider.value_changed.is_connected(_on_music_changed):
+		music_slider.value_changed.connect(_on_music_changed)
 	if contextual_thoughts_check != null and not contextual_thoughts_check.toggled.is_connected(
 			_on_contextual_thoughts_toggled):
 		contextual_thoughts_check.toggled.connect(_on_contextual_thoughts_toggled)
@@ -148,7 +175,7 @@ func toggle() -> bool:
 	return pause()
 
 func pause() -> bool:
-	if is_paused:
+	if is_paused or _paused_for_focus:
 		return false
 	var office := get_parent() as M1OfficeController
 	if office != null:
@@ -184,7 +211,8 @@ func resume() -> bool:
 	_disarm_leave()
 	if is_inside_tree():
 		get_tree().paused = false
-	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	var seated_mode := player != null and player.seated_station_mode
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE if seated_mode else Input.MOUSE_MODE_CAPTURED
 	if player != null:
 		var interaction := player.get_node_or_null("InteractionController") as InteractionController
 		if interaction != null:
@@ -227,6 +255,12 @@ func _on_telegraph_changed(value: float) -> void:
 func _on_foley_changed(value: float) -> void:
 	settings = GameSettings.load_settings()
 	settings.foley_volume_db = value
+	settings.apply(player)
+	settings.save()
+
+func _on_music_changed(value: float) -> void:
+	settings = GameSettings.load_settings()
+	settings.music_volume_db = value
 	settings.apply(player)
 	settings.save()
 

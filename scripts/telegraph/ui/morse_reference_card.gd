@@ -30,9 +30,9 @@ const CARD_DEPTH: float = 0.34
 const VIEWER_HEADER: String = "AMERICAN MORSE CODE (1890)"
 
 const ALPHABET_PATH: String = "res://data/morse/m1_american_morse_alphabet.tres"
-## Reading order as the viewer has always shown it: two columns, nine rows.
-const LEFT_COLUMN: Array[String] = ["A", "C", "D", "E", "F", "G", "H", "I", "L"]
-const RIGHT_COLUMN: Array[String] = ["N", "O", "R", "S", "T", "U", "W", "1", "7"]
+## Reading order as the viewer has always shown it: two columns, all M1 symbols.
+const LEFT_COLUMN: Array[String] = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M"]
+const RIGHT_COLUMN: Array[String] = ["N", "O", "P", "R", "S", "T", "U", "W", "Y", "1", "4", "7"]
 
 var interactable: Interactable = null
 var label_3d: Label3D = null

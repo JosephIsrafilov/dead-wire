@@ -43,7 +43,7 @@ var _draft: float = 0.0
 @export var stove_hz: float = 0.37
 
 ## The wick: 0..1 of full flame. The watch starts turned down; the operator
-## turns it up by hand (or the lamp comes up with the opened line).
+## turns it up by hand; opening the telegraph line never moves the wheel.
 signal wick_turned_up()
 signal wick_turned_down()
 @export var start_turned_down: bool = true
@@ -58,8 +58,11 @@ signal wick_turned_down()
 ## At dawn the lamp is turned down for the day man; this is how low.
 @export var dawn_wick: float = 0.06
 const PROMPT_WICK: String = "Turn Up the Wick"
+const PROMPT_DIM: String = "Dim the Lamp"
 const PROMPT_TRIM: String = "Trim the Wick"
 const PROMPT_TURN_DOWN: String = "Turn Down the Lamp"
+const DIM_WICK: float = 0.22
+const MIN_MANUAL_WICK: float = 0.14
 var _line_open: bool = false
 var _dawn: bool = false
 var _full_seconds: float = 0.0
@@ -96,17 +99,14 @@ func _bind_wick() -> void:
 		return
 	_wick_interactable = office.get_node_or_null("DeskSetup/OilLamp/WickInteractable") as Interactable
 	if _wick_interactable != null:
-		_wick_interactable.prompt_text = PROMPT_WICK
-		_wick_interactable.enabled = wick < 1.0
+		_wick_interactable.enabled = true
+		_sync_wick_prompt()
 		if not _wick_interactable.interacted.is_connected(_on_wick_interacted):
 			_wick_interactable.interacted.connect(_on_wick_interacted)
 	var door := office.get_node_or_null("SouthDoor/DoorController") as OfficeDoor
 	if door != null and not door.door_opened.is_connected(gust):
 		door.door_opened.connect(gust.bind(1.0))
 	var director := office.get_node_or_null("ShiftDirector") as ShiftDirector
-	if director != null and not director.shift_opened.is_connected(turn_up_wick):
-		# A forgotten lamp: Elias turns it up himself when he opens the line.
-		director.shift_opened.connect(turn_up_wick)
 	if director != null and not director.shift_opened.is_connected(_on_line_opened):
 		director.shift_opened.connect(_on_line_opened)
 
@@ -116,6 +116,8 @@ func _on_line_opened() -> void:
 func _on_wick_interacted() -> void:
 	if _dawn:
 		turn_down_wick()
+	elif wick >= 0.72:
+		dim_wick()
 	else:
 		turn_up_wick()
 
@@ -134,16 +136,48 @@ func turn_down_wick() -> void:
 		_wick_interactable.enabled = false
 	wick_turned_down.emit()
 
+func dim_wick() -> void:
+	if _dawn:
+		return
+	var target := DIM_WICK
+	_turn_wheel(target - wick)
+	_wick_target = target
+	_wick_rate = maxf(absf(wick - target) / maxf(wick_turn_seconds * 0.65, 0.01), 0.5)
+	_sync_wick_prompt()
+	wick_turned_down.emit()
+
+func adjust_wick(delta_wick: float) -> void:
+	if _dawn or is_zero_approx(delta_wick):
+		return
+	var next_target := clampf(_wick_target + delta_wick, MIN_MANUAL_WICK, 1.0)
+	if is_equal_approx(next_target, _wick_target):
+		return
+	_turn_wheel(next_target - _wick_target)
+	_wick_target = next_target
+	_wick_rate = maxf(absf(_wick_target - wick) / 0.18, 0.8)
+	if delta_wick > 0.0:
+		_full_seconds = 0.0
+	_sync_wick_prompt()
+
 func turn_up_wick() -> void:
 	if _wick_target >= 1.0 and wick >= 1.0:
+		_sync_wick_prompt()
 		return
 	_turn_wheel(1.0 - wick)
 	_wick_target = 1.0
 	_wick_rate = (1.0 - wick) / maxf(wick_turn_seconds, 0.01)
 	_full_seconds = 0.0
-	if _wick_interactable != null:
-		_wick_interactable.enabled = false
+	_sync_wick_prompt()
 	wick_turned_up.emit()
+
+func _sync_wick_prompt() -> void:
+	if _wick_interactable == null or _dawn:
+		return
+	_wick_interactable.enabled = true
+	if _wick_target >= 0.72:
+		_wick_interactable.prompt_text = PROMPT_DIM
+	else:
+		_wick_interactable.prompt_text = PROMPT_WICK
 
 ## The hand turns the wheel by as much as it moves the wick, at the wick's pace.
 func _turn_wheel(wick_amount: float) -> void:

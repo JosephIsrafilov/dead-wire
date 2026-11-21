@@ -59,6 +59,8 @@ signal glyph_contact(glyph_index: int)
 ## Pen tilt amplitude (radians) and hover lift (metres) at full drift.
 @export var idle_drift_tilt: float = 0.03
 @export var idle_drift_lift: float = 0.005
+## Purely cosmetic telegrapher's cramp ("glass arm") tremor during the core hook.
+@export var cramp_tremor_intensity: float = 0.0
 ## Plan 5.8: once the copy is complete the pen goes to the inkwell for a dip
 ## before the arm withdraws. Only then: a glyph never waits for the ink.
 @export var dip_reach_seconds: float = 0.45
@@ -603,8 +605,32 @@ func _segment_transform(start: Vector3, end: Vector3) -> Transform3D:
 
 func _process(delta: float) -> void:
 	_advance_idle(delta)
+	_apply_cramp_tremor()
 	# Withdrawal is tween-driven, so its elbow follows on rendered frames too.
 	_update_upper_arm()
+
+func _apply_cramp_tremor() -> void:
+	if cramp_tremor_intensity <= 0.001 or _motion_pending or not is_ready_to_write():
+		return
+	var hand := get_node_or_null(_get_hand_path()) as Node3D
+	if hand == null or not _assembly_rest_captured:
+		return
+	var amp := clampf(cramp_tremor_intensity, 0.0, 1.0)
+	var t := _idle_clock
+	var jitter_rot := Vector3(
+		deg_to_rad(1.1) * amp * sin(t * 27.0),
+		0.0,
+		deg_to_rad(1.2) * amp * cos(t * 31.0 + 0.7)
+	)
+	var jitter_pos := Vector3(
+		0.0014 * amp * sin(t * 23.0 + 0.3),
+		0.0009 * amp * absf(sin(t * 19.0)),
+		0.0
+	)
+	hand.transform = Transform3D(
+		hand.transform.basis * Basis.from_euler(jitter_rot),
+		hand.transform.origin + jitter_pos
+	)
 
 ## The hand waits between letters the way a hand does: after a short pause
 ## the pen lifts a few millimetres and the hand drifts and tilts slowly.

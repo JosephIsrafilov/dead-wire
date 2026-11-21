@@ -7,9 +7,11 @@ extends Node
 ##
 ## Every press clicks the sounder down/up, animates the brass lever, and inks
 ## honest MARK/GAP events onto the tape register (never passing text to it).
-## A forgiving decoder (±35% around dot/dash unit lengths) recognizes:
-##   - R   (.-.)          -> acknowledgement ("OK" after calls 1-2)
-##   - RPT (.-. .--. -)   -> repeat request ("YOU HEARD ME" after call 3)
+## A forgiving decoder (±35% around dot/dash unit lengths) recognizes honest
+## 1890 American Morse operator signals:
+##   - I (..)    -> acknowledgement ("OK" after calls 1-2)
+##   - K (-.-)   -> repeat / say again ("YOU HEARD ME" after call 3)
+##   (Legacy R / RPT patterns remain accepted as fallbacks.)
 ##
 ## Strictly optional: ignoring the key never blocks or soft-locks the shift.
 
@@ -22,8 +24,10 @@ const IDLE_COMMIT_SECONDS: float = 0.72
 ## ±35% tolerance around 1-unit dot and 3-unit dash durations.
 const DURATION_TOLERANCE: float = 0.35
 
-## Supported short operator signals in dot/dash notation matching the desk slip:
-## R (.-.) and RPT (.-. .--. -).
+## Supported short operator signals: honest American Morse I (..) and K (-.-),
+## plus legacy R / RPT fallbacks.
+const CODE_I: String = ".."
+const CODE_K: String = "-.-"
 const CODE_R: String = ".-."
 const CODE_RPT_LETTERS: Array[String] = [".-.", ".--.", "-"]
 const CODE_RPT_COMPACT: String = ".-..--.-"
@@ -85,10 +89,15 @@ func _is_manual_key_event(event: InputEvent) -> bool:
 	if event is InputEventMouseButton:
 		var mb := event as InputEventMouseButton
 		if mb.button_index == MOUSE_BUTTON_LEFT:
+			if _seated_cursor_active():
+				return _aiming_at_key() or _is_keying
 			return true
 	if event.is_action("interact") and _aiming_at_key() and not _key_wants_single_press():
 		return true
 	return false
+
+func _seated_cursor_active() -> bool:
+	return office != null and office.player != null and office.player.seated_station_mode
 
 func _aiming_at_key() -> bool:
 	if office == null or office.player == null or office.session_controller == null:
@@ -108,7 +117,7 @@ func _key_wants_single_press() -> bool:
 func _is_seated_and_free() -> bool:
 	if office == null or office.session_controller == null:
 		return false
-	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
+	if not _seated_cursor_active() and Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
 		return false
 	if office.is_world_view_blocked():
 		return false
@@ -240,6 +249,10 @@ static func decode_signal(raw: Array[Dictionary], spu: float, threshold_units: f
 	if not current.is_empty():
 		letters.append(current)
 
+	if letters.size() == 1 and letters[0] == CODE_I:
+		return "I"
+	if letters.size() == 1 and letters[0] == CODE_K:
+		return "K"
 	if letters.size() == 1 and letters[0] == CODE_R:
 		return "R"
 	if letters == CODE_RPT_LETTERS or compact == CODE_RPT_COMPACT:
@@ -258,11 +271,11 @@ func _handle_decoded_signal(code: String) -> void:
 		TelegraphSessionController.State.CONSEQUENCE,
 		TelegraphSessionController.State.COMPLETE,
 	]
-	if code == "RPT" and (after_hook_signal or _last_completed_slot == 2) and not _hook_rpt_answered:
+	if (code == "K" or code == "RPT") and (after_hook_signal or _last_completed_slot == 2) and not _hook_rpt_answered:
 		_hook_rpt_answered = true
 		_queue_wire_response("YOU HEARD ME", RESPONSE_DELAY_HOOK_SECONDS)
 		return
-	if code == "R" and not is_hook and _last_completed_slot in [0, 1]:
+	if (code == "I" or code == "R") and not is_hook and _last_completed_slot in [0, 1]:
 		_queue_wire_response("OK", RESPONSE_DELAY_ACK_SECONDS)
 
 func _queue_wire_response(text: String, delay_seconds: float) -> void:

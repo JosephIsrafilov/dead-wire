@@ -13,7 +13,7 @@ extends Node
 
 @export var slot_index: int = 1
 ## Late in the silence, after the foreign traffic has had the wire.
-@export var cloud_after_seconds: float = 24.0
+@export var cloud_after_seconds: float = 20.0
 @export var cloud_hold_seconds: float = 7.0
 @export var creak_stream: AudioStream = preload("res://audio/sfx/foley/floor_creak_2.wav")
 @export var creak_volume_db: float = -17.0

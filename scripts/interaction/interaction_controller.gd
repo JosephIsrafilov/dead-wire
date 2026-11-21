@@ -12,6 +12,8 @@ const INACTIVE_RETICLE_COLOR: Color = Color(0.86, 0.79, 0.63, 0.45)
 
 var current_target: Interactable = null
 var is_ui_blocked: bool = false
+var cursor_mode: bool = false
+var _cursor_target: Interactable = null
 
 ## Shown when nothing is under the crosshair. Used by the chair: the interaction
 ## ray does not report a trigger it starts inside, so a seated operator would
@@ -30,10 +32,8 @@ func _ready() -> void:
 
 func _process(_delta: float) -> void:
 	if is_ui_blocked:
-		if prompt_label != null and prompt_label.visible:
-			prompt_label.visible = false
 		current_target = null
-		refresh_reticle()
+		_update_prompt_ui()
 		return
 
 	_update_target()
@@ -41,11 +41,20 @@ func _process(_delta: float) -> void:
 	# action text while the crosshair stays on the same collider.
 	_update_prompt_ui()
 
+func set_cursor_target(target: Interactable) -> void:
+	cursor_mode = true
+	if target != null and not target.can_interact():
+		target = null
+	_cursor_target = target
+	if _cursor_target != current_target:
+		current_target = _cursor_target
+		_update_prompt_ui()
+
 func _unhandled_input(event: InputEvent) -> void:
 	if is_ui_blocked:
 		return
 
-	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
+	if not cursor_mode and Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
 		return
 
 	if event.is_action_pressed("interact") and not event.is_echo():
@@ -55,6 +64,12 @@ func _unhandled_input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 
 func _update_target() -> void:
+	if cursor_mode:
+		var valid: Interactable = _cursor_target if (_cursor_target != null and _cursor_target.can_interact()) else null
+		if valid != current_target:
+			current_target = valid
+			_update_prompt_ui()
+		return
 	var new_target: Interactable = null
 
 	if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED and interaction_ray:
@@ -74,20 +89,39 @@ func _update_prompt_ui() -> void:
 		return
 
 	if is_ui_blocked:
-		prompt_label.visible = false
+		var desk := get_tree().get_first_node_in_group(DeskAmendment.GROUP) as DeskAmendment
+		prompt_label.visible = desk != null and desk.writing
+		if prompt_label.visible:
+			prompt_label.text = persistent_hint
+			prompt_label.modulate.a = 1.0
 		return
 
-	var line := prompt_line(current_target)
-	if not line.is_empty() and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+	var pointer_live := cursor_mode or Input.mouse_mode == Input.MOUSE_MODE_CAPTURED
+	if cursor_mode:
+		prompt_label.offset_top = -98.0
+		prompt_label.offset_bottom = -62.0
+	var line := _cursor_prompt_line(current_target) if cursor_mode else prompt_line(current_target)
+	if not line.is_empty() and pointer_live:
 		prompt_label.text = line
-		prompt_label.modulate.a = 1.0
+		var bright := (current_target != null and (current_target.is_actionable or line == "The Way Out"))
+		prompt_label.modulate.a = 1.0 if (not cursor_mode or bright) else STATUS_ALPHA
 		prompt_label.visible = true
-	elif not persistent_hint.is_empty() and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+	elif not persistent_hint.is_empty() and pointer_live:
 		prompt_label.text = persistent_hint
 		prompt_label.modulate.a = STATUS_ALPHA
 		prompt_label.visible = true
 	else:
 		prompt_label.visible = false
+
+static func _cursor_prompt_line(target: Interactable) -> String:
+	if target == null or not target.can_interact():
+		return ""
+	if not target.is_actionable:
+		var prompt := target.get_prompt()
+		if prompt in ["Write Correction at Desk First", "Locked Until the Watch Is Over", "The Way Out"]:
+			return prompt
+		return ""
+	return target.get_prompt()
 
 ## The text printed for a target. The room shows state, overlays don't (GDD
 ## §35): a target E cannot act on prints nothing, and the quiet reticle says the
@@ -106,6 +140,9 @@ func set_persistent_hint(text: String) -> void:
 ## tests can drive the mouse state; production always reads Input.
 func refresh_reticle(captured_override: Variant = null) -> void:
 	if not reticle:
+		return
+	if cursor_mode:
+		reticle.visible = false
 		return
 	var captured: bool = Input.mouse_mode == Input.MOUSE_MODE_CAPTURED
 	if captured_override != null:

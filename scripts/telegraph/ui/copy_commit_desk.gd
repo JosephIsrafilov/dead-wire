@@ -47,6 +47,7 @@ var _tool: Node3D = null
 var _tool_rest: Vector3 = Vector3.ZERO
 var _tool_tween: Tween = null
 const OPTION_LABEL_NAMES := [&"OptionOneLabel", &"OptionTwoLabel"]
+const PLATE_TITLES := ["FILE CORRECTION", "FILE ORIGINAL"]
 const OPTION_STAMP_NAMES := [&"OptionOneStamp", &"OptionTwoStamp"]
 const LAPSED_ACTION_ID: StringName = &"lapsed"
 
@@ -114,6 +115,8 @@ func select_option(index: int) -> bool:
 	if action_id == StringName():
 		return false
 	if bool(_property(option, "requires_correction")):
+		if not _can_file_correction():
+			return false
 		if not _amendment_open and not amendment_requested.get_connections().is_empty():
 			_amendment_open = true
 			amendment_requested.emit()
@@ -260,9 +263,9 @@ func _handle_key_event(event: InputEvent) -> bool:
 		if controller.current_target == null or controller.current_target.get_parent() != self:
 			return false
 	var option_index := -1
-	if _action_pressed(event, "commit_option_1") or _key_pressed(event, KEY_1):
+	if _action_pressed(event, "commit_option_1"):
 		option_index = 0
-	elif _action_pressed(event, "commit_option_2") or _key_pressed(event, KEY_2):
+	elif _action_pressed(event, "commit_option_2"):
 		option_index = 1
 	if option_index >= 0 and select_option(option_index):
 		var viewport := get_viewport()
@@ -274,8 +277,15 @@ func _handle_key_event(event: InputEvent) -> bool:
 func _action_pressed(event: InputEvent, action: StringName) -> bool:
 	return InputMap.has_action(action) and event.is_action_pressed(action)
 
-func _key_pressed(event: InputEvent, keycode: Key) -> bool:
-	return event is InputEventKey and (event.physical_keycode == keycode or event.keycode == keycode)
+func _can_file_correction() -> bool:
+	var office := get_parent() as M1OfficeController
+	return office == null or not office.is_shift_directed() or not office.get_pending_correction().is_empty()
+
+func _option_label(index: int) -> String:
+	var office := get_parent() as M1OfficeController
+	if index < _options.size() and (office == null or not office.is_shift_directed()):
+		return _string_property(_options[index], "display_label")
+	return PLATE_TITLES[index]
 
 func _update_presentation() -> void:
 	var interact := get_interactable()
@@ -284,11 +294,17 @@ func _update_presentation() -> void:
 	for index in 2:
 		var target := get_node_or_null("Option%dInteractable" % (index + 1)) as Interactable
 		if target != null:
-			target.enabled = is_enabled()
-			if index < _options.size():
-				target.prompt_text = _string_property(_options[index], "display_label").replace("\n", ": ")
+			var is_corr := index < _options.size() and bool(_property(_options[index], "requires_correction"))
+			if is_corr and is_enabled() and not _can_file_correction():
+				target.enabled = true
+				target.is_actionable = false
+				target.prompt_text = "Write Correction at Desk First"
+			else:
+				target.enabled = is_enabled() and (index >= _options.size() or not is_corr or _can_file_correction())
+				target.is_actionable = target.enabled
+				if index < _options.size():
+					target.prompt_text = "Stamp: %s" % _option_label(index).replace("\n", " ")
 	var selected_index := _selected_index()
-	var options_visible := is_enabled() or _committed
 	# While the press is in flight the ink has not landed: the stamps stay
 	# hidden until the physical contact.
 	var ink_landed := _committed and not is_press_in_flight()
@@ -296,9 +312,9 @@ func _update_presentation() -> void:
 		var label := get_node_or_null(String(OPTION_LABEL_NAMES[index]))
 		var stamp := get_node_or_null(String(OPTION_STAMP_NAMES[index]))
 		var has_option := index < _options.size()
-		_set_text(label, _string_property(_options[index], "display_label") if has_option else "")
+		_set_text(label, _option_label(index))
 		if label != null:
-			label.visible = options_visible and has_option
+			label.visible = true
 		if stamp != null:
 			# A stamp exists only for a filed copy, and only once the press
 			# has physically landed. A lapse resolves the desk without filing

@@ -22,9 +22,14 @@ extends CanvasLayer
 ## 2026-10-16 frames the dotted gap merged into the letter run.
 const GLYPH_SEPARATOR := " · "
 const WORD_SEPARATOR := "     "
+const HEARD_PREFIX := "Heard — "
+const WIRE_PREFIX := "Wire — "
 ## Quieter than a spoken thought: the murmur stays below full attention.
 const MURMUR_ALPHA := 0.55
 const MURMUR_COLOR := Color(0.82, 0.78, 0.7, MURMUR_ALPHA)
+const WIRE_COLOR := Color(0.68, 0.76, 0.84, 0.62)
+const WIRE_HOLD_SECONDS := 5.0
+const RESPONSE_HOLD_SECONDS := 4.5
 ## A newly heard letter surfaces instead of popping in.
 @export var letter_fade_seconds: float = 0.35
 ## The murmur sits just under the copy board (owner's choice, plan 5.6): the
@@ -53,9 +58,11 @@ var _label: RichTextLabel = null
 ## Seconds since the newest letter was heard; drives its fade-in.
 var _fresh_elapsed: float = 0.0
 var _hold_elapsed: float = 0.0
+var _active_hold_seconds: float = 4.0
 var _fade_elapsed: float = 0.0
 ## Alpha the current dismissal started from, so a dismiss mid-fade never pops.
 var _dismiss_from_alpha: float = 1.0
+var _active_prefix: String = HEARD_PREFIX
 
 func _ready() -> void:
 	# Pausing the night pauses the whisper with it (default pausable mode).
@@ -96,6 +103,54 @@ func _bind_session() -> void:
 	var paper: TranscriptPaper = session.transcript_paper
 	if paper != null and not paper.transcript_inspected.is_connected(_on_transcript_inspected):
 		paper.transcript_inspected.connect(_on_transcript_inspected)
+	var office := get_parent()
+	if office != null:
+		var director := office.get_node_or_null("ShiftDirector") as ShiftDirector
+		if director != null and not director.foreign_traffic_heard.is_connected(_on_foreign_traffic_heard):
+			director.foreign_traffic_heard.connect(_on_foreign_traffic_heard)
+		var sender := office.get_node_or_null("OperatorKeySender") as OperatorKeySender
+		if sender != null and not sender.wire_response_sent.is_connected(_on_wire_response_sent):
+			sender.wire_response_sent.connect(_on_wire_response_sent)
+
+func _on_foreign_traffic_heard(text: String) -> void:
+	show_wire_line(text, true)
+
+func _on_wire_response_sent(text: String) -> void:
+	show_wire_line(text, false)
+
+## Displays distant party-line chatter or a reply on the wire without touching
+## an active main telegram whisper.
+func show_wire_line(text: String, distant: bool = false) -> void:
+	if text.is_empty() or _state == VoiceState.WHISPERING:
+		return
+	_perception_text = text
+	_revealed = text.replace(" ", "").length()
+	_fresh_elapsed = letter_fade_seconds
+	_hold_elapsed = 0.0
+	_fade_elapsed = 0.0
+	_active_hold_seconds = WIRE_HOLD_SECONDS if distant else RESPONSE_HOLD_SECONDS
+	_active_prefix = WIRE_PREFIX if distant else HEARD_PREFIX
+	_state = VoiceState.HOLDING
+	if _label != null:
+		_label.add_theme_color_override("default_color", WIRE_COLOR if distant else MURMUR_COLOR)
+	var rendered := text.to_lower() if distant else _render(1.0)
+	_apply_text(rendered)
+
+## Shows an exterior human voice or short inner reaction without the Morse prefix.
+func show_outside_line(text: String, duration: float = 5.5) -> void:
+	if text.is_empty() or _state == VoiceState.WHISPERING:
+		return
+	_perception_text = text
+	_revealed = text.length()
+	_fresh_elapsed = letter_fade_seconds
+	_hold_elapsed = 0.0
+	_fade_elapsed = 0.0
+	_active_hold_seconds = duration
+	_active_prefix = ""
+	_state = VoiceState.HOLDING
+	if _label != null:
+		_label.add_theme_color_override("default_color", Color(0.90, 0.82, 0.66, 0.82))
+	_apply_text(text)
 
 ## A new telegram clears the murmur: the voice only ever spells the message
 ## currently being heard.
@@ -104,7 +159,11 @@ func _on_transmission_started(scenario: TelegraphScenarioData) -> void:
 	_revealed = 0
 	_state = VoiceState.WHISPERING
 	_hold_elapsed = 0.0
+	_active_hold_seconds = hold_seconds
+	_active_prefix = HEARD_PREFIX
 	_fade_elapsed = 0.0
+	if _label != null:
+		_label.add_theme_color_override("default_color", MURMUR_COLOR)
 	_apply_text("")
 
 func _on_perception_glyph(_scenario_id: String, index: int, _glyph: String) -> void:
@@ -134,7 +193,7 @@ func _process(delta: float) -> void:
 	match _state:
 		VoiceState.HOLDING:
 			_hold_elapsed += delta
-			if _hold_elapsed >= hold_seconds:
+			if _hold_elapsed >= _active_hold_seconds:
 				_state = VoiceState.FADING
 				_fade_elapsed = 0.0
 		VoiceState.FADING:
@@ -197,7 +256,9 @@ func get_murmur_top() -> float:
 	return _label.offset_top if _label != null else AUTHORED_TOP
 
 func get_display_text() -> String:
-	return _label.get_parsed_text() if _label != null else ""
+	if _label == null:
+		return ""
+	return _label.get_parsed_text().trim_prefix(HEARD_PREFIX).trim_prefix(WIRE_PREFIX)
 
 ## How far the newest letter has surfaced, 0..1.
 func get_newest_letter_alpha() -> float:
@@ -247,7 +308,7 @@ func _render(fresh: float = 1.0) -> String:
 func _apply_text(text: String) -> void:
 	if _label == null:
 		return
-	_label.text = text
+	_label.text = _active_prefix + text if not text.is_empty() else ""
 	_label.visible = not text.is_empty()
 	_label.modulate.a = 1.0
 

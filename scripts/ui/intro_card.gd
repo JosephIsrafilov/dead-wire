@@ -151,5 +151,10 @@ func _release() -> void:
 		if interaction != null:
 			interaction.is_ui_blocked = false
 			interaction.refresh_prompt()
-	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	var seated_mode := player != null and player.seated_station_mode
+	var office := get_parent()
+	if not seated_mode and office != null:
+		var station := office.get_node_or_null("SeatedStationController")
+		seated_mode = station != null and bool(station.get("enabled"))
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE if seated_mode else Input.MOUSE_MODE_CAPTURED
 	intro_finished.emit()

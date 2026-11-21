@@ -17,11 +17,11 @@ extends Node
 
 @export var slot_index: int = 2
 ## Seconds into the silence when the wick begins to char.
-@export var gutter_after_seconds: float = 6.0
+@export var gutter_after_seconds: float = 4.0
 ## How long the wick takes to sink to its floor.
-@export var gutter_seconds: float = 16.0
+@export var gutter_seconds: float = 10.0
 ## Seconds into the silence when the figure is put in the yard.
-@export var figure_after_seconds: float = 24.0
+@export var figure_after_seconds: float = 18.0
 ## How long the figure is held past the first call.
 @export var figure_linger_seconds: float = 10.0
 ## WorldState: it stood there. Separate from the filing consequence's fact.

@@ -24,8 +24,8 @@ signal footstep_played(step_index: int)
 
 ## Tight rather than floaty. Playtesters describe soft first-person acceleration
 ## as "an ice level", and this room is full of small interaction targets.
-@export var acceleration: float = 4.5
-@export var deceleration: float = 8.0
+@export var acceleration: float = 6.2
+@export var deceleration: float = 10.0
 
 @export var head_bob_enabled: bool = true
 ## Vertical travel of the step cycle, in metres. Low by design.
@@ -47,13 +47,14 @@ signal footstep_played(step_index: int)
 ## never the same one twice running, each pitched a little in a short cycle.
 @export var footstep_step_distance: float = 0.65
 @export var footstep_min_distance: float = 0.001
-@export var footstep_stream: AudioStream = preload("res://audio/sfx/foley/footstep_wood_beta.wav")
+const DEFAULT_FOOTSTEP := preload("res://audio/sfx/foley/footstep_boards_1.wav")
+@export var footstep_stream: AudioStream = DEFAULT_FOOTSTEP
 @export var footstep_variants: Array[AudioStream] = [
-	preload("res://audio/sfx/foley/footstep_wood_1.wav"),
-	preload("res://audio/sfx/foley/footstep_wood_2.wav"),
-	preload("res://audio/sfx/foley/footstep_wood_3.wav"),
-	preload("res://audio/sfx/foley/footstep_wood_4.wav"),
-	preload("res://audio/sfx/foley/footstep_wood_5.wav"),
+	DEFAULT_FOOTSTEP,
+	preload("res://audio/sfx/foley/footstep_boards_2.wav"),
+	preload("res://audio/sfx/foley/footstep_boards_3.wav"),
+	preload("res://audio/sfx/foley/footstep_boards_4.wav"),
+	preload("res://audio/sfx/foley/footstep_boards_5.wav"),
 ]
 var _last_footstep_variant: int = -1
 
@@ -97,6 +98,8 @@ var _fov_leaning: bool = false
 var is_movement_locked: bool = false
 var is_look_locked: bool = false
 var is_seated: bool = false
+var seated_station_mode: bool = false
+var window_lean_requested: bool = false
 
 @onready var head: Node3D = $Head
 @onready var camera: Camera3D = $Head/Camera3D
@@ -187,7 +190,7 @@ func set_urgency(value: float) -> void:
 func _input(event: InputEvent) -> void:
 	# Escape belongs to the pause menu. The controller used to drop the cursor
 	# here and leave the shift running behind an uncaptured pointer.
-	if is_look_locked:
+	if is_look_locked or seated_station_mode:
 		return
 
 	var mouse_clicked: bool = event is InputEventMouseButton \
@@ -224,8 +227,8 @@ func aim_at(point: Vector3) -> void:
 	_update_camera_pose()
 
 func _process(delta: float) -> void:
-	var wants_lean := lean_enabled and not is_look_locked \
-		and InputMap.has_action("lean") and Input.is_action_pressed("lean")
+	var lean_pressed := InputMap.has_action("lean") and Input.is_action_pressed("lean")
+	var wants_lean := lean_enabled and not is_look_locked and (lean_pressed or window_lean_requested)
 	_lean_weight = move_toward(_lean_weight, 1.0 if wants_lean else 0.0, delta / maxf(lean_seconds, 0.01))
 	_update_camera_pose()
 
@@ -277,6 +280,9 @@ func _apply_yaw_limit() -> void:
 	rotation.y = _yaw_limit_centre + offset
 
 func _physics_process(delta: float) -> void:
+	if seated_station_mode:
+		_update_head(delta, 0.0)
+		return
 	if global_position.y < fall_recovery_height:
 		_recover_from_fall()
 		return
@@ -293,8 +299,9 @@ func _physics_process(delta: float) -> void:
 		target = direction * move_speed
 
 	var rate := acceleration if target.length_squared() > 0.0 else deceleration
-	velocity.x = move_toward(velocity.x, target.x, rate * delta)
-	velocity.z = move_toward(velocity.z, target.z, rate * delta)
+	var planar := Vector2(velocity.x, velocity.z).move_toward(Vector2(target.x, target.z), rate * delta)
+	velocity.x = planar.x
+	velocity.z = planar.y
 
 	var position_before_move := global_position
 	move_and_slide()

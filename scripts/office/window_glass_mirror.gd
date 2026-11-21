@@ -15,7 +15,7 @@ extends Node
 
 @export var office: Node = null
 ## How close the camera has to be to the glass for a lean to count.
-@export var lean_reach: float = 1.1
+@export var lean_reach: float = 1.9
 ## Below this the pane is a mirror: looking at it does not see the yard, and
 ## the figure standing there is not known (plan 3.7, honest observation).
 @export var mirror_hides_below: float = 0.35
@@ -27,6 +27,7 @@ var _material: StandardMaterial3D = null
 var _lamp: LampLife = null
 var _player: PlayerController = null
 var _figure: AttentionObservationTarget = null
+var _lean_target: Interactable = null
 
 ## 0..1: how much of the yard comes through the pane. Falls with the wick
 ## (a lamp turned down below ~0.3 leaves the glass clear) and rises with a lean
@@ -62,6 +63,19 @@ func _ready() -> void:
 		_material = (_glass.material as StandardMaterial3D).duplicate() as StandardMaterial3D
 		_material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 		_glass.material = _material
+		_lean_target = Interactable.new()
+		_lean_target.name = "LeanAtWindow"
+		_lean_target.prompt_text = "Lean Toward the Glass"
+		_lean_target.collision_layer = 0
+		_lean_target.collision_mask = 0
+		_lean_target.enabled = false
+		var collision := CollisionShape3D.new()
+		var box := BoxShape3D.new()
+		box.size = Vector3(0.72, 0.62, 0.10)
+		collision.shape = box
+		_lean_target.add_child(collision)
+		_lean_target.interacted.connect(_toggle_window_lean)
+		_glass.add_child(_lean_target)
 
 ## Smallest change in visibility worth touching the material for. Every write
 ## marks the CSG pane dirty and queues a rebuild, so a steady wick must cost
@@ -73,8 +87,14 @@ var _applied_visibility: float = -1.0
 func _process(_delta: float) -> void:
 	if _material == null:
 		return
+	var near := _near_glass()
+	_lean_target.enabled = near > 0.0 and _player != null and _player.lean_enabled and not _player.is_look_locked
+	_lean_target.collision_layer = 2 if _lean_target.enabled else 0
+	if _player != null and _player.window_lean_requested and not _looking_at_glass():
+		_toggle_window_lean()
 	var wick := _lamp.wick if _lamp != null else 1.0
-	yard_visibility_now = yard_visibility(wick, _lean_at_glass())
+	var lean := _player.get_lean_weight() * near if _player != null else 0.0
+	yard_visibility_now = yard_visibility(wick, lean)
 	if _figure != null:
 		_figure.view_obscured = yard_visibility_now < mirror_hides_below
 	if absf(yard_visibility_now - _applied_visibility) < VISIBILITY_STEP:
@@ -82,9 +102,19 @@ func _process(_delta: float) -> void:
 	_applied_visibility = yard_visibility_now
 	apply_to(_material, yard_visibility_now)
 
-func _lean_at_glass() -> float:
+func _near_glass() -> float:
 	if _player == null or _player.camera == null or _glass == null:
 		return 0.0
 	var distance := _player.camera.global_position.distance_to(_glass.global_position)
-	var nearness := 1.0 - smoothstep(lean_reach * 0.5, lean_reach, distance)
-	return _player.get_lean_weight() * nearness
+	return 1.0 - smoothstep(lean_reach * 0.5, lean_reach, distance)
+
+func _toggle_window_lean() -> void:
+	_player.window_lean_requested = not _player.window_lean_requested
+	_lean_target.prompt_text = "Pull Back" if _player.window_lean_requested else "Lean Toward the Glass"
+
+func _looking_at_glass() -> bool:
+	if not _lean_target.enabled or _player == null or _player.camera == null:
+		return false
+	var camera := _player.camera
+	var direction := (_glass.global_position - camera.global_position).normalized()
+	return -camera.global_basis.z.dot(direction) > 0.65

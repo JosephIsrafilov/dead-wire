@@ -539,8 +539,27 @@ func _unhandled_input(event: InputEvent) -> void:
 	if _just_opened_frame == Engine.get_process_frames():
 		return
 
+	if event is InputEventMouseButton and event.pressed and not event.is_echo():
+		var mb := event as InputEventMouseButton
+		var clicked_outside := mb.button_index == MOUSE_BUTTON_LEFT \
+			and not _point_inside_visible_sheet(mb.position)
+		if mb.button_index == MOUSE_BUTTON_RIGHT or clicked_outside:
+			close_document()
+			var vp := get_viewport()
+			if vp != null:
+				vp.set_input_as_handled()
+			return
+
 	if not event.is_echo() and (event.is_action_pressed("interact") or event.is_action_pressed("ui_cancel")):
 		close_document()
 		var vp := get_viewport()
 		if vp != null:
 			vp.set_input_as_handled()
+
+func _point_inside_visible_sheet(pos: Vector2) -> bool:
+	var copy_sheet := get_node_or_null("TranscriptSheet") as Control
+	if copy_sheet != null and copy_sheet.visible:
+		return copy_sheet.get_global_rect().has_point(pos)
+	if panel_container != null and panel_container.visible:
+		return panel_container.get_global_rect().has_point(pos)
+	return false

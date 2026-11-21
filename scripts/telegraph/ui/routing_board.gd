@@ -106,7 +106,7 @@ func _add_direct_stop_targets() -> void:
 		var box := BoxShape3D.new()
 		# Owns the half of the quadrant on its side, from the notch up past
 		# the grip's swing, so a real aim at the lever lands on a choice.
-		box.size = Vector3(0.3, 0.5, 0.2)
+		box.size = Vector3(0.42, 0.58, 0.24)
 		shape.shape = box
 		area.add_child(shape)
 		area.position = cfg[3]
@@ -176,12 +176,8 @@ func _input(event: InputEvent) -> void:
 	if event.is_echo() or not event.is_pressed():
 		return
 
-	var key_1: bool = event is InputEventKey \
-		and (event.physical_keycode == KEY_1 or event.keycode == KEY_1)
-	var is_route_1: bool = event.is_action_pressed("route_clear_east") or key_1
-	var key_2: bool = event is InputEventKey \
-		and (event.physical_keycode == KEY_2 or event.keycode == KEY_2)
-	var is_route_2: bool = event.is_action_pressed("route_hold") or key_2
+	var is_route_1: bool = event.is_action_pressed("route_clear_east")
+	var is_route_2: bool = event.is_action_pressed("route_hold")
 
 	if is_route_1:
 		if select_action("CLEAR EAST"):
@@ -237,7 +233,10 @@ func close_board() -> void:
 		return
 	is_open = false
 	_update_presentation()
-	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	var office := get_parent()
+	var player_node := office.get("player") as Node if office != null else null
+	var seated_mode := player_node != null and bool(player_node.get("seated_station_mode"))
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE if seated_mode else Input.MOUSE_MODE_CAPTURED
 	board_closed.emit()
 
 func select_action(action: String) -> bool:
@@ -328,7 +327,7 @@ func _throw_lever(action: String) -> void:
 	_lever_tween = create_tween()
 	_lever_tween.set_parallel(true)
 	_lever_tween.tween_property(pivot, "rotation:z", target, lever_throw_duration) \
-		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	if needle != null:
 		# The repeater answers the lever as the arm outside does: it drops for
 		# CLEAR and stands level for HOLD.
@@ -339,8 +338,10 @@ func _throw_lever(action: String) -> void:
 	if sfx != null:
 		sfx.stream = lever_impact_stream
 		sfx.bus = lever_impact_bus
-		_lever_tween.chain().tween_callback(sfx.play)
-	_lever_tween.chain().tween_callback(lever_stopped.emit)
+	_lever_tween.chain().tween_callback(func() -> void:
+		if is_instance_valid(sfx):
+			sfx.play()
+		lever_stopped.emit())
 
 ## A new slot resets the ability to submit — nothing else. The lever, the
 ## needle and the recorded route are the night's memory, not this slot's.

@@ -30,11 +30,10 @@ height = 0.0375
 ; for why one walk nudges both but only the lighter one skitters.
 [node name="LooseProps" type="Node3D"]
 
-; A tin cup, upright, 120 g. Its handle points along the desk toward the key,
-; so the whole cup stays clear of the pen tray and inside the desk's edge.
+; The cup rests behind the writing area, clear of the archived copy's path.
 [node name="TinCup" type="RigidBody3D" parent="."]
-position = Vector3(-2.05, 0.75, -0.19)
-rotation = Vector3(0, 1.5707964, 0)
+position = Vector3(-1.82, 0.75, -1.86)
+rotation = Vector3(0, 0, 0)
 script = ExtResource("1_loose")
 prop_mass = 0.12
 prop_bounce = 0.12
@@ -54,8 +53,8 @@ shape = SubResource("CupHandle")
 ; A squat ink bottle with its cork in, 200 g — still under the mass where the
 ; shove is capped, so it slides a little rather than resisting.
 [node name="InkBottle" type="RigidBody3D" parent="."]
-position = Vector3(-2.22, 0.75, -1.27)
-rotation = Vector3(0, 0.3, 0)
+position = Vector3(-0.83, 0.75, -1.78)
+rotation = Vector3(0, -1.2707963, 0)
 script = ExtResource("1_loose")
 prop_mass = 0.2
 prop_bounce = 0.05

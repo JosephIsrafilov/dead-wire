@@ -87,6 +87,9 @@
 [ext_resource type="PackedScene" path="res://scenes/office/operator_card.tscn" id="operator_card"]
 [ext_resource type="PackedScene" path="res://scenes/office/timetable_card.tscn" id="timetable_card"]
 [ext_resource type="Script" path="res://scripts/telegraph/hardware/operator_key_sender.gd" id="operator_key_sender"]
+[ext_resource type="Script" path="res://scripts/player/seated_station_controller.gd" id="seated_station"]
+[ext_resource type="Script" path="res://scripts/office/night_train_traffic.gd" id="night_train_traffic"]
+[ext_resource type="Script" path="res://scripts/office/service_shutter_event.gd" id="service_shutter_event"]
 
 [sub_resource type="BoxShape3D" id="SeatInteract"]
 size = Vector3(0.52, 0.76, 0.52)
@@ -232,7 +235,7 @@ ambient_mode = 0
 reflection_mask = 4294967293
 
 [node name="DeskLampLight" type="OmniLight3D" parent="."]
-position = Vector3(-2.5, 0.975, -0.45)
+position = Vector3(-1.65, 0.975, -2.06)
 light_color = Color(1, 0.81, 0.61, 1)
 light_energy = 2.6
 light_indirect_energy = 0.9
@@ -259,7 +262,7 @@ spot_angle = 40.0
 ; Lamp light thrown back off the lit copy sheet: warms the writing hand from
 ; below, the way white paper under a lamp does. No shadow, tiny range.
 [node name="PaperBounceLight" type="OmniLight3D" parent="."]
-position = Vector3(-2.2, 0.9, -0.72)
+position = Vector3(-1.38, 0.9, -1.76)
 light_color = Color(1, 0.82, 0.62, 1)
 light_energy = 0.18
 light_specular = 0.0
@@ -271,27 +274,34 @@ position = Vector3(2.1, 0.82, 1.45)
 light_color = Color(0.9, 0.32, 0.08, 1)
 light_energy = 1.7
 shadow_enabled = true
-omni_range = 2.9
-omni_attenuation = 1.6
+omni_range = 4.2
+omni_attenuation = 1.45
 
 [node name="RoutingBoardSconceLight" type="OmniLight3D" parent="."]
-position = Vector3(2.46, 1.34, -0.75)
+position = Vector3(-2.35, 1.42, -1.08)
 light_color = Color(0.76, 0.62, 0.42, 1)
-light_energy = 0.8
+light_energy = 1.35
 shadow_enabled = true
-omni_range = 2.4
-omni_attenuation = 1.6
+omni_range = 3.0
+omni_attenuation = 1.45
 
 ; The filing desk's sconce: a low wick over the plates, lighting them from
-; above (the stove's ember only grazes the desk top). Short range, shadowed:
-; the door beside it stays dark.
+; above (the stove's ember only grazes the desk top).
 [node name="FilingDeskSconceLight" type="OmniLight3D" parent="."]
-position = Vector3(0.84, 1.46, 2.12)
+position = Vector3(-0.20, 1.56, -1.10)
 light_color = Color(0.76, 0.62, 0.42, 1)
-light_energy = 0.5
+light_energy = 1.3
 shadow_enabled = true
-omni_range = 1.5
-omni_attenuation = 1.6
+omni_range = 3.2
+omni_attenuation = 1.35
+
+[node name="BackWallMoonFill" type="OmniLight3D" parent="."]
+position = Vector3(-1.1, 1.68, 1.35)
+light_color = Color(0.28, 0.44, 0.72, 1)
+light_energy = 0.34
+shadow_enabled = false
+omni_range = 4.8
+omni_attenuation = 1.3
 
 ; The floor itself stays this CSG box: its top face is what the player and the
 ; physics stand on. The worn boards laid over it are a look, not a surface.
@@ -783,10 +793,12 @@ size = Vector3(0.04, 0.16, 4.6)
 material = ExtResource("5_trim")
 
 [node name="DeskSetup" parent="." instance=ExtResource("10_desk")]
-transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -2.32, 0, -0.6)
+position = Vector3(-1.5, 0, -1.88)
+rotation = Vector3(0, 3.141593, 0)
 
 [node name="Chair" parent="." instance=ExtResource("11_chair")]
-transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -1.55, 0, -0.6)
+position = Vector3(-1.5, 0, -1.11)
+rotation = Vector3(0, 3.141593, 0)
 
 [node name="PhChairVisual" parent="Chair" instance=ExtResource("50_phchair")]
 visible = false
@@ -797,6 +809,9 @@ visible = false
 [node name="OperatorSeat" type="Node" parent="Chair" node_paths=PackedStringArray("office")]
 script = ExtResource("33_seat")
 office = NodePath("../..")
+seat_facing_degrees = 0.0
+seat_eye_height = 1.24
+seat_pitch_degrees = -11.0
 
 [node name="Interactable" type="Area3D" parent="Chair"]
 collision_layer = 2
@@ -809,56 +824,61 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
 shape = SubResource("SeatInteract")
 
 [node name="TelegraphStation" parent="." instance=ExtResource("15_station")]
-position = Vector3(-2.38, 0.752, -0.92)
+position = Vector3(-1.18, 0.752, -1.94)
+rotation = Vector3(0, -1.5707963, 0)
 
 ; Desk blotter: green baize on a board, leather ends. The writing station.
 [node name="DeskBlotter" type="CSGBox3D" parent="."]
-position = Vector3(-2.185, 0.7515, -0.59)
+position = Vector3(-1.51, 0.7515, -1.745)
+rotation = Vector3(0, -1.5707963, 0)
 size = Vector3(0.43, 0.003, 0.56)
 material = SubResource("BlotterFelt")
 
 [node name="DeskBlotterEndNear" type="CSGBox3D" parent="."]
-position = Vector3(-2.185, 0.7525, -0.31)
+position = Vector3(-1.79, 0.7525, -1.745)
+rotation = Vector3(0, -1.5707963, 0)
 size = Vector3(0.44, 0.005, 0.035)
 material = SubResource("BlotterLeather")
 
 [node name="DeskBlotterEndFar" type="CSGBox3D" parent="."]
-position = Vector3(-2.185, 0.7525, -0.87)
+position = Vector3(-1.23, 0.7525, -1.745)
+rotation = Vector3(0, -1.5707963, 0)
 size = Vector3(0.44, 0.005, 0.035)
 material = SubResource("BlotterLeather")
 
 [node name="TranscriptPaper" parent="." instance=ExtResource("16_paper")]
-position = Vector3(-2.23, 0.764, -0.72)
-rotation = Vector3(0, 1.5707963, 0)
+position = Vector3(-1.38, 0.764, -1.79)
+rotation = Vector3(0, 0, 0)
 
 ; The open inkwell is right of the copy board. The nib reaches this lip
 ; before descending to the ink after a copy is complete (5.8).
 [node name="InkwellMouth" type="Marker3D" parent="." groups=["inkwell_mouth"]]
-position = Vector3(-2.12, 0.805, -0.92)
+position = Vector3(-1.18, 0.805, -1.68)
 
 [node name="CopyCommitDesk" parent="." instance=ExtResource("40_commit")]
-position = Vector3(0.45, 0.72, 1.85)
-rotation = Vector3(0, 3.141593, 0)
+position = Vector3(-0.28, 0.72, -1.1)
+rotation = Vector3(0, -1.5707963, 0)
 
 [node name="MorseReferenceCard" parent="." instance=ExtResource("17_morseref")]
-position = Vector3(-2.8605, 1.2, -0.2)
-rotation = Vector3(1.5707963, 1.5707963, 0)
+position = Vector3(-2.42, 1.16, -2.18)
+rotation = Vector3(1.5707963, 0.30, 0)
 
 [node name="TimetableCard" parent="." instance=ExtResource("timetable_card")]
-position = Vector3(-2.8605, 1.2, -0.68)
-rotation = Vector3(1.5707963, 1.5707963, 0)
+position = Vector3(-0.58, 1.16, -2.18)
+rotation = Vector3(1.5707963, -0.30, 0)
 
 [node name="OperatorCard" parent="." instance=ExtResource("operator_card")]
-position = Vector3(-2.10, 0.753, -0.12)
-rotation = Vector3(0, 1.5707963, 0)
+position = Vector3(-1.98, 0.753, -1.66)
+rotation = Vector3(0, 0, 0)
 
 [node name="DispatchLedger" parent="." instance=ExtResource("18_ledger")]
-position = Vector3(-2.52, 0.752, -0.08)
-rotation = Vector3(0, 1.5707963, 0)
+position = Vector3(-2.02, 0.752, -2.08)
+rotation = Vector3(0, 0, 0)
 office_path = NodePath("..")
 
 [node name="RoutingBoard" parent="." instance=ExtResource("19_routing")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 2.74, 0.62, -0.85)
+position = Vector3(-2.74, 0.62, -1.08)
+rotation = Vector3(0, -1.5707963, 0)
 
 [node name="StorageCabinet" parent="." instance=ExtResource("12_cabinet")]
 ; Moved 23 cm along the wall on 2026-10-21: its top-back corner covered the
@@ -872,23 +892,21 @@ transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -2.58,
 ; overlay would double-render over it.
 
 [node name="FilingTable" type="MeshInstance3D" parent="."]
-; Service table by the south wall, east of the door: carries the CopyCommitDesk
-; plates and stamp as one solid filing station, clear of both door and stove.
-; Authored PSX table (tools/build_office_props_blender.py) — the Poly Haven
-; wooden_table_02 that used to sit here was the last third-party furniture in
-; the room. Top is at 0.80 m, which is where CopyCommitDesk's own collision
-; already ended; the old table was 3 cm short and the option plates floated.
+; Service table beside the operator's right elbow: carries CopyCommitDesk.
 mesh = ExtResource("53_table")
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 0.45, 0, 1.85)
+position = Vector3(-0.28, 0, -1.1)
+rotation = Vector3(0, 0, 0)
 
 [node name="PhLedgerVolumes" parent="." instance=ExtResource("52_phbooks")]
-transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 2.62, 1.08, 0.45)
+position = Vector3(0.92, 1.08, -1.1)
+rotation = Vector3(0, -1.5707963, 0)
 
 [node name="CornerStove" parent="." instance=ExtResource("13_stove")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 2.1, 0, 1.55)
 
 [node name="Bookcase" parent="." instance=ExtResource("14_bookcase")]
-transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 2.62, 0, 0.45)
+position = Vector3(0.92, 0, -1.1)
+rotation = Vector3(0, -1.5707963, 0)
 
 
 ; The shelf of division volumes. Its collision box stands in front of the
@@ -959,7 +977,8 @@ telegraph_key = NodePath("../TelegraphStation/TelegraphKey")
 transcript_paper = NodePath("../TranscriptPaper")
 
 [node name="TapeRegister" parent="TelegraphSessionController" instance=ExtResource("43_tape")]
-position = Vector3(-2.06, 0.751, -1.15)
+position = Vector3(-0.95, 0.751, -1.62)
+rotation = Vector3(0, -1.5707963, 0)
 
 [node name="DutySheet" type="Node3D" parent="." node_paths=PackedStringArray("office")]
 position = Vector3(1.62, 1.55, 2.221)
@@ -976,7 +995,7 @@ prompt_text = "Read Night Orders"
 shape = SubResource("DutySheetInteract")
 
 [node name="DawnEvidence" parent="." instance=ExtResource("41_evidence")]
-position = Vector3(0.45, 1.5, 2.24)
+position = Vector3(-0.78, 1.45, 2.24)
 
 [node name="ShiftDirector" type="Node" parent="." node_paths=PackedStringArray("office", "session")]
 script = ExtResource("29_shift")
@@ -1074,10 +1093,25 @@ script = ExtResource("outside_window")
 [node name="DeskAmendment" type="Node" parent="."]
 script = ExtResource("desk_amendment")
 
-; Live brass key sending (R / RPT) while seated at the desk.
+; Live brass key sending (I / K) while seated at the desk.
 [node name="OperatorKeySender" type="Node" parent="." node_paths=PackedStringArray("office")]
 script = ExtResource("operator_key_sender")
 office = NodePath("..")
+
+; Seated bay-window workstation: 4 views + direct cursor interaction.
+[node name="SeatedStationController" type="CanvasLayer" parent="." node_paths=PackedStringArray("office")]
+layer = 6
+script = ExtResource("seated_station")
+office = NodePath("..")
+
+; Live night train movements visible and audible from the bay window.
+[node name="NightTrainTraffic" type="Node3D" parent="."]
+script = ExtResource("night_train_traffic")
+
+; Brakeman H. Miller's yard clearance slip delivered under the south door.
+[node name="ServiceShutterEvent" type="Node3D" parent="."]
+position = Vector3(-1.6, 0, 2.02)
+script = ExtResource("service_shutter_event")
 
 ; The local playtest log (plan 10.6): writes only for a watch begun from the title.
 [node name="PlaytestTelemetry" type="Node" parent="."]

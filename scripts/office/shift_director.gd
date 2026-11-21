@@ -53,18 +53,18 @@ signal foreign_traffic_heard(text: String)
 ## Quiet stretch before each message: the line as weather. The first is long
 ## enough to learn the room; the silences then GROW toward the core hook, so the
 ## empty tape crawling is itself the pressure (horror layer §5).
-@export var wait_seconds_before_call: PackedFloat32Array = PackedFloat32Array([20.0, 38.0, 50.0])
+@export var wait_seconds_before_call: PackedFloat32Array = PackedFloat32Array([10.0, 28.0, 30.0])
 
 ## Party line traffic: neighbouring stations talking over the shared wire in
 ## the silences between Black Creek's own calls. Played on the sounder and
 ## inked honestly onto the tape register, never copied or filed by Elias.
 ## Only plays if it fits cleanly before the next call with a 3 s margin.
-@export var foreign_traffic_text: String = "DN TO RS 17 ON TIME AUDITOR DUE SUNDAY"
+@export var foreign_traffic_text: String = "DN TO RS 17 ON TIME AUDITOR"
 @export var foreign_traffic_slot: int = 1
-@export var foreign_traffic_after_seconds: float = 4.0
+@export var foreign_traffic_after_seconds: float = 2.0
 @export var party_line_by_slot: Dictionary = {
-	1: "DN TO RS 17 ON TIME AUDITOR DUE SUNDAY",
-	2: "RS TO DN LINE 4 DEAD WHO KEYED MJ",
+	1: "DN TO RS 17 ON TIME AUDITOR",
+	2: "RS TO DN 4 DEAD WHO KEYED MJ",
 }
 var foreign_traffic_played: bool = false
 var _party_line_played_slots: Dictionary = {}

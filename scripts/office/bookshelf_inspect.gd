@@ -43,19 +43,15 @@ NEWSPAPER CUTTING, OCTOBER 1885:
     ITS PATIENCE AND ITS SONS ...
 
 ────────────────────────────────────────
-PREDECESSOR'S JOURNAL LEAF (tucked inside the 1885 order book):
+STATION ORDER BOOK — MARGIN ENTRY (1885):
 OCT 14, 1885 — 11:42 PM
-Lower drift took water. MJ called twice — HOLD 17.
-The kid signed CLEAR anyway. Said the Superintendent told him to.
-I tore the tape off the reel and I'm going down to the shaft myself.
-Tell Dr. Crane his boy had a very steady hand tonight.
-— J.C.
+Night watch closed unsigned by Sr. Operator J. Cole.
+Register strip missing from reel. Relief entered by Asst. E. Crane.
 
 ────────────────────────────────────────
-COUNTY RECORD — FEE VOUCHER (1884)
-Dr. Arthur Crane — Medical attendance & drop calculation (State Warrant #19).
-Fee paid: $25.00.
-Margin note (A.C.): "Clean drop. No needless suffering. Keep the hand steady."
+FOLDED PRESCRIPTION SLIP (inside the front cover):
+Dr. Arthur Crane, County Physician — Black Creek
+Margin note (A.C.): "Keep the hand steady, Elias. Never lie to the record."
 """
 
 var interactable: Interactable = null

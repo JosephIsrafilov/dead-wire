@@ -38,7 +38,7 @@ enum PaperState {
 	INCOMPLETE_CLOSED,
 }
 
-@export var prompt_message: String = "Read the Copy"
+@export var prompt_message: String = "Read Current Copy"
 @export var empty_placeholder: String = ""
 ## Bounded catch-up after a pause, in glyphs per second. The continuous seated
 ## path follows authored cue timing; this rate only drains accumulated backlog.
@@ -467,6 +467,9 @@ func clear_transcript() -> void:
 	_paper_scenario_id = ""
 	_copy_finished_emitted = false
 	_catchup_budget = 0.0
+	var rig_reset := get_writer_rig()
+	if rig_reset != null:
+		rig_reset.cramp_tremor_intensity = 0.0
 	paper_state = PaperState.EMPTY
 	_update_display()
 
@@ -669,6 +672,9 @@ func _commit_ink() -> void:
 	if wet != null and lbl != null:
 		wet.mark(_written_glyphs, get_glyph_contact(_written_glyphs), lbl.basis)
 	_written_glyphs += 1
+	var cramp_rig := get_writer_rig()
+	if cramp_rig != null:
+		cramp_rig.cramp_tremor_intensity = 0.85 if (_transcript_text == "MJ WATCHER" and _written_glyphs >= 5) else 0.0
 	if _written_glyphs >= _total_glyphs():
 		_visible_characters = -1
 	else:
@@ -679,6 +685,7 @@ func _commit_ink() -> void:
 		paper_state = PaperState.READY_TO_INSPECT
 		var finished_rig := get_writer_rig()
 		if finished_rig != null:
+			finished_rig.cramp_tremor_intensity = 0.0
 			finished_rig.finish_with_dip()
 		_update_display()
 		copy_finished.emit(_paper_scenario_id)

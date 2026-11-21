@@ -63,6 +63,6 @@ pixel_size = 0.00055
 shaded = true
 alpha_cut = 1
 modulate = Color(0.14, 0.11, 0.08, 1)
-text = "R (.-.) OK | RPT (.-. .--. -) REPEAT"
+text = "I (· ·) OK  |  K (— · —) SAY AGAIN"
 font_size = 16
 outline_size = 0

@@ -493,6 +493,8 @@ func _process(delta: float) -> void:
 		stand()
 
 func _player_wants_to_walk() -> bool:
+	if _player != null and _player.seated_station_mode:
+		return false
 	if office != null and office.is_world_view_blocked():
 		return false
 	return Input.get_vector("move_left", "move_right", "move_forward", "move_backward").length_squared() > 0.01
