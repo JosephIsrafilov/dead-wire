@@ -5,3 +5,4 @@
 [resource]
 script = ExtResource("1_prof")
 seconds_per_unit = 0.1
+send_threshold_units = 2.0

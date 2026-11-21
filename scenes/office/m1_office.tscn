@@ -1,4 +1,4 @@
-[gd_scene load_steps=52 format=3 uid="uid://m1office001"]
+[gd_scene load_steps=53 format=3 uid="uid://m1office001"]
 
 [ext_resource type="Script" path="res://scripts/office/m1_office_controller.gd" id="1_controller"]
 [ext_resource type="Material" path="res://materials/style_tests/floor_wood_planks.tres" id="2_floor"]
@@ -86,6 +86,7 @@
 [ext_resource type="PackedScene" path="res://scenes/office/office_wear.tscn" id="office_wear"]
 [ext_resource type="PackedScene" path="res://scenes/office/operator_card.tscn" id="operator_card"]
 [ext_resource type="PackedScene" path="res://scenes/office/timetable_card.tscn" id="timetable_card"]
+[ext_resource type="Script" path="res://scripts/telegraph/hardware/operator_key_sender.gd" id="operator_key_sender"]
 
 [sub_resource type="BoxShape3D" id="SeatInteract"]
 size = Vector3(0.52, 0.76, 0.52)
@@ -1072,6 +1073,11 @@ script = ExtResource("outside_window")
 ; A correction is the hand's work at the desk (plan 6.3).
 [node name="DeskAmendment" type="Node" parent="."]
 script = ExtResource("desk_amendment")
+
+; Live brass key sending (R / RPT) while seated at the desk.
+[node name="OperatorKeySender" type="Node" parent="." node_paths=PackedStringArray("office")]
+script = ExtResource("operator_key_sender")
+office = NodePath("..")
 
 ; The local playtest log (plan 10.6): writes only for a watch begun from the title.
 [node name="PlaytestTelemetry" type="Node" parent="."]

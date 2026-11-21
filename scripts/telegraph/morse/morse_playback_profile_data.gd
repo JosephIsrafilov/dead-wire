@@ -2,6 +2,9 @@ class_name MorsePlaybackProfileData
 extends Resource
 
 @export var seconds_per_unit: float = 0.10
+## Threshold in units separating a dot (1 u) from a dash (3 u) when the
+## operator keys manually on the brass key.
+@export var send_threshold_units: float = 2.0
 
 func get_validation_errors() -> PackedStringArray:
 	var errors := PackedStringArray()

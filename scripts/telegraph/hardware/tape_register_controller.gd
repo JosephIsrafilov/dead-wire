@@ -11,7 +11,7 @@ extends Node3D
 signal tape_inspected(text: String)
 
 const TAPE_DOC_ID := "tape_register"
-const TAPE_TITLE := "STATION REGISTER"
+const TAPE_TITLE := "WIRE TAPE"
 const INCOMPLETE_MARK := "?"
 ## Strip language, 1894: takes are "strips" of the record; an interrupted
 ## take is broken off, a live one is running. The prefix is a named constant
@@ -71,6 +71,8 @@ const KEY_CATCH_SECONDS: float = 0.04
 const SPOOL_TAKE_UP_SECONDS: float = 0.8
 var _winding_key: Node3D = null
 var _wind_elapsed: float = -1.0
+var _wind_backlog: int = 0
+var _wind_released: int = 0
 var _key_angle: float = 0.0
 var _spool_drive: float = 1.0
 
@@ -120,6 +122,9 @@ func _on_interacted() -> void:
 
 func get_record() -> Array[TapeInkEvent]:
 	return _snapshot_events(_record)
+
+func get_strip_count() -> int:
+	return _segments.size()
 
 func _snapshot_events(events: Array[TapeInkEvent]) -> Array[TapeInkEvent]:
 	var snapshots: Array[TapeInkEvent] = []
@@ -177,6 +182,10 @@ func reset() -> void:
 	_active_ink = null
 	_seconds_per_unit = 0.0
 	_feed_cursors.clear()
+	_wind_elapsed = -1.0
+	_wind_backlog = 0
+	_wind_released = 0
+	_set_key_angle(0.0)
 	_stylus_target_y = _stylus_rest_y
 	_clockwork_running = false
 
@@ -197,7 +206,7 @@ func _on_timing_event_started(event: MorseScheduledEvent) -> void:
 	_active_segment.events.append(ink)
 	# The paper feeds out only while the clockwork keeps up: this mark reaches
 	# the readable strip immediately, or waits under the rollers for a winding.
-	if spring_tension >= SLACK_TENSION:
+	if spring_tension >= SLACK_TENSION and _wind_elapsed < 0.0:
 		_advance_feed_cursor(_active_segment, _active_segment.events.size())
 	_started_event = event
 	_active_ink = ink
@@ -250,18 +259,20 @@ func needs_winding() -> bool:
 	return spring_tension < wind_prompt_below
 
 func wind() -> void:
+	if _wind_elapsed >= 0.0:
+		return
 	spring_tension = 1.0
-	# Winding transports the whole strip in one motion: every mark still under
-	# the feed rollers is carried out. The record itself never changes.
+	_wind_backlog = 0
+	_wind_released = 0
 	for segment in _segments:
-		_advance_feed_cursor(segment, segment.events.size())
+		_wind_backlog += segment.events.size() - _visible_event_count(segment)
+	_set_key_angle(0.0)
 	if _wind_interactable != null:
 		_wind_interactable.enabled = false
 	_wind_elapsed = 0.0
 	register_wound.emit()
 
-## The key's turn and the spool's take-up; motion only, the spring itself was
-## wound at once above.
+## The ratchet releases the backlog in wire order, in step with the key.
 func _advance_winding(delta: float) -> void:
 	_spool_drive = move_toward(_spool_drive, spring_tension, maxf(delta, 0.0) / SPOOL_TAKE_UP_SECONDS)
 	if _wind_elapsed < 0.0:
@@ -269,10 +280,29 @@ func _advance_winding(delta: float) -> void:
 	_wind_elapsed += maxf(delta, 0.0)
 	var last_click: float = WIND_CLICK_SECONDS[WIND_CLICK_SECONDS.size() - 1]
 	if _wind_elapsed >= last_click + KEY_CATCH_SECONDS:
+		# Ink delivered during the turn also clears the rollers at the end.
+		for segment in _segments:
+			_advance_feed_cursor(segment, segment.events.size())
 		_wind_elapsed = -1.0
 		_set_key_angle(TAU)
 		return
 	_set_key_angle(_key_angle_at(_wind_elapsed))
+	var clicks := 0
+	for click in WIND_CLICK_SECONDS:
+		if _wind_elapsed >= click:
+			clicks += 1
+	var release_target := floori(float(_wind_backlog * clicks) / WIND_CLICK_SECONDS.size())
+	var remaining := release_target - _wind_released
+	if remaining <= 0:
+		return
+	for segment in _segments:
+		var visible := _visible_event_count(segment)
+		var count := mini(remaining, segment.events.size() - visible)
+		_advance_feed_cursor(segment, visible + count)
+		_wind_released += count
+		remaining -= count
+		if remaining == 0:
+			break
 
 func _key_angle_at(seconds: float) -> float:
 	var quarter := TAU / 4.0
@@ -309,9 +339,44 @@ func set_key_turn(fraction: float) -> void:
 func get_spool_drive() -> float:
 	return _spool_drive
 
+func _visible_event_count(segment: Dictionary) -> int:
+	return mini(int(_feed_cursors.get(segment.number, 0)), segment.events.size())
+
+## Snapshot of the exposed paper, not of ink still held under the rollers.
+func get_fed_record() -> Array[TapeInkEvent]:
+	var exposed: Array[TapeInkEvent] = []
+	for segment in _segments:
+		var events: Array[TapeInkEvent] = segment.events
+		for i in _visible_event_count(segment):
+			exposed.append(events[i].snapshot())
+	return exposed
+
 ## Monotonic feed cursor for one take: never shrinks, never exceeds the record.
 func _advance_feed_cursor(segment: Dictionary, available: int) -> void:
 	_feed_cursors[segment.number] = maxi(int(_feed_cursors.get(segment.number, 0)), available)
+
+func record_manual_take(events: Array[MorseTimingEvent], seconds_per_unit: float) -> void:
+	if events.is_empty() or seconds_per_unit <= 0.0:
+		return
+	var seg_events: Array[TapeInkEvent] = []
+	var segment := {"number": _segments.size() + 1, "interrupted": false, "complete": true, "events": seg_events}
+	_segments.append(segment)
+	_clockwork_running = true
+	for ev in events:
+		if ev == null:
+			continue
+		var ink := TapeInkEvent.new()
+		ink.kind = ev.kind
+		ink.duration_units = float(ev.duration_units)
+		ink.duration_seconds = float(ev.duration_units) * seconds_per_unit
+		ink.is_complete = true
+		_record.append(ink)
+		seg_events.append(ink)
+	if spring_tension >= SLACK_TENSION and _wind_elapsed < 0.0:
+		_advance_feed_cursor(segment, seg_events.size())
+
+func set_manual_stylus_down(down: bool) -> void:
+	_stylus_target_y = _stylus_rest_y - (stylus_travel if down else 0.0)
 
 func _on_playback_completed(_schedule: MorsePlaybackScheduleData) -> void:
 	if not _active_segment.is_empty():
@@ -355,12 +420,13 @@ func get_tape_text_for_viewer() -> String:
 	for segment in _segments:
 		var status := STATUS_INTERRUPTED if segment.interrupted else (STATUS_COMPLETE if segment.complete else STATUS_ACTIVE)
 		var evs: Array[TapeInkEvent] = segment.events
-		var visible_count := mini(int(_feed_cursors.get(segment.number, 0)), evs.size())
+		var visible_count := _visible_event_count(segment)
 		if visible_count < evs.size():
 			# Real backlog: these recorded marks are still under the rollers.
 			var slice_events: Array[TapeInkEvent] = evs.slice(0, visible_count)
-			takes.append("%s\n%s\n%s" % [TAKE_HEADER_FORMAT % [segment.number, status],
-				_render_ink(slice_events), SLACK_NOTE])
+			var note := "\n" + SLACK_NOTE if _wind_elapsed < 0.0 else ""
+			takes.append("%s\n%s%s" % [TAKE_HEADER_FORMAT % [segment.number, status],
+				_render_ink(slice_events), note])
 		else:
 			takes.append("%s\n%s" % [TAKE_HEADER_FORMAT % [segment.number, status],
 				_render_ink(evs)])

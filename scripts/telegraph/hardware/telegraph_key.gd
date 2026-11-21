@@ -5,6 +5,10 @@ signal key_pressed()
 ## Any physical press, live line or not: the brass moves either way. Sound and
 ## motion only — never the scheduler, so the tape register cannot record it.
 signal key_touched()
+## Manual keying on the brass key: emitted when the operator physically holds
+## the lever down and releases it.
+signal key_held_down()
+signal key_released(hold_seconds: float)
 
 @export var is_enabled: bool = true
 @export var prompt_message: String = "Answer the Line"
@@ -30,6 +34,9 @@ var lever_mesh: Node3D = null
 
 var press_count: int = 0
 var _is_animating: bool = false
+var _is_held: bool = false
+var _hold_elapsed: float = 0.0
+var _active_tween: Tween = null
 var _lever_rest: Transform3D = Transform3D.IDENTITY
 var _press_amount: float = 0.0
 
@@ -86,10 +93,63 @@ func _on_interacted() -> void:
 	_animate_press()
 	key_touched.emit()
 
+func _process(delta: float) -> void:
+	if _is_held:
+		_hold_elapsed += maxf(delta, 0.0)
+		set_press_amount(move_toward(_press_amount, 1.0, delta / maxf(press_down_time, 0.01)))
+
+func begin_manual_hold() -> void:
+	if _is_held:
+		return
+	if _active_tween != null and _active_tween.is_valid():
+		_active_tween.kill()
+	_active_tween = null
+	_is_animating = false
+	_is_held = true
+	_hold_elapsed = 0.0
+	set_press_amount(1.0)
+	key_touched.emit()
+	key_held_down.emit()
+
+func end_manual_hold() -> float:
+	if not _is_held:
+		return 0.0
+	_is_held = false
+	var held := maxf(_hold_elapsed, 0.02)
+	_hold_elapsed = 0.0
+	_animate_release()
+	key_released.emit(held)
+	return held
+
+func is_held() -> bool:
+	return _is_held
+
+func _animate_release() -> void:
+	if lever_mesh == null:
+		lever_mesh = get_node_or_null("Lever") as Node3D
+	if lever_mesh == null:
+		return
+	if not is_inside_tree():
+		set_press_amount(0.0)
+		return
+	if _active_tween != null and _active_tween.is_valid():
+		_active_tween.kill()
+	_is_animating = true
+	var tween := create_tween()
+	_active_tween = tween
+	var rebound_time := 0.022
+	tween.tween_method(set_press_amount, _press_amount, 0.0, press_up_time) \
+		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	tween.tween_method(set_press_amount, 0.0, stop_rebound, rebound_time) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	tween.tween_method(set_press_amount, stop_rebound, 0.0, rebound_time) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+	tween.tween_callback(func() -> void: _is_animating = false)
+
 func _animate_press() -> void:
 	if lever_mesh == null:
 		lever_mesh = get_node_or_null("Lever") as Node3D
-	if lever_mesh == null or _is_animating:
+	if lever_mesh == null or _is_animating or _is_held:
 		return
 
 	if not is_inside_tree():
@@ -102,6 +162,7 @@ func _animate_press() -> void:
 	# there for 150 ms, which read as a glitch rather than a press.
 	_is_animating = true
 	var tween := create_tween()
+	_active_tween = tween
 	var rebound_time := 0.022
 	tween.tween_method(set_press_amount, 0.0, 1.0, press_down_time) \
 		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
