@@ -95,7 +95,7 @@ func open_document(doc_id: String, title: String, body: String, footer: String =
 	if body_label != null:
 		var font: Font = PAPER_FONT
 		var font_size := 17
-		if doc_id in ["morse_reference", "tape_register"]:
+		if doc_id in ["morse_reference", "tape_register", "timetable_card"]:
 			font = MORSE_FONT
 			font_size = 16
 		elif doc_id in [HAND_DOC_ID, "previous_transcript"]:
@@ -151,7 +151,7 @@ func set_text_scale(value: float) -> void:
 	text_scale = clampf(value, 1.0, 1.5)
 	if not _is_open or body_label == null:
 		return
-	var base := 16 if _current_doc_id in ["morse_reference", "tape_register"] else 17
+	var base := 16 if _current_doc_id in ["morse_reference", "tape_register", "timetable_card"] else 17
 	if _current_doc_id in [HAND_DOC_ID, "previous_transcript"]:
 		base = 24
 	body_label.add_theme_font_size_override("normal_font_size", int(round(base * text_scale)))
@@ -257,19 +257,65 @@ func _present_copy(doc_id: String, body: String) -> void:
 			var previous := paper.get_node_or_null("PreviousSheet/PreviousSheetText") as Label3D
 			if previous != null:
 				ink.text = previous.text
+	_present_amendment(copy, ink, paper if doc_id == HAND_DOC_ID else null)
 	var status := copy.get_node("Status") as Label
 	status.text = "COPY INCOMPLETE" if mark >= 0 else ""
 	(copy.get_node("Footer") as Label).visible = false
 	_copy_footer(_active_footer())
 
-func _input(event: InputEvent) -> void:
-	if not _is_open or _current_doc_id not in [HAND_DOC_ID, "previous_transcript"]:
+## The lifted copy repeats the ink already on the physical sheet, never a hidden draft.
+func _present_amendment(copy: Control, ink: Label, paper: TranscriptPaper) -> void:
+	var correction := copy.get_node_or_null("AmendmentInk") as Label
+	if correction == null:
+		correction = ink.duplicate() as Label
+		correction.name = "AmendmentInk"
+		correction.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		copy.add_child(correction)
+	var strikes := copy.get_node_or_null("AmendmentStrikes") as Control
+	if strikes == null:
+		strikes = Control.new()
+		strikes.name = "AmendmentStrikes"
+		strikes.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		copy.add_child(strikes)
+	for child in strikes.get_children():
+		strikes.remove_child(child)
+		child.queue_free()
+	var amendment := paper.get_amendment() if paper != null else null
+	var word := amendment.get_written_text() if amendment != null else ""
+	correction.visible = not word.is_empty()
+	strikes.visible = correction.visible
+	if word.is_empty():
+		correction.text = ""
 		return
+	var font := ink.get_theme_font("font")
+	var font_size := ink.get_theme_font_size("font_size")
+	var line_height := font.get_height(font_size)
+	var lines := ink.text.split("\n")
+	correction.add_theme_font_override("font", font)
+	correction.add_theme_font_size_override("font_size", font_size)
+	correction.position = ink.position + Vector2(0, line_height * (lines.size() + amendment.gap_rows))
+	correction.size = ink.size
+	correction.text = TranscriptPaper.layout_text(word)
+	for index in lines.size():
+		if lines[index].is_empty():
+			continue
+		var stroke := ColorRect.new()
+		stroke.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		stroke.color = ink.get_theme_color("font_color")
+		stroke.position = ink.position + Vector2(0, line_height * index + font.get_ascent(font_size) * 0.62)
+		stroke.size = Vector2(font.get_string_size(lines[index], HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x, 1.0)
+		strikes.add_child(stroke)
+
+func _input(event: InputEvent) -> void:
+	if not _is_open:
+		return
+	var is_copy := _current_doc_id in [HAND_DOC_ID, "previous_transcript"]
 	if event is InputEventKey and event.pressed:
-		if _copy_key_pan(event):
+		var navigated := _copy_key_pan(event) if is_copy else _scroll_printed_document(event)
+		if navigated:
 			get_viewport().set_input_as_handled()
 		return
-	if not event is InputEventMouseButton or not event.pressed:
+	if not is_copy or not event is InputEventMouseButton or not event.pressed:
 		return
 	var direction := 0.0
 	if event.button_index == MOUSE_BUTTON_WHEEL_UP:
@@ -280,6 +326,34 @@ func _input(event: InputEvent) -> void:
 		return
 	_pan_copy_to(_copy_pan_y + direction * 48.0)
 	get_viewport().set_input_as_handled()
+
+## The world keeps mouse capture while reading. Use the body's own scroll
+## range so keyboard and wheel always continue from the same place.
+func _scroll_printed_document(event: InputEventKey) -> bool:
+	if body_label == null or not body_label.scroll_active:
+		return false
+	var bar := body_label.get_v_scroll_bar()
+	var bottom := bar.max_value - bar.page
+	if bottom <= bar.min_value:
+		return false
+	var line := float(body_label.get_line_height(0))
+	var page := maxf(line, bar.page - line)
+	match event.keycode:
+		KEY_UP:
+			bar.value -= line
+		KEY_DOWN:
+			bar.value += line
+		KEY_PAGEUP:
+			bar.value -= page
+		KEY_PAGEDOWN:
+			bar.value += page
+		KEY_HOME:
+			bar.value = bar.min_value
+		KEY_END:
+			bar.value = bottom
+		_:
+			return false
+	return true
 
 ## Keyboard pan for the magnified sheet. Only page/line-navigation keys are taken
 ## while a copy is open; letters (WASD) stay with the game and text entry.

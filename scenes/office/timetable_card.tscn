@@ -1,0 +1,42 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scripts/office/timetable_card.gd" id="1_card"]
+[ext_resource type="Script" path="res://scripts/interaction/interactable.gd" id="2_interact"]
+[ext_resource type="Material" path="res://materials/style_tests/paper_log.tres" id="3_paper"]
+[ext_resource type="FontFile" path="res://assets/fonts/imfell/IMFeENrm28P.ttf" id="4_font"]
+
+[sub_resource type="BoxMesh" id="CardMesh"]
+material = ExtResource("3_paper")
+size = Vector3(0.30, 0.003, 0.24)
+
+[sub_resource type="BoxShape3D" id="CardShape"]
+size = Vector3(0.30, 0.05, 0.24)
+
+[node name="TimetableCard" type="Node3D"]
+script = ExtResource("1_card")
+
+[node name="Paper" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.0015, 0)
+mesh = SubResource("CardMesh")
+
+[node name="Label3D" type="Label3D" parent="."]
+position = Vector3(0, 0.004, 0)
+rotation = Vector3(-1.5707963, 0, 0)
+font = ExtResource("4_font")
+pixel_size = 0.0011
+shaded = true
+alpha_cut = 1
+modulate = Color(0.12, 0.1, 0.08, 1)
+text = "BLACK CREEK & WESTERN\nNIGHT TIMETABLE"
+font_size = 16
+outline_size = 0
+
+[node name="Interactable" type="Area3D" parent="."]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("2_interact")
+prompt_text = "Read Night Timetable"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Interactable"]
+position = Vector3(0, 0.025, 0)
+shape = SubResource("CardShape")

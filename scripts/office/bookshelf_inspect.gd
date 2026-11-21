@@ -42,9 +42,20 @@ NEWSPAPER CUTTING, OCTOBER 1885:
     ... THE MINE WILL NOT REOPEN. THE COMPANY THANKS THE TOWN FOR
     ITS PATIENCE AND ITS SONS ...
 
-A note in the margin, in a hand that is not this operator's:
-    "They keep the order book here because nobody has needed it
-     since the mine shut. Do not let it go to your head."
+────────────────────────────────────────
+PREDECESSOR'S JOURNAL LEAF (tucked inside the 1885 order book):
+OCT 14, 1885 — 11:42 PM
+Lower drift took water. MJ called twice — HOLD 17.
+The kid signed CLEAR anyway. Said the Superintendent told him to.
+I tore the tape off the reel and I'm going down to the shaft myself.
+Tell Dr. Crane his boy had a very steady hand tonight.
+— J.C.
+
+────────────────────────────────────────
+COUNTY RECORD — FEE VOUCHER (1884)
+Dr. Arthur Crane — Medical attendance & drop calculation (State Warrant #19).
+Fee paid: $25.00.
+Margin note (A.C.): "Clean drop. No needless suffering. Keep the hand steady."
 """
 
 var interactable: Interactable = null
