@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b72mn83iadjvw"
-path="res://.godot/imported/hero.png-060637c8fa074e1a4be4db8a651d180c.ctex"
+uid="uid://dlbgqa0rsdvmj"
+path="res://.godot/imported/sounder.jpg-531ae22a9fb19d9dca3b8215b3ea797f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://sites/dead-wire/img/hero.png"
-dest_files=["res://.godot/imported/hero.png-060637c8fa074e1a4be4db8a651d180c.ctex"]
+source_file="res://landing/img/sounder.jpg"
+dest_files=["res://.godot/imported/sounder.jpg-531ae22a9fb19d9dca3b8215b3ea797f.ctex"]
 
 [params]
 

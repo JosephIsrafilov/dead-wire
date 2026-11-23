@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://m8eva627ylpg"
-path="res://.godot/imported/equipment_close.png-ffc42d4b7dcbd2e84ae094b1ffcb674c.ctex"
+uid="uid://dmx8gj82nnogl"
+path="res://.godot/imported/route_board.jpg-904cc8c6e605b0d4030a6e5032296210.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://sites/dead-wire/img/equipment_close.png"
-dest_files=["res://.godot/imported/equipment_close.png-ffc42d4b7dcbd2e84ae094b1ffcb674c.ctex"]
+source_file="res://landing/img/route_board.jpg"
+dest_files=["res://.godot/imported/route_board.jpg-904cc8c6e605b0d4030a6e5032296210.ctex"]
 
 [params]
 

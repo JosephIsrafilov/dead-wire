@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://yaw4tk1rq44j"
-path="res://.godot/imported/door.png-839e316c29d83edc0f19015efa2d2792.ctex"
+uid="uid://bk166ch3rxc2p"
+path="res://.godot/imported/hero_watcher.jpg-002ca696c005b9ec309b2fc250c6174e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://sites/dead-wire/img/door.png"
-dest_files=["res://.godot/imported/door.png-839e316c29d83edc0f19015efa2d2792.ctex"]
+source_file="res://landing/img/hero_watcher.jpg"
+dest_files=["res://.godot/imported/hero_watcher.jpg-002ca696c005b9ec309b2fc250c6174e.ctex"]
 
 [params]
 

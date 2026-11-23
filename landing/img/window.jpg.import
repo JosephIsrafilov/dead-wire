@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bcot3nm4tuqc2"
-path="res://.godot/imported/consequence.png-9e3d29ac7b7e148c97fe134583cdbbdb.ctex"
+uid="uid://bqpawa08fjy2s"
+path="res://.godot/imported/window.jpg-65d59cce5b06f931ebe1fd5623f8fc28.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://sites/dead-wire/img/consequence.png"
-dest_files=["res://.godot/imported/consequence.png-9e3d29ac7b7e148c97fe134583cdbbdb.ctex"]
+source_file="res://landing/img/window.jpg"
+dest_files=["res://.godot/imported/window.jpg-65d59cce5b06f931ebe1fd5623f8fc28.ctex"]
 
 [params]
 

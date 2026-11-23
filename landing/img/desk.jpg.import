@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://m5m18gq3so6y"
-path="res://.godot/imported/routing.png-e9f259840dc042f010d010fcca51f6e7.ctex"
+uid="uid://rxljac54ut58"
+path="res://.godot/imported/desk.jpg-731c07727802554f3ea541e53f451f7a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://sites/dead-wire/img/routing.png"
-dest_files=["res://.godot/imported/routing.png-e9f259840dc042f010d010fcca51f6e7.ctex"]
+source_file="res://landing/img/desk.jpg"
+dest_files=["res://.godot/imported/desk.jpg-731c07727802554f3ea541e53f451f7a.ctex"]
 
 [params]
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://breyf2xh56dh7"
-path="res://.godot/imported/waiting.png-51e87ab3911b0be6ce87c322c2c158cf.ctex"
+uid="uid://t13vawkcgskr"
+path="res://.godot/imported/icon.svg-9345aeada3145a2d81108c81fc88e4b4.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://sites/dead-wire/img/waiting.png"
-dest_files=["res://.godot/imported/waiting.png-51e87ab3911b0be6ce87c322c2c158cf.ctex"]
+source_file="res://landing/img/icon.svg"
+dest_files=["res://.godot/imported/icon.svg-9345aeada3145a2d81108c81fc88e4b4.ctex"]
 
 [params]
 
@@ -38,3 +38,6 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
+svg/scale=1.0
+editor/scale_with_editor_scale=false
+editor/convert_colors_with_editor_theme=false

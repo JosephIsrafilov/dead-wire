@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://1v0sfrvu5dfr"
-path="res://.godot/imported/writer.png-80fa4930d026439a4357decf7c2de374.ctex"
+uid="uid://m8io0cp54a0m"
+path="res://.godot/imported/title_desk.jpg-99623743dbca5cb63ccce99ffaf97fb5.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://sites/dead-wire/img/writer.png"
-dest_files=["res://.godot/imported/writer.png-80fa4930d026439a4357decf7c2de374.ctex"]
+source_file="res://landing/img/title_desk.jpg"
+dest_files=["res://.godot/imported/title_desk.jpg-99623743dbca5cb63ccce99ffaf97fb5.ctex"]
 
 [params]
 
