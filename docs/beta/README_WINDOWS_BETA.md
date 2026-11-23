@@ -13,12 +13,14 @@ This is a work-in-progress first-person night shift in a small telegraph office.
 - **W / A / S / D** — move
 - **Mouse** — look
 - **E** — interact with the indicated object
+- **Right mouse button / Q** — lean closer (hold by default; toggle is available in options)
 - **Esc** — close a document or open/pause the menu (context-dependent)
+- **Mouse wheel / Page Up / Page Down** — scroll a raised document. **Home / End** jump to either end. Use **Up / Down** for a line at a time in printed documents.
 - **1 / 2** — select a displayed option when the interface offers numbered choices
 
 Contextual thoughts offer brief, situation-specific procedural reminders; they are not required reading. Press **F1** to repeat the current reminder when available. You can turn contextual thoughts on or off in the options.
 
-The pointer may be captured during play. Follow the on-screen prompt for returning to menus or releasing control. Options include separate **Telegraph** and **Foley** volume controls plus display/readability settings.
+The pointer may be captured during play. Follow the on-screen prompt for returning to menus or releasing control. Options include separate **Master**, **Ambience**, **Telegraph**, **Foley**, and **Music** volume controls plus display/readability settings.
 
 ## Sound status
 

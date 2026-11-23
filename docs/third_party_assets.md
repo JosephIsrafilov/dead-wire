@@ -6,6 +6,23 @@ All third-party assets integrated into DEAD WIRE are verified for licensing comp
 
 > **Historical PSX pipeline note (superseded by the policy above, kept for provenance):** at the time this section was written, all runtime visual assets were hand-authored low-poly geometry and the entries below were reference-only (`runtime-instanced: no`). This describes the past state, not the current scene.
 
+## Black Creek 1890 — material and print kit
+
+The following Poly Haven textures are adapted under [CC0 1.0](https://polyhaven.com/license). `tools/generate_town_v2_textures.py` produces the matching albedo, OpenGL normal and roughness PNGs in `assets/textures/town_v2/`. The 1K originals are cached in `.dream-loop/town_cc0_cache/`, excluded from export.
+
+| Runtime prefix | CC0 source | Baked size |
+|---|---|---:|
+| `plank` | [Weathered Brown Planks](https://polyhaven.com/a/weathered_brown_planks) | 256² |
+| `roof` | [Roof Slates 02](https://polyhaven.com/a/roof_slates_02) | 512² |
+| `brick` | [Red Brick](https://polyhaven.com/a/red_brick) | 256² |
+| `stone` | [Old Stone Wall 02](https://polyhaven.com/a/old_stone_wall_02) | 256² |
+| `road` | [Gravelly Sand](https://polyhaven.com/a/gravelly_sand), with separate Godot wet-rut treatment | 512² |
+| `mahogany` | [Wood Cabinet Worn Long](https://polyhaven.com/a/wood_cabinet_worn_long), used as stained millwork | 256² |
+| `plaster` | [Worn Plaster Wall](https://polyhaven.com/a/worn_plaster_wall) | 256² |
+| `iron` | [Rusty Metal 02](https://polyhaven.com/a/rusty_metal_02) | 256² |
+
+The prints in `assets/textures/town_v2/print/` are original fictional period artwork, rasterized with `tools/generate_black_creek_print.py`, not archive scans. The added [Rye font](https://github.com/google/fonts/tree/main/ofl/rye) is SIL OFL 1.1; its license ships in `assets/fonts/rye/OFL.txt`.
+
 ## Audio Provenance Record
 
 **Historical note (pre-2026-09-19):** at the time of writing, the ambience bed
@@ -32,6 +49,8 @@ the synthesised beds themselves are unchanged.
 | `audio/sfx/foley/clock_strike.wav` | `render_clock_strike()` (`--only clock_strike`, plan 9.2) | 6.0 s mono one-shot |
 | `audio/sfx/train/train_whistle.wav`, `train_rumble.wav`, `train_steam.wav` | `tools/generate_train_audio.py` (plan 4.6) | one-shots |
 | `assets/models/office/chimney.obj` (model, not audio) | `tools/build_lamp_chimney.py` | — |
+
+**Current footstep runtime:** `audio/sfx/foley/footstep_boards_1..5.wav` are five edited contacts from [Steps in wood floor](https://opengameart.org/content/steps-in-wood-floor) by mikeask (CC0). The source recording was downmixed to mono, high-passed at 45 Hz, cut at each footfall, faded, and peak-matched. The player uses all five and the door event uses the third. The earlier synthesized footsteps above are legacy sources.
 
 **Music:** the intro card plays the project's own drone (`audio/music/intro_drone.wav`,
 plan 7.12, owner decision 30.10). The former temporary cue
@@ -371,3 +390,12 @@ Runtime asset: `assets/models/office_props_v1/coat_tailored.glb` and its extract
 `docs/art/state_2026-11-01/coat/sources/` (excluded from Godot import with `.gdignore`).
 The garment has 2004 triangles, including lining, cuff rims, pockets and horn buttons.
 Owner selected the warm-grey B material; motion acceptance is separate.
+
+## Office wear — owner-selected B (2026-11-02)
+
+`assets/textures/office_wear/` contains project-authored textures, not downloaded assets.
+`wallpaper_b.png` is the existing `assets/textures/worn_warmth/wallpaper_128_v1.png`
+with Pillow contrast factor 0.45. `sill_runoff.png`, `stove_soot.png`, and `lamp_smoke.png`
+are locally authored deterministic alpha masks (NumPy RNG seed 87). The four static
+quads in `scenes/office/office_wear.tscn` have no collision, animation or gameplay script.
+The owner approved study B; no lighting or furniture placement changed.

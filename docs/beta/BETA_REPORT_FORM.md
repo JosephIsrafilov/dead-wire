@@ -37,4 +37,4 @@ Describe what evidence you are attaching. Before sharing screenshots, remove nam
 
 ## Privacy reminder
 
-No telemetry or automatic upload is included. Participation and reporting are opt-in. Do not include personally identifying information or exact words you typed into the game.
+A local playtest log is enabled by default and can be disabled in the options; it is never uploaded automatically. Participation and sharing recordings or logs are optional. Do not include personally identifying information or exact words you typed into the game.
