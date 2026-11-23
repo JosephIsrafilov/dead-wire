@@ -1,55 +1,85 @@
 class_name TitleMood
 extends Control
 
-## The title is the office at night (plan 6.7): a frame of the room itself,
-## the lamp breathing a little, the side the menu stands on falling into the
-## dark, the room's own tone and the wind at the pane, and — now and then,
-## far off — the office call on a sounder that is not this one. The menu's
-## lines are a telegraph blank's; choosing one is the click of a key.
+## Live 3D station diorama behind the FORM 19 menu.
+## Renders TitleBackdrop3D inside an isolated SubViewport through our 5-bit
+## Bayer PSX grade shader, keeping menu typography razor-sharp above it.
 
-const BACKDROPS := {
-	"window": preload("res://assets/textures/title/title_window.png"),
-	"desk": preload("res://assets/textures/title/title_desk.png"),
-}
-const ROOM_TONE := preload("res://audio/sfx/ambience/room_tone.wav")
-const WIND := preload("res://audio/sfx/ambience/wind_window.wav")
-const KEY_CLICK := preload("res://audio/sfx/foley/key_click.wav")
-const SOUNDER_DOWN := preload("res://audio/sfx/telegraph/sounder_down.wav")
-const SOUNDER_UP := preload("res://audio/sfx/telegraph/sounder_up.wav")
-## American Morse "CR CR" as (down, up) pairs in units: C is "..  ." with its
-## spaced dot, R is ".  ..". One unit is a slow, distant hand.
-const CALL_UNITS := [[0, 1], [2, 3], [5, 6], [9, 10], [12, 13], [14, 15],
-	[20, 21], [22, 23], [25, 26], [29, 30], [32, 33], [34, 35]]
-const UNIT_SECONDS := 0.085
+signal sounder_pulse()
 
-@export var backdrop_name: String = "window"
-@export var call_interval: Vector2 = Vector2(35.0, 70.0)
+const BACKDROP_SCENE := preload("res://scenes/ui/title_backdrop_3d.tscn")
+const PSX_GRADE_SHADER := preload("res://materials/shaders/psx_grade.gdshader")
+const FALLBACK_TEXTURE := preload("res://assets/textures/title/title_window.png")
 
-var _image: TextureRect = null
-var _clock: float = 0.0
-var _next_call: float = 0.0
-var _call_time: float = -1.0
-var _call_step: int = 0
-var _sounder: AudioStreamPlayer = null
-var _click: AudioStreamPlayer = null
-var _rng := RandomNumberGenerator.new()
+var _container: SubViewportContainer = null
+var _viewport: SubViewport = null
+var _backdrop: TitleBackdrop3D = null
+var _grade_rect: ColorRect = null
+var _fade_overlay: ColorRect = null
 
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_image = TextureRect.new()
-	_image.texture = BACKDROPS.get(backdrop_name, BACKDROPS["window"])
-	_image.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	_image.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-	_image.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	_image.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(_image)
-	# The menu's side of the frame falls into the dark, so its lines read.
+	_build_live_diorama()
+	_build_dark_veil()
+	_build_fade_overlay()
+
+func _build_live_diorama() -> void:
+	_container = SubViewportContainer.new()
+	_container.name = "DioramaFrame"
+	_container.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_container.stretch = true
+	_container.stretch_shrink = 2
+	_container.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(_container)
+
+	_viewport = SubViewport.new()
+	_viewport.name = "DioramaViewport"
+	_viewport.own_world_3d = true
+	_viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	_viewport.size = Vector2i(640, 360)
+	_viewport.scaling_3d_mode = Viewport.SCALING_3D_MODE_NEAREST
+	_viewport.msaa_3d = Viewport.MSAA_DISABLED
+	_viewport.screen_space_aa = Viewport.SCREEN_SPACE_AA_DISABLED
+	_viewport.use_taa = false
+	_viewport.use_debanding = false
+	_viewport.canvas_item_default_texture_filter = Viewport.DEFAULT_CANVAS_ITEM_TEXTURE_FILTER_NEAREST
+	_container.add_child(_viewport)
+
+	_backdrop = BACKDROP_SCENE.instantiate() as TitleBackdrop3D
+	if _backdrop != null:
+		_viewport.add_child(_backdrop)
+		_backdrop.sounder_pulse.connect(func() -> void: sounder_pulse.emit())
+
+	var grade_layer := CanvasLayer.new()
+	grade_layer.layer = 1
+	_viewport.add_child(grade_layer)
+	_grade_rect = ColorRect.new()
+	_grade_rect.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_grade_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var mat := ShaderMaterial.new()
+	mat.shader = PSX_GRADE_SHADER
+	mat.set_shader_parameter("pixel_size", 1.0)
+	mat.set_shader_parameter("levels", 32.0)
+	mat.set_shader_parameter("color_saturation", 0.88)
+	mat.set_shader_parameter("shadow_tint", Vector3(0.004, 0.007, 0.016))
+	mat.set_shader_parameter("highlight_tint", Vector3(1.03, 0.99, 0.93))
+	mat.set_shader_parameter("shadow_crush_factor", 0.94)
+	mat.set_shader_parameter("vignette", 0.24)
+	mat.set_shader_parameter("grain", 0.024)
+	mat.set_shader_parameter("dither_strength", 1.25)
+	_grade_rect.material = mat
+	grade_layer.add_child(_grade_rect)
+
+func _build_dark_veil() -> void:
 	var shade := TextureRect.new()
+	shade.name = "MenuVeil"
 	var gradient := Gradient.new()
-	gradient.set_color(0, Color(0, 0, 0, 0.0))
-	gradient.set_color(1, Color(0, 0, 0, 0.82))
-	gradient.add_point(0.45, Color(0, 0, 0, 0.1))
+	gradient.set_color(0, Color(0.01, 0.01, 0.014, 0.0))
+	gradient.set_color(1, Color(0.01, 0.01, 0.014, 0.88))
+	gradient.add_point(0.46, Color(0.01, 0.01, 0.014, 0.20))
+	gradient.add_point(0.62, Color(0.01, 0.01, 0.014, 0.68))
 	var texture := GradientTexture2D.new()
 	texture.gradient = gradient
 	texture.fill_from = Vector2(0, 0.5)
@@ -60,59 +90,47 @@ func _ready() -> void:
 	shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	shade.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(shade)
-	_loop(ROOM_TONE, -16.0)
-	_loop(WIND, -20.0)
-	_sounder = _player(-24.0)
-	_click = _player(-8.0)
-	_rng.seed = 1890
-	_next_call = _rng.randf_range(8.0, 14.0)
+
+func _build_fade_overlay() -> void:
+	_fade_overlay = ColorRect.new()
+	_fade_overlay.name = "EnterFade"
+	_fade_overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_fade_overlay.color = Color(0.0, 0.0, 0.0, 0.0)
+	_fade_overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(_fade_overlay)
+
+func _input(event: InputEvent) -> void:
+	if _backdrop == null or not (event is InputEventMouseMotion):
+		return
+	var rect := get_viewport_rect().size
+	if rect.x <= 1.0 or rect.y <= 1.0:
+		return
+	var pos := (event as InputEventMouseMotion).position
+	var norm := Vector2(
+		(pos.x / rect.x) * 2.0 - 1.0,
+		(pos.y / rect.y) * 2.0 - 1.0
+	)
+	_backdrop.set_mouse_normalized(norm)
 
 func get_backdrop() -> Texture2D:
-	return _image.texture if _image != null else null
+	if _viewport != null:
+		return _viewport.get_texture()
+	return FALLBACK_TEXTURE
 
-## A key click: the sound of choosing a line on the blank.
-func click() -> void:
-	if _click != null and _click.is_inside_tree():
-		_click.stream = KEY_CLICK
-		_click.play()
+func get_backdrop_3d() -> TitleBackdrop3D:
+	return _backdrop
 
-func _process(delta: float) -> void:
-	_clock += delta
-	if _image != null:
-		# The lamp breathes: a slow swell with a small flicker riding it.
-		var breath := 0.965 + 0.025 * sin(_clock * 0.9) + 0.01 * sin(_clock * 7.3 + 1.7)
-		_image.modulate = Color(breath, breath, breath, 1.0)
-	_advance_call(delta)
+func set_options_open(open: bool) -> void:
+	if _backdrop != null:
+		_backdrop.set_options_open(open)
 
-func _advance_call(delta: float) -> void:
-	if _call_time < 0.0:
-		_next_call -= delta
-		if _next_call <= 0.0:
-			_call_time = 0.0
-			_call_step = 0
-		return
-	_call_time += delta
-	while _call_step < CALL_UNITS.size() * 2:
-		var pair: Array = CALL_UNITS[_call_step / 2]
-		var at: float = float(pair[_call_step % 2]) * UNIT_SECONDS
-		if _call_time < at:
-			return
-		_sounder.stream = SOUNDER_DOWN if _call_step % 2 == 0 else SOUNDER_UP
-		_sounder.play()
-		_call_step += 1
-	_call_time = -1.0
-	_next_call = _rng.randf_range(call_interval.x, call_interval.y)
+func advance_mood(delta: float) -> void:
+	if _backdrop != null:
+		_backdrop.advance_visual(delta)
 
-func _loop(stream: AudioStream, volume_db: float) -> void:
-	var player := _player(volume_db)
-	player.stream = stream
-	player.finished.connect(player.play)
-	player.play.call_deferred()
-
-func _player(volume_db: float) -> AudioStreamPlayer:
-	var player := AudioStreamPlayer.new()
-	player.volume_db = volume_db
-	if AudioServer.get_bus_index("Ambience") >= 0:
-		player.bus = &"Ambience"
-	add_child(player)
-	return player
+func play_enter_transition(duration: float = 0.36) -> void:
+	if _backdrop != null:
+		_backdrop.play_enter_transition()
+	if _fade_overlay != null and is_inside_tree():
+		var tw := create_tween()
+		tw.tween_property(_fade_overlay, "color:a", 1.0, duration).set_trans(Tween.TRANS_SINE)

@@ -1,14 +1,21 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
-  <rect x="3" y="3" width="122" height="122" rx="16" fill="#0d0e12" stroke="#2c2721" stroke-width="4"/>
-  <circle cx="102" cy="24" r="9" fill="#9fb2c6"/>
-  <g fill="none" stroke-linecap="round">
-    <path d="M70 40 Q 96 60 123 50" stroke="#6f6a62" stroke-width="4"/>
-    <path d="M26 40 C 22 62, 32 80, 24 104" stroke="#b8925a" stroke-width="5"/>
-  </g>
-  <g fill="#b8925a">
-    <rect x="44" y="18" width="10" height="106"/>
-    <rect x="18" y="32" width="62" height="8" rx="2"/>
-    <rect x="22" y="26" width="8" height="8" rx="2"/>
-    <rect x="66" y="26" width="8" height="8" rx="2"/>
-  </g>
+  <defs>
+    <radialGradient id="wax" cx="42%" cy="36%" r="68%">
+      <stop offset="0%" stop-color="#6b1d1b"/>
+      <stop offset="65%" stop-color="#451010"/>
+      <stop offset="100%" stop-color="#250809"/>
+    </radialGradient>
+    <linearGradient id="brass" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#e3c07b"/>
+      <stop offset="50%" stop-color="#9b7840"/>
+      <stop offset="100%" stop-color="#4d391c"/>
+    </linearGradient>
+  </defs>
+  <circle cx="64" cy="64" r="59" fill="url(#brass)" stroke="#23190d" stroke-width="3"/>
+  <circle cx="64" cy="64" r="49" fill="url(#wax)" stroke="#2b0c0c" stroke-width="2.5"/>
+  <circle cx="64" cy="64" r="44" fill="none" stroke="#8b2d27" stroke-width="1.2" opacity="0.65"/>
+  <text x="64" y="71" text-anchor="middle" font-family="Georgia, serif" font-weight="bold" font-size="44" fill="#ecd59a" stroke="#2c190c" stroke-width="1.4">19</text>
+  <circle cx="42" cy="91" r="3.6" fill="#d9b672"/>
+  <rect x="52" y="88" width="24" height="6" rx="2" fill="#d9b672"/>
+  <circle cx="86" cy="91" r="3.6" fill="#d9b672"/>
 </svg>

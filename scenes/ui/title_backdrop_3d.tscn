@@ -1,0 +1,361 @@
+[gd_scene load_steps=19 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/title_backdrop_3d.gd" id="1_script"]
+[ext_resource type="Material" path="res://materials/style_tests/floor_wood_planks.tres" id="2_floor"]
+[ext_resource type="Material" path="res://materials/style_tests/m1_wall_plaster.tres" id="3_wall"]
+[ext_resource type="Material" path="res://materials/style_tests/m1_ceiling_plaster.tres" id="4_ceiling"]
+[ext_resource type="Material" path="res://materials/style_tests/timber_trim.tres" id="5_trim"]
+[ext_resource type="Material" path="res://materials/style_tests/m1_night_sky.tres" id="6_sky"]
+[ext_resource type="Material" path="res://materials/style_tests/m1_wainscot_wood.tres" id="7_wainscot"]
+[ext_resource type="PackedScene" path="res://scenes/style_tests/props/window_north.tscn" id="8_window"]
+[ext_resource type="PackedScene" path="res://scenes/style_tests/props/desk_setup.tscn" id="9_desk"]
+[ext_resource type="PackedScene" path="res://scenes/telegraph/telegraph_station.tscn" id="10_station"]
+[ext_resource type="PackedScene" path="res://scenes/telegraph/tape_register.tscn" id="11_tape"]
+[ext_resource type="PackedScene" path="res://scenes/office/mine_yard.tscn" id="12_yard"]
+[ext_resource type="PackedScene" path="res://scenes/office/dust_motes.tscn" id="13_dust"]
+[ext_resource type="PackedScene" path="res://scenes/office/window_observation_event.tscn" id="14_fig"]
+[ext_resource type="PackedScene" path="res://scenes/style_tests/props/psx_chair.tscn" id="15_chair"]
+[ext_resource type="Material" path="res://materials/style_tests/form_night_copy.tres" id="16_form"]
+[ext_resource type="Material" path="res://materials/style_tests/metal_brass_aged.tres" id="17_brass"]
+[ext_resource type="Texture2D" path="res://assets/textures/worn_warmth/baize_128_v1.png" id="18_baize"]
+
+[sub_resource type="Gradient" id="GradeGradient"]
+offsets = PackedFloat32Array(0, 0.5, 1)
+colors = PackedColorArray(0, 0.012, 0.035, 1, 0.5, 0.49, 0.47, 1, 1, 0.97, 0.9, 1)
+
+[sub_resource type="GradientTexture1D" id="GradeCurve"]
+gradient = SubResource("GradeGradient")
+width = 256
+
+[sub_resource type="Environment" id="TitleEnv"]
+background_mode = 1
+background_color = Color(0.02, 0.025, 0.035, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.18, 0.24, 0.38, 1)
+ambient_light_sky_contribution = 0.0
+ambient_light_energy = 0.095
+tonemap_mode = 4
+tonemap_exposure = 1.38
+tonemap_white = 4.0
+fog_enabled = true
+fog_light_color = Color(0.16, 0.19, 0.24, 1)
+fog_light_energy = 0.55
+fog_density = 0.012
+fog_height = 1.15
+fog_height_density = 0.08
+fog_sky_affect = 0.35
+adjustment_enabled = true
+adjustment_contrast = 1.12
+adjustment_saturation = 0.86
+adjustment_color_correction = SubResource("GradeCurve")
+
+[sub_resource type="QuadMesh" id="SkyQuadMesh"]
+size = Vector2(900.0, 460.0)
+
+[sub_resource type="StandardMaterial3D" id="ExteriorSilhouette"]
+shading_mode = 0
+albedo_color = Color(0.018, 0.022, 0.032, 1)
+
+[sub_resource type="StandardMaterial3D" id="ExteriorTimber"]
+shading_mode = 0
+albedo_color = Color(0.075, 0.072, 0.07, 1)
+
+[sub_resource type="StandardMaterial3D" id="BlotterFelt"]
+albedo_color = Color(0.05, 0.1, 0.07, 1)
+albedo_texture = ExtResource("18_baize")
+texture_filter = 0
+roughness = 1.0
+specular_mode = 2
+
+[sub_resource type="StandardMaterial3D" id="BlotterLeather"]
+albedo_color = Color(0.2, 0.11, 0.07, 1)
+roughness = 0.6
+metallic_specular = 0.3
+
+[sub_resource type="PlaneMesh" id="FormSheetMesh"]
+material = ExtResource("16_form")
+size = Vector2(0.23, 0.3)
+
+[sub_resource type="StandardMaterial3D" id="PenWood"]
+albedo_color = Color(0.09, 0.055, 0.035, 1)
+roughness = 0.55
+
+[sub_resource type="CylinderMesh" id="PenBodyMesh"]
+material = SubResource("PenWood")
+top_radius = 0.0032
+bottom_radius = 0.0042
+height = 0.15
+radial_segments = 6
+
+[sub_resource type="CylinderMesh" id="PenNibMesh"]
+material = ExtResource("17_brass")
+top_radius = 0.004
+bottom_radius = 0.001
+height = 0.022
+radial_segments = 5
+
+[node name="TitleBackdrop3D" type="Node3D"]
+script = ExtResource("1_script")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("TitleEnv")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+position = Vector3(-0.56, 1.31, -0.58)
+fov = 44.0
+current = true
+
+[node name="DeskLampLight" type="OmniLight3D" parent="."]
+position = Vector3(-1.65, 0.975, -2.06)
+light_color = Color(1, 0.76, 0.48, 1)
+light_energy = 2.85
+light_indirect_energy = 0.9
+shadow_enabled = true
+omni_range = 4.2
+omni_attenuation = 1.8
+
+[node name="WindowMoonLight" type="SpotLight3D" parent="."]
+position = Vector3(-1.5, 2.0, -2.9)
+rotation = Vector3(-0.45, 3.141593, 0)
+light_color = Color(0.28, 0.48, 0.92, 1)
+light_energy = 2.65
+light_specular = 0.25
+light_indirect_energy = 0.7
+shadow_enabled = true
+spot_range = 7.0
+spot_attenuation = 0.9
+spot_angle = 42.0
+
+[node name="PaperBounceLight" type="OmniLight3D" parent="."]
+position = Vector3(-1.38, 0.9, -1.76)
+light_color = Color(1, 0.82, 0.62, 1)
+light_energy = 0.20
+light_specular = 0.0
+omni_range = 0.45
+omni_attenuation = 1.6
+
+[node name="RoutingSconceAccent" type="OmniLight3D" parent="."]
+position = Vector3(-2.30, 1.56, -1.08)
+light_color = Color(0.95, 0.74, 0.44, 1)
+light_energy = 0.75
+shadow_enabled = false
+omni_range = 2.6
+omni_attenuation = 1.5
+
+[node name="Floor" type="CSGBox3D" parent="."]
+position = Vector3(0, -0.05, 0)
+size = Vector3(6.04, 0.1, 4.84)
+material = ExtResource("2_floor")
+
+[node name="Ceiling" type="CSGBox3D" parent="."]
+position = Vector3(0, 2.9, 0)
+size = Vector3(6.04, 0.1, 4.84)
+material = ExtResource("4_ceiling")
+
+[node name="CeilingBeam1" type="CSGBox3D" parent="."]
+position = Vector3(-1.8, 2.84, 0)
+size = Vector3(0.12, 0.12, 4.56)
+material = ExtResource("5_trim")
+
+[node name="CeilingBeam2" type="CSGBox3D" parent="."]
+position = Vector3(-0.6, 2.84, 0)
+size = Vector3(0.12, 0.12, 4.56)
+material = ExtResource("5_trim")
+
+[node name="WestWall" type="CSGBox3D" parent="."]
+position = Vector3(-2.96, 1.425, 0)
+size = Vector3(0.12, 2.85, 4.84)
+material = ExtResource("3_wall")
+
+[node name="NorthWall_FarLeft" type="CSGBox3D" parent="."]
+position = Vector3(-2.66, 1.425, -2.36)
+size = Vector3(0.72, 2.85, 0.12)
+material = ExtResource("3_wall")
+
+[node name="NorthWall_MidLeft" type="CSGBox3D" parent="."]
+position = Vector3(-0.255, 1.425, -2.36)
+size = Vector3(0.89, 2.85, 0.12)
+material = ExtResource("3_wall")
+
+[node name="NorthWall_MidRight" type="CSGBox3D" parent="."]
+position = Vector3(1.05, 1.425, -2.36)
+size = Vector3(1.72, 2.85, 0.12)
+material = ExtResource("3_wall")
+
+[node name="NorthWall_Bottom" type="CSGBox3D" parent="."]
+position = Vector3(-1.5, 0.46, -2.36)
+size = Vector3(1.6, 0.92, 0.12)
+material = ExtResource("3_wall")
+
+[node name="NorthWall_Top" type="CSGBox3D" parent="."]
+position = Vector3(-1.5, 2.52, -2.36)
+size = Vector3(1.6, 0.76, 0.12)
+material = ExtResource("3_wall")
+
+[node name="NorthWindow" parent="." instance=ExtResource("8_window")]
+position = Vector3(-1.5, 1.55, -2.36)
+
+[node name="WainscotWest" type="CSGBox3D" parent="."]
+position = Vector3(-2.885, 0.7, 0)
+size = Vector3(0.045, 1.4, 4.6)
+material = ExtResource("7_wainscot")
+
+[node name="WainscotNorthFarLeft" type="CSGBox3D" parent="."]
+position = Vector3(-2.6, 0.7, -2.285)
+size = Vector3(0.6, 1.4, 0.045)
+material = ExtResource("7_wainscot")
+
+[node name="WainscotNorthMidLeft" type="CSGBox3D" parent="."]
+position = Vector3(-0.255, 0.7, -2.285)
+size = Vector3(0.89, 1.4, 0.045)
+material = ExtResource("7_wainscot")
+
+[node name="WainscotNorthMidRight" type="CSGBox3D" parent="."]
+position = Vector3(1.05, 0.7, -2.285)
+size = Vector3(1.72, 1.4, 0.045)
+material = ExtResource("7_wainscot")
+
+[node name="WainscotNorthUnderWindow" type="CSGBox3D" parent="."]
+position = Vector3(-1.5, 0.46, -2.285)
+size = Vector3(1.6, 0.92, 0.045)
+material = ExtResource("7_wainscot")
+
+[node name="ChairRailWest" type="CSGBox3D" parent="."]
+position = Vector3(-2.85, 1.4, 0)
+size = Vector3(0.09, 0.07, 4.6)
+material = ExtResource("5_trim")
+
+[node name="ChairRailNorthFarLeft" type="CSGBox3D" parent="."]
+position = Vector3(-2.6, 1.4, -2.27)
+size = Vector3(0.6, 0.07, 0.09)
+material = ExtResource("5_trim")
+
+[node name="ChairRailNorthMidLeft" type="CSGBox3D" parent="."]
+position = Vector3(-0.255, 1.4, -2.27)
+size = Vector3(0.93, 0.07, 0.09)
+material = ExtResource("5_trim")
+
+[node name="ChairRailNorthMidRight" type="CSGBox3D" parent="."]
+position = Vector3(1.05, 1.4, -2.27)
+size = Vector3(1.76, 0.07, 0.09)
+material = ExtResource("5_trim")
+
+[node name="ExteriorSky" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 150.0, -300.0)
+mesh = SubResource("SkyQuadMesh")
+material_override = ExtResource("6_sky")
+cast_shadow = 0
+
+[node name="MineYard" parent="." instance=ExtResource("12_yard")]
+
+[node name="ExteriorGround" type="CSGBox3D" parent="."]
+position = Vector3(-1.5, -0.02, -152.42)
+size = Vector3(700.0, 0.08, 300.0)
+material = SubResource("ExteriorSilhouette")
+
+[node name="ExteriorFence" type="Node3D" parent="."]
+
+[node name="FencePost1" type="CSGBox3D" parent="ExteriorFence"]
+position = Vector3(-3.4, 0.72, -3.05)
+size = Vector3(0.075, 1.4, 0.075)
+material = SubResource("ExteriorTimber")
+
+[node name="FencePost2" type="CSGBox3D" parent="ExteriorFence"]
+position = Vector3(-2.5, 0.70, -3.05)
+size = Vector3(0.075, 1.36, 0.075)
+material = SubResource("ExteriorTimber")
+
+[node name="FencePost3" type="CSGBox3D" parent="ExteriorFence"]
+position = Vector3(-0.62, 0.71, -3.05)
+size = Vector3(0.075, 1.38, 0.075)
+material = SubResource("ExteriorTimber")
+
+[node name="FenceRailHigh" type="CSGBox3D" parent="ExteriorFence"]
+position = Vector3(-1.55, 1.30, -3.02)
+size = Vector3(3.9, 0.06, 0.05)
+material = SubResource("ExteriorTimber")
+
+[node name="FenceRailLowNear" type="CSGBox3D" parent="ExteriorFence"]
+position = Vector3(-2.95, 0.76, -3.02)
+size = Vector3(1.05, 0.055, 0.045)
+material = SubResource("ExteriorTimber")
+
+[node name="ExteriorPole" type="CSGCylinder3D" parent="."]
+position = Vector3(-0.43, 1.3, -2.78)
+radius = 0.055
+height = 2.8
+sides = 6
+material = SubResource("ExteriorSilhouette")
+
+[node name="ExteriorPoleArm" type="CSGBox3D" parent="."]
+position = Vector3(-0.43, 2.3, -2.78)
+size = Vector3(0.9, 0.05, 0.06)
+material = SubResource("ExteriorSilhouette")
+
+[node name="ExteriorWireHigh" type="CSGBox3D" parent="."]
+position = Vector3(-1.485, 2.11, -2.95)
+rotation = Vector3(0, 0.2, -0.05)
+size = Vector3(2.83, 0.006, 0.006)
+material = SubResource("ExteriorSilhouette")
+
+[node name="ExteriorWireLow" type="CSGBox3D" parent="."]
+position = Vector3(-1.485, 2.06, -2.9)
+rotation = Vector3(0, 0.2, -0.07)
+size = Vector3(2.83, 0.006, 0.006)
+material = SubResource("ExteriorSilhouette")
+
+[node name="WindowFigure" parent="." instance=ExtResource("14_fig")]
+position = Vector3(-1.05, 0.96, -4.35)
+
+[node name="DeskSetup" parent="." instance=ExtResource("9_desk")]
+position = Vector3(-1.5, 0, -1.88)
+rotation = Vector3(0, 3.141593, 0)
+
+[node name="Chair" parent="." instance=ExtResource("15_chair")]
+position = Vector3(-1.62, 0, -1.06)
+rotation = Vector3(0, 2.88, 0)
+
+[node name="TelegraphStation" parent="." instance=ExtResource("10_station")]
+position = Vector3(-1.18, 0.752, -1.94)
+rotation = Vector3(0, -1.5707963, 0)
+
+[node name="TapeRegister" parent="." instance=ExtResource("11_tape")]
+position = Vector3(-0.95, 0.751, -1.62)
+rotation = Vector3(0, -1.5707963, 0)
+
+[node name="DeskBlotter" type="CSGBox3D" parent="."]
+position = Vector3(-1.51, 0.7515, -1.745)
+rotation = Vector3(0, -1.5707963, 0)
+size = Vector3(0.43, 0.003, 0.56)
+material = SubResource("BlotterFelt")
+
+[node name="DeskBlotterEndNear" type="CSGBox3D" parent="."]
+position = Vector3(-1.79, 0.7525, -1.745)
+rotation = Vector3(0, -1.5707963, 0)
+size = Vector3(0.44, 0.005, 0.035)
+material = SubResource("BlotterLeather")
+
+[node name="DeskBlotterEndFar" type="CSGBox3D" parent="."]
+position = Vector3(-1.23, 0.7525, -1.745)
+rotation = Vector3(0, -1.5707963, 0)
+size = Vector3(0.44, 0.005, 0.035)
+material = SubResource("BlotterLeather")
+
+[node name="Form19Sheet" type="MeshInstance3D" parent="."]
+position = Vector3(-1.38, 0.7545, -1.79)
+rotation = Vector3(0, 0.04, 0)
+mesh = SubResource("FormSheetMesh")
+
+[node name="DeskPen" type="Node3D" parent="."]
+position = Vector3(-1.28, 0.7575, -1.73)
+rotation = Vector3(0, 0.42, 1.5707963)
+
+[node name="Shaft" type="MeshInstance3D" parent="DeskPen"]
+position = Vector3(0, 0.02, 0)
+mesh = SubResource("PenBodyMesh")
+
+[node name="Nib" type="MeshInstance3D" parent="DeskPen"]
+position = Vector3(0, -0.068, 0)
+mesh = SubResource("PenNibMesh")
+
+[node name="DustMotes" parent="." instance=ExtResource("13_dust")]

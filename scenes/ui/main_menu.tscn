@@ -1,15 +1,25 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://scripts/ui/main_menu.gd" id="1_menu"]
 [ext_resource type="Script" path="res://scripts/ui/readability_options.gd" id="2_readability"]
+[ext_resource type="FontFile" path="res://assets/fonts/imfell/IMFeENrm28P.ttf" id="3_display_font"]
+[ext_resource type="FontFile" path="res://assets/fonts/oldstandard/OldStandardTT-Regular.ttf" id="4_serif_font"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_options"]
-bg_color = Color(0.06, 0.055, 0.05, 0.9)
+bg_color = Color(0.065, 0.055, 0.045, 0.94)
 border_width_left = 1
-border_width_top = 1
+border_width_top = 2
 border_width_right = 1
 border_width_bottom = 1
-border_color = Color(0.3, 0.26, 0.19, 1)
+border_color = Color(0.48, 0.39, 0.24, 0.85)
+content_margin_left = 14.0
+content_margin_top = 12.0
+content_margin_right = 14.0
+content_margin_bottom = 12.0
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_rule"]
+color = Color(0.55, 0.45, 0.28, 0.55)
+thickness = 1
 
 [node name="MainMenu" type="Control"]
 anchors_preset = 15
@@ -25,54 +35,92 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.028, 0.026, 0.03, 1)
+color = Color(0.018, 0.017, 0.02, 1)
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
 anchors_preset = 15
-anchor_right = 1.0
+anchor_left = 0.50
+anchor_right = 0.96
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
-custom_minimum_size = Vector2(420, 0)
+custom_minimum_size = Vector2(468, 0)
 layout_mode = 2
-theme_override_constants/separation = 10
+theme_override_constants/separation = 8
+
+[node name="DeptStampLabel" type="Label" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.60, 0.52, 0.38, 0.9)
+theme_override_fonts/font = ExtResource("4_serif_font")
+theme_override_font_sizes/font_size = 11
+text = "B.C. & W. R.R.  ·  ОТДЕЛ ТЕЛЕГРАФА"
+horizontal_alignment = 1
 
 [node name="TitleLabel" type="Label" parent="CenterContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.87, 0.79, 0.6, 1)
-theme_override_font_sizes/font_size = 40
-text = "DEAD WIRE"
+theme_override_colors/font_color = Color(0.95, 0.88, 0.72, 1)
+theme_override_colors/font_shadow_color = Color(0.02, 0.015, 0.01, 0.92)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 3
+theme_override_fonts/font = ExtResource("3_display_font")
+theme_override_font_sizes/font_size = 68
+text = "FORM 19"
 horizontal_alignment = 1
+
+[node name="TitleRuleRow" type="HBoxContainer" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="LeftRule" type="HSeparator" parent="CenterContainer/VBoxContainer/TitleRuleRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_styles/separator = SubResource("StyleBoxLine_rule")
+
+[node name="MorseGlyph" type="Label" parent="CenterContainer/VBoxContainer/TitleRuleRow"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.84, 0.70, 0.44, 0.98)
+theme_override_fonts/font = ExtResource("4_serif_font")
+theme_override_font_sizes/font_size = 15
+text = "· — ·"
+
+[node name="RightRule" type="HSeparator" parent="CenterContainer/VBoxContainer/TitleRuleRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_styles/separator = SubResource("StyleBoxLine_rule")
 
 [node name="TaglineLabel" type="Label" parent="CenterContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.52, 0.47, 0.38, 1)
-theme_override_font_sizes/font_size = 14
-text = "You hear one thing. Your hand writes another."
+theme_override_colors/font_color = Color(0.76, 0.70, 0.57, 1)
+theme_override_fonts/font = ExtResource("4_serif_font")
+theme_override_font_sizes/font_size = 15
+text = "Ты слышишь одно. Твоя рука пишет другое."
 horizontal_alignment = 1
 
 [node name="StationLabel" type="Label" parent="CenterContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.34, 0.31, 0.26, 1)
+theme_override_colors/font_color = Color(0.50, 0.45, 0.36, 1)
+theme_override_fonts/font = ExtResource("4_serif_font")
 theme_override_font_sizes/font_size = 12
-text = "BLACK CREEK STATION — APRIL 1890"
+text = "СТАНЦИЯ БЛЭК-КРИК  ·  АПРЕЛЬ 1890"
 horizontal_alignment = 1
 
 [node name="Spacer" type="Control" parent="CenterContainer/VBoxContainer"]
-custom_minimum_size = Vector2(0, 26)
+custom_minimum_size = Vector2(0, 18)
 layout_mode = 2
 
 [node name="BeginButton" type="Button" parent="CenterContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 17
-text = "Begin the Watch"
+theme_override_font_sizes/font_size = 18
+text = "Начать смену"
 
 [node name="OptionsButton" type="Button" parent="CenterContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 15
-text = "Options"
+text = "Настройки"
 
 [node name="OptionsPanel" type="PanelContainer" parent="CenterContainer/VBoxContainer"]
 visible = false
@@ -81,22 +129,42 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_options")
 
 [node name="OptionsBox" type="VBoxContainer" parent="CenterContainer/VBoxContainer/OptionsPanel"]
 layout_mode = 2
-theme_override_constants/separation = 8
+theme_override_constants/separation = 6
+
+[node name="TabBarRow" type="HBoxContainer" parent="CenterContainer/VBoxContainer/OptionsPanel/OptionsBox"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="TabGame" type="Button" parent="CenterContainer/VBoxContainer/OptionsPanel/OptionsBox/TabBarRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Игра"
+
+[node name="TabAudio" type="Button" parent="CenterContainer/VBoxContainer/OptionsPanel/OptionsBox/TabBarRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Звук"
+
+[node name="TabDisplay" type="Button" parent="CenterContainer/VBoxContainer/OptionsPanel/OptionsBox/TabBarRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Экран"
 
 [node name="SensitivityRow" type="HBoxContainer" parent="CenterContainer/VBoxContainer/OptionsPanel/OptionsBox"]
 layout_mode = 2
 theme_override_constants/separation = 10
 
 [node name="Label" type="Label" parent="CenterContainer/VBoxContainer/OptionsPanel/OptionsBox/SensitivityRow"]
-custom_minimum_size = Vector2(170, 0)
+custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.7, 0.65, 0.54, 1)
+theme_override_colors/font_color = Color(0.84, 0.77, 0.62, 1)
 theme_override_font_sizes/font_size = 13
-text = "Mouse sensitivity"
+text = "Чувствительность мыши"
 
 [node name="SensitivitySlider" type="HSlider" parent="CenterContainer/VBoxContainer/OptionsPanel/OptionsBox/SensitivityRow"]
 custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 4
 min_value = 0.5
 max_value = 8.0
@@ -105,25 +173,26 @@ value = 3.0
 
 [node name="HeadBobCheck" type="CheckButton" parent="CenterContainer/VBoxContainer/OptionsPanel/OptionsBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.7, 0.65, 0.54, 1)
+theme_override_colors/font_color = Color(0.84, 0.77, 0.62, 1)
 theme_override_font_sizes/font_size = 13
 button_pressed = true
-text = "Head movement while walking"
+text = "Покачивание головы"
 
 [node name="MasterRow" type="HBoxContainer" parent="CenterContainer/VBoxContainer/OptionsPanel/OptionsBox"]
 layout_mode = 2
 theme_override_constants/separation = 10
 
 [node name="Label" type="Label" parent="CenterContainer/VBoxContainer/OptionsPanel/OptionsBox/MasterRow"]
-custom_minimum_size = Vector2(170, 0)
+custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.7, 0.65, 0.54, 1)
+theme_override_colors/font_color = Color(0.84, 0.77, 0.62, 1)
 theme_override_font_sizes/font_size = 13
-text = "Master volume"
+text = "Общая громкость"
 
 [node name="MasterSlider" type="HSlider" parent="CenterContainer/VBoxContainer/OptionsPanel/OptionsBox/MasterRow"]
 custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 4
 min_value = -40.0
 max_value = 6.0
@@ -134,15 +203,16 @@ layout_mode = 2
 theme_override_constants/separation = 10
 
 [node name="Label" type="Label" parent="CenterContainer/VBoxContainer/OptionsPanel/OptionsBox/AmbienceRow"]
-custom_minimum_size = Vector2(170, 0)
+custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.7, 0.65, 0.54, 1)
+theme_override_colors/font_color = Color(0.84, 0.77, 0.62, 1)
 theme_override_font_sizes/font_size = 13
-text = "Room ambience"
+text = "Шум комнаты"
 
 [node name="AmbienceSlider" type="HSlider" parent="CenterContainer/VBoxContainer/OptionsPanel/OptionsBox/AmbienceRow"]
 custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 4
 min_value = -40.0
 max_value = 6.0
@@ -154,14 +224,15 @@ layout_mode = 2
 theme_override_constants/separation = 10
 
 [node name="Label" type="Label" parent="CenterContainer/VBoxContainer/OptionsPanel/OptionsBox/TelegraphRow"]
-custom_minimum_size = Vector2(170, 0)
+custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 13
-text = "Telegraph"
+text = "Телеграф"
 
 [node name="TelegraphSlider" type="HSlider" parent="CenterContainer/VBoxContainer/OptionsPanel/OptionsBox/TelegraphRow"]
 custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 4
 min_value = -40.0
 max_value = 6.0
@@ -173,14 +244,35 @@ layout_mode = 2
 theme_override_constants/separation = 10
 
 [node name="Label" type="Label" parent="CenterContainer/VBoxContainer/OptionsPanel/OptionsBox/FoleyRow"]
-custom_minimum_size = Vector2(170, 0)
+custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 13
-text = "Foley"
+text = "Звуки предметов"
 
 [node name="FoleySlider" type="HSlider" parent="CenterContainer/VBoxContainer/OptionsPanel/OptionsBox/FoleyRow"]
 custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+min_value = -40.0
+max_value = 6.0
+step = 1.0
+value = 0.0
+
+[node name="MusicRow" type="HBoxContainer" parent="CenterContainer/VBoxContainer/OptionsPanel/OptionsBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="CenterContainer/VBoxContainer/OptionsPanel/OptionsBox/MusicRow"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "Музыка"
+
+[node name="MusicSlider" type="HSlider" parent="CenterContainer/VBoxContainer/OptionsPanel/OptionsBox/MusicRow"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 4
 min_value = -40.0
 max_value = 6.0
@@ -189,7 +281,7 @@ value = 0.0
 
 [node name="ContextualThoughtsCheck" type="CheckButton" parent="CenterContainer/VBoxContainer/OptionsPanel/OptionsBox"]
 layout_mode = 2
-text = "Contextual thoughts"
+text = "Мысли оператора"
 button_pressed = true
 
 [node name="ReadabilityOptions" type="VBoxContainer" parent="CenterContainer/VBoxContainer/OptionsPanel/OptionsBox"]
@@ -199,11 +291,47 @@ script = ExtResource("2_readability")
 [node name="QuitButton" type="Button" parent="CenterContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 15
-text = "Quit"
+text = "Выход"
 
 [node name="FooterLabel" type="Label" parent="CenterContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.28, 0.26, 0.22, 1)
+theme_override_colors/font_color = Color(0.36, 0.32, 0.25, 1)
 theme_override_font_sizes/font_size = 11
-text = "M1 office prototype"
+text = "Сборка смены M1"
 horizontal_alignment = 1
+
+[node name="CornerStamp" type="Label" parent="."]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = -34.0
+offset_right = 460.0
+offset_bottom = -12.0
+theme_override_colors/font_color = Color(0.68, 0.60, 0.46, 0.86)
+theme_override_colors/font_shadow_color = Color(0.01, 0.01, 0.01, 0.85)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_fonts/font = ExtResource("4_serif_font")
+theme_override_font_sizes/font_size = 11
+text = "БЛЭК-КРИК, КОЛОРАДО  ·  ФОРМА № 19"
+
+[node name="LocaleBar" type="HBoxContainer" parent="."]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -112.0
+offset_top = -38.0
+offset_right = -22.0
+offset_bottom = -12.0
+theme_override_constants/separation = 6
+
+[node name="RuButton" type="Button" parent="LocaleBar"]
+layout_mode = 2
+text = "RU"
+
+[node name="EnButton" type="Button" parent="LocaleBar"]
+layout_mode = 2
+text = "EN"

@@ -1,6 +1,6 @@
 extends SceneTree
 
-## The pause menu and the title's options, as the player sees them (plan 6.8).
+## Windowed capture of the pause menu and the redesigned FORM 19 live 3D main menu.
 ## Windowed only. Writes to .dream-loop/menus/.
 ##
 ##   godot --path . --resolution 1920x1080 --script tools/menu_options_capture.gd
@@ -20,39 +20,44 @@ func _run() -> void:
 	var pause_menu := office.get_node("PauseMenu") as PauseMenu
 	pause_menu.pause()
 	await _shot("pause_menu")
-	pause_menu._on_leave_pressed()
-	await _shot("pause_leave_armed")
 	pause_menu.resume()
 	office.queue_free()
 	await process_frame
-	var menu: Node = load("res://scenes/ui/main_menu.tscn").instantiate()
+
+	var menu := load("res://scenes/ui/main_menu.tscn").instantiate() as MainMenu
 	root.add_child(menu)
-	for _i in 4:
+	for _i in 6:
 		await process_frame
 	var calibration := menu.get_node_or_null("BrightnessCalibration")
 	if calibration != null:
-		await _shot("title_calibration")
 		calibration.call("confirm")
 		await process_frame
+	var ru_btn := menu.get_node_or_null("LocaleBar/RuButton") as Button
+	if ru_btn != null:
+		ru_btn.pressed.emit()
 	await _shot("title")
-	# Plan 6.7: both title backdrops under the same menu, for the owner.
-	var mood := menu.get_node_or_null("TitleMood") as TitleMood
-	if mood != null:
-		await _shot("title_window")
-		mood._image.texture = TitleMood.BACKDROPS["desk"]
-		await _shot("title_desk")
-		mood._image.texture = TitleMood.BACKDROPS["window"]
-	if menu.has_method("open_options"):
-		menu.call("open_options")
-	else:
-		var panel := menu.get("options_panel") as Control
-		if panel != null:
-			panel.visible = true
+	await _shot("title_ru")
+
+	var en_btn := menu.get_node_or_null("LocaleBar/EnButton") as Button
+	if en_btn != null:
+		en_btn.pressed.emit()
+	await _shot("title_en")
+
+	if ru_btn != null:
+		ru_btn.pressed.emit()
+	menu.open_options()
+	menu.select_options_tab("game", false)
+	await _shot("title_options_game")
+	menu.select_options_tab("audio", false)
+	await _shot("title_options_audio")
+	menu.select_options_tab("display", false)
+	await _shot("title_options_display")
+	menu.select_options_tab("game", false)
 	await _shot("title_options")
 	quit(0)
 
 func _shot(label: String) -> void:
-	for _i in 6:
+	for _i in 8:
 		await process_frame
 	await RenderingServer.frame_post_draw
 	var image := root.get_texture().get_image()
