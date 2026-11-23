@@ -17,6 +17,19 @@ signal stamped()
 ## Scene wiring alternative when the office is a sibling.
 @export var office_path: NodePath = ^""
 
+const LEDGER_TEXT_RU: String = """ОСОБЫЕ ПРИКАЗЫ И ПРАВИЛА ПРОПУСКА (АПРЕЛЬ 1890)
+────────────────────────────
+1. ПАССАЖИРСКИЙ (ПОЕЗД 17):
+   - Приоритет: ПРОПУСТИТЬ НА ВОСТОК (CLEAR EAST) сразу.
+   - На боковой путь НЕ ставить, кроме прямого сообщения о завале.
+
+2. ВНЕПЛАНОВЫЙ НОЧНОЙ ТОВАРНЫЙ:
+   - Приказ 44 (участок Блэк-Крик):
+     ДЕРЖАТЬ (HOLD) ночной товарный до особого разрешения участка.
+   - Запрос EAST — это лишь направление, а не разрешение.
+   - На товарный № 71 разрешения на эту ночь НЕ ВЫДАНО.
+   - Ветка к руднику (MJ) закрыта под карантин с окт. 1885 г."""
+
 const LEDGER_TEXT: String = """BLACK CREEK STATION — DISPATCH LEDGER (APRIL 1890)
 ──────────────────────────────────────────────────
 SPECIAL ORDERS & ROUTING RULES:
@@ -82,14 +95,22 @@ func _ready() -> void:
 	off_duty_stamp = get_node_or_null("RightPage/OffDutyStamp") as Label3D
 
 	if interactable != null:
-		interactable.prompt_text = prompt_message
 		if not interactable.interacted.is_connected(_on_interacted):
 			interactable.interacted.connect(_on_interacted)
 	if sign_interactable != null:
 		_pen_layer = sign_interactable.collision_layer
-		sign_interactable.prompt_text = PROMPT_SIGN
 		if not sign_interactable.interacted.is_connected(_on_pen):
 			sign_interactable.interacted.connect(_on_pen)
+	refresh_locale()
+
+func refresh_locale() -> void:
+	if interactable != null:
+		interactable.prompt_text = GameLocale.pick("Открыть журнал", prompt_message)
+	if sign_interactable != null:
+		sign_interactable.prompt_text = GameLocale.pick(
+			"Закрыть смену" if _closing_offered else "Расписаться (по желанию)",
+			PROMPT_CLOSE if _closing_offered else PROMPT_SIGN
+		)
 
 func is_signed() -> bool:
 	return not signature_text.is_empty()
@@ -125,7 +146,7 @@ func offer_close() -> void:
 	_closing_offered = true
 	watches_stood += 1
 	if sign_interactable != null:
-		sign_interactable.prompt_text = PROMPT_CLOSE
+		sign_interactable.prompt_text = GameLocale.pick("Закрыть смену", PROMPT_CLOSE)
 		sign_interactable.enabled = true
 		sign_interactable.collision_layer = _pen_layer
 
@@ -134,13 +155,16 @@ func offer_close() -> void:
 func close_watch() -> void:
 	if not _closing_offered or is_closed():
 		return
-	var lines := PackedStringArray(["END OF WATCH", _station_time_text()])
+	var lines := PackedStringArray([
+		GameLocale.pick("КОНЕЦ СМЕНЫ", "END OF WATCH"),
+		_station_time_text(),
+	])
 	var knowledge := _knowledge_state()
 	var heard := knowledge.recall_value(&"last_wire_heard") if knowledge != null else ""
 	if not heard.is_empty():
-		lines.append("LAST ON THE WIRE:")
+		lines.append(GameLocale.pick("ПОСЛЕДНЕЕ НА ПРОВОДЕ:", "LAST ON THE WIRE:"))
 		lines.append(heard)
-	lines.append("WATCH %d" % maxi(watches_stood, 1))
+	lines.append(GameLocale.pick("СМЕНА %d", "WATCH %d") % maxi(watches_stood, 1))
 	closing_text = "\n".join(lines)
 	_put_pen_down()
 	if knowledge != null:
@@ -200,9 +224,12 @@ func get_interactable() -> Interactable:
 	return interactable
 
 func get_ledger_text() -> String:
-	var signed := "" if not is_signed() else "\n\n" + _pad_entry("ON DUTY", signature_text)
-	var closed := "" if not is_closed() else "\n\n" + closing_text + "\nOFF DUTY"
-	return LEDGER_TEXT + signed + "\n\n" + _night_entries_text() + closed
+	var on_duty := GameLocale.pick("ЗАСТУПИЛ", "ON DUTY")
+	var off_duty := GameLocale.pick("СМЕНА СДАНА", "OFF DUTY")
+	var signed := "" if not is_signed() else "\n\n" + _pad_entry(on_duty, signature_text)
+	var closed := "" if not is_closed() else "\n\n" + closing_text + "\n" + off_duty
+	var base := GameLocale.pick(LEDGER_TEXT_RU, LEDGER_TEXT)
+	return base + signed + "\n\n" + _night_entries_text() + closed
 
 ## Entries the operator actually made tonight, read from the shift's own
 ## knowledge record. WorldState is deliberately not consulted: the ledger is
@@ -216,7 +243,8 @@ func _night_entries_text() -> String:
 	var scenarios: Array[TelegraphScenarioData] = office.get_scenario_list()
 	if scenarios.is_empty():
 		return ""
-	var lines: PackedStringArray = ["NIGHT ENTRIES — %s" % NIGHT_ENTRIES_DATE]
+	var date_label := GameLocale.pick("АПРЕЛЬ 1890", NIGHT_ENTRIES_DATE)
+	var lines: PackedStringArray = [GameLocale.pick("ЗАПИСИ ЗА НОЧЬ — %s", "NIGHT ENTRIES — %s") % date_label]
 	var any_entry := false
 	for index in scenarios.size():
 		var scenario := scenarios[index]
@@ -227,7 +255,7 @@ func _night_entries_text() -> String:
 			lines.append(entry)
 			any_entry = true
 	if not any_entry:
-		lines.append("  (no traffic handled)")
+		lines.append(GameLocale.pick("  (передач не было)", "  (no traffic handled)"))
 	return "\n".join(lines)
 
 ## Booked traffic for the night. Mirrors the duty sheet's own split: booked
@@ -256,45 +284,64 @@ func _entry_for(
 	if status == DutySheet.STATUS_AWAITING and commit_outcome.is_empty():
 		# One row per booked slot: the label is known in advance, the entry
 		# honestly says nothing has been recorded yet.
-		return _pad_entry(_label_for(scenario, is_unscheduled), DutySheet.STATUS_AWAITING, true)
+		return _pad_entry(
+			_label_for(scenario, is_unscheduled),
+			DutySheet.display_status(DutySheet.STATUS_AWAITING),
+			true
+		)
 
 	var outcome := ""
 	if not scenario.requires_routing:
 		# The commit desk's outcomes are Elias's own sealed copies.
 		if not commit_outcome.is_empty():
 			if incomplete and commit_outcome == DutySheet.STATUS_CORE_HOOK_LAPSED:
-				outcome = "COPY INCOMPLETE / UNFILED"
+				outcome = GameLocale.pick("НЕ ДОПИСАНО / НЕ ПОДШИТО", "COPY INCOMPLETE / UNFILED")
 			else:
-				outcome = commit_outcome
+				outcome = DutySheet.display_status(commit_outcome)
 				var word := knowledge.recall_value(&"filed_word_core_hook", "")
 				if not word.is_empty():
 					outcome += "    " + word
 		elif incomplete:
-			outcome = "COPY INCOMPLETE"
+			outcome = GameLocale.pick("НЕ ДОПИСАНО", "COPY INCOMPLETE")
 		elif status == DutySheet.STATUS_COPIED:
-			outcome = "COPIED"
+			outcome = GameLocale.pick("ЗАПИСАНО", "COPIED")
 		elif status == DutySheet.STATUS_NO_COPY:
-			outcome = "NO COPY"
+			outcome = GameLocale.pick("НЕТ КОПИИ", "NO COPY")
 	else:
 		match status:
 			DutySheet.STATUS_FILED:
 				# The journal records what was actually sent. If the record
 				# does not say which way the lever went, it says nothing.
-				outcome = "COPIED / FILED" if knowledge.knows(StringName("copied_%s" % identifier)) else "FILED"
+				if knowledge.knows(StringName("copied_%s" % identifier)):
+					outcome = GameLocale.pick("ПОДШИТО", "COPIED / FILED")
+				else:
+					outcome = GameLocale.pick("ПОДШИТО", "FILED")
 				var action := _route_action(identifier, knowledge)
 				if not action.is_empty():
-					outcome += "    %s" % action
+					outcome += "    %s" % _route_display(action)
 			DutySheet.STATUS_LAPSED:
-				outcome = "COPY INCOMPLETE / NO ORDER SENT" if incomplete else "NO ORDER SENT"
+				if incomplete:
+					outcome = GameLocale.pick("НЕ ДОПИСАНО / БЕЗ ПРИКАЗА", "COPY INCOMPLETE / NO ORDER SENT")
+				else:
+					outcome = GameLocale.pick("БЕЗ ПРИКАЗА", "NO ORDER SENT")
 			DutySheet.STATUS_INCOMPLETE:
-				outcome = "COPY INCOMPLETE"
+				outcome = GameLocale.pick("НЕ ДОПИСАНО", "COPY INCOMPLETE")
 			DutySheet.STATUS_COPIED:
-				outcome = "COPIED"
+				outcome = GameLocale.pick("ЗАПИСАНО", "COPIED")
 			DutySheet.STATUS_NO_COPY:
-				outcome = "NO COPY"
+				outcome = GameLocale.pick("НЕТ КОПИИ", "NO COPY")
 	if outcome.is_empty():
 		return ""
 	return _pad_entry(_label_for(scenario, is_unscheduled), outcome, true)
+
+static func _route_display(action: String) -> String:
+	if not GameLocale.is_ru():
+		return action
+	if action == "CLEAR EAST":
+		return "ПРОПУСТИТЬ"
+	if action == "HOLD":
+		return "ДЕРЖАТЬ"
+	return action
 
 ## The route that actually went out, or nothing. "Filed" without a route fact
 ## stays directionless: absence of knowledge is not HOLD.
@@ -307,11 +354,11 @@ func _route_action(identifier: String, knowledge: KnowledgeStateStore) -> String
 
 func _label_for(scenario: TelegraphScenarioData, is_unscheduled: bool) -> String:
 	if is_unscheduled:
-		return "UNSCHEDULED"
+		return GameLocale.pick("ВНЕПЛАНОВАЯ", "UNSCHEDULED")
 	match scenario.scenario_id:
-		"baseline_train_17": return "TRAIN 17"
-		"attention_hold_freight": return "NIGHT FREIGHT"
-	return "TRAFFIC"
+		"baseline_train_17": return GameLocale.pick("ПОЕЗД 17", "TRAIN 17")
+		"attention_hold_freight": return GameLocale.pick("НОЧНОЙ ТОВАРНЫЙ", "NIGHT FREIGHT")
+	return GameLocale.pick("ПЕРЕДАЧА", "TRAFFIC")
 
 ## The header date matches every other document of the night: the setting
 ## fixes the month and year, and no document anywhere names a day.

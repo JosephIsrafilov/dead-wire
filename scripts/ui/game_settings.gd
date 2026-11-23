@@ -18,6 +18,7 @@ var mouse_sensitivity: float = 0.003
 var head_bob_enabled: bool = true
 var master_volume_db: float = 0.0
 var ambience_volume_db: float = -4.0
+var music_volume_db: float = -4.0
 var telegraph_volume_db: float = 0.0
 var foley_volume_db: float = 0.0
 var contextual_thoughts_enabled: bool = true
@@ -41,6 +42,7 @@ var sound_captions: bool = false
 var quality: int = 1
 ## Plan 10.6: the local playtest log (no network, never the corrected word).
 var playtest_telemetry_enabled: bool = true
+var language: String = "ru"
 const QUALITY_NAMES: Array[String] = ["Low", "Medium", "High"]
 const FPS_LIMITS: Array[int] = [0, 30, 60, 120, 144]
 ## The image/reading/display options a "Default" press restores (window mode
@@ -73,6 +75,7 @@ static func load_settings(path: String = "") -> GameSettings:
 	settings.mouse_sensitivity = float(config.get_value(SECTION, "mouse_sensitivity", settings.mouse_sensitivity))
 	settings.head_bob_enabled = bool(config.get_value(SECTION, "head_bob_enabled", settings.head_bob_enabled))
 	settings.master_volume_db = float(config.get_value(SECTION, "master_volume_db", settings.master_volume_db))
+	settings.music_volume_db = float(config.get_value(SECTION, "music_volume_db", settings.music_volume_db))
 	settings.ambience_volume_db = float(config.get_value(SECTION, "ambience_volume_db", settings.ambience_volume_db))
 	settings.telegraph_volume_db = float(config.get_value(SECTION, "telegraph_volume_db", settings.telegraph_volume_db))
 	settings.foley_volume_db = float(config.get_value(SECTION, "foley_volume_db", settings.foley_volume_db))
@@ -92,6 +95,7 @@ static func load_settings(path: String = "") -> GameSettings:
 	settings.quality = int(config.get_value(SECTION, "quality", settings.quality))
 	settings.playtest_telemetry_enabled = bool(config.get_value(
 		SECTION, "playtest_telemetry_enabled", settings.playtest_telemetry_enabled))
+	settings.language = str(config.get_value(SECTION, "language", settings.language))
 	settings.sanitize()
 	return settings
 
@@ -99,6 +103,7 @@ static func load_settings(path: String = "") -> GameSettings:
 func sanitize() -> void:
 	mouse_sensitivity = clampf(mouse_sensitivity if is_finite(mouse_sensitivity) else 0.003, 0.0005, 0.008)
 	master_volume_db = clampf(master_volume_db if is_finite(master_volume_db) else 0.0, -40.0, 6.0)
+	music_volume_db = clampf(music_volume_db if is_finite(music_volume_db) else -4.0, -40.0, 6.0)
 	ambience_volume_db = clampf(ambience_volume_db if is_finite(ambience_volume_db) else -4.0, -40.0, 6.0)
 	telegraph_volume_db = clampf(telegraph_volume_db if is_finite(telegraph_volume_db) else 0.0, -40.0, 6.0)
 	foley_volume_db = clampf(foley_volume_db if is_finite(foley_volume_db) else 0.0, -40.0, 6.0)
@@ -110,13 +115,18 @@ func sanitize() -> void:
 		max_fps = 0
 	if quality < 0 or quality >= QUALITY_NAMES.size():
 		quality = 1
+	if language != "ru" and language != "en":
+		language = "ru"
 
 func save(path: String = "") -> Error:
 	sanitize()
+	if not GameLocale.has_test_override():
+		GameLocale.set_language(language)
 	var config := ConfigFile.new()
 	config.set_value(SECTION, "mouse_sensitivity", mouse_sensitivity)
 	config.set_value(SECTION, "head_bob_enabled", head_bob_enabled)
 	config.set_value(SECTION, "master_volume_db", master_volume_db)
+	config.set_value(SECTION, "music_volume_db", music_volume_db)
 	config.set_value(SECTION, "ambience_volume_db", ambience_volume_db)
 	config.set_value(SECTION, "telegraph_volume_db", telegraph_volume_db)
 	config.set_value(SECTION, "foley_volume_db", foley_volume_db)
@@ -133,11 +143,14 @@ func save(path: String = "") -> Error:
 	config.set_value(SECTION, "sound_captions", sound_captions)
 	config.set_value(SECTION, "quality", quality)
 	config.set_value(SECTION, "playtest_telemetry_enabled", playtest_telemetry_enabled)
+	config.set_value(SECTION, "language", language)
 	return config.save(path if not path.is_empty() else config_path())
 
 ## Pushes the current values at the things they control.
 func apply(player: PlayerController) -> void:
 	sanitize()
+	if not GameLocale.has_test_override():
+		GameLocale.set_language(language)
 	if player != null:
 		player.mouse_sensitivity = mouse_sensitivity
 		player.invert_y = invert_y
@@ -160,6 +173,7 @@ func apply(player: PlayerController) -> void:
 					break
 
 	_set_bus_db("Master", master_volume_db)
+	_set_bus_db("Music", music_volume_db)
 	_set_bus_db("Ambience", ambience_volume_db)
 	_set_bus_db("Telegraph", telegraph_volume_db)
 	_set_bus_db("Foley", foley_volume_db)
@@ -186,8 +200,8 @@ func _apply_quality_to_office(office: Node, frame: Viewport) -> void:
 	if frame is SubViewport:
 		(frame as SubViewport).positional_shadow_atlas_size = shadow_atlas_size()
 	var env_node := office.get_node_or_null("WorldEnvironment") as WorldEnvironment if office != null else null
-	if env_node != null and env_node.environment != null:
-		# Low gives up the light in the air; the fog itself always stays.
+	if env_node != null and env_node.environment != null and office is M1OfficeController:
+		# Low gives up the light in the air; the fog itself always stays in the night office.
 		env_node.environment.volumetric_fog_enabled = quality > 0
 
 ## Window mode, VSync and the frame limit. Only what differs is touched, so a

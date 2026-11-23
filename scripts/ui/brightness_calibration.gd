@@ -34,13 +34,16 @@ func _ready() -> void:
 	column.add_theme_constant_override("separation", 18)
 	centre.add_child(column)
 	var heading := Label.new()
-	heading.text = "Before the watch"
+	heading.text = GameLocale.pick("Перед сменой", "Before the watch")
 	heading.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	heading.add_theme_font_size_override("font_size", 22)
 	heading.add_theme_color_override("font_color", Color(0.85, 0.78, 0.6))
 	column.add_child(heading)
 	var help := Label.new()
-	help.text = "Turn the brightness until the left mark is only just there,\nand the right one is not."
+	help.text = GameLocale.pick(
+		"Настройте яркость так, чтобы левый квадрат был едва виден,\nа правый сливался с темнотой.",
+		"Turn the brightness until the left mark is only just there,\nand the right one is not."
+	)
 	help.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	help.add_theme_color_override("font_color", Color(0.62, 0.57, 0.47))
 	column.add_child(help)
@@ -63,7 +66,7 @@ func _ready() -> void:
 	slider.value_changed.connect(_on_value)
 	column.add_child(slider)
 	var done := Button.new()
-	done.text = "Take the Watch"
+	done.text = GameLocale.pick("Принять смену", "Take the Watch")
 	done.pressed.connect(confirm)
 	column.add_child(done)
 	_on_value(slider.value)

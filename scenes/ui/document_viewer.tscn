@@ -1,15 +1,24 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://scripts/ui/document_viewer.gd" id="1_viewer"]
 [ext_resource type="Texture2D" path="res://materials/style_tests/textures/paper_worn_diff.png" id="2_paper"]
+[ext_resource type="FontFile" path="res://assets/fonts/oldstandard/OldStandardTT-Regular.ttf" id="3_serif"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxFlat_paper"]
+content_margin_left = 10.0
+content_margin_top = 8.0
+content_margin_right = 10.0
+content_margin_bottom = 8.0
 texture = ExtResource("2_paper")
 texture_margin_left = 6.0
 texture_margin_top = 6.0
 texture_margin_right = 6.0
 texture_margin_bottom = 6.0
-modulate_color = Color(1.0, 0.95, 0.84, 1)
+modulate_color = Color(0.96, 0.9, 0.78, 1)
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_sep"]
+color = Color(0.32, 0.23, 0.14, 0.55)
+thickness = 1
 
 [node name="DocumentViewer" type="CanvasLayer"]
 layer = 10
@@ -22,7 +31,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.04, 0.04, 0.05, 0.6)
+color = Color(0.03, 0.025, 0.02, 0.72)
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
 anchors_preset = 15
@@ -49,13 +58,15 @@ theme_override_constants/separation = 14
 
 [node name="TitleLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.18, 0.14, 0.1, 1)
-theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(0.16, 0.11, 0.07, 1)
+theme_override_fonts/font = ExtResource("3_serif")
+theme_override_font_sizes/font_size = 21
 text = ""
 horizontal_alignment = 1
 
 [node name="HSeparator" type="HSeparator" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_sep")
 
 [node name="BodyScroll" type="ScrollContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
@@ -75,8 +86,9 @@ fit_content = false
 
 [node name="FooterLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.42, 0.35, 0.28, 1)
-theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.36, 0.28, 0.19, 0.92)
+theme_override_fonts/font = ExtResource("3_serif")
+theme_override_font_sizes/font_size = 13
 text = "[E / Esc] Put Down Document"
 horizontal_alignment = 1
 

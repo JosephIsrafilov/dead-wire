@@ -40,8 +40,14 @@ const RESPONSE_HOLD_SECONDS := 5.0
 @export var sheet_gap: float = 14.0
 ## The board's near edge in the paper's own space.
 const SHEET_NEAR_EDGE := Vector3(0.0, 0.0, 0.17)
-const AUTHORED_TOP := -228.0
-const LINE_HEIGHT := 52.0
+const AUTHORED_TOP := -242.0
+const LINE_HEIGHT := 70.0
+
+static func _heard_prefix() -> String:
+	return GameLocale.pick("Слышу — ", "Heard — ")
+
+static func _wire_prefix() -> String:
+	return GameLocale.pick("ЛИНИЯ — ", "WIRE (Party Line) — ")
 
 enum VoiceState {
 	SILENT,
@@ -78,7 +84,7 @@ func _ready() -> void:
 	_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	# Crisp high-contrast outline + shadow so letters read clearly over paper.
-	_label.add_theme_font_override("normal_font", preload("res://assets/fonts/imfell/IMFeENrm28P.ttf"))
+	_label.add_theme_font_override("normal_font", preload("res://assets/fonts/oldstandard/OldStandardTT-Regular.ttf"))
 	_label.add_theme_font_size_override("normal_font_size", 22)
 	_label.add_theme_color_override("default_color", MURMUR_COLOR)
 	_label.add_theme_color_override("font_outline_color", Color(0.02, 0.015, 0.01, 0.92))
@@ -131,7 +137,7 @@ func show_wire_line(text: String, distant: bool = false) -> void:
 	_hold_elapsed = 0.0
 	_fade_elapsed = 0.0
 	_active_hold_seconds = WIRE_HOLD_SECONDS if distant else RESPONSE_HOLD_SECONDS
-	_active_prefix = WIRE_PREFIX if distant else HEARD_PREFIX
+	_active_prefix = _wire_prefix() if distant else _heard_prefix()
 	_state = VoiceState.HOLDING
 	if _label != null:
 		_label.add_theme_color_override("default_color", WIRE_COLOR if distant else MURMUR_COLOR)
@@ -162,7 +168,7 @@ func _on_transmission_started(scenario: TelegraphScenarioData) -> void:
 	_state = VoiceState.WHISPERING
 	_hold_elapsed = 0.0
 	_active_hold_seconds = hold_seconds
-	_active_prefix = HEARD_PREFIX
+	_active_prefix = _heard_prefix()
 	_fade_elapsed = 0.0
 	if _label != null:
 		_label.add_theme_color_override("default_color", MURMUR_COLOR)
@@ -182,6 +188,7 @@ func _on_transmission_finished(_scenario: TelegraphScenarioData) -> void:
 	if _state == VoiceState.WHISPERING:
 		_state = VoiceState.HOLDING
 		_hold_elapsed = 0.0
+		_apply_text(_render(1.0))
 
 func _process(delta: float) -> void:
 	_place_near_sheet()
@@ -260,7 +267,13 @@ func get_murmur_top() -> float:
 func get_display_text() -> String:
 	if _label == null:
 		return ""
-	return _label.get_parsed_text().trim_prefix(HEARD_PREFIX).trim_prefix(WIRE_PREFIX)
+	var raw := _label.get_parsed_text()
+	for pfx in [_heard_prefix(), _wire_prefix(), HEARD_PREFIX, WIRE_PREFIX]:
+		if raw.begins_with(pfx):
+			raw = raw.substr(pfx.length())
+			break
+	var nl := raw.find("\n")
+	return raw.substr(0, nl) if nl >= 0 else raw
 
 ## How far the newest letter has surfaced, 0..1.
 func get_newest_letter_alpha() -> float:
@@ -310,7 +323,14 @@ func _render(fresh: float = 1.0) -> String:
 func _apply_text(text: String) -> void:
 	if _label == null:
 		return
-	_label.text = _active_prefix + text if not text.is_empty() else ""
+	var out := ""
+	if not text.is_empty():
+		out = _active_prefix + text
+		if GameLocale.is_ru() and _state == VoiceState.HOLDING and not _active_prefix.is_empty():
+			var gloss := GameLocale.wire_gloss_ru(_perception_text)
+			if not gloss.is_empty():
+				out += "\n[font_size=17][color=#b8aa8e](%s)[/color][/font_size]" % gloss
+	_label.text = out
 	_label.visible = not text.is_empty()
 	_label.modulate.a = 1.0
 

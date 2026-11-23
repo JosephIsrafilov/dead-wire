@@ -161,6 +161,26 @@ max_value = 6.0
 step = 1.0
 value = 0.0
 
+[node name="MusicRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Columns/SoundColumn"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Label" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Columns/SoundColumn/MusicRow"]
+custom_minimum_size = Vector2(130, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.72, 0.67, 0.56, 1)
+theme_override_font_sizes/font_size = 14
+text = "Music"
+
+[node name="MusicSlider" type="HSlider" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Columns/SoundColumn/MusicRow"]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+size_flags_vertical = 4
+min_value = -40.0
+max_value = 6.0
+step = 1.0
+value = 0.0
+
 [node name="ContextualThoughtsCheck" type="CheckButton" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Columns/SoundColumn"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.72, 0.67, 0.56, 1)

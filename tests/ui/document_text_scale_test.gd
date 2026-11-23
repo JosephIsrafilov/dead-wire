@@ -12,6 +12,7 @@ func _key(keycode: int) -> InputEventKey:
 	event.pressed = true
 	return event
 func _run() -> void:
+	GameLocale.lock_language_for_test("en")
 	root.size=Vector2i(1280,720)
 	var viewer: Variant=load("res://scenes/ui/document_viewer.tscn").instantiate()
 	root.add_child(viewer)
@@ -83,6 +84,27 @@ func _run() -> void:
 	check(viewer.panel_container.size.y<=520.0,"Long printed ledger keeps the card within a bounded height at 1.5")
 	check(viewer.footer_label.get_global_rect().end.y<=viewer.get_viewport().get_visible_rect().size.y,
 		"Ledger footer stays on screen at 1.5")
+	var ledger_scroll: VScrollBar = viewer.body_label.get_v_scroll_bar()
+	root.push_input(_key(KEY_PAGEDOWN))
+	check(ledger_scroll.value > 0.0 and viewer.is_open() and root.is_input_handled(),
+		"PageDown reads later rows of the raised ledger")
+	viewer._input(_key(KEY_END))
+	check(is_equal_approx(ledger_scroll.value, ledger_scroll.max_value - ledger_scroll.page),
+		"End reaches the last ledger row")
+	var ledger_bottom: float = ledger_scroll.value
+	viewer._input(_key(KEY_UP))
+	check(ledger_scroll.value < ledger_bottom and ledger_scroll.value > 0.0,
+		"The up arrow reads back one line")
+	var after_line: float = ledger_scroll.value
+	viewer._input(_key(KEY_PAGEUP))
+	check(ledger_scroll.value < after_line and viewer.is_open(),
+		"PageUp reads back toward earlier ledger rows")
+	viewer._input(_key(KEY_HOME))
+	check(is_equal_approx(ledger_scroll.value, ledger_scroll.min_value),
+		"Home returns to the ledger heading")
+	root.push_input(_key(KEY_W))
+	check(not root.is_input_handled() and is_zero_approx(ledger_scroll.value),
+		"The ledger leaves letter keys available for their configured actions")
 	viewer.close_document()
 	var card_lines := PackedStringArray(Array(range(120)).map(func(value): return "Line %d of instruction text." % value))
 	viewer.open_document("instruction_card","INSTRUCTION","\n".join(card_lines))

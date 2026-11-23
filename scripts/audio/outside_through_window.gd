@@ -21,7 +21,7 @@ signal yard_sounded(stream: AudioStream)
 @export var max_interval_seconds: float = 90.0
 ## Measured in the night recording: at -15 dB, behind distance, glass and the
 ## room's bus, the yard sat level with the room tone and was not heard at all.
-@export var volume_db: float = -4.0
+@export var volume_db: float = -9.0
 ## Sources stand out in the yard, beyond the north wall (z = -2.36).
 @export var yard_min: Vector3 = Vector3(-7.0, 0.5, -14.0)
 @export var yard_max: Vector3 = Vector3(5.0, 6.0, -7.0)

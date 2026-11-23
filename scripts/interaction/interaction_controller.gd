@@ -6,6 +6,7 @@ extends Node
 @export var reticle: ColorRect
 
 const STATUS_ALPHA: float = 0.55
+const DEBUG_INTERACT_LOGS: bool = false
 ## Crosshair color: warm when E acts on the target, neutral and quiet otherwise.
 const ACTIONABLE_RETICLE_COLOR: Color = Color(0.95, 0.86, 0.68, 0.95)
 const INACTIVE_RETICLE_COLOR: Color = Color(0.86, 0.79, 0.63, 0.45)
@@ -14,6 +15,7 @@ var current_target: Interactable = null
 var is_ui_blocked: bool = false
 var cursor_mode: bool = false
 var _cursor_target: Interactable = null
+var _dbg_last_sig: String = ""
 
 ## Shown when nothing is under the crosshair. Used by the chair: the interaction
 ## ray does not report a trigger it starts inside, so a seated operator would
@@ -23,6 +25,9 @@ var persistent_hint: String = ""
 func _ready() -> void:
 	if not interaction_ray:
 		interaction_ray = get_node_or_null("../Head/Camera3D/InteractionRay") as RayCast3D
+	var body := get_parent() as CollisionObject3D
+	if body != null and interaction_ray != null:
+		interaction_ray.add_exception(body)
 	if not prompt_label:
 		prompt_label = get_node_or_null("../InteractionUI/PromptLabel") as Label
 	if not reticle:
@@ -31,6 +36,12 @@ func _ready() -> void:
 	_update_prompt_ui()
 
 func _process(_delta: float) -> void:
+	var owner_player := get_parent() as PlayerController
+	if cursor_mode and owner_player != null and not owner_player.seated_station_mode:
+		cursor_mode = false
+		_cursor_target = null
+	_log_state_change()
+
 	if is_ui_blocked:
 		current_target = null
 		_update_prompt_ui()
@@ -41,7 +52,27 @@ func _process(_delta: float) -> void:
 	# action text while the crosshair stays on the same collider.
 	_update_prompt_ui()
 
+func _log_state_change() -> void:
+	if not DEBUG_INTERACT_LOGS or DisplayServer.get_name() == "headless":
+		return
+	var tree_paused := get_tree() != null and get_tree().paused
+	var sig := "%s|%s|%d|%s" % [is_ui_blocked, cursor_mode, Input.mouse_mode, tree_paused]
+	if sig != _dbg_last_sig:
+		_dbg_last_sig = sig
+		print("[InteractState] blocked=%s cursor=%s mouse=%d paused=%s" % [
+			is_ui_blocked, cursor_mode, Input.mouse_mode, tree_paused
+		])
+
 func set_cursor_target(target: Interactable) -> void:
+	var owner_player := get_parent() as PlayerController
+	if owner_player != null and not owner_player.seated_station_mode:
+		if target == null and not cursor_mode:
+			return
+		cursor_mode = false
+		_cursor_target = null
+		return
+	if target == null and not cursor_mode:
+		return
 	cursor_mode = true
 	if target != null and not target.can_interact():
 		target = null
@@ -51,19 +82,38 @@ func set_cursor_target(target: Interactable) -> void:
 		_update_prompt_ui()
 
 func _unhandled_input(event: InputEvent) -> void:
-	if is_ui_blocked:
-		return
-
-	if not cursor_mode and Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
-		return
-
 	if event.is_action_pressed("interact") and not event.is_echo():
+		if DEBUG_INTERACT_LOGS and DisplayServer.get_name() != "headless":
+			var ray_col := str(interaction_ray.get_collider()) if interaction_ray != null else "null"
+			print("[Interact] E pre: blocked=%s cursor=%s mouse=%d target=%s ray=%s" % [
+				is_ui_blocked, cursor_mode, Input.mouse_mode, current_target, ray_col
+			])
+		if is_ui_blocked:
+			return
+		if not cursor_mode and Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
+			if DisplayServer.get_name() == "headless" or _is_office_blocked():
+				return
+			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 		_update_target()
+		if DEBUG_INTERACT_LOGS and DisplayServer.get_name() != "headless":
+			var ray_post := str(interaction_ray.get_collider()) if interaction_ray != null else "null"
+			print("[Interact] E post: target=%s ray=%s" % [current_target, ray_post])
 		if current_target and current_target.can_interact():
 			current_target.interact()
 			get_viewport().set_input_as_handled()
+	elif is_ui_blocked:
+		return
 
-func _update_target() -> void:
+func _is_office_blocked() -> bool:
+	if get_tree() != null and get_tree().paused:
+		return true
+	var p := get_parent()
+	var office := p.get_parent() if p != null else null
+	if office != null and office.has_method("is_world_view_blocked"):
+		return bool(office.call("is_world_view_blocked"))
+	return false
+
+func _update_target(captured_override: Variant = null) -> void:
 	if cursor_mode:
 		var valid: Interactable = _cursor_target if (_cursor_target != null and _cursor_target.can_interact()) else null
 		if valid != current_target:
@@ -71,20 +121,55 @@ func _update_target() -> void:
 			_update_prompt_ui()
 		return
 	var new_target: Interactable = null
+	var captured: bool = Input.mouse_mode == Input.MOUSE_MODE_CAPTURED
+	if captured_override != null:
+		captured = bool(captured_override)
 
-	if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED and interaction_ray:
+	if captured and interaction_ray:
 		interaction_ray.force_raycast_update()
-	if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED and interaction_ray and interaction_ray.is_colliding():
+	if captured and interaction_ray and interaction_ray.is_colliding():
 		var collider: Object = interaction_ray.get_collider()
 		if collider is Interactable and collider.can_interact():
 			new_target = collider
+		else:
+			new_target = _find_interactable_behind_solid(collider)
 
 	if new_target != current_target:
 		current_target = new_target
 		_update_prompt_ui()
 
-func _update_prompt_ui() -> void:
-	refresh_reticle()
+func _find_interactable_behind_solid(solid: Object) -> Interactable:
+	if interaction_ray == null or not interaction_ray.is_inside_tree():
+		return null
+	var space := interaction_ray.get_world_3d().direct_space_state
+	if space == null:
+		return null
+	var origin := interaction_ray.global_position
+	var world_end := interaction_ray.to_global(interaction_ray.target_position)
+	var ray_vec := world_end - origin
+	var max_len := ray_vec.length()
+	if max_len <= 0.01:
+		return null
+	var dir := ray_vec / max_len
+	var hit_dist := origin.distance_to(interaction_ray.get_collision_point())
+	var probe_dist := minf(hit_dist + 0.35, max_len)
+	var query := PhysicsRayQueryParameters3D.create(origin, origin + dir * probe_dist, 2)
+	query.collide_with_areas = true
+	query.collide_with_bodies = false
+	var area_hit := space.intersect_ray(query)
+	if area_hit.is_empty():
+		return null
+	var found := area_hit.get("collider") as Interactable
+	if found == null or not found.can_interact():
+		return null
+	var same_prop := (solid is Node) and found.get_parent() == (solid as Node).get_parent()
+	var area_dist := origin.distance_to(area_hit.get("position", origin))
+	if same_prop or area_dist <= hit_dist + 0.12:
+		return found
+	return null
+
+func _update_prompt_ui(captured_override: Variant = null) -> void:
+	refresh_reticle(captured_override)
 	if not prompt_label:
 		return
 	if cursor_mode:
@@ -99,14 +184,17 @@ func _update_prompt_ui() -> void:
 			prompt_label.modulate.a = 1.0
 		return
 
-	var pointer_live := cursor_mode or Input.mouse_mode == Input.MOUSE_MODE_CAPTURED
+	var captured: bool = Input.mouse_mode == Input.MOUSE_MODE_CAPTURED
+	if captured_override != null:
+		captured = bool(captured_override)
+	var pointer_live := cursor_mode or captured
 	if cursor_mode:
 		prompt_label.offset_top = -98.0
 		prompt_label.offset_bottom = -62.0
 	var line := _cursor_prompt_line(current_target) if cursor_mode else prompt_line(current_target)
 	if not line.is_empty() and pointer_live:
 		prompt_label.text = line
-		var bright := (current_target != null and (current_target.is_actionable or line == "The Way Out"))
+		var bright := (current_target != null and (current_target.is_actionable or line in ["The Way Out", "Выход"]))
 		prompt_label.modulate.a = 1.0 if (not cursor_mode or bright) else STATUS_ALPHA
 		prompt_label.visible = true
 	elif not persistent_hint.is_empty() and pointer_live:
@@ -121,7 +209,10 @@ static func _cursor_prompt_line(target: Interactable) -> String:
 		return ""
 	if not target.is_actionable:
 		var prompt := target.get_prompt()
-		if prompt in ["Write Correction at Desk First", "Locked Until the Watch Is Over", "The Way Out"]:
+		if prompt in [
+			"Write Correction at Desk First", "Locked Until the Watch Is Over", "The Way Out",
+			"Сначала внесите правку на столе", "Заперто до конца смены", "Выход"
+		]:
 			return prompt
 		return ""
 	return target.get_prompt()
@@ -161,6 +252,6 @@ func refresh_reticle(captured_override: Variant = null) -> void:
 
 ## Public refresh hook for pause/resume and other systems that change input
 ## capture state without moving the camera.
-func refresh_prompt() -> void:
-	_update_target()
-	_update_prompt_ui()
+func refresh_prompt(captured_override: Variant = null) -> void:
+	_update_target(captured_override)
+	_update_prompt_ui(captured_override)

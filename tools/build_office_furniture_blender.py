@@ -308,16 +308,12 @@ for index, (cx, cy, tilt) in enumerate(
 ):
     box("OrganizerForms%d" % index, (cx, cy, 0.35), (0.16, 0.10 if index != 1 else 0.05, 0.006), "paper", 0.001, rot_deg=(0, 0, tilt))
 
-# Pen tray with two steel pens, inkwell with a brass cap, wire lead block.
+# Pen tray with two steel pens and the wire lead block.
 box("PenTray", (0.52, 0.758, -0.18), (0.18, 0.016, 0.06), "dark_wood", 0.003)
 box("PenTrayInset", (0.52, 0.766, -0.18), (0.15, 0.006, 0.038), "baize")
 cyl("PenShaft1", (0.48, 0.772, -0.18), 0.006, 0.15, "iron", axis=(1, 0.12, 0.0), sides=6)
 cyl("PenShaft2", (0.56, 0.772, -0.19), 0.006, 0.14, "iron", axis=(1, -0.18, 0.05), sides=6)
-# The inkwell stands right of the copy board, within the writing hand's reach
-# (plan 5.8; tools/move_desk_inkwell.gd moved the baked copy to the same place).
-cyl("Inkwell", (-0.32, 0.775, -0.20), 0.026, 0.045, "iron", sides=10, radius_top=0.022)
-cyl("InkwellCap", (-0.32, 0.800, -0.20), 0.017, 0.012, "brass", sides=8)
-cyl("InkwellCollar", (-0.32, 0.792, -0.20), 0.027, 0.008, "brass", sides=10)
+# The open working inkwell is a separate mesh in desk_setup.tscn.
 box("WireLeadBlock", (-0.62, 0.765, 0.30), (0.08, 0.03, 0.06), "dark_wood", 0.002)
 cyl("WireLeadBush", (-0.62, 0.782, 0.30), 0.012, 0.02, "brass", sides=8)
 

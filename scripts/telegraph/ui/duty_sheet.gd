@@ -13,7 +13,7 @@ extends Node3D
 
 signal sheet_inspected(text: String)
 
-@export var prompt_message: String = "Read Duty Sheet"
+@export var prompt_message: String = "Read Night Orders"
 @export var office: M1OfficeController = null
 
 ## Traffic the station booked in advance, in slot order. Anything arriving beyond
@@ -23,56 +23,53 @@ signal sheet_inspected(text: String)
 	"NIGHT FREIGHT — UNVERIFIED"
 ])
 
-const HEADER: String = """BLACK CREEK STATION
-NIGHT SHIFT, APRIL 1890 — 11 P.M. TO 6 A.M.
+const HEADER: String = """BLACK CREEK STATION — NIGHT SHIFT, APRIL 1890 (11 P.M.–6 A.M.)
 OPERATOR: E. CRANE
-────────────────────────────────────────────
+────────────────────────────────
 
 STANDING ORDERS
+  1. Open the line on the brass key; answer on the same key.
+  2. Read each finished sheet, then set the signal lever (left).
+  3. Stamp & file every copy at the filing desk (right).
+  4. Compare the wire tape register against your sheet when needed.
+  5. Read the night handover before leaving through the south door.
 
-  Lamp up. Sit. Open the line; answer the call.
-  Copy while seated. Read each finished sheet.
-  Orders: Dispatch Ledger. Routes: east wall board.
-  Read the night handover before leaving.
-
-ROUTING
-  Set CLEAR EAST or HOLD using the Dispatch Ledger.
-  Sending a route is not filing a copy.
-
-READING THE WIRE
-  The register strip records marks and pauses,
-  not a translation. Use the American Morse card.
-  Wind the register at its side key when the
-  strip slows.
-
-FILING
-  Unscheduled copy is filed at the table: as
-  copied, or amended in your own hand.
-  AMEND COPY — type the word you intend to file.
-  FILE AS COPIED — seal the current handwriting.
-  Enter sends your word to file.
-  Esc puts the paper down and keeps your draft;
-  nothing is filed.
-
-LINE TIME
-  The line clock keeps running while you read or
-  edit. A line warning means the decision is
-  nearly due.
-
-────────────────────────────────────────────
+────────────────────────────────
 TONIGHT'S TRAFFIC
 """
 
+const HEADER_RU: String = """СТАНЦИЯ БЛЭК-КРИК — НОЧНАЯ СМЕНА, АПРЕЛЬ 1890 (23:00–06:00)
+ТЕЛЕГРАФИСТ: Э. КРЕЙН
+────────────────────────────────
+
+ПОРЯДОК СЛУЖБЫ
+  1. Откройте линию и отвечайте на вызов телеграфным ключом.
+  2. Прочтите готовый лист и переведите рычаг сигнала (слева).
+  3. Поставьте печать и подшейте копию на столе подшивки (справа).
+  4. При сомнении сверьте свою запись с телеграфной лентой у ключа.
+  5. Перед уходом прочтите передачу смены у южной двери.
+
+────────────────────────────────
+ТРАФИК НА ЭТУ НОЧЬ
+"""
+
 const FOOTER: String = """
-────────────────────────────────────────────
-Entries made by E. Crane. Retain station copies
-for the division's morning audit."""
+────────────────────────────────
+Entries made by E. Crane. Retain station copies."""
 
 const FOOTER_INCOMPLETE: String = """
-────────────────────────────────────────────
+────────────────────────────────
 Not every item on this sheet is closed.
-Entries made by E. Crane. Retain station copies
-for the division's morning audit."""
+Entries made by E. Crane. Retain station copies."""
+
+const FOOTER_RU: String = """
+────────────────────────────────
+Записи вёл Э. Крейн. Хранить для утренней сверки."""
+
+const FOOTER_INCOMPLETE_RU: String = """
+────────────────────────────────
+Не все пункты смены закрыты.
+Записи вёл Э. Крейн. Хранить для утренней сверки."""
 
 const STATUS_AWAITING: String = "AWAITING"
 const STATUS_COPIED: String = "COPIED"
@@ -97,6 +94,24 @@ const CORE_HOOK_OUTCOME_BY_FACT: Dictionary = {
 	&"core_hook_commit_lapsed": STATUS_CORE_HOOK_LAPSED,
 }
 
+const STATUS_RU_MAP: Dictionary = {
+	STATUS_AWAITING: "ОЖИДАЕТСЯ",
+	STATUS_COPIED: "ЗАПИСАНО",
+	STATUS_FILED: "ПОДШИТО",
+	STATUS_NO_COPY: "НЕТ КОПИИ",
+	STATUS_LAPSED: "БЕЗ ПРИКАЗА",
+	STATUS_INCOMPLETE: "НЕ ДОПИСАНО",
+	STATUS_CORE_HOOK_WATER: "СЛЫШАННОЕ ПОДШИТО",
+	STATUS_CORE_HOOK_AMENDED: "ПРАВКА ПОДШИТА",
+	STATUS_CORE_HOOK_WATCHER: "ЗАПИСАННОЕ ПОДШИТО",
+	STATUS_CORE_HOOK_LAPSED: "НЕ ПОДШИТО",
+}
+
+static func display_status(status: String) -> String:
+	if GameLocale.is_ru() and STATUS_RU_MAP.has(status):
+		return String(STATUS_RU_MAP[status])
+	return status
+
 var interactable: Interactable = null
 
 func _ready() -> void:
@@ -104,10 +119,13 @@ func _ready() -> void:
 		office = get_parent() as M1OfficeController
 
 	interactable = get_node_or_null("Interactable") as Interactable
+	refresh_locale()
+	if interactable != null and not interactable.interacted.is_connected(_on_interacted):
+		interactable.interacted.connect(_on_interacted)
+
+func refresh_locale() -> void:
 	if interactable != null:
-		interactable.prompt_text = prompt_message
-		if not interactable.interacted.is_connected(_on_interacted):
-			interactable.interacted.connect(_on_interacted)
+		interactable.prompt_text = GameLocale.pick("Ночной наряд", prompt_message)
 
 func get_interactable() -> Interactable:
 	if interactable == null:
@@ -120,32 +138,49 @@ func get_sheet_text() -> String:
 	var lines := PackedStringArray()
 	var scenarios := _scenarios()
 	var unscheduled := PackedStringArray()
+	var ru_labels: Array[String] = ["ПОЕЗД 17 — ПАССАЖИРСКИЙ", "НОЧНОЙ ТОВАРНЫЙ — БЕЗ РАЗРЕШ."]
 
 	for index in scenarios.size():
 		var status := get_status_for(scenarios[index])
 		if index < scheduled_labels.size():
-			lines.append("  %d. %s" % [index + 1, _pad_status(scheduled_labels[index], status)])
+			var row_label: String = ru_labels[index] if (GameLocale.is_ru() and index < ru_labels.size()) \
+				else scheduled_labels[index]
+			lines.append("  %d. %s" % [index + 1, _pad_status(row_label, display_status(status))])
 		elif status != STATUS_AWAITING:
 			# Unbooked traffic only exists on paper once it has been heard.
-			unscheduled.append("  *  %s" % _pad_status("UNSCHEDULED TRAFFIC", status))
+			unscheduled.append("  *  %s" % _pad_status(
+				GameLocale.pick("ВНЕПЛАНОВАЯ ПЕРЕДАЧА", "UNSCHEDULED TRAFFIC"),
+				display_status(status)
+			))
 
 	if lines.is_empty():
-		lines.append("  (no traffic booked)")
+		lines.append(GameLocale.pick("  (передач не назначено)", "  (no traffic booked)"))
 
 	var body := "\n".join(lines)
 	if not unscheduled.is_empty():
 		body += "\n\n" + "\n".join(unscheduled)
 	var core_hook_status := get_core_hook_outcome_status()
 	if not core_hook_status.is_empty():
-		body += "\n\n" + _pad_status(CORE_HOOK_OUTCOME_LABEL, core_hook_status)
+		body += "\n\n" + _pad_status(
+			GameLocale.pick("ВНЕПЛАНОВАЯ КОПИЯ", CORE_HOOK_OUTCOME_LABEL),
+			display_status(core_hook_status)
+		)
 		var knowledge := _knowledge_state()
 		var word := knowledge.recall_value(&"filed_word_core_hook", "") if knowledge != null else ""
 		if not word.is_empty():
-			body += "\n  FILED WORD: " + word
-	return HEADER + body + (FOOTER_INCOMPLETE if _has_open_items() else FOOTER)
+			body += GameLocale.pick("\n  ПОДШИТОЕ СЛОВО: ", "\n  FILED WORD: ") + word
+	var hdr := HEADER_RU if GameLocale.is_ru() else HEADER
+	var ftr := (FOOTER_INCOMPLETE_RU if GameLocale.is_ru() else FOOTER_INCOMPLETE) if _has_open_items() \
+		else (FOOTER_RU if GameLocale.is_ru() else FOOTER)
+	return hdr + body + ftr
 
 func get_watch_record() -> String:
-	return "BLACK CREEK STATION\nNIGHT REGISTER — E. CRANE\n\n" + get_sheet_text().substr(HEADER.length())
+	var title := GameLocale.pick(
+		"СТАНЦИЯ БЛЭК-КРИК\nНОЧНОЙ РЕГИСТР — Э. КРЕЙН\n\n",
+		"BLACK CREEK STATION\nNIGHT REGISTER — E. CRANE\n\n"
+	)
+	var hdr := HEADER_RU if GameLocale.is_ru() else HEADER
+	return title + get_sheet_text().substr(hdr.length())
 
 ## Elias can see a gap in his own paperwork. He cannot see what it cost — that
 ## stays in WorldState, and the only thing that ever reports it is the wire.

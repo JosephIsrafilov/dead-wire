@@ -20,7 +20,7 @@ static func profile(display_height: int, mode: int) -> Dictionary:
 		"scale": 1.0,
 		"divisor": 1,
 		"pixel_size": 1,
-		"levels": 48.0 if selected == Mode.CLASSIC else 64.0,
-		"vignette": 0.26 if selected == Mode.CLASSIC else 0.20,
+		"levels": 24.0 if selected == Mode.CLASSIC else 32.0,
+		"vignette": 0.30 if selected == Mode.CLASSIC else 0.25,
 		"grade_enabled": selected != Mode.CLEAN,
 	}

@@ -74,10 +74,17 @@ func _run() -> void:
 			else:
 				session.mark_transcript_verified()
 				if outcome == "file_water":
+					var pen := office.get_node("DeskAmendment") as DeskAmendment
+					check(pen.begin(), "Correction starts at the seated writing desk")
+					for letter in "WATER":
+						var key := InputEventKey.new()
+						key.keycode = OS.find_keycode_from_string(letter)
+						key.pressed = true
+						pen._input(key)
+					pen.finish()
+					for i in 120:
+						pen.advance(0.05)
 					office.copy_commit_desk.commit_option(&"amend_copy")
-					office.amendment_editor.correction.text = "WATER"
-					office.amendment_editor.correction.text_changed.emit("WATER")
-					office.amendment_editor.submit_draft()
 				else:
 					office.copy_commit_desk.commit_option(StringName(outcome))
 				check(not office.copy_commit_desk.commit_option(&"file_water"), "Terminal copy rejects duplicate filing")

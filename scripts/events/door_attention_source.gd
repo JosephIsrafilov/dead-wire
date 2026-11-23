@@ -4,7 +4,7 @@ extends Node3D
 signal footsteps_started()
 signal footsteps_completed()
 
-@export var footstep_sound: AudioStream = preload("res://audio/sfx/foley/footstep_wood_beta.wav")
+@export var footstep_sound: AudioStream = preload("res://audio/sfx/foley/footstep_boards_3.wav")
 @export var step_interval: float = 0.55
 @export var total_steps: int = 3
 @export var volume_db: float = -9.0
@@ -82,6 +82,9 @@ func _advance_lantern(delta: float) -> void:
 	if _lantern_time < 0.0:
 		return
 	_lantern_time += delta
+	if is_active and steps_played > 0:
+		# If Morse delays the next step, the lantern waits with it.
+		_lantern_time = minf(_lantern_time, step_interval * float(steps_played))
 	var duration := step_interval * float(total_steps) + 0.9
 	var progress := clampf(_lantern_time / duration, 0.0, 1.0)
 	_lantern_offset = lerpf(-lantern_gap_half_width, lantern_gap_half_width, progress)
@@ -122,9 +125,6 @@ func trigger_footsteps() -> void:
 	is_active = true
 	steps_played = 0
 	_step_timer = 0.0
-	_lantern_time = 0.0
-	_advance_lantern(0.0)
-	footsteps_started.emit()
 	_bind_fairness()
 	if not _can_start_next_step():
 		return
@@ -139,6 +139,10 @@ func _play_step() -> void:
 
 	steps_played += 1
 	_step_timer = step_interval
+	if steps_played == 1:
+		_lantern_time = 0.0
+		_advance_lantern(0.0)
+		footsteps_started.emit()
 
 	if steps_played >= total_steps:
 		is_active = false
@@ -146,12 +150,12 @@ func _play_step() -> void:
 
 func _process(delta: float) -> void:
 	_bind_fairness()
-	_advance_lantern(delta)
 	_listen_at_door()
 	if is_active and steps_played < total_steps:
 		_step_timer -= delta
 		if _step_timer <= 0.0 and _can_start_next_step():
 			_play_step()
+	_advance_lantern(delta)
 
 ## An ear to the door (plan 3.8): leaning in close, the steps beyond it come
 ## through less muffled. The same lean that reads the copy and peers at the yard.

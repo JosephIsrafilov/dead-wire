@@ -66,6 +66,22 @@ func _run() -> void:
 	check(chosen_survives(), "Leave Post preserves all three new choices")
 	pause_menu._on_quit()
 	check(chosen_survives(), "Pause Quit preserves all three new choices")
+	for scene_path in ["res://scenes/ui/main_menu.tscn", "res://scenes/ui/pause_menu.tscn"]:
+		var scene: Variant = load(scene_path).instantiate()
+		root.add_child(scene)
+		var slider: HSlider = scene.get("music_slider")
+		check(slider != null, "Music control exists in " + scene_path)
+		if slider != null:
+			slider.value = -11.0 if scene_path.contains("main_menu") else -17.0
+			var chosen := slider.value
+			check(is_equal_approx(GameSettings.load_settings().get("music_volume_db"), chosen), "Music control saves immediately")
+			var readout := slider.get_parent().get_node_or_null("Value") as Label
+			check(readout != null and readout.text == "%d dB" % chosen, "Music readout follows its slider")
+			check(is_equal_approx(AudioServer.get_bus_volume_db(AudioServer.get_bus_index("Music")), chosen), "Music control applies to the live bus")
+			scene.call("_on_master_changed", -5.0)
+			check(is_equal_approx(GameSettings.load_settings().get("music_volume_db"), chosen), "Other controls preserve music volume")
+		scene.queue_free()
+		await process_frame
 	menu.free()
 	pause_menu.free()
 	quit(1 if failures else 0)

@@ -123,14 +123,15 @@ for suite in $(find "$PROJECT_DIR/tests" -name "*_test.gd" | sort); do
 	rm -f "$timeout_marker"
 	output="$(cat "$out_file")"
 	rm -f "$out_file"
-	assertions=$(echo "$output" | grep -c "PASS:")
+	assertions=$(grep -cE '^[[:space:]]*PASS:' <<< "$output")
 	if [ $timed_out -eq 1 ]; then
 		failed_suites=$((failed_suites + 1))
 		failed_names="$failed_names $relative"
 		printf '%s\n' "$output" > "$log_dir/$log_name"
 		printf 'FAIL %-58s TIMEOUT after %ss (exit %d, log: test_logs/%s)\n' "$relative" "$SUITE_TIMEOUT" "$exit_code" "$log_name"
 		echo "$output" | tail -8 | sed 's/^/       /'
-	elif [ $exit_code -eq 0 ] && ! echo "$output" | grep -qE '^[[:space:]]*FAIL:'; then
+	elif [ $exit_code -eq 0 ] && [ "$assertions" -gt 0 ] \
+		&& ! grep -qE '^[[:space:]]*FAIL:|SCRIPT ERROR:|Parse Error:' <<< "$output"; then
 		passed_suites=$((passed_suites + 1))
 		total_assertions=$((total_assertions + assertions))
 		rm -f "$log_dir/$log_name"

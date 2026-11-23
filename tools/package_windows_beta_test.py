@@ -211,6 +211,12 @@ class PckDirectoryTests(unittest.TestCase):
             self.assertEqual(by_path["res://icon.svg"].size, len(b"pngdata"))
             self.assertEqual(by_path["res://icon.svg"].md5, package_windows_beta.entry_md5(b"pngdata"))
 
+    def test_provenance_reports_engine_version_not_pck_format(self):
+        with tempfile.TemporaryDirectory() as directory:
+            pck = Path(directory) / "game.pck"
+            build_pck(pck, {"res://icon.svg": b"png"}, engine=(4, 7, 1))
+            self.assertEqual(package_windows_beta._pck_engine_version(pck), "4.7.1")
+
     def test_reader_rejects_non_pck_bytes(self):
         with tempfile.TemporaryDirectory() as directory:
             pck = Path(directory) / "game.pck"
@@ -297,6 +303,20 @@ class PckDirectoryTests(unittest.TestCase):
             })
             package_windows_beta.check_pck_exclusions(pck)
 
+    def test_recorded_footsteps_must_form_a_complete_set(self):
+        samples = {
+            f"res://.godot/imported/footstep_boards_{index}.wav-hash.sample": b"audio"
+            for index in range(1, 6)
+        }
+        with tempfile.TemporaryDirectory() as directory:
+            pck = Path(directory) / "game.pck"
+            build_pck(pck, samples)
+            package_windows_beta.check_pck_exclusions(pck)
+            samples.pop("res://.godot/imported/footstep_boards_5.wav-hash.sample")
+            build_pck(pck, samples)
+            with self.assertRaisesRegex(RuntimeError, "missing required runtime audio"):
+                package_windows_beta.check_pck_exclusions(pck)
+
     def test_private_paths_are_refused_in_pck(self):
         with tempfile.TemporaryDirectory() as directory:
             pck = Path(directory) / "game.pck"
@@ -335,6 +355,24 @@ class PckDirectoryTests(unittest.TestCase):
                         package_windows_beta.check_pck_exclusions(pck)
             build_pck(pck, {"res://audio/music/intro_drone.wav": b"own", beta: b"beta"})
             package_windows_beta.check_pck_exclusions(pck)
+
+    def test_site_and_local_scratch_files_are_refused(self):
+        beta = "res://.godot/imported/footstep_wood_beta.wav-9bb5baa446e205f786a293ff220a641a.sample"
+        leaks = (
+            "res://landing/img/hero_watcher.jpg.import",
+            "res://.landing_shots/home.png.import",
+            "res://Godot/editor_settings-4.7.tres",
+            "res://tmpr7p27xcp/bed.wav.import",
+            "res://tmptx590wz0/t.wav.import",
+            "res://test_logs/private.log",
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            pck = Path(directory) / "game.pck"
+            for leak in leaks:
+                with self.subTest(path=leak):
+                    build_pck(pck, {leak: b"scratch", beta: b"beta"})
+                    with self.assertRaises(RuntimeError):
+                        package_windows_beta.check_pck_exclusions(pck)
 
     def test_no_licence_is_packaged_for_music_that_does_not_ship(self):
         beta = "res://.godot/imported/footstep_wood_beta.wav-9bb5baa446e205f786a293ff220a641a.sample"

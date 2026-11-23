@@ -26,13 +26,14 @@ signal view_changed(new_view: View, previous_view: View)
 
 const VIEW_PARAMS: Dictionary = {
 	View.DESK: {"yaw": 0.0, "pitch": -11.0, "fov": 68.0, "reach": 2.6},
-	View.LEFT_SIGNAL: {"yaw": 84.0, "pitch": -6.0, "fov": 62.0, "reach": 2.9},
+	View.LEFT_SIGNAL: {"yaw": 84.0, "pitch": -9.5, "fov": 66.0, "reach": 2.9},
 	View.RIGHT_FILING: {"yaw": -84.0, "pitch": -14.0, "fov": 64.0, "reach": 3.4},
 	View.BACK_DOOR: {"yaw": 172.0, "pitch": -2.0, "fov": 72.0, "reach": 4.8},
 }
 
 const FONT_LETTERPRESS := preload("res://assets/fonts/oldstandard/OldStandardTT-Regular.ttf")
 const CHAIR_CREAK_STREAM := preload("res://audio/sfx/foley/chair_settle_cc0.ogg")
+const DEBUG_SEATED_LOGS: bool = false
 
 var current_view: View = View.DESK
 ## Additive micro-tremor applied by external physical events (e.g. Train 17 rumble).
@@ -61,9 +62,14 @@ var _btn_left: Button = null
 var _btn_right: Button = null
 var _btn_down: Button = null
 var _btn_up: Button = null
+var _btn_stand: Button = null
 var _style_normal: StyleBoxFlat = null
 var _style_attention: StyleBoxFlat = null
 var _hovering_nav: bool = false
+var quiet_silence_dim_enabled: bool = true
+var _standing_fov: float = 0.0
+var _post_lock_notice_timer: float = 0.0
+var _post_lock_notice_kind: int = 0
 
 var _duty_panel: PanelContainer = null
 var _duty_primary: Label = null
@@ -88,7 +94,12 @@ func _ready() -> void:
 	_bind_intro.call_deferred()
 
 func _notification(what: int) -> void:
-	if what == NOTIFICATION_WM_MOUSE_EXIT or what == NOTIFICATION_APPLICATION_FOCUS_OUT:
+	if what == NOTIFICATION_WM_MOUSE_EXIT or what == NOTIFICATION_APPLICATION_FOCUS_OUT \
+			or what == NOTIFICATION_WM_WINDOW_FOCUS_OUT:
+		if DEBUG_SEATED_LOGS and DisplayServer.get_name() != "headless":
+			print("[SeatedStation] notif=%d enabled=%s activated=%s" % [what, enabled, _activated])
+		if not enabled or not _activated:
+			return
 		_pointer_inside = false
 		_hovering_nav = false
 		_clear_cursor_target()
@@ -121,21 +132,39 @@ func _bind_intro() -> void:
 	if not enabled:
 		return
 	_resolve_refs()
-	var intro := office.get_node_or_null("IntroCard") as IntroCard if office != null else null
-	if intro != null and intro.is_running() and not intro.is_finished():
-		if not intro.intro_finished.is_connected(_activate_station):
-			intro.intro_finished.connect(_activate_station, CONNECT_ONE_SHOT)
-		_set_nav_visible(false)
-		return
-	_activate_station()
+	_set_nav_visible(false)
+	if _seat != null and not _seat.sit_completed.is_connected(_on_seat_sit_completed):
+		_seat.sit_completed.connect(_on_seat_sit_completed)
+	_connect_director_signals()
+	# Ensure the chair stays interactable while Elias walks around before sitting.
+	var chair := office.get_node_or_null("Chair") as Node3D if office != null else null
+	if chair != null:
+		var chair_interact := chair.get_node_or_null("Interactable") as Interactable
+		if chair_interact != null:
+			chair_interact.enabled = true
+			chair_interact.collision_layer = 2
+	# Keep HUD overlays hidden until Elias sits at the desk.
+	if _duty_panel != null:
+		_duty_panel.visible = false
+	if _controls_label != null:
+		_controls_label.visible = false
 
-func _activate_station() -> void:
+func _on_seat_sit_completed() -> void:
+	if not _activated and enabled:
+		_activate_station(false)
+
+func activate_station() -> void:
+	_activate_station(true)
+
+func _activate_station(emit_seat_signals: bool = true) -> void:
 	if _activated or not enabled:
 		return
 	_resolve_refs()
 	if _player == null:
 		return
 	_activated = true
+	if DEBUG_SEATED_LOGS and DisplayServer.get_name() != "headless":
+		print("[SeatedStation] activated emit=%s" % emit_seat_signals)
 	_player.seated_station_mode = true
 	_player.clear_yaw_limit()
 	_player.set_walk_locked(true)
@@ -157,6 +186,11 @@ func _activate_station() -> void:
 		_seat.has_stood_once = true
 		_player.set_head_rest_position(Vector3(0.0, _seat.seat_eye_height, 0.0))
 
+	if _standing_fov <= 0.0 and _player != null:
+		_standing_fov = _player.base_fov
+	_post_lock_notice_timer = 0.0
+	_post_lock_notice_kind = 0
+
 	current_view = View.DESK
 	_current_yaw_rad = deg_to_rad(float(VIEW_PARAMS[View.DESK].yaw))
 	_current_pitch_rad = deg_to_rad(float(VIEW_PARAMS[View.DESK].pitch))
@@ -167,22 +201,101 @@ func _activate_station() -> void:
 		_interaction.cursor_mode = true
 		_interaction.refresh_reticle()
 
+	_connect_director_signals()
 	if office != null and office.shift_director != null:
 		office.shift_director.refresh_key_state()
-	if _seat != null:
-		_seat.seated.emit()
-		_seat.sit_completed.emit()
-	if office != null:
-		office._on_operator_sit_completed()
+	if emit_seat_signals:
+		if _seat != null:
+			_seat.seated.emit()
+			_seat.sit_completed.emit()
+		if office != null:
+			office._on_operator_sit_completed()
 
 	if office != null and office.window_observation != null \
 			and not office.window_observation.event_observed.is_connected(_on_window_figure_observed):
 		office.window_observation.event_observed.connect(_on_window_figure_observed, CONNECT_ONE_SHOT)
 
-	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-	Input.set_default_cursor_shape(Input.CURSOR_ARROW)
+	if DisplayServer.get_name() != "headless":
+		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+		Input.set_default_cursor_shape(Input.CURSOR_ARROW)
 	_refresh_nav_buttons()
 	_refresh_overlay_hud()
+
+func _connect_director_signals() -> void:
+	if office != null and office.shift_director != null \
+			and not office.shift_director.shift_opened.is_connected(_on_shift_opened):
+		office.shift_director.shift_opened.connect(_on_shift_opened)
+
+func can_stand_up() -> bool:
+	if office == null or office.shift_director == null:
+		return true
+	var phase := office.shift_director.get_phase()
+	return phase == ShiftDirector.Phase.PRE_SHIFT or office.shift_director.is_shift_over()
+
+func get_post_lock_notice_text() -> String:
+	if _post_lock_notice_timer <= 0.0:
+		return ""
+	return SeatedHudCopy.post_lock_notice_text(_post_lock_notice_kind)
+
+func _on_shift_opened() -> void:
+	if _activated:
+		_set_post_lock_notice(SeatedHudCopy.NOTICE_LINE_OPENED, 4.5)
+
+func _trigger_post_lock_warning() -> void:
+	_set_post_lock_notice(SeatedHudCopy.NOTICE_POST_LOCKED, 3.5)
+
+func _set_post_lock_notice(kind: int, duration: float) -> void:
+	_post_lock_notice_kind = kind
+	_post_lock_notice_timer = duration
+	_refresh_nav_buttons()
+	_refresh_overlay_hud()
+
+func deactivate_for_dawn() -> bool:
+	return stand_up_from_station()
+
+func stand_up_from_station() -> bool:
+	if not _activated or _player == null:
+		return false
+	_clear_cursor_target()
+	_activated = false
+	_post_lock_notice_timer = 0.0
+	_post_lock_notice_kind = 0
+	if DEBUG_SEATED_LOGS and DisplayServer.get_name() != "headless":
+		print("[SeatedStation] stood_up_from_station")
+	_hovering_nav = false
+	_player.seated_station_mode = false
+	_player.window_lean_requested = false
+	if _standing_fov > 0.0:
+		_player.base_fov = _standing_fov
+		if _player.camera != null:
+			_player.camera.fov = _standing_fov
+	_set_nav_visible(false)
+	if _duty_panel != null:
+		_duty_panel.visible = false
+	if _controls_label != null:
+		_controls_label.visible = false
+
+	if _interaction != null:
+		_interaction.cursor_mode = false
+		_interaction.refresh_reticle()
+
+	var chair := office.get_node_or_null("Chair") as Node3D if office != null else null
+	if chair != null:
+		var chair_interact := chair.get_node_or_null("Interactable") as Interactable
+		if chair_interact != null:
+			chair_interact.enabled = true
+			chair_interact.collision_layer = 2
+
+	if _seat != null:
+		_seat.stand()
+	else:
+		_player.set_walk_locked(false)
+		_player.set_seated(false)
+
+	if DisplayServer.get_name() != "headless":
+		Input.set_default_cursor_shape(Input.CURSOR_ARROW)
+		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	return true
 
 func _on_window_figure_observed() -> void:
 	if office == null:
@@ -192,7 +305,13 @@ func _on_window_figure_observed() -> void:
 		return
 	var murmur := office.get_node_or_null("MurmurCaption") as MurmurCaption
 	if murmur != null:
-		murmur.show_outside_line("Someone is standing by the mine fence... without a lantern.", 5.0)
+		murmur.show_outside_line(
+			GameLocale.pick(
+				"Кто-то стоит у шахтного забора... без фонаря.",
+				"Someone is standing by the mine fence... without a lantern."
+			),
+			5.0
+		)
 
 func _build_nav_ui() -> void:
 	_style_normal = StyleBoxFlat.new()
@@ -214,18 +333,18 @@ func _build_nav_ui() -> void:
 
 	_btn_left = _make_nav_button("‹ Signal", _on_nav_left_pressed)
 	_btn_left.set_anchors_preset(Control.PRESET_CENTER_LEFT)
-	_btn_left.offset_left = 14.0
-	_btn_left.offset_right = 136.0
-	_btn_left.offset_top = -24.0
-	_btn_left.offset_bottom = 24.0
+	_btn_left.offset_left = 12.0
+	_btn_left.offset_right = 116.0
+	_btn_left.offset_top = 48.0
+	_btn_left.offset_bottom = 86.0
 	add_child(_btn_left)
 
 	_btn_right = _make_nav_button("Filing ›", _on_nav_right_pressed)
 	_btn_right.set_anchors_preset(Control.PRESET_CENTER_RIGHT)
-	_btn_right.offset_left = -136.0
-	_btn_right.offset_right = -14.0
-	_btn_right.offset_top = -24.0
-	_btn_right.offset_bottom = 24.0
+	_btn_right.offset_left = -116.0
+	_btn_right.offset_right = -12.0
+	_btn_right.offset_top = 48.0
+	_btn_right.offset_bottom = 86.0
 	add_child(_btn_right)
 
 	_btn_down = _make_nav_button("⌄ Door", _on_nav_down_pressed)
@@ -237,12 +356,20 @@ func _build_nav_ui() -> void:
 	add_child(_btn_down)
 
 	_btn_up = _make_nav_button("⌃ Desk", _on_nav_up_pressed)
-	_btn_up.set_anchors_preset(Control.PRESET_CENTER_TOP)
-	_btn_up.offset_left = -68.0
-	_btn_up.offset_right = 68.0
+	_btn_up.set_anchors_preset(Control.PRESET_TOP_RIGHT)
+	_btn_up.offset_left = -148.0
+	_btn_up.offset_right = -16.0
 	_btn_up.offset_top = 14.0
-	_btn_up.offset_bottom = 54.0
+	_btn_up.offset_bottom = 50.0
 	add_child(_btn_up)
+
+	_btn_stand = _make_nav_button("⌃ Встать [Tab]", _on_stand_pressed)
+	_btn_stand.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
+	_btn_stand.offset_left = -105.0
+	_btn_stand.offset_right = 105.0
+	_btn_stand.offset_top = -108.0
+	_btn_stand.offset_bottom = -64.0
+	add_child(_btn_stand)
 
 	_set_nav_visible(false)
 
@@ -252,7 +379,7 @@ func _build_hud_overlays() -> void:
 	_duty_panel.set_anchors_preset(Control.PRESET_TOP_LEFT)
 	_duty_panel.offset_left = 16.0
 	_duty_panel.offset_top = 14.0
-	_duty_panel.offset_right = 540.0
+	_duty_panel.offset_right = 590.0
 	_duty_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_duty_panel.visible = false
 	var duty_style := StyleBoxFlat.new()
@@ -304,7 +431,7 @@ func _build_hud_overlays() -> void:
 	_controls_label.add_theme_color_override("font_color", Color(0.84, 0.77, 0.63, 0.56))
 	_controls_label.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 0.85))
 	_controls_label.add_theme_constant_override("shadow_offset_y", 1)
-	_controls_label.text = "[A/W/D/S] Look  ·  [Wheel] Lamp  ·  [RMB] Lean / Close"
+	_apply_controls_text()
 	add_child(_controls_label)
 
 	_tooltip_active_style = StyleBoxFlat.new()
@@ -334,6 +461,18 @@ func _build_hud_overlays() -> void:
 	_tooltip_label.add_theme_color_override("font_color", Color(0.95, 0.89, 0.76, 0.98))
 	_tooltip_panel.add_child(_tooltip_label)
 
+func _apply_controls_text() -> void:
+	if _controls_label != null:
+		_controls_label.text = GameLocale.pick(
+			"[A/W/D/S] Обзор  ·  [Колесо] Лампа  ·  [ПКМ] Прильнуть / Закрыть",
+			"[A/W/D/S] Look  ·  [Wheel] Lamp  ·  [RMB] Lean / Close"
+		)
+
+func refresh_locale() -> void:
+	_apply_controls_text()
+	_refresh_nav_buttons()
+	_refresh_overlay_hud()
+
 func _make_nav_button(label_text: String, handler: Callable) -> Button:
 	var btn := Button.new()
 	btn.text = label_text
@@ -357,9 +496,23 @@ func _make_nav_button(label_text: String, handler: Callable) -> Button:
 	return btn
 
 func _set_nav_visible(show_nav: bool) -> void:
-	for btn in [_btn_left, _btn_right, _btn_down, _btn_up]:
+	for btn in [_btn_left, _btn_right, _btn_down, _btn_up, _btn_stand]:
 		if btn != null:
 			btn.visible = show_nav
+
+func _on_stand_pressed() -> void:
+	if _is_blocked():
+		return
+	if can_stand_up():
+		stand_up_from_station()
+	else:
+		_trigger_post_lock_warning()
+
+func is_activated() -> bool:
+	return _activated
+
+func get_duty_strip_alpha() -> float:
+	return _duty_panel.modulate.a if _duty_panel != null else 0.0
 
 func _is_fullscreen_modal_open() -> bool:
 	if not enabled or not _activated or office == null:
@@ -416,27 +569,41 @@ func _refresh_nav_buttons() -> void:
 	if _is_blocked():
 		_set_nav_visible(false)
 		return
-	_btn_left.visible = current_view != View.LEFT_SIGNAL
-	_btn_right.visible = current_view != View.RIGHT_FILING
-	_btn_down.visible = current_view == View.DESK
+	_btn_left.visible = true
+	_btn_right.visible = true
+	_btn_down.visible = current_view != View.BACK_DOOR
 	_btn_up.visible = current_view != View.DESK
+	var allow_stand := can_stand_up()
+	var is_dawn := office != null and office.shift_director != null and office.shift_director.is_shift_over()
+	if _btn_stand != null:
+		_btn_stand.visible = allow_stand
+		if allow_stand:
+			_apply_nav_cue(_btn_stand, GameLocale.pick("⌃ Встать [Tab]", "⌃ Stand Up [Tab]"), is_dawn)
 
 	var attn := _attention_flags()
+	var s_sig := GameLocale.pick("Сигнал", "Signal")
+	var s_fil := GameLocale.pick("Подшивка", "Filing")
+	var s_door := GameLocale.pick("Дверь", "Door")
+	var s_desk := GameLocale.pick("Стол", "Desk")
 	match current_view:
 		View.DESK:
-			_apply_nav_cue(_btn_left, "‹ Signal", attn.signal)
-			_apply_nav_cue(_btn_right, "Filing ›", attn.filing)
-			_apply_nav_cue(_btn_down, "⌄ Door", attn.door)
+			_apply_nav_cue(_btn_left, "‹ " + s_sig, attn.signal)
+			_apply_nav_cue(_btn_right, s_fil + " ›", attn.filing)
+			_apply_nav_cue(_btn_down, "⌄ " + s_door, attn.door)
 		View.LEFT_SIGNAL:
-			_apply_nav_cue(_btn_right, "Desk ›", attn.desk or attn.filing or attn.door)
-			_apply_nav_cue(_btn_up, "⌃ Desk", attn.desk or attn.filing or attn.door)
+			_apply_nav_cue(_btn_left, "‹ " + s_door, attn.door)
+			_apply_nav_cue(_btn_right, s_desk + " ›", attn.desk or attn.filing)
+			_apply_nav_cue(_btn_down, "⌄ " + s_door, attn.door)
+			_apply_nav_cue(_btn_up, "⌃ " + s_desk, attn.desk or attn.filing)
 		View.RIGHT_FILING:
-			_apply_nav_cue(_btn_left, "‹ Desk", attn.desk or attn.signal or attn.door)
-			_apply_nav_cue(_btn_up, "⌃ Desk", attn.desk or attn.signal or attn.door)
+			_apply_nav_cue(_btn_left, "‹ " + s_desk, attn.desk or attn.signal)
+			_apply_nav_cue(_btn_right, s_door + " ›", attn.door)
+			_apply_nav_cue(_btn_down, "⌄ " + s_door, attn.door)
+			_apply_nav_cue(_btn_up, "⌃ " + s_desk, attn.desk or attn.signal)
 		View.BACK_DOOR:
-			_apply_nav_cue(_btn_left, "‹ Filing", attn.filing)
-			_apply_nav_cue(_btn_right, "Signal ›", attn.signal)
-			_apply_nav_cue(_btn_up, "⌃ Desk", attn.desk)
+			_apply_nav_cue(_btn_left, "‹ " + s_fil, attn.filing)
+			_apply_nav_cue(_btn_right, s_sig + " ›", attn.signal)
+			_apply_nav_cue(_btn_up, "⌃ " + s_desk, attn.desk)
 
 func _apply_nav_cue(btn: Button, base_text: String, active: bool) -> void:
 	if btn == null:
@@ -491,103 +658,30 @@ func _refresh_overlay_hud() -> void:
 	_update_tooltip_visual()
 
 func _duty_texts() -> Dictionary:
-	var primary := "STAND BY — Watch the wire and the yard"
-	var sub := ""
-	if office == null:
-		return {"primary": primary, "sub": sub}
-
-	var pen := office.get_node_or_null("DeskAmendment") as DeskAmendment
-	if pen != null and pen.writing:
-		primary = "WRITING CORRECTION — Type word, [Enter] Keep on sheet, [Esc] Cancel"
-		return {"primary": primary, "sub": sub}
-
-	var director := office.shift_director
-	var session := office.session_controller
-	if director != null and director.is_shift_over():
-		if office.dawn_evidence != null and office.dawn_evidence.is_revealed() \
-				and not office.dawn_evidence.is_inspected():
-			primary = "DAWN — Look back [S] and read the Night Handover beside the door"
-		elif office.office_door != null and not office.office_door.is_open:
-			primary = "DAWN — Look back [S] and open the south door to leave"
-		else:
-			primary = "DAWN — Click the open doorway [S] to end the watch"
-	elif director != null and director.get_phase() == ShiftDirector.Phase.PRE_SHIFT:
-		if _lamp_life != null and _lamp_life.wick < 0.72:
-			primary = "SHIFT START — Click lamp, check books, click brass key"
-		else:
-			primary = "SHIFT START — Check Timetable & Ledger, then brass key"
-		sub = "• Read at your own pace: Ledger (left), Timetable (right), Shelf [D]"
-	elif director != null and director.get_phase() == ShiftDirector.Phase.CALLING:
-		primary = "INCOMING CALL — Click the brass key%s to answer" \
-			% ("" if current_view == View.DESK else " [W]")
-	elif director != null and director.get_phase() == ShiftDirector.Phase.ANSWERING:
-		primary = "LINE ANSWERED — Sender coming in..."
-	elif session != null:
-		match session.get_state():
-			TelegraphSessionController.State.RECEIVING:
-				primary = "COPYING INCOMING — Listen to the sounder; wait for pen to finish"
-			TelegraphSessionController.State.COPYING:
-				primary = "FINISHING COPY — Wait for the pen to lift"
-			TelegraphSessionController.State.VERIFYING:
-				primary = "COPY COMPLETE — Click the clipboard sheet%s to read & verify" \
-					% ("" if current_view == View.DESK else " [W]")
-			TelegraphSessionController.State.AWAITING_ROUTE:
-				primary = "ORDER PENDING — Look left [A] and pull CLEAR EAST or HOLD" \
-					if current_view != View.LEFT_SIGNAL else "ORDER PENDING — Click CLEAR EAST or HOLD on the lever"
-			TelegraphSessionController.State.AWAITING_COMMIT:
-				var scen := session.get_current_scenario()
-				var is_hook := scen != null and scen.scenario_id == "core_hook_water_watcher"
-				if is_hook and office.get_pending_correction().is_empty():
-					primary = "FILE COPY — Compare Tape Strip vs Sheet before stamping"
-					sub = "• Hand wrote something different from what you heard — click lower sheet"
-				elif office.get_pending_correction().is_empty() and _slot_allows_correction(session):
-					primary = "FILE COPY — Pen lower sheet or stamp ORIGINAL [D]"
-				else:
-					primary = "FILE COPY — Look right [D] and stamp the copy"
-			TelegraphSessionController.State.CONSEQUENCE:
-				primary = "ORDER FILED — Watch the night outside"
-
-	var warning := session.get_deadline_warning_text() if session != null else ""
-	var shutter := office.get_node_or_null("ServiceShutterEvent")
-	var reg := session.get_tape_register() if session != null else null
-	if not warning.is_empty():
-		sub = "• %s" % warning
-	elif shutter != null and shutter.has_method("has_unread_slip") and shutter.has_unread_slip():
-		sub = "• Clearance slip slid under the south door — look back [S] to read"
-	elif reg != null and reg.needs_winding():
-		sub = "• Tape register slowing — click its side crank on the desk to wind"
-
-	return {"primary": primary, "sub": sub}
-
-func _slot_allows_correction(session: TelegraphSessionController) -> bool:
-	var scen := session.get_current_scenario() if session != null else null
-	if scen == null:
-		return false
-	for opt in scen.commit_options:
-		if opt != null and opt.requires_correction:
-			return true
-	return false
+	return SeatedHudCopy.duty_texts(office, current_view, View, get_post_lock_notice_text())
 
 func _on_nav_left_pressed() -> void:
 	if _is_blocked():
 		return
 	match current_view:
 		View.DESK: switch_view(View.LEFT_SIGNAL)
-		View.RIGHT_FILING: switch_view(View.DESK)
+		View.LEFT_SIGNAL: switch_view(View.BACK_DOOR)
 		View.BACK_DOOR: switch_view(View.RIGHT_FILING)
+		View.RIGHT_FILING: switch_view(View.DESK)
 
 func _on_nav_right_pressed() -> void:
 	if _is_blocked():
 		return
 	match current_view:
 		View.DESK: switch_view(View.RIGHT_FILING)
-		View.LEFT_SIGNAL: switch_view(View.DESK)
+		View.RIGHT_FILING: switch_view(View.BACK_DOOR)
 		View.BACK_DOOR: switch_view(View.LEFT_SIGNAL)
+		View.LEFT_SIGNAL: switch_view(View.DESK)
 
 func _on_nav_down_pressed() -> void:
 	if _is_blocked():
 		return
-	if current_view == View.DESK:
+	if current_view != View.BACK_DOOR:
 		switch_view(View.BACK_DOOR)
 
 func _on_nav_up_pressed() -> void:
@@ -611,8 +705,39 @@ func _process(delta: float) -> void:
 	_update_camera(delta, blocked)
 	if not blocked:
 		_update_mouse_raycast()
+	_post_lock_notice_timer = maxf(0.0, _post_lock_notice_timer - maxf(delta, 0.0))
 	_refresh_overlay_hud()
+	advance_hud_fade(delta)
 	_update_cramp_feedback(delta, blocked)
+
+func _is_quiet_silence() -> bool:
+	if _post_lock_notice_timer > 0.0:
+		return false
+	if office == null or office.shift_director == null:
+		return false
+	if office.shift_director.get_phase() != ShiftDirector.Phase.WAITING:
+		return false
+	var session := office.session_controller
+	if session != null and not session.get_deadline_warning_text().is_empty():
+		return false
+	var shutter := office.get_node_or_null("ServiceShutterEvent")
+	if shutter != null and shutter.has_method("has_unread_slip") and shutter.has_unread_slip():
+		return false
+	var reg := session.get_tape_register() if session != null else null
+	if reg != null and reg.needs_winding():
+		return false
+	return true
+
+func advance_hud_fade(delta: float) -> void:
+	if _duty_panel == null:
+		return
+	var silence := quiet_silence_dim_enabled and _is_quiet_silence()
+	var target_duty := 0.24 if silence else 1.0
+	var target_ctrl := 0.30 if silence else 0.88
+	var step_w := minf(maxf(delta, 0.0) * 3.0, 1.0)
+	_duty_panel.modulate.a = lerpf(_duty_panel.modulate.a, target_duty, step_w)
+	if _controls_label != null:
+		_controls_label.modulate.a = lerpf(_controls_label.modulate.a, target_ctrl, step_w)
 
 func _update_cramp_feedback(delta: float, blocked: bool) -> void:
 	if _cramp_vignette == null:
@@ -750,22 +875,7 @@ func _hide_tooltip() -> void:
 		_tooltip_panel.visible = false
 
 func _friendly_cursor_label(target: Interactable) -> String:
-	if target == null or not target.can_interact():
-		return ""
-	var raw := target.get_prompt()
-	var n: String = String(target.name)
-	var pname: String = String(target.get_parent().name) if target.get_parent() != null else ""
-	if n == "AmendInteractable":
-		return "Pick Up Pen — Correct Copy"
-	if n == "WickInteractable":
-		return "Oil Lamp — %s" % raw
-	if n == "LeanAtWindow":
-		return "Window Glass — Hold RMB to Lean" if not target.is_actionable else raw
-	if pname == "TelegraphKey" and not target.is_actionable:
-		return "Brass Key — %s (Space / Hold LMB)" % raw
-	if pname == "RoutingBoard" and not target.is_actionable:
-		return "Train-Order Signal (%s)" % raw
-	return raw
+	return SeatedHudCopy.cursor_label(office, target)
 
 func _is_open_door_target(target: Interactable) -> bool:
 	return office != null and office.office_door != null \
@@ -781,7 +891,7 @@ func _is_solid_occluded(space: PhysicsDirectSpaceState3D, origin: Vector3, dir: 
 
 func _clear_cursor_target() -> void:
 	_hovered_target = null
-	if _interaction != null:
+	if _activated and _interaction != null:
 		_interaction.set_cursor_target(null)
 	_hide_tooltip()
 
@@ -815,6 +925,13 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 
 	if event is InputEventKey and event.is_pressed() and not event.is_echo():
+		if (event as InputEventKey).keycode == KEY_TAB:
+			if can_stand_up():
+				stand_up_from_station()
+			else:
+				_trigger_post_lock_warning()
+			get_viewport().set_input_as_handled()
+			return
 		if event.is_action_pressed("move_left"):
 			_on_nav_left_pressed()
 			get_viewport().set_input_as_handled()

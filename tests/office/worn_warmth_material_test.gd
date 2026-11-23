@@ -19,6 +19,8 @@ func _run() -> void:
 	for i in names.size():
 		var material := materials[i] as StandardMaterial3D
 		var expected := "res://assets/textures/worn_warmth/%s_128_v1.png" % names[i]
+		if i == 0:
+			expected = "res://assets/textures/office_wear/wallpaper_b.png"
 		if not check(material.albedo_texture != null and material.albedo_texture.resource_path == expected,
 				"%s uses its versioned candidate texture" % names[i]):
 			office.free()
@@ -38,7 +40,13 @@ func _run() -> void:
 			if byte != int(round(float(level) * 255.0 / 31.0)):
 				quantized = false
 				break
-		if not check(quantized, "%s has 32 levels per channel" % names[i]): return
+		if i == 0:
+			# Owner-selected B is a contrast derivative, not the former quantized candidate.
+			var repair := office.get_node("OfficeWear/WallpaperRepair") as MeshInstance3D
+			var repair_material := repair.material_override as StandardMaterial3D
+			if not check(repair_material.albedo_texture == wall.albedo_texture,
+				"The repair and wall share the selected wallpaper instead of stale stock"): return
+		elif not check(quantized, "%s has 32 levels per channel" % names[i]): return
 	if not check(wall.uv1_scale.is_equal_approx(Vector3.ONE * 1.6),
 			"Wallpaper keeps the original stripe scale"): return
 	if not check(wall.albedo_color.is_equal_approx(Color(0.78, 0.76, 0.72)),

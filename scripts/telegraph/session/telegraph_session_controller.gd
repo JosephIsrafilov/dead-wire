@@ -205,11 +205,11 @@ func get_deadline_warning_text() -> String:
 	if not _deadline_warning_fired:
 		return ""
 	if _state == State.COPYING and _grace_active:
-		return "Finish the copy — the sender is waiting"
+		return GameLocale.pick("Допишите копию — отправитель ждёт", "Finish the copy — the sender is waiting")
 	if not _commit_resolved and _commit_clock_running() \
 			and get_commit_deadline_seconds() > 0.0 and _post_signal_elapsed < get_commit_deadline_seconds() \
 			and _state in [State.COPYING, State.VERIFYING, State.AWAITING_COMMIT]:
-		return "The sender is about to release the line"
+		return GameLocale.pick("Отправитель вот-вот закроет линию", "The sender is about to release the line")
 	return ""
 
 func get_post_signal_elapsed() -> float:

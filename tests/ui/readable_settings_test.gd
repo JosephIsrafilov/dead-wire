@@ -31,6 +31,8 @@ func _run() -> void:
 	if not require(settings.contextual_thoughts_enabled, "Contextual thoughts default to enabled"): return
 	if not require(is_equal_approx(settings.telegraph_volume_db, 0.0) and is_equal_approx(settings.foley_volume_db, 0.0), "Separate Telegraph and Foley levels default to 0 dB"): return
 
+	if not require(settings.get("music_volume_db") != null, "Music has its own saved volume"): return
+	settings.set("music_volume_db", -13.0)
 	var path := "user://readable_settings_test.cfg"
 	settings.presentation_mode = 2
 	settings.vertical_fov = 70.0
@@ -46,6 +48,20 @@ func _run() -> void:
 	if not require(is_equal_approx(loaded.text_scale, 1.4), "Text scale survives reload"): return
 	if not require(not loaded.contextual_thoughts_enabled, "Contextual thoughts toggle survives reload"): return
 	if not require(is_equal_approx(loaded.telegraph_volume_db, -8.0) and is_equal_approx(loaded.foley_volume_db, -12.0), "Telegraph and Foley levels survive reload"): return
+
+	if not require(is_equal_approx(loaded.get("music_volume_db"), -13.0), "Music volume survives reload"): return
+	loaded.apply(null)
+	var music_bus := AudioServer.get_bus_index("Music")
+	if not require(music_bus >= 0 and is_equal_approx(AudioServer.get_bus_volume_db(music_bus), -13.0),
+		"Saved music volume reaches its bus"): return
+	if not require(is_equal_approx(AudioServer.get_bus_volume_db(AudioServer.get_bus_index("Ambience")), -4.0),
+		"Music volume leaves the room ambience alone"): return
+	loaded.set("music_volume_db", NAN)
+	loaded.sanitize()
+	if not require(is_equal_approx(loaded.get("music_volume_db"), -4.0), "Invalid music volume falls back to the authored level"): return
+	loaded.set("music_volume_db", 90.0)
+	loaded.sanitize()
+	if not require(is_equal_approx(loaded.get("music_volume_db"), 6.0), "Music volume clamps to its upper bound"): return
 
 	settings.vertical_fov = 500.0
 	settings.text_scale = -10.0

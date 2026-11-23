@@ -26,19 +26,19 @@ const KNOW_SIGNED_ON: StringName = &"signed_on"
 const KNOW_SIGNED_ON_AT: StringName = &"signed_on_at"
 
 ## Elias's own margin note, added only when his record says he watched the
-## window during the unscheduled call. The note records the looking, never a
+## window after the unscheduled call. The note records the looking, never a
 ## confirmation — horror stays below the proof threshold (review §11 A4).
 const MARGIN_HEADER: String = """
 
 
 NOTE IN THE MARGIN (LATER HAND):"""
 const WINDOW_MARGIN_LINE: String = """
-Watched the window on the unscheduled call.
+Watched the window after the unscheduled call.
 What the glass held is not written here."""
 ## Plan 4.7: watching the yard in the last silence (SilenceThree) is its own
-## line, before the call - again the looking, never what was there.
+## line. The appearance can linger into the call.
 const YARD_MARGIN_LINE: String = """
-Looked out at the yard before the last call.
+Looked out at the yard late in the watch.
 The yard is not this office's to enter."""
 
 const VARIANT_WATER: StringName = &"water"
@@ -55,13 +55,21 @@ var _document_text: String = ""
 func _ready() -> void:
 	visible = false
 	_resolve_nodes()
+	refresh_locale()
 	_update_interaction()
+
+func refresh_locale() -> void:
+	if interactable != null:
+		interactable.prompt_text = GameLocale.pick("Прочитать передачу смены", "Read the Night Handover")
+	if _revealed:
+		_document_text = _build_document(_variant_id)
+		_update_labels()
 
 func _resolve_nodes() -> void:
 	if interactable == null:
 		interactable = get_node_or_null("Interactable") as Interactable
 	if interactable != null:
-		interactable.prompt_text = prompt_message
+		interactable.prompt_text = GameLocale.pick("Прочитать передачу смены", "Read the Night Handover")
 		if not interactable.interacted.is_connected(_on_interacted):
 			interactable.interacted.connect(_on_interacted)
 
@@ -121,6 +129,38 @@ func _read_variant() -> StringName:
 
 func _build_document(variant_id: StringName) -> String:
 	var knowledge := _get_knowledge_state()
+	var saw_yard := knowledge != null and knowledge.knows(SilenceThree.KNOWLEDGE_SAW_YARD)
+	var saw_window := knowledge != null and knowledge.knows(KNOW_SAW_WINDOW)
+	if GameLocale.is_ru():
+		var copy_ru := "Копия не подшита. Внеплановый вызов остался открыт."
+		if variant_id == VARIANT_WATER or variant_id == VARIANT_AMENDED:
+			var word_ru := knowledge.recall_value(KNOW_FILED_WORD, "") if knowledge != null else ""
+			copy_ru = "%s\n\nПравка внесена Э. Крейном. Исходная рабочая\nзапись приложена под этой копией." % word_ru
+		elif variant_id == VARIANT_WATCHER:
+			copy_ru = "WATCHER\n\nПодшито как записано Э. Крейном. Правки\nне вносились. Рабочий лист сохранён."
+		var text_ru := """СТАНЦИЯ БЛЭК-КРИК
+ПЕРЕДАЧА СМЕНЫ — КОНЕЦ НОЧНОГО ДЕЖУРСТВА, АПРЕЛЬ 1890
+────────────────────────────────
+ВНЕПЛАНОВАЯ ПЕРЕДАЧА
+
+%s
+
+Отправитель в журнал не внесён.
+Номер поезда не указан.
+
+Оставить утреннему телеграфисту.
+Запись в журнале — ещё не подтверждение.
+
+СОСТАВИЛ: Э. КРЕЙН / НОЧНОЙ СТОЛ
+%s""" % [copy_ru, _sign_on_line(knowledge)]
+		if saw_yard or saw_window:
+			text_ru += "\n\n\nЗАМЕТКА НА ПОЛЯХ (ПОЗЖЕ):"
+			if saw_yard:
+				text_ru += "\nВ конце смены выходил взглянуть на двор.\nЧто за оградой — не дело этой конторы."
+			if saw_window:
+				text_ru += "\nПосле внепланового вызова смотрел в окно.\nЧто стояло за стеклом, здесь не записано."
+		return text_ru
+
 	var copy := "No copy filed. The unscheduled call remains open."
 	if variant_id == VARIANT_WATER or variant_id == VARIANT_AMENDED:
 		var word := knowledge.recall_value(KNOW_FILED_WORD, "") if knowledge != null else ""
@@ -138,13 +178,11 @@ UNSCHEDULED NIGHT TRAFFIC
 Sender not entered in the night ledger.
 No train number supplied.
 
-Leave both sheets for the morning operator.
+Leave this record for the morning operator.
 An entry is not a confirmation.
 
 PREPARED: E. CRANE / NIGHT DESK
 %s""" % [copy, _sign_on_line(knowledge)]
-	var saw_yard := knowledge != null and knowledge.knows(SilenceThree.KNOWLEDGE_SAW_YARD)
-	var saw_window := knowledge != null and knowledge.knows(KNOW_SAW_WINDOW)
 	if saw_yard or saw_window:
 		text += MARGIN_HEADER
 		if saw_yard:
@@ -155,8 +193,9 @@ PREPARED: E. CRANE / NIGHT DESK
 
 func _sign_on_line(knowledge: KnowledgeStateStore) -> String:
 	if knowledge == null or not knowledge.knows(KNOW_SIGNED_ON):
-		return "NOT SIGNED ON IN THE LEDGER."
-	return "SIGNED ON %s. OFF DUTY 6:00 A.M." % knowledge.recall_value(KNOW_SIGNED_ON_AT, "")
+		return GameLocale.pick("В ЖУРНАЛЕ НЕ РАСПИСАЛСЯ.", "NOT SIGNED ON IN THE LEDGER.")
+	return GameLocale.pick("ЗАСТУПИЛ %s   СДАЛ СМЕНУ 06:00", "SIGNED ON %s   OFF DUTY 6:00 A.M.") \
+		% knowledge.recall_value(KNOW_SIGNED_ON_AT, "")
 
 func _update_labels() -> void:
 	var result := get_node_or_null("ResultLabel") as Label3D
@@ -168,16 +207,16 @@ func _update_labels() -> void:
 		VARIANT_WATER, VARIANT_AMENDED:
 			var knowledge := _get_knowledge_state()
 			result.text = knowledge.recall_value(KNOW_FILED_WORD, "") if knowledge != null else ""
-			stamp.text = "AMENDED"
-			subtitle.text = "NIGHT COPY / RETAIN"
+			stamp.text = GameLocale.pick("ИСПРАВЛЕНО", "AMENDED")
+			subtitle.text = GameLocale.pick("НОЧНАЯ КОПИЯ / ХРАНИТЬ", "NIGHT COPY / RETAIN")
 		VARIANT_WATCHER:
 			result.text = "WATCHER"
-			stamp.text = "AS WRITTEN"
-			subtitle.text = "NO TRAIN NUMBER"
+			stamp.text = GameLocale.pick("КАК ЗАПИСАНО", "AS WRITTEN")
+			subtitle.text = GameLocale.pick("БЕЗ НОМЕРА ПОЕЗДА", "NO TRAIN NUMBER")
 		_:
-			result.text = "NO COPY"
-			stamp.text = "OPEN"
-			subtitle.text = "LINE HELD OPEN"
+			result.text = GameLocale.pick("НЕТ КОПИИ", "NO COPY")
+			stamp.text = GameLocale.pick("ОТКРЫТО", "OPEN")
+			subtitle.text = GameLocale.pick("ЛИНИЯ НЕ ЗАКРЫТА", "LINE HELD OPEN")
 
 func _update_interaction() -> void:
 	_resolve_nodes()

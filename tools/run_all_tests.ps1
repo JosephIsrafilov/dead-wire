@@ -52,11 +52,11 @@ foreach ($suite in $suites) {
         $ErrorActionPreference = $oldErrorActionPreference
     }
     $exitCode = $LASTEXITCODE
-    $assertions = ([regex]::Matches($output, "PASS:")).Count
+    $assertions = ([regex]::Matches($output, "(?m)^[ \t]*PASS:")).Count
     # Godot on Windows may print "Failed to read the root certificate store"
     # to stderr even when the suite exits successfully. Match assertion lines,
     # not the generic word "Failed" in that engine warning.
-    if ($exitCode -eq 0 -and $assertions -gt 0 -and $output -notmatch "(?m)^FAIL:|SCRIPT ERROR:|Parse Error:") {
+    if ($exitCode -eq 0 -and $assertions -gt 0 -and $output -notmatch "(?m)^[ \t]*FAIL:|SCRIPT ERROR:|Parse Error:") {
         $passedSuites++
         $totalAssertions += $assertions
         "OK   {0,-58} {1,4} assertions" -f $relative, $assertions

@@ -10,6 +10,7 @@ func _init() -> void:
 
 func _run() -> void:
 	print("--- Starting Sound Captions Test Suite ---")
+	GameLocale.lock_language_for_test("en")
 	if not _a(not GameSettings.new().sound_captions, "Sound captions start off"): return
 	MainMenu.clear_state()
 	var office: M1OfficeController = load("res://scenes/office/m1_office.tscn").instantiate()
@@ -32,6 +33,24 @@ func _run() -> void:
 	if not _a(captions.current_text == "[the sounder calls]", "The office call is captioned"): return
 	captions._process(SoundCaptions.CAPTION_SECONDS + 0.1)
 	if not _a(captions.current_text.is_empty(), "A caption fades on its own"): return
+
+	# The player can be reading the dispatch rules when a real call repeats.
+	var director := office.shift_director
+	director.set_process(false)
+	var viewer := office.document_viewer
+	var ledger := office.get_node("DispatchLedger") as DispatchLedger
+	ledger.get_interactable().interact()
+	if not _a(viewer.is_open(), "The dispatch ledger is raised during the watch"): return
+	if not _a(director.open_line(), "The office opens the wire"): return
+	director.advance(director.wait_seconds_before_call[0] + 0.1)
+	if not _a(captions.current_text == "[the sounder calls]", "The first live call is captioned over the ledger"): return
+	captions._process(SoundCaptions.CAPTION_SECONDS + 0.1)
+	director.advance(director._call_window_seconds)
+	if not _a(captions.current_text == "[the sounder calls]", "The repeated live call is captioned while reading"): return
+	if not _a(viewer.is_open() and captions.layer > viewer.layer,
+		"The call stays clear of document dimming and leaves the ledger open"): return
+	if not _a(captions.layer < (office.get_node("PauseMenu") as PauseMenu).layer,
+		"Pause keeps its foreground layer"): return
 
 	# Described, never explained: no caption names a source.
 	for text in SoundCaptions.CAPTIONS.values():

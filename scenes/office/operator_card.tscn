@@ -1,0 +1,39 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://scripts/office/operator_card.gd" id="1_card"]
+[ext_resource type="Script" path="res://scripts/interaction/interactable.gd" id="2_interact"]
+[ext_resource type="Material" path="res://materials/style_tests/paper_log.tres" id="3_paper"]
+
+[ext_resource type="FontFile" path="res://assets/fonts/oldstandard/OldStandardTT-Regular.ttf" id="4_font"]
+
+[sub_resource type="BoxMesh" id="Card"]
+material = ExtResource("3_paper")
+size = Vector3(0.18, 0.003, 0.16)
+
+[sub_resource type="BoxShape3D" id="CardShape"]
+size = Vector3(0.18, 0.025, 0.16)
+
+[node name="OperatorCard" type="Node3D"]
+script = ExtResource("1_card")
+
+[node name="Paper" type="MeshInstance3D" parent="."]
+mesh = SubResource("Card")
+
+[node name="Heading" type="Label3D" parent="."]
+position = Vector3(0, 0.002, 0)
+rotation = Vector3(-1.5707963, 0, 0)
+font = ExtResource("4_font")
+pixel_size = 0.0008
+modulate = Color(0.12, 0.1, 0.08, 1)
+text = "OPERATOR'S REMINDER\n\nANSWER THE CALL\nREAD THE COPY\nCHECK THE LEDGER\nSET THE SIGNAL\nSTAMP BY THE STOVE"
+font_size = 18
+outline_size = 0
+
+[node name="Interactable" type="Area3D" parent="."]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("2_interact")
+prompt_text = "Operator's Reminder"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Interactable"]
+shape = SubResource("CardShape")

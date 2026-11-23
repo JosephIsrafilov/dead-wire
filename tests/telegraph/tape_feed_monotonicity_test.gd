@@ -16,6 +16,7 @@ func _run() -> void:
 	if not _test_full_take_stays_full_while_the_watch_runs_down(): return
 	if not _test_wind_releases_the_whole_backlog_once(): return
 	if not _test_new_take_keeps_history_and_reset_clears_the_feed(): return
+	if not _test_new_signal_during_winding_and_reset(): return
 	if not await _test_office_viewer_keeps_timing_columns(): return
 	print("--- All Tape Feed Monotonicity Tests PASSED (%d assertions) ---" % _assertions)
 	quit(0)
@@ -110,9 +111,24 @@ func _test_wind_releases_the_whole_backlog_once() -> bool:
 	if not _a(tape.get_record().size() == 9,
 		"The objective record already holds all nine events under the rollers"): return false
 	tape.wind()
+	var started := _parse_takes(_inspect(tape, 1.0))
+	if not _a(started[0]["ink"] == "" and not started[0]["slack"],
+		"Starting the key turn does not reveal the held ink or ask the player to wind again"): return false
+	tape._process(0.31)
+	var turning := _parse_takes(_inspect(tape, 1.0))
+	var prefix: String = turning[0]["ink"]
+	if not _a(not prefix.is_empty() and prefix != "·  ·   ·  ·   ·" and "·  ·   ·  ·   ·".begins_with(prefix),
+		"A partial key turn exposes a proper prefix with the original gaps"): return false
+	var angle := tape.get_key_angle()
+	tape.wind()
+	tape._process(0.0)
+	if not _a(is_equal_approx(tape.get_key_angle(), angle)
+		and _parse_takes(_inspect(tape, 1.0))[0]["ink"] == prefix,
+		"A repeat input during the turn does not restart the key or advance the paper"): return false
+	tape._process(0.5)
 	var wound := _parse_takes(_inspect(tape, 1.0))
 	if not _a(wound[0]["ink"] == "·  ·   ·  ·   ·" and not wound[0]["slack"],
-		"Winding feeds the whole held backlog out once"): return false
+		"A completed key turn feeds the whole held backlog out once"): return false
 	var again := _parse_takes(_inspect(tape, 1.0))
 	if not _a(again[0]["ink"] == wound[0]["ink"],
 		"Reading the wound strip again is idempotent"): return false
@@ -155,6 +171,7 @@ func _test_new_take_keeps_history_and_reset_clears_the_feed() -> bool:
 		and interrupted_ink.interrupted and not interrupted_ink.is_complete,
 		"Interruption keeps the exact fractional snapshot of the held event"): return false
 	tape.wind()
+	tape._process(1.0)
 	var wound := _parse_takes(_inspect(tape, 1.0))
 	if not _a(wound[0]["ink"] == "·  ·   ·",
 		"Winding preserves the older take's ink exactly"): return false
@@ -170,6 +187,36 @@ func _test_new_take_keeps_history_and_reset_clears_the_feed() -> bool:
 	if not _a(after_reset.size() == 1 and after_reset[0]["ink"] == "" and after_reset[0]["slack"],
 		"reset() clears the feed history: a fresh weak take is held again, no stale cursor"): return false
 	if not _a(tape.get_record().size() == 3, "reset() leaves only the new take's record"): return false
+	_cleanup(tape, scheduler)
+	return true
+
+func _test_new_signal_during_winding_and_reset() -> bool:
+	var tape := _make_register()
+	var scheduler := MorseRuntimeScheduler.new()
+	scheduler.auto_process = false
+	root.add_child(scheduler)
+	tape.connect_scheduler(scheduler)
+	tape.spring_tension = 0.35
+	var schedule := _schedule([1, 2, 1, 2, 1])
+	scheduler.start(schedule)
+	scheduler.advance_time(schedule.total_duration_seconds + 0.1)
+	tape.wind()
+	scheduler.start(schedule)
+	scheduler.advance_time(schedule.total_duration_seconds + 0.1)
+	tape._process(0.31)
+	var mid := _parse_takes(tape.get_tape_text_for_viewer())
+	if not _a(tape.get_record().size() == 10 and tape.get_fed_record().size() in range(1, 5)
+		and mid[1]["ink"].is_empty(), "Incoming ink waits behind the earlier paper on both surfaces"): return false
+	tape.line_live = false
+	tape._process(0.5)
+	if not _a(tape.get_fed_record().size() == 10 and tape.get_tape_text_for_viewer() == tape.get_tape_display_text(),
+		"The turn finishes feeding both takes even when the line is closed"): return false
+	tape.wind()
+	tape._process(0.25)
+	tape.reset()
+	tape._process(1.0)
+	if not _a(is_zero_approx(tape.get_key_angle()) and tape.get_fed_record().is_empty(),
+		"Reset cancels an in-flight turn without feeding stale ink"): return false
 	_cleanup(tape, scheduler)
 	return true
 
@@ -221,8 +268,11 @@ func _test_office_viewer_keeps_timing_columns() -> bool:
 		and office.document_viewer.get_current_doc_id() == "tape_register",
 		"Reading the office register opens the station register in the real viewer"): return false
 	var body_first: String = office.document_viewer.body_label.text
-	if not _a(body_first == M1OfficeController._wrap_tape_text(raw[0]),
-		"The viewer body is the lossless layout wrap of the real signal body"): return false
+	if not _a(body_first.replace(" TELEGRAM\n", "\n") == M1OfficeController._wrap_tape_text(raw[0]),
+		"Labelling a take preserves every timing column"): return false
+	if not _a(body_first.count(" TELEGRAM\n") == 1 and body_first.contains(
+		TapeRegisterController.TAKE_HEADER_FORMAT % [register.get_strip_count(), TapeRegisterController.STATUS_COMPLETE]
+		+ " TELEGRAM"), "The copy's strip has a label separate from calls and replies"): return false
 	var record := register.get_record()
 	if not _a(raw[0].ends_with(_tail_glyph(record[record.size() - 1])),
 		"Trailing timing columns survive into the signal body, trailing GAP whitespace included"): return false

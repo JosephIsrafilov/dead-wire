@@ -164,9 +164,15 @@ func _apply_prompt() -> void:
 	var settling := _is_animating or _body_phase != BodyPhase.IDLE
 	if settling:
 		var sitting := _body_phase == BodyPhase.SIT_APPROACH or is_seated
-		interactable.prompt_text = "Settling into the Chair" if sitting else "Standing Up"
+		interactable.prompt_text = GameLocale.pick(
+			"Усаживаюсь за стол" if sitting else "Встаю из-за стола",
+			"Settling into the Chair" if sitting else "Standing Up"
+		)
 	else:
-		interactable.prompt_text = PROMPT_STAND if is_seated else PROMPT_SIT
+		interactable.prompt_text = GameLocale.pick(
+			"Встать" if is_seated else "Сесть за стол телеграфиста",
+			PROMPT_STAND if is_seated else PROMPT_SIT
+		)
 	interactable.is_actionable = not settling
 
 func _on_interacted() -> void:

@@ -72,9 +72,59 @@ func _run() -> void:
 	if not _check(absf(behaviours["stand"]["end"] - stand_x) < 0.5, "A held No. 17 comes to a stand at the points"): return
 	if not _check(not behaviours["distant"]["seen"], "Without an order No. 17 is only a whistle far off"): return
 
+	# Every outcome starts with a whistle the office listener can actually hear.
+	var office: M1OfficeController = load("res://scenes/office/m1_office.tscn").instantiate()
+	root.add_child(office)
+	await process_frame
+	await process_frame
+	office.get_node("IntroCard").skip_immediately()
+	var actual := office.get_node("DawnTrain") as DawnTrain
+	actual.set_process(false)
+	for behaviour in ["pass", "stand", "distant"]:
+		actual.begin(behaviour, "gone")
+		actual.advance(actual.first_whistle_seconds + 0.01)
+		var distance := actual._whistle.global_position.distance_to(office.player.camera.global_position)
+		if not _check(distance < actual._whistle.max_distance,
+				"The first %s whistle lies inside the real office listener's cutoff" % behaviour): return
+		if behaviour == "distant":
+			actual.advance(9.0)
+			distance = actual._whistle.global_position.distance_to(office.player.camera.global_position)
+			if not _check(distance < actual._whistle.max_distance,
+					"The distant-only follow-up is not culled before reaching the office"): return
+			if not _check(not actual._passenger.visible, "Audible distant whistles do not force a passing train"): return
+	if not _check(_exhaust_count(actual) == 0, "A distant whistle leaves no plume over the yard"): return
+	actual.begin("pass", "gone")
+	actual.advance(actual.departure_seconds - 0.1)
+	if not _check(_exhaust_count(actual) == 0, "There is no exhaust before No. 17 enters the line"): return
+	for _step in 30:
+		actual.advance(0.1)
+	if not _check(_exhaust_count(actual, "StackSmoke") > 0, "A passing No. 17 leaves chimney exhaust"): return
+	if not _check(_exhaust_count(actual, "CylinderSteam") == 0, "A through train does not vent at the points"): return
+	while actual.get_passenger_x() < actual.end_x:
+		actual.advance(0.1)
+	if not _check(_exhaust_count(actual, "StackSmoke") > 0, "The plume survives the departure of the model"): return
+	actual.advance(10.0)
+	if not _check(_exhaust_count(actual) == 0, "The departed train's smoke dissipates"): return
+	actual.begin("stand", "gone")
+	while not actual._steamed:
+		actual.advance(0.1)
+	actual.advance(0.6)
+	if not _check(_exhaust_count(actual, "CylinderSteam") > 0, "The existing stand hiss cues low steam"): return
+	actual.advance(10.0)
+	if not _check(_exhaust_count(actual, "CylinderSteam") == 0, "Cylinder steam disperses without retriggering"): return
+	actual.begin("distant", "gone")
+	if not _check(_exhaust_count(actual) == 0, "Starting another outcome clears the previous plume"): return
+	office.get_parent().queue_free()
 	await process_frame
 	print("--- All Dawn Train Tests PASSED (%d assertions) ---" % _passed)
 	quit(0)
+
+func _exhaust_count(train: Node3D, source: String = "") -> int:
+	var count := 0
+	for puff in train.find_children("*", "Sprite3D", true, false):
+		if puff.visible and (source.is_empty() or str(puff.name).begins_with(source)):
+			count += 1
+	return count
 
 func _check(ok: bool, message: String) -> bool:
 	if ok:

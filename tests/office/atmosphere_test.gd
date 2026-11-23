@@ -38,7 +38,7 @@ func _run() -> void:
 
 	# --- the watch begins with the lamp turned down -------------------------
 	# Taking the watch is a physical act: the operator turns up the wick. If he
-	# opens the line without doing it, the lamp comes up with the shift anyway.
+	# opens the line without doing it, the wick stays where he left it.
 	var wick_life := office.get_node_or_null("LampLife") as LampLife
 	if not assert_condition(wick_life != null and wick_life.wick < 0.5, "The lamp starts the watch turned down"): return
 	var wick_act := office.get_node_or_null("DeskSetup/OilLamp/WickInteractable") as Interactable
@@ -52,7 +52,10 @@ func _run() -> void:
 	office.shift_director.open_line()
 	for _step in 180:
 		wick_life.advance(1.0 / 60.0)
-	if not assert_condition(is_equal_approx(wick_life.wick, 1.0), "Opening the line brings a forgotten lamp up"): return
+	if not assert_condition(is_equal_approx(wick_life.wick, 0.3), "Opening the line leaves the lamp under manual control"): return
+	# Later light-envelope checks exercise the manually raised working lamp.
+	wick_life.turn_up_wick()
+	wick_life.advance(wick_life.wick_turn_seconds + 0.1)
 
 	# --- the authored silence BEFORE the first call ---------------------------
 	# (A04) The room falls quiet inside the WAITING stretch, ahead of the
@@ -358,7 +361,8 @@ func _run() -> void:
 	if not assert_condition(register.get_tape_text_for_viewer().contains(TapeRegisterController.SLACK_NOTE), "A slack register spring holds back the tail of the strip in the viewer until wound"): return
 	wind_act.interact()
 	if not assert_condition(is_equal_approx(register.spring_tension, 1.0) and not wind_act.can_interact(), "Winding restores the spring"): return
-	if not assert_condition(not register.get_tape_text_for_viewer().contains(TapeRegisterController.SLACK_NOTE), "Winding advances the full strip into the viewer"): return
+	register._process(1.0)
+	if not assert_condition(register.get_tape_text_for_viewer() == register.get_tape_display_text(), "Winding advances the full strip into the viewer"): return
 	if not assert_condition(register.get_record().size() == record_before, "Winding never touches the record"): return
 
 	# --- Stove authored mesh & wall connection check -------------------------

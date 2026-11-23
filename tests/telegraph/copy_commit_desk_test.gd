@@ -18,6 +18,7 @@ func _init() -> void:
 
 func _run() -> void:
 	print("--- Starting Copy Commit Desk Test Suite ---")
+	GameLocale.lock_language_for_test("en")
 	var knowledge := root.get_node_or_null("KnowledgeState") as KnowledgeStateStore
 	var world := root.get_node_or_null("WorldState") as WorldStateStore
 	if not assert_condition(knowledge != null and world != null, "State autoloads available"): return
@@ -137,6 +138,19 @@ func _run() -> void:
 	office.amendment_editor.submit_draft()
 	if not assert_condition(desk.has_committed(), "An on-time intent is accepted and stamped in the same frame"): return
 	if not assert_condition(world.get_fact("core_hook_filed_water", false), "On-time WATER fact recorded"): return
+	_teardown(office)
+
+	# Unbound digits must not file copies outside the action map.
+	office = await _armed_office()
+	desk = office.copy_commit_desk
+	var saved_keys := InputMap.action_get_events("commit_option_1")
+	InputMap.action_erase_events("commit_option_1")
+	if not assert_condition(not desk._handle_key_event(_key(KEY_1)), "An unbound 1 cannot file a copy"): return
+	InputMap.action_add_event("commit_option_1", _key(KEY_3))
+	if not assert_condition(desk._handle_key_event(_key(KEY_3)), "Filing follows the remapped action"): return
+	InputMap.action_erase_events("commit_option_1")
+	for key in saved_keys:
+		InputMap.action_add_event("commit_option_1", key)
 	_teardown(office)
 
 	print("--- All Copy Commit Desk Tests PASSED (%d assertions) ---" % _assertions_passed)

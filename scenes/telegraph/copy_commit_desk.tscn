@@ -1,10 +1,21 @@
-[gd_scene load_steps=14 format=3 uid="uid://b1commit001"]
+[gd_scene load_steps=18 format=3 uid="uid://b1commit001"]
 
 [ext_resource type="Script" path="res://scripts/telegraph/ui/copy_commit_desk.gd" id="1_desk"]
 [ext_resource type="Script" path="res://scripts/interaction/interactable.gd" id="2_interact"]
 [ext_resource type="Material" path="res://materials/style_tests/timber_trim.tres" id="3_wood"]
 [ext_resource type="Material" path="res://materials/style_tests/paper_log.tres" id="4_paper"]
 [ext_resource type="Material" path="res://materials/style_tests/metal_brass_aged.tres" id="5_brass"]
+[ext_resource type="Material" path="res://materials/style_tests/form_night_copy.tres" id="6_form"]
+[ext_resource type="FontFile" path="res://assets/fonts/oldstandard/OldStandardTT-Regular.ttf" id="7_serif"]
+
+[sub_resource type="PlaneMesh" id="FilingFormMesh"]
+material = ExtResource("6_form")
+size = Vector2(0.28, 0.22)
+
+[sub_resource type="StandardMaterial3D" id="InkPadFeltMat"]
+shading_mode = 2
+albedo_color = Color(0.26, 0.07, 0.06, 1)
+roughness = 0.95
 
 [sub_resource type="BoxShape3D" id="DeskInteract"]
 size = Vector3(0.92, 0.28, 0.58)
@@ -51,10 +62,29 @@ position = Vector3(0, 0.04, 0)
 size = Vector3(0.86, 0.08, 0.48)
 material = ExtResource("3_wood")
 
-[node name="OptionOnePlate" type="CSGBox3D" parent="."]
-position = Vector3(-0.2, 0.085, -0.02)
-size = Vector3(0.36, 0.012, 0.24)
+[node name="FolderBoardOne" type="CSGBox3D" parent="."]
+position = Vector3(-0.2, 0.083, -0.02)
+size = Vector3(0.34, 0.008, 0.27)
+material = ExtResource("3_wood")
+
+[node name="BrassClipOne" type="CSGBox3D" parent="."]
+position = Vector3(-0.2, 0.091, -0.14)
+size = Vector3(0.09, 0.006, 0.018)
+material = ExtResource("5_brass")
+
+[node name="UnderSheetOne" type="CSGBox3D" parent="."]
+transform = Transform3D(0.999388, 0, 0.0349929, 0, 1, 0, -0.0349929, 0, 0.999388, -0.2, 0.088, -0.02)
+size = Vector3(0.28, 0.002, 0.22)
 material = ExtResource("4_paper")
+
+[node name="OptionOnePlate" type="CSGBox3D" parent="."]
+position = Vector3(-0.2, 0.0905, -0.02)
+size = Vector3(0.28, 0.003, 0.22)
+material = ExtResource("4_paper")
+
+[node name="FormFaceOne" type="MeshInstance3D" parent="."]
+position = Vector3(-0.2, 0.0924, -0.02)
+mesh = SubResource("FilingFormMesh")
 
 [node name="LegFrontLeft" type="CSGBox3D" parent="."]
 visible = false
@@ -80,10 +110,39 @@ position = Vector3(0.35, -0.34, -0.18)
 size = Vector3(0.05, 0.72, 0.05)
 material = ExtResource("3_wood")
 
-[node name="OptionTwoPlate" type="CSGBox3D" parent="."]
-position = Vector3(0.2, 0.085, -0.02)
-size = Vector3(0.36, 0.012, 0.24)
+[node name="FolderBoardTwo" type="CSGBox3D" parent="."]
+position = Vector3(0.2, 0.083, -0.02)
+size = Vector3(0.34, 0.008, 0.27)
+material = ExtResource("3_wood")
+
+[node name="BrassClipTwo" type="CSGBox3D" parent="."]
+position = Vector3(0.2, 0.091, -0.14)
+size = Vector3(0.09, 0.006, 0.018)
+material = ExtResource("5_brass")
+
+[node name="UnderSheetTwo" type="CSGBox3D" parent="."]
+transform = Transform3D(0.999388, 0, -0.0349929, 0, 1, 0, 0.0349929, 0, 0.999388, 0.2, 0.088, -0.02)
+size = Vector3(0.28, 0.002, 0.22)
 material = ExtResource("4_paper")
+
+[node name="OptionTwoPlate" type="CSGBox3D" parent="."]
+position = Vector3(0.2, 0.0905, -0.02)
+size = Vector3(0.28, 0.003, 0.22)
+material = ExtResource("4_paper")
+
+[node name="FormFaceTwo" type="MeshInstance3D" parent="."]
+position = Vector3(0.2, 0.0924, -0.02)
+mesh = SubResource("FilingFormMesh")
+
+[node name="InkPadCase" type="CSGBox3D" parent="."]
+position = Vector3(-0.11, 0.084, 0.16)
+size = Vector3(0.085, 0.012, 0.055)
+material = ExtResource("3_wood")
+
+[node name="InkPadFelt" type="CSGBox3D" parent="."]
+position = Vector3(-0.11, 0.0905, 0.16)
+size = Vector3(0.072, 0.003, 0.042)
+material = SubResource("InkPadFeltMat")
 
 ; The rubber stamp itself: dark wood handle and knob on an inked block.
 [node name="StampTool" type="Node3D" parent="."]
@@ -114,36 +173,44 @@ rings = 5
 material = ExtResource("3_wood")
 
 [node name="OptionOneLabel" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, -0.2, 0.096, -0.05)
-pixel_size = 0.0014
-modulate = Color(0.08, 0.06, 0.04, 1)
-outline_modulate = Color(0.08, 0.06, 0.04, 1)
-font_size = 28
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, -0.2, 0.094, -0.03)
+pixel_size = 0.00118
+shaded = true
+modulate = Color(0.14, 0.09, 0.06, 0.94)
+outline_modulate = Color(0.14, 0.09, 0.06, 0.94)
+font = ExtResource("7_serif")
+font_size = 18
 outline_size = 0
 horizontal_alignment = 1
 vertical_alignment = 1
-width = 180.0
+autowrap_mode = 3
+width = 210.0
 text = "AMEND COPY"
 visible = false
 
 [node name="OptionTwoLabel" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0.2, 0.096, -0.05)
-pixel_size = 0.0014
-modulate = Color(0.08, 0.06, 0.04, 1)
-outline_modulate = Color(0.08, 0.06, 0.04, 1)
-font_size = 28
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0.2, 0.094, -0.03)
+pixel_size = 0.00118
+shaded = true
+modulate = Color(0.14, 0.09, 0.06, 0.94)
+outline_modulate = Color(0.14, 0.09, 0.06, 0.94)
+font = ExtResource("7_serif")
+font_size = 18
 outline_size = 0
 horizontal_alignment = 1
 vertical_alignment = 1
-width = 180.0
+autowrap_mode = 3
+width = 210.0
 text = "FILE AS COPIED"
 visible = false
 
 [node name="OptionOneStamp" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, -0.2, 0.098, 0.05)
-pixel_size = 0.0013
+transform = Transform3D(0.997551, 0, -0.0699428, 0.0699428, 0, 0.997551, 0, -1, 0, -0.2, 0.0955, 0.042)
+pixel_size = 0.00125
+shaded = true
 modulate = Color(0.55, 0.12, 0.08, 1)
 outline_modulate = Color(0.16, 0.06, 0.03, 1)
+font = ExtResource("7_serif")
 font_size = 22
 outline_size = 0
 horizontal_alignment = 1
@@ -153,10 +220,12 @@ text = "VOID"
 visible = false
 
 [node name="OptionTwoStamp" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0.2, 0.098, 0.05)
-pixel_size = 0.0013
+transform = Transform3D(0.997551, 0, 0.0699428, -0.0699428, 0, 0.997551, 0, -1, 0, 0.2, 0.0955, 0.042)
+pixel_size = 0.00125
+shaded = true
 modulate = Color(0.55, 0.12, 0.08, 1)
 outline_modulate = Color(0.16, 0.06, 0.03, 1)
+font = ExtResource("7_serif")
 font_size = 22
 outline_size = 0
 horizontal_alignment = 1
@@ -166,11 +235,13 @@ text = "VOID"
 visible = false
 
 [node name="PromptLabel" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0.086, -0.19)
-pixel_size = 0.0013
-modulate = Color(0.75, 0.66, 0.49, 1)
-outline_modulate = Color(0.75, 0.66, 0.49, 1)
-font_size = 22
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0.086, -0.185)
+pixel_size = 0.00115
+shaded = true
+modulate = Color(0.78, 0.69, 0.52, 0.85)
+outline_modulate = Color(0.78, 0.69, 0.52, 0.85)
+font = ExtResource("7_serif")
+font_size = 13
 outline_size = 0
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -178,15 +249,17 @@ width = 240.0
 text = "AWAITING TRANSCRIPT"
 
 [node name="ResultLabel" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0.086, 0.19)
-pixel_size = 0.0013
-modulate = Color(0.75, 0.66, 0.49, 1)
-outline_modulate = Color(0.75, 0.66, 0.49, 1)
-font_size = 22
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0.086, 0.185)
+pixel_size = 0.00115
+shaded = true
+modulate = Color(0.78, 0.69, 0.52, 0.85)
+outline_modulate = Color(0.78, 0.69, 0.52, 0.85)
+font = ExtResource("7_serif")
+font_size = 13
 outline_size = 0
 horizontal_alignment = 1
 vertical_alignment = 1
-width = 160.0
+width = 180.0
 text = "NO FILE"
 
 [node name="Interactable" type="Area3D" parent="."]

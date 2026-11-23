@@ -18,10 +18,28 @@ var _transition_frame: int = -1
 
 func _ready() -> void:
 	visible = false
+	_apply_locale()
 	correction.text_changed.connect(_on_text_changed)
 	correction.text_submitted.connect(_on_text_submitted)
 	submit_button.pressed.connect(submit_draft)
 	cancel_button.pressed.connect(close_editor.bind(true))
+
+func _apply_locale() -> void:
+	var heading := get_node_or_null("CenterContainer/Panel/Margin/VBox/Heading") as Label
+	if heading != null:
+		heading.text = GameLocale.pick("ПРАВКА НОЧНОЙ КОПИИ", "AMEND NIGHT COPY")
+	var instr := get_node_or_null("CenterContainer/Panel/Margin/VBox/Instruction") as Label
+	if instr != null:
+		instr.text = GameLocale.pick(
+			"Впишите исправление (латиницей A–Z, одно слово, до 24 букв).\nИсходная копия сохраняется ниже.",
+			"Write your correction below. The original copy is retained.\nOne word, letters A–Z, up to 24 letters."
+		)
+	if correction != null:
+		correction.placeholder_text = GameLocale.pick("Ваша правка", "Your correction")
+	if submit_button != null:
+		submit_button.text = GameLocale.pick("ПОДШИТЬ ПРАВКУ [Enter]", "FILE CORRECTION [Enter]")
+	if cancel_button != null:
+		cancel_button.text = GameLocale.pick("ОТЛОЖИТЬ [Esc]", "PUT DOWN [Esc]")
 
 func is_open() -> bool:
 	return _is_open
@@ -48,8 +66,12 @@ func open_editor(scenario_id: String) -> void:
 	_submitting = false
 	_opening_frame = Engine.get_process_frames()
 	_transition_frame = _opening_frame
+	_apply_locale()
 	correction.text = _draft
-	status.text = "Enter the word you intend to file. The line is still running."
+	status.text = GameLocale.pick(
+		"Введите исправленное слово (латиницей). Линия идёт.",
+		"Enter the word you intend to file. The line is still running."
+	)
 	visible = true
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	editor_opened.emit()
@@ -80,7 +102,7 @@ func _on_text_changed(text: String) -> void:
 	_draft = canonical
 	_submitting = false
 	var error := AmendmentText.validation_error(canonical)
-	status.text = "To be filed: " + canonical if error.is_empty() else error
+	status.text = (GameLocale.pick("К подшивке: ", "To be filed: ") + canonical) if error.is_empty() else error
 
 func _on_text_submitted(_text: String) -> void:
 	submit_draft()

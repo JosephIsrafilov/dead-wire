@@ -14,7 +14,7 @@ signal clearance_slip_read()
 
 const KNOCK_STREAM := preload("res://audio/sfx/foley/board_door.wav")
 const PAPER_STREAM := preload("res://audio/sfx/foley/paper_sheet.mp3")
-const FONT_VOICE := preload("res://assets/fonts/imfell/IMFeENrm28P.ttf")
+const FONT_VOICE := preload("res://assets/fonts/oldstandard/OldStandardTT-Regular.ttf")
 const BANNER_HOLD_SECONDS := 7.0
 const BANNER_FADE_SECONDS := 1.0
 
@@ -163,14 +163,40 @@ func _on_slip_interacted() -> void:
 	if _doc_viewer != null:
 		_doc_viewer.open_document(
 			"yard_clearance_slip",
-			"FORM 31 — YARD CREW CLEARANCE",
+			GameLocale.pick("ФОРМА 31 — ДОКЛАД СО ДВОРА", "FORM 31 — YARD CREW CLEARANCE"),
 			_build_slip_text(),
-			"[E / Esc / Right-Click] Put Down Slip"
+			GameLocale.pick("[E / Esc / ПКМ] Отложить записку", "[E / Esc / Right-Click] Put Down Slip")
 		)
 	clearance_slip_read.emit()
 
 func _build_slip_text() -> String:
 	var world := get_tree().root.get_node_or_null("WorldState") as WorldStateStore if is_inside_tree() else null
+	if GameLocale.is_ru():
+		var t17_ru := "  Поезд № 17 (пасс.) ...... ждёт приказа на входном участке"
+		if world != null and bool(world.get_fact(&"train_17_routed_clear", false)):
+			t17_ru = "  Поезд № 17 (пасс.) ...... ПРОПУЩЕН НА ВОСТОК за стрелки"
+		elif world != null and bool(world.get_fact(&"train_17_held_in_error", false)):
+			t17_ru = "  Поезд № 17 (пасс.) ...... ЗАДЕРЖАН НА ЗАПАДЕ у семафора"
+
+		var f71_ru := "  Товарный № 71 ........... ждёт указаний по станции"
+		if world != null and bool(world.get_fact(&"freight_held_correctly", false)):
+			f71_ru = "  Товарный № 71 ........... ЗАДЕРЖАН на боковом пути (фонарь горит)"
+		elif world != null and bool(world.get_fact(&"freight_cleared_in_error", false)):
+			f71_ru = "  Товарный № 71 ........... ушёл на закрытую рудничную ветку"
+
+		return """ДОКЛАД СО ДВОРА В ПОЛНОЧЬ:
+%s
+%s
+
+ЗАПИСКА БРИГАДЫ (Г. Миллер, тормозной):
+Дверь не открывал — видел свет твоей лампы сквозь щели.
+У старого шахтного забора у 4-й версты стоит кто-то
+БЕЗ ФОНАРЯ. Скажи обходчику, пусть прогонит с путей.
+
+Не зевай на проводе после двух, Крейн.
+Шахтная ветка MJ в дождь опять коротит на землю.
+""" % [t17_ru, f71_ru]
+
 	var t17_line := "  No. 17 Passenger ...... awaiting order at block limit"
 	if world != null and bool(world.get_fact(&"train_17_routed_clear", false)):
 		t17_line = "  No. 17 Passenger ...... CLEARED EAST past points"
@@ -239,11 +265,27 @@ func _build_banner() -> void:
 	_banner_label.add_theme_font_override("font", FONT_VOICE)
 	_banner_label.add_theme_font_size_override("font_size", 18)
 	_banner_label.add_theme_color_override("font_color", Color(0.95, 0.86, 0.66, 0.96))
-	_banner_label.text = (
+	_banner_label.text = GameLocale.pick(
+		"У ДВЕРИ — Тормозной Миллер: «Крейн? Записка под дверью. "
+		+ "Скажи тому у забора, чтоб взял фонарь.»",
 		"AT THE DOOR — Brakeman: \"Crane? Clearance slip under the door. "
 		+ "Tell whoever's by the fence to carry a lamp.\""
 	)
 	_banner_panel.add_child(_banner_label)
+
+func refresh_locale() -> void:
+	if _banner_label != null:
+		_banner_label.text = GameLocale.pick(
+			"У ДВЕРИ — Тормозной Миллер: «Крейн? Записка под дверью. "
+			+ "Скажи тому у забора, чтоб взял фонарь.»",
+			"AT THE DOOR — Brakeman: \"Crane? Clearance slip under the door. "
+			+ "Tell whoever's by the fence to carry a lamp.\""
+		)
+	if _slip_interact != null:
+		_slip_interact.prompt_text = GameLocale.pick(
+			"Подобрать записку со двора",
+			"Pick Up Yard Clearance Slip"
+		)
 
 func _build_slip_and_light() -> void:
 	if _slip_root != null:
@@ -277,7 +319,10 @@ func _build_slip_and_light() -> void:
 
 	_slip_interact = Interactable.new()
 	_slip_interact.name = "Interactable"
-	_slip_interact.prompt_text = "Pick Up Yard Clearance Slip"
+	_slip_interact.prompt_text = GameLocale.pick(
+		"Подобрать записку со двора",
+		"Pick Up Yard Clearance Slip"
+	)
 	_slip_interact.collision_layer = 0
 	_slip_interact.collision_mask = 0
 	_slip_interact.enabled = false

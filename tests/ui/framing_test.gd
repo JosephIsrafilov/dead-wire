@@ -68,6 +68,9 @@ func _run() -> void:
 	pause_menu.pause()
 	if not assert_condition(pause_menu.is_paused and pause_menu.visible, "Escape holds the line"): return
 	if not assert_condition(root.get_tree().paused, "The shift actually stops"): return
+	root.propagate_notification(Node.NOTIFICATION_APPLICATION_FOCUS_OUT)
+	root.propagate_notification(Node.NOTIFICATION_APPLICATION_FOCUS_IN)
+	if not assert_condition(paused and pause_menu.is_paused, "Returning to the game preserves a manual pause"): return
 
 	pause_menu.resume()
 	if not assert_condition(not pause_menu.is_paused and not pause_menu.visible, "Resuming closes the menu"): return
@@ -78,6 +81,13 @@ func _run() -> void:
 	var viewer := office.document_viewer
 	if not assert_condition(viewer != null, "Document viewer is wired"): return
 	viewer.open_document("test_doc", "TEST", "body")
+	root.propagate_notification(Node.NOTIFICATION_APPLICATION_FOCUS_OUT)
+	if not assert_condition(paused and not office.session_controller.scheduler.can_process(),
+		"Losing app focus stops the wire even with a document raised"): return
+	if not assert_condition(viewer.is_open() and not pause_menu.visible, "Focus loss leaves the raised document in place"): return
+	root.propagate_notification(Node.NOTIFICATION_APPLICATION_FOCUS_IN)
+	if not assert_condition(not paused and office.session_controller.scheduler.can_process(), "Regaining app focus resumes the wire"): return
+	if not assert_condition(viewer.get_current_doc_id() == "test_doc", "Regaining app focus keeps the same document"): return
 	var escape := InputEventAction.new()
 	escape.action = "ui_cancel"
 	escape.pressed = true

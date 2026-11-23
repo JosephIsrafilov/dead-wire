@@ -2,6 +2,7 @@ extends SceneTree
 
 func _init() -> void:
 	print("--- Starting Routing Board Test Suite (Phase F / Gate 13A) ---")
+	GameLocale.lock_language_for_test("en")
 
 	var board_scene: PackedScene = ResourceLoader.load("res://scenes/telegraph/routing_board.tscn")
 	if not assert_condition(board_scene != null, "routing_board.tscn loads"): return
@@ -147,6 +148,24 @@ func _init() -> void:
 	if not assert_condition(clear_stop != null and hold_stop != null and clear_stop.can_interact() and hold_stop.can_interact(), "Direct physical lever stop interactables are active while awaiting route"): return
 	clear_stop.interact()
 	if not assert_condition(board_node.has_submitted_this_session and board_node._last_route_action == "CLEAR EAST" and not clear_stop.can_interact(), "Direct physical lever throw submits route and disables stops"): return
+
+	# An unbound digit must not bypass the action map (plan 6.8).
+	board_node.reset_for_new_transmission()
+	board_node.set_awaiting_route(true)
+	board_node.open_board()
+	var saved_keys := InputMap.action_get_events("route_clear_east")
+	InputMap.action_erase_events("route_clear_east")
+	board_node._input(ev_1_open)
+	if not assert_condition(not board_node.has_submitted_this_session, "An unbound 1 cannot route a telegram"): return
+	var remapped := InputEventKey.new()
+	remapped.physical_keycode = KEY_3
+	remapped.pressed = true
+	InputMap.action_add_event("route_clear_east", remapped)
+	board_node._input(remapped)
+	if not assert_condition(board_node.has_submitted_this_session, "Routing follows the remapped action"): return
+	InputMap.action_erase_events("route_clear_east")
+	for key in saved_keys:
+		InputMap.action_add_event("route_clear_east", key)
 
 	# Clean up
 	board_node.queue_free()

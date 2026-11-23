@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3]
+[gd_scene load_steps=16 format=3]
 
 [ext_resource type="Material" path="res://materials/style_tests/desk_wood.tres" id="1_wood"]
 [ext_resource type="Material" path="res://materials/style_tests/timber_trim.tres" id="2_dark_wood"]
@@ -6,10 +6,51 @@
 [ext_resource type="Material" path="res://materials/style_tests/metal_oxidized.tres" id="5_iron"]
 [ext_resource type="PackedScene" path="res://scenes/style_tests/props/oil_lamp_lowpoly.tscn" id="6_lamp"]
 [ext_resource type="Material" path="res://materials/style_tests/paper_log.tres" id="7_paper"]
-[ext_resource type="ArrayMesh" path="res://assets/models/office_furniture_v1/desk_static.res" id="9_authored"]
+[ext_resource type="ArrayMesh" path="res://assets/models/office_furniture_v1/desk_open_preview.res" id="9_authored"]
+[ext_resource type="Script" path="res://scripts/interaction/interactable.gd" id="10_interact"]
 
 [sub_resource type="BoxShape3D" id="DeskSolid"]
 size = Vector3(1.5, 0.75, 0.75)
+
+[sub_resource type="BoxShape3D" id="WickInteract"]
+size = Vector3(0.18, 0.34, 0.18)
+
+[sub_resource type="CylinderMesh" id="InkwellBody"]
+material = ExtResource("5_iron")
+top_radius = 0.026
+bottom_radius = 0.032
+height = 0.0205
+radial_segments = 10
+rings = 0
+
+[sub_resource type="TorusMesh" id="InkwellLip"]
+material = ExtResource("4_brass")
+inner_radius = 0.020
+outer_radius = 0.028
+rings = 10
+ring_segments = 8
+
+[sub_resource type="StandardMaterial3D" id="Ink"]
+albedo_color = Color(0.028, 0.022, 0.022, 1)
+roughness = 0.38
+
+[sub_resource type="CylinderMesh" id="InkSurface"]
+material = SubResource("Ink")
+top_radius = 0.026
+bottom_radius = 0.026
+height = 0.001
+radial_segments = 10
+rings = 0
+
+[sub_resource type="CylinderMesh" id="InkwellNeck"]
+material = ExtResource("5_iron")
+top_radius = 0.025
+bottom_radius = 0.026
+height = 0.030
+radial_segments = 10
+rings = 0
+cap_top = false
+cap_bottom = false
 
 [node name="DeskSetup" type="Node3D"]
 
@@ -119,21 +160,24 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.52, 0.755, -0.18)
 size = Vector3(0.18, 0.015, 0.06)
 material = ExtResource("2_dark_wood")
 
-[node name="Inkwell" type="CSGCylinder3D" parent="."]
-visible = false
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.52, 0.77, -0.08)
-radius = 0.025
-height = 0.04
-sides = 8
-material = ExtResource("5_iron")
+[node name="Inkwell" type="Node3D" parent="."]
+position = Vector3(-0.32, 0.75, -0.20)
 
-[node name="InkwellCap" type="CSGCylinder3D" parent="."]
-visible = false
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.52, 0.795, -0.08)
-radius = 0.016
-height = 0.012
-sides = 8
-material = ExtResource("4_brass")
+[node name="Body" type="MeshInstance3D" parent="Inkwell"]
+position = Vector3(0, 0.01025, 0)
+mesh = SubResource("InkwellBody")
+
+[node name="Neck" type="MeshInstance3D" parent="Inkwell"]
+position = Vector3(0, 0.0355, 0)
+mesh = SubResource("InkwellNeck")
+
+[node name="Lip" type="MeshInstance3D" parent="Inkwell"]
+position = Vector3(0, 0.051, 0)
+mesh = SubResource("InkwellLip")
+
+[node name="Ink" type="MeshInstance3D" parent="Inkwell"]
+position = Vector3(0, 0.046, 0)
+mesh = SubResource("InkSurface")
 
 [node name="WireLeadBlock" type="CSGBox3D" parent="."]
 visible = false
@@ -191,6 +235,17 @@ material = ExtResource("4_brass")
 [node name="OilLamp" parent="." instance=ExtResource("6_lamp")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.15, 0.75, 0.18)
 
+; This scene owns the wick target so it survives the binary scene export.
+[node name="WickInteractable" type="Area3D" parent="OilLamp"]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("10_interact")
+prompt_text = "Turn Up the Wick"
+enabled = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="OilLamp/WickInteractable"]
+position = Vector3(0, 0.16, 0)
+shape = SubResource("WickInteract")
 
 [node name="DeskSolid" type="StaticBody3D" parent="."]
 collision_layer = 1

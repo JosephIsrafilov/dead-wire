@@ -25,7 +25,10 @@ extends Node
 @export var cloud_hold_max: float = 6.5
 ## Dawn: the moon's cold light turns to a grey morning and strengthens over
 ## this long (plan 9.5: the morning is grey, the warmth stays at the lamp).
-@export var dawn_seconds: float = 22.0
+@export var dawn_seconds: float = 28.0
+@export var predawn_start_hours: float = 28.5
+@export var predawn_end_hours: float = 30.0
+@export var predawn_max_factor: float = 0.38
 @export var dawn_color: Color = Color(0.74, 0.76, 0.8)
 @export var dawn_energy_scale: float = 1.9
 ## Plan 9.5: the yard is unlit silhouette standing in the scene fog, so the
@@ -39,6 +42,8 @@ extends Node
 ## The sky seen through the pane. A cloud MoonWeather sends across the moon is
 ## drawn over the disc; the figure is not (it stands in the yard, not the sky).
 @export var sky_material: ShaderMaterial = null
+@export var shift_director: ShiftDirector = null
+@export var landing_light: OmniLight3D = null
 
 var dim: float = 0.0
 var dawn: float = 0.0
@@ -46,6 +51,7 @@ var dawn: float = 0.0
 var cloud_cover: float = 0.0
 
 var _rest_energy: float = 0.0
+var _landing_rest_energy: float = 0.0
 var _night_color: Color = Color.WHITE
 var _rng := RandomNumberGenerator.new()
 var _until_cloud: float = 0.0
@@ -63,6 +69,10 @@ func _ready() -> void:
 		moon_light = office.get_node_or_null("WindowBounceLight") as SpotLight3D
 	if window_event == null and office != null:
 		window_event = office.get_node_or_null("WindowObservationEvent") as AttentionObservationTarget
+	if shift_director == null and office != null:
+		shift_director = office.get_node_or_null("ShiftDirector") as ShiftDirector
+	if landing_light == null and office != null:
+		landing_light = office.get_node_or_null("LandingDawnLight") as OmniLight3D
 	if sky_material == null and office != null:
 		var sky := office.get_node_or_null("ExteriorSky") as GeometryInstance3D
 		if sky != null:
@@ -82,6 +92,8 @@ func _ready() -> void:
 	if moon_light != null:
 		_rest_energy = moon_light.light_energy
 		_night_color = moon_light.light_color
+	if landing_light != null:
+		_landing_rest_energy = landing_light.light_energy
 	_until_cloud = _rng.randf_range(cloud_interval_min, cloud_interval_max)
 
 func _process(delta: float) -> void:
@@ -152,6 +164,12 @@ func advance(delta: float) -> void:
 	cloud_cover = move_toward(cloud_cover, cover_target, delta / maxf(dim_fade_seconds, 0.01))
 	if _dawn_running:
 		dawn = minf(dawn + delta / maxf(dawn_seconds, 0.01), 1.0)
+	elif shift_director != null:
+		var hours := shift_director.get_station_hours()
+		if hours > predawn_start_hours:
+			var span := maxf(predawn_end_hours - predawn_start_hours, 0.01)
+			var predawn := clampf((hours - predawn_start_hours) / span, 0.0, 1.0) * predawn_max_factor
+			dawn = maxf(dawn, move_toward(dawn, predawn, delta / maxf(dawn_seconds, 0.01)))
 	if sky_material != null:
 		sky_material.set_shader_parameter("cloud_cover", cloud_cover)
 		sky_material.set_shader_parameter("dawn", dawn)
@@ -159,6 +177,8 @@ func advance(delta: float) -> void:
 		var d := smoothstep(0.0, 1.0, dawn)
 		moon_light.light_energy = _rest_energy * lerpf(1.0, dawn_energy_scale, d) * (1.0 - dim)
 		moon_light.light_color = _night_color.lerp(dawn_color, d)
+	if landing_light != null and _landing_rest_energy > 0.0:
+		landing_light.light_energy = _landing_rest_energy * lerpf(0.65, 1.45, smoothstep(0.0, 1.0, dawn))
 	# Only the dawn touches the air: at night the environment stays as authored.
 	if environment != null and dawn > 0.0:
 		var a := smoothstep(0.0, 1.0, dawn)

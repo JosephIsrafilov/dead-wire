@@ -1,0 +1,93 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://scripts/office/candle_life.gd" id="1_life"]
+[ext_resource type="Material" path="res://materials/style_tests/metal_brass_aged.tres" id="2_brass"]
+[ext_resource type="Material" path="res://materials/style_tests/paper_log.tres" id="3_wax"]
+[ext_resource type="Material" path="res://materials/style_tests/metal_oxidized.tres" id="4_wick"]
+[ext_resource type="Shader" path="res://materials/shaders/lamp_flame.gdshader" id="5_flame_shader"]
+
+[sub_resource type="StandardMaterial3D" id="WaxDripMat"]
+shading_mode = 2
+albedo_color = Color(0.84, 0.77, 0.62, 1)
+roughness = 0.65
+
+[sub_resource type="ShaderMaterial" id="CandleFlameMat"]
+render_priority = 0
+shader = ExtResource("5_flame_shader")
+shader_parameter/half_height = 0.022
+shader_parameter/sway = 0.004
+shader_parameter/sway_hz = 1.15
+shader_parameter/root_color = Color(0.18, 0.22, 0.55, 1)
+shader_parameter/body_color = Color(1.0, 0.84, 0.46, 1)
+shader_parameter/tip_color = Color(1.0, 0.48, 0.14, 1)
+shader_parameter/brightness = 1.85
+
+[sub_resource type="SphereMesh" id="FlameSphere"]
+radius = 0.011
+height = 0.044
+radial_segments = 10
+rings = 6
+
+[node name="CornerCandle" type="Node3D"]
+script = ExtResource("1_life")
+
+[node name="Saucer" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.009, 0)
+radius = 0.068
+height = 0.018
+sides = 12
+material = ExtResource("2_brass")
+
+[node name="SocketCup" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.028, 0)
+radius = 0.032
+height = 0.024
+sides = 10
+material = ExtResource("2_brass")
+
+[node name="HandleLoop" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.072, 0.026, 0)
+size = Vector3(0.024, 0.022, 0.012)
+material = ExtResource("2_brass")
+
+[node name="WaxPillar" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.11, 0)
+radius = 0.024
+height = 0.145
+sides = 10
+material = ExtResource("3_wax")
+
+[node name="WaxDripA" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.021, 0.115, 0.008)
+radius = 0.0055
+height = 0.055
+sides = 6
+material = SubResource("WaxDripMat")
+
+[node name="WaxDripB" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.016, 0.135, -0.015)
+radius = 0.0045
+height = 0.038
+sides = 6
+material = SubResource("WaxDripMat")
+
+[node name="Wick" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.19, 0)
+radius = 0.0025
+height = 0.016
+sides = 6
+material = ExtResource("4_wick")
+
+[node name="FlameMesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.198, 0)
+cast_shadow = 0
+mesh = SubResource("FlameSphere")
+surface_material_override/0 = SubResource("CandleFlameMat")
+
+[node name="CandleLight" type="OmniLight3D" parent="."]
+position = Vector3(0, 0.23, 0)
+light_color = Color(1, 0.72, 0.36, 1)
+light_energy = 1.75
+shadow_enabled = true
+omni_range = 5.4
+omni_attenuation = 1.3

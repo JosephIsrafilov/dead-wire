@@ -1,7 +1,10 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Material" path="res://materials/style_tests/timber_trim.tres" id="1_dark_wood"]
 [ext_resource type="Material" path="res://materials/style_tests/desk_wood.tres" id="2_light_wood"]
+
+[sub_resource type="BoxShape3D" id="SideTableSolidShape"]
+size = Vector3(0.6, 0.68, 0.45)
 
 [node name="PSXSideTable" type="Node3D"]
 
@@ -34,3 +37,11 @@ material = ExtResource("1_dark_wood")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.24, 0.32, -0.17)
 size = Vector3(0.05, 0.64, 0.05)
 material = ExtResource("1_dark_wood")
+
+[node name="SideTableSolid" type="StaticBody3D" parent="."]
+collision_layer = 1
+collision_mask = 1
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SideTableSolid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.34, 0)
+shape = SubResource("SideTableSolidShape")

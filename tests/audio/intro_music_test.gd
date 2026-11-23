@@ -7,7 +7,7 @@ func _run() -> void:
 	await process_frame
 	var music := intro.get_node("IntroMusic") as AudioStreamPlayer
 	check(music != null and music.stream != null, "The opening drone is loaded")
-	check(music.playing and music.bus == &"Ambience", "Intro music respects ambience and master settings")
+	check(music.playing and music.bus == &"Music", "Intro music uses the independently controlled Music bus")
 	var wav := music.stream as AudioStreamWAV
 	check(wav != null and wav.loop_mode == AudioStreamWAV.LOOP_DISABLED, "Opening cue never loops")
 	# Plan 7.12: the opening is the project's own drone, so no third-party cue

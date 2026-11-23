@@ -28,6 +28,7 @@ func _office() -> M1OfficeController:
 
 func _run() -> void:
 	print("--- Ledger: end of watch ---")
+	GameLocale.lock_language_for_test("en")
 	var office := _office()
 	await process_frame
 	await process_frame
@@ -35,7 +36,7 @@ func _run() -> void:
 	if not check(ledger.has_method("close_watch") and ledger.has_signal("stamped"), "The ledger can close a watch"): return
 	ledger.call("reset_watch_count")
 	var pen := ledger.get_node("SignInteractable") as Interactable
-	if not check(pen.get_prompt() == "Sign On", "Before dawn the pen signs on, it does not close"): return
+	if not check(pen.get_prompt() == "Sign On (Optional)", "Before dawn the pen signs on, it does not close"): return
 	pen.interact()
 	ledger.advance_signature(10.0)
 	if not check(pen.collision_layer == 0, "Signed on, the pen is put down until the morning"): return

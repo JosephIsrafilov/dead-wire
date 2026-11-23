@@ -39,6 +39,30 @@ func _run() -> void:
 	if not assert_condition(after_one_frame > 0.0, "Movement decays over frames rather than snapping to zero"): return
 	if not assert_condition(after_one_frame < player.move_speed, "Movement actually decays"): return
 
+	# A short tap should carry the same weight with one or two direction keys.
+	player.global_position = Vector3.ZERO
+	player.rotation.y = 0.0
+	player.velocity = Vector3.ZERO
+	Input.action_press("move_forward")
+	player._physics_process(1.0 / 60.0)
+	var straight_start := Vector2(player.velocity.x, player.velocity.z).length()
+	player.global_position = Vector3.ZERO
+	player.velocity = Vector3.ZERO
+	Input.action_press("move_right")
+	player._physics_process(1.0 / 60.0)
+	var diagonal_start := Vector2(player.velocity.x, player.velocity.z).length()
+	Input.action_release("move_forward")
+	Input.action_release("move_right")
+	if not assert_condition(straight_start > 0.0 and is_equal_approx(straight_start, diagonal_start), "Diagonal and straight taps gain the same speed"): return
+
+	player.velocity = Vector3(player.move_speed, 0.0, 0.0)
+	player._physics_process(1.0 / 60.0)
+	var straight_stop := Vector2(player.velocity.x, player.velocity.z).length()
+	player.velocity = Vector3(1.0, 0.0, -1.0).normalized() * player.move_speed
+	player._physics_process(1.0 / 60.0)
+	var diagonal_stop := Vector2(player.velocity.x, player.velocity.z).length()
+	if not assert_condition(is_equal_approx(straight_stop, diagonal_stop), "Stopping has the same horizontal braking in any direction"): return
+
 	# 3. Head motion stays inside comfortable bounds. Over-large bob is the most
 	#    common comfort failure in first-person horror.
 	player.velocity = Vector3(player.move_speed, 0.0, 0.0)

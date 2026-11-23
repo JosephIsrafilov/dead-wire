@@ -11,6 +11,7 @@ func _init() -> void:
 
 func _run() -> void:
 	print("--- Starting Tape Register Test Suite ---")
+	GameLocale.lock_language_for_test("en")
 	# 1. Instantiates and starts empty.
 	var tape: TapeRegisterController = load("res://scripts/telegraph/hardware/tape_register_controller.gd").new()
 	root.add_child(tape)
@@ -167,8 +168,8 @@ func _run() -> void:
 	if not _a(office.document_viewer.get_current_doc_id() == "tape_register",
 		"Viewer doc_id is tape_register"): return
 	if not _a(office.document_viewer.title_label != null
-		and office.document_viewer.title_label.text == "STATION REGISTER",
-		"Viewer title is STATION REGISTER"): return
+		and office.document_viewer.title_label.text == TapeRegisterController.TAPE_TITLE,
+		"The viewer names the wire tape"): return
 	office.document_viewer.close_document()
 	if not _a(not office.document_viewer.is_open(),
 		"Viewer closes after the tape read"): return

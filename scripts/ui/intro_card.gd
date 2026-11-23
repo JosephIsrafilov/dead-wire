@@ -38,12 +38,35 @@ static var spare_next_card: bool = false
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_find_nodes()
+	_apply_locale()
 	_resolve_player()
 	if spare_next_card:
 		spare_next_card = false
 		skip_immediately()
 		return
 	begin()
+
+func _apply_locale() -> void:
+	var place := get_node_or_null("CenterContainer/VBoxContainer/PlaceLabel") as Label
+	if place != null:
+		place.text = GameLocale.pick("БЛЭК-КРИК, КОЛОРАДО\nАПРЕЛЬ 1890", "BLACK CREEK, COLORADO\nAPRIL 1890")
+	var order := get_node_or_null("CenterContainer/VBoxContainer/OrderLabel") as RichTextLabel
+	if order != null:
+		order.text = GameLocale.pick(
+			"Ж.Д. БЛЭК-КРИК — ТЕЛЕГРАФНЫЙ ОТДЕЛ — ПРИКАЗ № 41\n\n"
+			+ "Э. КРЕЙНУ ПРИНЯТЬ НОЧНУЮ СМЕНУ НА СТ. БЛЭК-КРИК (ПОЗЫВНОЙ: BC).\n"
+			+ "ВЕТКА К ШАХТЕ (MJ) ЗАКРЫТА ПОСЛЕ НАВОДНЕНИЯ В ОКТЯБРЕ 1885 Г.\n"
+			+ "ПРОВЕРЬТЕ РАСПИСАНИЕ И ЖУРНАЛ ПЕРЕД ОТКРЫТИЕМ ЛИНИИ.\n"
+			+ "СЛУШАЙТЕ ПРОВОД. ЗАПИСЫВАЙТЕ ТО, ЧТО ПРИХОДИТ.",
+			"BLACK CREEK & WESTERN RY. — TELEGRAPH DEPT. — ORDER 41\n\n"
+			+ "E. CRANE TO RELIEVE NIGHT OPERATOR AT BLACK CREEK (CALL: BC).\n"
+			+ "MINE JUNCTION (MJ) HAS BEEN SEALED SINCE THE FLOOD OF OCT. 1885.\n"
+			+ "CHECK THE TIMETABLE AND DISPATCH LEDGER BEFORE OPENING THE LINE.\n"
+			+ "KEEP THE WIRE. COPY WHAT COMES."
+		)
+	var hint := get_node_or_null("CenterContainer/VBoxContainer/HintLabel") as Label
+	if hint != null:
+		hint.text = GameLocale.pick("нажмите любую клавишу или кликните", "any key or click to continue")
 
 func _find_nodes() -> void:
 	if fade_rect == null:
@@ -155,6 +178,6 @@ func _release() -> void:
 	var office := get_parent()
 	if not seated_mode and office != null:
 		var station := office.get_node_or_null("SeatedStationController")
-		seated_mode = station != null and bool(station.get("enabled"))
+		seated_mode = station != null and station.has_method("is_activated") and bool(station.call("is_activated"))
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE if seated_mode else Input.MOUSE_MODE_CAPTURED
 	intro_finished.emit()

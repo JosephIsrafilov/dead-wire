@@ -101,13 +101,20 @@ func _ready() -> void:
 	_spool_drive = spring_tension
 	_wind_interactable = get_node_or_null("WindInteractable") as Interactable
 	if _wind_interactable != null:
-		_wind_interactable.prompt_text = PROMPT_WIND
+		_wind_interactable.prompt_text = GameLocale.pick("Завести регистр", PROMPT_WIND)
 		_wind_interactable.enabled = false
 		if not _wind_interactable.interacted.is_connected(wind):
 			_wind_interactable.interacted.connect(wind)
 	var act := get_interactable()
 	if act != null:
-		act.prompt_text = prompt_message
+		act.prompt_text = GameLocale.pick("Осмотреть ленту регистра", prompt_message)
+
+func refresh_locale() -> void:
+	if _wind_interactable != null:
+		_wind_interactable.prompt_text = GameLocale.pick("Завести регистр", PROMPT_WIND)
+	var act := get_interactable()
+	if act != null:
+		act.prompt_text = GameLocale.pick("Осмотреть ленту регистра", prompt_message)
 
 func get_interactable() -> Interactable:
 	if interactable == null:
@@ -417,18 +424,23 @@ func get_tape_display_text() -> String:
 ## readable. The objective _record and get_tape_display_text() are untouched.
 func get_tape_text_for_viewer() -> String:
 	var takes: PackedStringArray = []
+	var header_fmt := GameLocale.pick("— ПОЛОСА %d · %s —", TAKE_HEADER_FORMAT)
+	var st_int := GameLocale.pick("ОБРЫВ", STATUS_INTERRUPTED)
+	var st_end := GameLocale.pick("КОНЕЦ", STATUS_COMPLETE)
+	var st_act := GameLocale.pick("ИДЁТ", STATUS_ACTIVE)
+	var slack_txt := GameLocale.pick("(лента застряла под валиками — заведите регистр)", SLACK_NOTE)
 	for segment in _segments:
-		var status := STATUS_INTERRUPTED if segment.interrupted else (STATUS_COMPLETE if segment.complete else STATUS_ACTIVE)
+		var status := st_int if segment.interrupted else (st_end if segment.complete else st_act)
 		var evs: Array[TapeInkEvent] = segment.events
 		var visible_count := _visible_event_count(segment)
 		if visible_count < evs.size():
 			# Real backlog: these recorded marks are still under the rollers.
 			var slice_events: Array[TapeInkEvent] = evs.slice(0, visible_count)
-			var note := "\n" + SLACK_NOTE if _wind_elapsed < 0.0 else ""
-			takes.append("%s\n%s%s" % [TAKE_HEADER_FORMAT % [segment.number, status],
+			var note := "\n" + slack_txt if _wind_elapsed < 0.0 else ""
+			takes.append("%s\n%s%s" % [header_fmt % [segment.number, status],
 				_render_ink(slice_events), note])
 		else:
-			takes.append("%s\n%s" % [TAKE_HEADER_FORMAT % [segment.number, status],
+			takes.append("%s\n%s" % [header_fmt % [segment.number, status],
 				_render_ink(evs)])
 	return "\n".join(takes)
 

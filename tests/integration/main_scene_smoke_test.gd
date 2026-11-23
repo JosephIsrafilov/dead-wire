@@ -23,7 +23,7 @@ func _init() -> void:
 	if not assert_condition(menu != null, "Main menu instantiates"): return
 	root.add_child(menu)
 	await process_frame
-	if not assert_condition(menu.begin_button != null and menu.begin_button.text == "Begin the Watch", "Main menu exposes the watch entry point"): return
+	if not assert_condition(menu.begin_button != null and menu.begin_button.text == GameLocale.pick("Начать смену", "Begin the Watch"), "Main menu exposes the watch entry point"): return
 
 	if not assert_condition(menu.begin_watch(), "Begin the Watch changes scene successfully"): return
 	await process_frame

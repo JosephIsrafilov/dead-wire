@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://scripts/player/player_controller.gd" id="1_controller"]
 [ext_resource type="Script" path="res://scripts/interaction/interaction_controller.gd" id="2_interaction"]
-[ext_resource type="AudioStream" path="res://audio/sfx/foley/footstep_wood_beta.wav" id="3_footstep"]
+[ext_resource type="AudioStream" path="res://audio/sfx/foley/footstep_boards_1.wav" id="3_footstep"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_1"]
 radius = 0.35

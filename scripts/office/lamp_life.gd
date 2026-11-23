@@ -77,6 +77,13 @@ var _bounce_rest: float = 0.0
 var _flame_rest_scale: Vector3 = Vector3.ONE
 var _time: float = 0.0
 
+var stove_heat: float = 1.0
+var _stove_stoke_timer: float = 0.0
+var _ember_material: StandardMaterial3D = null
+var _ember_rest_emission: float = 0.65
+var _shift_director: ShiftDirector = null
+var stove_cooling_enabled: bool = true
+
 func _ready() -> void:
 	_resolve()
 	if flame_mesh == null and not flame_mesh_path.is_empty():
@@ -92,6 +99,16 @@ func _ready() -> void:
 	if start_turned_down:
 		set_wick_immediate(turned_down_wick)
 	_bind_wick.call_deferred()
+
+func stoke_stove() -> void:
+	_stove_stoke_timer = 180.0
+	stove_heat = maxf(stove_heat, 1.05)
+
+func get_stove_heat() -> float:
+	return stove_heat
+
+func set_stove_heat_for_test(value: float) -> void:
+	stove_heat = clampf(value, 0.25, 1.4)
 
 func _bind_wick() -> void:
 	var office := get_parent()
@@ -125,7 +142,7 @@ func _on_wick_interacted() -> void:
 func offer_turn_down() -> void:
 	_dawn = true
 	if _wick_interactable != null:
-		_wick_interactable.prompt_text = PROMPT_TURN_DOWN
+		_wick_interactable.prompt_text = GameLocale.pick("Прикрутить лампу", PROMPT_TURN_DOWN)
 		_wick_interactable.enabled = wick > dawn_wick + 0.01
 
 func turn_down_wick() -> void:
@@ -170,14 +187,22 @@ func turn_up_wick() -> void:
 	_sync_wick_prompt()
 	wick_turned_up.emit()
 
+func refresh_locale() -> void:
+	if _wick_interactable == null:
+		return
+	if _dawn:
+		_wick_interactable.prompt_text = GameLocale.pick("Прикрутить лампу", PROMPT_TURN_DOWN)
+	else:
+		_sync_wick_prompt()
+
 func _sync_wick_prompt() -> void:
 	if _wick_interactable == null or _dawn:
 		return
 	_wick_interactable.enabled = true
 	if _wick_target >= 0.72:
-		_wick_interactable.prompt_text = PROMPT_DIM
+		_wick_interactable.prompt_text = GameLocale.pick("Приглушить лампу", PROMPT_DIM)
 	else:
-		_wick_interactable.prompt_text = PROMPT_WICK
+		_wick_interactable.prompt_text = GameLocale.pick("Прибавить фитиль", PROMPT_WICK)
 
 ## The hand turns the wheel by as much as it moves the wick, at the wick's pace.
 func _turn_wheel(wick_amount: float) -> void:
@@ -205,7 +230,7 @@ func gutter(to: float, seconds: float) -> void:
 	_wick_target = to
 	_wick_rate = (wick - to) / maxf(seconds, 0.01)
 	if _wick_interactable != null:
-		_wick_interactable.prompt_text = PROMPT_TRIM
+		_wick_interactable.prompt_text = GameLocale.pick("Подрезать фитиль", PROMPT_TRIM)
 		_wick_interactable.enabled = true
 
 func set_wick_immediate(value: float) -> void:
@@ -227,6 +252,21 @@ func _resolve() -> void:
 		bounce_light = office.get_node_or_null("PaperBounceLight") as OmniLight3D
 	if wick_wheel == null:
 		wick_wheel = office.get_node_or_null("DeskSetup/OilLamp/WickWheelPivot") as Node3D
+	if _shift_director == null:
+		_shift_director = office.get_node_or_null("ShiftDirector") as ShiftDirector
+	if _ember_material == null:
+		var ember := office.get_node_or_null("CornerStove/EmberSeam") as GeometryInstance3D
+		if ember != null:
+			var base_mat := ember.get("material") as StandardMaterial3D
+			if base_mat == null:
+				base_mat = ember.material_override as StandardMaterial3D
+			if base_mat != null:
+				_ember_material = base_mat.duplicate() as StandardMaterial3D
+				_ember_rest_emission = _ember_material.emission_energy_multiplier
+				if ember is CSGPrimitive3D:
+					(ember as CSGPrimitive3D).material = _ember_material
+				else:
+					ember.material_override = _ember_material
 
 func _process(delta: float) -> void:
 	advance(delta)
@@ -261,9 +301,25 @@ func advance(delta: float) -> void:
 			if _draft > 0.0 or had_draft:
 				_set_flame_sway(flame_sway_rest * (1.0 + 4.0 * _draft))
 
+	if _stove_stoke_timer > 0.0:
+		_stove_stoke_timer = maxf(_stove_stoke_timer - delta, 0.0)
+	var natural_target := 1.0
+	if stove_cooling_enabled and _shift_director != null:
+		var hours := _shift_director.get_station_hours()
+		if hours > 24.0:
+			var cool_t := clampf((hours - 24.0) / 3.0, 0.0, 1.0)
+			natural_target = lerpf(1.0, 0.36, cool_t)
+	var heat_target := natural_target
+	if _stove_stoke_timer > 0.0:
+		heat_target = lerpf(natural_target, 1.24, clampf(_stove_stoke_timer / 180.0, 0.0, 1.0))
+	var heat_rate := 0.45 if heat_target > stove_heat else 0.06
+	stove_heat = move_toward(stove_heat, heat_target, delta * heat_rate)
+
 	if stove_light != null and _stove_rest > 0.0:
 		var breath := sin(TAU * stove_hz * _time) * 0.7 + sin(TAU * stove_hz * 0.41 * _time + 2.3) * 0.3
-		stove_light.light_energy = _stove_rest * (1.0 + breath * stove_pulse_depth)
+		stove_light.light_energy = _stove_rest * stove_heat * (1.0 + breath * stove_pulse_depth)
+		if _ember_material != null:
+			_ember_material.emission_energy_multiplier = _ember_rest_emission * stove_heat * (1.0 + breath * 0.2)
 
 func _advance_sink(delta: float) -> void:
 	_full_seconds += delta
@@ -272,7 +328,7 @@ func _advance_sink(delta: float) -> void:
 	wick = maxf(wick - sink_per_second * delta, sink_floor)
 	_wick_target = wick
 	if wick < trim_threshold and _wick_interactable != null and not _wick_interactable.enabled:
-		_wick_interactable.prompt_text = PROMPT_TRIM
+		_wick_interactable.prompt_text = GameLocale.pick("Подрезать фитиль", PROMPT_TRIM)
 		_wick_interactable.enabled = true
 
 func get_lamp_rest_energy() -> float:

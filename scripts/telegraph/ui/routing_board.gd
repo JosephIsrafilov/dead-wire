@@ -68,22 +68,70 @@ func _ready() -> void:
 
 	_add_direct_stop_targets()
 	_bind_rules()
+	refresh_locale()
+
+func refresh_locale() -> void:
+	prompt_message = GameLocale.pick("Поездной сигнал", "Train-Order Signal")
+	var hdr := get_node_or_null("HeaderLabel3D") as Label3D
+	if hdr != null:
+		hdr.text = GameLocale.pick("ПОЕЗДНОЙ СИГНАЛ", "TRAIN-ORDER SIGNAL")
+	var sub := get_node_or_null("HeaderLabel3DSub") as Label3D
+	if sub != null:
+		sub.text = GameLocale.pick("ВОСТОЧНЫЙ ПУТЬ · БЛЭК-КРИК", "EASTWARD — BLACK CREEK")
+	var clear_lbl := get_node_or_null("ClearEastLabel3D") as Label3D
+	if clear_lbl != null:
+		clear_lbl.text = GameLocale.pick("ПРОПУСТИТЬ", "CLEAR EAST")
+	var hold_lbl := get_node_or_null("HoldLabel3D") as Label3D
+	if hold_lbl != null:
+		hold_lbl.text = GameLocale.pick("ДЕРЖАТЬ", "HOLD")
+	var clear_act := get_node_or_null("ClearStopInteractable") as Interactable
+	if clear_act != null:
+		clear_act.prompt_text = GameLocale.pick("Рычаг: ПРОПУСТИТЬ (CLEAR EAST)", "Throw Lever: CLEAR EAST")
+	var hold_act := get_node_or_null("HoldStopInteractable") as Interactable
+	if hold_act != null:
+		hold_act.prompt_text = GameLocale.pick("Рычаг: ДЕРЖАТЬ (HOLD)", "Throw Lever: HOLD")
+	_bind_rules()
 	_update_presentation()
 
 ## The rules frame reads through the office's document viewer, like any paper.
 func _bind_rules() -> void:
+	var title := GameLocale.pick("ПРАВИЛА ПОЕЗДНОГО СИГНАЛА", rules_title)
+	var body := GameLocale.pick(
+		"Ж.Д. БЛЭК-КРИК — СЛУЖБА ДВИЖЕНИЯ\n\n"
+		+ "221. Семафор стоит на СТОП. Открывать путь поезду только после приёма и проверки телеграммы.\n\n"
+		+ "222. Неясный приказ не исполняется. Задержать поезд и запросить подтверждение.\n\n"
+		+ "223. Рычагом работает только дежурный телеграфист. Между пазами рычаг не оставлять.\n\n"
+		+ "224. Каждая копия подшивается за столом сразу после приказа. Правка вписывается отдельно.\n\n"
+		+ "225. Самовольное открытие пути или задержка поезда без причины — увольнение.",
+		rules_text
+	)
 	var text := get_node_or_null("SignalRules/Text") as Label3D
 	if text != null:
-		text.text = rules_title + "\n\n" + rules_text
+		text.text = title + "\n\n" + body
 	var rules := get_node_or_null("SignalRules/Interactable") as Interactable
-	if rules != null and not rules.interacted.is_connected(read_rules):
-		rules.interacted.connect(read_rules)
+	if rules != null:
+		rules.prompt_text = GameLocale.pick("Правила сигнала", "Read Signal Rules")
+		if not rules.interacted.is_connected(read_rules):
+			rules.interacted.connect(read_rules)
 
 func read_rules() -> bool:
 	var office := get_parent() as M1OfficeController
 	if office == null or office.document_viewer == null or rules_text.is_empty():
 		return false
-	office.document_viewer.open_document("signal_rules", rules_title, rules_text, "[E / Esc] Put Down")
+	var title := GameLocale.pick("ПРАВИЛА ПОЕЗДНОГО СИГНАЛА", rules_title)
+	var body := GameLocale.pick(
+		"Ж.Д. БЛЭК-КРИК — СЛУЖБА ДВИЖЕНИЯ\n\n"
+		+ "221. Семафор стоит на СТОП. Открывать путь поезду только после приёма и проверки телеграммы.\n\n"
+		+ "222. Неясный приказ не исполняется. Задержать поезд и запросить подтверждение.\n\n"
+		+ "223. Рычагом работает только дежурный телеграфист. Между пазами рычаг не оставлять.\n\n"
+		+ "224. Каждая копия подшивается за столом сразу после приказа. Правка вписывается отдельно.\n\n"
+		+ "225. Самовольное открытие пути или задержка поезда без причины — увольнение.",
+		rules_text
+	)
+	office.document_viewer.open_document(
+		"signal_rules", title, body,
+		GameLocale.pick("[E / Esc / ПКМ] Отложить", "[E / Esc] Put Down")
+	)
 	return true
 
 func _add_direct_stop_targets() -> void:
@@ -154,7 +202,10 @@ func _update_presentation() -> void:
 	interactable.is_actionable = false
 	if not _last_route_action.is_empty() and not (is_awaiting_route and not has_submitted_this_session):
 		# The night's last order stays on the repeater after the slot moves on.
-		interactable.prompt_text = "Signal at %s" % _last_route_action
+		var act_label := _last_route_action
+		if GameLocale.is_ru():
+			act_label = "ПРОПУСТИТЬ" if _last_route_action == "CLEAR EAST" else "ДЕРЖАТЬ"
+		interactable.prompt_text = GameLocale.pick("Сигнал: %s", "Signal at %s") % act_label
 	else:
 		interactable.prompt_text = prompt_message
 

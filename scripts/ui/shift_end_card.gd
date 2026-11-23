@@ -12,6 +12,7 @@ signal fade_completed()
 
 const TITLE_SCENE: String = "res://scenes/ui/main_menu.tscn"
 const OFFICE_SCENE: String = "res://scenes/office/m1_office.tscn"
+const DAWN_TOWN_SCENE: String = "res://scenes/town/black_creek_exterior.tscn"
 
 @export var fade_duration: float = 1.6
 @export var card_delay: float = 0.5
@@ -21,6 +22,7 @@ var title_label: Label = null
 var body_label: RichTextLabel = null
 var footer_label: Label = null
 var card_root: Control = null
+var dawn_button: Button = null
 var again_button: Button = null
 var title_button: Button = null
 
@@ -32,11 +34,25 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	visible = false
 	_find_nodes()
+	_apply_locale()
 	_connect_buttons()
 	if fade_rect != null:
 		fade_rect.color.a = 0.0
 	if card_root != null:
 		card_root.modulate.a = 0.0
+
+func _apply_locale() -> void:
+	if dawn_button != null:
+		dawn_button.text = GameLocale.pick(
+			"Выйти на рассвет (Блэк-Крик)",
+			"Walk Home at Dawn (Black Creek)"
+		)
+	if again_button != null:
+		again_button.text = GameLocale.pick("Ещё одна смена", "Stand Another Watch")
+	if title_button != null:
+		title_button.text = GameLocale.pick("В главное меню", "Return to Title")
+	if footer_label != null:
+		footer_label.text = GameLocale.pick("6:00 — Станция Блэк-Крик", "6:00 A.M. — Black Creek Station")
 
 func _find_nodes() -> void:
 	if fade_rect == null:
@@ -49,16 +65,35 @@ func _find_nodes() -> void:
 		body_label = get_node_or_null("CenterContainer/VBoxContainer/BodyLabel") as RichTextLabel
 	if footer_label == null:
 		footer_label = get_node_or_null("CenterContainer/VBoxContainer/FooterLabel") as Label
+	if dawn_button == null:
+		dawn_button = get_node_or_null("CenterContainer/VBoxContainer/ButtonRow/DawnButton") as Button
 	if again_button == null:
 		again_button = get_node_or_null("CenterContainer/VBoxContainer/ButtonRow/AgainButton") as Button
 	if title_button == null:
 		title_button = get_node_or_null("CenterContainer/VBoxContainer/ButtonRow/TitleButton") as Button
 
 func _connect_buttons() -> void:
+	if dawn_button != null and not dawn_button.pressed.is_connected(continue_to_dawn):
+		dawn_button.pressed.connect(continue_to_dawn)
 	if again_button != null and not again_button.pressed.is_connected(stand_another_watch):
 		again_button.pressed.connect(stand_another_watch)
 	if title_button != null and not title_button.pressed.is_connected(return_to_title):
 		title_button.pressed.connect(return_to_title)
+
+## Preserves WorldState + KnowledgeState and walks out at dawn into Black Creek (M2-A).
+func continue_to_dawn(save_path: String = CampaignStateStore.DEFAULT_SAVE_PATH) -> bool:
+	if not is_inside_tree():
+		return false
+	var tree := get_tree()
+	if tree == null or tree.root == null:
+		return false
+	var world := tree.root.get_node_or_null("WorldState") as WorldStateStore
+	var knowledge := tree.root.get_node_or_null("KnowledgeState") as KnowledgeStateStore
+	var campaign := tree.root.get_node_or_null("CampaignState") as CampaignStateStore
+	if campaign != null:
+		campaign.begin_dawn_from_shift(world, knowledge, save_path)
+	tree.paused = false
+	return tree.change_scene_to_file(DAWN_TOWN_SCENE) == OK
 
 ## Both routes clear WorldState and KnowledgeState. A second watch must not begin
 ## holding the first watch's facts.
@@ -125,13 +160,16 @@ func play(title: String, record: String, footer: String = "") -> void:
 		fade_completed.emit())
 
 func _set_buttons_live(live: bool) -> void:
-	for button in [again_button, title_button]:
+	for button in [dawn_button, again_button, title_button]:
 		if button == null:
 			continue
 		button.disabled = not live
 		button.mouse_filter = Control.MOUSE_FILTER_STOP if live else Control.MOUSE_FILTER_IGNORE
-	if live and again_button != null:
-		again_button.grab_focus()
+	if live:
+		if dawn_button != null and dawn_button.visible:
+			dawn_button.grab_focus()
+		elif again_button != null:
+			again_button.grab_focus()
 
 ## Used when there is no tree to run a tween on, such as in tests.
 func _snap_to_end() -> void:

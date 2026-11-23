@@ -127,8 +127,21 @@ func repeat_current() -> void:
 	if not entry.is_empty():
 		_show(entry)
 
+const ENTRY_TEXT_RU := {
+	&"entry": "Стул у стола. Нужно сесть и открыть линию.",
+	&"open_line": "Телеграфный ключ — справа от блокнота.",
+	&"answer": "Станцию вызывают. Пора ответить ключом.",
+	&"read_copy": "Запись готова. Надо перечитать лист.",
+	&"route": "Рычаг сигнала слева [A].",
+	&"wind": "Регистр замедляется — заведите ручкой сбоку.",
+	&"filing": "Стол подшивки справа [D]. Поставьте печать.",
+	&"dawn": "Линия закрыта. Осталось сдать смену и выйти в дверь.",
+}
+
 func _show(entry: Dictionary) -> void:
-	current_text = entry.get("text", "")
+	var raw_text: String = entry.get("text", "")
+	var eid: StringName = entry.get("id", &"")
+	current_text = String(ENTRY_TEXT_RU[eid]) if (GameLocale.is_ru() and ENTRY_TEXT_RU.has(eid)) else raw_text
 	_remaining = float(entry.get("duration", 6.0))
 	if _label != null:
 		_label.text = current_text
@@ -272,45 +285,69 @@ static func refresh_interaction_hint(office: M1OfficeController) -> void:
 	var seated := seat != null and seat.is_seated
 	var cursor_station := office.player.seated_station_mode
 	var seated_hint := seated and not seat.has_stood_once and not cursor_station
-	var hint := OperatorSeat.HINT_SEATED if seated_hint else ""
+	var hint := GameLocale.pick("Встать со стула  ·  W A S D", OperatorSeat.HINT_SEATED) if seated_hint else ""
 	match office.session_controller.get_state():
 		TelegraphSessionController.State.VERIFYING:
-			hint = "Read the finished copy on the desk"
+			hint = GameLocale.pick("Прочтите готовую запись на столе", "Read the finished copy on the desk")
 		TelegraphSessionController.State.AWAITING_ROUTE:
-			hint = "Look left [A] for the signal lever" if cursor_station else "Set the route on the east wall board"
+			hint = GameLocale.pick("Повернитесь налево [A] к рычагу сигнала", "Look left [A] for the signal lever") \
+				if cursor_station else GameLocale.pick("Переведите рычаг сигнала", "Set the route on the signal board")
 		TelegraphSessionController.State.AWAITING_COMMIT:
 			if seated and office.get_pending_correction().is_empty():
-				hint = "Take the pen to correct, or look right [D] to file" if cursor_station \
-					else "Pick up the pen to correct, or file by the stove"
+				hint = GameLocale.pick(
+					"Взять перо для правки или подшить справа [D]",
+					"Take the pen to correct, or look right [D] to file"
+				) if cursor_station else GameLocale.pick(
+					"Возьмите перо для правки или подшейте копию справа",
+					"Pick up the pen to correct, or file at the desk"
+				)
 			else:
-				hint = "Look right [D] to stamp and file" if cursor_station \
-					else "File the copy at the table by the stove"
+				hint = GameLocale.pick("Повернитесь направо [D] для печати", "Look right [D] to stamp and file") \
+					if cursor_station else GameLocale.pick("Подшейте копию на столе подшивки", "File the copy at the filing desk")
+	if cursor_station:
+		hint = ""
 	if office.shift_director.get_phase() == ShiftDirector.Phase.PRE_SHIFT:
 		if cursor_station:
-			hint = "Click the brass key to open the line"
-			var wick := office.get_node_or_null("DeskSetup/OilLamp/WickInteractable") as Interactable
-			var lamp := office.get_node_or_null("LampLife") as LampLife
-			if wick != null and lamp != null and lamp.wick < 0.72:
-				hint = "Click the lamp to raise the wick, then click the brass key to open the line"
+			hint = ""
 		else:
-			hint = "[E] Open the line at the key right of the writing pad" \
-				if seated else "[W A S D] Move   [E] Sit in the chair at the desk"
+			hint = GameLocale.pick(
+				"[E] Открыть линию ключом справа от листа",
+				"[E] Open the line at the key right of the writing pad"
+			) if seated else GameLocale.pick(
+				"[W A S D] Ходить   [E] Осмотреть / Сесть за стол",
+				"[W A S D] Move   [E] Interact / Sit at desk"
+			)
 			var wick := office.get_node_or_null("DeskSetup/OilLamp/WickInteractable") as Interactable
 			if seated and wick != null and wick.can_interact():
-				hint = "[E] Turn up the lamp on the left, then use the key on the right"
+				hint = GameLocale.pick(
+					"[E] Прибавить лампу слева, затем ключ справа",
+					"[E] Turn up the lamp on the left, then use the key on the right"
+				)
 	elif office.shift_director.get_phase() == ShiftDirector.Phase.CALLING:
-		hint = "The wire is calling. Click the brass key to answer" if cursor_station \
-			else "The wire is calling. [E] Answer at the same key"
+		hint = "" if cursor_station else GameLocale.pick(
+			"Вызов на линии — [E] ответить ключом",
+			"The wire is calling. [E] Answer at the same key"
+		)
 	elif office.shift_director.get_phase() == ShiftDirector.Phase.WAITING \
-			and office.shift_director.get_slot_index() == 0 and seated:
-		hint = "Wait for the first call. Answer at the same key"
+			and office.shift_director.get_slot_index() == 0 and seated and not cursor_station:
+		hint = GameLocale.pick(
+			"Ждите первого вызова. Отвечайте тем же ключом",
+			"Wait for the first call. Answer at the same key"
+		)
 	elif office.shift_director.is_shift_over():
-		var leave_hint := "Look back [S] and read the night handover beside the door" \
-			if cursor_station and office.dawn_evidence.is_revealed() and not office.dawn_evidence.is_inspected() \
-			else ("Look back [S] and click the door to leave" if cursor_station \
-			else ("Read the night handover beside the door" \
-			if office.dawn_evidence.is_revealed() and not office.dawn_evidence.is_inspected() \
-			else "The watch is over — leave through the south door"))
+		var need_handover: bool = office.dawn_evidence != null and office.dawn_evidence.is_revealed() \
+			and not office.dawn_evidence.is_inspected()
+		var leave_hint := ""
+		if cursor_station:
+			leave_hint = ""
+		else:
+			leave_hint = GameLocale.pick(
+				"Прочтите передачу смены у двери",
+				"Read the night handover beside the door"
+			) if need_handover else GameLocale.pick(
+				"Смена окончена — выходите в южную дверь",
+				"The watch is over — leave through the south door"
+			)
 		hint = leave_hint
 	# The sender's warning takes priority over the usual work prompt.
 	var warning := office.session_controller.get_deadline_warning_text()

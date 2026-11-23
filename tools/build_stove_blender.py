@@ -141,6 +141,21 @@ def box(name, centre, size, kind, bevel=0.0, rot_deg=(0, 0, 0)):
     return finish(obj, kind)
 
 
+def torus(name, centre, major, minor, kind, rot_deg=(0, 0, 0)):
+    bpy.ops.mesh.primitive_torus_add(
+        major_radius=major,
+        minor_radius=minor,
+        major_segments=16,
+        minor_segments=6,
+        location=pos(centre),
+    )
+    obj = bpy.context.object
+    obj.name = name
+    obj.rotation_euler = tuple(math.radians(a) for a in rot_deg)
+    bpy.ops.object.transform_apply(location=False, rotation=True, scale=True)
+    return finish(obj, kind)
+
+
 def cyl(name, centre, radius, depth, kind, axis=(0, 1, 0), sides=12, radius_top=None):
     loc = pos(centre)
     if radius_top is None:
@@ -184,15 +199,57 @@ cyl("TopCrown", (0, 0.97, 0), 0.275, 0.09, "iron", sides=14, radius_top=0.315)
 cyl("TopCookingPlate", (0, 1.03, 0), 0.33, 0.04, "iron", sides=14)
 cyl("TopLidRing", (0, 1.055, 0), 0.22, 0.015, "sheet_iron", sides=12)
 
-# 5. Firebox door frame, slotted grate & brass latch on front (-Z in local space)
-box("FireDoorFrame", (0, 0.72, -0.325), (0.25, 0.24, 0.04), "iron", 0.003)
-box("FireDoorTopBar", (0, 0.80, -0.345), (0.21, 0.05, 0.025), "sheet_iron", 0.002)
-box("FireDoorMidBar", (0, 0.70, -0.345), (0.21, 0.075, 0.025), "sheet_iron", 0.002)
-# Leave gap around y=0.62, z=-0.305 so the glowing EmberSeam shines through the grate!
-for gx in (-0.075, -0.025, 0.025, 0.075):
-    box("GrateBar", (gx, 0.62, -0.342), (0.016, 0.055, 0.022), "iron", 0.001)
-box("FireDoorBottomLip", (0, 0.585, -0.345), (0.21, 0.025, 0.025), "sheet_iron", 0.002)
-cyl("FireDoorHandle", (0.105, 0.72, -0.365), 0.014, 0.075, "brass", axis=(0, 1, 0), sides=8)
+# 4b. Eight vertical cast-iron belly ribs around the firebox body
+for rib_i in range(8):
+    ang = math.tau * rib_i / 8.0 + math.pi / 8.0
+    # Skip ribs directly overlapping the front firebox door or rear seam
+    if math.cos(ang) < -0.75:
+        continue
+    rx = math.sin(ang) * 0.335
+    rz = math.cos(ang) * 0.335
+    box(
+        f"BellyRib_{rib_i}",
+        (rx, 0.65, rz),
+        (0.022, 0.36, 0.022),
+        "iron",
+        0.002,
+        rot_deg=(0, math.degrees(ang), 0),
+    )
+
+# Ash-shaker crank spindle & wood grip on the lower right side (+X)
+cyl("AshShakerSpindle", (0.29, 0.30, -0.05), 0.011, 0.08, "iron", axis=(1, 0, 0), sides=8)
+box("AshShakerArm", (0.33, 0.335, -0.05), (0.016, 0.085, 0.020), "iron", 0.002)
+cyl("AshShakerGrip", (0.365, 0.37, -0.05), 0.014, 0.055, "wood", axis=(1, 0, 0), sides=8)
+
+# 5. Firebox door surround arch, hinges, recessed grate bars, damper & brass latch (-Z front)
+box("FireDoorFrame", (0, 0.725, -0.328), (0.265, 0.275, 0.036), "iron", 0.004)
+box("FireDoorArchCap", (0, 0.875, -0.334), (0.285, 0.032, 0.044), "iron", 0.004)
+box("FireDoorSillLedge", (0, 0.568, -0.344), (0.280, 0.026, 0.052), "iron", 0.003)
+for cx in (-0.112, 0.112):
+    for cy in (0.855, 0.592):
+        cyl(f"SurroundRivet_{cx:.2f}_{cy:.2f}", (cx, cy, -0.352), 0.009, 0.010, "brass", axis=(0, 0, 1), sides=6)
+
+# Twin left hinge barrels & right latch keeper
+for hy in (0.805, 0.640):
+    cyl(f"FireDoorHinge_{hy:.2f}", (-0.122, hy, -0.348), 0.014, 0.048, "iron", axis=(0, 1, 0), sides=8)
+    box(f"FireDoorHingeStrap_{hy:.2f}", (-0.085, hy, -0.354), (0.070, 0.020, 0.010), "sheet_iron", 0.001)
+box("FireDoorLatchKeeper", (0.124, 0.725, -0.348), (0.022, 0.044, 0.022), "brass", 0.002)
+
+# Upper beveled plate + sliding brass draft damper over the grate
+box("FireDoorUpperPanel", (0, 0.775, -0.348), (0.215, 0.135, 0.024), "sheet_iron", 0.003)
+box("FireDoorPanelTrim", (0, 0.775, -0.360), (0.175, 0.095, 0.008), "iron", 0.002)
+box("DraftDamperPlate", (0.0, 0.775, -0.366), (0.095, 0.032, 0.008), "brass", 0.001)
+cyl("DraftDamperKnob", (-0.032, 0.775, -0.376), 0.010, 0.014, "brass", axis=(0, 0, 1), sides=8)
+
+# Crossbar above the open ember grate (y = 0.585..0.675 stays open to EmberSeam at z = -0.334!)
+box("FireDoorMidBar", (0, 0.688, -0.350), (0.220, 0.034, 0.026), "iron", 0.002)
+for gx in (-0.072, -0.036, 0.0, 0.036, 0.072):
+    box("GrateBar", (gx, 0.628, -0.354), (0.014, 0.082, 0.018), "iron", 0.002)
+box("FireDoorBottomLip", (0, 0.582, -0.350), (0.220, 0.024, 0.026), "sheet_iron", 0.002)
+
+# Curved brass door latch lever on the right
+cyl("FireDoorHandlePost", (0.105, 0.725, -0.366), 0.011, 0.028, "brass", axis=(0, 0, 1), sides=8)
+cyl("FireDoorHandle", (0.105, 0.715, -0.382), 0.013, 0.082, "brass", axis=(0, 1, 0), sides=8)
 
 # 6. Continuous stovepipe: vertical riser + segmented 90-deg elbow + horizontal flue into EastWall (+Z = +0.80m)
 cyl("PipeCollar", (0, 1.09, 0), 0.105, 0.09, "iron", sides=12)
@@ -235,19 +292,21 @@ for sx in (-0.36, 0.36):
     box("ShieldStandoffBot", (sx, 0.12, 0.725), (0.04, 0.24, 0.04), "iron")
 
 # 9. Coal scuttle, coal pile, shovel & ash pan
-cyl("CoalScuttleBody", (-0.34, 0.16, 0.20), 0.135, 0.28, "sheet_iron", sides=12, radius_top=0.16)
-cyl("CoalScuttleBase", (-0.34, 0.025, 0.20), 0.145, 0.04, "iron", sides=12)
-cyl("CoalScuttleLip", (-0.34, 0.30, 0.20), 0.165, 0.02, "iron", sides=12)
-cyl("CoalPile", (-0.34, 0.28, 0.20), 0.145, 0.07, "coal", sides=10, radius_top=0.06)
-cyl("ShovelShaft", (-0.38, 0.44, 0.20), 0.013, 0.42, "wood", axis=(0.25, 0.96, 0.0), sides=8)
-box("ShovelScoop", (-0.43, 0.22, 0.20), (0.11, 0.14, 0.03), "iron", 0.002, rot_deg=(0, 0, -15))
+cyl("CoalScuttleBody", (-0.46, 0.16, 0.22), 0.135, 0.28, "sheet_iron", sides=12, radius_top=0.16)
+cyl("CoalScuttleBase", (-0.46, 0.025, 0.22), 0.145, 0.04, "iron", sides=12)
+cyl("CoalScuttleLip", (-0.46, 0.30, 0.22), 0.165, 0.02, "iron", sides=12)
+cyl("CoalPile", (-0.46, 0.28, 0.22), 0.145, 0.07, "coal", sides=10, radius_top=0.06)
+torus("CoalScuttleHandle", (-0.46, 0.335, 0.22), 0.10, 0.008, "iron", rot_deg=(90, 0, 0))
+cyl("ShovelShaft", (-0.50, 0.44, 0.22), 0.013, 0.42, "wood", axis=(0.25, 0.96, 0.0), sides=8)
+box("ShovelScoop", (-0.55, 0.22, 0.22), (0.11, 0.14, 0.03), "iron", 0.002, rot_deg=(0, 0, -15))
 box("AshPan", (0.18, 0.035, -0.34), (0.24, 0.045, 0.18), "sheet_iron", 0.002)
 
 # 10. Depot cast-iron tea kettle on the top cooking plate (authored via Blender MCP)
-cyl("KettleBody", (-0.12, 1.10, -0.10), 0.095, 0.11, "iron", sides=12, radius_top=0.072)
-cyl("KettleLid", (-0.12, 1.16, -0.10), 0.048, 0.018, "brass", sides=10)
-cyl("KettleKnob", (-0.12, 1.178, -0.10), 0.014, 0.016, "brass", sides=8)
-cyl("KettleSpout", (-0.18, 1.12, -0.14), 0.014, 0.09, "iron", axis=(-0.55, 0.65, -0.45), sides=8)
+cyl("KettleBody", (-0.18, 1.10, -0.13), 0.095, 0.11, "iron", sides=12, radius_top=0.072)
+cyl("KettleLid", (-0.18, 1.16, -0.13), 0.048, 0.018, "brass", sides=10)
+cyl("KettleKnob", (-0.18, 1.178, -0.13), 0.014, 0.016, "brass", sides=8)
+cyl("KettleSpout", (-0.26, 1.12, -0.19), 0.014, 0.09, "iron", axis=(-0.55, 0.65, -0.45), sides=8)
+torus("KettleBailHandle", (-0.18, 1.175, -0.13), 0.072, 0.006, "iron", rot_deg=(90, 0, 0))
 
 # Join, triangulate, and export GLB
 bpy.ops.object.select_all(action="DESELECT")
@@ -286,6 +345,10 @@ report = {
 }
 
 bpy.ops.wm.save_as_mainfile(filepath=str(SOURCE / "dead_wire_stove_v1.blend"), copy=True)
+# After rebuilding, run `godot --headless --path . --script tools/import_stove.gd`
+# and refresh the engine-measured `glb_vertices` / `res_surface_vertices` in the
+# manifest: tests/presentation/stove_manifest_test.gd compares them to the
+# integrated asset, and the Blender vertex count above is source-side only.
 (OUT / "build_manifest.json").write_text(
     json.dumps(
         {

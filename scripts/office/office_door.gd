@@ -90,19 +90,22 @@ func unlock() -> void:
 func _on_shift_closed() -> void:
 	unlock()
 
+func refresh_locale() -> void:
+	_apply_prompt()
+
 func _apply_prompt() -> void:
 	_resolve_nodes()
 	if interactable == null:
 		return
 	if is_open:
-		interactable.prompt_text = PROMPT_STANDING_OPEN
+		interactable.prompt_text = GameLocale.pick("Выход", PROMPT_STANDING_OPEN)
 		interactable.is_actionable = false
 	elif locked:
-		interactable.prompt_text = PROMPT_LOCKED
+		interactable.prompt_text = GameLocale.pick("Заперто до конца смены", PROMPT_LOCKED)
 		# Still actionable: trying the handle and finding it locked is the point.
 		interactable.is_actionable = true
 	else:
-		interactable.prompt_text = PROMPT_UNLOCKED
+		interactable.prompt_text = GameLocale.pick("Уйти со смены", PROMPT_UNLOCKED)
 		interactable.is_actionable = true
 
 func _on_interacted() -> void:

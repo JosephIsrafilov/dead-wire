@@ -245,6 +245,9 @@ func _bind() -> void:
 func refresh_key_state() -> void:
 	_apply_key_state()
 
+func refresh_locale() -> void:
+	_apply_key_state()
+
 ## Session work states change without a director phase change (COPYING,
 ## VERIFYING, the decision states); the key must follow them.
 func _on_session_state_changed(
@@ -901,31 +904,31 @@ func _apply_key_state() -> void:
 
 	# The key is worked from the chair. Standing at the desk is not working.
 	if seat != null and not seat.is_seated and _phase in [Phase.PRE_SHIFT, Phase.CALLING]:
-		key.set_prompt_message(PROMPT_NOT_SEATED)
+		key.set_prompt_message(GameLocale.pick("Сядьте за стол для работы с ключом", PROMPT_NOT_SEATED))
 		key.set_enabled(false)
 		_apply_urgency()
 		return
 
 	match _phase:
 		Phase.PRE_SHIFT:
-			key.set_prompt_message(PROMPT_OPEN_LINE)
+			key.set_prompt_message(GameLocale.pick("Открыть линию", PROMPT_OPEN_LINE))
 			key.set_enabled(true)
 		Phase.WAITING:
-			key.set_prompt_message(PROMPT_LINE_QUIET)
+			key.set_prompt_message(GameLocale.pick("Линия молчит", PROMPT_LINE_QUIET))
 			key.set_enabled(false)
 		Phase.CALLING:
-			key.set_prompt_message(PROMPT_ANSWER_CALL)
+			key.set_prompt_message(GameLocale.pick("Ответить на вызов", PROMPT_ANSWER_CALL))
 			key.set_enabled(true)
 		Phase.ANSWERING:
-			key.set_prompt_message(PROMPT_ANSWERED)
+			key.set_prompt_message(GameLocale.pick("Ответ дан — ждите передачу", PROMPT_ANSWERED))
 			key.set_enabled(false)
 		Phase.RECEIVING, Phase.AWAITING_ROUTE:
 			_apply_key_state_for_session(key)
 		Phase.CLOSING:
-			key.set_prompt_message(PROMPT_CLOSING)
+			key.set_prompt_message(GameLocale.pick("Линия закрывается", PROMPT_CLOSING))
 			key.set_enabled(false)
 		Phase.SHIFT_OVER:
-			key.set_prompt_message(PROMPT_SHIFT_OVER)
+			key.set_prompt_message(GameLocale.pick("Линия закрыта. Смена окончена", PROMPT_SHIFT_OVER))
 			key.set_enabled(false)
 	_apply_urgency()
 
@@ -935,17 +938,17 @@ func _apply_key_state() -> void:
 func _apply_key_state_for_session(key: TelegraphKey) -> void:
 	key.set_enabled(false)
 	if session == null:
-		key.set_prompt_message(PROMPT_RECEIVING)
+		key.set_prompt_message(GameLocale.pick("Линия занята — идёт запись", PROMPT_RECEIVING))
 		return
 	var prompts := {
-		TelegraphSessionController.State.RECEIVING: PROMPT_RECEIVING,
-		TelegraphSessionController.State.COPYING: PROMPT_FINISHING_COPY,
-		TelegraphSessionController.State.VERIFYING: PROMPT_READ_COPY,
-		TelegraphSessionController.State.AWAITING_ROUTE: PROMPT_AWAITING_ROUTE,
-		TelegraphSessionController.State.AWAITING_COMMIT: PROMPT_FILE_COPY,
-		TelegraphSessionController.State.CONSEQUENCE: PROMPT_STAND_BY,
+		TelegraphSessionController.State.RECEIVING: GameLocale.pick("Линия занята — идёт запись", PROMPT_RECEIVING),
+		TelegraphSessionController.State.COPYING: GameLocale.pick("Завершение записи", PROMPT_FINISHING_COPY),
+		TelegraphSessionController.State.VERIFYING: GameLocale.pick("Прочтите лист", PROMPT_READ_COPY),
+		TelegraphSessionController.State.AWAITING_ROUTE: GameLocale.pick("Переведите рычаг сигнала", PROMPT_AWAITING_ROUTE),
+		TelegraphSessionController.State.AWAITING_COMMIT: GameLocale.pick("Подшейте копию", PROMPT_FILE_COPY),
+		TelegraphSessionController.State.CONSEQUENCE: GameLocale.pick("Ожидание", PROMPT_STAND_BY),
 	}
-	key.set_prompt_message(str(prompts.get(session.get_state(), PROMPT_LINE_QUIET)))
+	key.set_prompt_message(str(prompts.get(session.get_state(), GameLocale.pick("Линия молчит", PROMPT_LINE_QUIET))))
 
 ## While the wire is calling, Elias is hurrying. The camera carries a little of it.
 func _apply_urgency() -> void:

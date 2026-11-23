@@ -10,6 +10,7 @@ func check(ok: bool, text: String) -> bool:
 	return ok
 
 func _run() -> void:
+	GameLocale.lock_language_for_test("en")
 	if not check(FileAccess.file_exists("res://scripts/office/night_guidance_controller.gd"), "Guidance implementation is available"): return
 	var script = load("res://scripts/office/night_guidance_controller.gd")
 	if not check(script != null, "Guidance controller exists"): return
@@ -17,9 +18,9 @@ func _run() -> void:
 	guidance.data = load("res://data/night_guidance/m1_guidance.tres")
 	guidance.set_context(&"entry", false)
 	guidance.advance_guidance(3.0)
-	if not check(guidance.current_text.begins_with("Lamp first."), "Entry thought appears after delay"): return
-	# Plan 6.10: before the first watch the one pointer is to the orders by the door.
-	if not check(guidance.current_text.contains("by the door"), "The first thought points at the night's orders"): return
+	var entry_text: String = guidance.data.entry_for(&"entry").get("text", "")
+	if not check(not entry_text.is_empty() and guidance.current_text == entry_text, "Entry thought appears after delay"): return
+	if not check(guidance.current_text.contains("chair"), "The first thought points at the chair"): return
 	# AGENT_RULES §5: a thought names the next action; it never lists the room
 	# or reassures the player about it.
 	if not check(guidance.current_text.split(". ").size() <= 2 and not guidance.current_text.contains("unexplained"),
@@ -34,6 +35,11 @@ func _run() -> void:
 	if not check(guidance.current_text.is_empty(), "Protected wire or modal clears thought"): return
 	guidance.repeat_current()
 	if not check(guidance.current_text.is_empty(), "F1 cannot enter blocked presentation"): return
+	guidance.set_context(&"open_line", false)
+	guidance.advance_guidance(12.0)
+	if not check(guidance.current_text.is_empty(), "Seated help does not add an automatic thought"): return
+	guidance.repeat_current()
+	if not check(guidance.current_text.contains("right of the writing pad"), "F1 locates the key when seated"): return
 	guidance.set_context(&"read_copy", false)
 	guidance.enabled = false
 	guidance.advance_guidance(30.0)
@@ -64,11 +70,11 @@ func _run() -> void:
 	guidance.repeat_current()
 	if not check(guidance.current_text.is_empty(), "Unknown or completed steps do not retain a stale reminder"): return
 	# Plan 6.6: a night speaks few lines, each naming the next action, one
-	# short sentence or two; the optional winding reminder is the only extra.
+	# short sentence or two. Manual help and the winding reminder do not count.
 	var night_lines := 0
 	for entry in guidance.data.entries:
 		var text: String = entry.get("text", "")
-		if entry.get("id", &"") != &"wind":
+		if entry.get("automatic", true) and entry.get("id", &"") != &"wind":
 			night_lines += 1
 		if not check(text.split(". ").size() <= 2 and text.length() <= 60, "Thought '%s' is one or two short sentences" % entry.get("id", &"")): return
 	if not check(night_lines <= 6, "A night speaks at most six procedural lines (%d)" % night_lines): return

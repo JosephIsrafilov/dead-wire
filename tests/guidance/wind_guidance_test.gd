@@ -35,6 +35,8 @@ func _run() -> void:
 	if not _a(guidance._context != &"wind" and not register.needs_winding(),
 		"A healthy register leaves the wind context and the prompt alone"): return
 
+	# The fixture advances the watch in one call, not the register's frame clock.
+	register._process(1.0)
 	# Miss the first call to reach slot 1's compare window; the slowing
 	# register outranks the compare hint.
 	var encoder := AmericanMorseEncoder.new()

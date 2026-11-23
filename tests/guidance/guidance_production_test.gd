@@ -19,7 +19,8 @@ func _run() -> void:
 	office.get_node("IntroCard").skip_immediately()
 	guidance._refresh_visible_context()
 	guidance.repeat_current()
-	if not check(guidance.current_text.contains("Lamp first"), "Entry exposes only the visible work procedure"): return
+	var entry_text: String = guidance.data.entry_for(&"entry").get("text", "")
+	if not check(not entry_text.is_empty() and guidance.current_text == entry_text, "Entry exposes only the visible work procedure"): return
 	office.document_viewer.open_document("test", "TEST", "A document", "Put down")
 	if not check(guidance.current_text.is_empty(), "Document opened signal clears existing thought immediately"): return
 	office.document_viewer.close_document()

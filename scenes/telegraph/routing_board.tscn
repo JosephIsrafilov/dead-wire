@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://b1route001"]
+[gd_scene load_steps=18 format=3 uid="uid://b1route001"]
 
 [ext_resource type="Script" path="res://scripts/telegraph/ui/routing_board.gd" id="1_route"]
 [ext_resource type="Script" path="res://scripts/interaction/interactable.gd" id="2_interact"]
@@ -8,6 +8,23 @@
 [ext_resource type="Material" path="res://materials/style_tests/paper_log.tres" id="6_paper"]
 [ext_resource type="Material" path="res://materials/style_tests/metal_oxidized.tres" id="7_iron"]
 [ext_resource type="ArrayMesh" path="res://assets/models/office_props_v1/board_static.res" id="8_board_mesh"]
+[ext_resource type="FontFile" path="res://assets/fonts/oldstandard/OldStandardTT-Regular.ttf" id="9_serif"]
+
+[sub_resource type="StandardMaterial3D" id="CastIronWorn"]
+shading_mode = 2
+albedo_color = Color(0.24, 0.23, 0.22, 1)
+metallic = 0.55
+roughness = 0.58
+
+[sub_resource type="StandardMaterial3D" id="EnamelCream"]
+shading_mode = 2
+albedo_color = Color(0.84, 0.78, 0.65, 1)
+roughness = 0.45
+
+[sub_resource type="StandardMaterial3D" id="SignalGreen"]
+shading_mode = 2
+albedo_color = Color(0.08, 0.34, 0.14, 1)
+roughness = 0.6
 
 [sub_resource type="StandardMaterial3D" id="StencilPaint"]
 albedo_color = Color(0.6, 0.55, 0.43, 1)
@@ -73,15 +90,101 @@ position = Vector3(0, 0.82, 0.02)
 size = Vector3(0.46, 0.92, 0.03)
 material = ExtResource("4_wood")
 
+[node name="BackboardTrimTop" type="CSGBox3D" parent="."]
+position = Vector3(0, 1.29, 0.012)
+size = Vector3(0.51, 0.038, 0.046)
+material = ExtResource("4_wood")
+
+[node name="BackboardTrimBottom" type="CSGBox3D" parent="."]
+position = Vector3(0, 0.35, 0.012)
+size = Vector3(0.51, 0.038, 0.046)
+material = ExtResource("4_wood")
+
+[node name="BackboardTrimLeft" type="CSGBox3D" parent="."]
+position = Vector3(-0.24, 0.82, 0.012)
+size = Vector3(0.03, 0.94, 0.042)
+material = ExtResource("4_wood")
+
+[node name="BackboardTrimRight" type="CSGBox3D" parent="."]
+position = Vector3(0.24, 0.82, 0.012)
+size = Vector3(0.03, 0.94, 0.042)
+material = ExtResource("4_wood")
+
+[node name="WallBoltTL" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -0.19, 1.23, 0.0)
+radius = 0.011
+height = 0.016
+sides = 6
+material = SubResource("CastIronWorn")
+
+[node name="WallBoltTR" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.19, 1.23, 0.0)
+radius = 0.011
+height = 0.016
+sides = 6
+material = SubResource("CastIronWorn")
+
+[node name="WallBoltBL" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -0.19, 0.41, 0.0)
+radius = 0.011
+height = 0.016
+sides = 6
+material = SubResource("CastIronWorn")
+
+[node name="WallBoltBR" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.19, 0.41, 0.0)
+radius = 0.011
+height = 0.016
+sides = 6
+material = SubResource("CastIronWorn")
+
 [node name="LeverFoot" type="CSGBox3D" parent="."]
 position = Vector3(0, -0.6, -0.16)
-size = Vector3(0.3, 0.04, 0.22)
-material = ExtResource("7_iron")
+size = Vector3(0.32, 0.04, 0.22)
+material = SubResource("CastIronWorn")
 
 [node name="LeverPedestal" type="CSGBox3D" parent="."]
 position = Vector3(0, -0.51, -0.16)
-size = Vector3(0.08, 0.15, 0.09)
-material = ExtResource("7_iron")
+size = Vector3(0.09, 0.15, 0.09)
+material = SubResource("CastIronWorn")
+
+[node name="PivotBoss" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, -0.46, -0.16)
+radius = 0.045
+height = 0.095
+sides = 10
+material = ExtResource("5_brass")
+
+[node name="StandStrutLeft" type="CSGBox3D" parent="."]
+position = Vector3(-0.256, -0.22, -0.15)
+rotation = Vector3(0, 0, 0.388)
+size = Vector3(0.026, 0.77, 0.032)
+material = SubResource("CastIronWorn")
+
+[node name="StandStrutRight" type="CSGBox3D" parent="."]
+position = Vector3(0.256, -0.22, -0.15)
+rotation = Vector3(0, 0, -0.388)
+size = Vector3(0.026, 0.77, 0.032)
+material = SubResource("CastIronWorn")
+
+[node name="LinkageRod" type="CSGCylinder3D" parent="."]
+position = Vector3(0.16, 0.62, -0.025)
+radius = 0.008
+height = 1.95
+sides = 8
+material = SubResource("CastIronWorn")
+
+[node name="PulleyBracket" type="CSGBox3D" parent="."]
+position = Vector3(0.16, 1.58, -0.015)
+size = Vector3(0.06, 0.08, 0.05)
+material = ExtResource("5_brass")
+
+[node name="PulleyWheel" type="CSGCylinder3D" parent="."]
+transform = Transform3D(0, 1, 0, -1, 0, 0, 0, 0, 1, 0.16, 1.58, -0.035)
+radius = 0.038
+height = 0.016
+sides = 12
+material = SubResource("CastIronWorn")
 
 ; The quadrant: an iron arc band (r 0.70–0.74 around the pivot, ±46°) the
 ; lever rides between its two notches. One extruded shape, no hidden ring.
@@ -89,48 +192,122 @@ material = ExtResource("7_iron")
 position = Vector3(0, -0.46, -0.14)
 polygon = PackedVector2Array(-0.532, 0.514, -0.42, 0.609, -0.297, 0.678, -0.168, 0.721, -0.034, 0.739, 0.103, 0.733, 0.234, 0.702, 0.36, 0.647, 0.474, 0.568, 0.532, 0.514, 0.504, 0.486, 0.448, 0.537, 0.34, 0.611, 0.221, 0.663, 0.097, 0.693, -0.032, 0.699, -0.159, 0.682, -0.281, 0.641, -0.397, 0.576, -0.504, 0.486)
 depth = 0.04
-material = ExtResource("7_iron")
+material = SubResource("CastIronWorn")
 
 [node name="NotchClear" type="CSGBox3D" parent="."]
 position = Vector3(-0.403, 0.137, -0.16)
 rotation = Vector3(0, 0, 0.593412)
 size = Vector3(0.035, 0.06, 0.05)
-material = ExtResource("7_iron")
+material = SubResource("CastIronWorn")
+
+[node name="NotchClearCollar" type="CSGBox3D" parent="."]
+position = Vector3(-0.403, 0.137, -0.16)
+rotation = Vector3(0, 0, 0.593412)
+size = Vector3(0.052, 0.02, 0.062)
+material = ExtResource("5_brass")
 
 [node name="NotchHold" type="CSGBox3D" parent="."]
 position = Vector3(0.403, 0.137, -0.16)
 rotation = Vector3(0, 0, -0.593412)
 size = Vector3(0.035, 0.06, 0.05)
-material = ExtResource("7_iron")
+material = SubResource("CastIronWorn")
 
-; Enamel plates at the notches: white ground, black letters.
+[node name="NotchHoldCollar" type="CSGBox3D" parent="."]
+position = Vector3(0.403, 0.137, -0.16)
+rotation = Vector3(0, 0, -0.593412)
+size = Vector3(0.052, 0.02, 0.062)
+material = ExtResource("5_brass")
+
+; Enamel plates at the notches: cream enamel on dark iron brackets.
+[node name="PlateClearStem" type="CSGBox3D" parent="."]
+position = Vector3(-0.415, 0.19, -0.145)
+size = Vector3(0.02, 0.11, 0.014)
+material = SubResource("CastIronWorn")
+
+[node name="PlateClearBacking" type="CSGBox3D" parent="."]
+position = Vector3(-0.43, 0.25, -0.131)
+size = Vector3(0.26, 0.082, 0.006)
+material = SubResource("CastIronWorn")
+
 [node name="PlateClear" type="CSGBox3D" parent="."]
-position = Vector3(-0.43, 0.25, -0.135)
-size = Vector3(0.22, 0.065, 0.006)
-material = SubResource("SignalWhite")
+position = Vector3(-0.43, 0.25, -0.136)
+size = Vector3(0.24, 0.068, 0.006)
+material = SubResource("EnamelCream")
+
+[node name="PlateHoldStem" type="CSGBox3D" parent="."]
+position = Vector3(0.415, 0.19, -0.145)
+size = Vector3(0.02, 0.11, 0.014)
+material = SubResource("CastIronWorn")
+
+[node name="PlateHoldBacking" type="CSGBox3D" parent="."]
+position = Vector3(0.43, 0.25, -0.131)
+size = Vector3(0.22, 0.082, 0.006)
+material = SubResource("CastIronWorn")
 
 [node name="PlateHold" type="CSGBox3D" parent="."]
-position = Vector3(0.43, 0.25, -0.135)
-size = Vector3(0.15, 0.065, 0.006)
-material = SubResource("SignalWhite")
+position = Vector3(0.43, 0.25, -0.136)
+size = Vector3(0.2, 0.068, 0.006)
+material = SubResource("EnamelCream")
 
 ; The repeater: a brass case on the backboard with a small blade that stands
 ; level for STOP and drops for CLEAR, as the arm outside does.
 [node name="RepeaterCase" type="CSGCylinder3D" parent="."]
 position = Vector3(0, 0.97, -0.01)
 rotation = Vector3(1.570796, 0, 0)
-radius = 0.085
+radius = 0.09
 height = 0.03
 sides = 16
 material = ExtResource("5_brass")
 
-[node name="RepeaterFace" type="CSGCylinder3D" parent="."]
-position = Vector3(0, 0.97, -0.027)
+[node name="RepeaterBezel" type="CSGCylinder3D" parent="."]
+position = Vector3(0, 0.97, -0.024)
 rotation = Vector3(1.570796, 0, 0)
-radius = 0.072
+radius = 0.095
+height = 0.008
+sides = 16
+material = ExtResource("5_brass")
+
+[node name="RepeaterLugL" type="CSGBox3D" parent="."]
+position = Vector3(-0.1, 0.97, -0.004)
+size = Vector3(0.025, 0.03, 0.014)
+material = ExtResource("5_brass")
+
+[node name="RepeaterLugR" type="CSGBox3D" parent="."]
+position = Vector3(0.1, 0.97, -0.004)
+size = Vector3(0.025, 0.03, 0.014)
+material = ExtResource("5_brass")
+
+[node name="RepeaterFace" type="CSGCylinder3D" parent="."]
+position = Vector3(0, 0.97, -0.029)
+rotation = Vector3(1.570796, 0, 0)
+radius = 0.076
 height = 0.004
 sides = 16
 material = SubResource("RepeaterEnamel")
+
+[node name="RepeaterHub" type="CSGCylinder3D" parent="."]
+position = Vector3(-0.035, 0.97, -0.036)
+rotation = Vector3(1.570796, 0, 0)
+radius = 0.012
+height = 0.01
+sides = 10
+material = ExtResource("5_brass")
+
+[node name="AspectStopStud" type="CSGCylinder3D" parent="."]
+position = Vector3(0.052, 0.97, -0.032)
+rotation = Vector3(1.570796, 0, 0)
+radius = 0.008
+height = 0.006
+sides = 8
+material = SubResource("SignalRed")
+
+[node name="AspectClearStud" type="CSGCylinder3D" parent="."]
+position = Vector3(0.024, 0.916, -0.032)
+rotation = Vector3(1.570796, 0, 0)
+radius = 0.008
+height = 0.006
+sides = 8
+material = SubResource("SignalGreen")
 
 ; CSG blockout, hidden: BoardSolid and both interaction boxes were measured
 ; against these footprints, so the boxes stay the same size as before.
@@ -166,10 +343,29 @@ material = ExtResource("4_wood")
 
 ; ---- Header card: printed waybill card behind four thin wood strips ----
 
+[node name="HeaderBacking" type="CSGBox3D" parent="."]
+position = Vector3(0, 0.78, -0.003)
+size = Vector3(0.39, 0.145, 0.006)
+material = SubResource("CastIronWorn")
+
 [node name="HeaderCard" type="CSGBox3D" parent="."]
 position = Vector3(0, 0.78, -0.008)
 size = Vector3(0.36, 0.12, 0.006)
-material = ExtResource("6_paper")
+material = SubResource("EnamelCream")
+
+[node name="HeaderRivetL" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -0.165, 0.78, -0.012)
+radius = 0.005
+height = 0.004
+sides = 6
+material = ExtResource("5_brass")
+
+[node name="HeaderRivetR" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.165, 0.78, -0.012)
+radius = 0.005
+height = 0.004
+sides = 6
+material = ExtResource("5_brass")
 
 [node name="HeaderFrameTop" type="CSGBox3D" parent="."]
 visible = false
@@ -250,7 +446,7 @@ position = Vector3(0.0, 0.49, 0)
 radius = 0.017
 height = 0.98
 sides = 8
-material = ExtResource("7_iron")
+material = SubResource("CastIronWorn")
 
 [node name="LeverGrip" type="CSGCylinder3D" parent="LeverPivot"]
 position = Vector3(0.0, 1.03, 0)
@@ -263,7 +459,7 @@ material = ExtResource("5_brass")
 [node name="LatchRod" type="CSGBox3D" parent="LeverPivot"]
 position = Vector3(0.032, 0.55, 0)
 size = Vector3(0.007, 0.8, 0.007)
-material = ExtResource("7_iron")
+material = SubResource("CastIronWorn")
 
 [node name="LatchHandle" type="CSGBox3D" parent="LeverPivot"]
 position = Vector3(0.03, 0.95, 0)
@@ -330,7 +526,9 @@ material = ExtResource("7_iron")
 [node name="HeaderLabel3D" type="Label3D" parent="."]
 position = Vector3(0, 0.8, -0.0125)
 rotation = Vector3(0, 3.141593, 0)
-pixel_size = 0.0022
+pixel_size = 0.0021
+shaded = true
+font = ExtResource("9_serif")
 modulate = Color(0.08, 0.06, 0.04, 1)
 outline_size = 0
 text = "TRAIN-ORDER SIGNAL"
@@ -339,11 +537,13 @@ font_size = 13
 [node name="HeaderLabel3DSub" type="Label3D" parent="."]
 position = Vector3(0, 0.755, -0.0125)
 rotation = Vector3(0, 3.141593, 0)
-pixel_size = 0.0018
+pixel_size = 0.0013
+shaded = true
+font = ExtResource("9_serif")
 modulate = Color(0.08, 0.06, 0.04, 1)
 outline_size = 0
 text = "EASTWARD — BLACK CREEK"
-font_size = 13
+font_size = 12
 
 ; The one line that makes the lever legible. The board is a physical order
 ; instrument: throwing it is what actually sends a train, and it does not
@@ -386,19 +586,23 @@ text = "SIDING"
 font_size = 13
 
 [node name="ClearEastLabel3D" type="Label3D" parent="."]
-position = Vector3(-0.43, 0.25, -0.139)
+position = Vector3(-0.43, 0.25, -0.141)
 rotation = Vector3(0, 3.141593, 0)
-pixel_size = 0.0022
-modulate = Color(0.1, 0.07, 0.04, 1)
+pixel_size = 0.0018
+shaded = true
+font = ExtResource("9_serif")
+modulate = Color(0.08, 0.06, 0.04, 1)
 outline_size = 0
 text = "CLEAR EAST"
 font_size = 13
 
 [node name="HoldLabel3D" type="Label3D" parent="."]
-position = Vector3(0.43, 0.25, -0.139)
+position = Vector3(0.43, 0.25, -0.141)
 rotation = Vector3(0, 3.141593, 0)
-pixel_size = 0.0022
-modulate = Color(0.1, 0.07, 0.04, 1)
+pixel_size = 0.0018
+shaded = true
+font = ExtResource("9_serif")
+modulate = Color(0.08, 0.06, 0.04, 1)
 outline_size = 0
 text = "HOLD"
 font_size = 13
@@ -447,9 +651,11 @@ size = Vector3(0.27, 0.37, 0.003)
 material = ExtResource("6_paper")
 
 [node name="Text" type="Label3D" parent="SignalRules"]
-position = Vector3(0, 0, -0.0135)
+position = Vector3(0.125, 0, -0.0135)
 rotation = Vector3(0, 3.141593, 0)
 pixel_size = 0.00085
+shaded = true
+font = ExtResource("9_serif")
 modulate = Color(0.1, 0.07, 0.04, 1)
 outline_size = 0
 font_size = 16

@@ -157,6 +157,7 @@ max_final_correction = 0.16
 
 [node name="PreviousSheet" type="Node3D" parent="."]
 visible = false
+rotation = Vector3(0, 0.07, 0)
 
 [node name="PreviousSheetMesh" type="MeshInstance3D" parent="PreviousSheet"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0005, 0)

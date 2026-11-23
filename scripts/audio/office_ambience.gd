@@ -21,18 +21,18 @@ signal clock_ticked(tick_count: int)
 @export var clock_tock_stream: AudioStream = preload("res://audio/sfx/foley/clock_tock.wav")
 ## Plan 7.8: wind in the telegraph wire outside, heard through the glass.
 @export var wire_stream: AudioStream = preload("res://audio/sfx/ambience/wire_sing.wav")
-@export var wire_volume_db: float = -14.0
+@export var wire_volume_db: float = -22.0
 @export var wire_position: Vector3 = Vector3(-1.5, 2.7, -3.4)
 ## Through the closed pane only the low hum reaches the room; with the door
 ## open the wire is brighter and nearer.
-@export var wire_glass_cutoff_hz: float = 1400.0
+@export var wire_glass_cutoff_hz: float = 900.0
 @export var wire_open_cutoff_hz: float = 6000.0
 @export var wire_open_boost_db: float = 6.0
 
 @export var ambience_bus: StringName = &"Ambience"
 
 @export var room_tone_volume_db: float = -12.0
-@export var wind_volume_db: float = -9.0
+@export var wind_volume_db: float = -16.0
 @export var stove_volume_db: float = -13.0
 @export var clock_volume_db: float = -17.0
 
@@ -136,6 +136,8 @@ func build_players() -> void:
 	if wind_player == null:
 		wind_player = _build_positional(
 			"WindPlayer", as_looping(wind_stream), wind_volume_db, wind_position, wind_max_distance)
+		wind_player.max_db = wind_volume_db + wind_drift_db
+		wind_player.attenuation_filter_cutoff_hz = 1600.0
 	if stove_player == null:
 		stove_player = _build_positional(
 			"StovePlayer", as_looping(stove_stream), stove_volume_db, stove_position, stove_max_distance)
@@ -147,6 +149,7 @@ func build_players() -> void:
 			"WirePlayer", as_looping(wire_stream), wire_volume_db, wire_position, wind_max_distance)
 		wire_player.attenuation_filter_cutoff_hz = wire_glass_cutoff_hz
 		wire_player.attenuation_filter_db = -12.0
+		wire_player.max_db = wire_volume_db + wire_open_boost_db
 
 ## The door is open to the night: the wire is heard without the glass.
 func open_to_outside(open: bool = true) -> void:

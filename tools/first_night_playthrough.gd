@@ -2,9 +2,14 @@ extends SceneTree
 
 ## Uses production scenes, raycasts and InputMap events. Rendering can be
 ## recorded with -- --capture; otherwise timers are advanced explicitly.
+## -- --walk records the live night and walks between interaction points.
+const AISLE := Vector3(0.35, 0.0, 0.25)
+const ARRIVAL_RADIUS := 0.14
+
 var office: M1OfficeController
 var failures := 0
 var capture := false
+var walk := false
 var branch := "water"
 var screenshots := 0
 var audio_recording: AudioEffectRecord
@@ -14,7 +19,8 @@ var audio_marks: PackedStringArray = []
 var audio_started_msec := 0
 
 func _initialize() -> void:
-	capture = "--capture" in OS.get_cmdline_user_args()
+	walk = "--walk" in OS.get_cmdline_user_args()
+	capture = walk or "--capture" in OS.get_cmdline_user_args()
 	if "--watcher" in OS.get_cmdline_user_args():
 		branch = "watcher"
 	elif "--lapsed" in OS.get_cmdline_user_args():
@@ -22,6 +28,8 @@ func _initialize() -> void:
 	elif "--wrong" in OS.get_cmdline_user_args():
 		branch = "wrong"
 	output_folder += "_" + branch
+	if walk:
+		output_folder += "_walk"
 	_run.call_deferred()
 
 func _run() -> void:
@@ -99,6 +107,12 @@ func _run() -> void:
 		await create_timer(0.01).timeout
 		settle_guard += 1
 	check(office.operator_seat.is_settled(), "Chair transition actually settled before first key activation")
+	if walk:
+		var lamp := office.get_node("LampLife") as LampLife
+		await _aim_and_interact(office.get_node("DeskSetup/OilLamp/WickInteractable"))
+		await create_timer(lamp.wick_turn_seconds + 0.05).timeout
+		check(is_equal_approx(lamp.wick, 1.0), "E raises the wick before opening the line")
+		await _shot("02c_lamp_ready")
 	await _aim_and_interact(office.session_controller.telegraph_key.get_interactable())
 	check(office.shift_director.get_phase() == ShiftDirector.Phase.WAITING, "Seated key opens the watch")
 	for slot in 3:
@@ -187,6 +201,24 @@ func _run() -> void:
 		else:
 			await _press("commit_option_2")
 			check(not office.copy_commit_desk.has_committed(), "Unseen filing desk rejects remote shortcut")
+			if branch != "watcher" and branch != "lapsed":
+				var pen := office.get_node("DeskAmendment") as DeskAmendment
+				await _aim_and_interact(pen.get_target())
+				check(pen.writing and not office.copy_commit_desk.has_committed(), "Pick up the pen without filing")
+				await _shot("06_amendment_blank")
+				var word := "WAITER" if branch == "wrong" else "WATER"
+				for character in word:
+					await _raw_key(character.unicode_at(0), character.to_lower().unicode_at(0))
+				check(office.operator_seat.is_seated and office.session_controller.transcript_paper.get_amendment().word == word,
+					"Real typing keeps the intended word and the operator in the chair")
+				await _raw_key(KEY_ENTER)
+				for step in 200:
+					if not pen.writing:
+						break
+					await create_timer(0.05).timeout
+				check(office.get_pending_correction() == word and not office.copy_commit_desk.has_committed(),
+					"Enter leaves the correction on the unfiled sheet")
+				await _shot("06_amendment_typed")
 			await _stand()
 			if branch == "lapsed":
 				if capture:
@@ -196,17 +228,6 @@ func _run() -> void:
 				check(office.copy_commit_desk.get_result_text() == "UNFILED", "Unfiled deadline resolves without a selected copy")
 			else:
 				await _interact_at(Vector3(0.45, 0, 0.95), office.copy_commit_desk.get_node("Option2Interactable" if branch == "watcher" else "Option1Interactable"))
-				if branch != "watcher":
-					check(office.amendment_editor.is_open(), "Physical amendment opens an editor without filing")
-					await _shot("06_amendment_blank")
-					await process_frame
-					await process_frame
-					var word := "WAITER" if branch == "wrong" else "WATER"
-					for character in word:
-						await _raw_key(character.unicode_at(0), character.to_lower().unicode_at(0))
-					check(office.amendment_editor.correction.text == word, "Real typing preserves intended amendment word")
-					await _shot("06_amendment_typed")
-					await _raw_key(KEY_ENTER)
 				var expected_action := &"file_watcher" if branch == "watcher" else &"amend_copy"
 				check(office.copy_commit_desk.get_selected_action_id() == expected_action, "Physical %s choice resolves only after explicit action" % branch)
 			await _shot("06_filed")
@@ -327,10 +348,48 @@ func _stand() -> void:
 	check(not office.operator_seat.is_seated, "Movement rises from chair")
 
 func _interact_at(position: Vector3, target: Node3D) -> void:
-	office.player.global_position = position
-	office.player.velocity = Vector3.ZERO
-	await physics_frame
+	if walk:
+		# The ledger is reachable just south of the chair's collision envelope.
+		if target.get_parent().name == &"DispatchLedger":
+			position = Vector3(-1.18, 0.0, 0.10)
+		if _horizontal_to(position).length() > ARRIVAL_RADIUS:
+			if not await _walk_leg(AISLE) or not await _walk_leg(position):
+				check(false, "Could not reach %s on movement input" % target.name)
+				quit(1)
+				return
+		check(_horizontal_to(position).length() <= ARRIVAL_RADIUS, "Walked to %s within reach" % target.name)
+	else:
+		office.player.global_position = position
+		office.player.velocity = Vector3.ZERO
+		await physics_frame
 	await _aim_and_interact(target)
+
+func _walk_leg(target: Vector3) -> bool:
+	if _horizontal_to(target).length() <= ARRIVAL_RADIUS:
+		return true
+	var player := office.player
+	var previous := player.global_position
+	var longest_step := 0.0
+	var stop_radius := 0.08 + player.move_speed * player.move_speed / (2.0 * player.deceleration)
+	var deadline := Time.get_ticks_msec() + 9000
+	Input.action_press("move_forward")
+	while _horizontal_to(target).length() > stop_radius and Time.get_ticks_msec() < deadline:
+		player.aim_at(Vector3(target.x, player.camera.global_position.y, target.z))
+		await physics_frame
+		longest_step = maxf(longest_step, player.global_position.distance_to(previous))
+		previous = player.global_position
+	Input.action_release("move_forward")
+	for frame in 14:
+		await physics_frame
+		longest_step = maxf(longest_step, player.global_position.distance_to(previous))
+		previous = player.global_position
+	var distance := _horizontal_to(target).length()
+	print("WALK ", target, " arrival ", snappedf(distance, 0.001), " max physics step ", snappedf(longest_step, 0.001))
+	return distance <= ARRIVAL_RADIUS and longest_step < 0.12
+
+func _horizontal_to(target: Vector3) -> Vector2:
+	var offset := target - office.player.global_position
+	return Vector2(offset.x, offset.z)
 
 func _aim(target: Node3D) -> void:
 	var point := target.global_position

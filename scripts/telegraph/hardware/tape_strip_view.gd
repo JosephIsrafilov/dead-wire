@@ -84,7 +84,7 @@ func _process(delta: float) -> void:
 func refresh() -> void:
 	if _register == null or _image == null:
 		return
-	var events := _register.get_record()
+	var events := _register.get_fed_record()
 	var total := 0.0
 	for ink in events:
 		total += ink.duration_seconds

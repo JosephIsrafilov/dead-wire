@@ -29,13 +29,14 @@ func _office() -> M1OfficeController:
 
 func _run() -> void:
 	print("--- Ledger sign-on ---")
+	GameLocale.lock_language_for_test("en")
 	var office := _office()
 	await process_frame
 	await process_frame
 	var ledger := office.get_node_or_null("DispatchLedger") as DispatchLedger
 	if not check(ledger != null, "The office has its dispatch ledger"): return
 	var sign_area := ledger.get_node_or_null("SignInteractable") as Interactable
-	if not check(sign_area != null and sign_area.enabled and sign_area.get_prompt() == "Sign On",
+	if not check(sign_area != null and sign_area.enabled and sign_area.get_prompt() == "Sign On (Optional)",
 		"An unsigned ledger offers the pen"): return
 	if not check(ledger.get_interactable().get_prompt() == "Inspect Dispatch Ledger", "Reading the ledger stays its own action"): return
 	if not check(not bool(ledger.call("is_signed")), "A new watch starts unsigned"): return

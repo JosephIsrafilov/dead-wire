@@ -1,6 +1,7 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://scripts/office/watchman_lantern.gd" id="1_watchman"]
+[ext_resource type="PackedScene" path="res://scenes/office/mine_yard_rail_detail.tscn" id="2_rail_detail"]
 
 ; The yard and the closed mine beyond the north window, as real geometry.
 ;
@@ -35,6 +36,8 @@ shading_mode = 0
 albedo_color = Color(0.05, 0.058, 0.08, 1)
 
 [node name="MineYard" type="Node3D"]
+
+[node name="RailDetail" parent="." instance=ExtResource("2_rail_detail")]
 
 ; --- the branch line to the shaft ------------------------------------------
 ; Two rails from the yard gate to the headframe, catching a little sky.

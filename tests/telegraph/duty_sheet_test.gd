@@ -10,6 +10,7 @@ func _init() -> void:
 
 func _run() -> void:
 	print("--- Starting Duty Sheet Test Suite ---")
+	GameLocale.lock_language_for_test("en")
 	var knowledge := root.get_node_or_null("KnowledgeState") as KnowledgeStateStore
 	var world := root.get_node_or_null("WorldState") as WorldStateStore
 	if not assert_condition(knowledge != null, "KnowledgeState autoload is available"): return

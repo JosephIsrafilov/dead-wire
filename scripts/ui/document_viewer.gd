@@ -47,7 +47,7 @@ const COPY_FACE = preload("res://materials/style_tests/textures/psx/form_night_c
 const MORSE_FONT = preload("res://assets/fonts/courierprime/CourierPrime-Regular.ttf")
 ## Tape body = measured widest line + inner padding; card chrome = side margins.
 const TAPE_LINE_PADDING := 12.0
-const CARD_CHROME_WIDTH := 56.0
+const CARD_CHROME_WIDTH := 80.0
 const CARD_MIN_WIDTH := 620.0
 const BODY_MIN_WIDTH := 560.0
 
@@ -55,6 +55,7 @@ func _ready() -> void:
 	visible = false
 	_is_open = false
 	_find_nodes()
+	_style_paper_chrome()
 	text_scale = GameSettings.load_settings().text_scale
 	if not get_viewport().size_changed.is_connected(_on_viewport_resized):
 		get_viewport().size_changed.connect(_on_viewport_resized)
@@ -87,7 +88,9 @@ func open_document(doc_id: String, title: String, body: String, footer: String =
 	_current_doc_id = doc_id
 	_is_open = true
 	_just_opened_frame = Engine.get_process_frames()
-	_opened_footer = footer if not footer.is_empty() else default_footer
+	_opened_footer = footer if not footer.is_empty() else GameLocale.pick(
+		"[E / Esc / ПКМ] Отложить", default_footer
+	)
 	_live_footer = ""
 
 	if title_label != null:
@@ -95,9 +98,12 @@ func open_document(doc_id: String, title: String, body: String, footer: String =
 	if body_label != null:
 		var font: Font = PAPER_FONT
 		var font_size := 17
-		if doc_id in ["morse_reference", "tape_register", "timetable_card"]:
+		if doc_id in ["morse_reference", "tape_register", "timetable_card"] and not GameLocale.is_ru():
 			font = MORSE_FONT
 			font_size = 16
+		elif doc_id == "tape_register" and GameLocale.is_ru():
+			font = PAPER_FONT
+			font_size = 14
 		elif doc_id in [HAND_DOC_ID, "previous_transcript"]:
 			font = HAND_FONT
 			font_size = 24
@@ -113,6 +119,7 @@ func open_document(doc_id: String, title: String, body: String, footer: String =
 	if footer_label != null:
 		footer_label.text = _opened_footer
 
+	_style_paper_chrome(doc_id == "tape_register")
 	_present_copy(doc_id, body)
 	_apply_lamp_light_to_paper()
 	visible = true
@@ -151,12 +158,52 @@ func set_text_scale(value: float) -> void:
 	text_scale = clampf(value, 1.0, 1.5)
 	if not _is_open or body_label == null:
 		return
-	var base := 16 if _current_doc_id in ["morse_reference", "tape_register", "timetable_card"] else 17
-	if _current_doc_id in [HAND_DOC_ID, "previous_transcript"]:
+	var base := 16 if (
+		not GameLocale.is_ru() and _current_doc_id in ["morse_reference", "tape_register", "timetable_card"]
+	) else 17
+	if _current_doc_id == "tape_register" and GameLocale.is_ru():
+		base = 14
+	elif _current_doc_id in [HAND_DOC_ID, "previous_transcript"]:
 		base = 24
 	body_label.add_theme_font_size_override("normal_font_size", int(round(base * text_scale)))
 	_fit_body_width()
 	_present_copy(_current_doc_id, body_label.text)
+
+func _style_paper_chrome(is_tape: bool = false) -> void:
+	var scroll_path := "CenterContainer/PanelContainer/MarginContainer/VBoxContainer/BodyScroll"
+	var scroll := get_node_or_null(scroll_path) as ScrollContainer
+	var track := StyleBoxFlat.new()
+	track.bg_color = Color(0.26, 0.19, 0.12, 0.12)
+	track.set_corner_radius_all(3)
+	track.content_margin_top = 3.0
+	track.content_margin_bottom = 3.0
+	track.content_margin_left = 3.0
+	track.content_margin_right = 3.0
+	var grabber := StyleBoxFlat.new()
+	grabber.bg_color = Color(0.42, 0.31, 0.20, 0.58)
+	grabber.set_corner_radius_all(3)
+	var grabber_hi := grabber.duplicate() as StyleBoxFlat
+	grabber_hi.bg_color = Color(0.32, 0.22, 0.13, 0.80)
+	var empty := StyleBoxEmpty.new()
+	var bars: Array[ScrollBar] = []
+	if scroll != null:
+		bars.append(scroll.get_h_scroll_bar())
+		bars.append(scroll.get_v_scroll_bar())
+	if body_label != null:
+		bars.append(body_label.get_v_scroll_bar())
+	for bar in bars:
+		if bar == null:
+			continue
+		bar.add_theme_stylebox_override("scroll", track)
+		bar.add_theme_stylebox_override("scroll_focus", empty)
+		bar.add_theme_stylebox_override("grabber", grabber)
+		bar.add_theme_stylebox_override("grabber_highlight", grabber_hi)
+		bar.add_theme_stylebox_override("grabber_pressed", grabber_hi)
+	if panel_container != null:
+		var style := panel_container.get_theme_stylebox("panel")
+		if style is StyleBoxTexture:
+			var tex_style := style as StyleBoxTexture
+			tex_style.modulate_color = Color(0.95, 0.90, 0.77, 1.0) if is_tape else Color(0.96, 0.90, 0.78, 1.0)
 
 ## Timing ink is never clipped: the tape card grows to the measured widest line
 ## (bundled mono face, current size), bounded by the viewport. Wider strips scroll
@@ -180,9 +227,12 @@ func _fit_body_width() -> void:
 	var vbar_width := body_label.get_v_scroll_bar().get_combined_minimum_size().x
 	var body_width := maxf(BODY_MIN_WIDTH, ceilf(widest) + vbar_width + TAPE_LINE_PADDING)
 	var viewport_limit := maxf(area.x - 48.0, 1.0)
-	panel_container.custom_minimum_size.x = minf(maxf(CARD_MIN_WIDTH, body_width + CARD_CHROME_WIDTH), viewport_limit)
+	var needed_card := maxf(CARD_MIN_WIDTH, body_width + CARD_CHROME_WIDTH)
+	panel_container.custom_minimum_size.x = minf(needed_card, viewport_limit)
 	body_label.custom_minimum_size.x = body_width
-	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+	scroll.horizontal_scroll_mode = (
+		ScrollContainer.SCROLL_MODE_AUTO if needed_card > viewport_limit else ScrollContainer.SCROLL_MODE_DISABLED
+	)
 
 func _copy_footer(text: String) -> void:
 	if _copy_reading_footer == null:
@@ -206,8 +256,11 @@ func _copy_footer(text: String) -> void:
 	backing.visible = _is_open and _current_doc_id in [HAND_DOC_ID, "previous_transcript"]
 	_copy_reading_footer.position = Vector2(24, area.y - 48)
 	_copy_reading_footer.size = Vector2(maxf(area.x - 48, 1), 32)
-	var status := "COPY INCOMPLETE  ·  " if _copy_incomplete else ""
-	_copy_reading_footer.text = status + text + "  ·  [Wheel / PgUp PgDn Home End] Move sheet"
+	var status := GameLocale.pick("НЕ ДОПИСАНО  ·  ", "COPY INCOMPLETE  ·  ") if _copy_incomplete else ""
+	_copy_reading_footer.text = status + text + GameLocale.pick(
+		"  ·  [Колесо / PgUp PgDn] Сдвинуть лист",
+		"  ·  [Wheel / PgUp PgDn Home End] Move sheet"
+	)
 	_copy_reading_footer.visible = _is_open and _current_doc_id in [HAND_DOC_ID, "previous_transcript"]
 
 func _present_copy(doc_id: String, body: String) -> void:
@@ -259,7 +312,7 @@ func _present_copy(doc_id: String, body: String) -> void:
 				ink.text = previous.text
 	_present_amendment(copy, ink, paper if doc_id == HAND_DOC_ID else null)
 	var status := copy.get_node("Status") as Label
-	status.text = "COPY INCOMPLETE" if mark >= 0 else ""
+	status.text = GameLocale.pick("КОПИЯ НЕ ПОЛНА", "COPY INCOMPLETE") if mark >= 0 else ""
 	(copy.get_node("Footer") as Label).visible = false
 	_copy_footer(_active_footer())
 
@@ -447,7 +500,7 @@ func _animate_in() -> void:
 	tween.set_parallel(true)
 	if backdrop != null:
 		backdrop.color.a = 0.0
-		tween.tween_property(backdrop, "color:a", 0.6, open_duration).set_trans(Tween.TRANS_SINE)
+		tween.tween_property(backdrop, "color:a", 0.72, open_duration).set_trans(Tween.TRANS_SINE)
 	if centre != null:
 		centre.modulate.a = 0.0
 		centre.scale = Vector2(0.94, 0.94)

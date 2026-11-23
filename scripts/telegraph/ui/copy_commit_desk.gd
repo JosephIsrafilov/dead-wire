@@ -48,6 +48,7 @@ var _tool_rest: Vector3 = Vector3.ZERO
 var _tool_tween: Tween = null
 const OPTION_LABEL_NAMES := [&"OptionOneLabel", &"OptionTwoLabel"]
 const PLATE_TITLES := ["FILE CORRECTION", "FILE ORIGINAL"]
+const PLATE_TITLES_RU := ["ИСПРАВЛЕННАЯ\nКОПИЯ", "ПОДЛИННИК\nВ АРХИВ"]
 const OPTION_STAMP_NAMES := [&"OptionOneStamp", &"OptionTwoStamp"]
 const LAPSED_ACTION_ID: StringName = &"lapsed"
 
@@ -57,11 +58,16 @@ func _ready() -> void:
 		_tool_rest = _tool.position
 	interactable = get_node_or_null("Interactable") as Interactable
 	if interactable != null:
-		interactable.prompt_text = prompt_message
+		interactable.prompt_text = GameLocale.pick("Подшить копию", prompt_message)
 	for index in 2:
 		var target := get_node_or_null("Option%dInteractable" % (index + 1)) as Interactable
 		if target != null:
 			target.interacted.connect(select_option.bind(index))
+	_update_presentation()
+
+func refresh_locale() -> void:
+	if interactable != null:
+		interactable.prompt_text = GameLocale.pick("Подшить копию", prompt_message)
 	_update_presentation()
 
 func get_interactable() -> Interactable:
@@ -285,7 +291,7 @@ func _option_label(index: int) -> String:
 	var office := get_parent() as M1OfficeController
 	if index < _options.size() and (office == null or not office.is_shift_directed()):
 		return _string_property(_options[index], "display_label")
-	return PLATE_TITLES[index]
+	return PLATE_TITLES_RU[index] if GameLocale.is_ru() else PLATE_TITLES[index]
 
 func _update_presentation() -> void:
 	var interact := get_interactable()
@@ -298,12 +304,16 @@ func _update_presentation() -> void:
 			if is_corr and is_enabled() and not _can_file_correction():
 				target.enabled = true
 				target.is_actionable = false
-				target.prompt_text = "FILE CORRECTION — Correct at Desk First [A]"
+				target.prompt_text = GameLocale.pick(
+					"Исправленная копия — сначала внесите правку пером на столе [A]",
+					"FILE CORRECTION — Correct at Desk First [A]"
+				)
 			else:
 				target.enabled = is_enabled() and (index >= _options.size() or not is_corr or _can_file_correction())
 				target.is_actionable = target.enabled
 				if index < _options.size():
-					target.prompt_text = "Stamp: %s" % _option_label(index).replace("\n", " ")
+					target.prompt_text = GameLocale.pick("Поставить печать: %s", "Stamp: %s") \
+						% _option_label(index).replace("\n", " ")
 	var selected_index := _selected_index()
 	# While the press is in flight the ink has not landed: the stamps stay
 	# hidden until the physical contact.
@@ -320,19 +330,22 @@ func _update_presentation() -> void:
 			# has physically landed. A lapse resolves the desk without filing
 			# anything: no stamp is drawn at all.
 			stamp.visible = ink_landed and has_option and selected_index >= 0
-			_set_text(stamp, "FILED" if index == selected_index else "VOID")
+			_set_text(
+				stamp,
+				GameLocale.pick("ПОДШИТО", "FILED") if index == selected_index
+				else GameLocale.pick("АННУЛ.", "VOID")
+			)
 			_set_modulate(stamp, Color(0.72, 0.18, 0.12, 1.0) if index == selected_index else Color(0.42, 0.4, 0.35, 0.65))
 	var result := get_node_or_null("ResultLabel")
-	# An empty field says "nothing was filed" better than the word NO FILE did.
-	# The desk used to narrate its own state at the operator ("AWAITING
-	# TRANSCRIPT", "NO FILE", "UNAVAILABLE"), which read as a debug readout
-	# floating on an 1894 counter. When there is nothing to report, it reports
-	# nothing — which is what a real desk does.
-	_set_text(result, _result_text if _committed and not _result_text.is_empty() else "")
-	# Once filed, the stamp and the result line say it; the prompt line goes
-	# quiet instead of repeating "COPY FILED" a second time on the same desk.
+	var display_res := _result_text
+	if GameLocale.is_ru() and _committed and not _result_text.is_empty():
+		match _result_text:
+			"CORRECTION FILED": display_res = "ПРАВКА ПОДШИТА"
+			"COPY FILED": display_res = "КОПИЯ ПОДШИТА"
+			"UNFILED": display_res = "НЕ ПОДШИТО"
+	_set_text(result, display_res if _committed and not display_res.is_empty() else "")
 	var prompt := get_node_or_null("PromptLabel")
-	_set_text(prompt, prompt_message if is_enabled() else "")
+	_set_text(prompt, GameLocale.pick("Подшить одну копию", prompt_message) if is_enabled() else "")
 
 func _selected_index() -> int:
 	if _selected_action_id == StringName():

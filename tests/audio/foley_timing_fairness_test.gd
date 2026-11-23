@@ -69,8 +69,35 @@ func _check_boundaries_and_integration() -> void:
 	# Integration: a trigger inside a MARK defers the step; no MARK overlap at start.
 	scheduler.cancel()
 	scheduler.start(schedule)
+	var started_steps: Array[int] = []
+	door.footsteps_started.connect(func(): started_steps.append(door.steps_played))
 	door.trigger_footsteps()
 	_check(door.steps_played == 0 and door.is_active, "Trigger during MARK defers the first step")
+	scheduler.advance_time(0.02)
+	door._process(0.02)
+	_check(started_steps.is_empty(), "No caption is requested while the first step waits")
+	_check(is_zero_approx(door.get_lantern_glow()), "No lantern appears while the first step waits")
+
+	scheduler.advance_time(0.08)
+	door._process(0.0)
+	_check(door.steps_played == 1 and started_steps == [1], "First safe gap starts the step and its caption")
+	door._process(0.05)
+	_check(door.get_lantern_glow() > 0.0, "The lantern moves with the first audible step")
+
+	scheduler.advance_time(gap_end - scheduler.get_elapsed_seconds() + 0.01)
+	door._process(1.0)
+	var waiting_offset := door.get_lantern_offset()
+	door._process(3.0)
+	_check(door.steps_played == 1 and is_equal_approx(door.get_lantern_offset(), waiting_offset)
+		and door.get_lantern_glow() > 0.0, "The lantern holds its place while the next step waits")
+
+	scheduler.cancel()
+	door._process(0.0)
+	door._process(door.step_interval)
+	_check(door.steps_played == 3 and door.get_lantern_offset() > waiting_offset
+		and started_steps == [1], "Later steps carry the lantern onward without repeating the caption")
+	door._process(2.0)
+	_check(is_zero_approx(door.get_lantern_glow()), "The lantern fades after the final step")
 
 	# Duplicate binding must not double-connect the MARK listener.
 	door._bind_fairness()

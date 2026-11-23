@@ -68,7 +68,7 @@ func _run() -> void:
 	guidance.advance_guidance(0.1)
 	if not _a(guidance.current_text == data.reaction_for(&"call").get("text", ""),
 			"A queued reaction speaks immediately when the operator is free"): return
-	if not _a(not guidance.current_text.contains("Lamp first"),
+	if not _a(guidance.current_text != data.entry_for(&"entry").get("text", ""),
 			"The reaction outranks the procedural reminder"): return
 
 	# It expires on its own; the procedure then gets the floor back.

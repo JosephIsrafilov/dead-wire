@@ -12,6 +12,7 @@ signal resumed()
 const TITLE_SCENE: String = "res://scenes/ui/main_menu.tscn"
 const READABILITY_PATH: String = \
 	"CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Columns/ControlColumn/ReadabilityOptions"
+const DEBUG_FOCUS_LOGS: bool = false
 
 @export var player: PlayerController = null
 @export var document_viewer: DocumentViewer = null
@@ -38,6 +39,15 @@ const LEAVE_CONFIRM_MSEC := 4000
 var _leave_armed_at: int = -1
 var _leave_caption: String = ""
 
+static func _leave_confirm_text() -> String:
+	return GameLocale.pick(
+		"Выйти? Смена пропадёт — нажмите ещё раз",
+		"Leave? The night is lost — press again"
+	)
+
+func _enter_tree() -> void:
+	_bind_window_focus()
+
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	visible = false
@@ -48,22 +58,146 @@ func _ready() -> void:
 	settings.apply(player)
 	_push_settings_to_controls()
 	_connect_controls()
+	_bind_window_focus()
+	refresh_locale()
+
+func refresh_locale() -> void:
+	var box := "CenterContainer/PanelContainer/MarginContainer/VBoxContainer/"
+	var sound := box + "Columns/SoundColumn/"
+	var controls := box + "Columns/ControlColumn/"
+	var title := get_node_or_null(box + "TitleLabel") as Label
+	if title != null:
+		title.text = GameLocale.pick("ЛИНИЯ НА УДЕРЖАНИИ", "LINE HELD")
+	var subtitle := get_node_or_null(box + "SubtitleLabel") as Label
+	if subtitle != null:
+		var in_office := get_parent() is M1OfficeController
+		subtitle.text = GameLocale.pick(
+			"Станция Блэк-Крик — Ночная смена" if in_office else "Блэк-Крик — Апрель 1890",
+			"Black Creek Station — Night Watch" if in_office else "Black Creek — April 1890"
+		)
+	var row_labels := {
+		sound + "MasterRow/Label": ["Общая громкость", "Master volume"],
+		sound + "AmbienceRow/Label": ["Шум комнаты", "Room ambience"],
+		sound + "TelegraphRow/Label": ["Телеграф", "Telegraph"],
+		sound + "FoleyRow/Label": ["Звуки предметов", "Foley"],
+		sound + "MusicRow/Label": ["Музыка", "Music"],
+		controls + "SensitivityRow/Label": ["Чувствительность мыши", "Mouse sensitivity"],
+	}
+	for path in row_labels:
+		var lbl := get_node_or_null(path) as Label
+		if lbl != null:
+			var pair: Array = row_labels[path]
+			lbl.text = GameLocale.pick(pair[0], pair[1])
+	if head_bob_check != null:
+		head_bob_check.text = GameLocale.pick("Покачивание головы", "Head movement while walking")
+	if contextual_thoughts_check != null:
+		contextual_thoughts_check.text = GameLocale.pick("Мысли оператора", "Contextual thoughts")
+	if resume_button != null:
+		resume_button.text = GameLocale.pick("Продолжить", "Return to the Wire")
+	if title_button != null:
+		var base_leave := GameLocale.pick("В главное меню", "Leave the Post")
+		_leave_caption = base_leave
+		title_button.text = _leave_confirm_text() if is_leave_armed() else base_leave
+	if quit_button != null:
+		quit_button.text = GameLocale.pick("Выйти из игры", "Quit to Desktop")
+	var hint := get_node_or_null(box + "HintLabel") as Label
+	if hint != null:
+		if get_parent() is M1OfficeController:
+			hint.text = GameLocale.pick(
+				"A / W / D / S  обзор      ЛКМ  действие      ПКМ  прильнуть      Колесо  лампа      Пробел  ключ",
+				"W A S D  look      LMB  act      RMB  lean      Wheel  lamp      Space  key"
+			)
+		else:
+			hint.text = GameLocale.pick(
+				"WASD  ходьба      Shift  быстрый шаг      E  действие      Esc  пауза",
+				"W A S D  walk      Shift  brisk stride      E  act      Esc  pause"
+			)
+
+func _bind_window_focus() -> void:
+	if not is_inside_tree():
+		return
+	var root_win := get_tree().root
+	if root_win == null:
+		return
+	if not root_win.focus_entered.is_connected(_on_window_focus_entered):
+		root_win.focus_entered.connect(_on_window_focus_entered)
+	if not root_win.focus_exited.is_connected(_on_window_focus_exited):
+		root_win.focus_exited.connect(_on_window_focus_exited)
+
+func _unbind_window_focus() -> void:
+	if not is_inside_tree():
+		return
+	var root_win := get_tree().root
+	if root_win == null:
+		return
+	if root_win.focus_entered.is_connected(_on_window_focus_entered):
+		root_win.focus_entered.disconnect(_on_window_focus_entered)
+	if root_win.focus_exited.is_connected(_on_window_focus_exited):
+		root_win.focus_exited.disconnect(_on_window_focus_exited)
 
 func _notification(what: int) -> void:
-	if what == NOTIFICATION_APPLICATION_FOCUS_OUT and not get_tree().paused:
+	if what == NOTIFICATION_APPLICATION_FOCUS_OUT or what == NOTIFICATION_WM_WINDOW_FOCUS_OUT:
+		_on_window_focus_exited()
+	elif what == NOTIFICATION_APPLICATION_FOCUS_IN or what == NOTIFICATION_WM_WINDOW_FOCUS_IN:
+		_on_window_focus_entered()
+
+func _exit_tree() -> void:
+	_unbind_window_focus()
+	_release_focus_pause()
+
+func _log_focus(msg: String) -> void:
+	if DEBUG_FOCUS_LOGS and DisplayServer.get_name() != "headless":
+		print("[Focus] " + msg)
+
+func _on_window_focus_exited() -> void:
+	var paused_now := get_tree().paused if is_inside_tree() else false
+	_log_focus("window focus_exited paused_now=%s paused_for_focus=%s" % [paused_now, _paused_for_focus])
+	if is_inside_tree() and not get_tree().paused:
 		# Hold the wire and the shift clocks without taking over the active UI.
 		_paused_for_focus = true
 		get_tree().paused = true
-	elif what == NOTIFICATION_APPLICATION_FOCUS_IN:
-		_release_focus_pause()
 
-func _exit_tree() -> void:
+func _on_window_focus_entered() -> void:
+	_log_focus("window focus_entered paused_for_focus=%s is_paused=%s mouse=%d" % [
+		_paused_for_focus, is_paused, Input.mouse_mode
+	])
 	_release_focus_pause()
+	_restore_mouse_mode(true)
+	_restore_mouse_mode.call_deferred(true)
 
 func _release_focus_pause() -> void:
 	if _paused_for_focus:
 		_paused_for_focus = false
-		get_tree().paused = false
+		if is_inside_tree():
+			get_tree().paused = false
+		_restore_mouse_mode.call_deferred(true)
+
+func _restore_mouse_mode(force_reacquire: bool = false) -> void:
+	var tree_paused := is_inside_tree() and get_tree().paused
+	if is_paused or tree_paused:
+		_log_focus("restore skipped: is_paused=%s tree_paused=%s" % [is_paused, tree_paused])
+		return
+	var parent_node := get_parent()
+	var blocked := parent_node != null and parent_node.has_method("is_world_view_blocked") \
+		and bool(parent_node.call("is_world_view_blocked"))
+	if blocked:
+		_log_focus("restore skipped: world_view_blocked=true")
+		return
+	if is_inside_tree() and get_viewport() != null:
+		get_viewport().gui_release_focus()
+		if get_tree().root != null:
+			get_tree().root.gui_release_focus()
+	var seated_mode := player != null and player.seated_station_mode
+	if not seated_mode and force_reacquire and DisplayServer.get_name() != "headless" \
+			and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+		# Toggle through VISIBLE so Windows DisplayServer re-acquires OS ClipCursor.
+		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE if seated_mode else Input.MOUSE_MODE_CAPTURED
+	_log_focus("restored mouse_mode=%d seated=%s force=%s" % [Input.mouse_mode, seated_mode, force_reacquire])
+	if player != null:
+		var interaction := player.get_node_or_null("InteractionController") as InteractionController
+		if interaction != null:
+			interaction.refresh_prompt()
 
 func _find_nodes() -> void:
 	var box := "CenterContainer/PanelContainer/MarginContainer/VBoxContainer/"
@@ -211,12 +345,12 @@ func resume() -> bool:
 	_disarm_leave()
 	if is_inside_tree():
 		get_tree().paused = false
-	var seated_mode := player != null and player.seated_station_mode
-	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE if seated_mode else Input.MOUSE_MODE_CAPTURED
-	if player != null:
-		var interaction := player.get_node_or_null("InteractionController") as InteractionController
-		if interaction != null:
-			interaction.refresh_prompt()
+		if get_viewport() != null:
+			get_viewport().gui_release_focus()
+		if get_tree().root != null:
+			get_tree().root.gui_release_focus()
+	_restore_mouse_mode()
+	_restore_mouse_mode.call_deferred()
 	_save()
 	resumed.emit()
 	return true
@@ -285,7 +419,7 @@ func _on_leave_pressed() -> void:
 	if title_button != null:
 		if _leave_caption.is_empty():
 			_leave_caption = title_button.text
-		title_button.text = LEAVE_CONFIRM_TEXT
+		title_button.text = _leave_confirm_text()
 
 func is_leave_armed() -> bool:
 	return _leave_armed_at >= 0 and Time.get_ticks_msec() - _leave_armed_at <= LEAVE_CONFIRM_MSEC
@@ -296,6 +430,10 @@ func _disarm_leave() -> void:
 		title_button.text = _leave_caption
 
 func _process(_delta: float) -> void:
+	if _paused_for_focus and is_inside_tree():
+		var root_win := get_tree().root
+		if (root_win != null and root_win.has_focus()) or DisplayServer.window_is_focused():
+			_on_window_focus_entered()
 	if _leave_armed_at >= 0 and not is_leave_armed():
 		_disarm_leave()
 

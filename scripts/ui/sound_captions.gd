@@ -8,12 +8,19 @@ extends CanvasLayer
 
 const CAPTION_SECONDS := 3.5
 const FADE_SECONDS := 0.6
-const CAPTIONS := {
+const CAPTIONS_EN := {
 	&"call": "[the sounder calls]",
 	&"steps": "[steps beyond the door]",
 	&"creak": "[timber creaks]",
 	&"register": "[the register is running down]",
 }
+const CAPTIONS_RU := {
+	&"call": "[вызов на линии]",
+	&"steps": "[шаги за дверью]",
+	&"creak": "[скрип дерева]",
+	&"register": "[регистр замедляется]",
+}
+const CAPTIONS := CAPTIONS_EN
 
 @export var office: M1OfficeController
 var enabled: bool = false:
@@ -35,7 +42,7 @@ func _ready() -> void:
 	_label.offset_top = 18.0
 	_label.offset_bottom = 48.0
 	_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_label.add_theme_font_override("font", preload("res://assets/fonts/imfell/IMFeENrm28P.ttf"))
+	_label.add_theme_font_override("font", preload("res://assets/fonts/oldstandard/OldStandardTT-Regular.ttf"))
 	_label.add_theme_font_size_override("font_size", 18)
 	_label.add_theme_color_override("font_color", Color(0.82, 0.78, 0.7, 0.85))
 	_label.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.95))
@@ -49,9 +56,8 @@ func _bind() -> void:
 	if office == null:
 		return
 	if office.shift_director != null:
-		office.shift_director.call_started.connect(func(_slot: int, number: int) -> void:
-			if number == 1:
-				caption(&"call"))
+		office.shift_director.call_started.connect(func(_slot: int, _number: int) -> void:
+			caption(&"call"))
 	if office.door_attention != null:
 		office.door_attention.footsteps_started.connect(caption.bind(&"steps"))
 	var unease := office.get_node_or_null("UneaseDirector") as UneaseDirector
@@ -60,9 +66,10 @@ func _bind() -> void:
 
 ## Shows the caption for a heard sound, if captions are on.
 func caption(kind: StringName) -> void:
-	if not enabled or not CAPTIONS.has(kind):
+	var table: Dictionary = CAPTIONS_RU if GameLocale.is_ru() else CAPTIONS_EN
+	if not enabled or not table.has(kind):
 		return
-	current_text = CAPTIONS[kind]
+	current_text = table[kind]
 	_remaining = CAPTION_SECONDS
 	if _label != null:
 		_label.text = current_text

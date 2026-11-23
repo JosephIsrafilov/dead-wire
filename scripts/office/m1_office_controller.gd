@@ -49,6 +49,11 @@ func _ready() -> void:
 	_bind_signals()
 	load_scenario_by_index(0)
 	_bind_room_fade_in.call_deferred()
+	refresh_locale.call_deferred()
+
+func refresh_locale() -> void:
+	GameLocale.refresh_office_locale(self)
+	_update_transcript_prompt()
 
 ## The room is heard faintly behind the intro's black card and comes up with
 ## the picture; at the end of the watch it leaves with the picture.
@@ -557,7 +562,10 @@ func _on_correction_submitted(word: String) -> void:
 	if session_controller == null or amendment_editor == null:
 		return
 	if not session_controller.submit_amendment(word):
-		amendment_editor.reject_submission("The correction could not be filed; check the line status.")
+		amendment_editor.reject_submission(GameLocale.pick(
+			"Правку не удалось подшить; проверьте состояние линии.",
+			"The correction could not be filed; check the line status."
+		))
 
 func _on_commit_option_committed(action_id: StringName) -> void:
 	# The desk expressed intent. The session is the authority: its answer
@@ -661,30 +669,26 @@ func _on_transcript_inspected(text: String) -> void:
 	# A closed partial shows exactly the ink it has, with the honest mark. It
 	# never reveals the hidden remainder and never verifies anything.
 	if paper != null and paper.is_incomplete_closed():
-		var body := text if not text.is_empty() else "(nothing was written)"
-		document_viewer.open_document(
-			"transcript_paper", "NIGHT COPY — E. CRANE",
-			"%s\n\n— COPY INCOMPLETE —" % body, "[E / Esc] Put Down Transcript"
-		)
+		var body := text if not text.is_empty() else GameLocale.pick("(ничего не записано)", "(nothing was written)")
+		var ftr := GameLocale.pick("[E / Esc / ПКМ] Отложить копию", "[E / Esc] Put Down Transcript")
+		GameLocale.open_doc(document_viewer, "transcript_paper", "%s\n\n— COPY INCOMPLETE —" % body, ftr)
 		return
-	# Finished sheets — current or an earlier telegram's — read as records; the
-	# session's own listener decides whether reading verifies anything.
-	var footer := "[E / Esc] Put Down"
+	var footer := GameLocale.pick("[E / Esc / ПКМ] Отложить", "[E / Esc] Put Down")
 	var scenario := session_controller.get_current_scenario() if session_controller != null else null
 	if (is_shift_directed() and scenario != null and paper != null
 			and paper.get_paper_scenario_id() == scenario.scenario_id):
 		if (session_controller.get_state() == TelegraphSessionController.State.AWAITING_COMMIT
 				and not get_pending_correction().is_empty()):
-			footer += "  ·  File the correction by the stove"
+			footer += GameLocale.pick("  ·  Подшейте правку справа [D]", "  ·  File the correction at the desk [D]")
 		elif scenario.requires_routing and session_controller.get_state() in [
 			TelegraphSessionController.State.VERIFYING, TelegraphSessionController.State.AWAITING_ROUTE
 		]:
-			footer += "  ·  Set the route at the east wall"
+			footer += GameLocale.pick("  ·  Рычаг сигнала слева [A]", "  ·  Set the route at the lever [A]")
 		elif not scenario.requires_routing and session_controller.get_state() in [
 			TelegraphSessionController.State.VERIFYING, TelegraphSessionController.State.AWAITING_COMMIT
 		]:
-			footer += "  ·  Check the tape beside the key"
-	document_viewer.open_document("transcript_paper", "NIGHT COPY — E. CRANE", text, footer)
+			footer += GameLocale.pick("  ·  Сверьте с лентой у ключа", "  ·  Check the tape beside the key")
+	GameLocale.open_doc(document_viewer, "transcript_paper", text, footer)
 
 func _get_transcript_paper() -> TranscriptPaper:
 	var paper := get_node_or_null("TranscriptPaper") as TranscriptPaper
@@ -702,21 +706,22 @@ func _on_previous_transcript_inspected(text: String, incomplete: bool) -> void:
 		# that is feeding onto the writing zone.
 		paper.lift_sheet_for_reading(true)
 	var body := text + ("\n\n— COPY INCOMPLETE —" if incomplete else "")
-	document_viewer.open_document("previous_transcript", "NIGHT COPY — E. CRANE", body,
-		"[E / Esc] Put Down Previous Copy")
+	var ftr := GameLocale.pick("[E / Esc / ПКМ] Отложить копию", "[E / Esc] Put Down Previous Copy")
+	GameLocale.open_doc(document_viewer, "previous_transcript", body, ftr)
 
 func _on_tape_inspected(text: String) -> void:
-	# Dots and dashes only. No transcript on this surface, no comparison,
-	# no verdict: checking the copy against the strip is the player's work.
 	if document_viewer == null:
 		return
 	var lines := text.split("\n")
+	var strip_pfx := GameLocale.pick("— ПОЛОСА ", TapeRegisterController.TAKE_HEADER_PREFIX)
 	for index in lines.size():
 		for number in _telegram_strips:
-			if lines[index].begins_with("%s%d ·" % [TapeRegisterController.TAKE_HEADER_PREFIX, number]):
-				lines[index] += " TELEGRAM"
-	document_viewer.open_document(TapeRegisterController.TAPE_DOC_ID, TapeRegisterController.TAPE_TITLE,
-		_wrap_tape_text("\n".join(lines)), "[E / Esc] Put Down · Calls and replies share the tape · ? marks a cut signal")
+			if lines[index].begins_with("%s%d ·" % [strip_pfx, number]):
+				lines[index] += GameLocale.pick(" ТЕЛЕГРАММА", " TELEGRAM")
+	document_viewer.open_document(TapeRegisterController.TAPE_DOC_ID,
+		GameLocale.pick("ТЕЛЕГРАФНАЯ ЛЕНТА", TapeRegisterController.TAPE_TITLE), _wrap_tape_text("\n".join(lines)),
+		GameLocale.pick("[E / Esc / ПКМ] Отложить · На ленте все вызовы · ? — обрыв",
+			"[E / Esc] Put Down · Calls and replies share the tape · ? marks a cut signal"))
 
 ## Paper layout inserts line breaks only: every timing column survives.
 ## This helper never treats a GAP as disposable prose whitespace.
@@ -727,7 +732,8 @@ static func _wrap_tape_text(text: String, columns: int = 40) -> String:
 	var lines: PackedStringArray = []
 	for original in text.split("\n"):
 		# Take labels are layout metadata, not columns of timed ink.
-		if original.begins_with(TapeRegisterController.TAKE_HEADER_PREFIX) or original.is_empty():
+		if original.begins_with(TapeRegisterController.TAKE_HEADER_PREFIX) \
+				or original.begins_with("— ПОЛОСА ") or original.is_empty():
 			lines.append(original)
 			continue
 		var start := 0
@@ -787,22 +793,28 @@ func _update_transcript_prompt() -> void:
 		# Nothing has been written yet; the pad reports that instead of
 		# offering a read that opens an empty document. (PREPARING is not
 		# empty: a message is on the wire and the blank is feeding.)
-		act.prompt_text = "No Copy Yet"
+		act.prompt_text = GameLocale.pick("Лист пока пуст", "No Copy Yet")
 		act.is_actionable = false
 	elif _is_transcript_copy_in_progress():
 		var seated: bool = operator_seat != null and operator_seat.is_seated
-		act.prompt_text = "Still Copying" if seated else "Return to the Chair to Finish the Copy"
+		act.prompt_text = GameLocale.pick(
+			"Идёт запись" if seated else "Вернитесь за стол дописать копию",
+			"Still Copying" if seated else "Return to the Chair to Finish the Copy"
+		)
 		act.is_actionable = false
 	elif paper.is_incomplete_closed():
-		act.prompt_text = "Read Incomplete Copy"
+		act.prompt_text = GameLocale.pick("Прочитать неполную копию", "Read Incomplete Copy")
 		act.is_actionable = true
 	else:
-		act.prompt_text = paper.prompt_message
+		act.prompt_text = GameLocale.pick("Прочитать текущую копию", paper.prompt_message)
 		act.is_actionable = true
 
 ## Any full-screen surface that hides the world also blocks observation through
 ## it. This is computed centrally so every caller shares one definition.
 func is_world_view_blocked() -> bool:
+	var arrival := get_node_or_null("ShiftArrival")
+	if arrival != null and arrival.has_method("is_running") and arrival.is_running():
+		return true
 	var pen := get_node_or_null("DeskAmendment") as DeskAmendment
 	if pen != null and pen.writing:
 		return true
@@ -832,23 +844,15 @@ func _update_deadline_warning_footer() -> void:
 	if session_controller != null:
 		warning = session_controller.get_deadline_warning_text()
 	if not warning.is_empty():
-		document_viewer.set_live_footer("%s  —  [E / Esc] Put Down" % warning)
+		document_viewer.set_live_footer("%s  —  %s" % [warning, GameLocale.pick("[E / Esc] Отложить", "[E / Esc] Put Down")])
 	else:
 		document_viewer.set_live_footer("")
 
 func _on_card_inspected(text: String) -> void:
-	if document_viewer != null:
-		document_viewer.open_document(
-			"morse_reference", "AMERICAN MORSE CODE (1890)", text,
-			"[E / Esc] Put Down Reference Card"
-		)
+	GameLocale.open_doc(document_viewer, "morse_reference", text)
 
 func _on_ledger_inspected(text: String) -> void:
-	if document_viewer != null:
-		document_viewer.open_document(
-			"dispatch_ledger", "BLACK CREEK STATION — DISPATCH LEDGER", text,
-			"[E / Esc] Put Down Ledger"
-		)
+	GameLocale.open_doc(document_viewer, "dispatch_ledger", text)
 
 func trigger_seated_exit() -> void:
 	_exit_body_present = true
@@ -878,7 +882,10 @@ func _try_end_shift() -> void:
 	if dawn_evidence != null and dawn_evidence.is_revealed() and not dawn_evidence.is_inspected():
 		var interaction := player.get_node_or_null("InteractionController") as InteractionController
 		if interaction != null:
-			interaction.set_persistent_hint("Read the night handover before leaving")
+			interaction.set_persistent_hint(GameLocale.pick(
+				"Прочтите передачу смены перед уходом",
+				"Read the night handover before leaving"
+			))
 		return
 
 	office_door.notify_player_left()
@@ -893,26 +900,17 @@ func _try_end_shift() -> void:
 		interaction.refresh_prompt()
 
 func _on_duty_sheet_inspected(text: String) -> void:
-	if document_viewer != null:
-		document_viewer.open_document("duty_sheet", "NIGHT ORDERS", text, "[E / Esc] Put Down")
+	GameLocale.open_doc(document_viewer, "duty_sheet", text)
 
 func _on_bookshelf_inspected(text: String) -> void:
-	if document_viewer != null:
-		document_viewer.open_document(
-			"bookshelf", "BLACK CREEK — DIVISION VOLUMES", text,
-			"[E / Esc] Put Down the Volumes"
-		)
+	GameLocale.open_doc(document_viewer, "bookshelf", text)
 
 func _on_dawn_evidence_inspected(text: String) -> void:
 	var interaction: InteractionController = player.get_node_or_null("InteractionController") \
 		if player != null else null
 	if interaction != null:
 		interaction.set_persistent_hint("")
-	if document_viewer != null:
-		document_viewer.open_document(
-			"dawn_evidence", "BLACK CREEK — NIGHT HANDOVER", text,
-			"[E / Esc] Put Down the Night Handover"
-		)
+	GameLocale.open_doc(document_viewer, "dawn_evidence", text)
 
 func _on_document_opened(_doc_id: String) -> void:
 	if player != null:

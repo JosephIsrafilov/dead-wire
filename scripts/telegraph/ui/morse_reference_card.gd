@@ -43,15 +43,17 @@ func _ready() -> void:
 	label_3d = get_node_or_null("Label3D") as Label3D
 	_alphabet = load(ALPHABET_PATH) as AmericanMorseAlphabetData
 
-	if interactable != null:
-		interactable.prompt_text = prompt_message
-		if not interactable.interacted.is_connected(_on_interacted):
-			interactable.interacted.connect(_on_interacted)
+	refresh_locale()
+	if interactable != null and not interactable.interacted.is_connected(_on_interacted):
+		interactable.interacted.connect(_on_interacted)
 
+func refresh_locale() -> void:
+	if interactable != null:
+		interactable.prompt_text = GameLocale.pick(
+			"Справочник азбуки Морзе",
+			prompt_message
+		)
 	if label_3d != null:
-		# The whole table is printed on the physical card: a working operator
-		# can check a glyph against the wall of his own desk without opening
-		# the viewer. Nothing here singles out the final answer's letters.
 		label_3d.text = get_card_text()
 
 func get_interactable() -> Interactable:
@@ -98,15 +100,26 @@ static func render_rows(alphabet: AmericanMorseAlphabetData) -> Array[String]:
 
 ## The desk card's face: header plus the pattern rows.
 func get_card_text() -> String:
-	return "%s\n%s" % [CARD_HEADER, "\n".join(render_rows(_load_alphabet()))]
+	var hdr := GameLocale.pick("АЗБУКА МОРЗЕ (1890)", CARD_HEADER)
+	return "%s\n%s" % [hdr, "\n".join(render_rows(_load_alphabet()))]
 
 ## The viewer's face: the wide mono table. render_pattern already annotates
 ## the long dash, so both faces carry the same annotation from one source.
 func get_reference_text() -> String:
-	var header := VIEWER_HEADER
-	var divider := "─".repeat(28)
 	var rows := render_rows(_load_alphabet())
 	var example := AmericanMorseEncoder.new().encode("AL", _load_alphabet())
+	if GameLocale.is_ru():
+		var header_ru := "АМЕРИКАНСКАЯ АЗБУКА МОРЗЕ (1890)"
+		var divider_ru := "─".repeat(28)
+		return "%s\n%s\n%s\n\nЧТЕНИЕ ЛЕНТЫ\n" % [header_ru, divider_ru, "\n".join(rows)] \
+			+ "Точка: 1 ед.; тире: 3; длинное тире (L): 6.\n" \
+			+ "Внутри буквы: 1 ед.; внутренняя пауза (C, O, R): 2.\n" \
+			+ "Между буквами — 3 ед.; между словами — 6.\n" \
+			+ "Учитывайте внутренние паузы: это американский Морзе.\n\n" \
+			+ "ПРИМЕР: AL (для образца)\n%s\n\n" % render_pattern(example) \
+			+ "Номера полос отмечают записи линии, а не слова."
+	var header := VIEWER_HEADER
+	var divider := "─".repeat(28)
 	return "%s\n%s\n%s\n\nREADING THE STRIP\n" % [header, divider, "\n".join(rows)] \
 		+ "Dot: 1 unit; dash: 3; long dash: 6.\n" \
 		+ "Within a letter: 1 unit; internal pause: 2.\n" \

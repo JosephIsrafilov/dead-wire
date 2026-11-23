@@ -65,7 +65,7 @@ func _ready() -> void:
 		_glass.material = _material
 		_lean_target = Interactable.new()
 		_lean_target.name = "LeanAtWindow"
-		_lean_target.prompt_text = "Lean Toward the Glass"
+		_lean_target.prompt_text = GameLocale.pick("Прильнуть к стеклу", "Lean Toward the Glass")
 		_lean_target.collision_layer = 0
 		_lean_target.collision_mask = 0
 		_lean_target.enabled = false
@@ -108,9 +108,18 @@ func _near_glass() -> float:
 	var distance := _player.camera.global_position.distance_to(_glass.global_position)
 	return 1.0 - smoothstep(lean_reach * 0.5, lean_reach, distance)
 
+func refresh_locale() -> void:
+	if _lean_target == null:
+		return
+	var leaning := _player != null and _player.window_lean_requested
+	_lean_target.prompt_text = GameLocale.pick(
+		"Отпрянуть от стекла" if leaning else "Прильнуть к стеклу",
+		"Pull Back" if leaning else "Lean Toward the Glass"
+	)
+
 func _toggle_window_lean() -> void:
 	_player.window_lean_requested = not _player.window_lean_requested
-	_lean_target.prompt_text = "Pull Back" if _player.window_lean_requested else "Lean Toward the Glass"
+	refresh_locale()
 
 func _looking_at_glass() -> bool:
 	if not _lean_target.enabled or _player == null or _player.camera == null:

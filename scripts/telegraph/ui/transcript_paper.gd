@@ -58,7 +58,7 @@ enum PaperState {
 ## active sheet and the last archived one.
 ## World offset of the finished sheet: set down on the blotter beside the copy
 ## board (the board, pad and sheet stack 11 mm above the blotter).
-@export var previous_sheet_offset: Vector3 = Vector3(0.0, -0.0115, 0.27)
+@export var previous_sheet_offset: Vector3 = Vector3(-0.27, -0.0115, 0.03)
 @export var previous_slide_seconds: float = 0.35
 ## How far the read sheet rises toward the lamp while the viewer shows it, and
 ## how long the rise/settle takes. The paper owns this motion so the feed, the

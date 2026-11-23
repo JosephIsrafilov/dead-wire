@@ -3,27 +3,15 @@ extends Node3D
 
 ## The shelf of division volumes by the east wall.
 ##
-## It exists because the room's other reading surfaces — the ledger, the duty
-## sheet, the Morse card — are all about the operator's own work, and a depot
-## office also had the paperwork nobody opens until something goes wrong: the
-## general orders, the tariff, the quarantine notices. Putting that on the shelf
-## gives the east wall a reason to be looked at other than the routing board, and
-## it is where the "dead line since the mine closed" context lives in print.
-##
 ## Same contract as every other inspectable surface: it hands the office a block
 ## of authored text and never reads game state. Nothing here knows what happened
 ## tonight.
 
 signal inspected(text: String)
 
-@export var prompt_message: String = "Inspect Bookshelf"
+@export var prompt_message: String = "Осмотреть книжный шкаф"
 
-## The shelf reads as one short history of the division, in the order it
-## happened. The dates are the ones the setting fixes: the quarantine is the
-## June BEFORE the flood, the general order is the last one issued while the
-## line still carried mine traffic, and the cutting is what the company printed
-## afterwards. Nothing on this shelf is dated after the night it is read on.
-const SHELF_TEXT: String = """BLACK CREEK STATION — DIVISION VOLUMES
+const SHELF_TEXT_EN: String = """BLACK CREEK STATION — DIVISION VOLUMES
 ────────────────────────────────────────
 GENERAL ORDER 12 (bound, 1884):
     Every operator will acknowledge receipt of each order. An order
@@ -54,14 +42,46 @@ Dr. Arthur Crane, County Physician — Black Creek
 Margin note (A.C.): "Keep the hand steady, Elias. Never lie to the record."
 """
 
+const SHELF_TEXT_RU: String = """ОБЩИЙ ПРИКАЗ № 12 (подшивка, 1884):
+    Каждый телеграфист обязан подтвердить приём приказа.
+    Принятый приказ считается исполненным.
+
+ТАРИФ ВОСТОЧНОГО УЧАСТКА:
+    Телеграмма до десяти слов ............... 25 центов
+    Каждое следующее слово ................... 2 цента
+    Ночная служба (23:00–06:00) .............. без оплаты
+
+ОБЪЯВЛЕНИЕ — КАРАНТИН, ИЮНЬ 1885:
+    Водоснабжение и вагоны рудничной ветки ограничены
+    до окончания проверки. Запрет не снят.
+
+ГАЗЕТНАЯ ВЫРЕЗКА, ОКТЯБРЬ 1885:
+    ... ШАХТА НЕ ВОЗОБНОВИТ РАБОТУ. КОМПАНИЯ БЛАГОДАРИТ ГОРОД
+    ЗА ТЕРПЕНИЕ И ЗА ЕГО СЫНОВЕЙ ...
+
+────────────────────────────────
+ЖУРНАЛ ДЕЖУРСТВ — ПОМЕТКА НА ПОЛЯХ (1885):
+14 ОКТ. 1885 — 23:42
+Ночная смена закрыта без подписи ст. телеграфиста Дж. Коула.
+Лента регистра с катушки пропала. Смену принял пом. Э. Крейн.
+
+────────────────────────────────
+СЛОЖЕННЫЙ РЕЦЕПТ (вложен под обложку):
+Д-р Артур Крейн, окружной врач — Блэк-Крик
+Заметка на полях (А.К.): «Держи руку твёрдо, Элиас. Никогда не ври записи.»
+"""
+
 var interactable: Interactable = null
 
 func _ready() -> void:
 	interactable = get_node_or_null("Interactable") as Interactable
+	refresh_locale()
+	if interactable != null and not interactable.interacted.is_connected(_on_interacted):
+		interactable.interacted.connect(_on_interacted)
+
+func refresh_locale() -> void:
 	if interactable != null:
-		interactable.prompt_text = prompt_message
-		if not interactable.interacted.is_connected(_on_interacted):
-			interactable.interacted.connect(_on_interacted)
+		interactable.prompt_text = GameLocale.pick("Осмотреть книжный шкаф", "Inspect Bookshelf")
 
 func get_interactable() -> Interactable:
 	if interactable == null:
@@ -71,7 +91,7 @@ func get_interactable() -> Interactable:
 	return interactable
 
 func get_shelf_text() -> String:
-	return SHELF_TEXT
+	return GameLocale.pick(SHELF_TEXT_RU, SHELF_TEXT_EN)
 
 func _on_interacted() -> void:
-	inspected.emit(SHELF_TEXT)
+	inspected.emit(get_shelf_text())

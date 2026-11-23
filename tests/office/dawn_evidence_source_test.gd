@@ -12,6 +12,7 @@ func _init() -> void:
 
 func _run() -> void:
 	print("--- Starting Dawn Evidence Source Test Suite ---")
+	GameLocale.lock_language_for_test("en")
 	var world := root.get_node("WorldState") as WorldStateStore
 	var knowledge := root.get_node("KnowledgeState") as KnowledgeStateStore
 	world.reset_for_new_game()

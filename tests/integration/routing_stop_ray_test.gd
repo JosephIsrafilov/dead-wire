@@ -16,8 +16,34 @@ func _run() -> void:
 	if not await _test_modal_surface_stays(): return
 	if not await _test_direct_lifecycle_is_honest(): return
 	if not await _test_direct_deadline_boundaries(): return
+	if not await _test_lever_stops_at_contact(): return
 	print("Routing stop ray assertions: ", count)
 	quit(0)
+
+func _test_lever_stops_at_contact() -> bool:
+	var office := await _make_office()
+	var board := office.routing_board
+	var pivot := board.get_node("LeverPivot") as Node3D
+	var rest := pivot.rotation.z
+	var stop := rest + deg_to_rad(board.lever_throw_degrees)
+	var contacts: Array[float] = []
+	board.lever_stopped.connect(func(): contacts.append(pivot.rotation.z))
+	if not check(board.throw_direct_route("CLEAR EAST"), "The session accepts the physical throw"):
+		return false
+	var motion := board._lever_tween
+	motion.pause()
+	var inside_travel := true
+	for index in 9:
+		motion.custom_step(board.lever_throw_duration * 0.1)
+		inside_travel = inside_travel and pivot.rotation.z >= rest and pivot.rotation.z <= stop + 0.0001
+	if not check(inside_travel and contacts.is_empty(), "The moving lever stays inside its stops before contact"):
+		return false
+	motion.custom_step(board.lever_throw_duration)
+	if not check(contacts.size() == 1 and is_equal_approx(contacts[0], stop), "One contact fires at the authored stop angle"):
+		return false
+	office.queue_free()
+	await process_frame
+	return true
 
 func _make_office() -> M1OfficeController:
 	var office := load("res://scenes/office/m1_office.tscn").instantiate() as M1OfficeController

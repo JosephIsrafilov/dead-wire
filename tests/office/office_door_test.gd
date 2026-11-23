@@ -14,6 +14,7 @@ func _init() -> void:
 
 func _run() -> void:
 	print("--- Starting Office Door Test Suite ---")
+	GameLocale.lock_language_for_test("en")
 
 	var scene: PackedScene = ResourceLoader.load("res://scenes/office/m1_office.tscn")
 	if not assert_condition(scene != null, "m1_office.tscn loads"): return
@@ -158,6 +159,13 @@ func _run() -> void:
 	var commit_top_y: float = commit_solid.global_position.y + (commit_solid.shape as BoxShape3D).size.y * 0.5 if commit_solid != null else -1.0
 	if not assert_condition(commit_top_y > 0.0 and absf(table_box.end.y - commit_top_y) < 0.02, "The filing table top meets the commit desk bearing surface (%.3f vs %.3f)" % [table_box.end.y, commit_top_y]): return
 	if not assert_condition(absf(dawn_board.global_position.x - commit_desk.global_position.x) < 0.15, "Night Handover board hangs directly above the filing station"): return
+	var handover_frame := dawn_board.get_node("Frame") as CSGBox3D
+	var sconce_back := office.get_node("OfficeStorytellingProps/FilingDeskSconceBack") as CSGBox3D
+	var sconce_body := office.get_node("OfficeStorytellingProps/FilingDeskSconce") as CSGCylinder3D
+	var board_right := handover_frame.global_position.x + handover_frame.size.x * 0.5
+	var sconce_left := minf(sconce_back.global_position.x - sconce_back.size.x * 0.5,
+		sconce_body.global_position.x - sconce_body.radius)
+	if not assert_condition(board_right < sconce_left, "The filing sconce stands clear of the handover board"): return
 
 	print("--- All Office Door Tests PASSED (%d assertions) ---" % _assertions_passed)
 	quit(0)

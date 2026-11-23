@@ -1,0 +1,81 @@
+[gd_scene load_steps=13 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/textures/office_wear/sill_runoff.png" id="1"]
+[ext_resource type="Texture2D" path="res://assets/textures/office_wear/stove_soot.png" id="2"]
+[ext_resource type="Texture2D" path="res://assets/textures/office_wear/lamp_smoke.png" id="3"]
+[ext_resource type="Texture2D" path="res://assets/textures/office_wear/wallpaper_b.png" id="4"]
+
+[sub_resource type="StandardMaterial3D" id="Wear1"]
+transparency = 1
+albedo_texture = ExtResource("1")
+roughness = 1.0
+specular_mode = 2
+texture_filter = 3
+
+[sub_resource type="QuadMesh" id="Quad1"]
+size = Vector2(1, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="Wear2"]
+transparency = 1
+albedo_texture = ExtResource("2")
+roughness = 1.0
+specular_mode = 2
+texture_filter = 3
+
+[sub_resource type="QuadMesh" id="Quad2"]
+size = Vector2(1, 1.5)
+
+[sub_resource type="StandardMaterial3D" id="Wear3"]
+transparency = 1
+albedo_texture = ExtResource("3")
+roughness = 1.0
+specular_mode = 2
+texture_filter = 3
+
+[sub_resource type="QuadMesh" id="Quad3"]
+size = Vector2(2, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="Repair"]
+shading_mode = 1
+albedo_color = Color(0.6084, 0.5928, 0.5616, 0.78)
+albedo_texture = ExtResource("4")
+roughness = 0.96
+metallic_specular = 0.03
+uv1_scale = Vector3(1.6, 1.6, 1.6)
+uv1_offset = Vector3(0, 0.08, 0)
+uv1_triplanar = true
+uv1_world_triplanar = true
+texture_filter = 2
+
+[sub_resource type="QuadMesh" id="RepairQuad"]
+size = Vector2(0.24, 0.44)
+
+[node name="OfficeWear" type="Node3D"]
+
+[node name="SillRunoff" type="MeshInstance3D" parent="."]
+position = Vector3(-1.5, 0.69, -2.259)
+rotation = Vector3(0, 0, 0)
+mesh = SubResource("Quad1")
+material_override = SubResource("Wear1")
+cast_shadow = 0
+
+[node name="StoveSoot" type="MeshInstance3D" parent="."]
+position = Vector3(2.892, 1.98, 1.45)
+rotation = Vector3(0, -1.570796327, 0)
+mesh = SubResource("Quad2")
+material_override = SubResource("Wear2")
+cast_shadow = 0
+
+[node name="LampSmoke" type="MeshInstance3D" parent="."]
+position = Vector3(-2.892, 2.58, -0.85)
+rotation = Vector3(0, 1.570796327, 0)
+mesh = SubResource("Quad3")
+material_override = SubResource("Wear3")
+cast_shadow = 0
+
+[node name="WallpaperRepair" type="MeshInstance3D" parent="."]
+position = Vector3(-2.89, 1.72, 0.02)
+rotation = Vector3(0, 1.570796327, 0)
+mesh = SubResource("RepairQuad")
+material_override = SubResource("Repair")
+cast_shadow = 0

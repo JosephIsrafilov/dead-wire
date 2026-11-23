@@ -37,7 +37,7 @@ UNSHIPPABLE_PREFIXES = (
     "audio/music/temp/", "assets/third_party/", ".godot/imported/long_note_one.",
     "models/third_party/", "graphify-out/", "addons/", "screenshots/", "conductor.json", "output/",
 )
-REQUIRED_IMPORTED_PREFIXES = ("res://.godot/imported/footstep_wood_beta.wav-",)
+RECORDED_FOOTSTEP_PREFIXES = tuple(f".godot/imported/footstep_boards_{index}.wav-" for index in range(1, 6))
 
 SPOILER_DOCUMENTS = {"sound_handoff_spoilers.md"}
 SOURCE_EXECUTABLE = "dead-wire-windows-beta-x86_64.exe"
@@ -174,6 +174,7 @@ def check_pck_exclusions(pck: Path, entries: list[PckEntry] | None = None) -> No
     forbidden_prefixes = (
         "docs/", "tools/", "tests/", "builds/", "research/", "sites/",
         ".hermes/", ".codex/", ".agents/", "logs/", ".dream-loop/",
+        "landing/", ".landing_shots/", "godot/", "test_logs/",
     )
     bad: list[str] = []
     for path in paths:
@@ -183,7 +184,8 @@ def check_pck_exclusions(pck: Path, entries: list[PckEntry] | None = None) -> No
             continue
         if lowered == "icon.svg" or lowered.startswith(".godot/"):
             continue
-        if any(lowered.startswith(prefix) for prefix in forbidden_prefixes):
+        if (any(lowered.startswith(prefix) for prefix in forbidden_prefixes)
+                or re.match(r"^tmp[^/]+/", lowered)):
             bad.append(path)
         elif lowered.endswith((".py", ".blend")) or lowered == ".env" or "credential" in lowered or "secret" in lowered:
             bad.append(path)
@@ -198,8 +200,14 @@ def check_pck_exclusions(pck: Path, entries: list[PckEntry] | None = None) -> No
     )
     if legacy_leftovers:
         raise RuntimeError("PCK still contains legacy rollback-only audio: " + ", ".join(legacy_leftovers))
-    if not any(path.startswith(".godot/imported/footstep_wood_beta.wav-") for path in present):
-        raise RuntimeError("PCK is missing required runtime audio: footstep_wood_beta (imported sample)")
+    recorded_steps = {
+        prefix for prefix in RECORDED_FOOTSTEP_PREFIXES if any(path.startswith(prefix) for path in present)
+    }
+    if recorded_steps:
+        if len(recorded_steps) != len(RECORDED_FOOTSTEP_PREFIXES):
+            raise RuntimeError("PCK is missing required runtime audio: incomplete recorded footstep set")
+    elif not any(path.startswith(".godot/imported/footstep_wood_beta.wav-") for path in present):
+        raise RuntimeError("PCK is missing required runtime audio: recorded footsteps or the legacy beta step")
 
 
 def is_spoiler_document(relative_path: Path) -> bool:
@@ -270,7 +278,7 @@ def _pck_engine_version(pck: Path) -> str:
     header = pck.read_bytes()[:24]
     if header[:4] != PCK_MAGIC:
         return "unknown"
-    _, major, minor, patch = struct.unpack_from("<4I", header, 0)
+    _, major, minor, patch = struct.unpack_from("<4I", header, 4)
     return f"{major}.{minor}.{patch}"
 
 

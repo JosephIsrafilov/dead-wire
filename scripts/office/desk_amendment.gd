@@ -40,7 +40,7 @@ func _build_target() -> void:
 		return
 	_target = Interactable.new()
 	_target.name = "AmendInteractable"
-	_target.prompt_text = "Pick Up Pen to Correct"
+	_target.prompt_text = GameLocale.pick("Взять перо для правки", "Pick Up Pen to Correct")
 	_target.collision_layer = 0
 	_target.collision_mask = 0
 	_target.enabled = false
@@ -100,6 +100,10 @@ func begin() -> bool:
 	rig.begin_writing("")
 	rig.cramp_tremor_intensity = 0.65 if _is_core_hook_scenario() else 0.0
 	return true
+
+func refresh_locale() -> void:
+	if _target != null:
+		_target.prompt_text = GameLocale.pick("Взять перо для правки", "Pick Up Pen to Correct")
 
 func _process(delta: float) -> void:
 	if _target != null:

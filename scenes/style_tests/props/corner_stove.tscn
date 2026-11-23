@@ -10,10 +10,10 @@ size = Vector3(0.7, 1.75, 0.7)
 
 [sub_resource type="StandardMaterial3D" id="Ember"]
 shading_mode = 0
-albedo_color = Color(0.95, 0.34, 0.06, 1)
+albedo_color = Color(1.0, 0.44, 0.09, 1)
 emission_enabled = true
-emission = Color(1.0, 0.36, 0.06, 1)
-emission_energy_multiplier = 0.65
+emission = Color(1.0, 0.40, 0.07, 1)
+emission_energy_multiplier = 1.35
 roughness = 0.8
 
 [node name="CornerStove" type="Node3D"]
@@ -99,8 +99,8 @@ size = Vector3(0.28, 0.32, 0.04)
 material = ExtResource("1_iron")
 
 [node name="EmberSeam" type="CSGBox3D" parent="."]
-position = Vector3(0, 0.62, -0.322)
-size = Vector3(0.18, 0.045, 0.016)
+position = Vector3(0, 0.628, -0.346)
+size = Vector3(0.180, 0.068, 0.012)
 material = SubResource("Ember")
 
 [node name="DoorHandle" type="CSGCylinder3D" parent="."]

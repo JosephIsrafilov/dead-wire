@@ -18,6 +18,14 @@ const BEHAVIOUR_PASS: String = "pass"
 const BEHAVIOUR_STAND: String = "stand"
 const BEHAVIOUR_DISTANT: String = "distant"
 const BEHAVIOUR_GONE: String = "gone"
+const LOCOMOTIVE := preload("res://assets/models/dawn_train/no17.glb")
+const PASSENGER_COACH := preload("res://assets/models/dawn_train/passenger_coach.glb")
+const BAGGAGE_MAIL_CAR := preload("res://assets/models/dawn_train/baggage_mail_car.glb")
+const GUARD_OBSERVATION_CAR := preload("res://assets/models/dawn_train/guard_observation_car.glb")
+const Exhaust := preload("res://scripts/office/dawn_train_exhaust.gd")
+# No. 17 model coordinates (+X forward, +Y up).
+const STACK_OUTLET := Vector3(2.45, 3.73, 0.0)
+const CYLINDER_OUTLET := Vector3(1.88, 0.89, 0.0)
 
 @export var data: DawnTrainData = preload("res://data/night/dawn_train.tres")
 ## The main line runs across the view, this far out.
@@ -47,6 +55,7 @@ var _freight: Node3D = null
 var _whistle: AudioStreamPlayer3D = null
 var _rumble: AudioStreamPlayer3D = null
 var _steam: AudioStreamPlayer3D = null
+var _exhaust: Exhaust
 var _silhouette: StandardMaterial3D = null
 
 func _ready() -> void:
@@ -76,6 +85,7 @@ func begin(passenger_behaviour: String, freight_behaviour: String) -> void:
 	_passenger_seen = false
 	_near_whistled = false
 	_steamed = false
+	_exhaust.reset(departure_seconds)
 	_freight.visible = freight_behaviour == BEHAVIOUR_STAND
 	_place_passenger()
 
@@ -100,10 +110,12 @@ func advance(delta: float) -> void:
 	if _time < departure_seconds:
 		return
 	var moving := _time - departure_seconds
+	var speed := run_speed
 	if _passenger_behaviour == BEHAVIOUR_PASS:
 		_passenger_x = start_x + run_speed * moving
 	else:
 		_passenger_x = stand_x + (start_x - stand_x) * exp(-brake_rate * moving)
+		speed = absf(stand_x - _passenger_x) * brake_rate
 	_passenger_seen = true
 	_place_passenger()
 	if _rumble != null and not _rumble.playing and _passenger_x < end_x and _rumble.is_inside_tree():
@@ -122,7 +134,20 @@ func advance(delta: float) -> void:
 		_play(_whistle, whistle_stream, at + Vector3(2.0, 3.0, 0.0), 0.0)
 	if _passenger_behaviour == BEHAVIOUR_STAND and not _steamed and absf(_passenger_x - stand_x) < 1.0:
 		_steamed = true
-		_play(_steam, steam_stream, _passenger.global_position if _passenger.is_inside_tree() else Vector3.ZERO, -3.0)
+		_exhaust.release_steam(_time)
+		var outlet := _passenger.to_global(CYLINDER_OUTLET) if is_inside_tree() else Vector3.ZERO
+		_play(_steam, steam_stream, outlet, -3.0)
+	_exhaust.advance(_time, _passenger.position + STACK_OUTLET,
+		_passenger.position + CYLINDER_OUTLET, speed, _passenger.visible)
+
+func _add_passenger_car(parent: Node3D, packed: PackedScene, x: float) -> void:
+	var car := packed.instantiate()
+	car.name = packed.resource_path.get_file().get_basename()
+	car.position = Vector3(x, 0.0, 0.0)
+	parent.add_child(car)
+	# The dawn yard is read in silhouette; keep the detailed car dark enough to belong to it.
+	for mesh: MeshInstance3D in car.find_children("*", "MeshInstance3D"):
+		mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 
 func _place_passenger() -> void:
 	if _passenger == null:
@@ -157,28 +182,23 @@ func _build() -> void:
 	if _passenger != null:
 		return
 	_silhouette = _unshaded(Color(0.02, 0.024, 0.032), false)
-	var lamp := _unshaded(Color(1.0, 0.9, 0.65), true)
-	var windows := _unshaded(Color(1.0, 0.72, 0.4), true)
 	var tail := _unshaded(Color(1.0, 0.2, 0.1), true)
 
 	_passenger = Node3D.new()
 	_passenger.name = "PassengerNo17"
 	add_child(_passenger)
-	# Locomotive, front toward +x: frame, boiler, stack, cab, tender, lamp.
-	_box(_passenger, Vector3(7.5, 0.5, 2.4), Vector3(-0.8, 0.9, 0.0), _silhouette)
-	var boiler := _mesh(_passenger, _cylinder(0.75, 5.0), Vector3(0.4, 1.9, 0.0), _silhouette)
-	boiler.rotation = Vector3(0.0, 0.0, PI * 0.5)
-	_mesh(_passenger, _cylinder(0.32, 1.3), Vector3(2.0, 3.0, 0.0), _silhouette)
-	_box(_passenger, Vector3(2.2, 2.6, 2.6), Vector3(-3.2, 2.1, 0.0), _silhouette)
-	_box(_passenger, Vector3(4.0, 2.0, 2.6), Vector3(-6.6, 1.6, 0.0), _silhouette)
-	_box(_passenger, Vector3(0.25, 0.4, 0.4), Vector3(3.0, 2.6, 0.0), lamp)
-	# Three coaches with lit windows down both sides.
-	for car in 3:
-		var centre := -16.0 - 14.0 * car
-		_box(_passenger, Vector3(13.0, 2.8, 2.8), Vector3(centre, 2.0, 0.0), _silhouette)
-		for pane in 6:
-			_box(_passenger, Vector3(0.9, 0.55, 2.96), Vector3(centre - 4.5 + pane * 1.8, 2.4, 0.0), windows)
+	var locomotive := LOCOMOTIVE.instantiate()
+	_passenger.add_child(locomotive)
+	for mesh: MeshInstance3D in locomotive.find_children("*", "MeshInstance3D"):
+		mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	# Spacing follows the drawbars, not the bodies; the open end platforms remain visible.
+	_add_passenger_car(_passenger, PASSENGER_COACH, -15.12)
+	_add_passenger_car(_passenger, BAGGAGE_MAIL_CAR, -27.92)
+	_add_passenger_car(_passenger, GUARD_OBSERVATION_CAR, -39.31)
 	_passenger.visible = false
+	_exhaust = Exhaust.new()
+	_exhaust.name = "No17Exhaust"
+	add_child(_exhaust)
 
 	# No. 71: three dark box cars on the mine branch, a red lamp toward the yard.
 	_freight = Node3D.new()
@@ -192,7 +212,9 @@ func _build() -> void:
 	_box(_freight, Vector3(0.22, 0.22, 0.06), Vector3(-2.75, 3.6, -21.9), tail)
 	_freight.visible = false
 
-	_whistle = _player(&"Ambience", 60.0)
+	_whistle = _player(&"Ambience", 240.0)
+	# The opening call is beyond the yard; it must reach the office, not be culled.
+	_whistle.unit_size = 36.0
 	_rumble = _player(&"Ambience", 70.0)
 	_steam = _player(&"Ambience", 40.0)
 
@@ -210,15 +232,6 @@ func _unshaded(color: Color, no_fog: bool) -> StandardMaterial3D:
 	material.albedo_color = color
 	material.disable_fog = no_fog
 	return material
-
-func _cylinder(radius: float, height: float) -> CylinderMesh:
-	var cylinder := CylinderMesh.new()
-	cylinder.top_radius = radius
-	cylinder.bottom_radius = radius
-	cylinder.height = height
-	cylinder.radial_segments = 8
-	cylinder.rings = 1
-	return cylinder
 
 func _box(parent: Node3D, size: Vector3, at: Vector3, material: Material) -> MeshInstance3D:
 	var box := BoxMesh.new()

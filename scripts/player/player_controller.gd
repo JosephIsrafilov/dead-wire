@@ -18,6 +18,10 @@ signal seated_changed(is_seated: bool)
 signal footstep_played(step_index: int)
 
 @export var move_speed: float = 1.35
+@export var outdoor_mode: bool = false
+@export var outdoor_walk_speed: float = 2.65
+@export var outdoor_brisk_speed: float = 3.75
+@export var step_height: float = 0.0
 @export var mouse_sensitivity: float = 0.003
 ## Player option (plan 6.8): pushing the mouse forward looks down.
 @export var invert_y: bool = false
@@ -129,6 +133,7 @@ var _yaw_limit_half_range: float = -1.0
 var _camera_rest_transform := Transform3D.IDENTITY
 ## 0..1, eased toward the lean action; read by the camera pose every frame.
 var _lean_weight: float = 0.0
+var _step_eye_offset: float = 0.0
 
 func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -195,9 +200,14 @@ func _input(event: InputEvent) -> void:
 
 	var mouse_clicked: bool = event is InputEventMouseButton \
 		and event.button_index == MOUSE_BUTTON_LEFT and event.pressed \
-		and Input.mouse_mode == Input.MOUSE_MODE_VISIBLE
+		and Input.mouse_mode != Input.MOUSE_MODE_CAPTURED
 	if mouse_clicked:
+		if _is_parent_world_blocked():
+			return
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+		var interaction := get_node_or_null("InteractionController") as InteractionController
+		if interaction != null:
+			interaction.refresh_prompt()
 		get_viewport().set_input_as_handled()
 		return
 
@@ -227,10 +237,40 @@ func aim_at(point: Vector3) -> void:
 	_update_camera_pose()
 
 func _process(delta: float) -> void:
+	_ensure_walk_mouse_capture()
+	_step_eye_offset = move_toward(_step_eye_offset, 0.0, delta * 1.65)
 	var lean_pressed := InputMap.has_action("lean") and Input.is_action_pressed("lean")
 	var wants_lean := lean_enabled and not is_look_locked and (lean_pressed or window_lean_requested)
 	_lean_weight = move_toward(_lean_weight, 1.0 if wants_lean else 0.0, delta / maxf(lean_seconds, 0.01))
 	_update_camera_pose()
+
+func _is_parent_world_blocked() -> bool:
+	var p := get_parent()
+	return p != null and p.has_method("is_world_view_blocked") and bool(p.call("is_world_view_blocked"))
+
+func _ensure_walk_mouse_capture() -> void:
+	if DisplayServer.get_name() == "headless":
+		return
+	if seated_station_mode or is_movement_locked or is_look_locked or not is_inside_tree():
+		return
+	if get_tree().paused:
+		return
+	var root_win := get_tree().root
+	var has_win_focus := (root_win != null and root_win.has_focus()) or DisplayServer.window_is_focused()
+	if not has_win_focus:
+		return
+	if _is_parent_world_blocked():
+		return
+	if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+		return
+	if get_viewport() != null:
+		get_viewport().gui_release_focus()
+	if get_tree().root != null:
+		get_tree().root.gui_release_focus()
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	var interaction := get_node_or_null("InteractionController") as InteractionController
+	if interaction != null:
+		interaction.refresh_prompt()
 
 func get_lean_weight() -> float:
 	return _lean_weight
@@ -240,6 +280,7 @@ func _update_camera_pose() -> void:
 		return
 	# Position follows the rendered body; mouse orientation has no tick delay.
 	var origin := head.get_global_transform_interpolated().origin
+	origin.y += _step_eye_offset
 	origin += head.global_basis * _camera_rest_transform.origin
 	origin += _lean_offset(origin)
 	camera.global_transform = Transform3D(head.global_basis * _camera_rest_transform.basis, origin)
@@ -296,7 +337,10 @@ func _physics_process(delta: float) -> void:
 	if not is_movement_locked:
 		var input_direction: Vector2 = Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
 		var direction: Vector3 = (transform.basis * Vector3(input_direction.x, 0.0, input_direction.y)).normalized()
-		target = direction * move_speed
+		var active_speed := move_speed
+		if outdoor_mode:
+			active_speed = outdoor_brisk_speed if Input.is_key_pressed(KEY_SHIFT) else outdoor_walk_speed
+		target = direction * active_speed
 
 	var rate := acceleration if target.length_squared() > 0.0 else deceleration
 	var planar := Vector2(velocity.x, velocity.z).move_toward(Vector2(target.x, target.z), rate * delta)
@@ -304,13 +348,45 @@ func _physics_process(delta: float) -> void:
 	velocity.z = planar.y
 
 	var position_before_move := global_position
+	var walk := Vector3(velocity.x, 0.0, velocity.z)
+	var stepped := _try_walk_step(walk * delta)
 	move_and_slide()
+	if stepped:
+		apply_floor_snap()
+	if step_height > 0.0 and is_on_floor():
+		var lift := global_position.y - position_before_move.y
+		_step_eye_offset = clampf(_step_eye_offset - lift, -step_height, step_height)
 	_push_loose_bodies(delta)
 	var delta_x := global_position.x - position_before_move.x
 	var delta_z := global_position.z - position_before_move.z
 	var moved_distance := Vector2(delta_x, delta_z).length()
 	_advance_footsteps(moved_distance)
 	_update_head(delta, moved_distance)
+
+## Probe only authored street treads, never climb furniture or creek banks.
+func _try_walk_step(motion: Vector3) -> bool:
+	if step_height <= 0.0 or not is_on_floor() or motion.length_squared() < 0.000001:
+		return false
+	var wall := KinematicCollision3D.new()
+	if not test_move(global_transform, motion, wall) or wall.get_normal().y > 0.65:
+		return false
+	var obstacle := wall.get_collider() as Node
+	if obstacle == null or not obstacle.is_in_group(&"street_tread"):
+		return false
+	var raised := global_transform.translated(Vector3.UP * step_height)
+	if test_move(global_transform, Vector3.UP * step_height) or test_move(raised, motion):
+		return false
+	# A single radius-ahead ray can overshoot short indoor stair treads.
+	var space := get_world_3d().direct_space_state
+	for reach: float in [0.10, 0.19, 0.27, 0.38]:
+		var toe := raised.origin + motion + motion.normalized() * reach
+		var query := PhysicsRayQueryParameters3D.create(toe, toe - Vector3.UP * step_height, collision_mask)
+		query.exclude = [get_rid()]
+		var hit := space.intersect_ray(query)
+		if not hit.is_empty() and hit.collider == obstacle and hit.normal.y > 0.95:
+			global_position.y = hit.position.y + 0.002
+			return true
+	return false
 
 ## Shove anything loose the capsule is leaning on. move_and_slide leaves the
 ## player stopped against a rigid body and hands us the contact, so this is the
