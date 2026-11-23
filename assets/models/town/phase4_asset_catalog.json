@@ -1,0 +1,167 @@
+{
+  "coordinate_convention": "Godot world axes: X east, Y up, Z south; landmark origins are at art-bible grade positions.",
+  "assets": [
+    {
+      "name": "water_tower",
+      "path": "res://assets/models/town/water_tower.glb",
+      "world_transform": [
+        "-24",
+        "0",
+        "-14"
+      ],
+      "collisions": [
+        "COL_WaterTower_Legs",
+        "COL_WaterTower_Tank"
+      ]
+    },
+    {
+      "name": "kowalski_blacksmith",
+      "path": "res://assets/models/town/kowalski_blacksmith.glb",
+      "world_transform": [
+        "-46",
+        "0",
+        "13"
+      ],
+      "collisions": [
+        "COL_Blacksmith_Body",
+        "COL_Blacksmith_Forge"
+      ],
+      "prints": [
+        "blacksmith.png",
+        "shoeing.png"
+      ]
+    },
+    {
+      "name": "stone_calaboose",
+      "path": "res://assets/models/town/stone_calaboose.glb",
+      "world_transform": [
+        "26",
+        "0",
+        "6"
+      ],
+      "collisions": [
+        "COL_Calaboose_Walls"
+      ],
+      "prints": [
+        "wanted.png"
+      ]
+    },
+    {
+      "name": "mj_spur_gate",
+      "path": "res://assets/models/town/mj_spur_gate.glb",
+      "world_transform": [
+        "20",
+        "0",
+        "-16"
+      ],
+      "collisions": [
+        "COL_MJ_Gate_Posts",
+        "COL_MJ_Gate_Leaves"
+      ],
+      "interaction": {
+        "id": "mj_gate",
+        "world_point": [
+          20,
+          1.2,
+          -15.4
+        ],
+        "reserved_clearance": [
+          3.4,
+          2.0,
+          1.6
+        ]
+      },
+      "prints": [
+        "quarantine.png"
+      ]
+    },
+    {
+      "name": "creek_bridge_trough",
+      "path": "res://assets/models/town/creek_bridge_trough.glb",
+      "world_transform": [
+        "46",
+        "0",
+        "24"
+      ],
+      "collisions": [
+        "COL_Bridge_Deck",
+        "COL_Trough"
+      ],
+      "interaction": {
+        "id": "horse_trough",
+        "world_point": [
+          23.5,
+          0.55,
+          29.4
+        ],
+        "reserved_clearance": [
+          2.3,
+          1.0,
+          1.1
+        ]
+      }
+    },
+    {
+      "name": "chapel_steeple",
+      "path": "res://assets/models/town/chapel_steeple.glb",
+      "world_transform": [
+        "-54",
+        "9",
+        "62"
+      ],
+      "collisions": [
+        "COL_Chapel_Nave",
+        "COL_Chapel_Belfry"
+      ]
+    },
+    {
+      "name": "roadside_props",
+      "path": "res://assets/models/town/roadside_props.glb",
+      "world_transform": [
+        "0",
+        "0",
+        "0"
+      ],
+      "collisions": [
+        "COL_Wagon",
+        "COL_Woodpile",
+        "COL_HitchRail"
+      ],
+      "interaction_policy": "Decorative props stay outside depot, boarding, MJ and horse-trough interaction clearance."
+    }
+  ],
+  "print_assets": [
+    "res://assets/textures/town_v2/print/wanted.png",
+    "res://assets/textures/town_v2/print/quarantine.png",
+    "res://assets/textures/town_v2/print/blacksmith.png",
+    "res://assets/textures/town_v2/print/shoeing.png"
+  ],
+  "existing_layout_notes": {
+    "builder_positions_read": {
+      "depot": [
+        0,
+        0,
+        -2.5
+      ],
+      "main_track_z": -18,
+      "creek_x": 47,
+      "bridge_z": 23,
+      "existing_trough": [
+        23.5,
+        0,
+        29.4
+      ],
+      "existing_mj_gate": [
+        22,
+        0,
+        -14
+      ],
+      "existing_chapel": [
+        -46,
+        8.5,
+        58
+      ]
+    },
+    "integration_note": "Art Bible §6.2 positions are authoritative for this packet; existing builder currently contains placeholder/prototype positions and must be integrated deliberately rather than overwritten by this generator."
+  }
+}

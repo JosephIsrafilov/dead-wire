@@ -1,0 +1,102 @@
+[gd_scene load_steps=13 format=3]
+
+[ext_resource type="Script" path="res://scripts/town/black_creek_exterior.gd" id="1_ctrl"]
+[ext_resource type="Script" path="res://scripts/presentation/psx_presentation_host.gd" id="2_psx"]
+[ext_resource type="Script" path="res://scripts/town/town_time_of_day.gd" id="3_tod"]
+[ext_resource type="Script" path="res://scripts/town/town_architecture_builder.gd" id="4_builder"]
+[ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="5_player"]
+[ext_resource type="PackedScene" path="res://scenes/ui/document_viewer.tscn" id="6_doc"]
+[ext_resource type="PackedScene" path="res://scenes/ui/pause_menu.tscn" id="7_pause"]
+[ext_resource type="Script" path="res://scripts/town/dawn_walk_thoughts.gd" id="8_thoughts"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_town"]
+sky_top_color = Color(0.14, 0.42, 0.84, 1)
+sky_horizon_color = Color(0.64, 0.80, 0.94, 1)
+sky_curve = 0.04
+ground_bottom_color = Color(0.29, 0.26, 0.21, 1)
+ground_horizon_color = Color(0.62, 0.72, 0.78, 1)
+sun_angle_max = 10.0
+sun_curve = 0.35
+
+[sub_resource type="Sky" id="Sky_town"]
+sky_material = SubResource("ProceduralSkyMaterial_town")
+
+[sub_resource type="Environment" id="Environment_town"]
+background_mode = 2
+sky = SubResource("Sky_town")
+ambient_light_source = 2
+ambient_light_color = Color(0.84, 0.86, 0.88, 1)
+ambient_light_energy = 0.36
+tonemap_mode = 2
+tonemap_exposure = 1.05
+fog_enabled = false
+fog_light_color = Color(0.72, 0.83, 0.94, 1)
+fog_density = 0.0
+fog_sky_affect = 0.0
+
+[node name="BlackCreekExterior" type="Node3D"]
+script = ExtResource("1_ctrl")
+
+[node name="PSXPresentationHost" type="Node" parent="."]
+script = ExtResource("2_psx")
+default_preset = &"DAY_CLEAR"
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_town")
+
+[node name="SunLight" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.848048, -0.326356, 0.417638, 0, 0.788011, 0.615661, -0.529919, -0.52211, 0.668271, 0, 22, 0)
+light_color = Color(1, 0.9, 0.71, 1)
+light_energy = 1.48
+shadow_enabled = true
+directional_shadow_max_distance = 80.0
+
+[node name="TownAmbientPlayer" type="AudioStreamPlayer" parent="."]
+bus = &"Ambience"
+volume_db = -9.0
+
+[node name="TownSfxPlayer" type="AudioStreamPlayer" parent="."]
+bus = &"Foley"
+volume_db = -5.0
+
+[node name="TownTimeOfDay" type="Node" parent="." node_paths=PackedStringArray("world_env", "sun_light", "psx_host", "ambient_player")]
+script = ExtResource("3_tod")
+world_env = NodePath("../WorldEnvironment")
+sun_light = NodePath("../SunLight")
+psx_host = NodePath("../PSXPresentationHost")
+ambient_player = NodePath("../TownAmbientPlayer")
+
+[node name="TownArchitectureBuilder" type="Node3D" parent="."]
+script = ExtResource("4_builder")
+
+[node name="Player" parent="." instance=ExtResource("5_player")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0.3, 3)
+
+[node name="DocumentViewer" parent="." instance=ExtResource("6_doc")]
+
+[node name="PauseMenu" parent="." instance=ExtResource("7_pause")]
+
+[node name="DawnWalkThoughts" type="CanvasLayer" parent="."]
+script = ExtResource("8_thoughts")
+
+[node name="TownHudLayer" type="CanvasLayer" parent="."]
+layer = 4
+
+[node name="TopStripLabel" type="Label" parent="TownHudLayer"]
+offset_left = 20.0
+offset_top = 14.0
+offset_right = 1120.0
+offset_bottom = 44.0
+text = "BLACK CREEK — 1890"
+
+[node name="TransitionLayer" type="CanvasLayer" parent="."]
+layer = 25
+
+[node name="FadeRect" type="ColorRect" parent="TransitionLayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0)
