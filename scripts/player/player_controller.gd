@@ -49,9 +49,12 @@ signal footstep_played(step_index: int)
 ## Footsteps are distance-based so the sound stays tied to the floor even when
 ## acceleration or frame rate changes. Plan 7.4: five boards' worth of steps,
 ## never the same one twice running, each pitched a little in a short cycle.
+## Phase B: the boards are only the default *surface*; FootstepSurfaceResolver
+## swaps the bank when the boot lands on a deck, gravel, mud, rail or stone.
 @export var footstep_step_distance: float = 0.65
 @export var footstep_min_distance: float = 0.001
 const DEFAULT_FOOTSTEP := preload("res://audio/sfx/foley/footstep_boards_1.wav")
+const SURFACE_CONFIG := preload("res://data/audio/footstep_surfaces.tres")
 @export var footstep_stream: AudioStream = DEFAULT_FOOTSTEP
 @export var footstep_variants: Array[AudioStream] = [
 	DEFAULT_FOOTSTEP,
@@ -60,7 +63,16 @@ const DEFAULT_FOOTSTEP := preload("res://audio/sfx/foley/footstep_boards_1.wav")
 	preload("res://audio/sfx/foley/footstep_boards_4.wav"),
 	preload("res://audio/sfx/foley/footstep_boards_5.wav"),
 ]
+## Surface banks. Left empty, the controller builds its own resolver from the
+## shared config, so a scene gets material-aware steps without wiring anything.
+@export var surface_config: FootstepSurfaceConfig = SURFACE_CONFIG
+## A scene's own floor material: the saloon's pine, the boarding room's boards.
+@export var footstep_surface: StringName = &""
+## Walking outdoors defaults to the ground, not to interior boards.
+@export var surface_indoor: bool = true
 var _last_footstep_variant: int = -1
+var surface_resolver: FootstepSurfaceResolver = null
+var _last_surface: StringName = &""
 
 @export var settle_distance: float = 0.022
 @export var settle_duration: float = 0.22
@@ -134,6 +146,7 @@ var _camera_rest_transform := Transform3D.IDENTITY
 ## 0..1, eased toward the lean action; read by the camera pose every frame.
 var _lean_weight: float = 0.0
 var _step_eye_offset: float = 0.0
+@onready var _walk_capsule := $CollisionShape3D.shape as CapsuleShape3D
 
 func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -152,6 +165,15 @@ func _ready() -> void:
 		footstep_base_db = footstep_player.volume_db
 	if footstep_player != null and footstep_player.stream == null:
 		footstep_player.stream = footstep_stream
+	surface_resolver = get_node_or_null("FootstepSurfaceResolver") as FootstepSurfaceResolver
+	if surface_resolver == null:
+		surface_resolver = FootstepSurfaceResolver.new()
+		surface_resolver.name = "FootstepSurfaceResolver"
+		add_child(surface_resolver)
+	surface_resolver.config = surface_config
+	surface_resolver.indoor = surface_indoor
+	surface_resolver.set_context_surface(footstep_surface)
+	_last_surface = surface_resolver.get_current_surface()
 
 ## Locks walking and looking. Used by the modal document viewer.
 func set_movement_locked(locked: bool) -> void:
@@ -202,13 +224,8 @@ func _input(event: InputEvent) -> void:
 		and event.button_index == MOUSE_BUTTON_LEFT and event.pressed \
 		and Input.mouse_mode != Input.MOUSE_MODE_CAPTURED
 	if mouse_clicked:
-		if _is_parent_world_blocked():
-			return
-		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-		var interaction := get_node_or_null("InteractionController") as InteractionController
-		if interaction != null:
-			interaction.refresh_prompt()
-		get_viewport().set_input_as_handled()
+		if restore_walk_mouse_capture():
+			get_viewport().set_input_as_handled()
 		return
 
 	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
@@ -238,7 +255,7 @@ func aim_at(point: Vector3) -> void:
 
 func _process(delta: float) -> void:
 	_ensure_walk_mouse_capture()
-	_step_eye_offset = move_toward(_step_eye_offset, 0.0, delta * 1.65)
+	_step_eye_offset = move_toward(_step_eye_offset, 0.0, delta * 2.1)
 	var lean_pressed := InputMap.has_action("lean") and Input.is_action_pressed("lean")
 	var wants_lean := lean_enabled and not is_look_locked and (lean_pressed or window_lean_requested)
 	_lean_weight = move_toward(_lean_weight, 1.0 if wants_lean else 0.0, delta / maxf(lean_seconds, 0.01))
@@ -251,26 +268,24 @@ func _is_parent_world_blocked() -> bool:
 func _ensure_walk_mouse_capture() -> void:
 	if DisplayServer.get_name() == "headless":
 		return
+	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED and DisplayServer.window_is_focused():
+		restore_walk_mouse_capture()
+
+func restore_walk_mouse_capture(force_reacquire: bool = false) -> bool:
 	if seated_station_mode or is_movement_locked or is_look_locked or not is_inside_tree():
-		return
-	if get_tree().paused:
-		return
-	var root_win := get_tree().root
-	var has_win_focus := (root_win != null and root_win.has_focus()) or DisplayServer.window_is_focused()
-	if not has_win_focus:
-		return
-	if _is_parent_world_blocked():
-		return
-	if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
-		return
-	if get_viewport() != null:
-		get_viewport().gui_release_focus()
-	if get_tree().root != null:
+		return false
+	if get_tree().paused or _is_parent_world_blocked():
+		return false
+	get_viewport().gui_release_focus()
+	if get_viewport() != get_tree().root:
 		get_tree().root.gui_release_focus()
+	if force_reacquire and DisplayServer.get_name() != "headless":
+		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	var interaction := get_node_or_null("InteractionController") as InteractionController
 	if interaction != null:
 		interaction.refresh_prompt()
+	return true
 
 func get_lean_weight() -> float:
 	return _lean_weight
@@ -373,17 +388,38 @@ func _try_walk_step(motion: Vector3) -> bool:
 	var obstacle := wall.get_collider() as Node
 	if obstacle == null or not obstacle.is_in_group(&"street_tread"):
 		return false
+	var probe := motion
+	if probe.length() < 0.08:
+		probe = motion.normalized() * 0.08
 	var raised := global_transform.translated(Vector3.UP * step_height)
-	if test_move(global_transform, Vector3.UP * step_height) or test_move(raised, motion):
+	if test_move(global_transform, Vector3.UP * step_height) or test_move(raised, probe):
 		return false
-	# A single radius-ahead ray can overshoot short indoor stair treads.
 	var space := get_world_3d().direct_space_state
-	for reach: float in [0.10, 0.19, 0.27, 0.38]:
-		var toe := raised.origin + motion + motion.normalized() * reach
-		var query := PhysicsRayQueryParameters3D.create(toe, toe - Vector3.UP * step_height, collision_mask)
+	var dir := motion.normalized()
+	var into_wall := Vector3(-wall.get_normal().x, 0.0, -wall.get_normal().z)
+	into_wall = into_wall.normalized() if into_wall.length_squared() > 0.0001 else dir
+	var radius := _walk_capsule.radius
+	var contact := wall.get_position()
+	var contact_at_height := Vector3(contact.x, raised.origin.y, contact.z)
+	# At grazing angles the capsule touches the lip well to the side of its travel vector.
+	var toes: Array[Vector3] = [
+		raised.origin + dir * 0.06,
+		raised.origin + dir * radius * (0.14 / 0.35),
+		raised.origin + dir * radius * (0.24 / 0.35),
+		raised.origin + dir * (radius + (0.06 if outdoor_mode else 0.01)),
+	]
+	if outdoor_mode or dir.dot(into_wall) >= 0.60:
+		toes.append(contact_at_height + into_wall * 0.05)
+		toes.append(contact_at_height + into_wall * 0.14)
+	if outdoor_mode:
+		toes.append(contact_at_height + dir * 0.08 + into_wall * 0.06)
+	for toe: Vector3 in toes:
+		var query := PhysicsRayQueryParameters3D.create(toe, toe - Vector3.UP * (step_height + 0.06), collision_mask)
 		query.exclude = [get_rid()]
 		var hit := space.intersect_ray(query)
-		if not hit.is_empty() and hit.collider == obstacle and hit.normal.y > 0.95:
+		if not hit.is_empty() and hit.collider == obstacle and hit.normal.y > 0.85 \
+			and hit.position.y > global_position.y + 0.005 \
+			and hit.position.y <= global_position.y + step_height + 0.01:
 			global_position.y = hit.position.y + 0.002
 			return true
 	return false
@@ -436,17 +472,35 @@ func _advance_footsteps(moved_distance: float) -> void:
 func _play_footstep() -> void:
 	var index := _footstep_index
 	_footstep_index = (_footstep_index + 1) % 3
-	if footstep_player != null and footstep_player.stream != null and is_inside_tree():
-		if not footstep_variants.is_empty():
-			var pick := randi() % footstep_variants.size()
-			if pick == _last_footstep_variant:
-				pick = (pick + 1) % footstep_variants.size()
-			_last_footstep_variant = pick
-			footstep_player.stream = footstep_variants[pick]
-		footstep_player.pitch_scale = [0.96, 1.03, 0.99][index] + randf_range(-0.02, 0.02)
-		footstep_player.volume_db = footstep_base_db + randf_range(-1.5, 1.0)
+	var bank := _resolve_footstep_bank()
+	var stream := surface_resolver.next_stream(bank) if surface_resolver != null else null
+	if stream == null and not footstep_variants.is_empty():
+		var pick := randi() % footstep_variants.size()
+		if pick == _last_footstep_variant:
+			pick = (pick + 1) % footstep_variants.size()
+		_last_footstep_variant = pick
+		stream = footstep_variants[pick]
+	if footstep_player != null and stream != null and is_inside_tree():
+		footstep_player.stream = stream
+		var pitch_center := bank.pitch_center if bank != null else 1.0
+		var jitter := bank.pitch_jitter if bank != null else 0.02
+		footstep_player.pitch_scale = pitch_center * ([0.96, 1.03, 0.99][index] + randf_range(-jitter, jitter))
+		var offset := bank.volume_offset_db if bank != null else 0.0
+		footstep_player.volume_db = footstep_base_db + offset + randf_range(-1.5, 1.0)
 		footstep_player.play()
 	footstep_played.emit(index)
+
+## The bank the boot is standing on right now, or null to keep the legacy set.
+func _resolve_footstep_bank() -> FootstepSurfaceBank:
+	if surface_resolver == null:
+		return null
+	var resolved := surface_resolver.resolve_at(global_position + Vector3.UP * 0.05,
+		get_world_3d(), [get_rid()])
+	var surface: StringName = resolved["surface"]
+	if surface != _last_surface:
+		_last_surface = surface
+		surface_resolver.surface_changed.emit(surface)
+	return resolved["bank"]
 
 func _recover_from_fall() -> void:
 	velocity = Vector3.ZERO
@@ -502,6 +556,15 @@ func contact_nudge(strength: float = 1.0) -> void:
 	if not head_bob_enabled:
 		return
 	_contact_nudge = minf(contact_nudge_distance * maxf(strength, 0.0), CONTACT_NUDGE_CEILING)
+
+## Take the scene's ground into account: indoor boards or outdoor dirt, plus an
+## optional scene material (the saloon's pine, the boarding room's boards).
+func configure_footstep_surface(indoor: bool, context: StringName = &"") -> void:
+	surface_indoor = indoor
+	footstep_surface = context
+	if surface_resolver != null:
+		surface_resolver.set_indoor(indoor)
+		surface_resolver.set_context_surface(context)
 
 ## Used by the seat, which owns the head position while the operator is sitting.
 func set_head_rest_position(value: Vector3) -> void:

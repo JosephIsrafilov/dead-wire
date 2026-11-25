@@ -85,7 +85,7 @@ layer = 4
 [node name="TopStripLabel" type="Label" parent="TownHudLayer"]
 offset_left = 20.0
 offset_top = 14.0
-offset_right = 1120.0
+offset_right = 20.0
 offset_bottom = 44.0
 text = "BLACK CREEK — 1890"
 

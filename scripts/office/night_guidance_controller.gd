@@ -10,6 +10,9 @@ var enabled: bool = true:
 		if not value:
 			_clear()
 var current_text: String = ""
+var timetable_read := false
+var ledger_read := false
+var tape_read := false
 var _context: StringName = &""
 ## A thought the room produced rather than the procedure: what just happened.
 ## It waits for a quiet moment (no wire, no document, no board) so it can never
@@ -38,17 +41,27 @@ func _ready() -> void:
 	_label.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
 	# Stacked text channels: the whisper sits above (MurmurCaption), the
 	# interaction prompt below — no band may overlap another.
-	_label.offset_top = -176.0
+	_label.offset_top = -190.0
 	_label.offset_bottom = -124.0
-	_label.offset_left = 24.0
-	_label.offset_right = -24.0
+	_label.offset_left = 32.0
+	_label.offset_right = -32.0
 	_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	# A thought is printed like the room's own paper: a period book face in
 	# lamp-warm ink, not a modern caption.
 	_label.add_theme_font_override("font", preload("res://assets/fonts/oldstandard/OldStandardTT-Regular.ttf"))
-	_label.add_theme_font_size_override("font_size", 22)
+	_label.add_theme_font_size_override("font_size", 20)
+	var band := StyleBoxFlat.new()
+	band.bg_color = Color(0.05, 0.04, 0.03, 0.78)
+	band.border_color = Color(0.68, 0.56, 0.36, 0.54)
+	band.border_width_top = 1
+	band.border_width_bottom = 1
+	band.content_margin_left = 14.0
+	band.content_margin_right = 14.0
+	band.content_margin_top = 4.0
+	band.content_margin_bottom = 4.0
+	_label.add_theme_stylebox_override("normal", band)
 	_label.add_theme_color_override("font_color", Color(0.9, 0.84, 0.7, 1.0))
 	_label.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.95))
 	_label.add_theme_constant_override("shadow_offset_x", 1)
@@ -67,15 +80,17 @@ func set_context(context: StringName, blocked: bool) -> void:
 		_clear()
 
 func advance_guidance(delta: float) -> void:
+	_context_elapsed += delta
 	if _blocked:
 		return
 	if _label != null and not current_text.is_empty():
 		_label.modulate.a = minf(1.0, _label.modulate.a + delta * 8.0)
 	_since_auto += delta
-	_context_elapsed += delta
-	_remaining = maxf(0.0, _remaining - delta)
-	if _remaining <= 0.0:
-		_clear()
+	if _remaining > 0.0:
+		_remaining = maxf(0.0, _remaining - delta)
+		if _remaining <= 0.0:
+			_clear()
+			return
 	if not enabled:
 		return
 	# A reaction to what just happened outranks a procedural reminder: the
@@ -94,7 +109,9 @@ func advance_guidance(delta: float) -> void:
 		return
 	if not entry.get("automatic", true):
 		return
-	if _context_elapsed < float(entry.get("delay", 2.0)) or _since_auto < data.automatic_interval:
+	if _context_elapsed < float(entry.get("delay", 2.0)):
+		return
+	if not entry.get("paced_step", false) and _since_auto < data.automatic_interval:
 		return
 	_show(entry)
 	_since_auto = 0.0
@@ -124,27 +141,19 @@ func repeat_current() -> void:
 	if _blocked or data == null:
 		return
 	var entry := data.entry_for(_context)
-	if not entry.is_empty():
+	if not entry.is_empty() and (_context != &"answer_late" or _context_elapsed >= float(entry.delay)):
 		_show(entry)
 
-const ENTRY_TEXT_RU := {
-	&"entry": "Стул у стола. Нужно сесть и открыть линию.",
-	&"open_line": "Телеграфный ключ — справа от блокнота.",
-	&"answer": "Станцию вызывают. Пора ответить ключом.",
-	&"read_copy": "Запись готова. Надо перечитать лист.",
-	&"route": "Рычаг сигнала слева [A].",
-	&"wind": "Регистр замедляется — заведите ручкой сбоку.",
-	&"filing": "Стол подшивки справа [D]. Поставьте печать.",
-	&"dawn": "Линия закрыта. Осталось сдать смену и выйти в дверь.",
-}
-
 func _show(entry: Dictionary) -> void:
-	var raw_text: String = entry.get("text", "")
-	var eid: StringName = entry.get("id", &"")
-	current_text = String(ENTRY_TEXT_RU[eid]) if (GameLocale.is_ru() and ENTRY_TEXT_RU.has(eid)) else raw_text
+	var english: String = entry.get("text", "")
+	current_text = GameLocale.pick(String(entry.get("text_ru", english)), english)
 	_remaining = float(entry.get("duration", 6.0))
 	if _label != null:
 		_label.text = current_text
+		var line_height := _label.get_theme_font("font").get_height(_label.get_theme_font_size("font_size"))
+		var half_height := clampf(_label.get_line_count() * (line_height + 2.0) * 0.5 + 8.0, 18.0, 36.0)
+		_label.offset_top = -157.0 - half_height
+		_label.offset_bottom = -157.0 + half_height
 		_label.visible = true
 		_label.modulate.a = 0.0
 
@@ -163,41 +172,52 @@ func _drop_reaction() -> void:
 func _process(delta: float) -> void:
 	if office != null:
 		_refresh_visible_context()
-	advance_guidance(delta)
+	if not get_tree().paused:
+		advance_guidance(delta)
+
+static func wire_busy(session: TelegraphSessionController) -> bool:
+	return session.get_state() in [TelegraphSessionController.State.RECEIVING, TelegraphSessionController.State.COPYING] \
+		or (session.scheduler != null and session.scheduler.is_playing())
 
 func _refresh_visible_context() -> void:
-	if office.player != null and office.player.seated_station_mode:
-		set_context(&"", true)
-		return
 	var session := office.session_controller
 	var director := office.shift_director
 	if session == null or director == null:
 		set_context(&"", true)
 		return
-	var blocked := office.is_world_view_blocked() or get_tree().paused
+	var blocked := office.is_world_view_blocked() or get_tree().paused or wire_busy(session)
 	blocked = blocked or not session.get_deadline_warning_text().is_empty()
-	blocked = blocked or (session.scheduler != null and session.scheduler.is_playing())
-	var context: StringName = &""
+	set_context(_work_context(session, director), blocked)
+
+func _work_context(session: TelegraphSessionController, director: ShiftDirector) -> StringName:
+	var seated := office.operator_seat != null and office.operator_seat.is_seated
 	if director.is_shift_over():
-		context = &"dawn"
-	elif director.get_phase() == ShiftDirector.Phase.PRE_SHIFT:
-		context = &"open_line" if office.operator_seat != null and office.operator_seat.is_settled() else &"entry"
-	elif director.get_phase() == ShiftDirector.Phase.CALLING:
-		context = &"answer"
-	else:
-		match session.get_state():
-			TelegraphSessionController.State.VERIFYING: context = &"read_copy"
-			TelegraphSessionController.State.AWAITING_ROUTE: context = &"route"
-			TelegraphSessionController.State.AWAITING_COMMIT: context = &"filing"
-			TelegraphSessionController.State.RECEIVING, TelegraphSessionController.State.COPYING:
-				blocked = true
-		if director.get_phase() == ShiftDirector.Phase.WAITING:
-			var register := session.get_tape_register()
-			if register != null and register.needs_winding():
-				context = &"wind"
-			elif director.get_slot_index() == 1:
-				context = &"compare"
-	set_context(context, blocked)
+		if seated:
+			return &"dawn_seated"
+		return &"" if office.dawn_evidence != null and office.dawn_evidence.is_inspected() else &"dawn"
+	var phase := director.get_phase()
+	if phase == ShiftDirector.Phase.PRE_SHIFT:
+		return &"open_line" if seated else &"entry"
+	var slot := director.get_slot_index()
+	if phase == ShiftDirector.Phase.CALLING:
+		if slot == 0:
+			return &"answer"
+		return &"answer_late" if slot == 1 else &""
+	var register := session.get_tape_register()
+	if register != null and register.needs_winding():
+		return &"wind"
+	var state := session.get_state()
+	if slot == 0:
+		match state:
+			TelegraphSessionController.State.VERIFYING: return &"read_copy"
+			TelegraphSessionController.State.AWAITING_ROUTE: return &"route"
+			TelegraphSessionController.State.AWAITING_COMMIT: return &"filing"
+	if slot == 1 and phase == ShiftDirector.Phase.WAITING and not ledger_read:
+		return &"ledger"
+	if slot == 2 and not tape_read and state in [
+			TelegraphSessionController.State.AWAITING_ROUTE, TelegraphSessionController.State.AWAITING_COMMIT]:
+		return &"compare"
+	return &""
 
 func _unhandled_input(event: InputEvent) -> void:
 	# A real input action (plan 6.8), so it can be rebound like any other key.
@@ -268,7 +288,15 @@ func _on_work_state_changed(_new: int, _old: int) -> void:
 func _on_wire_started(_schedule: MorsePlaybackScheduleData) -> void:
 	set_context(_context, true)
 
-func _on_document_opened(_document_id: String) -> void:
+func _on_document_opened(document_id: String) -> void:
+	match document_id:
+		"timetable_card": timetable_read = true
+		"dispatch_ledger": ledger_read = true
+		TapeRegisterController.TAPE_DOC_ID:
+			if office.shift_director.get_slot_index() == 2 and office.session_controller.get_state() in [
+					TelegraphSessionController.State.VERIFYING, TelegraphSessionController.State.AWAITING_ROUTE,
+					TelegraphSessionController.State.AWAITING_COMMIT]:
+				tape_read = true
 	set_context(_context, true)
 
 static func refresh_interaction_hint(office: M1OfficeController) -> void:

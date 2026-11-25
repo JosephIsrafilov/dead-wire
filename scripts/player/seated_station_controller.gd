@@ -211,10 +211,6 @@ func _activate_station(emit_seat_signals: bool = true) -> void:
 		if office != null:
 			office._on_operator_sit_completed()
 
-	if office != null and office.window_observation != null \
-			and not office.window_observation.event_observed.is_connected(_on_window_figure_observed):
-		office.window_observation.event_observed.connect(_on_window_figure_observed, CONNECT_ONE_SHOT)
-
 	if DisplayServer.get_name() != "headless":
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 		Input.set_default_cursor_shape(Input.CURSOR_ARROW)
@@ -296,22 +292,6 @@ func stand_up_from_station() -> bool:
 		Input.set_default_cursor_shape(Input.CURSOR_ARROW)
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	return true
-
-func _on_window_figure_observed() -> void:
-	if office == null:
-		return
-	var sched := office.session_controller.scheduler if office.session_controller != null else null
-	if sched != null and sched.is_playing():
-		return
-	var murmur := office.get_node_or_null("MurmurCaption") as MurmurCaption
-	if murmur != null:
-		murmur.show_outside_line(
-			GameLocale.pick(
-				"Кто-то стоит у шахтного забора... без фонаря.",
-				"Someone is standing by the mine fence... without a lantern."
-			),
-			5.0
-		)
 
 func _build_nav_ui() -> void:
 	_style_normal = StyleBoxFlat.new()

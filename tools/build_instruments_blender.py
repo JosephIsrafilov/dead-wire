@@ -8,9 +8,12 @@ import json
 import math
 import random
 from pathlib import Path
+import sys
 from mathutils import Vector
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "tools"))
+from office_blender_look import bake_vertex_ao, scanned_materials
 OUT = ROOT / 'assets/models/instruments_v1'
 OUT.mkdir(parents=True, exist_ok=True)
 TEX = ROOT / 'assets/textures/instruments_v1'
@@ -27,53 +30,12 @@ coll = bpy.data.collections.new(COLLECTION)
 bpy.context.scene.collection.children.link(coll)
 # Six 64px tiles in a 256px atlas. Spare tiles remain dark.
 TILES = {'wood': (0, 0), 'brass': (1, 0), 'iron': (2, 0),
-         'coil': (3, 0), 'ebonite': (0, 1), 'paper': (1, 1)}
+         'coil': (3, 0), 'ebonite': (0, 1), 'paper': (1, 1),
+         'register_glass': (2, 1)}
 COLORS = {'wood': (87, 53, 32), 'brass': (151, 121, 70), 'iron': (52, 53, 51),
           'coil': (63, 48, 36), 'ebonite': (33, 29, 24), 'paper': (166, 152, 123)}
-rng = random.Random(1894)
-image = bpy.data.images.new('DW_Instrument_Atlas_256', width=256, height=256)
-pixels = [0.025, 0.022, 0.02, 1.0] * (256 * 256)
-for kind, (tx, ty) in TILES.items():
-    base = COLORS[kind]
-    for y in range(64):
-        for x in range(64):
-            noise = rng.uniform(-3, 3)
-            if kind == 'wood':
-                detail = 6 * math.sin(x * .58 + 1.8 * math.sin(y * .08)) + 3 * math.sin(x * 2.0)
-            elif kind == 'coil':
-                detail = -14 if y % 5 == 0 else (6 if y % 5 == 1 else -1)
-            elif kind == 'brass':
-                detail = 5 * math.sin(x * .21) * math.sin(y * .13)
-                if ((x - 17) ** 2 + (y - 42) ** 2) < 54:
-                    detail -= 13
-            elif kind == 'iron':
-                detail = 3 * math.sin(x * .43 + y * .31)
-            elif kind == 'paper':
-                detail = 2 * math.sin(y * .7)
-            else:
-                detail = 1.5 * math.sin(x * .2)
-            idx = ((ty * 64 + y) * 256 + tx * 64 + x) * 4
-            for c in range(3):
-                # Restrained quantized values, not universal high-frequency grime.
-                pixels[idx+c] = round(max(0, min(255, base[c] + detail + noise)) / 8) * 8 / 255
-            pixels[idx+3] = 1
-image.pixels.foreach_set(pixels)
-image.filepath_raw = str(TEX / 'instrument_atlas_256.png')
-image.file_format = 'PNG'
-image.save()
-image.pack()
-materials = {}
-for kind in TILES:
-    mat = bpy.data.materials.new('dw_' + kind)
-    mat.use_nodes = True
-    bsdf = mat.node_tree.nodes.get('Principled BSDF')
-    bsdf.inputs['Roughness'].default_value = .65 if kind == 'brass' else .88
-    bsdf.inputs['Metallic'].default_value = .5 if kind in ('brass', 'iron') else 0
-    tex = mat.node_tree.nodes.new('ShaderNodeTexImage')
-    tex.image = image
-    tex.interpolation = 'Closest'
-    mat.node_tree.links.new(tex.outputs['Color'], bsdf.inputs['Base Color'])
-    materials[kind] = mat
+materials = scanned_materials(TEX / "instrument_atlas_256.png", TILES, "dw_")
+
 
 def pos(v):
     return Vector((v[0], -v[2], v[1]))
@@ -147,9 +109,10 @@ def export(name):
     # Bake a deterministic explicit triangle mesh for identical Godot topology.
     tri = obj.modifiers.new('Export triangles', 'TRIANGULATE')
     bpy.ops.object.modifier_apply(modifier=tri.name)
+    bake_vertex_ao(obj)
     bpy.ops.export_scene.gltf(filepath=str(OUT/(name+'.glb')), export_format='GLB',
         use_selection=True, export_apply=True, export_yup=True, export_texcoords=True,
-        export_normals=True, export_materials='EXPORT', export_cameras=False,
+        export_normals=True, export_vertex_color="ACTIVE", export_materials='EXPORT', export_cameras=False,
         export_lights=False, export_animations=False)
     report[name] = {'triangles':len(obj.data.polygons),'vertices':len(obj.data.vertices),
                     'materials':[m.name for m in obj.data.materials]}
@@ -171,12 +134,22 @@ screw('KeyRearContact',(0,.032,-.052),.004,.019)
 screw('KeyFrontContact',(0,.024,.058),.0045,.012)
 box('KeyInsulator',(0,.019,.058),(.013,.004,.018),'ebonite',.0007)
 rod('KeyReturnSpring',(0,.018,-.035),(0,.028,-.017),.0018,'iron')
+cyl('CloserPivot', (.035, .021, -.026), .006, .008, 'brass')
+rod('CircuitCloser', (.035, .026, -.026), (.057, .023, .034), .003, 'brass')
+cyl('CloserThumb', (.057, .027, .035), .007, .008, 'ebonite', sides=10)
+for side in (-1, 1):
+    rod('ClothLead', (side * .029, .025, -.067), (side * .030, .012, -.094), .0014, 'coil')
+    rod('ClothLeadTail', (side * .030, .012, -.094), (side * .040, .003, -.115), .0014, 'coil')
 export('key_static')
 # Moving geometry is relative to the existing Lever origin at y=.022.
 box('KeyLeverBeam',(0,.006,.005),(.012,.012,.14),'brass',.001)
 cyl('KeyGripFoot',(0,.013,.060),.009,.007,'brass')
 cyl('KeyEboniteGrip',(0,.024,.060),.025,.016,'ebonite',sides=16,radius_top=.022)
 cyl('KeyGripFace',(0,.033,.060),.021,.002,'ebonite',sides=16)
+for index in range(16):
+    angle = math.tau * index / 16
+    x, z = .024 * math.cos(angle), .060 + .024 * math.sin(angle)
+    cyl('EboniteKnurl', (x, .023, z), .0011, .012, 'ebonite', sides=5)
 screw('KeyGripCentre',(0,.035,.060),.002,.002)
 export('key_lever')
 # SOUNDER: paired electromagnets with period-like wood/brass support.
@@ -198,6 +171,13 @@ screw('SounderStop',(0,.080,.040),.006,.018)
 screw('SounderRearAdjust',(0,.079,-.052),.005,.015)
 rod('SounderLeadLeft',(-.025,.029,-.020),(-.048,.027,-.068),.0012,'ebonite')
 rod('SounderLeadRight',(.025,.029,-.020),(.048,.027,-.068),.0012,'ebonite')
+for side in (-1, 1):
+    rod('CastBridgeLeg', (side * .044, .030, -.071), (side * .034, .066, -.071), .006, 'brass')
+    rod('CastBridgeShoulder', (side * .034, .066, -.071), (0, .078, -.071), .006, 'brass')
+spring = [(math.cos(i * math.tau / 8) * .004, .025 + i * .0013, -.085 + math.sin(i * math.tau / 8) * .004)
+          for i in range(29)]
+for lo, hi in zip(spring, spring[1:]):
+    rod('AdjusterSpring', lo, hi, .00075, 'iron', 5)
 export('sounder_static')
 # Existing ArmatureBar at y=.065,z=.005; preserve its vertical motion contract.
 box('Armature',(0,0,0),(.018,.007,.100),'brass',.0006)
@@ -206,20 +186,37 @@ screw('ArmatureFastener',(0,.004,-.032),.003,.002)
 export('sounder_armature')
 # REGISTER: visual casing only; preserved raw tape still comes from scheduler.
 box('RegisterPlinth',(0,.005,0),(.172,.010,.122),'wood',.002)
-box('RegisterCabinet',(0,.0375,0),(.160,.055,.110),'wood',.002)
+box('RegisterLowerOak', (0, .016, 0), (.160, .018, .110), 'wood', .003)
 box('RegisterTop',(0,.067,0),(.150,.004,.100),'brass',.0008)
-box('RegisterNamePlate',(0,.036,.0555),(.06,.012,.0012),'brass',.0003)
+box('RegisterNamePlate',(0,.017,.0555),(.090,.013,.0012),'brass',.0003)
 for x in (-.064,.064):
     for z in (-.040,.040):
         screw('RegisterPlateFixing',(x,.070,z),.0027,.002)
-    box('RegisterCornerBand',(x,.037,.0556),(.005,.049,.001),'iron')
+    for z in (-.047, .047):
+        box('CastCornerPost', (x, .044, z), (.011, .044, .012), 'brass', .001)
+    box('ClockworkGlass', (x * 1.17, .044, 0), (.001, .036, .080), 'register_glass')
+    box('GlazingLowerRail', (x * 1.15, .024, 0), (.004, .004, .082), 'brass')
+    box('GlazingUpperRail', (x * 1.15, .062, 0), (.004, .004, .082), 'brass')
+box('ClockworkFrontGlass', (0, .044, .052), (.115, .035, .001), 'register_glass')
+box('ClockworkBackplate', (0, .043, -.050), (.143, .038, .004), 'iron')
+for gy, gz, radius in ((.042, -.019, .017), (.045, .015, .014), (.040, .038, .009)):
+    rod('WheelAxle', (-.067, gy, gz), (.069, gy, gz), .0025, 'iron')
+    for x in (-.062, .060):
+        cyl('BrassClockworkWheel', (x, gy, gz), radius, .004, 'brass', (1, 0, 0), 16)
+        cyl('WheelHub', (x * 1.067, gy, gz), radius * .31, .003, 'iron', (1, 0, 0), 10)
+        for i in range(12):
+            angle = math.tau * i / 12
+            tooth = (x, gy + radius * math.cos(angle), gz + radius * math.sin(angle))
+            box('WheelTooth', tooth, (.005, .003, .003), 'brass')
 for x in (-.0145,.0145):
     box('RegisterSpoolCheek',(x,.097,-.025),(.004,.058,.050),'brass',.001)
     screw('RegisterCheekFixing',(x,.128,-.025),.0025,.002)
 # Side door and ring, not a transparent unmodelled gear-box.
-box('ClockworkSidePlate',(.0805,.038,0),(.001,.037,.073),'brass',.0005)
 cyl('WindingArbor',(.085,.040,-.010),.004,.012,'brass',(1,0,0),8)
-box('WindingKey',(.093,.040,-.010),(.004,.022,.012),'brass',.001)
+for y in (.032, .048):
+    cyl('WindingKeyButterfly', (.094, y, -.010), .008, .005, 'brass', (1, 0, 0), 8)
+for x in (-.019, .019):
+    box('TapeGuideLip', (x, .074, .045), (.004, .006, .090), 'brass', .0007)
 # Tape receiving tray stays at the original location.
 box('TrayFloor',(0,.003,.172),(.060,.006,.055),'wood',.001)
 box('TrayLip',(0,.012,.198),(.060,.024,.005),'wood',.001)
@@ -254,7 +251,8 @@ other_visibility = [(o, o.hide_render, o.hide_viewport) for o in bpy.context.sce
 for obj, _, _ in other_visibility:
     obj.hide_render = True
     obj.hide_viewport = True
-bpy.ops.wm.save_as_mainfile(filepath=str(SOURCE/'dead_wire_instruments_v1.blend'), copy=True)
+if "--save-source" in sys.argv:
+    bpy.ops.wm.save_as_mainfile(filepath=str(SOURCE/'dead_wire_instruments_v1.blend'), copy=True)
 for obj, render_hidden, viewport_hidden in other_visibility:
     obj.hide_render = render_hidden
     obj.hide_viewport = viewport_hidden

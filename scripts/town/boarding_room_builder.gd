@@ -12,6 +12,7 @@ const CHIMNEY_GLASS := preload("res://materials/shaders/hargrove_chimney_glass.g
 const ROOM_DESK := preload("res://assets/models/town/hargrove_room04_desk.glb")
 const BED_SCENE := preload("res://assets/models/town/room04_iron_bed.glb")
 const WASHSTAND_SCENE := preload("res://assets/models/town/room04_washstand.glb")
+const CHAIR_MESH := preload("res://assets/models/office_props_v1/chair_static.res")
 const PERIOD_PRINT := preload("res://scripts/town/period_print_surface.gd")
 const PRINT_PATH := "res://assets/textures/town_v2/print/"
 const HILLSIDE := preload("res://scripts/town/black_creek_hillside.gd")
@@ -38,6 +39,13 @@ func build_room() -> void:
 	_build_washstand()
 	_build_desk_and_notebook()
 	_build_door_and_calendar()
+	var chair := MeshInstance3D.new()
+	chair.name = "DeskChair"
+	chair.mesh = CHAIR_MESH
+	chair.position = Vector3(0.84, 0.0, -0.02)
+	chair.rotation_degrees.y = 95.0
+	add_child(chair)
+	BoardingMaterialLibrary.apply_recursive(self)
 	refresh_locale()
 
 func refresh_locale() -> void:
@@ -90,7 +98,8 @@ func _box(parent: Node3D, node_name: String, pos: Vector3, sz: Vector3, mat: Mat
 	parent.add_child(b)
 	return b
 
-func _prop_collision(parent: Node3D, pos: Vector3, size: Vector3) -> void:
+func _prop_collision(parent: Node3D, pos: Vector3, size: Vector3,
+		surface: StringName = &"", box_group: StringName = &"") -> void:
 	var body := StaticBody3D.new()
 	body.position = pos
 	var shape := CollisionShape3D.new()
@@ -99,6 +108,10 @@ func _prop_collision(parent: Node3D, pos: Vector3, size: Vector3) -> void:
 	shape.shape = box
 	body.add_child(shape)
 	parent.add_child(body)
+	if surface != &"":
+		FootstepSurfaceResolver.tag(body, surface)
+	if box_group != &"":
+		body.add_to_group(box_group)
 
 func _add_interactable(parent: Node3D, id: StringName, pos: Vector3, sz: Vector3) -> Interactable:
 	var area := Interactable.new()
@@ -116,7 +129,8 @@ func _add_interactable(parent: Node3D, id: StringName, pos: Vector3, sz: Vector3
 
 func _build_shell() -> void:
 	add_child(ROOM_SHELL.instantiate())
-	_prop_collision(self, Vector3(0, -0.05, 0), Vector3(3.54, 0.10, 4.38))
+	# Phase B: the floorboards are the material the boots read in this room.
+	_prop_collision(self, Vector3(0, -0.05, 0), Vector3(3.54, 0.10, 4.38), &"wood_office", &"footstep_floor")
 	_prop_collision(self, Vector3(0, 2.66, 0), Vector3(3.54, 0.10, 4.38))
 	# Glass does not block light, but the wall and sash still stop the capsule.
 	for edge in [-1.0, 1.0]:
@@ -134,24 +148,23 @@ func _build_window_vista() -> void:
 	add_child(vista)
 	HILLSIDE.build_ridge(vista, -110.0, 25.0)
 	HILLSIDE.build_ridge(vista, 132.0, 29.0, true)
-	for p: Vector3 in [Vector3(1.8, -4.1, -12), Vector3(11, -4.2, -3.7),
-			Vector3(16, -4.1, -13.5), Vector3(-8, -4.4, -19)]:
-		var cottage := HILLSIDE.COTTAGES[int(p.x > 8)].instantiate() as Node3D
+	for p: Vector3 in [Vector3(5.5, -5.6, -16.5), Vector3(16.5, -5.5, -14.5),
+			Vector3(19.0, -5.6, 4.5), Vector3(-6.0, -5.5, -22.0)]:
+		var cottage := HILLSIDE.COTTAGES[int(p.x > 10)].instantiate() as Node3D
 		cottage.position = p
-		cottage.rotation.y = 0.13 if p.x < 8 else -0.21
+		cottage.rotation.y = 0.18 if p.x < 10 else -0.24
 		vista.add_child(cottage)
-	for p: Vector3 in [Vector3(-4, 0.89, -18), Vector3(2.4, 1.06, -25), Vector3(7, 1.0, -21),
-			Vector3(13, 0.78, -16), Vector3(17, 1.12, -9), Vector3(18, 0.93, -3), Vector3(23, 1.04, 5),
-			Vector3(-10, 0.91, -26), Vector3(11, 0.81, -32), Vector3(24, 1.03, -24)]:
+	for p: Vector3 in [Vector3(-4, 0.92, -16), Vector3(2.4, 1.12, -23), Vector3(7, 1.05, -19),
+			Vector3(10.5, 1.18, -5.0), Vector3(13, 0.95, -15), Vector3(15.5, 1.16, -2.5),
+			Vector3(18, 0.96, 1.8), Vector3(23, 1.08, -7.0), Vector3(-10, 0.95, -25),
+			Vector3(11, 0.88, -30), Vector3(24, 1.05, -23), Vector3(7.5, 1.24, 3.2)]:
 		var tree := HILLSIDE.SPRUCE.instantiate() as Node3D
 		tree.position = Vector3(p.x, -4.5, p.z)
 		tree.scale = Vector3.ONE * p.y
 		tree.rotation.y = p.x * 0.31
 		vista.add_child(tree)
-	var ground := _solid(Color("747357"), 0.98)
-	ground.albedo_texture = preload("res://assets/textures/town_v2/road_albedo.png")
-	ground.uv1_scale = Vector3(21, 21, 1)
-	_box(vista, "Valley floor", Vector3(10, -4.46, -10), Vector3(160, 0.2, 150), ground, false)
+	var ground := _solid(Color("52593e"), 0.98)
+	_box(vista, "Valley floor", Vector3(10, -4.46, -10), Vector3(180, 0.2, 170), ground, false)
 	# Room lights are aimed in through the sashes; exterior light is isolated to the vista.
 	for mesh: GeometryInstance3D in vista.find_children("*", "GeometryInstance3D", true, false):
 		mesh.layers = 4

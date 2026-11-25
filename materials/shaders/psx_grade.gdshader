@@ -2,11 +2,11 @@ shader_type canvas_item;
 render_mode unshaded;
 uniform sampler2D screen_texture : hint_screen_texture, repeat_disable, filter_nearest;
 uniform float pixel_size = 1.0;
-uniform float levels = 32.0;
-uniform float vignette = 0.25;
-uniform float dither_strength = 1.35;
+uniform float levels = 48.0;
+uniform float vignette = 0.09;
+uniform float dither_strength = 0.40;
 // Restrained low-res grain + shadow-weighted Bayer dithering for 1890s PSX horror.
-uniform float grain = 0.026;
+uniform float grain = 0.007;
 uniform float grain_fps = 18.0;
 uniform float color_saturation = 0.88;
 uniform vec3 shadow_tint = vec3(0.004, 0.007, 0.016);
@@ -49,7 +49,7 @@ void fragment() {
 	float noise = grain_hash(cell, floor(TIME * grain_fps)) - 0.5;
 	color += noise * grain * grain_weight;
 
-	float dither_gain = dither_strength * (1.0 + (1.0 - luma) * 0.65);
+	float dither_gain = dither_strength * mix(1.15, 0.30, smoothstep(0.22, 0.72, luma));
 	float ordered = ((BAYER[index] + 0.5) / 16.0 - 0.5) * (dither_gain / safe_levels);
 	color = floor((clamp(color, vec3(0.0), vec3(1.0)) + ordered) * safe_levels + 0.5) / safe_levels;
 	COLOR = vec4(clamp(color, vec3(0.0), vec3(1.0)), 1.0);

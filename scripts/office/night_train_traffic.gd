@@ -24,7 +24,9 @@ const CUP_CLINK_STREAM := preload("res://audio/sfx/foley/cup_clink.wav")
 const STACK_OUTLET := Vector3(2.45, 3.73, 0.0)
 const CYLINDER_OUTLET := Vector3(1.88, 0.89, 0.0)
 
-@export var line_z: float = -18.0
+const RAIL_LAYOUT := preload("res://scripts/town/black_creek_rail_layout.gd")
+
+@export var line_z: float = RAIL_LAYOUT.OFFICE_MAIN_LINE_Z
 @export var start_x: float = -62.0
 @export var end_x: float = 76.0
 @export var stand_x: float = -3.0
@@ -38,6 +40,7 @@ var _tin_cup: RigidBody3D = null
 
 var _train17: Node3D = null
 var _headlamp: SpotLight3D = null
+var _window_sweep_light: OmniLight3D = null
 var _exhaust: Exhaust = null
 var _freight71: Node3D = null
 
@@ -55,6 +58,7 @@ var _t17_x: float = -62.0
 var _t17_steamed: bool = false
 var _t17_cup_nudged: bool = false
 var _t17_whistled: bool = false
+var _t17_reacted: bool = false
 
 var _armed_71: bool = false
 var _delay_71: float = 0.0
@@ -119,15 +123,16 @@ func trigger_train_17_now(cleared: bool) -> void:
 	_t17_steamed = false
 	_t17_cup_nudged = false
 	_t17_whistled = false
+	_t17_reacted = false
 	_exhaust.reset(0.0)
 	_train17.visible = true
 	_train17.position = Vector3(_t17_x, 0.0, line_z)
 	if _can_play_audio() and _wire_idle():
 		_t17_whistled = true
-		_play_3d(_whistle, WHISTLE_STREAM, Vector3(-38.0, 3.5, line_z), -5.0)
+		_play_3d(_whistle, WHISTLE_STREAM, Vector3(-38.0, 3.5, line_z), -2.0)
 	if _rumble != null and _can_play_audio():
 		_rumble.stream = _looping(RUMBLE_STREAM)
-		_rumble.volume_db = -28.0 if not _wire_idle() else -8.0
+		_rumble.volume_db = -28.0 if not _wire_idle() else -4.0
 		_rumble.global_position = Vector3(_t17_x, 1.5, line_z)
 		_rumble.play()
 
@@ -200,26 +205,55 @@ func _advance_train_17(delta: float) -> void:
 
 	if not _t17_whistled and _t17_x > -34.0 and _wire_idle() and _can_play_audio():
 		_t17_whistled = true
-		_play_3d(_whistle, WHISTLE_STREAM, _train17.global_position + Vector3(2.0, 3.0, 0.0), -2.0)
+		_play_3d(_whistle, WHISTLE_STREAM, _train17.global_position + Vector3(2.0, 3.0, 0.0), +1.0)
 
 	if _mode_17 == "stand" and not _t17_steamed and absf(_t17_x - stand_x) < 1.2:
 		_t17_steamed = true
 		_exhaust.release_steam(_t17_time)
 		if _wire_idle() and _can_play_audio():
-			_play_3d(_steam, STEAM_STREAM, _train17.global_position + CYLINDER_OUTLET, -4.0)
+			_play_3d(_steam, STEAM_STREAM, _train17.global_position + CYLINDER_OUTLET, -1.5)
+
+	if not _t17_reacted and _t17_x >= -14.0 and _wire_idle() and DisplayServer.get_name() != "headless":
+		_t17_reacted = true
+		var office := get_parent()
+		var murmur := office.get_node_or_null("MurmurCaption") as MurmurCaption if office != null else null
+		if murmur != null:
+			if _mode_17 == "pass":
+				murmur.show_outside_line(
+					GameLocale.pick(
+						"Вот и семнадцатый — пошёл по главному пути на восток. Прожектор бьёт прямо в стекло.",
+						"There goes Number 17 — rolling clear on the main eastbound. Headlamp cuts straight through the bay glass."
+					),
+					4.8
+				)
+			else:
+				murmur.show_outside_line(
+					GameLocale.pick(
+						"Семнадцатый затормозил у входного семафора — пар шипит во весь двор.",
+						"Number 17 pulled up at the stop board — blowing off steam across the yard."
+					),
+					4.8
+				)
+
+	if _window_sweep_light != null:
+		var pass_glow := clampf(1.0 - absf(_t17_x + 2.5) / 14.0, 0.0, 1.0)
+		_window_sweep_light.position = Vector3(clampf(_t17_x * 0.35 - 0.8, -3.5, 1.5), 1.65, -2.95)
+		_window_sweep_light.light_energy = pass_glow * 3.8
 
 	if _mode_17 == "pass" and not _t17_cup_nudged and _t17_x >= -6.0:
 		_t17_cup_nudged = true
 		if _tin_cup != null:
 			_tin_cup.apply_central_impulse(Vector3(0.012, 0.008, 0.006))
 		if _wire_idle() and _can_play_audio() and _cup_player != null:
-			_play_3d(_cup_player, CUP_CLINK_STREAM, Vector3(-1.82, 0.80, -1.86), -16.0)
+			_play_3d(_cup_player, CUP_CLINK_STREAM, Vector3(-1.82, 0.80, -1.86), -14.0)
 
 	_update_rumble_and_tremor(speed)
 
 	if _mode_17 == "pass" and _t17_x >= end_x:
 		_t17_time = -1.0
 		_train17.visible = false
+		if _window_sweep_light != null:
+			_window_sweep_light.light_energy = 0.0
 		if _rumble != null:
 			_rumble.stop()
 		if _station != null:
@@ -237,9 +271,9 @@ func _update_rumble_and_tremor(speed: float) -> void:
 			_station.tremor_offset_deg = Vector2.ZERO
 	if _rumble != null and _rumble.playing:
 		_rumble.global_position = Vector3(_t17_x, 1.5, line_z)
-		var base_db := -5.0 if near_window else -12.0
+		var base_db := -1.5 if near_window else -9.0
 		if _mode_17 == "stand":
-			base_db = lerpf(-22.0, -7.0, clampf(speed / 6.0, 0.0, 1.0))
+			base_db = lerpf(-18.0, -5.0, clampf(speed / 6.0, 0.0, 1.0))
 		_rumble.volume_db = -28.0 if not _wire_idle() else base_db
 
 func _advance_freight_71(delta: float) -> void:
@@ -311,19 +345,29 @@ func _build_trains() -> void:
 	_headlamp = SpotLight3D.new()
 	_headlamp.name = "HeadlampSpot"
 	_headlamp.position = Vector3(3.12, 2.35, 0.0)
-	_headlamp.rotation = Vector3(-0.04, -1.85, 0.0)
+	_headlamp.rotation = Vector3(-0.06, -1.62, 0.0)
 	_headlamp.light_color = Color(1.0, 0.86, 0.56)
-	_headlamp.light_energy = 11.0
-	_headlamp.spot_range = 46.0
-	_headlamp.spot_attenuation = 0.85
-	_headlamp.spot_angle = 26.0
+	_headlamp.light_energy = 26.0
+	_headlamp.spot_range = 52.0
+	_headlamp.spot_attenuation = 0.72
+	_headlamp.spot_angle = 36.0
 	_headlamp.shadow_enabled = false
 	_train17.add_child(_headlamp)
+
+	if _window_sweep_light == null:
+		_window_sweep_light = OmniLight3D.new()
+		_window_sweep_light.name = "TrainWindowSweep"
+		_window_sweep_light.light_color = Color(1.0, 0.80, 0.46)
+		_window_sweep_light.light_energy = 0.0
+		_window_sweep_light.omni_range = 8.5
+		_window_sweep_light.omni_attenuation = 1.4
+		_window_sweep_light.shadow_enabled = false
+		add_child(_window_sweep_light)
 
 	var win_mat := StandardMaterial3D.new()
 	win_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	win_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	win_mat.albedo_color = Color(0.95, 0.72, 0.38, 0.78)
+	win_mat.albedo_color = Color(1.0, 0.78, 0.42, 0.92)
 	win_mat.disable_fog = true
 	var win_mesh := BoxMesh.new()
 	win_mesh.size = Vector3(0.46, 0.42, 0.04)

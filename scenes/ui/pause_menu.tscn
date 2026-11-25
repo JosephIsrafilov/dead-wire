@@ -1,21 +1,23 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://scripts/ui/pause_menu.gd" id="1_pause"]
 [ext_resource type="Script" path="res://scripts/ui/readability_options.gd" id="2_readability"]
+[ext_resource type="FontFile" path="res://assets/fonts/imfell/IMFeENrm28P.ttf" id="3_display"]
+[ext_resource type="FontFile" path="res://assets/fonts/oldstandard/OldStandardTT-Regular.ttf" id="4_serif"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
-bg_color = Color(0.07, 0.065, 0.06, 0.97)
-border_width_left = 2
+bg_color = Color(0.065, 0.055, 0.045, 0.96)
+border_width_left = 1
 border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.42, 0.35, 0.24, 1)
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.48, 0.39, 0.24, 0.90)
 corner_radius_top_left = 2
 corner_radius_top_right = 2
 corner_radius_bottom_right = 2
 corner_radius_bottom_left = 2
-shadow_color = Color(0, 0, 0, 0.5)
-shadow_size = 14
+shadow_color = Color(0, 0, 0, 0.65)
+shadow_size = 16
 
 [node name="PauseMenu" type="CanvasLayer"]
 layer = 30
@@ -28,7 +30,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.02, 0.02, 0.025, 0.72)
+color = Color(0.018, 0.016, 0.020, 0.78)
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
 anchors_preset = 15
@@ -38,189 +40,227 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="PanelContainer" type="PanelContainer" parent="CenterContainer"]
-custom_minimum_size = Vector2(460, 0)
+custom_minimum_size = Vector2(540, 0)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
 
 [node name="MarginContainer" type="MarginContainer" parent="CenterContainer/PanelContainer"]
 layout_mode = 2
-theme_override_constants/margin_left = 22
-theme_override_constants/margin_top = 16
-theme_override_constants/margin_right = 22
-theme_override_constants/margin_bottom = 16
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 14
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 14
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer"]
 layout_mode = 2
+theme_override_constants/separation = 7
+
+[node name="HeaderRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="TitleLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
+[node name="HeaderLeftSpacer" type="Control" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/HeaderRow"]
+custom_minimum_size = Vector2(72, 0)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.85, 0.78, 0.6, 1)
-theme_override_font_sizes/font_size = 20
-text = "LINE HELD"
+
+[node name="TitleBox" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/HeaderRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 1
+
+[node name="TitleLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/HeaderRow/TitleBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.88, 0.72, 1)
+theme_override_fonts/font = ExtResource("3_display")
+theme_override_font_sizes/font_size = 24
+text = "ЛИНИЯ НА УДЕРЖАНИИ"
 horizontal_alignment = 1
 
-[node name="SubtitleLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
+[node name="SubtitleLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/HeaderRow/TitleBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.5, 0.45, 0.36, 1)
+theme_override_colors/font_color = Color(0.62, 0.54, 0.41, 1)
+theme_override_fonts/font = ExtResource("4_serif")
+theme_override_font_sizes/font_size = 12
+text = "Станция Блэк-Крик — Ночная смена"
+horizontal_alignment = 1
+
+[node name="LocaleBar" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/HeaderRow"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 4
+
+[node name="RuButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/HeaderRow/LocaleBar"]
+layout_mode = 2
+text = "RU"
+
+[node name="EnButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/HeaderRow/LocaleBar"]
+layout_mode = 2
+text = "EN"
+
+[node name="TabBarRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="TabGame" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/TabBarRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Игра"
+
+[node name="TabAudio" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/TabBarRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Звук"
+
+[node name="TabDisplay" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/TabBarRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Экран"
+
+[node name="OptionsBox" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 178)
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="SensitivityRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/OptionsBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/OptionsBox/SensitivityRow"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.84, 0.77, 0.62, 1)
 theme_override_font_sizes/font_size = 13
-text = "Black Creek Station — Night Watch"
-horizontal_alignment = 1
+text = "Чувствительность мыши"
 
-[node name="HSeparator" type="HSeparator" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
-layout_mode = 2
-
-; The office frame is 540 lines tall (plan 1.1): one long column of options
-; ran off the top and bottom of it. Sound on the left, hands and eyes on the
-; right; the way back to the wire stays below both.
-[node name="Columns" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
-layout_mode = 2
-theme_override_constants/separation = 26
-
-[node name="SoundColumn" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Columns"]
+[node name="SensitivitySlider" type="HSlider" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/OptionsBox/SensitivityRow"]
+custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/separation = 8
-
-[node name="MasterRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Columns/SoundColumn"]
-layout_mode = 2
-theme_override_constants/separation = 12
-
-[node name="Label" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Columns/SoundColumn/MasterRow"]
-custom_minimum_size = Vector2(130, 0)
-layout_mode = 2
-theme_override_colors/font_color = Color(0.72, 0.67, 0.56, 1)
-theme_override_font_sizes/font_size = 14
-text = "Master volume"
-
-[node name="MasterSlider" type="HSlider" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Columns/SoundColumn/MasterRow"]
-custom_minimum_size = Vector2(160, 0)
-layout_mode = 2
-size_flags_vertical = 4
-min_value = -40.0
-max_value = 6.0
-step = 1.0
-
-[node name="AmbienceRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Columns/SoundColumn"]
-layout_mode = 2
-theme_override_constants/separation = 12
-
-[node name="Label" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Columns/SoundColumn/AmbienceRow"]
-custom_minimum_size = Vector2(130, 0)
-layout_mode = 2
-theme_override_colors/font_color = Color(0.72, 0.67, 0.56, 1)
-theme_override_font_sizes/font_size = 14
-text = "Room ambience"
-
-[node name="AmbienceSlider" type="HSlider" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Columns/SoundColumn/AmbienceRow"]
-custom_minimum_size = Vector2(160, 0)
-layout_mode = 2
-size_flags_vertical = 4
-min_value = -40.0
-max_value = 6.0
-step = 1.0
-value = -4.0
-
-[node name="TelegraphRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Columns/SoundColumn"]
-layout_mode = 2
-theme_override_constants/separation = 12
-
-[node name="Label" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Columns/SoundColumn/TelegraphRow"]
-custom_minimum_size = Vector2(130, 0)
-layout_mode = 2
-theme_override_colors/font_color = Color(0.72, 0.67, 0.56, 1)
-theme_override_font_sizes/font_size = 14
-text = "Telegraph"
-
-[node name="TelegraphSlider" type="HSlider" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Columns/SoundColumn/TelegraphRow"]
-custom_minimum_size = Vector2(160, 0)
-layout_mode = 2
-size_flags_vertical = 4
-min_value = -40.0
-max_value = 6.0
-step = 1.0
-value = 0.0
-
-[node name="FoleyRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Columns/SoundColumn"]
-layout_mode = 2
-theme_override_constants/separation = 12
-
-[node name="Label" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Columns/SoundColumn/FoleyRow"]
-custom_minimum_size = Vector2(130, 0)
-layout_mode = 2
-theme_override_colors/font_color = Color(0.72, 0.67, 0.56, 1)
-theme_override_font_sizes/font_size = 14
-text = "Foley"
-
-[node name="FoleySlider" type="HSlider" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Columns/SoundColumn/FoleyRow"]
-custom_minimum_size = Vector2(160, 0)
-layout_mode = 2
-size_flags_vertical = 4
-min_value = -40.0
-max_value = 6.0
-step = 1.0
-value = 0.0
-
-[node name="MusicRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Columns/SoundColumn"]
-layout_mode = 2
-theme_override_constants/separation = 12
-
-[node name="Label" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Columns/SoundColumn/MusicRow"]
-custom_minimum_size = Vector2(130, 0)
-layout_mode = 2
-theme_override_colors/font_color = Color(0.72, 0.67, 0.56, 1)
-theme_override_font_sizes/font_size = 14
-text = "Music"
-
-[node name="MusicSlider" type="HSlider" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Columns/SoundColumn/MusicRow"]
-custom_minimum_size = Vector2(160, 0)
-layout_mode = 2
-size_flags_vertical = 4
-min_value = -40.0
-max_value = 6.0
-step = 1.0
-value = 0.0
-
-[node name="ContextualThoughtsCheck" type="CheckButton" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Columns/SoundColumn"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.72, 0.67, 0.56, 1)
-theme_override_font_sizes/font_size = 14
-text = "Contextual thoughts"
-button_pressed = true
-
-[node name="ControlColumn" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Columns"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/separation = 8
-
-[node name="SensitivityRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Columns/ControlColumn"]
-layout_mode = 2
-theme_override_constants/separation = 12
-
-[node name="Label" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Columns/ControlColumn/SensitivityRow"]
-custom_minimum_size = Vector2(130, 0)
-layout_mode = 2
-theme_override_colors/font_color = Color(0.72, 0.67, 0.56, 1)
-theme_override_font_sizes/font_size = 14
-text = "Mouse sensitivity"
-
-[node name="SensitivitySlider" type="HSlider" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Columns/ControlColumn/SensitivityRow"]
-custom_minimum_size = Vector2(160, 0)
-layout_mode = 2
 size_flags_vertical = 4
 min_value = 0.5
 max_value = 8.0
 step = 0.1
 value = 3.0
 
-[node name="HeadBobCheck" type="CheckButton" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Columns/ControlColumn"]
+[node name="HeadBobCheck" type="CheckButton" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/OptionsBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.72, 0.67, 0.56, 1)
-theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.84, 0.77, 0.62, 1)
+theme_override_font_sizes/font_size = 13
 button_pressed = true
-text = "Head movement while walking"
+text = "Покачивание головы"
 
-[node name="ReadabilityOptions" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Columns/ControlColumn"]
+[node name="ContextualThoughtsCheck" type="CheckButton" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/OptionsBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.84, 0.77, 0.62, 1)
+theme_override_font_sizes/font_size = 13
+button_pressed = true
+text = "Мысли оператора"
+
+[node name="MasterRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/OptionsBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/OptionsBox/MasterRow"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.84, 0.77, 0.62, 1)
+theme_override_font_sizes/font_size = 13
+text = "Общая громкость"
+
+[node name="MasterSlider" type="HSlider" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/OptionsBox/MasterRow"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+min_value = -40.0
+max_value = 6.0
+step = 1.0
+
+[node name="AmbienceRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/OptionsBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/OptionsBox/AmbienceRow"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.84, 0.77, 0.62, 1)
+theme_override_font_sizes/font_size = 13
+text = "Шум комнаты"
+
+[node name="AmbienceSlider" type="HSlider" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/OptionsBox/AmbienceRow"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+min_value = -40.0
+max_value = 6.0
+step = 1.0
+value = -4.0
+
+[node name="TelegraphRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/OptionsBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/OptionsBox/TelegraphRow"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.84, 0.77, 0.62, 1)
+theme_override_font_sizes/font_size = 13
+text = "Телеграф"
+
+[node name="TelegraphSlider" type="HSlider" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/OptionsBox/TelegraphRow"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+min_value = -40.0
+max_value = 6.0
+step = 1.0
+value = 0.0
+
+[node name="FoleyRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/OptionsBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/OptionsBox/FoleyRow"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.84, 0.77, 0.62, 1)
+theme_override_font_sizes/font_size = 13
+text = "Звуки предметов"
+
+[node name="FoleySlider" type="HSlider" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/OptionsBox/FoleyRow"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+min_value = -40.0
+max_value = 6.0
+step = 1.0
+value = 0.0
+
+[node name="MusicRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/OptionsBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/OptionsBox/MusicRow"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.84, 0.77, 0.62, 1)
+theme_override_font_sizes/font_size = 13
+text = "Музыка"
+
+[node name="MusicSlider" type="HSlider" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/OptionsBox/MusicRow"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+min_value = -40.0
+max_value = 6.0
+step = 1.0
+value = 0.0
+
+[node name="ReadabilityOptions" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/OptionsBox"]
 layout_mode = 2
 script = ExtResource("2_readability")
 
@@ -234,24 +274,25 @@ theme_override_constants/separation = 10
 [node name="ResumeButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonRow"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 15
-text = "Return to the Wire"
+theme_override_font_sizes/font_size = 14
+text = "Продолжить"
 
 [node name="TitleButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonRow"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 15
-text = "Leave the Post"
+theme_override_font_sizes/font_size = 14
+text = "В главное меню"
 
 [node name="QuitButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonRow"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 15
-text = "Quit to Desktop"
+theme_override_font_sizes/font_size = 14
+text = "Выйти из игры"
 
 [node name="HintLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.42, 0.38, 0.31, 1)
-theme_override_font_sizes/font_size = 12
-text = "W A S D  move      E  handle      Q / right mouse  lean in      1 / 2  set route      F1  recall thought"
+theme_override_colors/font_color = Color(0.54, 0.48, 0.37, 0.9)
+theme_override_fonts/font = ExtResource("4_serif")
+theme_override_font_sizes/font_size = 11
+text = "A / W / D / S  обзор      ЛКМ  действие      ПКМ  прильнуть      Колесо  лампа      Пробел  ключ"
 horizontal_alignment = 1

@@ -65,5 +65,12 @@ func update(slot: int, seconds_into_silence: float, silence_seconds: float) -> v
 	if not _figure_placed and seconds_into_silence >= figure_after_seconds:
 		_figure_placed = true
 		if figure != null:
+			# Stage B (Stage 1.1): the close one, three to four metres beyond the
+			# bay window, where the wick has just sunk and the pane has stopped
+			# being a mirror. The far-fence figure belongs to Miller's knock, not
+			# to this silence, so the stage is stated even though it is the default:
+			# a night that has already had Stage A must not carry its position here.
+			if figure.has_method("set_stage"):
+				figure.call("set_stage", 0)
 			var hold := maxf(silence_seconds - seconds_into_silence, 0.0) + figure_linger_seconds
 			figure.trigger_event(hold, world_fact_id, knowledge_fact_id)

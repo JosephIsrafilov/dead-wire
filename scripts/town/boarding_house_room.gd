@@ -12,6 +12,53 @@ const SPLASH_SFX := preload("res://audio/sfx/town/water_splash_basin.wav")
 const BIRDS_WAKE_SFX := preload("res://audio/sfx/town/morning_birds_wake.wav")
 const DOOR_LATCH_SFX := preload("res://audio/sfx/foley/door_latch.wav")
 
+## The campaign's one week: Monday 14 April 1890 through Sunday 20 April 1890.
+## A night shift begins after midnight, so day_index 1 is the first dawn on the
+## 14th, and the index only advances when Elias leaves for the next watch.
+const WEEK_LENGTH := 7
+const RENT_DAY := 3
+const HEARING_DAY := 7
+## A combining long stroke (U+0336, zero advance in the bundled face), so a day
+## already spent is struck through in the calendar's own ink.
+const STRIKE := "\u0336"
+const WEEK_ROWS: Array[Dictionary] = [
+	{
+		"date_ru": "Пн, 14 апр.", "date_en": "Mon, Apr 14", "ringed": false,
+		"entry_ru": "Ночная смена на станции",
+		"entry_en": "Night watch at the depot",
+	},
+	{
+		"date_ru": "Вт, 15 апр.", "date_en": "Tue, Apr 15", "ringed": false,
+		"entry_ru": "Ночная смена",
+		"entry_en": "Night watch",
+	},
+	{
+		"date_ru": "Ср, 16 апр.", "date_en": "Wed, Apr 16", "ringed": true,
+		"entry_ru": "Аренда $4.00 — миссис Харгроув",
+		"entry_en": "Board $4.00 due to Mrs. Hargrove",
+	},
+	{
+		"date_ru": "Чт, 17 апр.", "date_en": "Thu, Apr 17", "ringed": false,
+		"entry_ru": "Ночная смена",
+		"entry_en": "Night watch",
+	},
+	{
+		"date_ru": "Пт, 18 апр.", "date_en": "Fri, Apr 18", "ringed": false,
+		"entry_ru": "Ночная смена",
+		"entry_en": "Night watch",
+	},
+	{
+		"date_ru": "Сб, 19 апр.", "date_en": "Sat, Apr 19", "ringed": false,
+		"entry_ru": "Тихая суббота, город затихает",
+		"entry_en": "Quiet Saturday; the town goes still",
+	},
+	{
+		"date_ru": "Вс, 20 апр.", "date_en": "Sun, Apr 20", "ringed": true,
+		"entry_ru": "08:00 — Суд на ключе, Денвер",
+		"entry_en": "08:00 A.M. — the wire court, from Denver",
+	},
+]
+
 @export var enable_psx_rendering: bool = true
 
 @onready var psx_host: PSXPresentationHost = $PSXPresentationHost
@@ -29,17 +76,22 @@ const DOOR_LATCH_SFX := preload("res://audio/sfx/foley/door_latch.wav")
 @onready var sleep_title_label: Label = $TransitionLayer/SleepTitleLabel
 @onready var hud_label: Label = $RoomHudLayer/TopStripLabel
 
+var door_knock := DoorKnockSequence.new()
+
 var _transitioning: bool = false
 var _is_day_mode: bool = false
 var _common: BoardingHouseCommon
 
 func _ready() -> void:
+	add_child(door_knock)
 	if psx_host != null:
 		psx_host.enable_psx_rendering = enable_psx_rendering
 	_common = BoardingHouseCommon.new()
 	_common.name = "HargroveCommon"
 	add_child(_common)
 	_common.build()
+	if not _common.common_interactable_triggered.is_connected(_on_common_interactable):
+		_common.common_interactable_triggered.connect(_on_common_interactable)
 	var exit := Interactable.new()
 	exit.position = Vector3(-1.46, 1.14, -4.22)
 	var collision := CollisionShape3D.new()
@@ -72,9 +124,11 @@ func _configure_player() -> void:
 	player.outdoor_mode = false
 	player.step_height = 0.22
 	player.floor_snap_length = 0.23
+	# Phase B: bare boards underfoot in the rented room.
+	player.configure_footstep_surface(true, &"wood_office")
 	player.global_position = BoardingHouseCommon.ENTRY
 	player.reset_physics_interpolation()
-	player.aim_at(Vector3(-0.91, 1.6, -1.4))
+	player.aim_at(Vector3(-0.35, 1.52, -0.80))
 	if DisplayServer.get_name() != "headless":
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
@@ -98,19 +152,23 @@ func apply_room_time_mode(is_day: bool) -> void:
 			world_env.environment.set_meta(&"room_env_unique", true)
 		var env := world_env.environment
 		env.volumetric_fog_enabled = false
-		env.ambient_light_color = Color(0.95, 0.88, 0.74) if is_day else Color(0.48, 0.52, 0.60)
-		env.ambient_light_energy = 0.39 if is_day else 0.27
+		env.ambient_light_color = Color(0.95, 0.86, 0.72) if is_day else Color(0.42, 0.48, 0.58)
+		env.ambient_light_energy = 0.28 if is_day else 0.18
 		env.tonemap_exposure = 1.15 if is_day else 1.05
 		env.background_color = Color(0.55, 0.69, 0.78) if is_day else Color(0.27, 0.34, 0.43)
 	if window_sun != null:
 		window_sun.visible = is_day
-		window_sun.light_energy = 1.65 if is_day else 0.25
+		window_sun.light_energy = 1.85 if is_day else 0.25
 		window_sun.rotation_degrees = Vector3(-42.0, 53.0, 0.0)
 		window_sun.light_angular_distance = 1.15
 	if _common != null:
 		for source in get_tree().get_nodes_in_group(&"boarding_lamp"):
 			if _common.is_ancestor_of(source):
-				(source as Node3D).visible = not is_day
+				if source is TownOilLight:
+					(source as Node3D).visible = true
+					(source as TownOilLight).set_intensity_scale(0.38 if is_day else 1.0)
+				else:
+					(source as Node3D).visible = not is_day
 	_refresh_hud()
 
 func _style_hud() -> void:
@@ -127,6 +185,8 @@ func _style_hud() -> void:
 		sleep_title_label.add_theme_color_override("font_color", Color(0.92, 0.87, 0.74, 1.0))
 
 func refresh_locale() -> void:
+	if _common != null:
+		_common.refresh_locale()
 	if room_builder != null:
 		room_builder.refresh_locale()
 	if pause_menu != null:
@@ -182,6 +242,52 @@ func _on_room_interactable(id: StringName) -> void:
 		&"landlady_note":
 			_open_landlady_note()
 
+func _on_common_interactable(id: StringName) -> void:
+	if _transitioning or is_world_view_blocked():
+		return
+	match id:
+		&"guest_register":
+			if document_viewer != null:
+				var body := GameLocale.pick(
+					"ПАНСИОН МИССИС ХАРГРОУВ — КНИГА ЖИЛЬЦОВ (АПРЕЛЬ 1890)\n"
+					+ "────────────────────────────────────────────────\n"
+					+ "№ 1 — Томас Бейнс (десятник рудника) ....... оплачено по сб.\n"
+					+ "№ 2 — Артур Линдстром (путевой мастер) ..... в утренней смене\n"
+					+ "№ 3 — СВОБОДНА (заперта с прошлой осени; ключ у хозяйки)\n"
+					+ "№ 4 — Элиас Крейн (ночной телеграфист) .... расчёт в среду ($4.00)\n\n"
+					+ "Памятка Клары Харгроув:\n"
+					+ "Обед в зале накрыт. Угли в камине гостиной прошу не заливать.",
+					"MRS. HARGROVE'S BOARDING HOUSE — GUEST REGISTER (APRIL 1890)\n"
+					+ "────────────────────────────────────────────────\n"
+					+ "No. 1 — Thomas Baines (shift boss) ........ paid through Sat.\n"
+					+ "No. 2 — Arthur Lindstrom (gandy dancer) ... out on early track\n"
+					+ "No. 3 — VACANT (locked since last autumn; Mrs. H. holds key)\n"
+					+ "No. 4 — Elias Crane (night operator) ...... board due Wed. ($4.00)\n\n"
+					+ "Clara Hargrove's house note:\n"
+					+ "Stew keeps warm on the dining range. Please mind the parlor hearth."
+				)
+				document_viewer.open_document(
+					"guest_register",
+					GameLocale.pick("КНИГА ЖИЛЬЦОВ ПАНСИОНА", "BOARDING HOUSE REGISTER"),
+					body,
+					GameLocale.pick("[E / Esc] Закрыть книгу", "[E / Esc] Close Ledger")
+				)
+		&"room_1":
+			door_knock.start(_common.get_common_interactable(id), thoughts, GameLocale.pick(
+				"За дверью храпит Бейнс — с ночной на шахту ему через час. Пусть спит, чёрт с ним.",
+				"Baines snoring through the pine panels. Guy's got an hour left before shaft bell—leave him be."
+			))
+		&"room_2":
+			door_knock.start(_common.get_common_interactable(id), thoughts, GameLocale.pick(
+				"Тихо. Линдстром с путейцами уже ушёл проверять балласт до зари.",
+				"Dead quiet inside. Lindstrom's already out walking ballast with the track crew."
+			))
+		&"room_3":
+			door_knock.start(_common.get_common_interactable(id), thoughts, GameLocale.pick(
+				"Замок ржавый, за дверью ни звука. Третью комнату Клара с осени не открывает.",
+				"Rusted deadbolt and dead air behind the wood. Clara hasn't rented out Room 3 since last fall."
+			))
+
 func trigger_wash_face() -> void:
 	var campaign := _campaign()
 	if campaign != null:
@@ -192,8 +298,8 @@ func trigger_wash_face() -> void:
 		sfx_player.play()
 	if thoughts != null:
 		thoughts.show_thought(GameLocale.pick(
-			"Холодная вода из кувшина. Голова проясняется.",
-			"Cold pitcher water. Clears the head right out."
+			"Ледяная вода из кувшина прямо по роже. Вроде отпустило.",
+			"Ice-cold pitcher water straight in the face. Knocked some sense back into me."
 		))
 
 func trigger_sleep() -> void:
@@ -201,13 +307,14 @@ func trigger_sleep() -> void:
 	if campaign != null and campaign.phase != CampaignStateStore.PHASE_DAWN_WALK:
 		if thoughts != null:
 			thoughts.show_thought(GameLocale.pick(
-				"Выспался до полудня. Пора выйти в город — заглянуть в «Медный Мул».",
-				"Already rested till noon. Time to step out into town and check The Copper Mule."
+				"До полудня провалялся, хватит уже. Надо выползать в город — зайти в «Медный Мул».",
+				"Slept till noon, that's enough. Better drag myself outside and see who's pouring at The Copper Mule."
 			))
 		return
 	if DisplayServer.get_name() == "headless" or not is_inside_tree():
 		complete_sleep_immediate("")
 		return
+	door_knock.cancel()
 	_transitioning = true
 	if player != null:
 		player.set_movement_locked(true)
@@ -245,8 +352,8 @@ func trigger_sleep() -> void:
 			player.set_movement_locked(false)
 		if thoughts != null:
 			thoughts.show_thought(GameLocale.pick(
-				"Солнце уже высоко. Пора выйти на улицу Блэк-Крика.",
-				"The mountain sun is already high. Time to step out onto Black Creek street."
+				"Солнце уже в зените, а башка всё чугунная. Пора выползти на улицу.",
+				"Sun's high already and my skull still feels like lead. Time to step out onto the street."
 			)))
 
 func complete_sleep_immediate(save_path: String = CampaignStateStore.DEFAULT_SAVE_PATH) -> void:
@@ -313,42 +420,113 @@ static func build_case_notebook_text(knowledge: KnowledgeStateStore, campaign: C
 func _open_calendar() -> void:
 	if document_viewer == null:
 		return
-	var title := GameLocale.pick("НАСТЕННЫЙ КАЛЕНДАРЬ — АПРЕЛЬ 1890", "WALL CALENDAR — APRIL 1890")
-	var body := GameLocale.pick(
-		"АПРЕЛЬ 1890 ГОДА · БЛЭК-КРИК, КОЛОРАДО\n────────────────────────────────\n"
-		+ "Понедельник — Заступление на ночную смену (ст. Блэк-Крик)\n"
-		+ "Четверг — Плата за комнату и стол миссис Харгроув ($4.00)\n"
-		+ "Воскресенье, 08:00 — Ожидается вызов ревизора на линии.\n\n"
-		+ "На полях карандашом обведена старая дата: «14 окт. 1885».",
-		"APRIL 1890 · BLACK CREEK, COLORADO\n────────────────────────────────\n"
-		+ "Monday — Begin Night Watch at Black Creek Depot\n"
-		+ "Thursday — Room & Board due to Mrs. Hargrove ($4.00)\n"
-		+ "Sunday, 8:00 A.M. — Division Auditor wire conference.\n\n"
-		+ "Penciled lightly in the margin: \"Oct 14, 1885\"."
-	)
-	document_viewer.open_document("room_calendar", title, body,
+	var campaign := _campaign()
+	document_viewer.open_document("room_calendar",
+		GameLocale.pick("НАСТЕННЫЙ КАЛЕНДАРЬ — АПРЕЛЬ 1890", "WALL CALENDAR — APRIL 1890"),
+		build_room_calendar_text(campaign),
 		GameLocale.pick("[E / Esc] Отойти", "[E / Esc] Step Back"))
+
+## Which day of the week the room is living, clamped to the week the campaign
+## actually spans so a save outside 1..7 still shows a real morning.
+static func resolve_week_day(day_index: int) -> int:
+	return clampi(day_index, 1, WEEK_LENGTH)
+
+## One line of a tear-off calendar page: the date, what the day holds, ringed in
+## pencil if it is an obligation, and struck through with a pencil line if the
+## day has already been lived. Today is called out rather than coloured.
+static func _calendar_line(row: Dictionary, index: int, day: int, ru: bool) -> String:
+	var date := String(row["date_ru"]) if ru else String(row["date_en"])
+	var entry := String(row["entry_ru"]) if ru else String(row["entry_en"])
+	var line := "%s · %s" % [date, entry]
+	if index < day - 1:
+		var struck := ""
+		for i in date.length():
+			struck += date.substr(i, 1) + STRIKE
+		line = "%s · %s" % [struck, entry]
+	elif index == day - 1:
+		line = GameLocale.pick("Сегодня: %s", "Today: %s") % line
+	if bool(row["ringed"]):
+		line = "[ %s ]" % line
+	return line
+
+## The wall calendar as it hangs on a given morning of the week: days already
+## spent are struck through, the rent and the hearing stay ringed, and today is
+## named. Body text matches the document viewer's plain (non-BBcode) style.
+static func build_room_calendar_text(campaign: CampaignStateStore) -> String:
+	var day := resolve_week_day(campaign.day_index if campaign != null else 1)
+	var ru := GameLocale.is_ru()
+	var text := GameLocale.pick(
+		"АПРЕЛЬ 1890 ГОДА · БЛЭК-КРИК, КОЛОРАДО\n────────────────────────────────\n",
+		"APRIL 1890 · BLACK CREEK, COLORADO\n────────────────────────────────\n")
+	for index in WEEK_ROWS.size():
+		text += _calendar_line(WEEK_ROWS[index], index, day, ru) + "\n"
+	text += "\n" + GameLocale.pick(
+		"Зачёркнутое — прожитые дни. Обведено карандашом: аренда (среда, 16-го)\n"
+		+ "и воскресный суд на ключе в 08:00.\n"
+		+ "На полях, рукой Клары: «Мистер Крейн — плата за комнату по средам».",
+		"Struck through: days already lived. Ringed in pencil: the board\n"
+		+ "(Wednesday the 16th) and the Sunday wire court at 08:00.\n"
+		+ "In the margin, in Clara's hand: \"Room 4 settles its board on Wednesdays.\"")
+	return text
 
 func _open_landlady_note() -> void:
 	if document_viewer == null:
 		return
-	var title := GameLocale.pick("ЗАПИСКА ОТ КЛАРЫ ХАРГРОУВ", "NOTE FROM MRS. CLARA HARGROVE")
-	var body := GameLocale.pick(
-		"Мистер Крейн,\n\n"
-		+ "Комната № 4 протоплена, свежая вода в кувшине на рукомойнике.\n"
-		+ "Отоспитесь после дежурства. Когда выйдете на солнце, загляните напротив —\n"
-		+ "Сайлас уже открыл «Медный Мул», там сегодня горячее жаркое и приличный кофе.\n"
-		+ "Плата за неделю ($4.00) не горит до четверга.\n\n"
-		+ "— Клара Харгроув",
-		"Mr. Crane,\n\n"
-		+ "Room 4 is aired and fresh pitcher water is on the washstand.\n"
-		+ "Get proper rest after the wire. Once you wake to the sun, Silas has\n"
-		+ "opened The Copper Mule across the road—hot stew and decent coffee.\n"
-		+ "Board ($4.00) can wait until Thursday.\n\n"
-		+ "— Clara Hargrove"
-	)
-	document_viewer.open_document("landlady_note", title, body,
+	var campaign := _campaign()
+	document_viewer.open_document("landlady_note",
+		GameLocale.pick("ЗАПИСКА ОТ КЛАРЫ ХАРГРОУВ", "NOTE FROM MRS. CLARA HARGROVE"),
+		build_landlady_note_text(campaign),
 		GameLocale.pick("[E / Esc] Сложить записку", "[E / Esc] Fold Note"))
+
+## Clara's note is the room's other clock: it is dated on the morning Elias reads
+## it and its one errand moves with the week — the board is not yet due, due
+## today, or settled on Sunday.
+static func build_landlady_note_text(campaign: CampaignStateStore) -> String:
+	var day := resolve_week_day(campaign.day_index if campaign != null else 1)
+	var ru := GameLocale.is_ru()
+	var date := String(WEEK_ROWS[day - 1]["date_ru" if ru else "date_en"])
+	date += " 1890" if ru else ", 1890"
+	var closing := ""
+	if day < RENT_DAY:
+		closing = GameLocale.pick(
+			"Плата за неделю ($4.00) не горит до среды, 16 апреля.",
+			"Board for the week ($4.00) is not due until Wednesday, April 16.")
+	elif day == RENT_DAY:
+		closing = GameLocale.pick(
+			"Сегодня среда — плата за неделю ($4.00) за вами. Оставьте на комоде,\n"
+			+ "когда пойдёте в город.",
+			"Today is Wednesday, so the week's board ($4.00) is due. Leave it on\n"
+			+ "the dresser when you head into town.")
+	elif day < HEARING_DAY:
+		closing = GameLocale.pick(
+			"Плата за неделю ($4.00) за вами с прошлой среды — не забудьте до воскресенья.\n"
+			+ "В воскресенье в восемь утра вас ждут на проводе из Денвера.",
+			"The week's board ($4.00) has stood since Wednesday—settle it before Sunday.\n"
+			+ "Sunday at eight they want you on the wire from Denver.")
+	else:
+		closing = GameLocale.pick(
+			"Плата за неделю ($4.00) по-прежнему за вами; после суда сочтёмся.\n"
+			+ "В восемь утра ключ уже стучит — Денвер ждёт вас.",
+			"The week's board ($4.00) still stands; we will square it after the hearing.\n"
+			+ "At eight the key is already ticking—Denver is waiting on you.")
+	var body := ""
+	if ru:
+		body = "Мистер Крейн,\n\n"
+		body += "Комната № 4 протоплена, свежая вода в кувшине на рукомойнике.\n"
+		body += "Отоспитесь после дежурства. Когда выйдете на солнце, загляните напротив —\n"
+		body += "Сайлас уже открыл «Медный Мул», там сегодня горячее жаркое и приличный кофе.\n"
+		body += closing + "\n\n"
+		body += "%s\n\n" % date
+		body += "— Клара Харгроув"
+	else:
+		body = "Mr. Crane,\n\n"
+		body += "Room 4 is aired and fresh pitcher water is on the washstand.\n"
+		body += "Get proper rest after the wire. Once you wake to the sun, Silas has\n"
+		body += "opened The Copper Mule across the road—hot stew and decent coffee.\n"
+		body += closing + "\n\n"
+		body += "%s\n\n" % date
+		body += "— Clara Hargrove"
+	return body
 
 func _step_outside() -> void:
 	var campaign := _campaign()
@@ -361,6 +539,7 @@ func _step_outside() -> void:
 		return
 	if campaign != null:
 		campaign.pending_spawn_point = &"boarding_house_porch"
+	door_knock.cancel()
 	_transitioning = true
 	if player != null:
 		player.set_movement_locked(true)
@@ -370,14 +549,15 @@ func _step_outside() -> void:
 	if fade_rect != null and is_inside_tree() and DisplayServer.get_name() != "headless":
 		fade_rect.visible = true
 		var tw := create_tween()
-		tw.tween_property(fade_rect, "color:a", 1.0, 0.45).set_trans(Tween.TRANS_SINE)
+		tw.tween_property(fade_rect, "color:a", 1.0, 0.25).set_trans(Tween.TRANS_SINE)
 		tw.tween_callback(func() -> void:
 			if is_inside_tree():
-				get_tree().change_scene_to_file(TOWN_EXTERIOR_SCENE))
+				SceneTransitionManager.go(get_tree(), TOWN_EXTERIOR_SCENE))
 	elif is_inside_tree():
-		get_tree().change_scene_to_file(TOWN_EXTERIOR_SCENE)
+		SceneTransitionManager.go(get_tree(), TOWN_EXTERIOR_SCENE)
 
 func _on_document_opened(_doc_id: String) -> void:
+	door_knock.cancel()
 	if player != null:
 		player.set_movement_locked(true)
 		var ic := player.get_node_or_null("InteractionController") as InteractionController

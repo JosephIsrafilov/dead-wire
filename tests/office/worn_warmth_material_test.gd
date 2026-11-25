@@ -21,16 +21,23 @@ func _run() -> void:
 		var expected := "res://assets/textures/worn_warmth/%s_128_v1.png" % names[i]
 		if i == 0:
 			expected = "res://assets/textures/office_wear/wallpaper_b.png"
+		elif i == 1:
+			expected = "res://assets/textures/office_surfaces/beadboard_albedo.png"
+		elif i == 2:
+			expected = "res://assets/textures/office_surfaces/blotter_albedo.png"
 		if not check(material.albedo_texture != null and material.albedo_texture.resource_path == expected,
 				"%s uses its versioned candidate texture" % names[i]):
 			office.free()
 			return
-		if not check(material.albedo_texture.get_size() == Vector2(128, 128),
-				"%s uses the 128px grid" % names[i]): return
+		var dimension := 256 if i == 1 or i == 2 else 128
+		if not check(material.albedo_texture.get_size() == Vector2(dimension, dimension),
+				"%s uses the intended PSX texture grid" % names[i]): return
 		if not check(material.texture_filter == (BaseMaterial3D.TEXTURE_FILTER_NEAREST_WITH_MIPMAPS
-				if i < 2 else BaseMaterial3D.TEXTURE_FILTER_NEAREST),
+				if i < 3 else BaseMaterial3D.TEXTURE_FILTER_NEAREST),
 				"%s uses nearest filtering with minification for room surfaces" % names[i]): return
-		if not check(not material.normal_enabled, "%s has no new normal map" % names[i]): return
+		if not check(material.normal_enabled == (i < 3) and
+				(i == 3 or (material.normal_texture != null and material.roughness_texture != null)),
+				"%s has the material maps appropriate to its surface" % names[i]): return
 		var image := material.albedo_texture.get_image()
 		image.convert(Image.FORMAT_RGB8)
 		image.clear_mipmaps()
@@ -46,15 +53,15 @@ func _run() -> void:
 			var repair_material := repair.material_override as StandardMaterial3D
 			if not check(repair_material.albedo_texture == wall.albedo_texture,
 				"The repair and wall share the selected wallpaper instead of stale stock"): return
-		elif not check(quantized, "%s has 32 levels per channel" % names[i]): return
+		elif i == 3 and not check(quantized, "%s has 32 levels per channel" % names[i]): return
+		elif i in [1, 2] and not check(not quantized, "%s keeps detail before PSX grading" % names[i]): return
 	if not check(wall.uv1_scale.is_equal_approx(Vector3.ONE * 1.6),
 			"Wallpaper keeps the original stripe scale"): return
 	if not check(wall.albedo_color.is_equal_approx(Color(0.78, 0.76, 0.72)),
 			"Wallpaper keeps its original material tint"): return
 	if not check(felt.roughness >= 0.995 and felt.specular_mode == BaseMaterial3D.SPECULAR_DISABLED,
 			"Baize remains fully matte"): return
-	if not check(felt.albedo_color.is_equal_approx(Color(0.05, 0.1, 0.07)),
-			"Baize keeps its original tint"): return
+	if not check(felt.albedo_color == Color.WHITE, "Baize uses the palette in its authored texture"): return
 	var face := load("res://materials/style_tests/form_night_copy.tres") as StandardMaterial3D
 	if not check(face.albedo_texture.resource_path.begins_with("res://materials/style_tests/textures/psx/"),
 			"Printed copy form is not replaced by blank stock"): return

@@ -17,8 +17,8 @@ const PRESETS := {
 		"part": "res://assets/models/instruments_v1/register_winding_key.res",
 		"surfaces": ["dw_brass"],
 		"axis_origin": Vector3(0.0, 0.04, -0.01),
-		"min": Vector3(0.084, 0.027, -0.018),
-		"max": Vector3(0.1, 0.053, -0.002),
+		"min": Vector3(0.084, 0.023, -0.019),
+		"max": Vector3(0.1, 0.057, -0.001),
 	},
 	"lamp_wheel": {
 		"static": "res://assets/models/office_props_v1/oil_lamp_static.res",

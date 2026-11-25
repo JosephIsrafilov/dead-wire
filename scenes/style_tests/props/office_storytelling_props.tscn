@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3]
+[gd_scene load_steps=10 format=3]
 
 [ext_resource type="Material" path="res://materials/style_tests/desk_wood.tres" id="1_wood"]
 [ext_resource type="Material" path="res://materials/style_tests/timber_trim.tres" id="2_trim"]
@@ -10,20 +10,32 @@
 [ext_resource type="Material" path="res://materials/style_tests/clock_glass.tres" id="8_glass"]
 [ext_resource type="ArrayMesh" path="res://assets/models/office_props_v1/clock_static.res" id="9_clock"]
 [ext_resource type="ArrayMesh" path="res://assets/models/office_props_v1/wall_props_static.res" id="10_wall"]
-[ext_resource type="ArrayMesh" path="res://assets/models/office_props_v1/wire_run_static.res" id="11_wire"]
+[ext_resource type="FontFile" path="res://assets/fonts/oldstandard/OldStandardTT-Bold.ttf" id="12_stencil"]
 
 [node name="OfficeStorytellingProps" type="Node3D"]
 
 ; The authored south-wall and west-wall fittings: the coat rack with a real
 ; hanging coat and hat, the night register frame, the service hatch with its
-; worn counter sill, the message tray, the glass bell insulators and the strung
-; wire run. Everything below it is the CSG blockout it replaced, kept invisible
-; because the names and transforms are what the captures and checks measure.
+; worn counter sill and the message tray. Everything below it is the CSG
+; blockout it replaced, kept invisible because the names and transforms are
+; what the captures and checks measure.
 [node name="AuthoredWallProps" type="MeshInstance3D" parent="."]
 mesh = ExtResource("10_wall")
 
-[node name="AuthoredWireRun" type="MeshInstance3D" parent="."]
-mesh = ExtResource("11_wire")
+[node name="DenverCrateStencil" type="Label3D" parent="."]
+position = Vector3(2.435, 0.142, -0.992)
+rotation = Vector3(0, -1.5707963, 0)
+text = "BC&W · DENVER"
+font = ExtResource("12_stencil")
+font_size = 60
+pixel_size = 0.00058
+outline_size = 0
+shaded = true
+modulate = Color(0.23, 0.16, 0.105, 1)
+
+; The west-wall wire run (AuthoredWireRun) is gone: it strung the line along
+; the west wall above the desk's OLD position, which no longer exists. The
+; line now enters at the north bay, at the desk's own lead block.
 
 ; The authored regulator case: cornice, stiles, faceted brass bezel and an open
 ; pendulum trunk. Its origin is on the wall plane, local +X points into the room,

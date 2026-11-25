@@ -36,7 +36,7 @@ func _run() -> void:
 			await _shot(cam, Vector3(21, 1.9, 31.5), Vector3(15, 2.3, 35.5), mode + "clinic")
 		if phase in ["4", "5", "6"] and not dawn:
 			await _shot(cam, Vector3(-41, 3, 24), Vector3(-48, 4.1, 15.5), "west_forge")
-			await _shot(cam, Vector3(-44, 3, 32), Vector3(-53, 11.7, 63), "west_chapel")
+			await _shot(cam, Vector3(-33.5, 3.0, 26.5), Vector3(-46.0, 3.8, 39.0), "west_chapel")
 			await _shot(cam, Vector3(34, 2.5, 23.5), Vector3(49, 1.4, 22.5), "east_bridge")
 			await _shot(cam, Vector3(25, 1.92, -8.8), Vector3(21, 1.55, -14.0), "mj_gate")
 			await _shot(cam, Vector3(18, 17, 47), Vector3(-10, 1.5, 4.3), "aerial_north")

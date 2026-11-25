@@ -40,7 +40,7 @@ const RESPONSE_HOLD_SECONDS := 5.0
 @export var sheet_gap: float = 14.0
 ## The board's near edge in the paper's own space.
 const SHEET_NEAR_EDGE := Vector3(0.0, 0.0, 0.17)
-const AUTHORED_TOP := -242.0
+const AUTHORED_TOP := -268.0
 const LINE_HEIGHT := 70.0
 
 static func _heard_prefix() -> String:

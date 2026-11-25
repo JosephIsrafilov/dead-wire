@@ -130,13 +130,8 @@ func _apply_psx_scale() -> void:
 	if grade != null:
 		grade.visible = enable_psx_rendering and profile.grade_enabled
 		if grade.material is ShaderMaterial:
-			var material := grade.material as ShaderMaterial
-			# The fallback mirrors the policy's own contract (cell = render
-			# divisor), never a second rule that re-pixelates READABLE.
-			var psx_cell: float = float(profile.get("pixel_size", profile.divisor))
-			material.set_shader_parameter("pixel_size", psx_cell)
-			material.set_shader_parameter("levels", profile.levels)
-			material.set_shader_parameter("vignette", profile.vignette)
+			ReadabilityPolicy.apply_grade_to_material(grade.material as ShaderMaterial, profile)
+
 
 func _create_presentation_viewport() -> void:
 	if not is_inside_tree():  # deferred: the office may be freed already
@@ -584,6 +579,9 @@ func _on_commit_resolved(action_id: StringName, result_text: String) -> void:
 
 func _on_consequence_started(event_id: String, hold_seconds: float) -> void:
 	if event_id == "window_figure" and window_observation != null:
+		# Stage 1.1: the filing consequence's figure is the close one (Stage B).
+		if window_observation.has_method("set_stage"):
+			window_observation.call("set_stage", 0)
 		window_observation.trigger_event(maxf(hold_seconds, 0.0))
 	elif event_id == "moon_cloud" and moon_weather != null:
 		# A cloud crosses the moon: the light goes down and comes back, and
@@ -987,11 +985,10 @@ func _process(_delta: float) -> void:
 	_update_transcript_prompt()
 	NightGuidanceController.refresh_interaction_hint(self)
 	_update_deadline_warning_footer()
-	if window_observation != null and window_observation.is_active:
-		var cam := player_camera
-		if cam == null and player != null:
-			cam = player.get_node_or_null("Head/Camera3D") as Camera3D
-		if cam == null and is_inside_tree() and get_viewport() != null:
-			cam = get_viewport().get_camera_3d()
-		if cam != null:
-			window_observation.check_camera(cam, is_world_view_blocked())
+	var cam := player_camera if player_camera != null else (
+		player.get_node_or_null("Head/Camera3D") as Camera3D if player != null else null
+	)
+	if cam == null and is_inside_tree() and get_viewport() != null:
+		cam = get_viewport().get_camera_3d()
+	if window_observation != null and window_observation.is_active and cam != null:
+		window_observation.check_camera(cam, is_world_view_blocked())

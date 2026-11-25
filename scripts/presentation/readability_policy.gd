@@ -20,7 +20,15 @@ static func profile(display_height: int, mode: int) -> Dictionary:
 		"scale": 1.0,
 		"divisor": 1,
 		"pixel_size": 1,
-		"levels": 24.0 if selected == Mode.CLASSIC else 32.0,
-		"vignette": 0.30 if selected == Mode.CLASSIC else 0.25,
+		"levels": 24.0 if selected == Mode.CLASSIC else 48.0,
+		"vignette": 0.30 if selected == Mode.CLASSIC else 0.09,
+		"dither_strength": 0.40,
+		"grain": 0.007,
 		"grade_enabled": selected != Mode.CLEAN,
 	}
+
+static func apply_grade_to_material(material: ShaderMaterial, grade: Dictionary, preset: Dictionary = {}) -> void:
+	material.set_shader_parameter("pixel_size", float(grade.pixel_size))
+	material.set_shader_parameter("levels", grade.levels)
+	for parameter in ["vignette", "grain", "dither_strength"]:
+		material.set_shader_parameter(parameter, preset.get(parameter, grade[parameter]))

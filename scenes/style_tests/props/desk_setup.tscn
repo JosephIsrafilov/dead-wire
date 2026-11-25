@@ -8,6 +8,8 @@
 [ext_resource type="Material" path="res://materials/style_tests/paper_log.tres" id="7_paper"]
 [ext_resource type="ArrayMesh" path="res://assets/models/office_furniture_v1/desk_open_preview.res" id="9_authored"]
 [ext_resource type="Script" path="res://scripts/interaction/interactable.gd" id="10_interact"]
+[ext_resource type="ArrayMesh" path="res://assets/models/office_furniture_v1/desk_details_static.res" id="11_details"]
+[ext_resource type="Material" path="res://materials/style_tests/ink_glass.tres" id="12_glass"]
 
 [sub_resource type="BoxShape3D" id="DeskSolid"]
 size = Vector3(1.5, 0.75, 0.75)
@@ -16,11 +18,11 @@ size = Vector3(1.5, 0.75, 0.75)
 size = Vector3(0.18, 0.34, 0.18)
 
 [sub_resource type="CylinderMesh" id="InkwellBody"]
-material = ExtResource("5_iron")
+material = ExtResource("12_glass")
 top_radius = 0.026
 bottom_radius = 0.032
 height = 0.0205
-radial_segments = 10
+radial_segments = 8
 rings = 0
 
 [sub_resource type="TorusMesh" id="InkwellLip"]
@@ -56,6 +58,9 @@ cap_bottom = false
 
 [node name="AuthoredDesk" type="MeshInstance3D" parent="."]
 mesh = ExtResource("9_authored")
+
+[node name="DeskDetails" type="MeshInstance3D" parent="."]
+mesh = ExtResource("11_details")
 
 [node name="DeskTop" type="CSGBox3D" parent="."]
 visible = false

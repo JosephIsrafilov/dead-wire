@@ -4,17 +4,27 @@
 [ext_resource type="Material" path="res://materials/style_tests/timber_trim.tres" id="2_trim"]
 [ext_resource type="Material" path="res://materials/style_tests/paper_log.tres" id="3_paper"]
 [ext_resource type="ArrayMesh" path="res://assets/models/stove_v1/stove_static.res" id="4_stove_mesh"]
+[ext_resource type="Texture2D" path="res://assets/textures/office_surfaces/ember_coals.png" id="5_coals"]
 
 [sub_resource type="BoxShape3D" id="StoveSolid"]
 size = Vector3(0.7, 1.75, 0.7)
 
 [sub_resource type="StandardMaterial3D" id="Ember"]
 shading_mode = 0
-albedo_color = Color(1.0, 0.44, 0.09, 1)
+albedo_color = Color(0.32, 0.22, 0.14, 1)
+albedo_texture = ExtResource("5_coals")
 emission_enabled = true
-emission = Color(1.0, 0.40, 0.07, 1)
-emission_energy_multiplier = 1.35
+emission = Color(0.95, 0.155, 0.020, 1)
+emission_energy_multiplier = 2.75
+emission_texture = ExtResource("5_coals")
+texture_filter = 2
 roughness = 0.8
+
+[sub_resource type="StandardMaterial3D" id="Mica"]
+transparency = 1
+albedo_color = Color(0.44, 0.26, 0.10, 0.22)
+metallic_specular = 0.18
+roughness = 0.59
 
 [node name="CornerStove" type="Node3D"]
 
@@ -102,6 +112,29 @@ material = ExtResource("1_iron")
 position = Vector3(0, 0.628, -0.346)
 size = Vector3(0.180, 0.068, 0.012)
 material = SubResource("Ember")
+
+[node name="MicaPane" type="CSGBox3D" parent="."]
+position = Vector3(0, 0.628, -0.355)
+size = Vector3(0.178, 0.065, 0.003)
+material = SubResource("Mica")
+cast_shadow = 0
+
+[node name="PokerStem" type="CSGCylinder3D" parent="."]
+position = Vector3(0.39, 0.34, 0.29)
+rotation = Vector3(0.17, 0, 0.14)
+radius = 0.008
+height = 0.65
+sides = 8
+material = ExtResource("1_iron")
+
+[node name="PokerEye" type="CSGTorus3D" parent="."]
+position = Vector3(0.344, 0.676, 0.348)
+rotation = Vector3(1.5707963, 0, 0)
+inner_radius = 0.018
+outer_radius = 0.030
+sides = 10
+ring_sides = 6
+material = ExtResource("1_iron")
 
 [node name="DoorHandle" type="CSGCylinder3D" parent="."]
 visible = false

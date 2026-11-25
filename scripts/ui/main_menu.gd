@@ -17,7 +17,7 @@ const SFX_SOUNDER_DOWN := preload("res://audio/sfx/telegraph/sounder_down.wav")
 const SFX_SOUNDER_UP := preload("res://audio/sfx/telegraph/sounder_up.wav")
 const SFX_WIND := preload("res://audio/sfx/ambience/wind_window.wav")
 const SFX_ROOM_TONE := preload("res://audio/sfx/ambience/room_tone.wav")
-const MUSIC_DRONE := preload("res://audio/music/intro_drone.wav")
+const MUSIC_DRONE := preload("res://audio/music/menu_dread_ambient.wav")
 
 @export var office_scene_path: String = OFFICE_SCENE
 
@@ -175,19 +175,13 @@ func refresh_locale() -> void:
 	var dept := get_node_or_null(box + "DeptStampLabel") as Label
 	if dept != null:
 		dept.text = GameLocale.pick(
-			"B.C. & W. R.R.  ·  ОТДЕЛ ТЕЛЕГРАФА",
+			"ЖЕЛ. ДОР. БЛЭК-КРИК  ·  ТЕЛЕГРАФНАЯ СТАНЦИЯ",
 			"B.C. & W. R.R.  ·  TELEGRAPH DEPT."
-		)
-	var tagline := get_node_or_null(box + "TaglineLabel") as Label
-	if tagline != null:
-		tagline.text = GameLocale.pick(
-			"Ты слышишь одно. Твоя рука пишет другое.",
-			"You hear one thing. Your hand writes another."
 		)
 	var station := get_node_or_null(box + "StationLabel") as Label
 	if station != null:
 		station.text = GameLocale.pick(
-			"СТАНЦИЯ БЛЭК-КРИК  ·  АПРЕЛЬ 1890",
+			"РАЗЪЕЗД БЛЭК-КРИК  ·  АПРЕЛЬ 1890 ГОДА",
 			"BLACK CREEK STATION  ·  APRIL 1890"
 		)
 	var corner_stamp := get_node_or_null("CornerStamp") as Label
@@ -319,9 +313,9 @@ func _setup_audio() -> void:
 
 	_wind_player = _make_loop_player(SFX_WIND, &"Ambience", -27.0)
 	_room_player = _make_loop_player(SFX_ROOM_TONE, &"Ambience", -31.0)
-	_music_player = _make_loop_player(MUSIC_DRONE, &"Music", -38.0)
+	_music_player = _make_loop_player(MUSIC_DRONE, &"Music", -34.0)
 	if _music_player != null:
-		create_tween().tween_property(_music_player, "volume_db", -21.0, 2.4).set_trans(Tween.TRANS_SINE)
+		create_tween().tween_property(_music_player, "volume_db", -9.0, 2.8).set_trans(Tween.TRANS_SINE)
 
 func _make_loop_player(stream: AudioStream, bus_name: StringName, db: float) -> AudioStreamPlayer:
 	if stream == null:
@@ -417,7 +411,7 @@ func continue_campaign() -> bool:
 	var target := "res://scenes/town/black_creek_exterior.tscn"
 	if campaign.phase == CampaignStateStore.PHASE_NIGHT:
 		target = office_scene_path
-	return tree.change_scene_to_file(target) == OK
+	return SceneTransitionManager.go(tree, target)
 
 func _on_begin_pressed() -> void:
 	if _is_starting:
@@ -433,7 +427,27 @@ func _on_begin_pressed() -> void:
 	if mood != null:
 		mood.play_enter_transition(0.36)
 	var timer := get_tree().create_timer(0.36)
-	timer.timeout.connect(begin_watch, CONNECT_ONE_SHOT)
+	timer.timeout.connect(begin_night_approach, CONNECT_ONE_SHOT)
+
+## Starts a new watch via the foggy night approach outside Black Creek Depot.
+func begin_night_approach() -> bool:
+	clear_state()
+	DispatchLedger.reset_watch_count()
+	PlaytestTelemetry.arm()
+	save_preferences()
+	watch_started.emit()
+
+	if not is_inside_tree():
+		return false
+	var tree := get_tree()
+	if tree == null or tree.root == null:
+		return false
+	var campaign := tree.root.get_node_or_null("CampaignState") as CampaignStateStore
+	if campaign != null:
+		campaign.phase = CampaignStateStore.PHASE_NIGHT_APPROACH
+		campaign.pending_spawn_point = &"night_arrival"
+	tree.paused = false
+	return SceneTransitionManager.go(tree, "res://scenes/town/black_creek_exterior.tscn")
 
 ## Clears all state stores and opens the office. Everything that starts a watch
 ## synchronously must come through here.
@@ -450,7 +464,7 @@ func begin_watch() -> bool:
 	if tree == null:
 		return false
 	tree.paused = false
-	return tree.change_scene_to_file(office_scene_path) == OK
+	return SceneTransitionManager.go(tree, office_scene_path)
 
 ## Both stores reset independently, exactly as the state contract requires.
 static func clear_state() -> void:

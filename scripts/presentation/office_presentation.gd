@@ -20,12 +20,16 @@ func attach_source(frame: SubViewport) -> void:
 	source = frame
 
 func configure(window_size: Vector2i, profile: Dictionary) -> void:
+	var safe_window := Vector2i(maxi(window_size.x, 1), maxi(window_size.y, 1))
 	var low_resolution: bool = profile.grade_enabled
-	source.size = profile.content_size if low_resolution else window_size
+	var target_size: Vector2i = profile.content_size if low_resolution else safe_window
+	source.size = Vector2i(maxi(target_size.x, 1), maxi(target_size.y, 1))
 	source.size_2d_override = Vector2i.ZERO if low_resolution else Vector2i(1280, 720)
 	source.size_2d_override_stretch = not low_resolution
-	size = Vector2(source.size)
-	var factor := minf(float(window_size.x) / size.x, float(window_size.y) / size.y)
+	var safe_source := Vector2(float(source.size.x), float(source.size.y))
+	size = safe_source
+	var factor := minf(float(safe_window.x) / safe_source.x, float(safe_window.y) / safe_source.y)
 	scale = Vector2.ONE * factor
-	position = (Vector2(window_size) - size * factor) * 0.5
-	(material as ShaderMaterial).set_shader_parameter("prescale", maxf(1.0, ceilf(factor)))
+	position = (Vector2(safe_window) - safe_source * factor) * 0.5
+	if material is ShaderMaterial:
+		(material as ShaderMaterial).set_shader_parameter("prescale", maxf(1.0, ceilf(factor)))

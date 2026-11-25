@@ -90,24 +90,55 @@ func refresh_locale() -> void:
 	var hold_act := get_node_or_null("HoldStopInteractable") as Interactable
 	if hold_act != null:
 		hold_act.prompt_text = GameLocale.pick("Рычаг: ДЕРЖАТЬ (HOLD)", "Throw Lever: HOLD")
+	_refresh_track_schematic_locale()
+	_update_track_schematic_lamps(_last_route_action)
 	_bind_rules()
 	_update_presentation()
 
+func _refresh_track_schematic_locale() -> void:
+	var title := get_node_or_null("TrackSchematic/TitleLabel3D") as Label3D
+	if title != null:
+		title.text = GameLocale.pick("СХЕМА ПУТЕЙ", "TRACK PLAN")
+	var main := get_node_or_null("TrackSchematic/MainLabel3D") as Label3D
+	if main != null:
+		main.text = GameLocale.pick(
+			"ВОСТОК  ←  ПОСТ  ←  ЗАПАД",
+			"EAST  ←  DEPOT  ←  WEST"
+		)
+	var hold := get_node_or_null("TrackSchematic/HoldLabel3D") as Label3D
+	if hold != null:
+		hold.text = GameLocale.pick("РАЗЪЕЗД (ДЕРЖАТЬ)", "SIDING HOLD (STOP)")
+	var mj := get_node_or_null("TrackSchematic/MjLabel3D") as Label3D
+	if mj != null:
+		mj.text = GameLocale.pick("ВЕТКА MJ · ЗАКРЫТА (1885)", "MJ SPUR · CLOSED (1885)")
+
+func _update_track_schematic_lamps(action: String) -> void:
+	var clear_lamp := get_node_or_null("TrackSchematic/ClearLamp") as CSGCylinder3D
+	var hold_lamp := get_node_or_null("TrackSchematic/HoldLamp") as CSGCylinder3D
+	if clear_lamp == null or hold_lamp == null:
+		return
+	var is_clear := action == "CLEAR EAST"
+	var m_clear := StandardMaterial3D.new()
+	m_clear.albedo_color = Color(0.18, 0.72, 0.28) if is_clear else Color(0.06, 0.14, 0.07)
+	m_clear.emission_enabled = is_clear
+	m_clear.emission = Color(0.18, 0.78, 0.28)
+	m_clear.emission_energy_multiplier = 0.85 if is_clear else 0.0
+	clear_lamp.material = m_clear
+	var m_hold := StandardMaterial3D.new()
+	m_hold.albedo_color = Color(0.78, 0.18, 0.12) if not is_clear else Color(0.18, 0.06, 0.05)
+	m_hold.emission_enabled = not is_clear
+	m_hold.emission = Color(0.82, 0.22, 0.12)
+	m_hold.emission_energy_multiplier = 0.75 if not is_clear else 0.0
+	hold_lamp.material = m_hold
+
 ## The rules frame reads through the office's document viewer, like any paper.
 func _bind_rules() -> void:
-	var title := GameLocale.pick("ПРАВИЛА ПОЕЗДНОГО СИГНАЛА", rules_title)
-	var body := GameLocale.pick(
-		"Ж.Д. БЛЭК-КРИК — СЛУЖБА ДВИЖЕНИЯ\n\n"
-		+ "221. Семафор стоит на СТОП. Открывать путь поезду только после приёма и проверки телеграммы.\n\n"
-		+ "222. Неясный приказ не исполняется. Задержать поезд и запросить подтверждение.\n\n"
-		+ "223. Рычагом работает только дежурный телеграфист. Между пазами рычаг не оставлять.\n\n"
-		+ "224. Каждая копия подшивается за столом сразу после приказа. Правка вписывается отдельно.\n\n"
-		+ "225. Самовольное открытие пути или задержка поезда без причины — увольнение.",
-		rules_text
-	)
 	var text := get_node_or_null("SignalRules/Text") as Label3D
 	if text != null:
-		text.text = title + "\n\n" + body
+		text.text = GameLocale.pick(
+			"ПРАВИЛА СИГНАЛА\n\nСТОП ДО ПРИКАЗА\nНЕЯСНО — ЗАДЕРЖАТЬ\nСВЕРИТЬ РАСПИСАНИЕ\nРЫЧАГ — ДО УПОРА\nКОПИЮ ПОДШИТЬ",
+			"SIGNAL RULES\n\nSTOP UNTIL ORDERED\nIF IN DOUBT, HOLD\nCHECK THE TIMETABLE\nTHROW TO THE STOP\nFILE THE COPY"
+		)
 	var rules := get_node_or_null("SignalRules/Interactable") as Interactable
 	if rules != null:
 		rules.prompt_text = GameLocale.pick("Правила сигнала", "Read Signal Rules")
@@ -344,6 +375,7 @@ func play_route_accept(action: String, accepted: bool) -> void:
 	# A slot reset may have happened inside the intent. Its old payload still
 	# becomes watch memory, but must never submit the new slot.
 	_last_route_action = action
+	_update_track_schematic_lamps(action)
 	_update_presentation()
 	_throw_lever(action)
 	route_accepted.emit(action)

@@ -26,12 +26,16 @@ import json
 import math
 import random
 from pathlib import Path
+import sys
 
 import bpy
 from mathutils import Vector
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "tools"))
+from office_blender_look import bake_vertex_ao, scanned_materials
 OUT = ROOT / "assets/models/office_props_v1"
+ONLY_MESHES = set(sys.argv[sys.argv.index("--only") + 1:]) if "--only" in sys.argv else set()
 OUT.mkdir(parents=True, exist_ok=True)
 TEX = ROOT / "assets/textures/office_props_v1"
 TEX.mkdir(parents=True, exist_ok=True)
@@ -66,6 +70,7 @@ TILES = {
     "knot_wood": (1, 3),
     "wool": (2, 3),
     "dust": (3, 3),
+    "soot_glass": (3, 1),
 }
 COLORS = {
     "dark_wood": (54, 40, 28),
@@ -98,88 +103,7 @@ COLORS = {
     "dust": (104, 96, 80),
 }
 
-rng = random.Random(18941894)
-image = bpy.data.images.new("DW_Props_Atlas_256", width=256, height=256)
-pixels = [0.02, 0.02, 0.02, 1.0] * (256 * 256)
-
-for kind, (tx, ty) in TILES.items():
-    base = COLORS[kind]
-    for y in range(64):
-        for x in range(64):
-            noise = rng.uniform(-3.0, 3.0)
-            if kind in ("dark_wood", "mid_wood", "knot_wood"):
-                detail = 5.0 * math.sin(y * 0.62 + 2.4 * math.sin(x * 0.11))
-                detail += -26.0 if (y % 32) in (0, 1) else 0.0
-                if kind == "knot_wood":
-                    # A knot is a dark eye with the grain bending round it.
-                    dx, dy = x - 30.0, y - 36.0
-                    r = math.sqrt(dx * dx + dy * dy)
-                    detail += -34.0 if r < 7.0 else (8.0 if r < 10.0 else 0.0)
-            elif kind == "worn_wood":
-                # Bare, greyed wood: grain, plus the fine cross scratches that
-                # a hundred years of boots and boxes leave on a sill.
-                detail = 4.0 * math.sin(y * 0.58 + 2.0 * math.sin(x * 0.09)) - 4.0
-                detail += -12.0 if ((x * 7 + y * 3) % 53) in (0, 1) else 0.0
-            elif kind == "stained_wood":
-                # Water and soot soak in unevenly; no straight edges.
-                detail = 5.0 * math.sin(x * 0.11 + y * 0.07) + 3.0 * math.cos(y * 0.05 - x * 0.03)
-                detail += -9.0 if ((x * 3 + y * 5) % 71) == 0 else 0.0
-            elif kind == "rust":
-                detail = 7.0 * math.sin(x * 0.33) * math.cos(y * 0.27)
-                detail += -10.0 if ((x * 11 + y * 7) % 29) == 0 else 0.0
-            elif kind == "wool":
-                # Greasy wool: fine nap, no sheen, and the dark halo where the
-                # shoulders and elbows have rubbed against a wall for years.
-                detail = 2.0 * math.sin(x * 1.9) * math.cos(y * 1.7) - 3.0
-                detail += -7.0 if ((x * 13 + y * 5) % 37) in (0, 1) else 0.0
-            elif kind == "dust":
-                detail = 3.0 * math.sin(x * 0.21 + y * 0.17) - 2.0
-                detail += -6.0 if ((x * 7 + y * 11) % 43) == 0 else 0.0
-            elif kind == "brass":
-                detail = 5.0 * math.sin(x * 0.22) * math.cos(y * 0.19)
-                detail += -12.0 if ((x * 3 + y * 5) % 61) == 0 else 0.0
-            elif kind == "iron":
-                detail = 3.0 * math.sin(x * 0.41 + y * 0.37) + 2.0 * math.cos(y * 0.8)
-            elif kind == "paper":
-                detail = 2.5 * math.sin(x * 0.9 + y * 0.4)
-                detail += -8.0 if (y % 21) == 0 else 0.0
-            elif kind == "enamel":
-                detail = 2.0 * math.sin(x * 0.5 + y * 0.7)
-                detail += -6.0 if ((x * 2 + y * 3) % 47) == 0 else 0.0
-            elif kind == "leather":
-                detail = 4.0 * math.sin(x * 0.7) * math.cos(y * 0.6)
-                detail += -14.0 if ((x + y * 2) % 17) == 0 else 0.0
-            elif kind == "slate":
-                # Slate is not flat: a little chipped sheen, no grain.
-                detail = 4.0 * math.sin(x * 0.19 + y * 0.23) + 2.0 * math.cos(x * 0.41 - y * 0.13)
-                detail += -7.0 if ((x * 5 + y * 7) % 83) == 0 else 0.0
-            elif kind == "baize":
-                detail = 3.0 * math.sin(x * 1.3) * math.cos(y * 1.1)
-            else:
-                detail = 2.0 * math.sin(x * 0.3) * math.cos(y * 0.4)
-            idx = ((ty * 64 + y) * 256 + tx * 64 + x) * 4
-            for c in range(3):
-                pixels[idx + c] = round(max(0, min(255, base[c] + detail + noise)) / 8) * 8 / 255
-            pixels[idx + 3] = 1.0
-
-image.pixels.foreach_set(pixels)
-image.filepath_raw = str(TEX / "props_atlas_256.png")
-image.file_format = "PNG"
-image.save()
-image.pack()
-
-materials = {}
-for kind in TILES:
-    mat = bpy.data.materials.new("dw_props_" + kind)
-    mat.use_nodes = True
-    bsdf = mat.node_tree.nodes.get("Principled BSDF")
-    bsdf.inputs["Roughness"].default_value = 0.55 if kind == "brass" else 0.9
-    bsdf.inputs["Metallic"].default_value = 0.6 if kind in ("brass", "iron") else 0.0
-    tex = mat.node_tree.nodes.new("ShaderNodeTexImage")
-    tex.image = image
-    tex.interpolation = "Closest"
-    mat.node_tree.links.new(tex.outputs["Color"], bsdf.inputs["Base Color"])
-    materials[kind] = mat
+materials = scanned_materials(TEX / "props_atlas_256.png", TILES, "dw_props_")
 
 
 def pos(v):
@@ -411,6 +335,7 @@ def bake(name):
     bpy.ops.object.transform_apply(location=False, rotation=True, scale=True)
     tri = obj.modifiers.new("Export triangles", "TRIANGULATE")
     bpy.ops.object.modifier_apply(modifier=tri.name)
+    bake_vertex_ao(obj)
     return obj
 
 
@@ -418,19 +343,20 @@ def export(obj, filename):
     bpy.ops.object.select_all(action="DESELECT")
     obj.select_set(True)
     bpy.context.view_layer.objects.active = obj
-    bpy.ops.export_scene.gltf(
-        filepath=str(OUT / filename),
-        export_format="GLB",
-        use_selection=True,
-        export_apply=True,
-        export_yup=True,
-        export_texcoords=True,
-        export_normals=True,
-        export_materials="EXPORT",
-        export_cameras=False,
-        export_lights=False,
-        export_animations=False,
-    )
+    if not ONLY_MESHES or obj.name in ONLY_MESHES:
+        bpy.ops.export_scene.gltf(
+            filepath=str(OUT / filename),
+            export_format="GLB",
+            use_selection=True,
+            export_apply=True,
+            export_yup=True,
+            export_texcoords=True,
+            export_normals=True, export_vertex_color="ACTIVE",
+            export_materials="EXPORT",
+            export_cameras=False,
+            export_lights=False,
+            export_animations=False,
+        )
     return {
         "triangles": len(obj.data.polygons),
         "vertices": len(obj.data.vertices),
@@ -481,6 +407,12 @@ cyl("LampWickRing", (0.0, 0.164, 0.0), 0.022, 0.008, "brass", sides=10)
 # the fount's waist, where a thumb would actually reach.
 cyl("LampWickShaft", (0.050, 0.099, 0.0), 0.005, 0.018, "iron", axis=(1, 0, 0), sides=6)
 cyl("LampWickWheel", (0.060, 0.099, 0.0), 0.010, 0.006, "brass", axis=(1, 0, 0), sides=8)
+ring("LampCarryRing", (-0.054, 0.083, 0.0), .034, .006, .008, "brass", segments=14)
+box("LampRingAnchor", (-0.049, 0.110, 0.0), (.024, .014, .018), "iron", .001)
+for i in range(12):
+    angle = math.tau * i / 12
+    box("BurnerCrownTooth", (.028 * math.cos(angle), .153, .028 * math.sin(angle)),
+        (.008, .010, .008), "brass", .001)
 
 # A small brass plate riveted to the fount: the maker's mark, as a raised facet.
 box("LampMakerPlate", (0.0, 0.099, -0.058), (0.028, 0.014, 0.004), "brass", 0.001)
@@ -496,7 +428,8 @@ tube("ChimneyFlare", (0.0, 0.192, 0.0), 0.022, 0.018, "glass", sides=10, radius_
 tube("ChimneyBellyLow", (0.0, 0.222, 0.0), 0.034, 0.042, "glass", sides=10)
 tube("ChimneyBelly", (0.0, 0.264, 0.0), 0.035, 0.042, "glass", sides=10)
 tube("ChimneyShoulder", (0.0, 0.305, 0.0), 0.035, 0.040, "glass", sides=10, radius_top=0.026)
-tube("ChimneyLip", (0.0, 0.346, 0.0), 0.026, 0.042, "glass", sides=10)
+tube("ChimneyUpper", (0.0, 0.338, 0.0), 0.026, 0.026, "glass", sides=10)
+tube("ChimneySootLip", (0.0, 0.359, 0.0), 0.026, 0.016, "soot_glass", sides=10)
 lamp_glass = bake("lamp_glass_static")
 glass_stats = export(lamp_glass, "lamp_glass_static.glb")
 
@@ -520,28 +453,70 @@ box("ChairStretcherBack", (0.0, 0.175, -0.175), (0.35, 0.018, 0.018), "dark_wood
 for sx in (-0.185, 0.185):
     box("ChairStretcherSide", (sx, 0.16, 0.0), (0.018, 0.018, 0.35), "dark_wood")
 
-# Seat: a planked slab with a moulded edge, no cushion (a depot chair is wood).
-box("ChairSeatPlank", (0.0, 0.44, 0.0), (0.44, 0.030, 0.42), "mid_wood", 0.003)
-box("ChairSeatEdge", (0.0, 0.424, 0.0), (0.46, 0.008, 0.44), "dark_wood", 0.002)
-for sz in (-0.13, -0.043, 0.043, 0.13):
-    box("ChairSeatSeam", (0.0, 0.4555, sz), (0.42, 0.001, 0.004), "dark_wood")
+# Saddle seat: the rim tops out at the unchanged 0.455 m seat datum.
+seat_vertices, seat_faces = [], []
+seat_steps = 16
+for radius, height in ((1.0, .414), (1.0, .455), (.78, .453), (.33, .438)):
+    for i in range(seat_steps):
+        a = math.tau * i / seat_steps
+        seat_vertices.append(pos((.226 * radius * math.cos(a), height, .215 * radius * math.sin(a))))
+for row in range(3):
+    for i in range(seat_steps):
+        j = (i + 1) % seat_steps
+        seat_faces.append((row * seat_steps + i, row * seat_steps + j,
+                           (row + 1) * seat_steps + j, (row + 1) * seat_steps + i))
+seat_faces.append(tuple(range(3 * seat_steps, 4 * seat_steps)))
+seat_mesh = bpy.data.meshes.new("SaddleSeat")
+seat_mesh.from_pydata(seat_vertices, [], [tuple(reversed(face)) for face in seat_faces])
+seat_mesh.update()
+seat_uv = seat_mesh.uv_layers.new()
+for loop in seat_mesh.loops:
+    vertex = seat_vertices[loop.vertex_index]
+    seat_uv.data[loop.index].uv = (.5 + vertex.y / .46, .5 + vertex.x / .49)
+seat = bpy.data.objects.new("SaddleSeat", seat_mesh)
+coll.objects.link(seat)
+finish(seat, "mid_wood", 1.0)
 
-# Aprons under the seat.
-box("ChairApronFront", (0.0, 0.395, 0.196), (0.38, 0.05, 0.016), "dark_wood", 0.002)
-box("ChairApronBack", (0.0, 0.395, -0.196), (0.38, 0.05, 0.016), "dark_wood", 0.002)
-for sx in (-0.204, 0.204):
-    box("ChairApronSide", (sx, 0.395, 0.0), (0.016, 0.05, 0.36), "dark_wood", 0.002)
+box("ChairFrontApron", (0.0, 0.395, 0.174), (0.38, 0.05, 0.016), "dark_wood", 0.003)
+box("ChairBackApron", (0.0, 0.395, -0.174), (0.38, 0.05, 0.016), "dark_wood", 0.003)
+for sx in (-0.174, 0.174):
+    box("ChairSideApron", (sx, 0.395, 0), (0.016, 0.05, 0.34), "dark_wood", 0.003)
 
-# Back: two turned posts, a crest rail, a mid rail and five spindles.
-for sx in (-0.185, 0.185):
-    cyl("ChairBackPost", (sx, 0.6725, -0.175), 0.019, 0.435, "dark_wood", sides=8, radius_top=0.014)
-    cyl("ChairBackPostBead", (sx, 0.462, -0.175), 0.024, 0.022, "dark_wood", sides=8)
-box("ChairCrestRail", (0.0, 0.875, -0.178), (0.40, 0.055, 0.030), "mid_wood", 0.004)
-box("ChairCrestBead", (0.0, 0.842, -0.178), (0.36, 0.012, 0.024), "dark_wood")
-box("ChairMidRail", (0.0, 0.655, -0.176), (0.34, 0.030, 0.020), "mid_wood", 0.002)
-for sx in (-0.12, -0.06, 0.0, 0.06, 0.12):
-    cyl("ChairBackSpindle", (sx, 0.7625, -0.176), 0.0085, 0.185, "dark_wood", sides=6)
-    cyl("ChairSpindleBead", (sx, 0.745, -0.176), 0.012, 0.016, "dark_wood", sides=6)
+# Continuous horseshoe arm rail, rising to the crest at the back.
+rail_steps = 18
+section_steps = 8
+rail_vertices, rail_faces = [], []
+for i in range(rail_steps + 1):
+    u = i / rail_steps
+    a = math.pi * (1.22 * u - .11)
+    y = .673 + .205 * math.sin(math.pi * u) ** 2
+    x, z = .207 * math.cos(a), .045 - .229 * math.sin(a)
+    for j in range(section_steps):
+        b = math.tau * j / section_steps
+        rail_vertices.append(pos((x + .023 * math.cos(a) * math.cos(b), y + .022 * math.sin(b),
+                                  z - .023 * math.sin(a) * math.cos(b))))
+    if 0 < i < rail_steps and i % 2:
+        h = y - .448
+        cyl("TurnedArmSpindle", (x, .448 + h / 2, z), .012, h, "dark_wood", sides=8, radius_top=.010)
+        cyl("SpindleCollar", (x, .481, z), .017, .021, "mid_wood", sides=8, radius_top=.013)
+        cyl("SpindleBead", (x, y - .059, z), .015, .020, "mid_wood", sides=8, radius_top=.012)
+for i in range(rail_steps):
+    for j in range(section_steps):
+        k = (j + 1) % section_steps
+        rail_faces.append((i * section_steps + j, (i + 1) * section_steps + j,
+                           (i + 1) * section_steps + k, i * section_steps + k))
+rail_faces.extend((tuple(reversed(range(section_steps))),
+                   tuple(range(rail_steps * section_steps, (rail_steps + 1) * section_steps))))
+rail_mesh = bpy.data.meshes.new("ContinuousArm")
+rail_mesh.from_pydata(rail_vertices, [], rail_faces)
+rail_mesh.update()
+rail_uv = rail_mesh.uv_layers.new()
+for loop in rail_mesh.loops:
+    rail_uv.data[loop.index].uv = ((loop.vertex_index % section_steps) / section_steps,
+                                   (loop.vertex_index // section_steps) / rail_steps)
+rail = bpy.data.objects.new("ContinuousArm", rail_mesh)
+coll.objects.link(rail)
+finish(rail, "mid_wood", 1.0)
 
 chair = bake("chair_static")
 chair_stats = export(chair, "chair_static.glb")
@@ -588,6 +563,8 @@ for sz in (-0.094, 0.094):
     box("ClockTrunkStile", (0.060, -0.345, sz), (0.100, 0.240, 0.022), "dark_wood", 0.002)
 box("ClockTrunkRailTop", (0.060, -0.228, 0.0), (0.100, 0.020, 0.210), "dark_wood", 0.002)
 box("ClockTrunkRailBottom", (0.060, -0.462, 0.0), (0.100, 0.022, 0.224), "dark_wood", 0.002)
+ring("ClockCaseMoulding", (0.074, 0.0, 0.0), .222, .025, .040, "mid_wood", segments=16)
+ring("ClockTrunkSightBead", (0.105, -.345, 0), .085, .009, .012, "mid_wood", segments=14)
 
 # A small brass finial on the cornice and the winding plate on the dial well.
 cyl("ClockFinial", (0.055, 0.274, 0.0), 0.018, 0.026, "brass", sides=8, radius_top=0.012)
@@ -806,11 +783,21 @@ box("LeafStileChipB", (0.884, -0.590, -0.026), (0.030, 0.040, 0.008), "worn_wood
 box("LeafSplit", (0.700, 0.860, -0.027), (0.005, 0.180, 0.005), "stained_wood")
 # Wear where a hand has pushed this door open for years: the paint is gone in a
 # palm-sized patch beside the latch.
-box("LeafHandWear", (0.760, -0.070, -0.029), (0.130, 0.170, 0.004), "worn_wood")
+box("LeafLockBacking", (0.787, -0.070, -0.033), (0.083, 0.161, 0.010), "iron", .002)
 
 # Escutcheon and keyhole on the room face by the latch stile.
-box("LeafEscutcheon", (0.800, -0.045, -0.050), (0.060, 0.150, 0.008), "brass", 0.001)
+box("LeafEscutcheon", (0.800, -0.045, -0.042), (0.060, 0.150, 0.008), "iron", 0.001)
 box("LeafKeyhole", (0.800, -0.070, -0.055), (0.012, 0.026, 0.006), "iron")
+box("BoltBackplate", (.765, .216, -.039), (.171, .047, .021), "iron", .004)
+for x in (.71, .82):
+    box("BoltGuide", (x, .216, -.053), (.029, .042, .012), "iron", .003)
+cyl("SlidingBolt", (.781, .221, -.065), .012, .152, "iron", axis=(1, 0, 0), sides=8)
+box("BoltTurn", (.771, .244, -.073), (.014, .052, .018), "iron", .003)
+for y in (-.625, .625):
+    cyl("StrapHingePin", (.016, y, -.052), .015, .101, "iron", sides=8)
+    box("LeafForgedStrap", (.077, y, -.057), (.145, .033, .012), "iron", .005)
+    for x in (.038, .115):
+        cyl("StrapRivet", (x, y, -.066), .008, .009, "iron", axis=(0, 0, 1), sides=7)
 
 door_leaf = bake("door_leaf_static")
 door_leaf_stats = export(door_leaf, "door_leaf_static.glb")
@@ -1061,6 +1048,36 @@ box("TraySlipReceived", (-2.712, 0.928, -1.680), (0.070, 0.100, 0.004), "paper",
 box("TraySlipSent", (-2.706, 0.916, -1.470), (0.066, 0.084, 0.004), "paper", 0.001, rot_deg=(0, 0, 6))
 box("TraySlipEdge", (-2.700, 0.880, -1.452), (0.030, 0.012, 0.070), "worn_wood")
 
+# The hoop hangs where the operator can pick it up on the way out to the train.
+box("OrderHoopHookPlate", (-.87, 1.76, 2.258), (.043, .085, .015), "iron", .004)
+box("OrderHoopHook", (-.87, 1.730, 2.225), (.020, .020, .060), "iron", .005)
+hoop_x, hoop_y, hoop_z, hoop_r = -.87, 1.572, 2.213, .135
+for i in range(16):
+    angle = math.tau * (i + .5) / 16
+    box("HandBentAshHoop", (hoop_x + hoop_r * math.cos(angle),
+        hoop_y + hoop_r * math.sin(angle), hoop_z), (.016, .057, .017), "worn_wood",
+        .002, rot_deg=(0, 0, math.degrees(angle)))
+box("OrderHoopHandle", (-.87, 1.21, 2.213), (.024, .48, .021), "mid_wood", .003)
+for y in (1.432, 1.450):
+    box("HoopBinding", (-.87, y, 2.213), (.027, .012, .025), "leather", .001)
+box("OrderSlipInCord", (-.818, 1.51, 2.189), (.086, .102, .006), "paper",
+    rot_deg=(0, 0, -13))
+box("OrderSlipFold", (-.824, 1.478, 2.184), (.075, .024, .004), "enamel",
+    rot_deg=(0, 0, -13))
+box("OrderSlipSpringClip", (-.796, 1.546, 2.181), (.023, .025, .010), "brass",
+    .001, rot_deg=(0, 0, -13))
+
+cyl("SpittoonFoot", (2.55, .012, .93), .087, .020, "brass", sides=13)
+cyl("SpittoonBowl", (2.55, .070, .93), .095, .095, "brass", sides=13, radius_top=.066)
+tube("SpittoonMouth", (2.55, .137, .93), .064, .043, "brass", sides=13, radius_top=.10)
+cyl("SpittoonDarkInterior", (2.55, .11, .93), .060, .004, "iron", sides=13)
+
+box("DenverCrate", (2.62, .142, -.992), (.35, .278, .42), "worn_wood", .004)
+for z in (-1.166, -.818):
+    box("CrateEndCleat", (2.438, .142, z), (.024, .284, .030), "dark_wood", .002)
+for y in (.102, .182):
+    box("CratePlankJoint", (2.441, y, -.992), (.004, .004, .40), "dark_wood")
+
 wall_props = bake("wall_props_static")
 wall_props_stats = export(wall_props, "wall_props_static.glb")
 
@@ -1110,7 +1127,8 @@ wire_run_stats = export(wire_run, "wire_run_static.glb")
 
 
 # --- save the editable source and the manifest -----------------------------
-bpy.ops.wm.save_as_mainfile(filepath=str(SOURCE / "dead_wire_office_props_v1.blend"), copy=True)
+if "--save-source" in sys.argv:
+    bpy.ops.wm.save_as_mainfile(filepath=str(SOURCE / "dead_wire_office_props_v1.blend"), copy=True)
 
 report = {
     "oil_lamp_static": lamp_stats,

@@ -170,6 +170,9 @@ def exterior():
             edge=(3.89 if axis=='X' else 4.25)*side
             slab('OldWhite',axis,edge-.072,edge+.072,v+math.copysign(.10,v),.43,5.88,.09)
     door('X',-1.46,4.30,.46,1.22)
+    slab('FirL', 'X', -2.13, -.79, 4.45, .46, .505, .34)
+    for z in (.78, 2.28):
+        slab('Shadow', 'X', -2.04, -1.83, 4.43, z, z+.064, .04)
     box('Plinth',(0,0,.21),(7.96,8.67,.44))
     for axis, fixed, limit in [('X',4.33,3.95),('X',-4.33,3.95),('Y',3.98,4.27),('Y',-3.98,4.27)]:
         for row in range(2):
@@ -349,6 +352,9 @@ def main():
     import build_black_creek_residential_kit as residential
     residential.register()
     args = sys.argv[sys.argv.index('--')+1:] if '--' in sys.argv else []
+    if '--exterior-only' in args:
+        exterior()
+        return
     if '--room-lamps' in args:
         room_desk()
         residential.room_details()

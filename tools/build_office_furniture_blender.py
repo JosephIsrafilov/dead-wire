@@ -18,12 +18,16 @@ import json
 import math
 import random
 from pathlib import Path
+import sys
 
 import bpy
 from mathutils import Vector
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "tools"))
+from office_blender_look import bake_vertex_ao, scanned_materials
 OUT = ROOT / "assets/models/office_furniture_v1"
+ONLY_MESHES = set(sys.argv[sys.argv.index("--only") + 1:]) if "--only" in sys.argv else set()
 OUT.mkdir(parents=True, exist_ok=True)
 TEX = ROOT / "assets/textures/office_furniture_v1"
 TEX.mkdir(parents=True, exist_ok=True)
@@ -50,6 +54,10 @@ TILES = {
     "leather": (1, 1),
     "baize": (2, 1),
     "iron": (3, 1),
+    "book_wine": (0, 2),
+    "book_ocher": (1, 2),
+    "book_blue": (2, 2),
+    "book_olive": (3, 2),
 }
 COLORS = {
     "dark_wood": (54, 40, 28),
@@ -66,55 +74,7 @@ COLORS = {
     "iron": (46, 44, 42),
 }
 
-rng = random.Random(18941020)
-image = bpy.data.images.new("DW_Furniture_Atlas_256", width=256, height=256)
-pixels = [0.02, 0.02, 0.02, 1.0] * (256 * 256)
-
-for kind, (tx, ty) in TILES.items():
-    base = COLORS[kind]
-    for y in range(64):
-        for x in range(64):
-            noise = rng.uniform(-3.0, 3.0)
-            if kind in ("dark_wood", "mid_wood", "light_wood"):
-                grain = 5.0 * math.sin(y * 0.62 + 2.4 * math.sin(x * 0.11))
-                seam = -26.0 if (y % 32) in (0, 1) else 0.0
-                detail = grain + seam
-            elif kind == "brass":
-                detail = 5.0 * math.sin(x * 0.22) * math.cos(y * 0.19)
-                detail += -12.0 if ((x * 3 + y * 5) % 61) == 0 else 0.0
-            elif kind == "paper":
-                detail = 2.5 * math.sin(x * 0.9 + y * 0.4)
-                detail += -8.0 if (y % 21) == 0 else 0.0
-            elif kind == "leather":
-                detail = 4.0 * math.sin(x * 0.7) * math.cos(y * 0.6)
-                detail += -14.0 if ((x + y * 2) % 17) == 0 else 0.0
-            elif kind == "baize":
-                detail = 3.0 * math.sin(x * 1.3) * math.cos(y * 1.1)
-            else:
-                detail = 3.0 * math.sin(x * 0.41 + y * 0.37) + 2.0 * math.cos(y * 0.8)
-            idx = ((ty * 64 + y) * 256 + tx * 64 + x) * 4
-            for c in range(3):
-                pixels[idx + c] = round(max(0, min(255, base[c] + detail + noise)) / 8) * 8 / 255
-            pixels[idx + 3] = 1.0
-
-image.pixels.foreach_set(pixels)
-image.filepath_raw = str(TEX / "furniture_atlas_256.png")
-image.file_format = "PNG"
-image.save()
-image.pack()
-
-materials = {}
-for kind in TILES:
-    mat = bpy.data.materials.new("dw_furniture_" + kind)
-    mat.use_nodes = True
-    bsdf = mat.node_tree.nodes.get("Principled BSDF")
-    bsdf.inputs["Roughness"].default_value = 0.62 if kind == "brass" else 0.9
-    bsdf.inputs["Metallic"].default_value = 0.6 if kind in ("brass", "iron") else 0.0
-    tex = mat.node_tree.nodes.new("ShaderNodeTexImage")
-    tex.image = image
-    tex.interpolation = "Closest"
-    mat.node_tree.links.new(tex.outputs["Color"], bsdf.inputs["Base Color"])
-    materials[kind] = mat
+materials = scanned_materials(TEX / "furniture_atlas_256.png", TILES, "dw_furniture_")
 
 
 def pos(v):
@@ -209,10 +169,16 @@ def bake(name):
     bpy.ops.object.transform_apply(location=False, rotation=True, scale=True)
     tri = obj.modifiers.new("Export triangles", "TRIANGULATE")
     bpy.ops.object.modifier_apply(modifier=tri.name)
+    bake_vertex_ao(obj)
     return obj
 
 
 def export(obj, filename):
+    if not ONLY_MESHES or obj.name in ONLY_MESHES:
+        _write_glb(obj, filename)
+    return _stats(obj)
+
+def _write_glb(obj, filename):
     bpy.ops.object.select_all(action="DESELECT")
     obj.select_set(True)
     bpy.context.view_layer.objects.active = obj
@@ -223,12 +189,14 @@ def export(obj, filename):
         export_apply=True,
         export_yup=True,
         export_texcoords=True,
-        export_normals=True,
+        export_normals=True, export_vertex_color="ACTIVE",
         export_materials="EXPORT",
         export_cameras=False,
         export_lights=False,
         export_animations=False,
     )
+
+def _stats(obj):
     return {
         "triangles": len(obj.data.polygons),
         "vertices": len(obj.data.vertices),
@@ -272,15 +240,16 @@ for sx in (-0.68, 0.68):
         cyl("DeskLegCollarMid", (sx, 0.24, sz), 0.050, 0.030, "dark_wood", axis=(0, 1, 0), sides=8)
         cyl("DeskLegShoe", (sx, 0.02, sz), 0.042, 0.04, "brass", axis=(0, 1, 0), sides=8, radius_top=0.036)
 
-# Drawer pedestal on the operator's right, three drawers with bail pulls.
+# Drawer pedestal with stamped half-shell pulls.
 box("DrawerCarcass", (0.48, 0.45, 0.0), (0.38, 0.48, 0.65), "dark_wood", 0.004)
 box("DrawerCarcassTop", (0.48, 0.70, 0.0), (0.40, 0.02, 0.67), "mid_wood", 0.003)
 for index, cy in enumerate((0.30, 0.475, 0.62)):
     box("DrawerFront%d" % index, (0.48, cy, -0.318), (0.34, 0.135, 0.022), "mid_wood", 0.004)
     box("DrawerBead%d" % index, (0.48, cy, -0.330), (0.30, 0.10, 0.008), "dark_wood")
-    for bx in (0.40, 0.56):
-        box("DrawerPullPost%d" % index, (bx, cy + 0.005, -0.336), (0.012, 0.012, 0.018), "brass")
-    box("DrawerPullBar%d" % index, (0.48, cy + 0.005, -0.346), (0.15, 0.010, 0.010), "brass", 0.002)
+    box("CupPullPlate", (0.48, cy + .005, -.339), (.132, .041, .013), "brass", .005)
+    box("CupPullRecess", (0.48, cy - .005, -.346), (.095, .018, .005), "iron", .003)
+    for dx, dz in ((-.045, -.351), (-.023, -.359), (0, -.362), (.023, -.359), (.045, -.351)):
+        box("CupPullGrip", (.48 + dx, cy + .009, dz), (.027, .017, .018), "brass", .004)
 
 # Back rail against the wall.
 box("DeskBackRail", (0.0, 0.63, -0.345), (1.46, 0.08, 0.05), "dark_wood", 0.003)
@@ -319,6 +288,20 @@ cyl("WireLeadBush", (-0.62, 0.782, 0.30), 0.012, 0.02, "brass", sides=8)
 
 desk = bake("desk_static")
 desk_stats = export(desk, "desk_static.glb")
+
+# The playable desk uses the open version of the top. These accessories save as
+# a separate assembly so the pre-shift folios and writer paths remain exposed.
+begin()
+cyl("BillSpikeBase", (.575, .756, -.096), .044, .012, "iron", sides=11)
+cyl("BillSpikePin", (.575, .801, -.096), .003, .091, "iron", sides=7, radius_top=.0005)
+for y, twist in ((.767, 22), (.772, -12), (.779, 4)):
+    box("ImpaledReceipt", (.575, y, -.094), (.075, .004, .053), "paper", rot_deg=(0, twist, 0))
+box("SulphurMatchbox", (.216, .758, .093), (.055, .015, .033), "dark_wood", .001)
+box("MatchboxPaperSleeve", (.213, .765, .093), (.048, .003, .034), "paper", .001)
+for z in (.087, .098):
+    cyl("SulphurMatch", (.249, .761, z), .0012, .025, "light_wood", axis=(1, 0, 0), sides=5)
+    cyl("MatchHead", (.262, .761, z), .0021, .004, "leather", axis=(1, 0, 0), sides=6)
+details_stats = export(bake("desk_details_static"), "desk_details_static.glb")
 
 # =========================================================================
 # 2. Record bookcase (prop-local; sides x = +-0.4, back at z = -0.15)
@@ -364,7 +347,7 @@ for shelf_y, fill_to, height_lo, height_hi in shelf_specs:
         width = round(rng_case.uniform(0.030, 0.056), 3)
         height = round(rng_case.uniform(height_lo, height_hi), 3)
         lean = rng_case.choice((0.0, 0.0, 0.0, 0.0, 2.5, -3.0))
-        kind = rng_case.choice(("leather", "leather", "dark_wood", "mid_wood"))
+        kind = rng_case.choice(("book_wine", "book_ocher", "book_blue", "book_olive"))
         spine("BookVolume", x, shelf_y, width, height, kind, lean)
         x += width + rng_case.uniform(0.001, 0.004)
 
@@ -414,7 +397,9 @@ box("PigeonholeShelf", (0.0, 1.35, 0.235), (0.80, 0.02, 0.10), "mid_wood", 0.002
 for dx in (-0.27, 0.0, 0.27):
     box("PigeonholeDivider", (dx, 1.35, 0.235), (0.02, 0.52, 0.10), "dark_wood", 0.002)
 for dx in (-0.27, 0.0, 0.27):
-    box("PigeonholeLabel", (dx + 0.135 if dx < 0.26 else dx, 1.10, 0.289), (0.10, 0.035, 0.004), "paper")
+    label_x = dx + 0.135 if dx < 0.26 else dx
+    box("LabelHolder", (label_x, 1.10, 0.289), (0.116, 0.045, 0.006), "brass", .002)
+    box("PigeonholeLabel", (label_x, 1.10, 0.293), (0.084, 0.025, 0.003), "paper")
 box("PaperFolio1", (-0.135, 1.25, 0.23), (0.20, 0.15, 0.04), "paper", 0.001, rot_deg=(0, 0, 4))
 box("PaperFolio2", (0.135, 1.40, 0.23), (0.20, 0.18, 0.04), "paper", 0.001, rot_deg=(0, 0, -6))
 box("PaperFolio3", (-0.135, 1.44, 0.23), (0.18, 0.10, 0.03), "paper", 0.001, rot_deg=(0, 0, -3))
@@ -424,10 +409,12 @@ cabinet = bake("cabinet_static")
 cabinet_stats = export(cabinet, "cabinet_static.glb")
 
 # --- save the editable source and the manifest -----------------------------
-bpy.ops.wm.save_as_mainfile(filepath=str(SOURCE / "dead_wire_office_furniture_v1.blend"), copy=True)
+if "--save-source" in sys.argv:
+    bpy.ops.wm.save_as_mainfile(filepath=str(SOURCE / "dead_wire_office_furniture_v1.blend"), copy=True)
 
 report = {
     "desk_static": desk_stats,
+    "desk_details_static": details_stats,
     "bookcase_static": bookcase_stats,
     "cabinet_static": cabinet_stats,
 }

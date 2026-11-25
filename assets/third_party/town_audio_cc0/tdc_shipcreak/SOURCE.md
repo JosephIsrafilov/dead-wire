@@ -1,0 +1,22 @@
+# tdc_shipcreak
+
+- source: https://archive.org/details/designers-choice-complete
+- author: Nicholas A. Judy (The Designer's Choice)
+- license: CC0 1.0
+- note: Same library: a long timber-friction take made for a ship, i.e. recorded wood under load rather than a whole door.
+- status: source-only. `assets/third_party/` is excluded from both
+  export presets and refused by `tools/package_windows_beta.py`; only
+  the cut runtime files under `audio/sfx/` ship.
+
+Each file below is a **lossless FLAC excerpt** of the original download, not
+a re-encode: the excerpt starts at `origin` seconds of the original and ends
+at `end`, so every sample the build cuts is bit-identical to the download.
+The original's size, duration and SHA-256 are recorded so the excerpt can be
+re-derived from the same upload.
+
+| excerpt | original | origin | end | original bytes | original sha256 | excerpt sha256 |
+|---|---|---|---|---|---|---|
+| `ship_creaking_sound_design.flac` | `ship_creaking_sound_design.wav` | 5.95 s | 52.8 s | 13348344 | `01aad0f4f6168048…` | `37ddd9fe917da17c…` |
+
+Cut times and filters live in `tools/town_audio_sources.py`; the build is
+`tools/build_town_audio_recordings.py`.

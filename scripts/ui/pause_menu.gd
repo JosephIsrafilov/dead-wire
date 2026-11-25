@@ -11,8 +11,10 @@ signal resumed()
 
 const TITLE_SCENE: String = "res://scenes/ui/main_menu.tscn"
 const READABILITY_PATH: String = \
-	"CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Columns/ControlColumn/ReadabilityOptions"
+	"CenterContainer/PanelContainer/MarginContainer/VBoxContainer/OptionsBox/ReadabilityOptions"
 const DEBUG_FOCUS_LOGS: bool = false
+const SFX_PAPER_TURN := preload("res://audio/sfx/foley/paper_turn.wav")
+const SFX_KEY_CLICK := preload("res://audio/sfx/foley/key_click.wav")
 
 @export var player: PlayerController = null
 @export var document_viewer: DocumentViewer = null
@@ -21,6 +23,7 @@ var settings: GameSettings = null
 
 var is_paused: bool = false
 var _paused_for_focus: bool = false
+var _reacquire_on_walk_input: bool = false
 
 var sensitivity_slider: HSlider = null
 var head_bob_check: CheckButton = null
@@ -33,6 +36,14 @@ var contextual_thoughts_check: CheckButton = null
 var resume_button: Button = null
 var title_button: Button = null
 var quit_button: Button = null
+
+var _tab_game: Button = null
+var _tab_audio: Button = null
+var _tab_display: Button = null
+var _ru_button: Button = null
+var _en_button: Button = null
+var _active_tab: String = "game"
+var _ui_fx_player: AudioStreamPlayer = null
 
 const LEAVE_CONFIRM_TEXT := "Leave? The night is lost — press again"
 const LEAVE_CONFIRM_MSEC := 4000
@@ -59,35 +70,121 @@ func _ready() -> void:
 	_push_settings_to_controls()
 	_connect_controls()
 	_bind_window_focus()
+	_apply_period_styles()
+	select_options_tab("game", false)
 	refresh_locale()
+
+func _apply_period_styles() -> void:
+	var panel := get_node_or_null("CenterContainer/PanelContainer") as PanelContainer
+	PeriodUIStyle.style_options_ledger(panel)
+	PeriodUIStyle.style_menu_button(resume_button, true)
+	PeriodUIStyle.style_menu_button(title_button, false)
+	PeriodUIStyle.style_menu_button(quit_button, false)
+	var options := get_node_or_null("CenterContainer/PanelContainer/MarginContainer/VBoxContainer/OptionsBox")
+	if options != null:
+		PeriodUIStyle.style_controls_recursive(options)
+	_refresh_tab_styles()
+	_refresh_locale_pills()
+
+func _refresh_tab_styles() -> void:
+	PeriodUIStyle.style_tab_button(_tab_game, _active_tab == "game")
+	PeriodUIStyle.style_tab_button(_tab_audio, _active_tab == "audio")
+	PeriodUIStyle.style_tab_button(_tab_display, _active_tab == "display")
+
+func _refresh_locale_pills() -> void:
+	var is_ru := GameLocale.is_ru()
+	PeriodUIStyle.style_locale_pill(_ru_button, is_ru)
+	PeriodUIStyle.style_locale_pill(_en_button, not is_ru)
+
+func select_options_tab(tab_id: String, with_sound: bool = true) -> void:
+	_active_tab = tab_id
+	var options := "CenterContainer/PanelContainer/MarginContainer/VBoxContainer/OptionsBox/"
+	var game_nodes := [
+		get_node_or_null(options + "SensitivityRow"),
+		head_bob_check,
+		contextual_thoughts_check,
+	]
+	var audio_nodes := [
+		get_node_or_null(options + "MasterRow"),
+		get_node_or_null(options + "AmbienceRow"),
+		get_node_or_null(options + "TelegraphRow"),
+		get_node_or_null(options + "FoleyRow"),
+		get_node_or_null(options + "MusicRow"),
+	]
+	for node in game_nodes:
+		if node is Control:
+			(node as Control).visible = (tab_id == "game")
+	for node in audio_nodes:
+		if node is Control:
+			(node as Control).visible = (tab_id == "audio")
+	var read := get_node_or_null(READABILITY_PATH) as ReadabilityOptions
+	if read != null:
+		read.apply_tab_filter(tab_id)
+	_refresh_tab_styles()
+	if with_sound:
+		_play_ui_fx(SFX_PAPER_TURN, -14.0)
+
+func _on_locale_pill_pressed(code: String) -> void:
+	var read := get_node_or_null(READABILITY_PATH) as ReadabilityOptions
+	if read != null:
+		read.select_language_code(code)
+	else:
+		var s := GameSettings.load_settings()
+		s.language = code
+		s.save()
+		GameLocale.set_language(code)
+	var parent_node := get_parent()
+	if parent_node != null and parent_node.has_method("refresh_locale"):
+		parent_node.call("refresh_locale")
+	else:
+		refresh_locale()
+	_play_ui_fx(SFX_KEY_CLICK, -16.0)
+
+func _play_ui_fx(stream: AudioStream, db: float) -> void:
+	if DisplayServer.get_name() == "headless" or not is_inside_tree() or stream == null:
+		return
+	if _ui_fx_player == null:
+		_ui_fx_player = AudioStreamPlayer.new()
+		_ui_fx_player.process_mode = Node.PROCESS_MODE_ALWAYS
+		_ui_fx_player.bus = &"Foley" if AudioServer.get_bus_index(&"Foley") >= 0 else &"Master"
+		add_child(_ui_fx_player)
+	_ui_fx_player.stream = stream
+	_ui_fx_player.volume_db = db
+	_ui_fx_player.play()
 
 func refresh_locale() -> void:
 	var box := "CenterContainer/PanelContainer/MarginContainer/VBoxContainer/"
-	var sound := box + "Columns/SoundColumn/"
-	var controls := box + "Columns/ControlColumn/"
-	var title := get_node_or_null(box + "TitleLabel") as Label
+	var options := box + "OptionsBox/"
+	var title := get_node_or_null(box + "HeaderRow/TitleBox/TitleLabel") as Label
 	if title != null:
 		title.text = GameLocale.pick("ЛИНИЯ НА УДЕРЖАНИИ", "LINE HELD")
-	var subtitle := get_node_or_null(box + "SubtitleLabel") as Label
+	var subtitle := get_node_or_null(box + "HeaderRow/TitleBox/SubtitleLabel") as Label
 	if subtitle != null:
 		var in_office := get_parent() is M1OfficeController
 		subtitle.text = GameLocale.pick(
 			"Станция Блэк-Крик — Ночная смена" if in_office else "Блэк-Крик — Апрель 1890",
 			"Black Creek Station — Night Watch" if in_office else "Black Creek — April 1890"
 		)
+	if _tab_game != null:
+		_tab_game.text = GameLocale.pick("Игра", "Game")
+	if _tab_audio != null:
+		_tab_audio.text = GameLocale.pick("Звук", "Audio")
+	if _tab_display != null:
+		_tab_display.text = GameLocale.pick("Экран", "Display")
 	var row_labels := {
-		sound + "MasterRow/Label": ["Общая громкость", "Master volume"],
-		sound + "AmbienceRow/Label": ["Шум комнаты", "Room ambience"],
-		sound + "TelegraphRow/Label": ["Телеграф", "Telegraph"],
-		sound + "FoleyRow/Label": ["Звуки предметов", "Foley"],
-		sound + "MusicRow/Label": ["Музыка", "Music"],
-		controls + "SensitivityRow/Label": ["Чувствительность мыши", "Mouse sensitivity"],
+		options + "MasterRow/Label": ["Общая громкость", "Master volume"],
+		options + "AmbienceRow/Label": ["Шум комнаты", "Room ambience"],
+		options + "TelegraphRow/Label": ["Телеграф", "Telegraph"],
+		options + "FoleyRow/Label": ["Звуки предметов", "Foley"],
+		options + "MusicRow/Label": ["Музыка", "Music"],
+		options + "SensitivityRow/Label": ["Чувствительность мыши", "Mouse sensitivity"],
 	}
 	for path in row_labels:
 		var lbl := get_node_or_null(path) as Label
 		if lbl != null:
 			var pair: Array = row_labels[path]
 			lbl.text = GameLocale.pick(pair[0], pair[1])
+	_refresh_locale_pills()
 	if head_bob_check != null:
 		head_bob_check.text = GameLocale.pick("Покачивание головы", "Head movement while walking")
 	if contextual_thoughts_check != null:
@@ -155,6 +252,7 @@ func _on_window_focus_exited() -> void:
 	if is_inside_tree() and not get_tree().paused:
 		# Hold the wire and the shift clocks without taking over the active UI.
 		_paused_for_focus = true
+		_reacquire_on_walk_input = true
 		get_tree().paused = true
 
 func _on_window_focus_entered() -> void:
@@ -170,7 +268,6 @@ func _release_focus_pause() -> void:
 		_paused_for_focus = false
 		if is_inside_tree():
 			get_tree().paused = false
-		_restore_mouse_mode.call_deferred(true)
 
 func _restore_mouse_mode(force_reacquire: bool = false) -> void:
 	var tree_paused := is_inside_tree() and get_tree().paused
@@ -201,24 +298,28 @@ func _restore_mouse_mode(force_reacquire: bool = false) -> void:
 
 func _find_nodes() -> void:
 	var box := "CenterContainer/PanelContainer/MarginContainer/VBoxContainer/"
-	var sound := box + "Columns/SoundColumn/"
-	var controls := box + "Columns/ControlColumn/"
+	var options := box + "OptionsBox/"
+	_tab_game = get_node_or_null(box + "TabBarRow/TabGame") as Button
+	_tab_audio = get_node_or_null(box + "TabBarRow/TabAudio") as Button
+	_tab_display = get_node_or_null(box + "TabBarRow/TabDisplay") as Button
+	_ru_button = get_node_or_null(box + "HeaderRow/LocaleBar/RuButton") as Button
+	_en_button = get_node_or_null(box + "HeaderRow/LocaleBar/EnButton") as Button
 	if sensitivity_slider == null:
-		sensitivity_slider = get_node_or_null(controls + "SensitivityRow/SensitivitySlider") as HSlider
+		sensitivity_slider = get_node_or_null(options + "SensitivityRow/SensitivitySlider") as HSlider
 	if head_bob_check == null:
-		head_bob_check = get_node_or_null(controls + "HeadBobCheck") as CheckButton
+		head_bob_check = get_node_or_null(options + "HeadBobCheck") as CheckButton
 	if master_slider == null:
-		master_slider = get_node_or_null(sound + "MasterRow/MasterSlider") as HSlider
+		master_slider = get_node_or_null(options + "MasterRow/MasterSlider") as HSlider
 	if ambience_slider == null:
-		ambience_slider = get_node_or_null(sound + "AmbienceRow/AmbienceSlider") as HSlider
+		ambience_slider = get_node_or_null(options + "AmbienceRow/AmbienceSlider") as HSlider
 	if telegraph_slider == null:
-		telegraph_slider = get_node_or_null(sound + "TelegraphRow/TelegraphSlider") as HSlider
+		telegraph_slider = get_node_or_null(options + "TelegraphRow/TelegraphSlider") as HSlider
 	if foley_slider == null:
-		foley_slider = get_node_or_null(sound + "FoleyRow/FoleySlider") as HSlider
+		foley_slider = get_node_or_null(options + "FoleyRow/FoleySlider") as HSlider
 	if music_slider == null:
-		music_slider = get_node_or_null(sound + "MusicRow/MusicSlider") as HSlider
+		music_slider = get_node_or_null(options + "MusicRow/MusicSlider") as HSlider
 	if contextual_thoughts_check == null:
-		contextual_thoughts_check = get_node_or_null(sound + "ContextualThoughtsCheck") as CheckButton
+		contextual_thoughts_check = get_node_or_null(options + "ContextualThoughtsCheck") as CheckButton
 	if resume_button == null:
 		resume_button = get_node_or_null(box + "ButtonRow/ResumeButton") as Button
 	if title_button == null:
@@ -282,8 +383,25 @@ func _connect_controls() -> void:
 		title_button.pressed.connect(_on_leave_pressed)
 	if quit_button != null and not quit_button.pressed.is_connected(_on_quit):
 		quit_button.pressed.connect(_on_quit)
+	if _tab_game != null and not _tab_game.pressed.is_connected(select_options_tab.bind("game", true)):
+		_tab_game.pressed.connect(select_options_tab.bind("game", true))
+	if _tab_audio != null and not _tab_audio.pressed.is_connected(select_options_tab.bind("audio", true)):
+		_tab_audio.pressed.connect(select_options_tab.bind("audio", true))
+	if _tab_display != null and not _tab_display.pressed.is_connected(select_options_tab.bind("display", true)):
+		_tab_display.pressed.connect(select_options_tab.bind("display", true))
+	if _ru_button != null and not _ru_button.pressed.is_connected(_on_locale_pill_pressed.bind(GameLocale.LANG_RU)):
+		_ru_button.pressed.connect(_on_locale_pill_pressed.bind(GameLocale.LANG_RU))
+	if _en_button != null and not _en_button.pressed.is_connected(_on_locale_pill_pressed.bind(GameLocale.LANG_EN)):
+		_en_button.pressed.connect(_on_locale_pill_pressed.bind(GameLocale.LANG_EN))
 
 func _input(event: InputEvent) -> void:
+	if _reacquire_on_walk_input and player != null and not event.is_echo() and event.is_pressed():
+		var click: bool = event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT
+		var walk_key := event.is_action_pressed("interact") or event.is_action_pressed("move_forward") \
+			or event.is_action_pressed("move_backward") or event.is_action_pressed("move_left") \
+			or event.is_action_pressed("move_right")
+		if (click or walk_key) and player.restore_walk_mouse_capture(true):
+			_reacquire_on_walk_input = false
 	if event.is_echo() or not event.is_action_pressed("ui_cancel"):
 		return
 	var office := get_parent() as M1OfficeController
@@ -450,7 +568,7 @@ func return_to_title() -> bool:
 	visible = false
 	tree.paused = false
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-	return tree.change_scene_to_file(TITLE_SCENE) == OK
+	return SceneTransitionManager.go(tree, TITLE_SCENE)
 
 func _on_quit() -> void:
 	_save()

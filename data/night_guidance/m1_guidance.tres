@@ -4,13 +4,17 @@
 
 [resource]
 script = ExtResource("1")
-entries = Array[Dictionary]([{"id": &"entry", "text": "The chair at the desk. Sit down to work the wire.", "delay": 2.0, "duration": 9.0, "once": true},
-{"id": &"open_line", "text": "The telegraph key is just right of the writing pad.", "duration": 9.0, "automatic": false},
-{"id": &"answer", "text": "The office is calling. Back to the key.", "delay": 1.0, "duration": 6.0, "once": true},
-{"id": &"read_copy", "text": "The copy is done. I should read it back.", "delay": 2.0, "duration": 6.0, "once": true},
-{"id": &"route", "text": "Look left [A] for the signal lever.", "delay": 2.0, "duration": 6.0, "once": true},
-{"id": &"wind", "text": "The register is slowing. Click its crank to wind it.", "delay": 1.0, "duration": 6.0, "once": true},
-{"id": &"filing", "text": "Look right [D] to stamp and file the copy.", "delay": 2.0, "duration": 6.0, "once": true},
-{"id": &"dawn", "text": "The line is closed. The handover, then the door.", "delay": 2.0, "duration": 6.0, "once": true}])
+entries = Array[Dictionary]([{"id": &"entry", "text": "No matter how many years you've kept a wire — at a new post you start from the basics, so you don't slip. Sit at the desk first and take stock.", "text_ru": "Сколько лет за ключом ни сиди — на новом посту начинай с азов, чтобы не ошибиться. Сяду за стол и осмотрюсь.", "delay": 0.80, "duration": 8.0, "paced_step": true},
+{"id": &"open_line", "text": "Signal board and Morse on the left, timetable on the right, ledger on the desk. When ready, tap the brass key to open the line.", "text_ru": "Слева доска путей и азбука, справа расписание, журнал на столе. Когда будешь готов — коснись ключа, чтобы открыть линию.", "delay": 0.55, "duration": 7.5, "paced_step": true},
+{"id": &"answer", "text": "Wire's calling. Answer on the key.", "text_ru": "Вызывают. Ответь ключом.", "delay": 0.25, "duration": 5.0, "paced_step": true},
+{"id": &"read_copy", "text": "Copy's down. Lift the sheet and check the order against the timetable on the right.", "text_ru": "Копия готова. Подними лист и сверь приказ с расписанием справа.", "delay": 0.60, "duration": 6.0, "paced_step": true},
+{"id": &"route", "text": "Signal board on the left [A] — set the lever to CLEAR or HOLD per the order.", "text_ru": "Доска путей слева [A] — переведи рычаг по приказу: ПРОПУСТИТЬ или ДЕРЖАТЬ.", "delay": 0.55, "duration": 6.0, "paced_step": true},
+{"id": &"filing", "text": "Signal set. Turn right [D] and file the copy into the clip.", "text_ru": "Рычаг выставлен. Повернись направо [D] и подшей копию в стопку.", "delay": 0.55, "duration": 6.0, "paced_step": true},
+{"id": &"answer_late", "text": "They're still calling. Answer on the key.", "text_ru": "Всё ещё вызывают. Ответь ключом.", "delay": 7.00, "duration": 5.0, "paced_step": true},
+{"id": &"ledger", "text": "The ledger's on the desk. It lists the orders for this watch.", "text_ru": "Журнал на столе. В нём отмечают приказы этой смены.", "delay": 2.50, "duration": 6.0, "paced_step": true},
+{"id": &"wind", "text": "Register spring is running down — wind the brass key on its side.", "text_ru": "Пружина регистра ослабла — подзаведи латунный ключик сбоку.", "delay": 0.75, "duration": 6.0, "paced_step": true},
+{"id": &"compare", "text": "The paper tape beside the key only marks the wire's strokes. And the pen for amendments sits at the foot of the sheet.", "text_ru": "Бумажная лента у ключа пишет только удары. А перо для правки лежит внизу бланка.", "delay": 0.90, "duration": 7.0, "paced_step": true},
+{"id": &"dawn_seated", "text": "Shift's closed. Stand up [Tab], read the handover sheet, and step out.", "text_ru": "Смена закрыта. Встань из-за стола [Tab], забери передачу смены и выходи.", "delay": 0.60, "duration": 7.0, "paced_step": true},
+{"id": &"dawn", "text": "The line's quiet. The handover's by the south door.", "text_ru": "Линия замолчала. Сводка у южной двери.", "delay": 1.00, "duration": 6.0, "paced_step": true}])
 reactions = Array[Dictionary]([])
 automatic_interval = 12.0

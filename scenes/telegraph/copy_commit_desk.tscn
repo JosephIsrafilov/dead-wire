@@ -6,7 +6,7 @@
 [ext_resource type="Material" path="res://materials/style_tests/paper_log.tres" id="4_paper"]
 [ext_resource type="Material" path="res://materials/style_tests/metal_brass_aged.tres" id="5_brass"]
 [ext_resource type="Material" path="res://materials/style_tests/form_night_copy.tres" id="6_form"]
-[ext_resource type="FontFile" path="res://assets/fonts/oldstandard/OldStandardTT-Regular.ttf" id="7_serif"]
+[ext_resource type="FontFile" path="res://assets/fonts/oldstandard/OldStandardTT-Bold.ttf" id="7_serif"]
 
 [sub_resource type="PlaneMesh" id="FilingFormMesh"]
 material = ExtResource("6_form")
@@ -173,14 +173,15 @@ rings = 5
 material = ExtResource("3_wood")
 
 [node name="OptionOneLabel" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, -0.2, 0.094, -0.03)
+texture_filter = 3
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, -0.2, 0.096, -0.03)
 pixel_size = 0.00118
 shaded = true
-modulate = Color(0.14, 0.09, 0.06, 0.94)
-outline_modulate = Color(0.14, 0.09, 0.06, 0.94)
+modulate = Color(0.055, 0.038, 0.025, 1)
+outline_modulate = Color(0.055, 0.038, 0.025, 1)
 font = ExtResource("7_serif")
-font_size = 18
-outline_size = 0
+font_size = 22
+outline_size = 1
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
@@ -189,14 +190,15 @@ text = "AMEND COPY"
 visible = false
 
 [node name="OptionTwoLabel" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0.2, 0.094, -0.03)
+texture_filter = 3
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0.2, 0.096, -0.03)
 pixel_size = 0.00118
 shaded = true
-modulate = Color(0.14, 0.09, 0.06, 0.94)
-outline_modulate = Color(0.14, 0.09, 0.06, 0.94)
+modulate = Color(0.055, 0.038, 0.025, 1)
+outline_modulate = Color(0.055, 0.038, 0.025, 1)
 font = ExtResource("7_serif")
-font_size = 18
-outline_size = 0
+font_size = 22
+outline_size = 1
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
@@ -205,6 +207,7 @@ text = "FILE AS COPIED"
 visible = false
 
 [node name="OptionOneStamp" type="Label3D" parent="."]
+texture_filter = 3
 transform = Transform3D(0.997551, 0, -0.0699428, 0.0699428, 0, 0.997551, 0, -1, 0, -0.2, 0.0955, 0.042)
 pixel_size = 0.00125
 shaded = true
@@ -220,6 +223,7 @@ text = "VOID"
 visible = false
 
 [node name="OptionTwoStamp" type="Label3D" parent="."]
+texture_filter = 3
 transform = Transform3D(0.997551, 0, 0.0699428, -0.0699428, 0, 0.997551, 0, -1, 0, 0.2, 0.0955, 0.042)
 pixel_size = 0.00125
 shaded = true
@@ -235,13 +239,14 @@ text = "VOID"
 visible = false
 
 [node name="PromptLabel" type="Label3D" parent="."]
+texture_filter = 3
 transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0.086, -0.185)
 pixel_size = 0.00115
 shaded = true
-modulate = Color(0.78, 0.69, 0.52, 0.85)
+modulate = Color(0.95, 0.90, 0.78, 1)
 outline_modulate = Color(0.78, 0.69, 0.52, 0.85)
 font = ExtResource("7_serif")
-font_size = 13
+font_size = 16
 outline_size = 0
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -249,13 +254,14 @@ width = 240.0
 text = "AWAITING TRANSCRIPT"
 
 [node name="ResultLabel" type="Label3D" parent="."]
+texture_filter = 3
 transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0.086, 0.185)
 pixel_size = 0.00115
 shaded = true
-modulate = Color(0.78, 0.69, 0.52, 0.85)
+modulate = Color(0.95, 0.90, 0.78, 1)
 outline_modulate = Color(0.78, 0.69, 0.52, 0.85)
 font = ExtResource("7_serif")
-font_size = 13
+font_size = 16
 outline_size = 0
 horizontal_alignment = 1
 vertical_alignment = 1

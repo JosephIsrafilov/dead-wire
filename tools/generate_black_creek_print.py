@@ -77,7 +77,8 @@ def sign(stem, title, sub, size, bg, ink=GOLD, boards=True):
     border(d, w, h, ink, 5)
     text(d,w/2,h*(.40 if sub else .50),title,round(h*.39),w*.89,ink,'display',RED if boards else None)
     if sub:
-        text(d,w/2,h*.73,sub,round(h*.18),w*.86,ink)
+        subtitle_scale = .28 if stem == 'depot' else .18
+        text(d,w/2,h*.73,sub,round(h*subtitle_scale),w*.86,ink)
     for x in (10, w-11):
         d.ellipse((x-2,h//2-2,x+2,h//2+2), fill='#463429')
     age(im, boards).save(OUT / f'{stem}.png', optimize=True)

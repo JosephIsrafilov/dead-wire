@@ -1,0 +1,143 @@
+[gd_resource type="Resource" script_class="FootstepSurfaceConfig" load_steps=58 format=3]
+
+[ext_resource type="Script" path="res://scripts/audio/footstep_surface_config.gd" id="1_config"]
+[ext_resource type="Script" path="res://scripts/audio/footstep_surface_bank.gd" id="2_bank"]
+[ext_resource type="AudioStream" path="res://audio/sfx/foley/footstep_boards_1.wav" id="a1_1"]
+[ext_resource type="AudioStream" path="res://audio/sfx/foley/footstep_boards_2.wav" id="a1_2"]
+[ext_resource type="AudioStream" path="res://audio/sfx/foley/footstep_boards_3.wav" id="a1_3"]
+[ext_resource type="AudioStream" path="res://audio/sfx/foley/footstep_boards_4.wav" id="a1_4"]
+[ext_resource type="AudioStream" path="res://audio/sfx/foley/footstep_boards_5.wav" id="a1_5"]
+[ext_resource type="AudioStream" path="res://audio/sfx/foley/surfaces/wood_saloon_1.wav" id="a2_1"]
+[ext_resource type="AudioStream" path="res://audio/sfx/foley/surfaces/wood_saloon_2.wav" id="a2_2"]
+[ext_resource type="AudioStream" path="res://audio/sfx/foley/surfaces/wood_saloon_3.wav" id="a2_3"]
+[ext_resource type="AudioStream" path="res://audio/sfx/foley/surfaces/wood_saloon_4.wav" id="a2_4"]
+[ext_resource type="AudioStream" path="res://audio/sfx/foley/surfaces/boardwalk_1.wav" id="a3_1"]
+[ext_resource type="AudioStream" path="res://audio/sfx/foley/surfaces/boardwalk_2.wav" id="a3_2"]
+[ext_resource type="AudioStream" path="res://audio/sfx/foley/surfaces/boardwalk_3.wav" id="a3_3"]
+[ext_resource type="AudioStream" path="res://audio/sfx/foley/surfaces/wood_bridge_1.wav" id="a4_1"]
+[ext_resource type="AudioStream" path="res://audio/sfx/foley/surfaces/wood_bridge_2.wav" id="a4_2"]
+[ext_resource type="AudioStream" path="res://audio/sfx/foley/surfaces/wood_bridge_3.wav" id="a4_3"]
+[ext_resource type="AudioStream" path="res://audio/sfx/foley/surfaces/stairs_1.wav" id="a5_1"]
+[ext_resource type="AudioStream" path="res://audio/sfx/foley/surfaces/stairs_2.wav" id="a5_2"]
+[ext_resource type="AudioStream" path="res://audio/sfx/foley/surfaces/stairs_3.wav" id="a5_3"]
+[ext_resource type="AudioStream" path="res://audio/sfx/foley/surfaces/carpet_1.wav" id="a6_1"]
+[ext_resource type="AudioStream" path="res://audio/sfx/foley/surfaces/carpet_2.wav" id="a6_2"]
+[ext_resource type="AudioStream" path="res://audio/sfx/foley/surfaces/carpet_3.wav" id="a6_3"]
+[ext_resource type="AudioStream" path="res://audio/sfx/foley/surfaces/carpet_4.wav" id="a6_4"]
+[ext_resource type="AudioStream" path="res://audio/sfx/foley/surfaces/wet_mud_1.wav" id="a7_1"]
+[ext_resource type="AudioStream" path="res://audio/sfx/foley/surfaces/wet_mud_2.wav" id="a7_2"]
+[ext_resource type="AudioStream" path="res://audio/sfx/foley/surfaces/wet_mud_3.wav" id="a7_3"]
+[ext_resource type="AudioStream" path="res://audio/sfx/foley/surfaces/wet_mud_4.wav" id="a7_4"]
+[ext_resource type="AudioStream" path="res://audio/sfx/foley/surfaces/wet_mud_5.wav" id="a7_5"]
+[ext_resource type="AudioStream" path="res://audio/sfx/foley/surfaces/wet_mud_6.wav" id="a7_6"]
+[ext_resource type="AudioStream" path="res://audio/sfx/foley/surfaces/dirt_1.wav" id="a8_1"]
+[ext_resource type="AudioStream" path="res://audio/sfx/foley/surfaces/dirt_2.wav" id="a8_2"]
+[ext_resource type="AudioStream" path="res://audio/sfx/foley/surfaces/dirt_3.wav" id="a8_3"]
+[ext_resource type="AudioStream" path="res://audio/sfx/foley/surfaces/dirt_4.wav" id="a8_4"]
+[ext_resource type="AudioStream" path="res://audio/sfx/foley/surfaces/ballast_1.wav" id="a9_1"]
+[ext_resource type="AudioStream" path="res://audio/sfx/foley/surfaces/ballast_2.wav" id="a9_2"]
+[ext_resource type="AudioStream" path="res://audio/sfx/foley/surfaces/ballast_3.wav" id="a9_3"]
+[ext_resource type="AudioStream" path="res://audio/sfx/foley/surfaces/ballast_4.wav" id="a9_4"]
+[ext_resource type="AudioStream" path="res://audio/sfx/foley/surfaces/rail_1.wav" id="a10_1"]
+[ext_resource type="AudioStream" path="res://audio/sfx/foley/surfaces/rail_2.wav" id="a10_2"]
+[ext_resource type="AudioStream" path="res://audio/sfx/foley/surfaces/rail_3.wav" id="a10_3"]
+[ext_resource type="AudioStream" path="res://audio/sfx/foley/surfaces/rail_4.wav" id="a10_4"]
+[ext_resource type="AudioStream" path="res://audio/sfx/foley/surfaces/stone_1.wav" id="a11_1"]
+[ext_resource type="AudioStream" path="res://audio/sfx/foley/surfaces/stone_2.wav" id="a11_2"]
+[ext_resource type="AudioStream" path="res://audio/sfx/foley/surfaces/stone_3.wav" id="a11_3"]
+[ext_resource type="AudioStream" path="res://audio/sfx/foley/surfaces/stone_4.wav" id="a11_4"]
+
+[sub_resource type="Resource" id="Bank_wood_office"]
+script = ExtResource("2_bank")
+surface = &"wood_office"
+streams = [ExtResource("a1_1"), ExtResource("a1_2"), ExtResource("a1_3"), ExtResource("a1_4"), ExtResource("a1_5")]
+volume_offset_db = 0.00
+pitch_center = 1.00
+pitch_jitter = 0.020
+
+[sub_resource type="Resource" id="Bank_wood_saloon"]
+script = ExtResource("2_bank")
+surface = &"wood_saloon"
+streams = [ExtResource("a2_1"), ExtResource("a2_2"), ExtResource("a2_3"), ExtResource("a2_4")]
+volume_offset_db = -1.4
+pitch_center = 1.00
+pitch_jitter = 0.020
+
+[sub_resource type="Resource" id="Bank_boardwalk"]
+script = ExtResource("2_bank")
+surface = &"boardwalk"
+streams = [ExtResource("a3_1"), ExtResource("a3_2"), ExtResource("a3_3")]
+volume_offset_db = -2.3
+pitch_center = 1.00
+pitch_jitter = 0.025
+
+[sub_resource type="Resource" id="Bank_wood_bridge"]
+script = ExtResource("2_bank")
+surface = &"wood_bridge"
+streams = [ExtResource("a4_1"), ExtResource("a4_2"), ExtResource("a4_3")]
+volume_offset_db = -3.5
+pitch_center = 0.98
+pitch_jitter = 0.020
+
+[sub_resource type="Resource" id="Bank_stairs"]
+script = ExtResource("2_bank")
+surface = &"stairs"
+streams = [ExtResource("a5_1"), ExtResource("a5_2"), ExtResource("a5_3")]
+volume_offset_db = -3.0
+pitch_center = 1.02
+pitch_jitter = 0.020
+
+[sub_resource type="Resource" id="Bank_carpet"]
+script = ExtResource("2_bank")
+surface = &"carpet"
+streams = [ExtResource("a6_1"), ExtResource("a6_2"), ExtResource("a6_3"), ExtResource("a6_4")]
+volume_offset_db = -1.4
+pitch_center = 1.00
+pitch_jitter = 0.015
+
+[sub_resource type="Resource" id="Bank_wet_mud"]
+script = ExtResource("2_bank")
+surface = &"wet_mud"
+streams = [ExtResource("a7_1"), ExtResource("a7_2"), ExtResource("a7_3"), ExtResource("a7_4"), ExtResource("a7_5"), ExtResource("a7_6")]
+volume_offset_db = 0.0
+pitch_center = 0.97
+pitch_jitter = 0.030
+
+[sub_resource type="Resource" id="Bank_dirt"]
+script = ExtResource("2_bank")
+surface = &"dirt"
+streams = [ExtResource("a8_1"), ExtResource("a8_2"), ExtResource("a8_3"), ExtResource("a8_4")]
+volume_offset_db = 0.0
+pitch_center = 1.00
+pitch_jitter = 0.025
+
+[sub_resource type="Resource" id="Bank_ballast"]
+script = ExtResource("2_bank")
+surface = &"ballast"
+streams = [ExtResource("a9_1"), ExtResource("a9_2"), ExtResource("a9_3"), ExtResource("a9_4")]
+volume_offset_db = 0.0
+pitch_center = 1.00
+pitch_jitter = 0.030
+
+[sub_resource type="Resource" id="Bank_rail"]
+script = ExtResource("2_bank")
+surface = &"rail"
+streams = [ExtResource("a10_1"), ExtResource("a10_2"), ExtResource("a10_3"), ExtResource("a10_4")]
+volume_offset_db = 0.0
+pitch_center = 1.04
+pitch_jitter = 0.020
+
+[sub_resource type="Resource" id="Bank_stone"]
+script = ExtResource("2_bank")
+surface = &"stone"
+streams = [ExtResource("a11_1"), ExtResource("a11_2"), ExtResource("a11_3"), ExtResource("a11_4")]
+volume_offset_db = -0.8
+pitch_center = 1.00
+pitch_jitter = 0.020
+
+[resource]
+script = ExtResource("1_config")
+banks = [SubResource("Bank_wood_office"), SubResource("Bank_wood_saloon"), SubResource("Bank_boardwalk"), SubResource("Bank_wood_bridge"), SubResource("Bank_stairs"), SubResource("Bank_carpet"), SubResource("Bank_wet_mud"), SubResource("Bank_dirt"), SubResource("Bank_ballast"), SubResource("Bank_rail"), SubResource("Bank_stone")]
+indoor_surface = &"wood_office"
+outdoor_surface = &"dirt"
+fallback_surface = &"wood_office"

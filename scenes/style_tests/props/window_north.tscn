@@ -44,19 +44,11 @@ cast_shadow = 0
 size = Vector3(1.6, 1.22, 0.02)
 material = ExtResource("2_glass")
 
-; The sash is glazed two over two (owner's choice, 2026-10-30): a meeting rail
-; across the middle and one muntin down it, just proud of the glass on the
-; room side. They cast shadows, so the moon lays a cross on the floor, and the
-; figure is seen partly through the bars. No collision: the observation rays
-; pass the column at x = 0 untouched.
+; The two sashes meet horizontally. Each uses a continuous sheet so the
+; operator keeps a clear sightline through the centre of the opening.
 [node name="MeetingRail" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.055)
 size = Vector3(1.42, 0.034, 0.03)
-material = ExtResource("1_trim")
-
-[node name="Muntin" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.055)
-size = Vector3(0.02, 1.2, 0.026)
 material = ExtResource("1_trim")
 
 ; CSG frame, sash, sill and blind, hidden: the authored mesh carries them now.

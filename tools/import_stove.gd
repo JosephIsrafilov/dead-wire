@@ -1,6 +1,7 @@
 extends SceneTree
 ## Import the Blender-authored CornerStove assembly and bind its nearest-filtered 256px atlas.
 const OUT := "res://assets/models/stove_v1/"
+const ATLAS_MATERIAL := preload("res://tools/office_atlas_material.gd")
 
 func _initialize() -> void:
 	_run.call_deferred()
@@ -31,14 +32,13 @@ func _run() -> void:
 		var key := imported.resource_name if imported != null else "dw_stove_iron"
 		var mat := StandardMaterial3D.new()
 		mat.resource_name = key
-		mat.albedo_texture = atlas
-		mat.albedo_color = Color.WHITE
-		mat.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
-		mat.shading_mode = BaseMaterial3D.SHADING_MODE_PER_VERTEX
-		mat.roughness = 0.68 if key.contains("brass") else 0.92
-		mat.metallic = 0.45 if (key.contains("iron") or key.contains("brass")) else 0.0
-		mat.metallic_specular = 0.15
-		mat.normal_enabled = false
+		ATLAS_MATERIAL.apply(mat, atlas, key)
+		if key.contains("iron"):
+			mat.albedo_color = Color(0.37, 0.36, 0.35)
+			mat.metallic = 0.47
+			mat.metallic_specular = 0.13
+		elif key.contains("brick"):
+			mat.albedo_color = Color(0.60, 0.68, 0.70)
 		mesh.surface_set_material(index, mat)
 	var err := ResourceSaver.save(mesh, OUT + "stove_static.res")
 	var glb_counts := _mesh_counts(source.mesh as ArrayMesh)

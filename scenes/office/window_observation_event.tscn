@@ -1,145 +1,63 @@
-[gd_scene load_steps=12 format=3 uid="uid://b1winobs001"]
+[gd_scene load_steps=6 format=3 uid="uid://b1winobs001"]
 
 [ext_resource type="Script" path="res://scripts/events/attention_observation_target.gd" id="1_obs"]
-[ext_resource type="Shader" path="res://materials/shaders/figure_moon_rim.gdshader" id="2_rim"]
+[ext_resource type="ArrayMesh" path="res://assets/models/window_figure_v1/figure_coat.res" id="2_coat"]
+[ext_resource type="ArrayMesh" path="res://assets/models/window_figure_v1/figure_head.res" id="3_head"]
+[ext_resource type="ArrayMesh" path="res://assets/models/window_figure_v1/figure_hat.res" id="4_hat"]
+[ext_resource type="ArrayMesh" path="res://assets/models/window_figure_v1/figure_eye_glints.res" id="5_glints"]
 
-[sub_resource type="ShaderMaterial" id="FigureCloth"]
-render_priority = 0
-shader = ExtResource("2_rim")
-shader_parameter/core_color = Color(0.012, 0.015, 0.022, 1)
-shader_parameter/rim_color = Color(0.22, 0.32, 0.48, 1)
-shader_parameter/rim_power = 3.2
-shader_parameter/rim_strength = 0.32
-
-[sub_resource type="ShaderMaterial" id="FigureHat"]
-render_priority = 0
-shader = ExtResource("2_rim")
-shader_parameter/core_color = Color(0.009, 0.012, 0.018, 1)
-shader_parameter/rim_color = Color(0.26, 0.38, 0.56, 1)
-shader_parameter/rim_power = 2.8
-shader_parameter/rim_strength = 0.40
-
-[sub_resource type="CylinderMesh" id="CoatMesh"]
-material = SubResource("FigureCloth")
-top_radius = 0.205
-bottom_radius = 0.285
-height = 1.04
-radial_segments = 12
-rings = 1
-
-[sub_resource type="SphereMesh" id="HeadMesh"]
-material = SubResource("FigureCloth")
-radius = 0.115
-height = 0.25
-radial_segments = 14
-rings = 8
-
-[sub_resource type="CylinderMesh" id="NeckMesh"]
-material = SubResource("FigureCloth")
-top_radius = 0.056
-bottom_radius = 0.072
-height = 0.10
-radial_segments = 10
-rings = 1
-
-[sub_resource type="CapsuleMesh" id="ShoulderMesh"]
-material = SubResource("FigureCloth")
-radius = 0.105
-height = 0.46
-radial_segments = 10
-rings = 6
-
-[sub_resource type="CylinderMesh" id="HatBrimMesh"]
-material = SubResource("FigureHat")
-top_radius = 0.215
-bottom_radius = 0.22
-height = 0.026
-radial_segments = 14
-rings = 1
-
-[sub_resource type="CylinderMesh" id="HatCrownMesh"]
-material = SubResource("FigureHat")
-top_radius = 0.115
-bottom_radius = 0.135
-height = 0.145
-radial_segments = 14
-rings = 1
+; The man behind the north window (Stage 1.1). Authored in Blender by
+; tools/build_window_figure_blender.py, imported by tools/import_window_figure.gd.
+;
+; Why four meshes and not one. The GDD 10 contract needs the head to move on its
+; own - a permanent twenty degree list, and a four degree tick after 1.8 s of
+; being looked at - while the body stays dead still. So Coat hangs off
+; VisualIndicator, and Head and HatBrim are two children of VisualIndicator that
+; share one neck pivot and are always written together. EyeGlints is parented
+; under Head, so the four facets in the sockets travel with the face.
+;
+; The contract names other code depends on:
+;   VisualIndicator   what is shown and hidden, and whose subtree defines the
+;                     silhouette AABB the frustum test uses
+;   Coat              MeshInstance3D, authored ArrayMesh, the standing body
+;   Head              MeshInstance3D, authored ArrayMesh, at the neck pivot
+;   HatBrim           MeshInstance3D, authored ArrayMesh, at the same pivot
+; and there is no ShimmerLight and no Light3D anywhere in this subtree: a light
+; here would be a lamp standing in the yard, and the yard has had none since the
+; mine shut in 1885.
+;
+; The meshes are authored with the boot soles at y = -0.94 in figure-local space,
+; so the node's own origin stands on the ground wherever it is placed - the
+; office and the title diorama both put its feet on the yard at y = 0.96.
+;
+; use_stage_positions stays OFF here: the title diorama places this scene by hand
+; and must not be walked to Stage B. The office turns it on in its own instance.
 
 [node name="WindowObservationEvent" type="Node3D"]
 script = ExtResource("1_obs")
+max_distance = 18.0
+far_stage_position = Vector3(-1.42, 0.965, -11.4)
+close_stage_position = Vector3(-1.08, 0.965, -3.86)
 
 [node name="VisualIndicator" type="Node3D" parent="."]
 visible = false
-rotation = Vector3(0, -0.18, 0)
 
 [node name="Coat" type="MeshInstance3D" parent="VisualIndicator"]
 cast_shadow = 0
-position = Vector3(0, -0.16, 0)
-mesh = SubResource("CoatMesh")
-
-[node name="LegLeft" type="CSGBox3D" parent="VisualIndicator"]
-cast_shadow = 0
-position = Vector3(-0.085, -0.77, 0.02)
-size = Vector3(0.1, 0.32, 0.11)
-material = SubResource("FigureCloth")
-
-[node name="LegRight" type="CSGBox3D" parent="VisualIndicator"]
-cast_shadow = 0
-position = Vector3(0.085, -0.77, -0.02)
-size = Vector3(0.1, 0.32, 0.11)
-material = SubResource("FigureCloth")
-
-[node name="BootLeft" type="CSGBox3D" parent="VisualIndicator"]
-cast_shadow = 0
-position = Vector3(-0.085, -0.905, 0.05)
-size = Vector3(0.12, 0.07, 0.24)
-material = SubResource("FigureHat")
-
-[node name="BootRight" type="CSGBox3D" parent="VisualIndicator"]
-cast_shadow = 0
-position = Vector3(0.085, -0.905, 0.0)
-size = Vector3(0.12, 0.07, 0.24)
-material = SubResource("FigureHat")
+mesh = ExtResource("2_coat")
 
 [node name="Head" type="MeshInstance3D" parent="VisualIndicator"]
 cast_shadow = 0
-position = Vector3(0, 0.54, 0.01)
-rotation = Vector3(0.06, 0, 0.05)
-mesh = SubResource("HeadMesh")
+position = Vector3(0, 0.545, 0.012)
+rotation = Vector3(0, 0, 0.3490658)
+mesh = ExtResource("3_head")
 
-[node name="Neck" type="MeshInstance3D" parent="VisualIndicator"]
+[node name="EyeGlints" type="MeshInstance3D" parent="VisualIndicator/Head"]
 cast_shadow = 0
-position = Vector3(0, 0.415, 0)
-mesh = SubResource("NeckMesh")
-
-[node name="Shoulders" type="MeshInstance3D" parent="VisualIndicator"]
-cast_shadow = 0
-position = Vector3(0, 0.325, 0)
-rotation = Vector3(0, 0, 1.5707963)
-mesh = SubResource("ShoulderMesh")
-
-[node name="LeftArm" type="CSGBox3D" parent="VisualIndicator"]
-cast_shadow = 0
-position = Vector3(-0.225, 0.04, 0.01)
-rotation = Vector3(0, 0, -0.06)
-size = Vector3(0.10, 0.54, 0.13)
-material = SubResource("FigureCloth")
-
-[node name="RightArm" type="CSGBox3D" parent="VisualIndicator"]
-cast_shadow = 0
-position = Vector3(0.225, 0.05, 0.02)
-rotation = Vector3(0, 0, 0.06)
-size = Vector3(0.10, 0.52, 0.13)
-material = SubResource("FigureCloth")
+mesh = ExtResource("5_glints")
 
 [node name="HatBrim" type="MeshInstance3D" parent="VisualIndicator"]
 cast_shadow = 0
-position = Vector3(0, 0.645, 0.015)
-rotation = Vector3(0.08, 0, 0.04)
-mesh = SubResource("HatBrimMesh")
-
-[node name="HatCrown" type="MeshInstance3D" parent="VisualIndicator"]
-cast_shadow = 0
-position = Vector3(0, 0.72, 0.015)
-rotation = Vector3(0.08, 0, 0.04)
-mesh = SubResource("HatCrownMesh")
+position = Vector3(0, 0.545, 0.012)
+rotation = Vector3(0, 0, 0.3490658)
+mesh = ExtResource("4_hat")

@@ -38,6 +38,7 @@ static func duty_texts(
 		return {"primary": primary, "sub": sub}
 
 	var director := office.shift_director
+	var slot := director.get_slot_index() if director != null else -1
 	var session := office.session_controller
 	var lamp_life := office.get_node_or_null("LampLife") as LampLife
 	if director != null and director.is_shift_over():
@@ -73,74 +74,38 @@ static func duty_texts(
 			"• You may stand [Tab] now · Once you open the line, you cannot leave the desk until dawn"
 		)
 	elif director != null and director.get_phase() == ShiftDirector.Phase.CALLING:
-		primary = GameLocale.pick(
-			"ВЫЗОВ — Нажмите телеграфный ключ%s",
-			"INCOMING CALL — Click the brass key%s to answer"
-		) % ("" if current_view == view_enum.DESK else " [W]")
+		primary = GameLocale.pick("1. Ответьте ключом%s", "1. Answer on the key%s") if slot == 0 \
+			else GameLocale.pick("ВЫЗОВ — Ответьте ключом%s", "CALL — Answer on the key%s")
+		primary = primary % ("" if current_view == view_enum.DESK else " [W]")
 	elif director != null and director.get_phase() == ShiftDirector.Phase.ANSWERING:
 		primary = GameLocale.pick("ОТВЕТ ПРИНЯТ — Ждите передачу...", "LINE ANSWERED — Sender coming in...")
 	elif session != null:
 		match session.get_state():
 			TelegraphSessionController.State.RECEIVING:
-				primary = GameLocale.pick(
-					"ПРИЁМ — Слушайте саундер; рука записывает",
-					"COPYING INCOMING — Listen to the sounder; wait for pen to finish"
-				)
+				primary = GameLocale.pick("ИДЁТ ПРИЁМ — Слушайте клопфер", "RECEIVING — Listen to the sounder")
 			TelegraphSessionController.State.COPYING:
-				primary = GameLocale.pick(
-					"ДОПИСЫВАЕТ — Подождите, пока перо поднимется",
-					"FINISHING COPY — Wait for the pen to lift"
-				)
+				primary = GameLocale.pick("ДОПИСЫВАЕТ — Дождитесь пера", "FINISHING COPY — Wait for the pen")
 			TelegraphSessionController.State.VERIFYING:
-				primary = GameLocale.pick(
-					"ЗАПИСЬ ГОТОВА — Нажмите на лист%s для проверки",
-					"COPY COMPLETE — Click the clipboard sheet%s to read & verify"
-				) % ("" if current_view == view_enum.DESK else " [W]")
+				primary = GameLocale.pick("2. Прочтите лист%s", "2. Read the copy%s") if slot == 0 \
+					else GameLocale.pick("КОПИЯ ГОТОВА — Прочтите лист%s", "COPY READY — Read the sheet%s")
+				primary = primary % ("" if current_view == view_enum.DESK else " [W]")
 			TelegraphSessionController.State.AWAITING_ROUTE:
-				if current_view != view_enum.LEFT_SIGNAL:
-					primary = GameLocale.pick(
-						"ПРИКАЗ ЖДЁТ — Повернитесь налево [A] к рычагу сигнала",
-						"ORDER PENDING — Look left [A] and pull CLEAR EAST or HOLD"
-					)
-				else:
-					primary = GameLocale.pick(
-						"ПРИКАЗ ЖДЁТ — Выберите ПРОПУСТИТЬ или ДЕРЖАТЬ на рычаге",
-						"ORDER PENDING — Click CLEAR EAST or HOLD on the lever"
-					)
+				primary = GameLocale.pick("3. Выставьте рычаг%s", "3. Set the signal%s") if slot == 0 \
+					else GameLocale.pick("ПРИКАЗ ЖДЁТ — Выставьте рычаг%s", "ORDER PENDING — Set the signal%s")
+				primary = primary % ("" if current_view == view_enum.LEFT_SIGNAL else " [A]")
 			TelegraphSessionController.State.AWAITING_COMMIT:
-				if office.get_pending_correction().is_empty() and _slot_allows_correction(session):
-					if current_view != view_enum.RIGHT_FILING:
-						primary = GameLocale.pick(
-							"ПОДШИВКА — Поставьте печать справа [D]",
-							"FILE COPY — Pen lower sheet or stamp ORIGINAL [D]"
-						)
-					else:
-						primary = GameLocale.pick(
-							"ПОДШИВКА — Нажмите печать на столе",
-							"FILE COPY — Stamp the copy on the desk"
-						)
-					sub = GameLocale.pick(
-						"• Нужна правка — возьмите перо внизу листа [W]",
-						"• To amend the copy — click the pen on the lower sheet [W]"
-					)
-				else:
-					if current_view != view_enum.RIGHT_FILING:
-						primary = GameLocale.pick(
-							"ПОДШИВКА — Повернитесь направо [D] и поставьте печать",
-							"FILE COPY — Look right [D] and stamp the copy"
-						)
-					else:
-						primary = GameLocale.pick(
-							"ПОДШИВКА — Поставьте печать на копию",
-							"FILE COPY — Stamp the copy"
-						)
+				primary = GameLocale.pick("4. Подшейте копию%s", "4. File the copy%s") if slot == 0 \
+					else GameLocale.pick("ПОДШИВКА — Поставьте печать%s", "FILING — Stamp the copy%s")
+				primary = primary % ("" if current_view == view_enum.RIGHT_FILING else " [D]")
 			TelegraphSessionController.State.CONSEQUENCE:
 				primary = GameLocale.pick("ПОДШИТО — Следите за двором", "ORDER FILED — Watch the night outside")
 
 	var warning := session.get_deadline_warning_text() if session != null else ""
 	var shutter := office.get_node_or_null("ServiceShutterEvent")
 	var reg := session.get_tape_register() if session != null else null
-	if not warning.is_empty():
+	if session != null and NightGuidanceController.wire_busy(session):
+		sub = ""
+	elif not warning.is_empty():
 		sub = "• %s" % warning
 	elif not post_lock_notice.is_empty():
 		sub = "• %s" % post_lock_notice
@@ -153,6 +118,12 @@ static func duty_texts(
 		sub = GameLocale.pick(
 			"• Регистр замедляется — заведите ручкой справа на столе",
 			"• Tape register slowing — click its side crank on the desk to wind"
+		)
+	elif slot == 2 and session != null and session.get_state() == TelegraphSessionController.State.AWAITING_COMMIT \
+			and office.get_pending_correction().is_empty():
+		sub = GameLocale.pick(
+			"• Лента у ключа хранит запись ударов · Перо для правки лежит внизу бланка [W]",
+			"• The tape beside the key holds the raw marks · Correction pen rests at the foot of the sheet [W]"
 		)
 
 	return {"primary": primary, "sub": sub}
@@ -189,12 +160,3 @@ static func cursor_label(office: M1OfficeController, target: Interactable) -> St
 	if pname == "RoutingBoard" and not target.is_actionable:
 		return GameLocale.pick("Поездной сигнал (%s)", "Train-Order Signal (%s)") % raw
 	return raw
-
-static func _slot_allows_correction(session: TelegraphSessionController) -> bool:
-	var scen := session.get_current_scenario() if session != null else null
-	if scen == null:
-		return false
-	for opt in scen.commit_options:
-		if opt != null and opt.requires_correction:
-			return true
-	return false

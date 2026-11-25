@@ -4,26 +4,27 @@
   "atlas": "res://assets/textures/instruments_v1/instrument_atlas_256.png",
   "assemblies": {
     "key_static": {
-      "triangles": 708,
-      "vertices": 400,
+      "triangles": 928,
+      "vertices": 524,
       "materials": [
         "dw_wood",
         "dw_brass",
         "dw_ebonite",
-        "dw_iron"
+        "dw_iron",
+        "dw_coil"
       ]
     },
     "key_lever": {
-      "triangles": 256,
-      "vertices": 140,
+      "triangles": 512,
+      "vertices": 300,
       "materials": [
         "dw_brass",
         "dw_ebonite"
       ]
     },
     "sounder_static": {
-      "triangles": 1004,
-      "vertices": 560,
+      "triangles": 1564,
+      "vertices": 904,
       "materials": [
         "dw_wood",
         "dw_brass",
@@ -42,12 +43,13 @@
       ]
     },
     "register_static": {
-      "triangles": 904,
-      "vertices": 508,
+      "triangles": 2732,
+      "vertices": 1620,
       "materials": [
         "dw_wood",
         "dw_brass",
         "dw_ebonite",
+        "dw_register_glass",
         "dw_iron"
       ]
     },
@@ -68,7 +70,7 @@
       ]
     }
   },
-  "total_triangles": 3332,
+  "total_triangles": 6196,
   "reference_urls": [
     "https://americanhistory.si.edu/collections/object/nmah_706904",
     "https://americanhistory.si.edu/collections/object/nmah_712418",

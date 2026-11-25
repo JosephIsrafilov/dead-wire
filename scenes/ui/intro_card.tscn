@@ -1,8 +1,13 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://scripts/ui/intro_card.gd" id="1_intro"]
-
 [ext_resource type="AudioStream" path="res://audio/music/intro_drone.wav" id="2_music"]
+[ext_resource type="FontFile" path="res://assets/fonts/imfell/IMFeENrm28P.ttf" id="3_display"]
+[ext_resource type="FontFile" path="res://assets/fonts/oldstandard/OldStandardTT-Regular.ttf" id="4_serif"]
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_intro"]
+color = Color(0.62, 0.50, 0.30, 0.65)
+thickness = 1
 
 [node name="IntroCard" type="CanvasLayer"]
 layer = 25
@@ -14,7 +19,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0, 0, 0, 1)
+color = Color(0.015, 0.013, 0.014, 1)
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
 anchors_preset = 15
@@ -24,26 +29,29 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
-custom_minimum_size = Vector2(640, 0)
+custom_minimum_size = Vector2(680, 0)
 layout_mode = 2
-theme_override_constants/separation = 16
+theme_override_constants/separation = 18
 
 [node name="PlaceLabel" type="Label" parent="CenterContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.84, 0.77, 0.6, 1)
-theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(0.92, 0.85, 0.68, 1)
+theme_override_fonts/font = ExtResource("3_display")
+theme_override_font_sizes/font_size = 28
 text = "BLACK CREEK, COLORADO
 APRIL 1890"
 horizontal_alignment = 1
 
 [node name="HSeparator" type="HSeparator" parent="CenterContainer/VBoxContainer"]
 layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_intro")
 
 [node name="OrderLabel" type="RichTextLabel" parent="CenterContainer/VBoxContainer"]
-custom_minimum_size = Vector2(620, 160)
+custom_minimum_size = Vector2(660, 165)
 layout_mode = 2
-theme_override_colors/default_color = Color(0.66, 0.61, 0.51, 1)
-theme_override_font_sizes/normal_font_size = 15
+theme_override_colors/default_color = Color(0.78, 0.72, 0.60, 1)
+theme_override_fonts/normal_font = ExtResource("4_serif")
+theme_override_font_sizes/normal_font_size = 16
 bbcode_enabled = false
 text = "BLACK CREEK & WESTERN RY. — TELEGRAPH DEPT. — ORDER 41
 
@@ -55,13 +63,14 @@ fit_content = true
 
 [node name="HintLabel" type="Label" parent="CenterContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.38, 0.35, 0.29, 1)
+theme_override_colors/font_color = Color(0.50, 0.45, 0.36, 0.92)
+theme_override_fonts/font = ExtResource("4_serif")
 theme_override_font_sizes/font_size = 12
 text = "any key or click to continue"
 horizontal_alignment = 1
 
 [node name="IntroMusic" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("2_music")
-volume_db = -20.0
+volume_db = -14.0
 bus = &"Music"
 

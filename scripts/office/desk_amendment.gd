@@ -20,6 +20,7 @@ var _requested: int = 0
 var _finishing: bool = false
 var _saved_word: String = ""
 var _target: Interactable = null
+var _resting_pen: Node3D
 var _cramp_hold: float = 0.0
 var _cramp_triggered_once: bool = false
 var _cramp_player: AudioStreamPlayer = null
@@ -52,6 +53,7 @@ func _build_target() -> void:
 	_target.position = Vector3(0.0, 0.016, 0.095)
 	_target.interacted.connect(begin)
 	paper.add_child(_target)
+	_resting_pen = paper.get_node_or_null("RestingPen") as Node3D
 
 func get_pending(scenario_id: String) -> String:
 	return str(_pending.get(scenario_id, ""))
@@ -113,6 +115,8 @@ func _process(delta: float) -> void:
 		# An off target leaves the ray's layer, so reading the copy is never
 		# intercepted by a pen that cannot be taken up.
 		_target.collision_layer = 2 if open else 0
+		if _resting_pen != null:
+			_resting_pen.visible = open
 	if writing:
 		advance(delta)
 

@@ -29,7 +29,9 @@ const CYLINDER_OUTLET := Vector3(1.88, 0.89, 0.0)
 
 @export var data: DawnTrainData = preload("res://data/night/dawn_train.tres")
 ## The main line runs across the view, this far out.
-@export var line_z: float = -18.0
+const RAIL_LAYOUT := preload("res://scripts/town/black_creek_rail_layout.gd")
+
+@export var line_z: float = RAIL_LAYOUT.OFFICE_MAIN_LINE_Z
 @export var start_x: float = -70.0
 @export var end_x: float = 80.0
 ## Where a held No. 17 comes to a stand: by the points.

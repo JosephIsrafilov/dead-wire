@@ -24,16 +24,21 @@ func _init() -> void:
 		var normals := PackedVector3Array()
 		var tangents := PackedFloat32Array()
 		var uvs := PackedVector2Array()
+		var colors := PackedColorArray()
 		for idx in kept:
 			positions.append(arrays[Mesh.ARRAY_VERTEX][idx])
 			normals.append(arrays[Mesh.ARRAY_NORMAL][idx])
 			uvs.append(arrays[Mesh.ARRAY_TEX_UV][idx])
+			if arrays[Mesh.ARRAY_COLOR] != null:
+				colors.append(arrays[Mesh.ARRAY_COLOR][idx])
 			for component in 4:
 				tangents.append(arrays[Mesh.ARRAY_TANGENT][idx * 4 + component])
 		compact[Mesh.ARRAY_VERTEX] = positions
 		compact[Mesh.ARRAY_NORMAL] = normals
 		compact[Mesh.ARRAY_TANGENT] = tangents
 		compact[Mesh.ARRAY_TEX_UV] = uvs
+		if not colors.is_empty():
+			compact[Mesh.ARRAY_COLOR] = colors
 		arrays = compact
 		out.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
 		out.surface_set_material(out.get_surface_count() - 1, source.surface_get_material(surface))

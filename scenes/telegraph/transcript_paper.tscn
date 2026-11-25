@@ -11,6 +11,7 @@
 [ext_resource type="Material" path="res://materials/style_tests/form_night_copy.tres" id="11_form"]
 [ext_resource type="Material" path="res://materials/style_tests/desk_wood.tres" id="12_wood"]
 [ext_resource type="ArrayMesh" path="res://assets/models/operator/forearm_v3.res" id="8_sleeve"]
+[ext_resource type="Material" path="res://materials/style_tests/writer_sleeve.tres" id="8_wool"]
 [ext_resource type="ArrayMesh" path="res://assets/models/operator/cuff_v3.res" id="9_cuff"]
 [ext_resource type="ArrayMesh" path="res://assets/models/operator/upper_arm_v1.res" id="13_upper"]
 [ext_resource type="Script" path="res://scripts/telegraph/ui/wet_ink.gd" id="14_wet"]
@@ -150,6 +151,19 @@ prompt_text = "Read the Copy"
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.005, 0)
 shape = SubResource("BoxShape3D_interact")
 
+[node name="RestingPen" type="Node3D" parent="."]
+visible = false
+position = Vector3(0.025, 0.013, 0.095)
+rotation = Vector3(0, 0, 1.5707963)
+
+[node name="Shaft" type="MeshInstance3D" parent="RestingPen"]
+position = Vector3(0, 0.03, 0)
+mesh = SubResource("CylinderMesh_pen")
+
+[node name="Nib" type="MeshInstance3D" parent="RestingPen"]
+position = Vector3(0, -0.058, 0)
+mesh = SubResource("CylinderMesh_nib")
+
 [node name="WriterRig" type="Node3D" parent="."]
 script = ExtResource("4_rig")
 wrist_travel_limit = 0.006
@@ -200,6 +214,7 @@ rotation = Vector3(0.18, 0.0, 0.10)
 
 [node name="SleeveMesh" type="MeshInstance3D" parent="WriterRig/Sleeve"]
 layers = 2
+material_override = ExtResource("8_wool")
 material_overlay = SubResource("ArmIntoDark")
 mesh = ExtResource("8_sleeve")
 
@@ -244,6 +259,7 @@ cull_mask = 2
 [node name="ElbowAnchor" type="Marker3D" parent="WriterRig/Sleeve"]
 
 [node name="UpperArm" type="MeshInstance3D" parent="WriterRig"]
+material_override = ExtResource("8_wool")
 layers = 2
 material_overlay = SubResource("ArmIntoDark")
 mesh = ExtResource("13_upper")

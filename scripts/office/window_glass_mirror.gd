@@ -46,8 +46,8 @@ static func apply_to(material: StandardMaterial3D, visibility: float) -> void:
 	var dark_mirror := Color(0.24, 0.17, 0.11, 0.93)
 	material.albedo_color = clear.lerp(dark_mirror, m)
 	material.metallic = lerpf(0.0, 0.45, m)
-	material.roughness = lerpf(0.72, 0.24, m)
-	material.metallic_specular = lerpf(0.07, 0.6, m)
+	material.roughness = lerpf(0.72, 0.33, m)
+	material.metallic_specular = lerpf(0.07, 0.43, m)
 
 func _ready() -> void:
 	if office == null:
@@ -96,7 +96,10 @@ func _process(_delta: float) -> void:
 	var lean := _player.get_lean_weight() * near if _player != null else 0.0
 	yard_visibility_now = yard_visibility(wick, lean)
 	if _figure != null:
-		_figure.view_obscured = yard_visibility_now < mirror_hides_below
+		var threshold := mirror_hides_below
+		if _figure.has_method("get_stage") and int(_figure.call("get_stage")) == 0:
+			threshold = minf(mirror_hides_below, 0.22)
+		_figure.view_obscured = yard_visibility_now < threshold
 	if absf(yard_visibility_now - _applied_visibility) < VISIBILITY_STEP:
 		return
 	_applied_visibility = yard_visibility_now

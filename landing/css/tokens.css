@@ -1,0 +1,100 @@
+/* FORM 19 — 1890s Frontier Archival Design Tokens */
+
+@font-face {
+  font-family: "Old Standard TT";
+  src: url("../fonts/OldStandardTT-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Old Standard TT";
+  src: url("../fonts/OldStandardTT-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "IM Fell English";
+  src: url("../fonts/IMFeENrm28P.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Courier Prime";
+  src: url("../fonts/CourierPrime-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Cedarville Cursive";
+  src: url("../fonts/Cedarville-Cursive.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* Night Station Polarity (Default) */
+  --bg-void: #090806;
+  --bg-walnut: #14100c;
+  --bg-panel: #19140f;
+  --bg-panel-elevated: #211a13;
+  --bg-slate: #10161e;
+
+  --paper: #ebe0c6;
+  --paper-aged: #dccba7;
+  --paper-rule: rgba(58, 43, 27, 0.22);
+  --paper-margin: rgba(140, 48, 38, 0.34);
+
+  --ink-light: #efe5cf;
+  --ink-warm: #d4c6aa;
+  --ink-muted: #a99b82;
+  --ink-faint: #7b6f5c;
+  --ink-dark: #1a1510;
+  --ink-dark-soft: #4e4131;
+
+  --brass: #c9a05d;
+  --brass-bright: #ebd096;
+  --brass-dim: rgba(201, 160, 93, 0.34);
+  --brass-soft: rgba(201, 160, 93, 0.14);
+
+  --wax: #6d1f1d;
+  --wax-bright: #a43831;
+  --baize: #152b20;
+  --baize-border: rgba(201, 160, 93, 0.28);
+
+  --line-soft: rgba(235, 224, 198, 0.11);
+  --line-mid: rgba(235, 224, 198, 0.20);
+
+  /* Sunlit Black Creek Polarity */
+  --day-bg: #efe3c8;
+  --day-surface: #e4d3ae;
+  --day-card: #f4ebd4;
+  --day-ink: #20170f;
+  --day-ink-soft: #4e3d2d;
+  --day-ochre: #87521e;
+  --day-sky: #284667;
+  --day-crimson: #6c2520;
+  --day-border: rgba(58, 40, 22, 0.22);
+
+  /* Typography */
+  --font-display: "Old Standard TT", "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  --font-period: "IM Fell English", "Old Standard TT", "Cormorant Garamond", Georgia, serif;
+  --font-body: "Old Standard TT", "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  --font-mono: "IBM Plex Mono", "Courier Prime", "Courier New", monospace;
+  --font-hand: "Caveat", "Cedarville Cursive", Georgia, cursive;
+
+  /* Spatial & Motion Rhythm */
+  --max-width: 1180px;
+  --topbar-h: 64px;
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --ease-mechanical: cubic-bezier(0.22, 1, 0.36, 1);
+}

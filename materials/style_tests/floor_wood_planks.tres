@@ -1,6 +1,8 @@
-[gd_resource type="StandardMaterial3D" load_steps=2 format=3]
+[gd_resource type="StandardMaterial3D" load_steps=4 format=3]
 
-[ext_resource type="Texture2D" path="res://materials/style_tests/textures/psx/psx_floor_worn_128.png" id="1_tex"]
+[ext_resource type="Texture2D" path="res://assets/textures/office_surfaces/floor_albedo.png" id="1_tex"]
+[ext_resource type="Texture2D" path="res://assets/textures/office_surfaces/floor_normal.png" id="2_normal"]
+[ext_resource type="Texture2D" path="res://assets/textures/office_surfaces/floor_roughness.png" id="3_rough"]
 
 ; Worn boarding, not clean boarding: uneven board tones, dark seams, iron nails
 ; with rust runs, a knot and a split board (tools/build_worn_floor.py).
@@ -11,10 +13,14 @@
 ; ran at 2.5 x 3.0, which made every board 0.6 m wide and the floor read as a
 ; print of four planks repeated.
 [resource]
-shading_mode = 1
-albedo_color = Color(0.72, 0.6, 0.46, 1)
+albedo_color = Color(0.58, 0.53, 0.45, 1)
 albedo_texture = ExtResource("1_tex")
-roughness = 0.92
+roughness = 0.91
 metallic_specular = 0.08
 uv1_scale = Vector3(10.785714, 8.642857, 1.0)
 texture_filter = 2
+normal_enabled = true
+normal_scale = 0.85
+normal_texture = ExtResource("2_normal")
+roughness_texture = ExtResource("3_rough")
+roughness_texture_channel = 0

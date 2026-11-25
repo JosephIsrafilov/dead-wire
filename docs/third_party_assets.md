@@ -16,10 +16,12 @@ The following Poly Haven textures are adapted under [CC0 1.0](https://polyhaven.
 | `roof` | [Roof Slates 02](https://polyhaven.com/a/roof_slates_02) | 512² |
 | `brick` | [Red Brick](https://polyhaven.com/a/red_brick) | 256² |
 | `stone` | [Old Stone Wall 02](https://polyhaven.com/a/old_stone_wall_02) | 256² |
-| `road` | [Gravelly Sand](https://polyhaven.com/a/gravelly_sand), with separate Godot wet-rut treatment | 512² |
+| `road` | [Brown Mud 02](https://polyhaven.com/a/brown_mud_02) (Rob Tuytel, CC0), graded warm toward spring Colorado clay; Godot wet-rut treatment on top | 512² |
 | `mahogany` | [Wood Cabinet Worn Long](https://polyhaven.com/a/wood_cabinet_worn_long), used as stained millwork | 256² |
 | `plaster` | [Worn Plaster Wall](https://polyhaven.com/a/worn_plaster_wall) | 256² |
 | `iron` | [Rusty Metal 02](https://polyhaven.com/a/rusty_metal_02) | 256² |
+| `clay` | [Brown Mud 03](https://polyhaven.com/a/brown_mud_03) (Rob Tuytel, CC0), rut silt trampled to a slick skin | 256² |
+| `slag` | [Burned Ground 01](https://polyhaven.com/a/burned_ground_01) (Rob Tuytel, CC0), boiler slag spread as depot and MJ ballast | 256² |
 
 The prints in `assets/textures/town_v2/print/` are original fictional period artwork, rasterized with `tools/generate_black_creek_print.py`, not archive scans. The added [Rye font](https://github.com/google/fonts/tree/main/ofl/rye) is SIL OFL 1.1; its license ships in `assets/fonts/rye/OFL.txt`.
 
@@ -50,7 +52,39 @@ the synthesised beds themselves are unchanged.
 | `audio/sfx/train/train_whistle.wav`, `train_rumble.wav`, `train_steam.wav` | `tools/generate_train_audio.py` (plan 4.6) | one-shots |
 | `assets/models/office/chimney.obj` (model, not audio) | `tools/build_lamp_chimney.py` | — |
 
-**Current footstep runtime:** `audio/sfx/foley/footstep_boards_1..5.wav` are five edited contacts from [Steps in wood floor](https://opengameart.org/content/steps-in-wood-floor) by mikeask (CC0). The source recording was downmixed to mono, high-passed at 45 Hz, cut at each footfall, faded, and peak-matched. The player uses all five and the door event uses the third. The earlier synthesized footsteps above are legacy sources.
+**Closed-door knock:** `audio/sfx/town/door_knock_wood.wav` uses the three
+recorded impacts in [Knocking on Wood Door (2)](https://freesound.org/people/Flem0527/sounds/629986/)
+by Flem0527 ([CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/)).
+The public Freesound HQ preview was trimmed at the onset, downmixed to mono,
+resampled to 48 kHz PCM16, peak-matched to -6 dBFS, and faded at the edges.
+
+**Current footstep runtime (Phase B):** the boots read the material they land on.
+`audio/sfx/foley/footstep_boards_1..5.wav` are five edited contacts from
+[Steps in wood floor](https://opengameart.org/content/steps-in-wood-floor) by
+mikeask (CC0); they remain the interior `wood_office` bank. The other ten
+materials are cut from the registered CC0 recordings below by
+`tools/build_footstep_surface_banks.py` into
+`audio/sfx/foley/surfaces/<surface>_<n>.wav` and declared in
+`data/audio/footstep_surfaces.tres`. Every one is a real recorded contact
+(decoded, onset-cut, 45 Hz high-pass, edge-faded, peak-matched at -6 dBFS); no
+surface is synthesised. The earlier `footstep_wood_1..5.wav` and
+`footstep_wood_beta.wav` are legacy sources and are excluded from the beta
+package (the packager refuses them beside the recorded banks).
+
+| Sound | CC0 source | Author | Adaptation |
+|---|---|---|---|
+| `surfaces/wood_saloon_1..4.wav`, `boardwalk_3`, `stairs_1..2` | [100 CC0 SFX #2](https://opengameart.org/content/100-cc0-sfx-2) | rubberduck | four wood-footstep takes, onset-cut and trimmed |
+| `surfaces/boardwalk_1..3`, `wood_bridge_1..3`, `stairs_3`, `ballast_1..4` | [Different steps on wood, stone, leaves, gravel and mud](https://opengameart.org/content/different-steps-on-wood-stone-leaves-gravel-and-mud) | TinyWorlds (edits of pdsounds.org recordings) | wood takes cut per contact; the gravel walk cut at its four measured footfalls |
+| `surfaces/dirt_1..4`, `stone_1..4` | [Fantozzi's Footsteps (Grass/Sand & Stone)](https://opengameart.org/content/fantozzis-footsteps-grasssand-stone) | Fantozzi (submitted by qubodup) | single steps, trimmed; "Sand" reads as packed earth, "Stone" as hard ground |
+| `surfaces/carpet_1..4` | [Footsteps Leather, Cloth, Armor](https://opengameart.org/content/footsteps-leather-cloth-armor) | HaelDB | the four cloth steps (the upload is dual-licensed OGA-BY 3.0 / CC0; CC0 taken) |
+| `surfaces/wet_mud_1..3` | [25 CC0 mud sfx](https://opengameart.org/content/25-cc0-mud-sfx) | rubberduck | three wet contacts, onset-cut |
+| `surfaces/wet_mud_4..6` | [100 CC0 SFX #2](https://opengameart.org/content/100-cc0-sfx-2) | rubberduck | the wet-footstep takes |
+| `surfaces/rail_1..4` | [Metal footsteps on concrete](https://opengameart.org/content/metal-footsteps-on-concrete) | Thimras | recorded metal-on-concrete contacts, high-passed at 180 Hz so the plate ring stays and the concrete body drops |
+
+The raw downloads are staged in `assets/third_party/footsteps_cc0/<pack>/` with a
+`SOURCE.md` (URL, author, licence, per-file SHA-256) and a `.gdignore`; both export
+presets and the packager exclude `assets/third_party/`, so only the cut runtime
+one-shots ship.
 
 **Music:** the intro card plays the project's own drone (`audio/music/intro_drone.wav`,
 plan 7.12, owner decision 30.10). The former temporary cue
@@ -71,7 +105,41 @@ derivative, CC0 texture derivatives) or an OFL font.
 **Open item:** `sounder_down.wav`, `sounder_up.wav`, and `footstep_wood.wav`
 predate this register and their origin is not documented anywhere in the
 repository. Their provenance must be established — or they must be regenerated —
-before any public release.
+before any public release. (`footstep_wood.wav` is rollback-only, unreferenced
+and refused by the packager; the boots no longer reach for it.)
+
+### Black Creek recorded audio — Phase B / chapel
+
+Runtime paths below are relative to `audio/sfx/`. The earlier synthesis tables describe historical files, not these replacements. Source excerpts and hashes are in [`town_audio_cc0`](../assets/third_party/town_audio_cc0/); `tools/town_audio_sources.py` records the cut and filtering for each replacement. No source packs are exported.
+
+- **Park**: [Park Ambiences](https://opengameart.org/content/park-ambiences), Thimras, CC0 1.0.
+- **TDC**: [The Complete Designer's Choice SFX Collection](https://archive.org/details/designers-choice-complete), Nicholas A. Judy, CC0 1.0.
+- **Tree**: [Tree Creaking](https://opengameart.org/content/tree-creaking), Department64 recording adapted by AntumDeluge, CC0 1.0.
+
+| Runtime file | Source and edit |
+|---|---|
+| `town/day_town_ambience.wav` | Park: birds in a copse, stereo loop |
+| `town/dawn_mountain_wind.wav` | Park: open-field wind, stereo loop |
+| `town/creek_rush_loop.wav` | Park: river over a low step, mono loop |
+| `town/morning_birds_wake.wav` | TDC: Carolina Wren Chirping |
+| `town/boarding_room_tone.wav` | TDC: Quiet Nighttime, stereo loop; also used very quietly in the saloon |
+| `town/water_splash_basin.wav` | TDC: Water Splash Small |
+| `town/bed_creak_sleep.wav` | Tree: wood friction substituted for the bed frame |
+| `town/saloon_through_wall.wav` | TDC: Restaurant or Bar Walla, filtered for playback through wood |
+| `town/saloon_stove_fire.wav` | TDC: Campfire Crackling (`FIREBurn-Samsung Galaxy Smartphone, CU_Campfire Crackling_Nicholas Judy_TDC.wav`), 20–35 s, 100 Hz high-pass, 2.9 kHz low-pass, crossfaded mono |
+| `town/saloon_window_wind.wav` | Park: open-field wind, 113–130 s, 80 Hz high-pass, 920 Hz low-pass, crossfaded mono |
+| `train/train_whistle.wav` | TDC: Train Steam Whistle, Old Recording |
+| `train/train_rumble.wav` | [Steam Locomotive, Passage](https://bigsoundbank.com/steam-locomotive-passage-s3009.html), Joseph Sardin, CC0. Mono cut of 14–19 s, filtered to 30–850 Hz and faded. Source FLAC SHA-256 `eeabc0acde11ea4be0af3dc26e9c764d7618ca3778f676beee80fcbbbf10b29b`. |
+| `train/train_steam.wav` | TDC: Steam Release, Acme Windmaster |
+| `foley/door_hinge.wav` | TDC: Front Door Open/Close, Squeaks |
+| `foley/floor_creak_1.wav` | TDC: Floorboard Creak |
+| `foley/floor_creak_2.wav` | Tree: timber under load |
+| `foley/floor_creak_3.wav` | TDC: Ship Creaking, first cut |
+| `foley/board_door.wav` | TDC: Ship Creaking, second cut |
+| `foley/board_window.wav` | TDC: Ship Creaking, third cut |
+| `town/chapel_bell_toll.wav` | [Sunday Church Ambiance](https://soundbible.com/1264-Sunday-Church-Ambiance.html), lezer, Public Domain. One 1.98 s toll from 24.32 s, filtered and faded; mono 48 kHz PCM16. Source MP3 SHA-256 `8683b538fee74fcf4f6c672e63ce2665c24d9be48f40ac0c1d4c9ba8cba163bd`. |
+
+The original office ambience generator and the sounder were not replaced in this pass.
 
 ---
 
@@ -399,3 +467,29 @@ with Pillow contrast factor 0.45. `sill_runoff.png`, `stove_soot.png`, and `lamp
 are locally authored deterministic alpha masks (NumPy RNG seed 87). The four static
 quads in `scenes/office/office_wear.tscn` have no collision, animation or gameplay script.
 The owner approved study B; no lighting or furniture placement changed.
+
+## Window Figure reveal sting — 2026-11-24
+
+`audio/sfx/foley/figure_window_sting.wav` is built offline by
+`tools/build_clean_ambience_and_music.py` strictly from existing recorded CC0 / Public
+Domain WAV assets in this repository (zero procedural oscillator synthesis):
+`audio/sfx/town/chapel_bell_toll.wav` (lezer PD), `audio/sfx/foley/clock_strike.wav`,
+`audio/sfx/ambience/outside_headframe.wav`, and `audio/sfx/ambience/outside_couplings.wav`.
+
+## Clean alpine ambience & frontier dread ambient music — 2026-11-24
+
+All car/traffic rumble (40–180 Hz Adelaide park bleed) and 60 Hz building fan hum were
+eliminated by `tools/build_clean_ambience_and_music.py` using only verified CC0 / Public
+Domain recordings already in the repository (zero unlicensed assets; `long_note_one.mp3`
+stays unreferenced and excluded from exports):
+
+- `audio/sfx/town/boarding_room_tone.wav` (36 s stereo loop): quiet wooden room air from
+  `room_tone.wav` + LPF-filtered `wind_window.wav` + faint slowed `floor_creak_2.wav` (60/120 Hz notched, HPF 88 Hz).
+- `audio/sfx/town/dawn_mountain_wind.wav` (40 s stereo loop) & `audio/sfx/town/saloon_window_wind.wav`
+  (24 s mono loop): pure mountain gusts derived from `wind_window.wav` and `wire_sing.wav` (HPF 175 Hz).
+- `audio/sfx/town/day_town_ambience.wav` (32 s stereo loop): mountain morning breeze (`wind_window.wav`),
+  distant stream wash (`creek_rush_loop.wav`), and scattered clean Carolina wren calls (`morning_birds_wake.wav`, HPF 1.3 kHz).
+- `audio/music/menu_dread_ambient.wav` (48 s stereo loop), `audio/music/watch_dread_ambient.wav`
+  (56 s stereo loop, bandstop-sculpted across 1.1–4.8 kHz for GDD §7 Morse clarity), and
+  `audio/music/intro_drone.wav` (10 s mono one-shot): granular Paulstretch / dark-reverb weaves of
+  `chapel_bell_toll.wav`, `clock_strike.wav`, `outside_headframe.wav`, `wire_sing.wav`, and `wind_window.wav`.

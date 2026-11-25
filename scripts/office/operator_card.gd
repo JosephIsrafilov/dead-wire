@@ -20,10 +20,11 @@ func refresh_locale() -> void:
 	if interactable != null:
 		interactable.prompt_text = GameLocale.pick("Памятка оператора", "Read Operator's Reminder")
 	if heading != null:
-		heading.text = GameLocale.pick(
-			"ПАМЯТКА\n\nПРИНЯТЬ ВЫЗОВ\nПРОЧЕСТЬ ЛИСТ\nСВЕРИТЬ ЖУРНАЛ\nСИГНАЛ СЛЕВА\nПЕЧАТЬ СПРАВА",
-			"OPERATOR'S REMINDER\n\nANSWER THE CALL\nREAD THE COPY\nCHECK THE LEDGER\nSIGNAL ON LEFT\nSTAMP ON RIGHT"
-		)
+		var ru_text := "ПАМЯТКА ПОСТА\n\n1. КЛЮЧ — ВЫЗОВ\n2. ПРОЧЕСТЬ ЛИСТ\n" \
+			+ "3. ЖУРНАЛ И ЛЕНТА\n4. СИГНАЛ СЛЕВА [A]\n5. ПЕЧАТЬ СПРАВА [D]"
+		var en_text := "STANDING ORDERS\n\n1. ANSWER ON KEY\n2. READ THE COPY\n" \
+			+ "3. CHECK LEDGER / TAPE\n4. SIGNAL LEFT [A]\n5. FILE RIGHT [D]"
+		heading.text = GameLocale.pick(ru_text, en_text)
 
 func _on_interacted() -> void:
 	var viewer := get_parent().get_node_or_null("DocumentViewer") as DocumentViewer

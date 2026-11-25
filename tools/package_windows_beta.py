@@ -19,7 +19,7 @@ from pathlib import Path
 
 EXCLUDED_PARTS = {
     ".hermes", ".codex", ".agents", ".git", ".godot", "builds", "docs", "research",
-    "tools", "tests", "logs", "credentials", "variable_source",
+    "tools", "tests", "logs", "credentials", "variable_source", "scratch",
 }
 EXCLUDED_NAMES = {".env", ".env.example", ".env.local"}
 EXCLUDED_SUFFIXES = {".log", ".secret", ".credentials", ".blend", ".gdignore", ".py", ".zip", ".bak", ".dmp"}
@@ -38,6 +38,33 @@ UNSHIPPABLE_PREFIXES = (
     "models/third_party/", "graphify-out/", "addons/", "screenshots/", "conductor.json", "output/",
 )
 RECORDED_FOOTSTEP_PREFIXES = tuple(f".godot/imported/footstep_boards_{index}.wav-" for index in range(1, 6))
+# Phase B: the surface banks. Every bank that ships must ship whole — a partial
+# set would silently fall back to interior boards under an outdoor boot, which is
+# exactly the lie this pass exists to remove. Counts mirror BANKS in
+# tools/build_footstep_surface_banks.py, and `surface_bank_contract()` below
+# re-reads that table so the two can never drift apart silently.
+SURFACE_BANK_SIZES = {
+    "wood_saloon": 4,
+    "boardwalk": 3,
+    "wood_bridge": 3,
+    "stairs": 3,
+    "carpet": 4,
+    "wet_mud": 6,
+    "dirt": 4,
+    "ballast": 4,
+    "rail": 4,
+    "stone": 4,
+}
+SURFACE_SAMPLE_PREFIXES = tuple(
+    f".godot/imported/{surface}_{index}.wav-"
+    for surface, count in SURFACE_BANK_SIZES.items()
+    for index in range(1, count + 1)
+)
+# Legacy synthesised sets from Phase A: kept in the repository for rollback, never
+# shipped. The beta boots use the recorded mikeask boards plus these banks.
+LEGACY_SYNTHETIC_PREFIXES = tuple(
+    f".godot/imported/footstep_wood_{index}.wav-" for index in range(1, 6)
+) + (".godot/imported/footstep_wood_beta.wav-",)
 
 SPOILER_DOCUMENTS = {"sound_handoff_spoilers.md"}
 SOURCE_EXECUTABLE = "dead-wire-windows-beta-x86_64.exe"
@@ -174,7 +201,7 @@ def check_pck_exclusions(pck: Path, entries: list[PckEntry] | None = None) -> No
     forbidden_prefixes = (
         "docs/", "tools/", "tests/", "builds/", "research/", "sites/",
         ".hermes/", ".codex/", ".agents/", "logs/", ".dream-loop/",
-        "landing/", ".landing_shots/", "godot/", "test_logs/",
+        "landing/", ".landing_shots/", "godot/", "test_logs/", "scratch/",
     )
     bad: list[str] = []
     for path in paths:
@@ -208,6 +235,44 @@ def check_pck_exclusions(pck: Path, entries: list[PckEntry] | None = None) -> No
             raise RuntimeError("PCK is missing required runtime audio: incomplete recorded footstep set")
     elif not any(path.startswith(".godot/imported/footstep_wood_beta.wav-") for path in present):
         raise RuntimeError("PCK is missing required runtime audio: recorded footsteps or the legacy beta step")
+    check_surface_banks(present)
+
+
+def check_surface_banks(present: set[str]) -> None:
+    """Footstep banks ship whole or not at all.
+
+    Phase B: a pack with half a bank would pass a per-file existence check and
+    still drop the player onto the interior boards on gravel — exactly the lie
+    this pass exists to remove. Once any surface ships, every declared surface
+    must ship complete; the synthesised Phase-A sets must not ride along.
+    """
+    shipped: dict[str, set[int]] = {}
+    for surface, count in SURFACE_BANK_SIZES.items():
+        for index in range(1, count + 1):
+            prefix = f".godot/imported/{surface}_{index}.wav-"
+            if any(path.startswith(prefix) for path in present):
+                shipped.setdefault(surface, set()).add(index)
+    if not shipped:
+        return
+    for surface, count in sorted(SURFACE_BANK_SIZES.items()):
+        missing = sorted(set(range(1, count + 1)) - shipped.get(surface, set()))
+        if missing:
+            raise RuntimeError(
+                f"PCK is missing required runtime audio: surface bank '{surface}' "
+                f"is incomplete (missing voice {missing})")
+    legacy = sorted(path for path in present if path.startswith(LEGACY_SYNTHETIC_PREFIXES))
+    if legacy:
+        raise RuntimeError(
+            "PCK still contains synthesised Phase-A footsteps beside the recorded "
+            "surface banks: " + ", ".join(legacy))
+
+
+def surface_bank_contract() -> dict[str, int]:
+    """Read the shipping bank counts from the authoritative builder table."""
+    text = (Path(__file__).with_name("build_footstep_surface_banks.py")).read_text(encoding="utf-8")
+    body = text.split("BANKS: dict[str, list[tuple[str, float, float, str]]] = {", 1)[1].split("\n}\n", 1)[0]
+    return {name: len(re.findall(r'\("', rows))
+            for name, rows in re.findall(r'"(\w+)": \[(.*?)\]', body, re.DOTALL)}
 
 
 def is_spoiler_document(relative_path: Path) -> bool:

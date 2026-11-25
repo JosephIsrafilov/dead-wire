@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3]
+
+; A hand-tagged collider, as a builder or a designer would leave one: the
+; material lives in the node's metadata, under the canonical key with no
+; `surface` alias beside it. `tests/audio/footstep_surface_test.gd` probes it to
+; prove the scene-file spelling resolves, not just the runtime `tag()` call.
+
+[sub_resource type="BoxShape3D" id="Shape_deck"]
+size = Vector3(6, 0.5, 6)
+
+[node name="HandTaggedDeck" type="StaticBody3D"]
+metadata/footstep_surface = &"stone"
+metadata/footstep_surface_priority = 3
+
+[node name="Collision" type="CollisionShape3D" parent="."]
+shape = SubResource("Shape_deck")

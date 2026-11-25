@@ -88,13 +88,14 @@ func _unhandled_input(event: InputEvent) -> void:
 			print("[Interact] E pre: blocked=%s cursor=%s mouse=%d target=%s ray=%s" % [
 				is_ui_blocked, cursor_mode, Input.mouse_mode, current_target, ray_col
 			])
-		if is_ui_blocked:
+		if is_ui_blocked or _is_office_blocked():
 			return
-		if not cursor_mode and Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
-			if DisplayServer.get_name() == "headless" or _is_office_blocked():
+		var headless := DisplayServer.get_name() == "headless"
+		if not cursor_mode and Input.mouse_mode != Input.MOUSE_MODE_CAPTURED and not headless:
+			var player := get_parent() as PlayerController
+			if player == null or not player.restore_walk_mouse_capture(true):
 				return
-			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-		_update_target()
+		_update_target(true if headless else null)
 		if DEBUG_INTERACT_LOGS and DisplayServer.get_name() != "headless":
 			var ray_post := str(interaction_ray.get_collider()) if interaction_ray != null else "null"
 			print("[Interact] E post: target=%s ray=%s" % [current_target, ray_post])

@@ -103,6 +103,7 @@ func _run() -> void:
 	office.player.reset_physics_interpolation()
 	office.player.aim_at(Vector3(2.1, 1.10, 1.55))
 	await physics_frame
+	await physics_frame
 	await process_frame
 	ic._update_target(true)
 	_check(ic.current_target == stove_act,
@@ -111,6 +112,7 @@ func _run() -> void:
 	office.player.global_position = Vector3(1.1, 0.0, -1.20)
 	office.player.reset_physics_interpolation()
 	office.player.aim_at(Vector3(1.1, 1.85, -2.29))
+	await physics_frame
 	await physics_frame
 	await process_frame
 	ic._update_target(true)

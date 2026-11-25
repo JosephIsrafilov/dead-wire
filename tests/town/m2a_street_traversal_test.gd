@@ -8,10 +8,19 @@ func _run() -> void:
 	root.add_child(town)
 	var player := town.get_node("Player") as PlayerController
 	var sections := [
-		["depot descent", Vector3(0, 0.31, 2.5), Vector2(0, 5), 0.0],
+		["depot descent", Vector3(-1.6, 0.31, -5.25), Vector2(-1.6, -3.0), 0.0],
+		["depot south edge", Vector3(-3.3, 0.05, -3.35), Vector2(-3.3, -5.55), 0.30],
+		["depot 30 degree approach", Vector3(2.0, 0.05, -4.52), Vector2(5.62, -6.61), 0.30],
+		["depot east freight ramp", Vector3(15.5, 0.05, -12.9), Vector2(12.4, -12.9), 0.30],
+		["depot west end ramp", Vector3(-7.4, 0.05, -10.5), Vector2(-3.9, -10.5), 0.30],
+		["depot east end outside the freight ramp", Vector3(15.1, 0.05, -6), Vector2(12.6, -6), 0.30],
+		["depot north edge", Vector3(4, 0.05, -16.7), Vector2(4, -14.7), 0.30],
+		["south boardwalk climb off steps", Vector3(8.0, 0.05, 29.6), Vector2(8.0, 32.0), 0.30],
+		["north boardwalk climb off steps", Vector3(16.0, 0.05, 16.3), Vector2(16.0, 14.0), 0.30],
 		["south walk ascent", Vector3(29.54, 0.05, 29.2), Vector2(29.54, 32.6), 0.30],
 		["boarding porch ascent", Vector3(29.54, 0.31, 32.3), Vector2(29.54, 35.3), 0.46],
 		["boarding porch and walk descent", Vector3(29.54, 0.47, 35.3), Vector2(29.54, 29.2), 0.0],
+		["day access to quarantine gate", Vector3(21.0, 0.05, -20.5), Vector2(21.0, -24.4), 0.0],
 		["bridge eastbound", Vector3(40.1, 0.03, 23), Vector2(53, 23), 0.0],
 		["bridge westbound", Vector3(53, 0.03, 23), Vector2(40.1, 23), 0.0],
 	]
@@ -51,10 +60,22 @@ func _run() -> void:
 	var blocked := not walker.get_world_3d().direct_space_state.intersect_ray(ray).is_empty()
 	failures += int(blocked)
 	print("%s: Room 4 overview has a clear opening sightline" % ["FAIL" if blocked else "PASS"])
-	var goals := [Vector3(-0.91, 0, -3.51), Vector3(-0.91, 2.71, 1.79),
-		Vector3(1.88, 2.71, 1.79), Vector3(1.88, 2.71, -0.62),
-		Vector3(1.88, 2.71, 0.47), Vector3(1.88, 2.71, 1.79),
-		Vector3(-0.91, 2.71, 1.79), Vector3(-0.91, 0.0, -3.84)]
+	var goals := [
+		Vector3(-1.46, 0, -3.50),
+		Vector3(-1.85, 0, -2.25),
+		Vector3(-0.25, 0, -1.95),
+		Vector3(1.25, 0, -2.10),
+		Vector3(-0.25, 0, -1.65),
+		Vector3(-0.25, 2.71, 3.45),
+		Vector3(1.35, 2.71, 3.45),
+		Vector3(1.88, 2.71, 1.79),
+		Vector3(1.88, 2.71, -0.62),
+		Vector3(1.88, 2.71, 1.79),
+		Vector3(1.35, 2.71, 3.45),
+		Vector3(-0.25, 2.71, 3.45),
+		Vector3(-0.25, 0.0, -1.65),
+		Vector3(-1.46, 0.0, -3.50),
+	]
 	var reached := true
 	for waypoint: Vector3 in goals:
 		var flat := Vector2(waypoint.x, waypoint.z)

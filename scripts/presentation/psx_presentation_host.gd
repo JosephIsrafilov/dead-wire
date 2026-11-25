@@ -18,54 +18,54 @@ const GRADE_PRESETS: Dictionary = {
 		"shadow_tint": Vector3(0.004, 0.007, 0.016),
 		"highlight_tint": Vector3(1.03, 0.99, 0.93),
 		"crush": 0.94,
-		"vignette": 0.25,
-		"grain": 0.026,
-		"dither": 1.35,
+		"vignette": 0.09,
+		"grain": 0.007,
+		"dither_strength": 0.4,
 	},
 	&"DAWN": {
 		"saturation": 0.82,
 		"shadow_tint": Vector3(0.008, 0.012, 0.022),
 		"highlight_tint": Vector3(1.00, 0.97, 0.94),
 		"crush": 0.95,
-		"vignette": 0.21,
-		"grain": 0.020,
-		"dither": 1.15,
+		"vignette": 0.0762,
+		"grain": 0.0051,
+		"dither_strength": 0.3385,
 	},
 	&"DAY_CLEAR": {
 		"saturation": 1.05,
 		"shadow_tint": Vector3(0.006, 0.005, 0.010),
 		"highlight_tint": Vector3(1.06, 1.01, 0.90),
 		"crush": 0.98,
-		"vignette": 0.10,
-		"grain": 0.012,
-		"dither": 0.85,
+		"vignette": 0.0415,
+		"grain": 0.0032,
+		"dither_strength": 0.2523,
 	},
 	&"DAY_GOLDEN": {
 		"saturation": 1.08,
 		"shadow_tint": Vector3(0.010, 0.006, 0.012),
 		"highlight_tint": Vector3(1.10, 0.98, 0.84),
 		"crush": 0.97,
-		"vignette": 0.14,
-		"grain": 0.015,
-		"dither": 0.95,
+		"vignette": 0.0485,
+		"grain": 0.0038,
+		"dither_strength": 0.2831,
 	},
 	&"SALOON_WARM": {
 		"saturation": 1.02,
 		"shadow_tint": Vector3(0.014, 0.007, 0.003),
 		"highlight_tint": Vector3(1.08, 0.97, 0.82),
 		"crush": 0.96,
-		"vignette": 0.16,
-		"grain": 0.018,
-		"dither": 1.00,
+		"vignette": 0.0554,
+		"grain": 0.0051,
+		"dither_strength": 0.2954,
 	},
 	&"DUSK": {
 		"saturation": 0.90,
 		"shadow_tint": Vector3(0.012, 0.008, 0.020),
 		"highlight_tint": Vector3(1.04, 0.92, 0.85),
 		"crush": 0.94,
-		"vignette": 0.20,
-		"grain": 0.022,
-		"dither": 1.15,
+		"vignette": 0.0692,
+		"grain": 0.0057,
+		"dither_strength": 0.3385,
 	},
 }
 
@@ -132,13 +132,15 @@ func _apply_psx_settings() -> void:
 	vp.canvas_item_default_texture_filter = Viewport.DEFAULT_CANVAS_ITEM_TEXTURE_FILTER_NEAREST
 
 func _apply_psx_scale() -> void:
+	if not is_inside_tree():
+		return
 	var vp := get_viewport()
 	if vp == null:
 		return
 	var window := get_window()
 	var height := window.size.y if window != null and window.size.y > 0 else 720
 	var profile := ReadabilityPolicy.profile(height, _presentation_mode)
-	if _container != null and window != null:
+	if _container != null and is_instance_valid(_container) and window != null:
 		_container.configure(window.size, profile)
 	vp.scaling_3d_scale = profile.scale
 	if _grade_rect != null:
@@ -146,16 +148,11 @@ func _apply_psx_scale() -> void:
 		if _grade_rect.material is ShaderMaterial:
 			var mat := _grade_rect.material as ShaderMaterial
 			var preset_data: Dictionary = GRADE_PRESETS.get(_active_preset, GRADE_PRESETS[&"DAY_CLEAR"])
-			var psx_cell: float = float(profile.get("pixel_size", profile.divisor))
-			mat.set_shader_parameter("pixel_size", psx_cell)
-			mat.set_shader_parameter("levels", profile.levels)
+			ReadabilityPolicy.apply_grade_to_material(mat, profile, preset_data)
 			mat.set_shader_parameter("color_saturation", float(preset_data["saturation"]))
 			mat.set_shader_parameter("shadow_tint", preset_data["shadow_tint"])
 			mat.set_shader_parameter("highlight_tint", preset_data["highlight_tint"])
 			mat.set_shader_parameter("shadow_crush_factor", float(preset_data["crush"]))
-			mat.set_shader_parameter("vignette", float(preset_data["vignette"]))
-			mat.set_shader_parameter("grain", float(preset_data["grain"]))
-			mat.set_shader_parameter("dither_strength", float(preset_data["dither"]))
 
 func _create_presentation_viewport() -> void:
 	var host := get_parent()
@@ -200,11 +197,13 @@ func _create_presentation_viewport() -> void:
 func _exit_tree() -> void:
 	if _reparenting:
 		return
-	var window := get_window()
+	var container := _container
+	_container = null
+	var window := get_window() if is_inside_tree() else null
 	if window != null:
 		if window.size_changed.is_connected(_apply_psx_scale):
 			window.size_changed.disconnect(_apply_psx_scale)
-		if _container != null and is_instance_valid(_container):
-			_container.queue_free()
 		for prop in _window_state:
 			window.set(prop, _window_state[prop])
+	if container != null and is_instance_valid(container):
+		container.queue_free()

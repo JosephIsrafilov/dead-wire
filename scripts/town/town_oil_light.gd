@@ -8,6 +8,7 @@ const CHAMBERSTICK := preload("res://assets/models/town/black_creek_chamberstick
 var _lamp: OmniLight3D
 var _flame: MeshInstance3D
 var _energy: float
+var _scale: float = 1.0
 var _time: float
 
 static func mount(parent: Node3D, at: Vector3, yaw: float, energy: float, reach: float) -> TownOilLight:
@@ -66,11 +67,21 @@ func _build(reach: float) -> void:
 	add_child(_flame)
 	_time = absf(position.x * 1.7 + position.y * 0.61)
 
+## Adjusts overall lamp intensity while keeping subtle warm interior bounce intact.
+func set_intensity_scale(scale: float) -> void:
+	_scale = clampf(scale, 0.0, 1.5)
+	if _lamp != null:
+		_lamp.light_energy = _energy * _scale
+	if _flame != null:
+		_flame.visible = _scale > 0.55
+
 func _process(delta: float) -> void:
 	if not is_visible_in_tree() or _lamp == null:
 		return
 	_time += delta
 	var drift := sin(_time * 7.1) * 0.041 + sin(_time * 12.7 + 0.7) * 0.028 + sin(_time * 2.9) * 0.024
-	_lamp.light_energy = _energy * (1.0 + drift)
-	_flame.scale.y = 1.0 + drift * 2.7
-	_flame.rotation.z = sin(_time * 6.2) * 0.13
+	var base := _energy * _scale
+	_lamp.light_energy = base * (1.0 + drift)
+	if _flame != null and _flame.visible:
+		_flame.scale.y = 1.0 + drift * 2.7
+		_flame.rotation.z = sin(_time * 6.2) * 0.13

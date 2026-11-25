@@ -24,6 +24,12 @@ rotation = Vector3(0, 0.35, 0)
 size = Vector3(0.21, 0.06, 0.27)
 material = ExtResource("3_wood")
 
+[node name="SoundOpening" type="CSGBox3D" parent="Resonator"]
+operation = 2
+position = Vector3(0.102, 0, 0)
+size = Vector3(0.09, 0.030, 0.137)
+material = SubResource("SoundHole")
+
 [node name="ResonatorLip" type="CSGBox3D" parent="."]
 position = Vector3(-0.08, 0.004, -0.11)
 rotation = Vector3(0, 0.35, 0)
@@ -31,9 +37,9 @@ size = Vector3(0.23, 0.008, 0.29)
 material = ExtResource("3_wood")
 
 [node name="VoiceHole" type="CSGBox3D" parent="."]
-position = Vector3(0.0197, 0.03, -0.1463)
+position = Vector3(-0.024, 0.03, -0.1305)
 rotation = Vector3(0, 0.35, 0)
-size = Vector3(0.004, 0.026, 0.13)
+size = Vector3(0.004, 0.028, 0.133)
 material = SubResource("SoundHole")
 
 [node name="Sounder" parent="." instance=ExtResource("1_sounder")]

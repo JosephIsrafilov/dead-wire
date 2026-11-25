@@ -266,20 +266,20 @@ func _build_banner() -> void:
 	_banner_label.add_theme_font_size_override("font_size", 18)
 	_banner_label.add_theme_color_override("font_color", Color(0.95, 0.86, 0.66, 0.96))
 	_banner_label.text = GameLocale.pick(
-		"У ДВЕРИ — Тормозной Миллер: «Крейн? Записка под дверью. "
-		+ "Скажи тому у забора, чтоб взял фонарь.»",
-		"AT THE DOOR — Brakeman: \"Crane? Clearance slip under the door. "
-		+ "Tell whoever's by the fence to carry a lamp.\""
+		"У ДВЕРИ — Миллер (тормозной): «Крейн! Кинул сводку под порог. "
+		+ "И передай тому мужику у забора — без фонаря тут живо под рельсы попадёшь.»",
+		"AT THE DOOR — Miller (Brakeman): \"Crane! Slid the yard slip under your door. "
+		+ "And tell whoever's loitering by the fence to light a blasted lantern.\""
 	)
 	_banner_panel.add_child(_banner_label)
 
 func refresh_locale() -> void:
 	if _banner_label != null:
 		_banner_label.text = GameLocale.pick(
-			"У ДВЕРИ — Тормозной Миллер: «Крейн? Записка под дверью. "
-			+ "Скажи тому у забора, чтоб взял фонарь.»",
-			"AT THE DOOR — Brakeman: \"Crane? Clearance slip under the door. "
-			+ "Tell whoever's by the fence to carry a lamp.\""
+			"У ДВЕРИ — Миллер (тормозной): «Крейн! Кинул сводку под порог. "
+			+ "И передай тому мужику у забора — без фонаря тут живо под рельсы попадёшь.»",
+			"AT THE DOOR — Miller (Brakeman): \"Crane! Slid the yard slip under your door. "
+			+ "And tell whoever's loitering by the fence to light a blasted lantern.\""
 		)
 	if _slip_interact != null:
 		_slip_interact.prompt_text = GameLocale.pick(

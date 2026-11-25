@@ -2,14 +2,15 @@
 
     blender --background --factory-startup --python author_coat.py
 
-Writes coat_A.glb / coat_B.glb and dead_wire_coat.blend next to this file;
-the game uses coat_B.glb copied to assets/models/office_props_v1/coat_tailored.glb.
+Pass -- <output-directory> to keep the study files out of the source folder.
+The game uses coat_B.glb copied to assets/models/office_props_v1/coat_tailored.glb.
 """
-import bpy, bmesh, math, json
+import bpy, bmesh, math, sys
 from pathlib import Path
 from mathutils import Vector
 import numpy as np
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(sys.argv[sys.argv.index('--') + 1]).resolve() if '--' in sys.argv else Path(__file__).resolve().parent
+ROOT.mkdir(parents=True, exist_ok=True)
 NAME = 'DW_Coat_Study_Tailored'
 if bpy.app.background:
     # Headless runs start from factory settings: the default scene is ours.
@@ -40,9 +41,9 @@ for r,(y,w,d) in enumerate(profile):
     for c in range(N+1):
         theta=-math.pi/2+gap+(2*math.pi-2*gap)*c/N
         # Broad tension folds, not a uniformly corrugated tube.
-        fold=(.007*math.sin(theta*5+.4)+.004*math.cos(theta*9-.6))*max(0,(t-.22)/.78)
-        x=math.cos(theta)*(w+fold)
-        z=math.sin(theta)*(d+fold*.75)
+        fold=(.010*math.sin(theta*5+.4+t*.65)+.005*math.cos(theta*9-.6))*max(0,(t-.18)/.82)
+        x=math.cos(theta)*(w+fold)+.012*t*t
+        z=math.sin(theta)*(d+fold*.90)-.008*t*t*math.cos(theta*2+.7)
         yy=y-.014
         if r<3: yy-=.035*abs(math.cos(theta)) + (.034 if r==0 else .014)*max(0,-math.sin(theta))
         yy+=.007*math.sin(theta*2+.5)*t*t
@@ -70,8 +71,9 @@ for a,b,side in holes:
     # Soft shoulder cap, heavy upper arm, compressed elbow, flattened cuff.
     sections=[(.181,1.792,-.007,.046,.043),(.192,1.735,-.018,.045,.037),
               (.198,1.645,-.035,.040,.031),(.194,1.595,-.045,.040,.028),
-              (.183,1.515,-.058,.036,.024),(.176,1.425,-.063,.033,.020),
-              (.175,1.401,-.062,.034,.020)]
+              (.183,1.515,-.058,.036,.024),(.176,1.437,-.063,.033,.020),
+              (.176,1.430,-.063,.035,.022),(.174,1.405,-.061,.034,.021),
+               (.174,1.401,-.061,.033,.020)]
     for k,(cx,cy,cz,rx,rz) in enumerate(sections):
         curr=[]
         # A coat on a hook has no arm in it: at the armhole the sleeve ring
@@ -89,21 +91,25 @@ for a,b,side in holes:
             u=j/len(prev)*.30*3; un=(j+1)/len(prev)*.30*3
             face([prev[j],curr[j],curr[jj],prev[jj]],[(u,(cy+.06)*3),(u,cy*3),(un,cy*3),(un,(cy+.06)*3)])
         prev=curr
-# Rolled collar grows from neckline; no separate floating ring.
+# Rolled collar and a raised break in the lapel catch light on different planes.
+facing_start = len(faces)
 prev=grid[0]
-for scale,dy in [(1.14,.018),(1.12,.040)]:
-    curr=[vertex((verts[i][0]*scale,verts[i][1]+dy,verts[i][2]*scale)) for i in grid[0]]
+for scale,dy in [(1.12,.019),(1.27,.016)]:
+    curr=[vertex((verts[i][0]*scale,verts[i][1]+dy,verts[i][2]*scale-.006)) for i in grid[0]]
     for j in range(N): face([prev[j],prev[j+1],curr[j+1],curr[j]])
     prev=curr
-# Narrow folded lapels, joined to the two front opening edges.
 for col,side in [(0,1),(N,-1)]:
     edge=[grid[r][col] for r in range(6)]
-    width=[.014,.038,.045,.034,.016,0]
+    width=[.024,.044,.065,.048,.029,.006]
+    ridge=[]
     outer=[]
     for r,i in enumerate(edge):
-        p=Vector(verts[i]); p.x+=side*width[r]; p.z-=.010+width[r]*.35
-        outer.append(vertex(p))
-    for r in range(5): face([edge[r],edge[r+1],outer[r+1],outer[r]])
+        x,y,z=verts[i]
+        ridge.append(vertex((x+side*width[r]*.33,y,z-.005-width[r]*.48)))
+        outer.append(vertex((x+side*width[r],y+[.002,-.011,.009,.002,-.007,-.004][r],z-.004-width[r]*.16)))
+    for r in range(5):
+        face([edge[r],edge[r+1],ridge[r+1],ridge[r]])
+        face([ridge[r],ridge[r+1],outer[r+1],outer[r]])
 
 def wool(name, rgb, seed):
     rng=np.random.default_rng(seed); size=64
@@ -133,7 +139,13 @@ uv=mesh.uv_layers.new(name='Wool metre scale')
 for poly,coords in zip(mesh.polygons,uvfaces):
     for li,coord in zip(poly.loop_indices,coords): uv.data[li].uv=coord
 obj=bpy.data.objects.new('Tailored_coat_JOINED_sleeves',mesh); scene.collection.objects.link(obj)
-obj.data.materials.append(charcoal); obj.data.materials.append(lining)
+facing=bpy.data.materials.new('Wool facing'); facing.use_nodes=True
+facing_bsdf=next(n for n in facing.node_tree.nodes if n.type=='BSDF_PRINCIPLED')
+facing_bsdf.inputs['Base Color'].default_value=(.13,.11,.09,1)
+facing_bsdf.inputs['Roughness'].default_value=1
+obj.data.materials.append(charcoal); obj.data.materials.append(facing); obj.data.materials.append(lining)
+for poly in mesh.polygons:
+    if poly.index>=facing_start: poly.material_index=1
 bm=bmesh.new(); bm.from_mesh(mesh)
 # The excised armhole centre vertices are no longer needed.
 bmesh.ops.delete(bm,geom=[v for v in bm.verts if not v.link_faces],context='VERTS')
@@ -151,7 +163,7 @@ assert not [e for e in bm.edges if len(e.link_faces)>2], 'Non-manifold outer she
 print('SHELL connected vertices',len(visited),'faces',len(mesh.polygons),'armhole shared edges',len(seams))
 bm.free()
 bpy.context.view_layer.objects.active=obj; obj.select_set(True)
-solid=obj.modifiers.new('Wool edge thickness 2mm','SOLIDIFY'); solid.thickness=.002; solid.offset=-1; solid.material_offset=1; solid.material_offset_rim=1
+solid=obj.modifiers.new('Wool edge thickness 2mm','SOLIDIFY'); solid.thickness=.002; solid.offset=-1; solid.material_offset=2; solid.material_offset_rim=2
 bpy.ops.object.modifier_apply(modifier=solid.name)
 # Applied, closed shell includes lining and cuff rims; no subdivision.
 # Two restrained pocket flaps and dark horn buttons, attached details rather than noise.

@@ -1,8 +1,16 @@
 extends RefCounted
 ## Visual-only terrain outside the authored collision envelope.
+##
+## The mesh is a coarse 2 m grid on purpose: it is background, not walkable, and
+## the spruce cluster hides most of the faceting. What it must not do is show the
+## geometry's own UVs. Those quads are metres wide in y and tens of metres in
+## x/z, so a planar projection smears into contour bands — the "stretched" streaks
+## visible from the aerial cameras. Every surface here therefore samples the
+## town's CC0 stone and clay triplanar from world space through
+## black_creek_ground.gdshader in `triplanar_slope` mode, and every open mesh
+## border gets a skirt so no camera can see the hill's underside.
 
 const SPRUCE := preload("res://assets/models/town/black_creek_spruce.glb")
-const STONE := preload("res://assets/textures/town_v1/stone_foundation_128.png")
 const COTTAGES := [
 	preload("res://assets/models/town/black_creek_cottage_a.glb"),
 	preload("res://assets/models/town/black_creek_cottage_b.glb"),
@@ -10,7 +18,12 @@ const COTTAGES := [
 const LOT_X := [-34.0, -12.0, 12.0, 34.0]
 const LOT_Z := [58.0, 61.0, 58.0, 60.0]
 const LOT_Y := [3.1, 4.2, 3.8, 4.6]
-const CHAPEL := Vector3(-54.0, 9.0, 62.0)
+## The valley floor is a half-metre box whose top face sits at y = 0, so the hill
+## must dive below that plane or its rim reads as a slot from an aerial camera.
+const GRID := 2.0
+const SKIRT := -4.0
+const COLUMNS := 120
+const ROWS := 53
 
 static func build(parent: Node3D) -> void:
 	var random := RandomNumberGenerator.new()
@@ -30,7 +43,7 @@ static func build(parent: Node3D) -> void:
 		var tree_height := size * random.randf_range(0.84, 1.23)
 		var yaw := random.randf() * TAU
 		var tree := SPRUCE.instantiate() as Node3D
-		tree.position = Vector3(x, _mesh_grade(x, z) - 0.26, z)
+		tree.position = Vector3(x, mesh_grade(x, z) - 0.26, z)
 		tree.scale = Vector3(size, tree_height, size)
 		tree.rotation.y = yaw
 		parent.add_child(tree)
@@ -39,23 +52,23 @@ static func build(parent: Node3D) -> void:
 	build_ridge(parent, 153.0, 31.0, true)
 	build_ridge(parent, -156.0, 41.0, true)
 
-static func _mesh_grade(x: float, z: float) -> float:
+static func mesh_grade(x: float, z: float) -> float:
 	# Interpolate the same triangles as _slope, not the unsampled height function.
-	var gx := floorf(x * 0.5) * 2.0
-	var gz := floorf(z * 0.5) * 2.0
-	var u := (x - gx) * 0.5
-	var v := (z - gz) * 0.5
-	var b := _grade(gx + 2, gz)
-	var c := _grade(gx, gz + 2)
+	var gx := floorf(x / GRID) * GRID
+	var gz := floorf(z / GRID) * GRID
+	var u := (x - gx) / GRID
+	var v := (z - gz) / GRID
+	var b := _grade(gx + GRID, gz)
+	var c := _grade(gx, gz + GRID)
 	if u + v <= 1.0:
 		return _grade(gx, gz) * (1.0 - u - v) + b * u + c * v
-	return _grade(gx + 2, gz + 2) * (u + v - 1.0) + b * (1.0 - v) + c * (1.0 - u)
+	return _grade(gx + GRID, gz + GRID) * (u + v - 1.0) + b * (1.0 - v) + c * (1.0 - u)
 
 static func _near_lot(x: float, z: float) -> bool:
 	for i in LOT_X.size():
 		if absf(x - LOT_X[i]) < 6.4 and absf(z - LOT_Z[i]) < 5.5:
 			return true
-	return Vector2(x - CHAPEL.x, z - CHAPEL.z).length() < 9.0
+	return false
 
 static func _grade(x: float, z: float) -> float:
 	var rise := maxf(0.0, z - 46.8)
@@ -65,38 +78,79 @@ static func _grade(x: float, z: float) -> float:
 	for i in LOT_X.size():
 		var radius := maxf(absf(x - LOT_X[i]) / 7.0, absf(z - LOT_Z[i]) / 6.0)
 		height = lerpf(LOT_Y[i], height, smoothstep(0.76, 1.45, radius))
-	var chapel_grade := maxf(absf(x - CHAPEL.x) / 5.0, absf(z - CHAPEL.z) / 6.8)
-	height = lerpf(CHAPEL.y, height, smoothstep(0.8, 1.65, chapel_grade))
-	return height * lerpf(0.17, 1.0, smoothstep(3, 14, absf(x - 47))) - 0.065
+	# The creek cut stays, but its rim feathers over 9 m instead of ripping at
+	# 4.6 m per metre. That gradient is what read as a torn slot beside the chapel
+	# terrace, not missing geometry.
+	var creek_fade := lerpf(0.17, 1.0, smoothstep(2.0, 19.0, absf(x - 47.0)))
+	var outer_fade := 1.0 - smoothstep(104.0, 120.0, absf(x))
+	return height * creek_fade * outer_fade - 0.065
+
 
 static func _slope(parent: Node3D, random: RandomNumberGenerator) -> void:
 	var surface := SurfaceTool.new()
 	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
 	surface.set_smooth_group(-1)
-	for iz in 53:
-		for ix in 120:
-			var x := -120.0 + ix * 2.0
-			var z := 46.0 + iz * 2.0
+	for iz in ROWS:
+		for ix in COLUMNS:
+			var x := -120.0 + ix * GRID
+			var z := 46.0 + iz * GRID
 			var a := Vector3(x, _grade(x, z), z)
-			var b := Vector3(x + 2, _grade(x + 2, z), z)
-			var c := Vector3(x, _grade(x, z + 2), z + 2)
-			var d := Vector3(x + 2, _grade(x + 2, z + 2), z + 2)
+			var b := Vector3(x + GRID, _grade(x + GRID, z), z)
+			var c := Vector3(x, _grade(x, z + GRID), z + GRID)
+			var d := Vector3(x + GRID, _grade(x + GRID, z + GRID), z + GRID)
 			_triangle(surface, a, b, c, random.randf())
 			_triangle(surface, b, d, c, random.randf())
-	var mat := StandardMaterial3D.new()
-	mat.vertex_color_use_as_albedo = true
-	mat.roughness = 0.96
-	mat.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST_WITH_MIPMAPS
-	mat.albedo_texture = STONE
-	var path := "res://assets/textures/town_v2/stone_albedo.png"
-	if ResourceLoader.exists(path):
-		mat.albedo_texture = load(path) as Texture2D
-	_finish(parent, "GraniteThawTerraces", surface, mat)
+	_skirt(surface)
+	_finish(parent, "GraniteThawTerraces", surface, _slope_material())
+
+## The old grid stopped dead at its outline; from any aerial camera the open
+## underside showed as a pale slot beside the chapel terrace. Three borders are
+## unshared (the north edge meets the valley floor), so each gets a wall down
+## below the floor plane, closed at the lip.
+static func _skirt(surface: SurfaceTool) -> void:
+	var west := -120.0
+	var east := -120.0 + COLUMNS * GRID
+	var south := 46.0 + ROWS * GRID
+	for ix in COLUMNS:
+		var x0 := west + ix * GRID
+		var x1 := x0 + GRID
+		_wall(surface, Vector3(x1, _grade(x1, 46.0), 46.0), Vector3(x0, _grade(x0, 46.0), 46.0),
+			Vector3(0, 0, -1))
+		_wall(surface, Vector3(x0, _grade(x0, south), south), Vector3(x1, _grade(x1, south), south),
+			Vector3(0, 0, 1))
+	for iz in ROWS:
+		var z0 := 46.0 + iz * GRID
+		var z1 := z0 + GRID
+		_wall(surface, Vector3(west, _grade(west, z0), z0), Vector3(west, _grade(west, z1), z1),
+			Vector3(-1, 0, 0))
+		_wall(surface, Vector3(east, _grade(east, z1), z1), Vector3(east, _grade(east, z0), z0),
+			Vector3(1, 0, 0))
+
+static func _wall(surface: SurfaceTool, a: Vector3, b: Vector3, _outward: Vector3) -> void:
+	var a_low := Vector3(a.x, SKIRT, a.z)
+	var b_low := Vector3(b.x, SKIRT, b.z)
+	var rock := Color("554b3e")
+	var front_verts := [a_low, b_low, b, a_low, b, a]
+	var back_verts := [a_low, b, b_low, a_low, a, b]
+	for tris in [front_verts, back_verts]:
+		surface.set_color(rock)
+		for p: Vector3 in tris:
+			surface.set_uv(Vector2(p.x + p.z, p.y) * 0.2)
+			surface.add_vertex(p)
+
+static func _slope_material() -> ShaderMaterial:
+	var mat := ShaderMaterial.new()
+	mat.shader = load("res://materials/shaders/black_creek_ground.gdshader")
+	mat.set_shader_parameter("triplanar_slope", true)
+	mat.set_shader_parameter("slope_scale", 0.23)
+	mat.set_shader_parameter("rock_albedo", load("res://assets/textures/town_v2/stone_albedo.png"))
+	mat.set_shader_parameter("dirt_albedo", load("res://assets/textures/town_v2/road_albedo.png"))
+	return mat
 
 static func _triangle(surface: SurfaceTool, a: Vector3, b: Vector3, c: Vector3, variation: float) -> void:
 	var cliff := 1.0 - (c - a).cross(b - a).normalized().y
-	var base := Color("65704a").lerp(Color("a29381"), clampf(cliff * 3.1, 0, 1))
-	base = base.lightened(variation * 0.14)
+	var base := Color("5e6647").lerp(Color("8d8272"), clampf(cliff * 2.4, 0, 1))
+	base = base.lightened(variation * 0.13)
 	for p: Vector3 in [a, b, c]:
 		surface.set_color(base)
 		surface.set_uv(Vector2(p.x + p.y * 0.55, p.z - p.y) * 0.21)
@@ -137,7 +191,8 @@ static func _ridge_point(axis: float, distance: float, height: float, row: float
 	var crest := 0.83 + 0.25 * sin(mapped * 0.066 + distance) + 0.12 * sin(mapped * 0.14)
 	crest += relief.get_noise_2d(mapped * 1.45, 13.0) * 0.24
 	var run := axis + sin(mapped * 0.077) * absf(distance) * 0.055 * (1.0 - row)
-	var forward := distance * lerpf(0.52, 1.0, row) + sin(mapped * 0.075) * row * absf(distance) * 0.07
+	var near_ratio := 0.44 if flank else 0.52
+	var forward := distance * lerpf(near_ratio, 1.0, row) + sin(mapped * 0.075) * row * absf(distance) * 0.07
 	var fold := relief.get_noise_2d(mapped * 1.8, row * 76.0) * sin(row * PI) * 0.46
 	var y := height * (crest * pow(row, 1.12) + fold) - 7.0 * (1.0 - row)
 	return Vector3(forward, y, run) if flank else Vector3(run, y, forward)

@@ -1,6 +1,6 @@
 extends SceneTree
 ## The slowing register teaches itself: in the quiet between calls Elias
-## thinks about winding it, ahead of the compare hint, whenever the side key
+## thinks about winding it, ahead of the ledger hint, whenever the side key
 ## is actually due.
 ##   godot --headless --audio-driver Dummy --path . --script tests/guidance/wind_guidance_test.gd
 
@@ -10,6 +10,7 @@ func _init() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
+	GameLocale.lock_language_for_test("en")
 	print("--- Starting Wind Guidance Test Suite ---")
 	var office := await _fresh_office()
 	if office == null:
@@ -37,8 +38,8 @@ func _run() -> void:
 
 	# The fixture advances the watch in one call, not the register's frame clock.
 	register._process(1.0)
-	# Miss the first call to reach slot 1's compare window; the slowing
-	# register outranks the compare hint.
+	# Miss the first call to reach slot 1's ledger window; the slowing
+	# register outranks the ledger hint.
 	var encoder := AmericanMorseEncoder.new()
 	var compiler := MorseScheduleCompiler.new()
 	var call_sequence := encoder.encode(director.call_sign, director.alphabet)
@@ -52,11 +53,11 @@ func _run() -> void:
 	register.spring_tension = 0.5
 	guidance._refresh_visible_context()
 	if not _a(guidance._context == &"wind",
-		"The wind hint outranks the compare hint while the register needs winding"): return
+		"The wind hint outranks the ledger hint while the register needs winding"): return
 	register.wind()
 	guidance._refresh_visible_context()
-	if not _a(guidance._context == &"compare",
-		"A wound register hands the thought back to comparing the strip"): return
+	if not _a(guidance._context == &"ledger",
+		"A wound register hands the thought back to checking the ledger"): return
 
 	office.queue_free()
 	# The office's presentation frame is freed one frame after the office
@@ -87,6 +88,7 @@ func _fresh_office() -> M1OfficeController:
 	var intro := office.get_node_or_null("IntroCard") as IntroCard
 	if intro != null and intro.is_running():
 		intro.skip_immediately()
+	office.get_node("ShiftArrival").skip_immediately()
 	var guidance := office.get_node("NightGuidance") as NightGuidanceController
 	guidance.set_process(false)
 	office.session_controller.scheduler.auto_process = false

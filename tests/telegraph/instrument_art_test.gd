@@ -34,7 +34,8 @@ func _run() -> void:
 		for surface in mesh.get_surface_count():
 			var mat := mesh.surface_get_material(surface) as StandardMaterial3D
 			if not check(mat != null and mat.albedo_texture != null, "%s surface has authored texture" % node.name): return
-			if not check(mat.texture_filter == BaseMaterial3D.TEXTURE_FILTER_NEAREST, "%s uses nearest texture filtering" % node.name): return
+			if not check(mat.texture_filter == BaseMaterial3D.TEXTURE_FILTER_NEAREST_WITH_MIPMAPS,
+				"%s uses nearest texture filtering with mipmaps" % node.name): return
 			var arrays := mesh.surface_get_arrays(surface)
 			var indices: PackedInt32Array = arrays[Mesh.ARRAY_INDEX]
 			triangles += indices.size() / 3

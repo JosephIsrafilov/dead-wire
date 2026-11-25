@@ -1,0 +1,34 @@
+[gd_resource type="Resource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/town/chronicle_issue.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+dateline_ru = "Том VIII  •  Понедельник, 14 апреля 1890 г.  •  5 центов"
+dateline_en = "Vol. VIII  •  Monday, April 14, 1890  •  Five cents"
+body_ru = "С ШАХТНОГО ДВОРА
+
+На верхнем копре меняют канат. Руду с нижнего отвала взвесят у пробирной после полудня. Ветка MJ по-прежнему закрыта; порожние вагоны туда не подавать.
+
+РАСПИСАНИЕ BC&W
+
+№ 17 принимает пассажиров у главной платформы. Груз № 71 принимают у товарного настила; предъявляйте накладные агенту, а не кондуктору. Сверяйте часы на станции.
+
+ПО ГОРОДУ
+
+Вода у моста поднялась за ночь на две зарубки. Возчики просят держаться середины настила. У миссис Харгроув обед в полдень; за столом найдётся место для двоих, если предупредить утром.
+
+Г. Беллами, издатель. Объявления к следующему выпуску принимаются до четверга."
+body_en = "FROM THE MINE YARD
+
+A new rope is being fitted at the upper headframe. Ore from the lower dump will be weighed at the assay office after noon. The MJ spur remains closed; no empties are to be spotted there.
+
+BC&W RAILWAY NOTICE
+
+No. 17 boards passengers at the main platform. Goods for No. 71 go to the freight deck; present waybills to the agent, not the conductor. Set your watch by the depot clock.
+
+ABOUT TOWN
+
+The creek rose two notches at the bridge overnight. Teamsters are asked to keep to the middle of the planks. Mrs. Hargrove serves dinner at noon; room for two if word is sent in the morning.
+
+H. Bellamy, Publisher. Notices for the next number received through Thursday."

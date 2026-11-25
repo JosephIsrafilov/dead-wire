@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://b1route001"]
+[gd_scene load_steps=19 format=3 uid="uid://b1route001"]
 
 [ext_resource type="Script" path="res://scripts/telegraph/ui/routing_board.gd" id="1_route"]
 [ext_resource type="Script" path="res://scripts/interaction/interactable.gd" id="2_interact"]
@@ -8,18 +8,30 @@
 [ext_resource type="Material" path="res://materials/style_tests/paper_log.tres" id="6_paper"]
 [ext_resource type="Material" path="res://materials/style_tests/metal_oxidized.tres" id="7_iron"]
 [ext_resource type="ArrayMesh" path="res://assets/models/office_props_v1/board_static.res" id="8_board_mesh"]
-[ext_resource type="FontFile" path="res://assets/fonts/oldstandard/OldStandardTT-Regular.ttf" id="9_serif"]
+[ext_resource type="FontFile" path="res://assets/fonts/oldstandard/OldStandardTT-Bold.ttf" id="9_serif"]
+[ext_resource type="Texture2D" path="res://assets/textures/town_v2/iron_albedo.png" id="10_iron_albedo"]
+[ext_resource type="Texture2D" path="res://assets/textures/town_v2/iron_normal.png" id="11_iron_normal"]
+[ext_resource type="Texture2D" path="res://assets/textures/town_v2/iron_roughness.png" id="12_iron_rough"]
+[ext_resource type="Material" path="res://materials/style_tests/card_morse_stock.tres" id="13_card_stock"]
 
 [sub_resource type="StandardMaterial3D" id="CastIronWorn"]
-shading_mode = 2
-albedo_color = Color(0.24, 0.23, 0.22, 1)
-metallic = 0.55
-roughness = 0.58
+albedo_color = Color(0.67, 0.64, 0.57, 1)
+albedo_texture = ExtResource("10_iron_albedo")
+metallic = 0.72
+roughness = 0.84
+roughness_texture = ExtResource("12_iron_rough")
+roughness_texture_channel = 0
+normal_enabled = true
+normal_scale = 0.53
+normal_texture = ExtResource("11_iron_normal")
+texture_filter = 2
+uv1_triplanar = true
+uv1_scale = Vector3(4, 4, 4)
 
 [sub_resource type="StandardMaterial3D" id="EnamelCream"]
 shading_mode = 2
-albedo_color = Color(0.84, 0.78, 0.65, 1)
-roughness = 0.45
+albedo_color = Color(0.95, 0.90, 0.78, 1)
+roughness = 0.58
 
 [sub_resource type="StandardMaterial3D" id="SignalGreen"]
 shading_mode = 2
@@ -51,10 +63,14 @@ albedo_color = Color(0.035, 0.032, 0.03, 1)
 roughness = 0.3
 
 [sub_resource type="BoxShape3D" id="RulesInteract"]
-size = Vector3(0.34, 0.44, 0.12)
+size = Vector3(0.36, 0.44, 0.12)
 
 [sub_resource type="BoxShape3D" id="StandSolid"]
 size = Vector3(0.3, 0.6, 0.24)
+
+[sub_resource type="PlaneMesh" id="RulesCardFaceMesh"]
+material = ExtResource("13_card_stock")
+size = Vector2(0.34, 0.37)
 
 [node name="RoutingBoard" type="Node3D"]
 script = ExtResource("1_route")
@@ -186,12 +202,93 @@ height = 0.016
 sides = 12
 material = SubResource("CastIronWorn")
 
+; The relay rod leaves the wall at the pulley and passes through the ceiling.
+[node name="OverheadTieRod" type="CSGCylinder3D" parent="."]
+position = Vector3(0.16, 1.855, -0.036)
+radius = 0.009
+height = 0.555
+sides = 8
+material = SubResource("CastIronWorn")
+
+[node name="OverheadPulley" type="CSGCylinder3D" parent="."]
+position = Vector3(0.16, 2.11, -0.056)
+rotation = Vector3(1.5707963, 0, 0)
+radius = 0.039
+height = 0.021
+sides = 12
+material = SubResource("CastIronWorn")
+
+[node name="CeilingTieRod" type="CSGBox3D" parent="."]
+position = Vector3(0.16, 2.135, -0.65)
+size = Vector3(0.012, 0.012, 1.24)
+material = SubResource("CastIronWorn")
+
+[node name="CeilingGland" type="CSGBox3D" parent="."]
+position = Vector3(0.16, 2.227, -1.26)
+size = Vector3(0.072, 0.026, 0.078)
+material = ExtResource("5_brass")
+
+[node name="SignalUplink" type="CSGCylinder3D" parent="."]
+position = Vector3(0.16, 2.18, -1.26)
+radius = 0.011
+height = 0.11
+sides = 8
+material = SubResource("CastIronWorn")
+
 ; The quadrant: an iron arc band (r 0.70–0.74 around the pivot, ±46°) the
 ; lever rides between its two notches. One extruded shape, no hidden ring.
 [node name="Quadrant" type="CSGPolygon3D" parent="."]
 position = Vector3(0, -0.46, -0.14)
 polygon = PackedVector2Array(-0.532, 0.514, -0.42, 0.609, -0.297, 0.678, -0.168, 0.721, -0.034, 0.739, 0.103, 0.733, 0.234, 0.702, 0.36, 0.647, 0.474, 0.568, 0.532, 0.514, 0.504, 0.486, 0.448, 0.537, 0.34, 0.611, 0.221, 0.663, 0.097, 0.693, -0.032, 0.699, -0.159, 0.682, -0.281, 0.641, -0.397, 0.576, -0.504, 0.486)
 depth = 0.04
+material = SubResource("CastIronWorn")
+
+[node name="QuadrantTooth1" type="CSGBox3D" parent="."]
+position = Vector3(0.36021, 0.18984, -0.164)
+rotation = Vector3(0, 0, -0.506145)
+size = Vector3(0.037, 0.027, 0.052)
+material = SubResource("CastIronWorn")
+
+[node name="QuadrantTooth2" type="CSGBox3D" parent="."]
+position = Vector3(0.26627, 0.23365, -0.164)
+rotation = Vector3(0, 0, -0.366519)
+size = Vector3(0.037, 0.027, 0.052)
+material = SubResource("CastIronWorn")
+
+[node name="QuadrantTooth3" type="CSGBox3D" parent="."]
+position = Vector3(0.16714, 0.26396, -0.164)
+rotation = Vector3(0, 0, -0.226893)
+size = Vector3(0.037, 0.027, 0.052)
+material = SubResource("CastIronWorn")
+
+[node name="QuadrantTooth4" type="CSGBox3D" parent="."]
+position = Vector3(0.06476, 0.28017, -0.164)
+rotation = Vector3(0, 0, -0.087266)
+size = Vector3(0.037, 0.027, 0.052)
+material = SubResource("CastIronWorn")
+
+[node name="QuadrantTooth5" type="CSGBox3D" parent="."]
+position = Vector3(-0.03889, 0.28198, -0.164)
+rotation = Vector3(0, 0, 0.052360)
+size = Vector3(0.037, 0.027, 0.052)
+material = SubResource("CastIronWorn")
+
+[node name="QuadrantTooth6" type="CSGBox3D" parent="."]
+position = Vector3(-0.14177, 0.26935, -0.164)
+rotation = Vector3(0, 0, 0.191986)
+size = Vector3(0.037, 0.027, 0.052)
+material = SubResource("CastIronWorn")
+
+[node name="QuadrantTooth7" type="CSGBox3D" parent="."]
+position = Vector3(-0.2419, 0.24252, -0.164)
+rotation = Vector3(0, 0, 0.331613)
+size = Vector3(0.037, 0.027, 0.052)
+material = SubResource("CastIronWorn")
+
+[node name="QuadrantTooth8" type="CSGBox3D" parent="."]
+position = Vector3(-0.33731, 0.20202, -0.164)
+rotation = Vector3(0, 0, 0.471239)
+size = Vector3(0.037, 0.027, 0.052)
 material = SubResource("CastIronWorn")
 
 [node name="NotchClear" type="CSGBox3D" parent="."]
@@ -524,26 +621,30 @@ sides = 8
 material = ExtResource("7_iron")
 
 [node name="HeaderLabel3D" type="Label3D" parent="."]
+outline_modulate = Color(0.055, 0.038, 0.025, 1)
+texture_filter = 3
 position = Vector3(0, 0.8, -0.0125)
 rotation = Vector3(0, 3.141593, 0)
-pixel_size = 0.0021
+pixel_size = 0.00173
 shaded = true
 font = ExtResource("9_serif")
-modulate = Color(0.08, 0.06, 0.04, 1)
-outline_size = 0
+modulate = Color(0.055, 0.038, 0.025, 1)
+outline_size = 1
 text = "TRAIN-ORDER SIGNAL"
-font_size = 13
+font_size = 19
 
 [node name="HeaderLabel3DSub" type="Label3D" parent="."]
+outline_modulate = Color(0.055, 0.038, 0.025, 1)
+texture_filter = 3
 position = Vector3(0, 0.755, -0.0125)
 rotation = Vector3(0, 3.141593, 0)
-pixel_size = 0.0013
+pixel_size = 0.00128
 shaded = true
 font = ExtResource("9_serif")
-modulate = Color(0.08, 0.06, 0.04, 1)
-outline_size = 0
+modulate = Color(0.055, 0.038, 0.025, 1)
+outline_size = 1
 text = "EASTWARD — BLACK CREEK"
-font_size = 12
+font_size = 16
 
 ; The one line that makes the lever legible. The board is a physical order
 ; instrument: throwing it is what actually sends a train, and it does not
@@ -555,6 +656,8 @@ font_size = 12
 ; at y 0.982, the MAIN label starts at 0.90), never over the diagram, and it is
 ; short enough to clear the slate's 0.72 m width at this pixel size.
 [node name="InstructionLabel3D" type="Label3D" parent="."]
+font = ExtResource("9_serif")
+texture_filter = 3
 visible = false
 position = Vector3(0, 0.958, -0.048)
 rotation = Vector3(0, 3.141593, 0)
@@ -563,9 +666,10 @@ modulate = Color(0.68, 0.62, 0.48, 1)
 outline_size = 0
 text = "THROW = SEND. IT DOES NOT READ THE COPY."
 font_size = 12
-font_size = 11
 
 [node name="LineLabel3D" type="Label3D" parent="."]
+font = ExtResource("9_serif")
+texture_filter = 3
 visible = false
 position = Vector3(-0.24, 0.9, -0.048)
 rotation = Vector3(0, 3.141593, 0)
@@ -576,6 +680,8 @@ text = "MAIN"
 font_size = 13
 
 [node name="SidingLabel3D" type="Label3D" parent="."]
+font = ExtResource("9_serif")
+texture_filter = 3
 visible = false
 position = Vector3(-0.24, 0.56, -0.048)
 rotation = Vector3(0, 3.141593, 0)
@@ -586,26 +692,30 @@ text = "SIDING"
 font_size = 13
 
 [node name="ClearEastLabel3D" type="Label3D" parent="."]
+outline_modulate = Color(0.055, 0.038, 0.025, 1)
+texture_filter = 3
 position = Vector3(-0.43, 0.25, -0.141)
 rotation = Vector3(0, 3.141593, 0)
-pixel_size = 0.0018
+pixel_size = 0.00152
 shaded = true
 font = ExtResource("9_serif")
-modulate = Color(0.08, 0.06, 0.04, 1)
-outline_size = 0
+modulate = Color(0.055, 0.038, 0.025, 1)
+outline_size = 1
 text = "CLEAR EAST"
-font_size = 13
+font_size = 18
 
 [node name="HoldLabel3D" type="Label3D" parent="."]
+outline_modulate = Color(0.055, 0.038, 0.025, 1)
+texture_filter = 3
 position = Vector3(0.43, 0.25, -0.141)
 rotation = Vector3(0, 3.141593, 0)
-pixel_size = 0.0018
+pixel_size = 0.00152
 shaded = true
 font = ExtResource("9_serif")
-modulate = Color(0.08, 0.06, 0.04, 1)
-outline_size = 0
+modulate = Color(0.055, 0.038, 0.025, 1)
+outline_size = 1
 text = "HOLD"
-font_size = 13
+font_size = 18
 
 [node name="BoardSolid" type="StaticBody3D" parent="."]
 collision_layer = 1
@@ -642,26 +752,33 @@ max_db = -4.0
 position = Vector3(0.62, 0.62, 0.0)
 
 [node name="Frame" type="CSGBox3D" parent="SignalRules"]
-size = Vector3(0.32, 0.42, 0.02)
+size = Vector3(0.38, 0.42, 0.02)
 material = ExtResource("4_wood")
 
 [node name="Sheet" type="CSGBox3D" parent="SignalRules"]
 position = Vector3(0, 0, -0.011)
-size = Vector3(0.27, 0.37, 0.003)
+size = Vector3(0.34, 0.37, 0.003)
 material = ExtResource("6_paper")
 
+[node name="SheetFace" type="MeshInstance3D" parent="SignalRules"]
+position = Vector3(0, 0, -0.0128)
+rotation = Vector3(1.5707963, 3.141593, 0)
+mesh = SubResource("RulesCardFaceMesh")
+
 [node name="Text" type="Label3D" parent="SignalRules"]
-position = Vector3(0.125, 0, -0.0135)
+outline_modulate = Color(0.055, 0.038, 0.025, 1)
+texture_filter = 3
+position = Vector3(0, 0, -0.0142)
 rotation = Vector3(0, 3.141593, 0)
-pixel_size = 0.00085
+pixel_size = 0.00128
 shaded = true
 font = ExtResource("9_serif")
-modulate = Color(0.1, 0.07, 0.04, 1)
-outline_size = 0
-font_size = 16
-width = 300.0
-autowrap_mode = 2
-horizontal_alignment = 0
+modulate = Color(0.055, 0.038, 0.025, 1)
+outline_size = 1
+font_size = 20
+width = 236.0
+autowrap_mode = 0
+horizontal_alignment = 1
 
 [node name="Interactable" type="Area3D" parent="SignalRules"]
 collision_layer = 2
@@ -672,3 +789,99 @@ prompt_text = "Read the Rules"
 [node name="CollisionShape3D" type="CollisionShape3D" parent="SignalRules/Interactable"]
 position = Vector3(0, 0, -0.05)
 shape = SubResource("RulesInteract")
+
+; ---- Track schematic plate: diegetic map showing Main East vs Siding Hold vs sealed MJ ----
+[node name="TrackSchematic" type="Node3D" parent="."]
+position = Vector3(-0.73, 0.86, 0.0)
+
+[node name="Frame" type="CSGBox3D" parent="TrackSchematic"]
+size = Vector3(0.56, 0.42, 0.022)
+material = ExtResource("4_wood")
+
+[node name="Slate" type="CSGBox3D" parent="TrackSchematic"]
+position = Vector3(0, 0, -0.011)
+size = Vector3(0.51, 0.37, 0.004)
+material = ExtResource("3_slate")
+
+[node name="LineMain" type="CSGBox3D" parent="TrackSchematic"]
+position = Vector3(-0.01, 0.045, -0.015)
+size = Vector3(0.35, 0.008, 0.003)
+material = ExtResource("5_brass")
+
+[node name="LineSiding" type="CSGBox3D" parent="TrackSchematic"]
+position = Vector3(-0.03, -0.025, -0.015)
+size = Vector3(0.19, 0.007, 0.003)
+material = ExtResource("5_brass")
+
+[node name="SwitchSiding" type="CSGBox3D" parent="TrackSchematic"]
+position = Vector3(0.085, 0.010, -0.015)
+rotation = Vector3(0, 0, -0.52)
+size = Vector3(0.007, 0.085, 0.003)
+material = ExtResource("5_brass")
+
+[node name="LineSpurMJ" type="CSGBox3D" parent="TrackSchematic"]
+position = Vector3(-0.04, -0.088, -0.015)
+size = Vector3(0.16, 0.006, 0.003)
+material = SubResource("SignalRed")
+
+[node name="ClearLamp" type="CSGCylinder3D" parent="TrackSchematic"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -0.155, 0.045, -0.017)
+radius = 0.011
+height = 0.006
+sides = 10
+material = SubResource("RepeaterEnamel")
+
+[node name="HoldLamp" type="CSGCylinder3D" parent="TrackSchematic"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -0.155, -0.025, -0.017)
+radius = 0.011
+height = 0.006
+sides = 10
+material = SubResource("SignalRed")
+
+[node name="TitleLabel3D" type="Label3D" parent="TrackSchematic"]
+texture_filter = 3
+position = Vector3(0, 0.135, -0.016)
+rotation = Vector3(0, 3.141593, 0)
+pixel_size = 0.00125
+shaded = true
+font = ExtResource("9_serif")
+modulate = Color(0.95, 0.90, 0.78, 1)
+outline_size = 0
+text = "СХЕМА ПУТЕЙ СТ. БЛЭК-КРИК"
+font_size = 20
+
+[node name="MainLabel3D" type="Label3D" parent="TrackSchematic"]
+texture_filter = 3
+position = Vector3(0.01, 0.072, -0.016)
+rotation = Vector3(0, 3.141593, 0)
+pixel_size = 0.00125
+shaded = true
+font = ExtResource("9_serif")
+modulate = Color(0.88, 0.96, 0.82, 1)
+outline_size = 0
+text = "ВОСТОК (ПРОПУСТИТЬ)  ◀══  СТАНЦИЯ  ◀══  ЗАПАД"
+font_size = 18
+
+[node name="HoldLabel3D" type="Label3D" parent="TrackSchematic"]
+texture_filter = 3
+position = Vector3(0.01, -0.002, -0.016)
+rotation = Vector3(0, 3.141593, 0)
+pixel_size = 0.00125
+shaded = true
+font = ExtResource("9_serif")
+modulate = Color(0.95, 0.90, 0.78, 1)
+outline_size = 0
+text = "РАЗЪЕЗД (ДЕРЖАТЬ)"
+font_size = 18
+
+[node name="MjLabel3D" type="Label3D" parent="TrackSchematic"]
+texture_filter = 3
+position = Vector3(0.01, -0.064, -0.016)
+rotation = Vector3(0, 3.141593, 0)
+pixel_size = 0.00125
+shaded = true
+font = ExtResource("9_serif")
+modulate = Color(0.96, 0.70, 0.60, 1)
+outline_size = 0
+text = "ВЕТКА ШАХТЫ MJ — ЗАШИТО (1885)"
+font_size = 18

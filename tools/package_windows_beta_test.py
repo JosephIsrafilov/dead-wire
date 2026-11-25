@@ -317,6 +317,52 @@ class PckDirectoryTests(unittest.TestCase):
             with self.assertRaisesRegex(RuntimeError, "missing required runtime audio"):
                 package_windows_beta.check_pck_exclusions(pck)
 
+    def test_surface_banks_must_ship_complete(self):
+        samples = {
+            f"res://.godot/imported/{surface}_{index}.wav-hash.sample": b"audio"
+            for surface, count in package_windows_beta.SURFACE_BANK_SIZES.items()
+            for index in range(1, count + 1)
+        }
+        boards = {
+            f"res://.godot/imported/footstep_boards_{index}.wav-hash.sample": b"audio"
+            for index in range(1, 6)
+        }
+        with tempfile.TemporaryDirectory() as directory:
+            pck = Path(directory) / "game.pck"
+            build_pck(pck, {**boards, **samples})
+            package_windows_beta.check_pck_exclusions(pck)
+            for surface in ("dirt", "rail", "stone"):
+                with self.subTest(surface=surface):
+                    trimmed = dict(samples)
+                    trimmed.pop(f"res://.godot/imported/{surface}_2.wav-hash.sample")
+                    build_pck(pck, {**boards, **trimmed})
+                    with self.assertRaisesRegex(RuntimeError, f"surface bank '{surface}' is incomplete"):
+                        package_windows_beta.check_pck_exclusions(pck)
+
+    def test_surface_bank_contract_matches_the_builder(self):
+        contract = package_windows_beta.surface_bank_contract()
+        self.assertEqual(contract, package_windows_beta.SURFACE_BANK_SIZES)
+
+    def test_synthesised_phase_a_steps_do_not_ship_beside_the_banks(self):
+        boards = {
+            f"res://.godot/imported/footstep_boards_{index}.wav-hash.sample": b"audio"
+            for index in range(1, 6)
+        }
+        samples = {
+            f"res://.godot/imported/{surface}_{index}.wav-hash.sample": b"audio"
+            for surface, count in package_windows_beta.SURFACE_BANK_SIZES.items()
+            for index in range(1, count + 1)
+        }
+        with tempfile.TemporaryDirectory() as directory:
+            pck = Path(directory) / "game.pck"
+            build_pck(pck, {
+                **boards,
+                **samples,
+                "res://.godot/imported/footstep_wood_3.wav-hash.sample": b"generated",
+            })
+            with self.assertRaisesRegex(RuntimeError, "synthesised Phase-A footsteps"):
+                package_windows_beta.check_pck_exclusions(pck)
+
     def test_private_paths_are_refused_in_pck(self):
         with tempfile.TemporaryDirectory() as directory:
             pck = Path(directory) / "game.pck"
@@ -365,6 +411,7 @@ class PckDirectoryTests(unittest.TestCase):
             "res://tmpr7p27xcp/bed.wav.import",
             "res://tmptx590wz0/t.wav.import",
             "res://test_logs/private.log",
+            "res://scratch/bay_probe.gd.remap",
         )
         with tempfile.TemporaryDirectory() as directory:
             pck = Path(directory) / "game.pck"

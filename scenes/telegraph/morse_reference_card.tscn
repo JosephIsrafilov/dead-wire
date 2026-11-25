@@ -1,20 +1,22 @@
-[gd_scene load_steps=6 format=3 uid="uid://b1morseref001"]
+[gd_scene load_steps=9 format=3 uid="uid://b1morseref001"]
 
 [ext_resource type="Script" path="res://scripts/telegraph/ui/morse_reference_card.gd" id="1_ref"]
 [ext_resource type="Script" path="res://scripts/interaction/interactable.gd" id="2_interact"]
 [ext_resource type="Material" path="res://materials/style_tests/paper_log.tres" id="3_paper"]
 [ext_resource type="Material" path="res://materials/style_tests/card_morse_stock.tres" id="4_stock"]
 
+[ext_resource type="FontFile" path="res://assets/fonts/oldstandard/OldStandardTT-Bold.ttf" id="5_bold"]
+
 [sub_resource type="BoxMesh" id="BoxMesh_card"]
 material = ExtResource("3_paper")
-size = Vector3(0.3, 0.003, 0.3)
+size = Vector3(0.36, 0.003, 0.38)
 
 [sub_resource type="PlaneMesh" id="CardFaceMesh"]
 material = ExtResource("4_stock")
-size = Vector2(0.3, 0.3)
+size = Vector2(0.36, 0.38)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_interact"]
-size = Vector3(0.22, 0.05, 0.28)
+size = Vector3(0.36, 0.05, 0.38)
 
 [node name="MorseReferenceCard" type="Node3D"]
 script = ExtResource("1_ref")
@@ -28,13 +30,15 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0032, 0)
 mesh = SubResource("CardFaceMesh")
 
 [node name="Label3D" type="Label3D" parent="."]
+texture_filter = 3
+font = ExtResource("5_bold")
 transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0.004, 0)
-pixel_size = 0.00115
-modulate = Color(0.12, 0.1, 0.08, 1)
-outline_modulate = Color(0.85, 0.82, 0.72, 1)
+pixel_size = 0.00110
+modulate = Color(0.055, 0.038, 0.025, 1)
+outline_modulate = Color(0.055, 0.038, 0.025, 1)
 text = "AMERICAN MORSE CODE 1890"
-font_size = 12
-outline_size = 0
+font_size = 19
+outline_size = 1
 autowrap_mode = 0
 
 [node name="Interactable" type="Area3D" parent="."]

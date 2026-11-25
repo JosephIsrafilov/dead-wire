@@ -11,7 +11,7 @@ extends Node
 ## never touched, and the player's own bus volumes stay theirs: the gate is
 ## an effect of its own on each bus, taken off when the office goes.
 
-const DUCKED_BUSES: Array[StringName] = [&"Ambience", &"Foley"]
+const DUCKED_BUSES: Array[StringName] = [&"Ambience", &"Foley", &"Music"]
 
 @export var office: M1OfficeController
 @export var duck_db: float = -20.0

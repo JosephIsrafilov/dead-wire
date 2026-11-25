@@ -315,7 +315,11 @@ func _on_defaults() -> void:
 func _commit(settings: GameSettings) -> void:
 	settings.save()
 	var ancestor: Node = self
+	var host: PSXPresentationHost
 	while ancestor != null and not (ancestor is M1OfficeController):
+		host = ancestor.get_node_or_null("PSXPresentationHost") as PSXPresentationHost
+		if host != null:
+			break
 		ancestor = ancestor.get_parent()
 	var office := ancestor as M1OfficeController
 	settings.apply(office.player if office != null else null)
@@ -323,6 +327,8 @@ func _commit(settings: GameSettings) -> void:
 		office.apply_presentation_mode(settings.presentation_mode)
 		if office.document_viewer != null and office.document_viewer.has_method("set_text_scale"):
 			office.document_viewer.set_text_scale(settings.text_scale)
+	elif host != null:
+		host.apply_presentation_mode(settings.presentation_mode)
 
 ## The older sound/control rows share the same numeric feedback in both menus.
 static func attach_readout(slider: HSlider, format: String) -> void:

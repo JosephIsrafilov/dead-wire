@@ -3,7 +3,7 @@ extends RefCounted
 const PAPER := preload("res://scripts/town/period_print_surface.gd")
 const WANTED := preload("res://assets/textures/town_v2/print/wanted.png")
 
-static func build(parent: Node3D) -> void:
+static func build(parent: Node3D, depot_origin: Vector3) -> void:
 	var timber := StandardMaterial3D.new()
 	timber.albedo_texture = preload("res://assets/textures/town_v2/plank_albedo.png")
 	timber.albedo_color = Color("aa9075")
@@ -31,9 +31,15 @@ static func build(parent: Node3D) -> void:
 			if i < poles.size() - 1:
 				_wire(parent, top, Vector3(poles[i+1], 6.71, 12.6 + lane), iron)
 		if i % 2 == 0:
-			PAPER.place(parent, "WeatheredBroadside", pos + Vector3(0, 1.52, 0.129), Vector2(0.22, 0.26),
-				WANTED, Vector3(0, 0, i - 4), 0.008)
-	_wire(parent, Vector3(0, 5.03, -0.5), Vector3(-8, 6.71, 12.6), iron)
+			# Pressed flat onto the bark: the pole tapers from r 0.168 at grade to
+			# 0.091 at 7.08 m, so at 1.52 m the bark is r 0.1515. The sheet's own
+			# centre touches that radius and wraps around it, instead of hovering
+			# 0.13 m inside the timber as a flat card the player can see through.
+			PAPER.place(parent, "WeatheredBroadside", pos + Vector3(0, 1.52, 0.152),
+				Vector2(0.22, 0.26), WANTED, Vector3(0, 0, (i % 4) - 1.5), 0.004, 0.152)
+	for lane in [-0.46, 0.0, 0.46]:
+		_wire(parent, depot_origin + Vector3(lane, 5.58, 1.2),
+			Vector3(-8.0, 6.71, 12.6 + lane * 0.60 / 0.46), iron)
 
 static func _cylinder(parent: Node3D, pos: Vector3, top: float, bottom: float,
 		height: float, material: Material) -> MeshInstance3D:

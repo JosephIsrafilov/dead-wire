@@ -14,6 +14,8 @@ extends CanvasLayer
 
 signal intro_finished()
 
+const CLICK_SFX := preload("res://audio/sfx/foley/key_click.wav")
+
 @export var hold_seconds: float = 9.0
 @export var fade_duration: float = 2.2
 @export var skip_fade_duration: float = 0.35
@@ -26,6 +28,8 @@ var fade_rect: ColorRect = null
 var card_root: Control = null
 
 var _music_fade: Tween = null
+var _reveal_tween: Tween = null
+var _click_player: AudioStreamPlayer = null
 var _is_running: bool = false
 var _is_finished: bool = false
 var _elapsed: float = 0.0
@@ -97,11 +101,17 @@ func begin() -> void:
 	visible = true
 	var music := get_node_or_null("IntroMusic") as AudioStreamPlayer
 	if music != null:
-		music.play()
+		if DisplayServer.get_name() != "headless" and is_inside_tree():
+			music.volume_db = -30.0
+			music.play()
+			create_tween().tween_property(music, "volume_db", -12.0, 1.8).set_trans(Tween.TRANS_SINE)
+		else:
+			music.play()
 	if fade_rect != null:
 		fade_rect.color.a = 1.0
 	if card_root != null:
 		card_root.modulate.a = 1.0
+	_play_entrance_sequence()
 	# He is not in the room yet, so he cannot walk or look around it.
 	if player != null:
 		player.set_movement_locked(true)
@@ -161,7 +171,44 @@ func _finish_with_duration(duration: float) -> void:
 		tween.tween_property(fade_rect, "color:a", 0.0, duration).set_trans(Tween.TRANS_SINE)
 	tween.chain().tween_callback(_release)
 
+func _play_entrance_sequence() -> void:
+	var place := get_node_or_null("CenterContainer/VBoxContainer/PlaceLabel") as Control
+	var rule := get_node_or_null("CenterContainer/VBoxContainer/HSeparator") as Control
+	var order := get_node_or_null("CenterContainer/VBoxContainer/OrderLabel") as Control
+	var hint := get_node_or_null("CenterContainer/VBoxContainer/HintLabel") as Control
+	if not is_inside_tree() or DisplayServer.get_name() == "headless":
+		for c in [place, rule, order, hint]:
+			if c != null:
+				c.modulate.a = 1.0
+		return
+	for c in [place, rule, order, hint]:
+		if c != null:
+			c.modulate.a = 0.0
+	if _click_player == null:
+		_click_player = AudioStreamPlayer.new()
+		_click_player.stream = CLICK_SFX
+		_click_player.bus = &"Foley" if AudioServer.get_bus_index(&"Foley") >= 0 else &"Master"
+		_click_player.volume_db = -20.0
+		add_child(_click_player)
+	if _reveal_tween != null and is_instance_valid(_reveal_tween):
+		_reveal_tween.kill()
+	_reveal_tween = create_tween()
+	if place != null:
+		_reveal_tween.tween_property(place, "modulate:a", 1.0, 0.75).set_trans(Tween.TRANS_SINE)
+	if rule != null:
+		_reveal_tween.tween_property(rule, "modulate:a", 1.0, 0.45).set_trans(Tween.TRANS_SINE)
+	_reveal_tween.tween_callback(func() -> void:
+		if is_instance_valid(_click_player) and _click_player.is_inside_tree():
+			_click_player.play())
+	if order != null:
+		_reveal_tween.tween_property(order, "modulate:a", 1.0, 1.05).set_trans(Tween.TRANS_SINE)
+	_reveal_tween.tween_interval(0.35)
+	if hint != null:
+		_reveal_tween.tween_property(hint, "modulate:a", 1.0, 0.65).set_trans(Tween.TRANS_SINE)
+
 func _release() -> void:
+	if _reveal_tween != null and is_instance_valid(_reveal_tween):
+		_reveal_tween.kill()
 	if _music_fade != null and is_instance_valid(_music_fade):
 		_music_fade.kill()
 	var music := get_node_or_null("IntroMusic") as AudioStreamPlayer

@@ -24,6 +24,14 @@ cd "$(dirname "$0")/.."
 
 CACHE_DIR="${GDTOOLKIT_CACHE_DIR:-.cache/gdtoolkit}"
 export GDTOOLKIT_CACHE_DIR="$(cd "$(dirname "$CACHE_DIR")" 2>/dev/null && pwd || pwd)/$(basename "$CACHE_DIR")"
+# gdlint is a native Windows binary, so it does not understand an MSYS path
+# (/c/Users/...). Handed one, it cannot open its grammar cache and reports
+# "Cannot open file '<every file>': Access is denied" once per file. Convert the
+# cache path to the native spelling; on Linux and macOS this is a no-op.
+if command -v cygpath >/dev/null 2>&1; then
+  GDTOOLKIT_CACHE_DIR="$(cygpath -m "$GDTOOLKIT_CACHE_DIR" 2>/dev/null || echo "$GDTOOLKIT_CACHE_DIR")"
+  export GDTOOLKIT_CACHE_DIR
+fi
 mkdir -p "$GDTOOLKIT_CACHE_DIR"
 
 GDLINT=".venv-tools/Scripts/gdlint.exe"

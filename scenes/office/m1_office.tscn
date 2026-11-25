@@ -1,4 +1,4 @@
-[gd_scene load_steps=55 format=3 uid="uid://m1office001"]
+[gd_scene load_steps=56 format=3 uid="uid://m1office001"]
 
 [ext_resource type="Script" path="res://scripts/office/m1_office_controller.gd" id="1_controller"]
 [ext_resource type="Material" path="res://materials/style_tests/floor_wood_planks.tres" id="2_floor"]
@@ -10,13 +10,14 @@
 [ext_resource type="PackedScene" path="res://scenes/office/mine_yard.tscn" id="6_yard"]
 [ext_resource type="Script" path="res://scripts/office/window_glass_mirror.gd" id="63_glass_mirror"]
 [ext_resource type="Script" path="res://scripts/office/silence_three.gd" id="64_silence_three"]
+[ext_resource type="Script" path="res://scripts/office/window_figure_staging.gd" id="75_figure_staging"]
 [ext_resource type="Script" path="res://scripts/office/silence_two.gd" id="65_silence_two"]
 [ext_resource type="Script" path="res://scripts/office/dead_line_clicks.gd" id="66_dead_line"]
 [ext_resource type="Script" path="res://scripts/office/dawn_train.gd" id="67_dawn_train"]
-[ext_resource type="PackedScene" path="res://scenes/office/dust_motes.tscn" id="68_dust"]
 [ext_resource type="Script" path="res://scripts/office/wire_sway.gd" id="69_wire_sway"]
 [ext_resource type="PackedScene" path="res://scenes/office/yard_snow.tscn" id="70_snow"]
 [ext_resource type="Material" path="res://materials/style_tests/m1_wainscot_wood.tres" id="7_wainscot"]
+[ext_resource type="ArrayMesh" path="res://assets/models/office_props_v1/wainscot_panel.res" id="7_wainscot_mesh"]
 [ext_resource type="PackedScene" path="res://scenes/style_tests/props/window_north.tscn" id="8_window"]
 [ext_resource type="PackedScene" path="res://scenes/style_tests/props/door_south.tscn" id="9_door"]
 [ext_resource type="PackedScene" path="res://scenes/style_tests/props/desk_setup.tscn" id="10_desk"]
@@ -70,7 +71,10 @@
 [ext_resource type="Material" path="res://materials/style_tests/map_division.tres" id="46_map"]
 [ext_resource type="PackedScene" path="res://scenes/style_tests/props/oil_lamp_lowpoly.tscn" id="47_lamp"]
 
-[ext_resource type="Texture2D" path="res://assets/textures/worn_warmth/baize_128_v1.png" id="51_baize"]
+[ext_resource type="Texture2D" path="res://assets/textures/office_surfaces/blotter_albedo.png" id="51_baize"]
+[ext_resource type="Texture2D" path="res://assets/textures/office_surfaces/blotter_normal.png" id="51_baize_normal"]
+[ext_resource type="Texture2D" path="res://assets/textures/office_surfaces/blotter_roughness.png" id="51_baize_rough"]
+[ext_resource type="PackedScene" path="res://scenes/office/office_joinery.tscn" id="office_joinery"]
 
 [ext_resource type="Script" path="res://scripts/office/night_guidance_controller.gd" id="guidance"]
 
@@ -97,6 +101,8 @@
 [ext_resource type="Script" path="res://scripts/office/yard_fog.gd" id="yard_fog"]
 [ext_resource type="ArrayMesh" path="res://assets/models/office_props_v1/division_map_frame_static.res" id="division_map_frame"]
 
+[ext_resource type="Script" path="res://scripts/office/shift_target_highlight.gd" id="shift_highlight"]
+
 [sub_resource type="BoxShape3D" id="SeatInteract"]
 size = Vector3(0.70, 1.04, 0.70)
 
@@ -110,20 +116,20 @@ size = Vector3(1.7, 2.0, 0.6)
 size = Vector3(0.23, 0.15, 0.11)
 
 [sub_resource type="StandardMaterial3D" id="BlotterFelt"]
-albedo_color = Color(0.05, 0.1, 0.07, 1)
 albedo_texture = ExtResource("51_baize")
-texture_filter = 0
+texture_filter = 2
 roughness = 1.0
+roughness_texture = ExtResource("51_baize_rough")
+roughness_texture_channel = 0
 specular_mode = 2
+normal_enabled = true
+normal_scale = 0.56
+normal_texture = ExtResource("51_baize_normal")
 
 [sub_resource type="StandardMaterial3D" id="BlotterLeather"]
 albedo_color = Color(0.2, 0.11, 0.07, 1)
 roughness = 0.6
 metallic_specular = 0.3
-
-[sub_resource type="StandardMaterial3D" id="LineWire"]
-albedo_color = Color(0.09, 0.08, 0.07, 1)
-roughness = 0.6
 
 [sub_resource type="StandardMaterial3D" id="DoorGapLight"]
 shading_mode = 0
@@ -233,7 +239,7 @@ mouse_filter = 2
 [node name="RoomReflection" type="ReflectionProbe" parent="."]
 position = Vector3(0, 1.45, 0)
 update_mode = 0
-intensity = 0.55
+intensity = 0.72
 max_distance = 8.0
 size = Vector3(5.9, 2.95, 4.7)
 interior = true
@@ -241,11 +247,14 @@ ambient_mode = 0
 reflection_mask = 4294967293
 
 [node name="DeskLampLight" type="OmniLight3D" parent="."]
-position = Vector3(-1.65, 0.975, -2.06)
-light_color = Color(1, 0.77, 0.52, 1)
-light_energy = 2.75
+position = Vector3(-1.65, 1.02, -2.06)
+light_color = Color(1, 0.76, 0.49, 1)
+light_energy = 2.25
+light_specular = 0.56
 light_indirect_energy = 0.9
 shadow_enabled = true
+shadow_opacity = 0.78
+shadow_blur = 2.8
 omni_range = 3.8
 omni_attenuation = 1.85
 
@@ -253,34 +262,36 @@ omni_attenuation = 1.85
 ; The operator's own arm (visual layer 2) is not in its cull mask: the body
 ; stays in the lamp's world instead of becoming a grey band at the frame edge.
 [node name="WindowBounceLight" type="SpotLight3D" parent="."]
-position = Vector3(-1.5, 2.0, -2.9)
-rotation = Vector3(-0.45, 3.141593, 0)
-light_color = Color(0.28, 0.46, 0.88, 1)
-light_energy = 2.65
+position = Vector3(-1.38, 1.86, -2.73)
+rotation = Vector3(-0.61, 3.141593, 0)
+light_color = Color(0.43, 0.60, 0.89, 1)
+light_energy = 2.82
 light_specular = 0.25
 light_cull_mask = 4294967293
 light_indirect_energy = 0.7
 shadow_enabled = true
 spot_range = 7.0
 spot_attenuation = 0.9
-spot_angle = 42.0
+spot_angle = 37.0
 
 ; Lamp light thrown back off the lit copy sheet: warms the writing hand from
 ; below, the way white paper under a lamp does. No shadow, tiny range.
 [node name="PaperBounceLight" type="OmniLight3D" parent="."]
-position = Vector3(-1.38, 0.9, -1.76)
-light_color = Color(1, 0.82, 0.62, 1)
-light_energy = 0.18
+position = Vector3(-1.50, 0.93, -1.75)
+light_color = Color(1, 0.78, 0.54, 1)
+light_energy = 0.36
 light_specular = 0.0
-omni_range = 0.4
+omni_range = 1.45
 omni_attenuation = 1.6
 
 [node name="StoveEmberLight" type="OmniLight3D" parent="."]
-position = Vector3(1.62, 0.68, 1.55)
-light_color = Color(0.96, 0.30, 0.06, 1)
-light_energy = 2.25
+position = Vector3(1.60, 0.59, 1.51)
+light_color = Color(1, 0.45, 0.20, 1)
+light_energy = 1.02
 shadow_enabled = true
-omni_range = 5.0
+shadow_opacity = 0.72
+shadow_blur = 2.0
+omni_range = 4.2
 omni_attenuation = 1.4
 
 [node name="RoutingBoardSconceLight" type="OmniLight3D" parent="."]
@@ -302,12 +313,13 @@ omni_range = 3.2
 omni_attenuation = 1.55
 
 [node name="BackWallMoonFill" type="OmniLight3D" parent="."]
-position = Vector3(0.95, 2.05, -0.35)
-light_color = Color(0.30, 0.44, 0.70, 1)
-light_energy = 0.22
+position = Vector3(-1.24, 1.57, 1.13)
+light_color = Color(0.57, 0.65, 0.78, 1)
+light_energy = 0.64
+light_specular = 0.05
 shadow_enabled = false
-omni_range = 5.8
-omni_attenuation = 1.25
+omni_range = 3.0
+omni_attenuation = 1.65
 
 ; The floor itself stays this CSG box: its top face is what the player and the
 ; physics stand on. The worn boards laid over it are a look, not a surface.
@@ -330,24 +342,26 @@ material = ExtResource("4_ceiling")
 use_collision = true
 
 [node name="CeilingBeam1" type="CSGBox3D" parent="."]
-position = Vector3(-1.8, 2.84, 0)
-size = Vector3(0.12, 0.12, 4.56)
+position = Vector3(-1.8, 2.80, 0)
+size = Vector3(0.16, 0.16, 4.56)
 material = ExtResource("5_trim")
 
 [node name="CeilingBeam2" type="CSGBox3D" parent="."]
-position = Vector3(-0.6, 2.84, 0)
-size = Vector3(0.12, 0.12, 4.56)
+position = Vector3(-0.6, 2.80, 0)
+size = Vector3(0.16, 0.16, 4.56)
 material = ExtResource("5_trim")
 
 [node name="CeilingBeam3" type="CSGBox3D" parent="."]
-position = Vector3(0.6, 2.84, 0)
-size = Vector3(0.12, 0.12, 4.56)
+position = Vector3(0.6, 2.80, 0)
+size = Vector3(0.16, 0.16, 4.56)
 material = ExtResource("5_trim")
 
 [node name="CeilingBeam4" type="CSGBox3D" parent="."]
-position = Vector3(1.8, 2.84, 0)
-size = Vector3(0.12, 0.12, 4.56)
+position = Vector3(1.8, 2.80, 0)
+size = Vector3(0.16, 0.16, 4.56)
 material = ExtResource("5_trim")
+
+[node name="OfficeJoinery" parent="." instance=ExtResource("office_joinery")]
 
 [node name="WestWall" type="CSGBox3D" parent="."]
 position = Vector3(-2.96, 1.425, 0)
@@ -431,8 +445,6 @@ cast_shadow = 0
 ; The morning trains (plan 4.6): what the board did, seen and heard at dawn.
 [node name="DawnTrain" type="Node3D" parent="."]
 script = ExtResource("67_dawn_train")
-
-[node name="DustMotes" parent="." instance=ExtResource("68_dust")]
 
 ; The line outside sways a little in the wind (plan 3.9).
 [node name="WireSway" type="Node" parent="."]
@@ -596,29 +608,18 @@ material = ExtResource("5_trim")
 transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, -2.62, 1.402, 1.16)
 
 [node name="CabinetLampLight" type="OmniLight3D" parent="."]
-position = Vector3(-2.62, 1.57, 1.10)
+position = Vector3(-2.39, 1.57, 1.19)
 light_color = Color(1, 0.76, 0.52, 1)
-light_energy = 0.38
+light_energy = 0.68
 shadow_enabled = true
+shadow_opacity = 0.65
 omni_range = 2.6
 omni_attenuation = 1.6
 
-; The line comes down the west wall behind the pigeonholes to the lead-in
-; block on the desk: the instruments are visibly on the wire.
-[node name="LineDropA" type="CSGBox3D" parent="."]
-position = Vector3(-2.82, 1.635, -1.25)
-size = Vector3(0.008, 1.69, 0.008)
-material = SubResource("LineWire")
-
-[node name="LineDropB" type="CSGBox3D" parent="."]
-position = Vector3(-2.82, 1.58, -1.235)
-size = Vector3(0.008, 1.58, 0.008)
-material = SubResource("LineWire")
-
-[node name="LineLeadIn" type="CSGBox3D" parent="."]
-position = Vector3(-2.72, 0.792, -1.242)
-size = Vector3(0.2, 0.008, 0.022)
-material = SubResource("LineWire")
+; The line used to come down the west wall behind the pigeonholes to a lead-in
+; block beside the old desk. Both are gone (roadmap 0.2): the desk sits in the
+; north bay now, so that tail pointed at a wall with no instrument under it.
+; The live entry is the desk's own WireLeadBlock in DeskSetup.
 
 ; Light from the lit landing under the office door: the door is a place in
 ; the dark, not a hole in it.
@@ -685,45 +686,53 @@ prompt_text = "Locked Until the Watch Is Over"
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.26)
 shape = SubResource("DoorInteract")
 
-[node name="WainscotWest" type="CSGBox3D" parent="."]
+[node name="WainscotWest" type="MeshInstance3D" parent="."]
 position = Vector3(-2.885, 0.7, 0)
-size = Vector3(0.045, 1.4, 4.6)
-material = ExtResource("7_wainscot")
+scale = Vector3(0.045, 1.4, 4.6)
+mesh = ExtResource("7_wainscot_mesh")
+material_override = ExtResource("7_wainscot")
 
-[node name="WainscotEast" type="CSGBox3D" parent="."]
+[node name="WainscotEast" type="MeshInstance3D" parent="."]
 position = Vector3(2.885, 0.7, 0)
-size = Vector3(0.045, 1.4, 4.6)
-material = ExtResource("7_wainscot")
+scale = Vector3(0.045, 1.4, 4.6)
+mesh = ExtResource("7_wainscot_mesh")
+material_override = ExtResource("7_wainscot")
 
-[node name="WainscotNorthFarLeft" type="CSGBox3D" parent="."]
+[node name="WainscotNorthFarLeft" type="MeshInstance3D" parent="."]
 position = Vector3(-2.6, 0.7, -2.285)
-size = Vector3(0.6, 1.4, 0.045)
-material = ExtResource("7_wainscot")
+scale = Vector3(0.6, 1.4, 0.045)
+mesh = ExtResource("7_wainscot_mesh")
+material_override = ExtResource("7_wainscot")
 
-[node name="WainscotNorthMidLeft" type="CSGBox3D" parent="."]
+[node name="WainscotNorthMidLeft" type="MeshInstance3D" parent="."]
 position = Vector3(-0.255, 0.7, -2.285)
-size = Vector3(0.89, 1.4, 0.045)
-material = ExtResource("7_wainscot")
+scale = Vector3(0.89, 1.4, 0.045)
+mesh = ExtResource("7_wainscot_mesh")
+material_override = ExtResource("7_wainscot")
 
-[node name="WainscotNorthMidRight" type="CSGBox3D" parent="."]
+[node name="WainscotNorthMidRight" type="MeshInstance3D" parent="."]
 position = Vector3(1.05, 0.7, -2.285)
-size = Vector3(1.72, 1.4, 0.045)
-material = ExtResource("7_wainscot")
+scale = Vector3(1.72, 1.4, 0.045)
+mesh = ExtResource("7_wainscot_mesh")
+material_override = ExtResource("7_wainscot")
 
-[node name="WainscotNorthRight" type="CSGBox3D" parent="."]
+[node name="WainscotNorthRight" type="MeshInstance3D" parent="."]
 position = Vector3(2.405, 0.7, -2.285)
-size = Vector3(0.99, 1.4, 0.045)
-material = ExtResource("7_wainscot")
+scale = Vector3(0.99, 1.4, 0.045)
+mesh = ExtResource("7_wainscot_mesh")
+material_override = ExtResource("7_wainscot")
 
-[node name="WainscotSouthLeft" type="CSGBox3D" parent="."]
+[node name="WainscotSouthLeft" type="MeshInstance3D" parent="."]
 position = Vector3(-2.51, 0.7, 2.285)
-size = Vector3(0.72, 1.4, 0.045)
-material = ExtResource("7_wainscot")
+scale = Vector3(0.72, 1.4, 0.045)
+mesh = ExtResource("7_wainscot_mesh")
+material_override = ExtResource("7_wainscot")
 
-[node name="WainscotSouthRight" type="CSGBox3D" parent="."]
+[node name="WainscotSouthRight" type="MeshInstance3D" parent="."]
 position = Vector3(0.88, 0.7, 2.285)
-size = Vector3(3.92, 1.4, 0.045)
-material = ExtResource("7_wainscot")
+scale = Vector3(3.92, 1.4, 0.045)
+mesh = ExtResource("7_wainscot_mesh")
+material_override = ExtResource("7_wainscot")
 
 [node name="ChairRailWest" type="CSGBox3D" parent="."]
 position = Vector3(-2.85, 1.4, 0)
@@ -781,10 +790,11 @@ position = Vector3(-2.51, 0.08, 2.28)
 size = Vector3(0.72, 0.16, 0.04)
 material = ExtResource("5_trim")
 
-[node name="WainscotNorthUnderWindow" type="CSGBox3D" parent="."]
+[node name="WainscotNorthUnderWindow" type="MeshInstance3D" parent="."]
 position = Vector3(-1.5, 0.46, -2.285)
-size = Vector3(1.6, 0.92, 0.045)
-material = ExtResource("7_wainscot")
+scale = Vector3(1.6, 0.92, 0.045)
+mesh = ExtResource("7_wainscot_mesh")
+material_override = ExtResource("7_wainscot")
 
 [node name="ChairRailNorthRight" type="CSGBox3D" parent="."]
 position = Vector3(2.415, 1.4, -2.27)
@@ -882,8 +892,8 @@ position = Vector3(-0.58, 1.16, -2.18)
 rotation = Vector3(1.5707963, -0.30, 0)
 
 [node name="OperatorCard" parent="." instance=ExtResource("operator_card")]
-position = Vector3(-1.98, 0.753, -1.66)
-rotation = Vector3(0, 0, 0)
+position = Vector3(-0.2, 1.16, -2.062)
+rotation = Vector3(1.5707963, -0.30, 0)
 
 [node name="DispatchLedger" parent="." instance=ExtResource("18_ledger")]
 position = Vector3(-2.02, 0.752, -2.08)
@@ -969,8 +979,14 @@ position = Vector3(-1.6, 0.2, 2.85)
 ;
 ; It is still well inside the observation contract's 10 m reach, and the
 ; silhouette is still cut out against the sky rather than lit.
+; Stage 1.1: this instance owns the two-stage placement, so the figure is put at
+; whatever stage its own controller asks for - Stage B 3 m beyond the glass in
+; Silence 3, Stage A out at the old mine fence when Miller knocks. The scene file
+; leaves use_stage_positions off, because the title diorama places this same
+; figure by hand and must not inherit the night's staging.
 [node name="WindowObservationEvent" parent="." instance=ExtResource("21_winobs")]
-position = Vector3(-0.92, 0.96, -4.15)
+position = Vector3(-0.92, 0.965, -4.15)
+use_stage_positions = true
 
 [node name="HangingCoat" parent="." instance=ExtResource("60_hanging_coat")]
 
@@ -1036,6 +1052,12 @@ script = ExtResource("63_glass_mirror")
 [node name="SilenceThree" type="Node" parent="."]
 script = ExtResource("64_silence_three")
 
+; Stage 1.1, Stage A: Miller's clearance slip landing at the south door puts the
+; figure out at the old mine fence. Its own node because the office controller is
+; at the file-length ceiling and this concern is independent of the wire.
+[node name="WindowFigureStaging" type="Node" parent="."]
+script = ExtResource("75_figure_staging")
+
 ; Silence 2 teaches the window (plan 4.1): a cloud over the moon, a sash creak.
 [node name="SilenceTwo" type="Node" parent="."]
 script = ExtResource("65_silence_two")
@@ -1095,6 +1117,9 @@ layer = 4
 script = ExtResource("guidance")
 
 ; Critical Morse stays readable: the room steps back while it plays (7.7).
+[node name="ShiftTargetHighlight" type="Node" parent="."]
+script = ExtResource("shift_highlight")
+
 [node name="FairnessGate" type="Node" parent="."]
 script = ExtResource("fairness_gate")
 

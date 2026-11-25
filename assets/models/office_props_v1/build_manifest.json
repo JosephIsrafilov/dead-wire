@@ -4,14 +4,14 @@
   "atlas": "res://assets/textures/office_props_v1/props_atlas_256.png",
   "assemblies": {
     "oil_lamp_static": {
-      "triangles": 544,
-      "vertices": 300,
+      "triangles": 1284,
+      "vertices": 724,
       "materials": [
         "dw_props_brass",
         "dw_props_iron"
       ],
       "aabb_godot": [
-        -0.058,
+        -0.061,
         0.0,
         -0.06,
         0.063,
@@ -20,10 +20,11 @@
       ]
     },
     "lamp_glass_static": {
-      "triangles": 100,
-      "vertices": 100,
+      "triangles": 120,
+      "vertices": 120,
       "materials": [
-        "dw_props_glass"
+        "dw_props_glass",
+        "dw_props_soot_glass"
       ],
       "aabb_godot": [
         -0.0333,
@@ -35,24 +36,24 @@
       ]
     },
     "chair_static": {
-      "triangles": 1108,
-      "vertices": 640,
+      "triangles": 1726,
+      "vertices": 968,
       "materials": [
         "dw_props_dark_wood",
         "dw_props_mid_wood"
       ],
       "aabb_godot": [
-        -0.23,
+        -0.2293,
         0.0,
-        -0.22,
-        0.23,
-        0.9025,
-        0.22
+        -0.215,
+        0.2293,
+        0.9,
+        0.215
       ]
     },
     "clock_static": {
-      "triangles": 1000,
-      "vertices": 588,
+      "triangles": 1360,
+      "vertices": 828,
       "materials": [
         "dw_props_dark_wood",
         "dw_props_brass",
@@ -61,10 +62,10 @@
       "aabb_godot": [
         0.0,
         -0.473,
-        -0.235,
+        -0.2395,
         0.112,
         0.287,
-        0.235
+        0.2395
       ]
     },
     "board_static": {
@@ -126,8 +127,8 @@
       ]
     },
     "door_leaf_static": {
-      "triangles": 960,
-      "vertices": 564,
+      "triangles": 1436,
+      "vertices": 828,
       "materials": [
         "dw_props_mid_wood",
         "dw_props_stained_wood",
@@ -139,9 +140,9 @@
         "dw_props_worn_wood"
       ],
       "aabb_godot": [
-        0.002,
+        0.001,
         -1.04,
-        -0.062,
+        -0.082,
         0.905,
         1.032,
         0.019
@@ -201,8 +202,8 @@
       ]
     },
     "wall_props_static": {
-      "triangles": 1360,
-      "vertices": 784,
+      "triangles": 2678,
+      "vertices": 1520,
       "materials": [
         "dw_props_dark_wood",
         "dw_props_mid_wood",
@@ -212,13 +213,16 @@
         "dw_props_baize",
         "dw_props_paper",
         "dw_props_worn_wood",
-        "dw_props_rust"
+        "dw_props_rust",
+        "dw_props_leather",
+        "dw_props_enamel",
+        "dw_props_brass"
       ],
       "aabb_godot": [
         -2.755,
-        0.852,
+        0.0,
         -1.802,
-        2.74,
+        2.795,
         2.112,
         2.303
       ]
@@ -241,5 +245,5 @@
       ]
     }
   },
-  "total_triangles": 10024
+  "total_triangles": 13556
 }

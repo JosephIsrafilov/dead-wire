@@ -10,6 +10,7 @@ signal phase_changed(new_phase: StringName)
 signal wallet_changed(wallet_cents: int)
 signal state_reset
 
+const PHASE_NIGHT_APPROACH := &"NIGHT_APPROACH"
 const PHASE_NIGHT := &"NIGHT"
 const PHASE_DAWN_WALK := &"DAWN_WALK"
 const PHASE_DAY_TOWN := &"DAY_TOWN"

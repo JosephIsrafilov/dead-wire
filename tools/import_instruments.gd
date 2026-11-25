@@ -2,6 +2,7 @@ extends SceneTree
 ## Import the Blender-authored assemblies; preserve materials as local nearest atlas.
 const NAMES := ["key_static", "key_lever", "sounder_static", "sounder_armature", "register_static", "register_spool", "register_stylus"]
 const OUT := "res://assets/models/instruments_v1/"
+const ATLAS_MATERIAL := preload("res://tools/office_atlas_material.gd")
 func _initialize() -> void:
 	_run.call_deferred()
 func _run() -> void:
@@ -31,14 +32,11 @@ func _run() -> void:
 			var key := imported.resource_name
 			if not materials.has(key):
 				var mat := imported.duplicate() as StandardMaterial3D
-				mat.albedo_texture = atlas
 				mat.albedo_color = Color.WHITE
-				mat.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
-				mat.roughness = 0.65 if key.contains("brass") else 0.88
-				mat.metallic = 0.5 if key.contains("brass") or key.contains("iron") else 0.0
-				mat.metallic_specular = 0.3
-				mat.normal_enabled = false
 				mat.orm_texture = null
+				ATLAS_MATERIAL.apply(mat, atlas, key)
+				if key.contains("glass"):
+					ATLAS_MATERIAL.glass(mat, Color(0.77, 0.83, 0.76, 0.16))
 				materials[key] = mat
 			mesh.surface_set_material(index, materials[key])
 		var error := ResourceSaver.save(mesh, OUT + name + ".res")

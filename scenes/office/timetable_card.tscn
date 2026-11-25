@@ -1,16 +1,22 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://scripts/office/timetable_card.gd" id="1_card"]
 [ext_resource type="Script" path="res://scripts/interaction/interactable.gd" id="2_interact"]
 [ext_resource type="Material" path="res://materials/style_tests/paper_log.tres" id="3_paper"]
-[ext_resource type="FontFile" path="res://assets/fonts/imfell/IMFeENrm28P.ttf" id="4_font"]
+[ext_resource type="FontFile" path="res://assets/fonts/oldstandard/OldStandardTT-Bold.ttf" id="4_font"]
+[ext_resource type="Material" path="res://materials/style_tests/card_timetable_stock.tres" id="5_stock"]
+[ext_resource type="Material" path="res://materials/style_tests/metal_brass_aged.tres" id="6_brass"]
 
 [sub_resource type="BoxMesh" id="CardMesh"]
 material = ExtResource("3_paper")
-size = Vector3(0.30, 0.003, 0.24)
+size = Vector3(0.36, 0.003, 0.29)
+
+[sub_resource type="PlaneMesh" id="CardFaceMesh"]
+material = ExtResource("5_stock")
+size = Vector2(0.36, 0.29)
 
 [sub_resource type="BoxShape3D" id="CardShape"]
-size = Vector3(0.30, 0.05, 0.24)
+size = Vector3(0.36, 0.05, 0.29)
 
 [node name="TimetableCard" type="Node3D"]
 script = ExtResource("1_card")
@@ -19,17 +25,37 @@ script = ExtResource("1_card")
 position = Vector3(0, 0.0015, 0)
 mesh = SubResource("CardMesh")
 
+[node name="CardFace" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.0032, 0)
+mesh = SubResource("CardFaceMesh")
+
+[node name="TackLeft" type="CSGCylinder3D" parent="."]
+position = Vector3(-0.146, 0.0042, -0.118)
+radius = 0.0045
+height = 0.0032
+sides = 8
+material = ExtResource("6_brass")
+
+[node name="TackRight" type="CSGCylinder3D" parent="."]
+position = Vector3(0.146, 0.0042, -0.118)
+radius = 0.0045
+height = 0.0032
+sides = 8
+material = ExtResource("6_brass")
+
 [node name="Label3D" type="Label3D" parent="."]
-position = Vector3(0, 0.004, 0)
+outline_modulate = Color(0.055, 0.038, 0.025, 1)
+texture_filter = 3
+position = Vector3(0, 0.0044, 0.001)
 rotation = Vector3(-1.5707963, 0, 0)
 font = ExtResource("4_font")
-pixel_size = 0.0011
+pixel_size = 0.00102
 shaded = true
-alpha_cut = 1
-modulate = Color(0.12, 0.1, 0.08, 1)
+modulate = Color(0.055, 0.038, 0.025, 1)
 text = "BLACK CREEK & WESTERN\nNIGHT TIMETABLE"
-font_size = 16
-outline_size = 0
+font_size = 21
+outline_size = 1
+line_spacing = 3.0
 
 [node name="Interactable" type="Area3D" parent="."]
 collision_layer = 2

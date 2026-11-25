@@ -31,29 +31,21 @@ const TIMETABLE_TEXT_RU: String = """ПОЕЗД 17    | ПАССАЖИРСКИЙ
   TRAIN = поезд        FREIGHT = товарный
   CLEAR EAST = путь на восток    HOLD = держать"""
 
-const WALL_CARD_TEXT_EN: String = """BLACK CREEK & WESTERN
-NIGHT TIMETABLE
+const WALL_CARD_TEXT_EN: String = """NIGHT TIMETABLE
 
-TRAIN 17   01:15
-FORM 19 (CLEAR)
+No.      TIME     DIRECTION
+17         01:15      EAST
+71         02:00      EAST
 
-FREIGHT 71 02:00
-RULE 44: FORM 31 (HOLD)
+MJ SPUR CLOSED"""
 
-MJ SPUR    -----
-[CLOSED OCT 14, 1885]"""
+const WALL_CARD_TEXT_RU: String = """НОЧНОЕ РАСПИСАНИЕ
 
-const WALL_CARD_TEXT_RU: String = """Ж.Д. БЛЭК-КРИК
-НОЧНОЕ РАСПИСАНИЕ
+№       ВРЕМЯ      ПУТЬ
+17        01:15      ВОСТОК
+71        02:00      ВОСТОК
 
-ПОЕЗД 17   01:15
-ПРОПУСТИТЬ (CLEAR)
-
-ТОВАРНЫЙ 71 02:00
-ПРИКАЗ 44: ДЕРЖАТЬ
-
-ВЕТКА MJ   -----
-[ЗАКРЫТА С 1885 Г.]"""
+ВЕТКА MJ ЗАКРЫТА"""
 
 var interactable: Interactable = null
 var label_3d: Label3D = null

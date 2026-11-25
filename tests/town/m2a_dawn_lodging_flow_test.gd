@@ -106,7 +106,7 @@ func _run() -> void:
 
 	_check(town.time_of_day != null and town.time_of_day.current_preset == TownTimeOfDay.PRESET_DAWN,
 		"BlackCreekExterior opens in DAWN preset when phase == DAWN_WALK")
-	_check(town.player.global_position.distance_to(Vector3(0.0, 0.30, 3.0)) < 0.25,
+	_check(town.player.global_position.distance_to(TownArchitectureBuilder.DEPOT_SOUTH_SPAWN) < 0.25,
 		"Player spawns on Depot south platform at depot_south")
 	_check(town.builder.get_town_interactable(&"boarding_door") != null
 		and town.builder.get_town_interactable(&"saloon_door") != null
@@ -114,6 +114,7 @@ func _run() -> void:
 		"Exterior builds boarding door, saloon door, and MJ gate interactables")
 	_check(town.builder.get_town_interactable(&"boarding_door").prompt_text.contains("пансион"),
 		"Boarding door prompt localizes to Russian")
+	await _check_town_doors(town)
 	town.queue_free()
 	await process_frame
 
@@ -174,3 +175,31 @@ func _run() -> void:
 	GameLocale.clear_test_override()
 	print("M2-A assertions: passed=%d failed=%d" % [_passed, _failed])
 	quit(0 if _failed == 0 else 1)
+
+
+func _check_town_doors(town: BlackCreekExteriorController) -> void:
+	town.door_knock.thought_delay_seconds = 0.12
+	var player := town.player
+	var interaction := player.get_node("InteractionController") as InteractionController
+	for spec in [
+		[&"chronicle_door", 1.0], [&"assay_door", 1.0], [&"mercantile_door", -1.0],
+		[&"clinic_door", -1.0], [&"smithy_door", 1.0], [&"calaboose_door", 1.0],
+	]:
+		var door := town.builder.get_town_interactable(spec[0])
+		var at := door.global_position
+		player.global_position = Vector3(at.x, 0.31, at.z + 1.7 * spec[1])
+		player.velocity = Vector3.ZERO
+		player.reset_physics_interpolation()
+		await physics_frame
+		await physics_frame
+		player.aim_at(at)
+		await process_frame
+		interaction.refresh_prompt(true)
+		var pressed := InputEventKey.new()
+		pressed.physical_keycode = KEY_E
+		pressed.pressed = true
+		town.get_viewport().push_input(pressed, true)
+		_check(interaction.current_target == door and town.thoughts.get_current_text().is_empty(),
+			"Standing E reaches %s and leaves a pause for a response" % spec[0])
+		await create_timer(0.18).timeout
+		_check(not town.thoughts.get_current_text().is_empty(), "Elias responds at %s after the pause" % spec[0])

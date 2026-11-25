@@ -1,0 +1,186 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Material" path="res://materials/style_tests/timber_trim.tres" id="1_oak"]
+
+[ext_resource type="Texture2D" path="res://assets/textures/town_v2/iron_normal.png" id="2_iron_normal"]
+
+[sub_resource type="StandardMaterial3D" id="ForgedIron"]
+albedo_color = Color(0.20, 0.18, 0.15, 1)
+metallic = 0.72
+roughness = 0.69
+normal_enabled = true
+normal_texture = ExtResource("2_iron_normal")
+texture_filter = 2
+
+[sub_resource type="SphereMesh" id="BoltHead"]
+radius = 0.016
+height = 0.032
+radial_segments = 6
+rings = 2
+material = SubResource("ForgedIron")
+
+[node name="OfficeJoinery" type="Node3D"]
+
+[node name="NorthWestPost" type="CSGBox3D" parent="."]
+position = Vector3(-2.83, 1.425, -2.219)
+size = Vector3(0.14, 2.85, 0.14)
+material = ExtResource("1_oak")
+
+[node name="NorthWestPlinth" type="CSGBox3D" parent="."]
+position = Vector3(-2.83, 0.095, -2.219)
+size = Vector3(0.17, 0.19, 0.17)
+material = ExtResource("1_oak")
+
+[node name="NorthWestCapital" type="CSGBox3D" parent="."]
+position = Vector3(-2.83, 2.67, -2.219)
+size = Vector3(0.17, 0.085, 0.17)
+material = ExtResource("1_oak")
+
+[node name="SouthWestPost" type="CSGBox3D" parent="."]
+position = Vector3(-2.83, 1.425, 2.219)
+size = Vector3(0.14, 2.85, 0.14)
+material = ExtResource("1_oak")
+
+[node name="SouthWestPlinth" type="CSGBox3D" parent="."]
+position = Vector3(-2.83, 0.095, 2.219)
+size = Vector3(0.17, 0.19, 0.17)
+material = ExtResource("1_oak")
+
+[node name="SouthWestCapital" type="CSGBox3D" parent="."]
+position = Vector3(-2.83, 2.67, 2.219)
+size = Vector3(0.17, 0.085, 0.17)
+material = ExtResource("1_oak")
+
+[node name="NorthEastPost" type="CSGBox3D" parent="."]
+position = Vector3(2.83, 1.425, -2.219)
+size = Vector3(0.14, 2.85, 0.14)
+material = ExtResource("1_oak")
+
+[node name="NorthEastPlinth" type="CSGBox3D" parent="."]
+position = Vector3(2.83, 0.095, -2.219)
+size = Vector3(0.17, 0.19, 0.17)
+material = ExtResource("1_oak")
+
+[node name="NorthEastCapital" type="CSGBox3D" parent="."]
+position = Vector3(2.83, 2.67, -2.219)
+size = Vector3(0.17, 0.085, 0.17)
+material = ExtResource("1_oak")
+
+[node name="SouthEastPost" type="CSGBox3D" parent="."]
+position = Vector3(2.83, 1.425, 2.219)
+size = Vector3(0.14, 2.85, 0.14)
+material = ExtResource("1_oak")
+
+[node name="SouthEastPlinth" type="CSGBox3D" parent="."]
+position = Vector3(2.83, 0.095, 2.219)
+size = Vector3(0.17, 0.19, 0.17)
+material = ExtResource("1_oak")
+
+[node name="SouthEastCapital" type="CSGBox3D" parent="."]
+position = Vector3(2.83, 2.67, 2.219)
+size = Vector3(0.17, 0.085, 0.17)
+material = ExtResource("1_oak")
+
+[node name="Beam1NorthStrap" type="CSGBox3D" parent="."]
+position = Vector3(-1.8, 2.714, -2.15)
+size = Vector3(0.179, 0.017, 0.125)
+material = SubResource("ForgedIron")
+
+[node name="WestBolt" type="MeshInstance3D" parent="Beam1NorthStrap"]
+position = Vector3(-0.055, -0.013, 0)
+mesh = SubResource("BoltHead")
+
+[node name="EastBolt" type="MeshInstance3D" parent="Beam1NorthStrap"]
+position = Vector3(0.055, -0.013, 0)
+mesh = SubResource("BoltHead")
+
+[node name="Beam1SouthStrap" type="CSGBox3D" parent="."]
+position = Vector3(-1.8, 2.714, 2.15)
+size = Vector3(0.179, 0.017, 0.125)
+material = SubResource("ForgedIron")
+
+[node name="WestBolt" type="MeshInstance3D" parent="Beam1SouthStrap"]
+position = Vector3(-0.055, -0.013, 0)
+mesh = SubResource("BoltHead")
+
+[node name="EastBolt" type="MeshInstance3D" parent="Beam1SouthStrap"]
+position = Vector3(0.055, -0.013, 0)
+mesh = SubResource("BoltHead")
+
+[node name="Beam2NorthStrap" type="CSGBox3D" parent="."]
+position = Vector3(-0.6, 2.714, -2.15)
+size = Vector3(0.179, 0.017, 0.125)
+material = SubResource("ForgedIron")
+
+[node name="WestBolt" type="MeshInstance3D" parent="Beam2NorthStrap"]
+position = Vector3(-0.055, -0.013, 0)
+mesh = SubResource("BoltHead")
+
+[node name="EastBolt" type="MeshInstance3D" parent="Beam2NorthStrap"]
+position = Vector3(0.055, -0.013, 0)
+mesh = SubResource("BoltHead")
+
+[node name="Beam2SouthStrap" type="CSGBox3D" parent="."]
+position = Vector3(-0.6, 2.714, 2.15)
+size = Vector3(0.179, 0.017, 0.125)
+material = SubResource("ForgedIron")
+
+[node name="WestBolt" type="MeshInstance3D" parent="Beam2SouthStrap"]
+position = Vector3(-0.055, -0.013, 0)
+mesh = SubResource("BoltHead")
+
+[node name="EastBolt" type="MeshInstance3D" parent="Beam2SouthStrap"]
+position = Vector3(0.055, -0.013, 0)
+mesh = SubResource("BoltHead")
+
+[node name="Beam3NorthStrap" type="CSGBox3D" parent="."]
+position = Vector3(0.6, 2.714, -2.15)
+size = Vector3(0.179, 0.017, 0.125)
+material = SubResource("ForgedIron")
+
+[node name="WestBolt" type="MeshInstance3D" parent="Beam3NorthStrap"]
+position = Vector3(-0.055, -0.013, 0)
+mesh = SubResource("BoltHead")
+
+[node name="EastBolt" type="MeshInstance3D" parent="Beam3NorthStrap"]
+position = Vector3(0.055, -0.013, 0)
+mesh = SubResource("BoltHead")
+
+[node name="Beam3SouthStrap" type="CSGBox3D" parent="."]
+position = Vector3(0.6, 2.714, 2.15)
+size = Vector3(0.179, 0.017, 0.125)
+material = SubResource("ForgedIron")
+
+[node name="WestBolt" type="MeshInstance3D" parent="Beam3SouthStrap"]
+position = Vector3(-0.055, -0.013, 0)
+mesh = SubResource("BoltHead")
+
+[node name="EastBolt" type="MeshInstance3D" parent="Beam3SouthStrap"]
+position = Vector3(0.055, -0.013, 0)
+mesh = SubResource("BoltHead")
+
+[node name="Beam4NorthStrap" type="CSGBox3D" parent="."]
+position = Vector3(1.8, 2.714, -2.15)
+size = Vector3(0.179, 0.017, 0.125)
+material = SubResource("ForgedIron")
+
+[node name="WestBolt" type="MeshInstance3D" parent="Beam4NorthStrap"]
+position = Vector3(-0.055, -0.013, 0)
+mesh = SubResource("BoltHead")
+
+[node name="EastBolt" type="MeshInstance3D" parent="Beam4NorthStrap"]
+position = Vector3(0.055, -0.013, 0)
+mesh = SubResource("BoltHead")
+
+[node name="Beam4SouthStrap" type="CSGBox3D" parent="."]
+position = Vector3(1.8, 2.714, 2.15)
+size = Vector3(0.179, 0.017, 0.125)
+material = SubResource("ForgedIron")
+
+[node name="WestBolt" type="MeshInstance3D" parent="Beam4SouthStrap"]
+position = Vector3(-0.055, -0.013, 0)
+mesh = SubResource("BoltHead")
+
+[node name="EastBolt" type="MeshInstance3D" parent="Beam4SouthStrap"]
+position = Vector3(0.055, -0.013, 0)
+mesh = SubResource("BoltHead")

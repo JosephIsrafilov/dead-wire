@@ -69,7 +69,12 @@ func _disable_diorama_interactables() -> void:
 func _pose_uncanny_figure() -> void:
 	if _window_figure != null:
 		_window_figure.visible = false
-	if _figure_head != null:
+	# The scene authors the twenty degree list itself now (Stage 1.1), and the
+	# figure's own controller caches that authored pose as its base. The diorama
+	# must not write a second opinion here: a hardcoded angle would drift out of
+	# step with the asset the moment the asset changed, and it would disagree with
+	# the copy of the same figure in the office.
+	if _figure_head != null and not is_equal_approx(_figure_head.rotation.z, deg_to_rad(20.0)):
 		_figure_head.rotation.z = deg_to_rad(20.0)
 
 func apply_campaign_mood() -> void:

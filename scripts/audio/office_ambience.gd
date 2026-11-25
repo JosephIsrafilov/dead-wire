@@ -21,7 +21,9 @@ signal clock_ticked(tick_count: int)
 @export var clock_tock_stream: AudioStream = preload("res://audio/sfx/foley/clock_tock.wav")
 ## Plan 7.8: wind in the telegraph wire outside, heard through the glass.
 @export var wire_stream: AudioStream = preload("res://audio/sfx/ambience/wire_sing.wav")
+@export var dread_music_stream: AudioStream = preload("res://audio/music/watch_dread_ambient.wav")
 @export var wire_volume_db: float = -22.0
+@export var dread_music_volume_db: float = -14.0
 @export var wire_position: Vector3 = Vector3(-1.5, 2.7, -3.4)
 ## Through the closed pane only the low hum reaches the room; with the door
 ## open the wire is brighter and nearer.
@@ -62,6 +64,7 @@ var wind_player: AudioStreamPlayer3D = null
 var stove_player: AudioStreamPlayer3D = null
 var clock_player: AudioStreamPlayer3D = null
 var wire_player: AudioStreamPlayer3D = null
+var dread_music_player: AudioStreamPlayer = null
 ## Plan 7.5: in the hush before the last call the tick drops out of hearing.
 ## The movement keeps going — the pendulum and the hands do not stop.
 var clock_muted: bool = false
@@ -74,6 +77,7 @@ var _stove_drift_target: float = 0.0
 var _drift_left: float = 0.0
 var _drift_rate: float = 1.0
 var _drift_rng := RandomNumberGenerator.new()
+var _music_duck_db: float = 0.0
 
 var ticks_played: int = 0
 
@@ -99,6 +103,8 @@ func _apply_levels() -> void:
 		stove_player.volume_db = stove_volume_db + _hush_db + _stove_drift
 	if clock_player != null:
 		clock_player.volume_db = clock_volume_db + _hush_db
+	if dread_music_player != null:
+		dread_music_player.volume_db = dread_music_volume_db + _hush_db + _music_duck_db
 
 func _ready() -> void:
 	_drift_rng.randomize()
@@ -150,6 +156,13 @@ func build_players() -> void:
 		wire_player.attenuation_filter_cutoff_hz = wire_glass_cutoff_hz
 		wire_player.attenuation_filter_db = -12.0
 		wire_player.max_db = wire_volume_db + wire_open_boost_db
+	if dread_music_player == null and dread_music_stream != null:
+		dread_music_player = AudioStreamPlayer.new()
+		dread_music_player.name = "DreadMusicPlayer"
+		dread_music_player.stream = as_looping(dread_music_stream)
+		dread_music_player.volume_db = dread_music_volume_db
+		dread_music_player.bus = &"Music" if AudioServer.get_bus_index(&"Music") >= 0 else &"Master"
+		add_child(dread_music_player)
 
 ## The door is open to the night: the wire is heard without the glass.
 func open_to_outside(open: bool = true) -> void:
@@ -195,12 +208,13 @@ func start() -> void:
 	_play_loop(wind_player)
 	_play_loop(stove_player)
 	_play_loop(wire_player)
+	_play_loop(dread_music_player)
 	var door := get_node_or_null("../SouthDoor/DoorController")
 	if door != null and door.has_signal(&"door_opened") and not door.door_opened.is_connected(open_to_outside):
 		door.door_opened.connect(open_to_outside.bind(true))
 
 func stop() -> void:
-	for player in [room_tone_player, wind_player, stove_player, clock_player, wire_player]:
+	for player in [room_tone_player, wind_player, stove_player, clock_player, wire_player, dread_music_player]:
 		if player != null and player.playing:
 			player.stop()
 
@@ -212,7 +226,21 @@ func _play_loop(player: Node) -> void:
 
 func _process(delta: float) -> void:
 	advance_clock(delta)
+	_update_music_duck(delta)
 	advance_drift(delta)
+
+func _update_music_duck(delta: float) -> void:
+	if dread_music_player == null:
+		return
+	var wire_busy := false
+	var office := get_parent()
+	if office != null:
+		var sched := office.get_node_or_null("MorseRuntimeScheduler")
+		if sched != null and sched.has_method("is_playing") and bool(sched.call("is_playing")):
+			wire_busy = true
+	var target := -10.0 if wire_busy else 0.0
+	var rate := 22.0 if target < _music_duck_db else 6.0
+	_music_duck_db = move_toward(_music_duck_db, target, rate * maxf(delta, 0.0))
 
 ## Separated from _process so tests can drive the escapement without a real frame.
 func advance_clock(delta: float) -> void:

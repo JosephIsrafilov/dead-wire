@@ -44,7 +44,8 @@
       ],
       "prints": [
         "wanted.png"
-      ]
+      ],
+      "dressing_notes": "WantedPoster lies in the -X wall plane on a sawn backing board at local (-2.638, 1.92, 0.10); the two front lights are true 0.30 x 0.80 apertures cut through the 0.45 front wall at |x| 1.44, outboard of the oak door jambs, with a dark lining 0.20 back and one iron bar."
     },
     {
       "name": "mj_spur_gate",
@@ -105,14 +106,29 @@
       "name": "chapel_steeple",
       "path": "res://assets/models/town/chapel_steeple.glb",
       "world_transform": [
-        "-54",
-        "9",
-        "62"
+        "-46",
+        "0.62",
+        "39"
       ],
       "collisions": [
         "COL_Chapel_Nave",
+        "COL_Chapel_Bench",
+        "COL_Chapel_Revetment",
         "COL_Chapel_Belfry"
-      ]
+      ],
+      "interaction": {
+        "id": "chapel_bell",
+        "world_point": [
+          -46,
+          8.72,
+          35.9
+        ],
+        "reserved_clearance": [
+          2.6,
+          3.4,
+          2.7
+        ]
+      }
     },
     {
       "name": "roadside_props",
@@ -127,7 +143,9 @@
         "COL_Woodpile",
         "COL_HitchRail"
       ],
-      "interaction_policy": "Decorative props stay outside depot, boarding, MJ and horse-trough interaction clearance."
+      "interaction_policy": "Decorative props stay outside depot, boarding, MJ and horse-trough interaction clearance. The depot crates, smithy quench tub and trestle, mercantile hogshead and the trough bucket and brush are dressing only: they carry no collider and stand off every walk line.",
+      "removed": "PolePoster0..4 - five 0.62 x 0.92 one-sided bills floating at y 3.75 with no support - are gone; black_creek_telegraph_lines.gd keeps the wrapped, double-sided WeatheredBroadside at eye height on every second pole.",
+      "creek_boulders": "Four faceted, irregular boulders bedded 0.14 m into the ground at (44.35, 26.55), (49.85, 27.20) and (46.10, 30.30) on the creek-bed reach below the bridge and (51.05, 28.55) on the east bank, replacing four eight-sided drums whose flat undersides floated over the gravel."
     }
   ],
   "print_assets": [

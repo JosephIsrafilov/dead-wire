@@ -8,10 +8,13 @@ import json
 import math
 import random
 from pathlib import Path
+import sys
 import bpy
 from mathutils import Vector
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "tools"))
+from office_blender_look import bake_vertex_ao, scanned_materials
 OUT = ROOT / "assets/models/stove_v1"
 OUT.mkdir(parents=True, exist_ok=True)
 TEX = ROOT / "assets/textures/stove_v1"
@@ -46,53 +49,7 @@ COLORS = {
     "wood": (86, 54, 34),
 }
 
-rng = random.Random(189410)
-image = bpy.data.images.new("DW_Stove_Atlas_256", width=256, height=256)
-pixels = [0.02, 0.02, 0.02, 1.0] * (256 * 256)
-
-for kind, (tx, ty) in TILES.items():
-    base = COLORS[kind]
-    for y in range(64):
-        for x in range(64):
-            noise = rng.uniform(-3.5, 3.5)
-            if kind == "iron":
-                detail = 3.5 * math.sin(x * 0.41 + y * 0.37) + 2.0 * math.cos(y * 0.8)
-            elif kind == "sheet_iron":
-                detail = 4.0 * math.sin(y * 0.35) - (8.0 if x in (8, 55) else 0.0)
-            elif kind == "brass":
-                detail = 5.0 * math.sin(x * 0.22) * math.cos(y * 0.19)
-            elif kind == "brick":
-                row = y // 8
-                mortar_y = (y % 8) in (0, 7)
-                mortar_x = ((x + (16 if row % 2 else 0)) % 32) in (0, 1)
-                detail = -22.0 if (mortar_y or mortar_x) else 5.0 * math.sin(x * 0.3 + row)
-            elif kind == "coal":
-                detail = 6.0 * math.sin(x * 0.9) * math.cos(y * 0.9)
-            else:
-                detail = 6.0 * math.sin(x * 0.55 + 1.5 * math.sin(y * 0.09))
-            idx = ((ty * 64 + y) * 256 + tx * 64 + x) * 4
-            for c in range(3):
-                pixels[idx + c] = round(max(0, min(255, base[c] + detail + noise)) / 8) * 8 / 255
-            pixels[idx + 3] = 1.0
-
-image.pixels.foreach_set(pixels)
-image.filepath_raw = str(TEX / "stove_atlas_256.png")
-image.file_format = "PNG"
-image.save()
-image.pack()
-
-materials = {}
-for kind in TILES:
-    mat = bpy.data.materials.new("dw_stove_" + kind)
-    mat.use_nodes = True
-    bsdf = mat.node_tree.nodes.get("Principled BSDF")
-    bsdf.inputs["Roughness"].default_value = 0.65 if kind == "brass" else 0.92
-    bsdf.inputs["Metallic"].default_value = 0.55 if kind in ("iron", "sheet_iron", "brass") else 0.0
-    tex = mat.node_tree.nodes.new("ShaderNodeTexImage")
-    tex.image = image
-    tex.interpolation = "Closest"
-    mat.node_tree.links.new(tex.outputs["Color"], bsdf.inputs["Base Color"])
-    materials[kind] = mat
+materials = scanned_materials(TEX / "stove_atlas_256.png", TILES, "dw_stove_")
 
 
 def pos(v):
@@ -173,8 +130,13 @@ def cyl(name, centre, radius, depth, kind, axis=(0, 1, 0), sides=12, radius_top=
 
 
 # 1. Hearth pad & bevelled floor plate
-box("HearthPad", (0, 0.010, 0), (0.82, 0.020, 0.82), "sheet_iron", 0.004)
-box("HearthRim", (0, 0.022, 0), (0.76, 0.008, 0.76), "iron", 0.002)
+box("MortarBed", (0, .011, 0), (.87, .022, .85), "brick", .004)
+for row in range(5):
+    for col in range(4):
+        x = -.325 + .216 * col
+        z = -.336 + .168 * row
+        box("HearthBrick", (x, .024, z), (.211, .034, .162), "brick", .004,
+            rot_deg=(0, 180 * ((row + col) % 2), 0))
 
 # 2. Four cast-iron cabriole legs
 for sx in (-0.23, 0.23):
@@ -321,6 +283,7 @@ bpy.ops.object.origin_set(type="ORIGIN_CURSOR")
 bpy.ops.object.transform_apply(location=False, rotation=True, scale=True)
 tri = stove_obj.modifiers.new("Export triangles", "TRIANGULATE")
 bpy.ops.object.modifier_apply(modifier=tri.name)
+bake_vertex_ao(stove_obj)
 
 bpy.ops.export_scene.gltf(
     filepath=str(OUT / "stove_static.glb"),
@@ -329,7 +292,7 @@ bpy.ops.export_scene.gltf(
     export_apply=True,
     export_yup=True,
     export_texcoords=True,
-    export_normals=True,
+    export_normals=True, export_vertex_color="ACTIVE",
     export_materials="EXPORT",
     export_cameras=False,
     export_lights=False,
@@ -344,7 +307,8 @@ report = {
     }
 }
 
-bpy.ops.wm.save_as_mainfile(filepath=str(SOURCE / "dead_wire_stove_v1.blend"), copy=True)
+if "--save-source" in sys.argv:
+    bpy.ops.wm.save_as_mainfile(filepath=str(SOURCE / "dead_wire_stove_v1.blend"), copy=True)
 # After rebuilding, run `godot --headless --path . --script tools/import_stove.gd`
 # and refresh the engine-measured `glb_vertices` / `res_surface_vertices` in the
 # manifest: tests/presentation/stove_manifest_test.gd compares them to the

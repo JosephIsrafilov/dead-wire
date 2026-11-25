@@ -1,8 +1,7 @@
-[gd_scene load_steps=13 format=3]
+[gd_scene load_steps=10 format=3]
 
 [ext_resource type="Texture2D" path="res://assets/textures/office_wear/sill_runoff.png" id="1"]
 [ext_resource type="Texture2D" path="res://assets/textures/office_wear/stove_soot.png" id="2"]
-[ext_resource type="Texture2D" path="res://assets/textures/office_wear/lamp_smoke.png" id="3"]
 [ext_resource type="Texture2D" path="res://assets/textures/office_wear/wallpaper_b.png" id="4"]
 
 [sub_resource type="StandardMaterial3D" id="Wear1"]
@@ -24,16 +23,6 @@ texture_filter = 3
 
 [sub_resource type="QuadMesh" id="Quad2"]
 size = Vector2(1, 1.5)
-
-[sub_resource type="StandardMaterial3D" id="Wear3"]
-transparency = 1
-albedo_texture = ExtResource("3")
-roughness = 1.0
-specular_mode = 2
-texture_filter = 3
-
-[sub_resource type="QuadMesh" id="Quad3"]
-size = Vector2(2, 0.5)
 
 [sub_resource type="StandardMaterial3D" id="Repair"]
 shading_mode = 1
@@ -66,13 +55,9 @@ mesh = SubResource("Quad2")
 material_override = SubResource("Wear2")
 cast_shadow = 0
 
-[node name="LampSmoke" type="MeshInstance3D" parent="."]
-position = Vector3(-2.892, 2.58, -0.85)
-rotation = Vector3(0, 1.570796327, 0)
-mesh = SubResource("Quad3")
-material_override = SubResource("Wear3")
-cast_shadow = 0
-
+; Soot from the oil lamp that used to hang on the west wall. Retired with that
+; position (roadmap 0.2): with no lamp on this wall, the patch read as a stain
+; with no cause. The sill runoff, the stove soot and the wallpaper repair stay.
 [node name="WallpaperRepair" type="MeshInstance3D" parent="."]
 position = Vector3(-2.89, 1.72, 0.02)
 rotation = Vector3(0, 1.570796327, 0)

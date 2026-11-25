@@ -93,7 +93,7 @@ func continue_to_dawn(save_path: String = CampaignStateStore.DEFAULT_SAVE_PATH) 
 	if campaign != null:
 		campaign.begin_dawn_from_shift(world, knowledge, save_path)
 	tree.paused = false
-	return tree.change_scene_to_file(DAWN_TOWN_SCENE) == OK
+	return SceneTransitionManager.go(tree, DAWN_TOWN_SCENE)
 
 ## Both routes clear WorldState and KnowledgeState. A second watch must not begin
 ## holding the first watch's facts.
@@ -114,7 +114,7 @@ func _go_to(path: String) -> bool:
 	if tree == null:
 		return false
 	tree.paused = false
-	return tree.change_scene_to_file(path) == OK
+	return SceneTransitionManager.go(tree, path)
 
 func is_running() -> bool:
 	return _is_running

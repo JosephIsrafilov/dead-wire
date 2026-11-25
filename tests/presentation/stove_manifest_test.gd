@@ -97,7 +97,7 @@ func _run() -> void:
 		material_names.append(mat.resource_name)
 		if mat.albedo_texture == null or mat.albedo_texture.get_width() != 256:
 			atlas_ok = false
-		if mat.texture_filter != BaseMaterial3D.TEXTURE_FILTER_NEAREST:
+		if mat.texture_filter != BaseMaterial3D.TEXTURE_FILTER_NEAREST_WITH_MIPMAPS:
 			nearest_ok = false
 	if not check(material_names.size() == 6 and not material_names.has(""),
 			"The RES carries six named importer materials (%s)" % str(material_names)):
@@ -115,7 +115,7 @@ func _run() -> void:
 		stove.free()
 		quit(1)
 		return
-	if not check(nearest_ok, "Every RES material filters the atlas NEAREST"):
+	if not check(nearest_ok, "Every RES material uses nearest filtering with mipmaps"):
 		stove.free()
 		quit(1)
 		return

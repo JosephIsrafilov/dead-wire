@@ -154,10 +154,10 @@ func _on_stove_interacted() -> void:
 		)
 	_show_quiet_murmur(
 		GameLocale.pick(
-			"Угли вспыхнули. На пару часов тепла хватит.",
-			"The coals catch. Enough warmth for a couple of hours."
+			"Кочерга в золе — хоть щели чуть согреет, пока с колорадских хребтов не замело.",
+			"Stirred the clinkers up. Won't stop the ridge draft, but at least my fingers won't stiffen at the key."
 		),
-		3.6
+		4.0
 	)
 
 func _on_map_interacted() -> void:
@@ -221,10 +221,10 @@ func _on_coat_interacted() -> void:
 		_coat_comment_shown = true
 		_show_quiet_murmur(
 			GameLocale.pick(
-				"Сырая шерсть ещё пахнет угольным дымом с платформы.",
-				"Damp wool. Still smells of coal smoke from the platform."
+				"Сырое сукно до сих пор воняет мазутом и угольной гарью с перрона.",
+				"Wet wool still reeks of soot and wet coal smoke from the platform."
 			),
-			3.8
+			4.0
 		)
 
 func _show_quiet_murmur(text: String, duration: float) -> void:

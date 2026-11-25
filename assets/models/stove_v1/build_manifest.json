@@ -1,22 +1,22 @@
 {
   "assemblies": {
     "stove_static": {
-      "glb_vertices": 7880,
+      "glb_vertices": 10743,
       "materials": [
-        "dw_stove_sheet_iron",
+        "dw_stove_brick",
         "dw_stove_iron",
+        "dw_stove_sheet_iron",
         "dw_stove_brass",
         "dw_stove_wood",
-        "dw_stove_brick",
         "dw_stove_coal"
       ],
-      "res_surface_vertices": 7880,
-      "triangles": 4140,
-      "vertices": 7880
+      "res_surface_vertices": 10743,
+      "triangles": 4976,
+      "vertices": 10743
     }
   },
   "atlas": "res://assets/textures/stove_v1/stove_atlas_256.png",
   "authoring": "Blender 5.2 bpy; deterministic depot potbelly stove and wall flue",
-  "total_triangles": 4140,
+  "total_triangles": 4976,
   "units": "metres"
 }

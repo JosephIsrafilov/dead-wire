@@ -10,11 +10,11 @@ extends SceneTree
 
 const CUP_PATH := "res://assets/models/office_props_v1/tin_cup.res"
 const BOTTLE_PATH := "res://assets/models/office_props_v1/ink_bottle.res"
-const TIN := "res://materials/style_tests/metal_oxidized.tres"
+const ENAMEL := "res://materials/style_tests/cup_enamel.tres"
 ## Dark green glass, opaque on purpose: a small moving prop must not sort
 ## against the room, so it reads as glass only by the lamp's glint.
 const GLASS := "res://materials/style_tests/ink_glass.tres"
-const CORK := "res://materials/style_tests/paper_log.tres"
+const CAP := "res://materials/style_tests/metal_brass_aged.tres"
 const LABEL := "res://materials/style_tests/paper_log.tres"
 const SEGMENTS := 20
 ## Texels per metre the room's props sit near (64 px texture -> ~3 repeats/m).
@@ -44,9 +44,9 @@ func _initialize() -> void:
 	var body := _begin()
 	_lathe(body, CUP_PROFILE)
 	_handle(body)
-	_commit(body, cup, "dw_cup_tin", TIN)
+	_commit(body, cup, "dw_cup_enamel", ENAMEL)
 	var bottle := ArrayMesh.new()
-	for part in [[GLASS_PROFILE, "dw_bottle_glass", GLASS], [CORK_PROFILE, "dw_bottle_cork", CORK],
+	for part in [[GLASS_PROFILE, "dw_bottle_glass", GLASS], [CORK_PROFILE, "dw_bottle_cap", CAP],
 			[LABEL_PROFILE, "dw_bottle_label", LABEL]]:
 		var tool := _begin()
 		_lathe(tool, part[0])
@@ -69,6 +69,7 @@ func _begin() -> SurfaceTool:
 
 func _commit(tool: SurfaceTool, mesh: ArrayMesh, surface_name: String, material_path: String) -> void:
 	tool.index()
+	tool.generate_tangents()
 	tool.commit(mesh)
 	var surface := mesh.get_surface_count() - 1
 	mesh.surface_set_name(surface, surface_name)

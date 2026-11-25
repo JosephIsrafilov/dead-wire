@@ -85,9 +85,11 @@ mesh = SubResource("FlameSphere")
 surface_material_override/0 = SubResource("CandleFlameMat")
 
 [node name="CandleLight" type="OmniLight3D" parent="."]
-position = Vector3(0, 0.23, 0)
+position = Vector3(-0.20, 0.29, 0.24)
 light_color = Color(1, 0.72, 0.36, 1)
-light_energy = 1.75
+light_energy = 1.10
 shadow_enabled = true
-omni_range = 5.4
+shadow_opacity = 0.63
+shadow_blur = 2.1
+omni_range = 3.4
 omni_attenuation = 1.3

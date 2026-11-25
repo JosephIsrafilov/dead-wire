@@ -1,0 +1,74 @@
+{
+  "version": "window_figure_v3",
+  "authoring": "Blender 5.2 bpy; gaunt towering silhouette + pale uncanny face + glaring eyes",
+  "units": "metres",
+  "assemblies": {
+    "figure_coat": {
+      "triangles": 1404,
+      "vertices": 712,
+      "materials": [
+        "dw_figure_cloth"
+      ],
+      "aabb_godot": [
+        -0.259,
+        -0.94,
+        -0.1506,
+        0.2683,
+        0.575,
+        0.1938
+      ]
+    },
+    "figure_head": {
+      "triangles": 940,
+      "vertices": 476,
+      "materials": [
+        "dw_figure_cloth"
+      ],
+      "aabb_godot": [
+        -0.075,
+        -0.145,
+        -0.076,
+        0.075,
+        0.198,
+        0.1161
+      ]
+    },
+    "figure_hat": {
+      "triangles": 700,
+      "vertices": 352,
+      "materials": [
+        "dw_figure_hat"
+      ],
+      "aabb_godot": [
+        -0.212,
+        0.1184,
+        -0.214,
+        0.212,
+        0.278,
+        0.222
+      ]
+    },
+    "figure_eye_glints": {
+      "triangles": 296,
+      "vertices": 156,
+      "materials": [
+        "dw_figure_cloth"
+      ],
+      "aabb_godot": [
+        -0.0437,
+        0.0805,
+        0.0822,
+        0.0429,
+        0.0946,
+        0.0876
+      ]
+    }
+  },
+  "pivots": {
+    "figure_coat": "figure origin, boots at y = -0.94",
+    "figure_head": "neck top (VisualIndicator-local y 0.545)",
+    "figure_hat": "neck top (VisualIndicator-local y 0.545)",
+    "figure_eye_glints": "neck top (VisualIndicator-local y 0.545)"
+  },
+  "total_triangles": 3340
+}

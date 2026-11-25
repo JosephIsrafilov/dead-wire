@@ -92,24 +92,16 @@ size_flags_horizontal = 3
 size_flags_vertical = 4
 theme_override_styles/separator = SubResource("StyleBoxLine_rule")
 
-[node name="TaglineLabel" type="Label" parent="CenterContainer/VBoxContainer"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.76, 0.70, 0.57, 1)
-theme_override_fonts/font = ExtResource("4_serif_font")
-theme_override_font_sizes/font_size = 15
-text = "Ты слышишь одно. Твоя рука пишет другое."
-horizontal_alignment = 1
-
 [node name="StationLabel" type="Label" parent="CenterContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.50, 0.45, 0.36, 1)
+theme_override_colors/font_color = Color(0.70, 0.62, 0.48, 0.94)
 theme_override_fonts/font = ExtResource("4_serif_font")
-theme_override_font_sizes/font_size = 12
-text = "СТАНЦИЯ БЛЭК-КРИК  ·  АПРЕЛЬ 1890"
+theme_override_font_sizes/font_size = 13
+text = "РАЗЪЕЗД БЛЭК-КРИК  ·  АПРЕЛЬ 1890 ГОДА"
 horizontal_alignment = 1
 
 [node name="Spacer" type="Control" parent="CenterContainer/VBoxContainer"]
-custom_minimum_size = Vector2(0, 18)
+custom_minimum_size = Vector2(0, 22)
 layout_mode = 2
 
 [node name="BeginButton" type="Button" parent="CenterContainer/VBoxContainer"]
